@@ -121,3 +121,5 @@ draw. This would let us make the Grid objects just a special kind of
 DrawObject that could be anywhere in the Z-order. Would this slow down
 the check too much?
 
+
+* Setup TRAC
