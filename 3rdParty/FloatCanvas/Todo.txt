@@ -1,0 +1,123 @@
+Notes on stuff to do on the FloatCanvas Project:
+
+* Break out FloatCanvas.py into more modules:
+  - One for Events?
+  - One for DrawObjects
+  - ???
+
+* Add a demo of the Grid to the main demo
+
+* Add a group demo to the main demo.
+
+* Make a "Relative Group" object -- with the coordinates relative to the group,
+  rather thn world coords.
+
+* Keep track of the part of the BB that gets uncovered in a MoveImage
+  call, so it only draws what you need to. also have MoveImage blit the
+  current buffer in the right place first, so that only the part that needs
+  to be is blank
+
+* Use the new Bounding Box object everywhere to handle all the BB stuff: look at what
+  MPL has, maybe I can borrow that C++ code to make the BB object faster.
+
+* Can I use PyEventBinder and EvtHandler with the DrawObjects?
+
+* merge Line, ArrowLine and Arrow code: DRY!
+
+* test YDown Projection code. It caused problems with:
+   - ScaledTextBox
+   -- ???
+   -- maybe just Y-up or Y-down and have projections outside the FloatCanvas?
+
+* the "InForeground" parameter shouldn't be part of the DrawObject
+__init__. It should be part of the Add* methods only. Unless I'm going
+to get rid of the whole idea of DrawObjects being independent of the
+Canvas they are on.
+
+* Add FloatCanvas methods to move objects up and down in the z-order:
+  MoveUp(), MoveDown(), MoveToTop(), MoveToBottom(). You can use:
+  
+  >>> l = range(10)
+  >>> l[2:4] = l[3:1:-1]
+  >>> l
+  [0, 1, 3, 2, 4, 5, 6, 7, 8, 9]
+  
+  to shift things in the list.
+
+* Use new wx.FontFromPixelSize so that font scaling is consistant
+  across platforms: fonts are TOO SMALL on OS-X now!
+* Let the user define ppi, then set properties in points (or inches, or???).
+
+* Refactor the Projection code, to make it more flexible: ultimately
+adding a wide variety of projections. But maybe not: in some ways, it
+really doesn't make sense to re-project whenever the objects are
+drawn. The re-factor is still a good idea, however.
+
+* Add a PadSize to the regular text object: a spacer, so that you can
+  put text a set number of pixels away from the reference point
+
+* Add a FloatCanvas.Bind() method, rather than the EVT_** binding functions.
+
+* Re-Structure so that the DrawObjects don't need a reference to the
+Canvas. This will require a different Bind() method, among other things.
+
+* Have a mechanism for objects to let the canvas know that they have
+changed, so that the force flag to Draw() is no longer required
+
+* When objects get removed from the Canvas, their bindings don't. Fix
+this!
+
+* Explore adding multiple layers of transparent bitmaps...or bitmaps
+with a black background that get blitted wx.OR.
+
+* Printing: Brent Turner implemented this, but I haven't tested or
+integrated it yet.
+
+* UnBindAll is not robust, and there should be an individual unbind also
+
+***********Small stuff ***********
+* Make all LineAndFill objects use SetUpDraw() method
+
+* Re-factor the Circle object to use DC.DrawCircle. Maybe add a
+DC.DrawCircleList() method to wxPython as well.
+
+*Add some exception handling to the drawing code, so that if one object
+doesn't draw, the rest will.
+
+*Add zoom limits for Scaled text, so as to not try and draw text too
+big. This is done., but it's now hard coded to a font size that happens
+to work on my system.
+
+* Clean up public vs private attribute names
+
+
+***********Open issues**************
+
+* When I started writing the code I was trying to make a way to draw that
+didn't require the programmer using FloatCanvas to know anything about
+wxDCs. The result is that you never directly pass in a wxPen, or a
+wxColour, etc. I'm not sure if this is a good design goal anymore. I'm
+not sure anyone can use it without a pretty good understanding of
+wxPython anyway, so what's the point?
+
+* I have a whole system for caching pens and brushes. I think that's now
+obsolete...am I right?
+
+* Should all DrawObjects have a unique name or id number? At the moment,
+I don't see a need for them, and the user code can add one itself if it
+wants. Somehow, however, it seems like it would be useful, if for no
+other reason than to give a consistant interface to the naming
+convention. Note that all Python objects get an ID, so we could use this.
+
+* Similar to above...A UserData attribute: This would help prevent
+the user accidentally overriding attribute names by adding arbitrary
+stuff themselves. Perhaps an empty class, so that users could stuff
+whatever they want into it.
+
+* Refactor the BoundingBox check so that each object knows whether it
+needs to be drawn or not, rather than doing it outside the objects. This
+would let objects define their own methods for determining whether to
+draw. This would let us make the Grid objects just a special kind of
+DrawObject that could be anywhere in the Z-order. Would this slow down
+the check too much?
+

@@ -1,0 +1,42 @@
+FAQ for the wxPython FloatCanvas:
+
+
+1) Why don't you use a wxScrolledWindow, or at least wxPython scrollbars?
+
+I'm not using a wxScrolledWindow or wxScrollBars for two reasons:
+
+  1) When you scroll with scrollbars, the window receives Paint events
+  often as you scroll. As I often use the FloatCanvas for lots of
+  objects that take a while to draw, the re-drawing can't keep
+  up. Using the "Panning" tool, means that you only re-draw after moving
+  as far as you're going to.
+
+  2) The limits of the objects are not pre-defined. There is a Bounding
+  Box calculated, that is used for the ZoomToBB method, but with the
+  present system, you can scroll outside of that Bounding box, and add
+  objects there, or whatever.
+
+However, The scrolling of the FloatCanvas itself is independent of the
+UI used to scroll it. In the demo, the scrolling is handled by the
+NavCanvas. One could put a FloatCanvas on a window and attach scrollbars
+to it if you wanted, and it very well might make sense for some
+applications. If you do, give me a demo, and I'll include it.
+
+2) Can I put a FloatCanvas on another windows, such a wx.SplitterWindow,
+or does it need to create it's own Frame?
+
+It should be able to be put anywhere a wx.Panel can be.
+
+It does not always create it's own Frame. That's how I originally wrote
+it, but I re-factored it while back. 
+
+DrawFrame is just what it says: A Frame. If you look at the DrawFrame
+code, you'll see that it creates a frame, and puts a NavCanvas on
+it. You just need to put the NavCanvas on your SplitterWindow. DrawFrame
+provides a few other things, like menus and all, but the basics are
+provided by NavCanvas.
+
+You can also use a raw FloatCanvas, which is the same thing, but without
+the button bar for Zoom, pan, etc, so you'd need to provide you're own
+way to navigate.
+
