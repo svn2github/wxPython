@@ -246,6 +246,9 @@ class GUIMove(GUIBase):
             dc.EndDrawing()
 
     def OnWheel(self, event):
+        """
+           By default, zoom in/out by a 0.1 factor per Wheel event.
+        """
         if event.GetWheelRotation() < 0:
             self.parent.Zoom(0.9)
         else:
