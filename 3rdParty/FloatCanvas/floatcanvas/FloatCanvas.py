@@ -67,7 +67,7 @@ EVT_MOUSEWHEEL = wx.PyEventBinder(EVT_FC_MOUSEWHEEL)
 
 class _MouseEvent(wx.PyCommandEvent):
 
-    """
+    """!
 
     This event class takes a regular wxWindows mouse event as a parameter,
     and wraps it so that there is access to all the original methods. This
@@ -104,7 +104,7 @@ class _MouseEvent(wx.PyCommandEvent):
 
 def _cycleidxs(indexcount, maxvalue, step):
 
-    """
+    """!
     Utility function used by _colorGenerator
 
     """
@@ -117,7 +117,7 @@ def _cycleidxs(indexcount, maxvalue, step):
 
 def _colorGenerator():
 
-    """
+    """!
 
     Generates a series of unique colors used to do hit-tests with the Hit
     Test bitmap
@@ -143,15 +143,27 @@ def _colorGenerator():
     return _cycleidxs(indexcount=3, maxvalue=256, step=step)
 
 class DrawObject:
-    """
+    """!
     This is the base class for all the objects that can be drawn.
 
     One must subclass from this (and an assortment of Mixins) to create
     a new DrawObject.
 
+      \note This class contain a series of static dictionaries:
+
+      * BrushList
+      * PenList
+      * FillStyleList
+      * LineStyleList
+
+      Is this still necessary?
+
     """
 
     def __init__(self, InForeground  = False, IsVisible = True):
+        """! \param InForeground (bool)
+             \param IsVisible (Bool)
+        """
         self.InForeground = InForeground
 
         self._Canvas = None
@@ -223,8 +235,9 @@ class DrawObject:
             }
 
     def BBFromPoints(self, Points):
-        """
+        """!
         Calculates a Bounding box from a set of points (NX2 array of coordinates)
+        \param Points (array?) 
         """
 
         ## fixme: this could be done with array.min() and vstack() in numpy.
@@ -320,9 +333,13 @@ class DrawObject:
             self.InForeground = True
 
     def Hide(self):
+        """! \brief Make an object hidden.
+        """
         self.Visible = False
 
     def Show(self):
+        """! \brief Make an object visible on the canvas.
+        """
         self.Visible = True
 
 class Group(DrawObject): 
