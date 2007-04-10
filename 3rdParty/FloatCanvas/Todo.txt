@@ -1,16 +1,30 @@
 Notes on stuff to do on the FloatCanvas Project:
 
+* change font size scaling -- they are too small on OS-X!
+
+* make sure EVT_ERASE_BACKGOUND is being caught when it should -- maybe some flicker reduction will result!
+
+
 * Break out FloatCanvas.py into more modules:
+
   - One for Events?
+
   - One for DrawObjects
+
   - ???
+
 
 * Add a demo of the Grid to the main demo
 
+
 * Add a group demo to the main demo.
 
+
+
 * Make a "Relative Group" object -- with the coordinates relative to the group,
+
   rather thn world coords.
+
 
 * Keep track of the part of the BB that gets uncovered in a MoveImage
   call, so it only draws what you need to. also have MoveImage blit the
@@ -121,5 +135,3 @@ draw. This would let us make the Grid objects just a special kind of
 DrawObject that could be anywhere in the Z-order. Would this slow down
 the check too much?
 
-
-* Setup TRAC

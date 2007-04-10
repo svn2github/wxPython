@@ -6,6 +6,9 @@ Module that holds the GUI modes used by FloatCanvas
 
 Note that this can only be imported after a wx.App() has been created.
 
+This approach was inpired by Christian Blouin, who also wrote the initial
+version of the code.
+
 """
 
 import wx
@@ -57,34 +60,24 @@ class GUIBase:
     # Handlers
     def OnLeftDown(self, event):
         pass
-
     def OnLeftUp(self, event):
         pass
-
     def OnLeftDouble(self, event):
         pass
-
     def OnRightDown(self, event):
         pass
-
     def OnRightUp(self, event):
         pass
-
     def OnRightDouble(self, event):
         pass
-
     def OnMiddleDown(self, event):
         pass
-
     def OnMiddleUp(self, event):
         pass
-
     def OnMiddleDouble(self, event):
         pass
-
     def OnWheel(self, event):
         pass
-
     def OnMove(self, event):
         pass
             

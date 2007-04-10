@@ -40,7 +40,6 @@ class NavCanvas(wx.Panel):
                    size = wx.DefaultSize,
                    **kwargs): # The rest just get passed into FloatCanvas
         wx.Panel.__init__(self, parent, id, size=size)
-        
 
         self.BuildToolbar()
         ## Create the vertical sizer for the toolbar and Panel
@@ -52,11 +51,13 @@ class NavCanvas(wx.Panel):
 
         self.SetSizerAndFit(box)
 
+
         import GUIMode # here so that it doesn't get imported before wx.App()
         self.GUIZoomIn  =  GUIMode.GUIZoomIn(self.Canvas)
         self.GUIZoomOut =  GUIMode.GUIZoomOut(self.Canvas)
         self.GUIMove    =  GUIMode.GUIMove(self.Canvas)
         self.GUIMouse   =  GUIMode.GUIMouse(self.Canvas)
+
 
         # default to Mouse mode
         #self.ToolBar.ToggleTool(ID_POINTER_BUTTON, 1)
@@ -69,7 +70,6 @@ class NavCanvas(wx.Panel):
     def BuildToolbar(self):
         tb = wx.ToolBar(self)
         self.ToolBar = tb
-
         tb.SetToolBitmapSize((24,24))
 
         self.PointerTool = tb.AddRadioTool(wx.ID_ANY, bitmap=Resources.getPointerBitmap(), shortHelp = "Pointer")
@@ -91,16 +91,28 @@ class NavCanvas(wx.Panel):
         self.ZoomButton.Bind(wx.EVT_BUTTON, self.ZoomToFit)
 
         tb.Realize()
-        # fixme: why was this there is it needed on some platfroms?
-        #S = tb.GetSize()
-        #tb.SetSizeHints(*S)#[0],S[1])
+        ## fixme: remove this when the bug is fixed!
+        wx.CallAfter(self.HideShowHack) # this required on wxPython 2.8.1 onm OS-X
+
         return tb
 
+    def HideShowHack(self):
+        ##fixme: remove this when the bug is fixed!
+        """
+        Hack to hide and show button on toolbar to get around OS-X bug on
+        wxPython2.8 on OS-X
+        """
+        self.ZoomButton.Hide()
+        self.ZoomButton.Show()
+
     def SetMode(self, Mode):
+
         self.Canvas.SetMode(Mode)
 
 
     def ZoomToFit(self,Event):
+
         self.Canvas.ZoomToBB()
+
         self.Canvas.SetFocus() # Otherwise the focus stays on the Button, and wheel events are lost.
 

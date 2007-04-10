@@ -92,6 +92,6 @@ Chris.Barker@noaa.gov
 
 """
 
-__version__ = "0.9.17"
+__version__ = "0.9.18a"
 
 

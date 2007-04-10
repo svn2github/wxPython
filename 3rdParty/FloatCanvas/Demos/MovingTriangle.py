@@ -127,6 +127,7 @@ class DrawFrame(wx.Frame):
         return None
 
     def TriHit(self, object):
+    	print "In TriHit"
         if not self.Moving:
             self.Moving = True
             self.StartPoint = object.HitCoordsPixel

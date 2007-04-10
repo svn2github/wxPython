@@ -8,13 +8,15 @@ NavCanvas
 
 import wx
 
+app = wx.App(0)
+
 try:
     # See if there is a local copy
     import sys
     sys.path.append("../")
     from floatcanvas import NavCanvas, FloatCanvas, GUIMode
 except ImportError:
-    from wx.lib.floatcanvas import NavCanvas, FloatCanvas
+    from wx.lib.floatcanvas import NavCanvas, FloatCanvas, GUIMode
 
 class TestFrame(wx.Frame):
     
@@ -26,7 +28,6 @@ class TestFrame(wx.Frame):
         # Layout
         MainSizer = wx.BoxSizer(wx.VERTICAL)
         MainSizer.Add(self.canvas, 4, wx.EXPAND)
-        
         self.SetSizer(MainSizer)
         
         self.canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftDown)
@@ -38,19 +39,11 @@ class TestFrame(wx.Frame):
         
         wx.CallAfter(self.canvas.ZoomToBB)
                         
-
     def OnLeftDown(self, event):
         print 'Left Button clicked at:', event.Coords
 
-class App1(wx.App):
-
-    def OnInit(self):
-        frame = TestFrame(None, title="Mouse Event Tester")
-        frame.Show(True)
-        self.SetTopWindow(frame)
-        return True
-    
-app = App1(0)
-
+frame = TestFrame(None, title="Mouse Event Tester")
+#self.SetTopWindow(frame)
+frame.Show(True)
 app.MainLoop()
 

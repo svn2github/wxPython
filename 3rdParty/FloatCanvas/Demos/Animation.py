@@ -19,6 +19,7 @@ from floatcanvas import NavCanvas, FloatCanvas
 # import installed version
 # from wx.lib.floatcanvas import FloatCanvas, NavCanvas
 
+
 ID_DRAW_BUTTON = 100
 ID_QUIT_BUTTON = 101
 ID_CLEAR_BUTTON = 103

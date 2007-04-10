@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 
 try:
     import numpy as N
@@ -1004,7 +1004,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           Family = wx.ROMAN,
                                           Style = wx.NORMAL,
                                           Weight = wx.NORMAL,
-                                          Underline = False,
+                                          Underlined = False,
                                           Position = 'br',
                                           Alignment = "left",
                                           InForeground = False)
@@ -1052,7 +1052,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           Family = wx.TELETYPE,
                                           Style = wx.NORMAL,
                                           Weight = wx.NORMAL,
-                                          Underline = False,
+                                          Underlined = False,
                                           Position = 'cr',
                                           Alignment = "left",
                                           InForeground = False)
@@ -1070,7 +1070,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           Family = wx.TELETYPE,
                                           Style = wx.NORMAL,
                                           Weight = wx.NORMAL,
-                                          Underline = False,
+                                          Underlined = False,
                                           Position = 'cl',
                                           Alignment = "left",
                                           InForeground = False)
@@ -1091,7 +1091,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           Family = wx.TELETYPE,
                                           Style = wx.NORMAL,
                                           Weight = wx.NORMAL,
-                                          Underline = False,
+                                          Underlined = False,
                                           Position = 'tc',
                                           Alignment = "left",
                                           InForeground = False)
@@ -1109,7 +1109,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           Family = wx.TELETYPE,
                                           Style = wx.NORMAL,
                                           Weight = wx.NORMAL,
-                                          Underline = False,
+                                          Underlined = False,
                                           Position = 'bc',
                                           Alignment = "left",
                                           InForeground = False)
@@ -1758,8 +1758,8 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
 if __name__ == "__main__":
 
     # running stand alone, Use wxversion:
-    import wxversion
-    wxversion.select("2.6")
+#    import wxversion
+#    wxversion.select("2.6")
 #    wxversion.select("2.8")
     import wx
    

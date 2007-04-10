@@ -1,88 +1,70 @@
-The Change Log for FloatCanvas.
+The Change Log for FloatCanvas. 4/09/2007
+
+* A bunch of merging of changes into the SVN version Christian set up
+
+* Changed the keyword "underline" to "underlined" everywhere in the
+various font code.  -- there was a mixture before.
+
+3/06/2007 * Update for wxPython 2.8.1 - Added a hack to get around
+toolbar bug with 2.8.1 on OS-X -
+
+-2/13/2007
+
+* Fixed a bug where GUI.UpdateScreen was called on None.
+
+* Fixed a bug in Demos/MouseTest.py -- GUIMode can't be imported until
+after a wx.App is created.
 
 
 *****Release 0.9.17*****
 
--1/19/2007
-Only fully tested and working with wxPython2.6
+-1/19/2007 * Only fully tested and working with wxPython2.6
 
-Tested with wxPython 2.8 on OS-X: Hit-testing doesn't work, I expect that it's a change in teh binary format of the off-screen bitmap
-Also the "Zoom To Fit" button isn't showing up in teh toolbar of NavCanvas.
+* Tested with wxPython 2.8 on OS-X: Hit-testing doesn't work, I expect
+that it's a change in the binary format of the off-screen bitmap Also
+the "Zoom To Fit" button isn't showing up in the toolbar of NavCanvas.
 
 It's been a while -- I hope I catch them all:
 
-*Refactored the way Mouse events are handled. There is now a GUIMode 
+*Refactored the way Mouse events are handled. This was inspired, and
+some of the code written, but Christian Blouin. There is now a GUIMode
+module that holds a set of classes for handling all the mouse events. So
+now the FloatCanvas.SetMode() method takes a GUIMode object as input,
+rather than a string. To impliment your own GUI modes, you can create a
+new GUIMode object, subclassed from GUIMode.GUIBase, or one of the
+existing modes, changing only those handlers that you want to change.
+The hope is that this will make it easier to make apps that allow the
+user to interact with the canvas: simply set up a new GUI mode that does
+what you want. Unfortuately, I haven't integrated that into any of the
+demos yet!
 
-module that holds a set of classes for handling all the mouse events. 
-
-So now the FloatCanvas.SetMode() method takes a GUIMode object as 
-
-input, rather than a string. To impliment your own GUI modes, you can 
-
-create a new GUIMode object, subclassed from GUIMode.GUIBase, or one 
-
-of the existing modes, changing only those handlers that you want to 
-
-change. The hope is that this will make it easier to make apps that 
-
-allow the user to interact with the canvas: simply set up 
-
-a new GUI mode that does what you want. Unfortuately, I haven't 
-
-integrated that into any of the demos yet!
-
-
-
-* Changed the default ZoomIn, ZoomOut, and Move modes so that the 
-
-mouse wheel zooms in and out -- kind of like Google Earth.
-
-
+* Changed the default ZoomIn, ZoomOut, and Move modes so that the mouse
+wheel zooms in and out -- kind of like Google Earth.
 
 * Completed the transition to numpy 1.*
 
-
-
 * The mouse move event is always raised in the standard GUI modes.
 
-
-
-* Cleaned up the NavCanvas code a lot: RadioTool, lamdas to pass the modes, etc.
-
-
+* Cleaned up the NavCanvas code a lot: RadioTool, lamdas to pass the
+modes, etc.
 
 * Added an AddObjects() method
 
-
-
 * Added a Merge() method to the bounding box class
 
+* Added a Group DrawObject class -- it take a sequence of DrawObjects,
+and that can then be treated as one, at least with .Visible, SetColor
+etc. I'd like to make this more full featured. Inparticular, make a
+Relative version, that would have all the coords relative to the group,
+rather than world coords.
 
+* Add a set of Setcolor() etc. methods to the DrawObject base class, so
+that every DrawObject will at least have an empty method there. This
+allows code to loop through lsits of DrawObjects and set properties.
 
-* Added a Group DrawObject class -- it take a sequence of DrawObjects, and 
-
-  that can then be treated as one, at least with .Visible, SetColor 
-
-  etc. I'd like to make this more full featured. Inparticular, make a 
-
-  Relative version, that would have all the coords relative to the group, 
-
-  rather than world coords.
-
-
-* Add a set of Setcolor() etc. methods to the DrawObject base class, so that 
-
-  every DrawObject will at least have an empty method there. This allows code 
-
-  to loop through lsits of DrawObjects and set properties.
-
-
-
-* Moved the enheritance order of all the DrawObjects, inheriting DrawObject 
-
-  last, to make sure that any method overridden in the mixins will be used.
-
-
+* Moved the enheritance order of all the DrawObjects, inheriting
+DrawObject last, to make sure that any method overridden in the mixins
+will be used.
 
 -10/05/2006
 
@@ -94,11 +76,11 @@ inputs, so it will efficiently convert other arrays.
 
 -8/16/2006
 
-* Edited to support numpy 1.0beta (and future numpys, I
-hope). FloatCanvas now requires numpy -- keeping Numeric an numarray
-support just didn't seem worth it. However, you should still be able
-touse either of those in your user code, and numpy will use the array
-inteface to efficiently transfer data. I'm not testing this, however.
+* Edited to support numpy 1.0beta (and future numpys, I hope).
+FloatCanvas now requires numpy -- keeping Numeric an numarray support
+just didn't seem worth it. However, you should still be able touse
+either of those in your user code, and numpy will use the array inteface
+to efficiently transfer data. I'm not testing this, however.
 
 -8/14/2006
 
@@ -139,8 +121,8 @@ correct if the height or width was < 0
 
 * Added FloatCanvas.MinScale and FloatCanvas.MaxScale attributes. They
 default to None. If not None, they set the max and min scale factor when
-zooming, so you can't zoom beyond that limit. Scale is the multiplier
-to go from world to pixel units. Trial and error is probably the easiers
+zooming, so you can't zoom beyond that limit. Scale is the multiplier to
+go from world to pixel units. Trial and error is probably the easiers
 way to figure out what makes sense for your app.
 
 * Removed the __getattr__ method from NavCanvas. Now you need to
@@ -148,8 +130,8 @@ reference the Canvas in the NavCanvas explicitly. This allows ordinary
 attribute setting and getting.
 
 * Re-factored to put all the initialization of attributes in an
-InitAll() method. FloatCanvas.InitAll() can now be called to re-set the Canvas to
-defaults. (and remove all DrawObjects)
+InitAll() method. FloatCanvas.InitAll() can now be called to re-set the
+Canvas to defaults. (and remove all DrawObjects)
 
 
 
@@ -159,7 +141,7 @@ defaults. (and remove all DrawObjects)
 with a sample grid object. It can be done by adding a Grid object to one
 (or both) of:
 
-FloatCanvas.GridUnder and/or FloatCanvas.GridOver 
+FloatCanvas.GridUnder and/or FloatCanvas.GridOver
 
 A DotGrid class is provided as an example. See Demos/GridDemo.py for an
 example of use.
@@ -176,7 +158,7 @@ HitTest dictionary, instead of wx.Color.Red(), etc....
 
 * changed the numpy (etc) import to:
 
-  import numpy as N
+import numpy as N
 
 * added an ArrowLine object
 
@@ -184,36 +166,34 @@ HitTest dictionary, instead of wx.Color.Red(), etc....
 
 -1/17/2006
 
-* A few changes to the Onsize() routine, so that the building of
-  buffers is more modular, and only what needs doing is done. Fixed a
-  bug on OS-X when trying to make a (0,0) sized bitmap
+* A few changes to the Onsize() routine, so that the building of buffers
+is more modular, and only what needs doing is done. Fixed a bug on OS-X
+when trying to make a (0,0) sized bitmap
 
 * Added a maximum latitude for the flat earth projection.
 
 -1/04/2006
 
 * Added a "log" to the demo, so that events can make changes to the log,
-  rather than just printing to the console.
+rather than just printing to the console.
 
-  Made all the print commands for hit test, etc, all go there.
+Made all the print commands for hit test, etc, all go there.
 
 -9/14/2005
 
 Added SquarePoint to demo
 
--8/09/2005
-Finished fixing the demo, so that it works with the API change of all x,y
-pairs being passed in as a pair (see next entry)
+-8/09/2005 Finished fixing the demo, so that it works with the API
+change of all x,y pairs being passed in as a pair (see next entry)
 
 Fixed a bug in the Circle object, forcing float division in calculating
 coordinates from the center and diameter. Also added a "from __future__
 import division" call so that that won't happen again.
 
--6/10/2005
-Changed all DrawObjects to take an (x,y) pair rather than individual x,y
-parameters. Also changed rectangles and ellipses to take (w,h)
-pair. This is an API change, but should be easy to accomidate, all you
-need to do is add a parenthesis pair:
+-6/10/2005 Changed all DrawObjects to take an (x,y) pair rather than
+individual x,y parameters. Also changed rectangles and ellipses to take
+(w,h) pair. This is an API change, but should be easy to accomidate, all
+you need to do is add a parenthesis pair:
 
 (...x, y, ...) --->  (...(x,y), ...)
 
@@ -226,9 +206,8 @@ under the File->SavePNG menu item.
 Added a "Visible" attribute, so that objects can be shown or not without
 removing them from the Canvas. The constructor has a new parameter:
 IsVisible, that defaults to True. To change after constructing, there
-are two new DrawObject methods:
-   Show() and Hide()
-There is a simple demo of this in the Demo, under the Tests-->Hide menu
+are two new DrawObject methods: Show() and Hide() There is a simple demo
+of this in the Demo, under the Tests-->Hide menu
 
 
 -6/01/2005
@@ -267,7 +246,8 @@ right-left with wheel+ctrl
 
 -7/16/2004
 
-* Moved a few more methods into the XYObjectMixin and the PointsObjectMixin
+* Moved a few more methods into the XYObjectMixin and the
+PointsObjectMixin
 
 * Changed PointSet to use DrawEllipseList.. quite a bit faster for
 anything more than 100 points.
@@ -281,11 +261,13 @@ Color, line and fill styles, etc.
 
 -6/04/2004
 
-* Removed an extra Yield() call--fixing a wierd bug with re-sizing breaking 
+* Removed an extra Yield() call--fixing a wierd bug with re-sizing
+breaking
 
 -6/03/2004
 
-* make it work with numarray: NOTE: it is a LOT slower (2.5 - 10 times slower!)
+* make it work with numarray: NOTE: it is a LOT slower (2.5 - 10 times
+slower!)
 
 * Re-integrate it with the wxPython demo
 
@@ -305,10 +287,10 @@ Mac-one or the other!
 
 * Use fixdc.py, so that it conforms to future wx.DC API
 
-* The Demo now tries to import the floatcanvas package, and it if
-fails, it specifically imports the wxPython.lib version
+* The Demo now tries to import the floatcanvas package, and it if fails,
+it specifically imports the wxPython.lib version
 
-* Get it working with 2.5. 
+* Get it working with 2.5.
 
 * Added a bunch of optimizations suggested by Leo Kreymborg
 
