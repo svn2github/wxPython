@@ -1,6 +1,8 @@
 Notes on stuff to do on the FloatCanvas Project:
 
-* change font size scaling -- they are too small on OS-X!
+* fix hit-test bug on OS-X!
+
+* change font size scaling -- they are too small on OS-X! Maybe do a GetTextExtetnt on a "X", and go from there.
 
 * make sure EVT_ERASE_BACKGOUND is being caught when it should -- maybe some flicker reduction will result!
 

@@ -12,9 +12,8 @@ import wx
 
 ## import the local version
 import sys
-sys.path.append("../")
+sys.path.append("..")
 from floatcanvas import NavCanvas, FloatCanvas
-
 
 import numpy as N
     
@@ -53,7 +52,7 @@ class DrawFrame(wx.Frame):
                                       Family = wx.ROMAN,
                                       Style = wx.NORMAL,
                                       Weight = wx.NORMAL,
-                                      Underline = False,
+                                      Underlined = False,
                                       Position = 'br',
                                       Alignment = "left",
                                       InForeground = False)
@@ -104,7 +103,7 @@ class DrawFrame(wx.Frame):
                                       Family = wx.TELETYPE,
                                       Style = wx.NORMAL,
                                       Weight = wx.NORMAL,
-                                      Underline = False,
+                                      Underlined = False,
                                       Position = 'cr',
                                       Alignment = "left",
                                       InForeground = False)
@@ -122,7 +121,7 @@ class DrawFrame(wx.Frame):
                                       Family = wx.TELETYPE,
                                       Style = wx.NORMAL,
                                       Weight = wx.NORMAL,
-                                      Underline = False,
+                                      Underlined = False,
                                       Position = 'cl',
                                       Alignment = "left",
                                       InForeground = False)
@@ -143,7 +142,7 @@ class DrawFrame(wx.Frame):
                                       Family = wx.TELETYPE,
                                       Style = wx.NORMAL,
                                       Weight = wx.NORMAL,
-                                      Underline = False,
+                                      Underlined = False,
                                       Position = 'tc',
                                       Alignment = "left",
                                       InForeground = False)
@@ -161,7 +160,7 @@ class DrawFrame(wx.Frame):
                                       Family = wx.TELETYPE,
                                       Style = wx.NORMAL,
                                       Weight = wx.NORMAL,
-                                      Underline = False,
+                                      Underlined = False,
                                       Position = 'bc',
                                       Alignment = "left",
                                       InForeground = False)

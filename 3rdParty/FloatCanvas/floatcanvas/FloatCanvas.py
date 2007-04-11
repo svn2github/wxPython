@@ -132,7 +132,7 @@ def _colorGenerator():
 ##        print "Warning: There have been problems with hit-testing on 16bbp displays"
 ##        step = 8
     if depth >= 24:
-        step = 1
+        step = 100
     else:
         msg= ["ColorGenerator does not work with depth = %s" % depth]
         msg.append("It is required for hit testing -- binding events to mouse")
@@ -250,8 +250,10 @@ class DrawObject:
         self.CallBackFuncs[Event] = CallBackFun
         self.HitAble = True
         self._Canvas.UseHitTest = True
-        if not self._Canvas._HTdc:
-            self._Canvas.MakeNewHTdc()
+        if self.InForeground and self._Canvas._ForegroundHTBitmap is None:
+            self._Canvas.MakeNewHTBitmap()
+        elif self._Canvas._HTBitmap is None:
+            self._Canvas.MakeNewHTBitmap()
         if not self.HitColor:
             if not self._Canvas.HitColorGenerator:
                 self._Canvas.HitColorGenerator = _colorGenerator()
@@ -1973,7 +1975,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
             #fixme: get the shiftfun working!
         else:
             print "Using cached bitmap"
-            ##fixme: The cahced bitmap could be used if the one needed is the same scale, but
+            ##fixme: The cached bitmap could be used if the one needed is the same scale, but
             ##       a subset of the cached one.
             bmp = self.ScaledBitmap[1]
         dc.DrawBitmapPoint(bmp, XYs, True)
@@ -2030,7 +2032,6 @@ class DotGrid:
     def _Draw(self, dc, Canvas):
         Points = self.CalcPoints(Canvas)
 
-        #print Points
         Points = Canvas.WorldToPixel(Points)
 
         dc.SetPen(wx.Pen(self.Color,self.CrossThickness))
@@ -2284,21 +2285,37 @@ class FloatCanvas(wx.Panel):
         """
         This is called in various other places to raise a Mouse Event
         """
-        #print "in Raise Mouse Event", Event
         pt = self.PixelToWorld( Event.GetPosition() )
         evt = _MouseEvent(EventType, Event, self.GetId(), pt)
         self.GetEventHandler().ProcessEvent(evt)
+
+    if wx.__version__ >= "2.8":
+        #print "Using hit test code for 2.8"
+        def GetHitTestColor(self, xy):
+            if self._ForegroundHTBitmap:
+                pdata = wx.AlphaPixelData(self._ForegroundHTBitmap)
+            else:
+                pdata = wx.AlphaPixelData(self._HTBitmap)
+            pacc = pdata.GetPixels()
+            pacc.MoveTo(pdata, xy[0], xy[1])
+            return pacc.Get()[:3]
+    else:
+        #print "using pre-2.8 hit test code"
+        def GetHitTestColor(self,  xy ):
+            dc = wx.MemoryDC()
+            if self._ForegroundHTBitmap:
+                dc.SelectObject(self._ForegroundHTBitmap)
+            else:
+                dc.SelectObject(self._HTBitmap)
+            hitcolor = dc.GetPixelPoint( xy )
+            return hitcolor.Get()
 
     def HitTest(self, event, HitEvent):
         if self.HitDict:
             # check if there are any objects in the dict for this event
             if self.HitDict[ HitEvent ]:
                 xy = event.GetPosition()
-                if self._ForegroundHTdc:
-                    hitcolor = self._ForegroundHTdc.GetPixelPoint( xy )
-                else:
-                    hitcolor = self._HTdc.GetPixelPoint( xy )
-                color = hitcolor.Get()
+                color = self.GetHitTestColor( xy )
                 if color in self.HitDict[ HitEvent ]:
                     Object = self.HitDict[ HitEvent ][color]
                     ## Add the hit coords to the Object
@@ -2316,11 +2333,7 @@ class FloatCanvas(wx.Panel):
                  self.HitDict[EVT_FC_LEAVE_OBJECT ]    )
             ):
             xy = event.GetPosition()
-            if self._ForegroundHTdc:
-                hitcolor = self._ForegroundHTdc.GetPixelPoint( xy )
-            else:
-                hitcolor = self._HTdc.GetPixelPoint( xy )
-            color = hitcolor.Get()
+            color = self.GetHitTestColor( xy )
             OldObject = self.ObjectUnderMouse
             ObjectCallbackCalled = False
             if color in self.HitDict[ EVT_FC_ENTER_OBJECT ]:
@@ -2431,29 +2444,21 @@ class FloatCanvas(wx.Panel):
         else:
             self._ForegroundBuffer = None
         if self.UseHitTest:
-            self.MakeNewHTdc()
+            self.MakeNewHTBitmap()
         else:
-            self._HTdc = None
-            self._ForegroundHTdc = None
+            self._HTBitmap = None
+            self._ForegroundHTBitmap = None
 
-    def MakeNewHTdc(self):
-        ## Note: While it's considered a "bad idea" to keep a
-        ## MemoryDC around I'm doing it here because a wx.Bitmap
-        ## doesn't have a GetPixel method so a DC is needed to do
-        ## the hit-test. It didn't seem like a good idea to re-create
-        ## a wx.MemoryDC on every single mouse event, so I keep it
-        ## around instead
-        self._HTdc = wx.MemoryDC()
+    def MakeNewHTBitmap(self):
+        """
+        Off screen Bitmaps used for Hit tests
+        
+        """
         self._HTBitmap = wx.EmptyBitmap(*self.PanelSize)
-        self._HTdc.SelectObject( self._HTBitmap )
-        self._HTdc.SetBackground(wx.BLACK_BRUSH)
         if self._ForeDrawList:
-            self._ForegroundHTdc = wx.MemoryDC()
             self._ForegroundHTBitmap = wx.EmptyBitmap(*self.PanelSize)
-            self._ForegroundHTdc.SelectObject( self._ForegroundHTBitmap )
-            self._ForegroundHTdc.SetBackground(wx.BLACK_BRUSH)
         else:
-           self._ForegroundHTdc = None
+           self._ForegroundHTBitmap = None
 
     def OnSize(self, event=None):
         self.InitializePanel()
@@ -2529,12 +2534,17 @@ class FloatCanvas(wx.Panel):
         if self._BackgroundDirty or Force:
             dc.SetBackground(self.BackgroundBrush)
             dc.Clear()
-            if self._HTdc:
-                self._HTdc.Clear()
+            if self._HTBitmap is not None:
+                HTdc = wx.MemoryDC()
+                HTdc.SelectObject(self._HTBitmap)
+                HTdc.Clear()
+            else:
+                HTdc = None
             if self.GridUnder is not None:
                 self.GridUnder._Draw(dc, self)
-            self._DrawObjects(dc, self._DrawList, ScreenDC, self.ViewPortBB, self._HTdc)
+            self._DrawObjects(dc, self._DrawList, ScreenDC, self.ViewPortBB, HTdc)
             self._BackgroundDirty = False
+            del HTdc
 
         if self._ForeDrawList:
             ## If an object was just added to the Foreground, there might not yet be a buffer
@@ -2545,21 +2555,22 @@ class FloatCanvas(wx.Panel):
             dc = wx.MemoryDC() ## I got some strange errors (linewidths wrong) if I didn't make a new DC here
             dc.SelectObject(self._ForegroundBuffer)
             dc.DrawBitmap(self._Buffer,0,0)
-            if self._ForegroundHTdc is None:
-                self._ForegroundHTdc = wx.MemoryDC()
-                self._ForegroundHTdc.SelectObject( wx.EmptyBitmap(
-                                                   self.PanelSize[0],
-                                                   self.PanelSize[1]) )
-            if self._HTdc:
-                ## blit the background HT buffer to the foreground HT buffer
-                self._ForegroundHTdc.Blit(0, 0,
-                                          self.PanelSize[0], self.PanelSize[1],
-                                          self._HTdc, 0, 0)
+            if self._ForegroundHTBitmap is not None:
+                ForegroundHTdc = wx.MemoryDC()
+                ForegroundHTdc.SelectObject( self._ForegroundHTBitmap)
+                ForegroundHTdc.Clear()
+                if self._HTBitmap is not None:
+                    #Draw the background HT buffer to the foreground HT buffer
+                    ForegroundHTdc.DrawBitmap(self._HTBitmap, 0, 0)
+            else:
+                ForegroundHTdc = None
             self._DrawObjects(dc,
                               self._ForeDrawList,
                               ScreenDC,
                               self.ViewPortBB,
-                              self._ForegroundHTdc)
+                              ForegroundHTdc)
+            if self._ForegroundHTBitmap is not None:
+                self._ForegroundHTBitmap.SaveFile("Hit.png", wx.BITMAP_TYPE_PNG)
         if self.GridOver is not None:
             self.GridOver._Draw(dc, self)
         ScreenDC.Blit(0, 0, self.PanelSize[0],self.PanelSize[1], dc, 0, 0)
@@ -2568,8 +2579,6 @@ class FloatCanvas(wx.Panel):
         ##fixme: maybe GUIModes should never be None, and rather have a Do-nothing GUI-Mode.
         if self.GUIMode is not None:
             self.GUIMode.UpdateScreen()
-
-            
 
         if self.Debug: print "Drawing took %f seconds of CPU time"%(clock()-start)
 
@@ -2594,7 +2603,7 @@ class FloatCanvas(wx.Panel):
                  BB1[1,1] > BB2[0,1] and BB1[0,1] < BB2[1,1]):
                 redrawlist.append(Object)
         #return redrawlist
-        ##fixme: diabled this!!!!
+        ##fixme: disabled this!!!!
         return DrawList
     _ShouldRedraw = staticmethod(_ShouldRedraw)
 
@@ -2849,7 +2858,6 @@ class FloatCanvas(wx.Panel):
         Blit = ScreenDC.Blit # for speed
         NumBetweenBlits = self.NumBetweenBlits # for speed
         for i, Object in enumerate(self._ShouldRedraw(DrawList, ViewPortBB)):
-            #print "Drawing:", Object
             if Object.Visible:
                 Object._Draw(dc, WorldToPixel, ScaleWorldToPixel, HTdc)
                 if (i+1) % NumBetweenBlits == 0:

@@ -1,5 +1,6 @@
 #!/usr/bin/env python2.4
 
+
 """
 A test and demo of the ScaledTextbox.
 
@@ -7,6 +8,7 @@ It also shows how one can use the Mouse to interact and change objects on a Canv
 
 this really needs to be re-done with GUI-Modes.
 """
+
 
 import wx
 
@@ -26,6 +28,7 @@ LongString = (
 """This is a long string. It is a bunch of text. I am using it to test how the nifty wrapping text box works when you want to re-size.
 
 This is another paragraph. I am trying to make it long enough to wrap a reasonable amount. Let's see how it works.
+
 
     This is a way to start a paragraph with indenting
 """
@@ -60,12 +63,19 @@ class DrawFrame(wx.Frame):
         FloatCanvas.EVT_LEFT_DOWN(self.Canvas, self.OnLeftDown)
 
         Point = N.array((0,0), N.float)
+
         
+
         Canvas.AddCircle(Point,
+
                          Diameter=40,
+
                          FillColor="Red",
+
                          LineStyle=None,
+
                          )
+
         
         Width = 300
         self.Box = Canvas.AddScaledTextBox(LongString,
@@ -81,7 +91,7 @@ class DrawFrame(wx.Frame):
                                       #Family = wx.TELETYPE,
                                       Style = wx.NORMAL,
                                       Weight = wx.NORMAL,
-                                      Underline = False,
+                                      Underlined = False,
                                       Position = 'tl',
                                       LineSpacing = 0.8,     
                                       Alignment = "left",

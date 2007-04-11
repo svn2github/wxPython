@@ -49,7 +49,7 @@ class DrawFrame(wx.Frame):
                                       Family = wx.ROMAN,
                                       Style = wx.NORMAL,
                                       Weight = wx.NORMAL,
-                                      Underline = False,
+                                      Underlined = False,
                                       Position = 'br',
                                       Alignment = "left",
                                       InForeground = False)
