@@ -2569,8 +2569,6 @@ class FloatCanvas(wx.Panel):
                               ScreenDC,
                               self.ViewPortBB,
                               ForegroundHTdc)
-            if self._ForegroundHTBitmap is not None:
-                self._ForegroundHTBitmap.SaveFile("Hit.png", wx.BITMAP_TYPE_PNG)
         if self.GridOver is not None:
             self.GridOver._Draw(dc, self)
         ScreenDC.Blit(0, 0, self.PanelSize[0],self.PanelSize[1], dc, 0, 0)
