@@ -12,9 +12,8 @@ import wx
 
 ## import a local version
 import sys
-sys.path.append("../")
+sys.path.append("..")
 from floatcanvas import NavCanvas, FloatCanvas
-
 
 class DrawFrame(wx.Frame):
 
@@ -38,22 +37,24 @@ class DrawFrame(wx.Frame):
         Canvas = NC.Canvas
         self.Canvas = Canvas
 
-
         FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
 
         Point = (45,40)
-        
+
         ## create a few Objects:
         C = FloatCanvas.Circle((0, 0), 10, FillColor="Red")
         R = FloatCanvas.Rectangle((5, 5),(15, 8), FillColor="Blue")
         E = FloatCanvas.Ellipse((1.5, 1.5), (12, 8), FillColor="Purple")
         C2 = FloatCanvas.Circle((0, 5), 10, FillColor="cyan")
         T = FloatCanvas.Text("Group A", (5.5, 5.5), Position="cc", Size = 16, Weight=wx.BOLD, Family=wx.SWISS)
+
         self.GroupA = FloatCanvas.Group((R,C,E))
         self.GroupA.AddObjects((C2,T))
         Canvas.AddObject(self.GroupA)
+
         
         ## create another Groups of objects
+
         R = FloatCanvas.Rectangle((15, 15),(10, 18), FillColor="orange")
         E = FloatCanvas.Ellipse((22, 28), (12, 8), FillColor="yellow")
         C = FloatCanvas.Circle((25, 20), 15, FillColor="Green")
@@ -64,19 +65,19 @@ class DrawFrame(wx.Frame):
         Canvas.AddObject(self.GroupB)
        
         self.Groups = {"A":self.GroupA, "B":self.GroupB}
-        
-                # Add a couple of tools to the Canvas Toolbar
+
+        # Add a couple of tools to the Canvas Toolbar
+
         tb = NC.ToolBar
-        tb.AddSeparator()
+#        tb.AddSeparator()
 
         for Group in self.Groups.keys():
             Button = wx.Button(tb, wx.ID_ANY, "Hide/Show%s"%Group)
             tb.AddControl(Button)
             print Group
             Button.Bind(wx.EVT_BUTTON, lambda evt, group=Group: self.HideGroup(evt, group))
-
         tb.Realize()
-      
+
         self.Show()
         Canvas.ZoomToBB()
 
@@ -86,7 +87,6 @@ class DrawFrame(wx.Frame):
 
         """
         self.SetStatusText("%.2f, %.2f"%tuple(event.Coords))
-
 
     def HideGroup(self, evt, group=""):
         G = self.Groups[group]

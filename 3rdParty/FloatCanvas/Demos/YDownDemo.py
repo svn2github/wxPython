@@ -1,12 +1,11 @@
 #!/usr/bin/env python2.4
 
 """
-
 This demonstrates how to use FloatCanvas with a coordinate system where
 Y is increased down, instead of up. This is a standard system for
 images, for instance.
 
-Note that there are some problems with doing this for bitmaps and text: things that requiore positioning.
+Note that there are some problems with doing this for bitmaps and text: things that require positioning.
 
 I'm sure it can be fixed, but I don't have a need for it, so I haven't taken the time yet.
 -chb
@@ -20,7 +19,7 @@ import wx
 
 ## import a local version
 import sys
-sys.path.append("../")
+sys.path.append("..")
 from floatcanvas import NavCanvas, FloatCanvas
 
 

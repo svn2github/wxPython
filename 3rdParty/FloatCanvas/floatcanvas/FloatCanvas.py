@@ -132,7 +132,7 @@ def _colorGenerator():
 ##        print "Warning: There have been problems with hit-testing on 16bbp displays"
 ##        step = 8
     if depth >= 24:
-        step = 100
+        step = 1
     else:
         msg= ["ColorGenerator does not work with depth = %s" % depth]
         msg.append("It is required for hit testing -- binding events to mouse")

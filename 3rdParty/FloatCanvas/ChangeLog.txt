@@ -1,5 +1,8 @@
 The Change Log for FloatCanvas. 4/09/2007
 
+* fixed hit-test bug on OS-X! This required a bit of a re-factor,
+  but it works now.
+
 * A bunch of merging of changes into the SVN version Christian set up
 
 * Changed the keyword "underline" to "underlined" everywhere in the

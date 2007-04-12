@@ -4,16 +4,8 @@ A Panel that includes the FloatCanvas and Navigation controls
 """
 
 import wx
-#import GUIMode
 import FloatCanvas, Resources
 
-#~ ID_ZOOM_IN_BUTTON = wx.NewId()
-#~ ID_ZOOM_OUT_BUTTON = wx.NewId()
-#~ ID_MOVE_MODE_BUTTON = wx.NewId()
-#~ ID_POINTER_BUTTON = wx.NewId()
-
-
-#---------------------------------------------------------------------------
 
 class NavCanvas(wx.Panel):
     """
@@ -21,16 +13,6 @@ class NavCanvas(wx.Panel):
 
     This is a high level window that encloses the FloatCanvas in a panel
     and adds a Navigation toolbar.
-
-    Copyright: Christopher Barker
-
-    License: Same as the version of wxPython you are using it with
-
-    Please let me know if you're using this!!!
-
-    Contact me at:
-
-    Chris.Barker@noaa.gov
 
     """
 
@@ -58,14 +40,11 @@ class NavCanvas(wx.Panel):
         self.GUIMove    =  GUIMode.GUIMove(self.Canvas)
         self.GUIMouse   =  GUIMode.GUIMouse(self.Canvas)
 
-
         # default to Mouse mode
-        #self.ToolBar.ToggleTool(ID_POINTER_BUTTON, 1)
         self.ToolBar.ToggleTool(self.PointerTool.GetId(), True)
         self.Canvas.SetMode(self.GUIMouse)
 
         return None
-
 
     def BuildToolbar(self):
         tb = wx.ToolBar(self)
@@ -92,7 +71,7 @@ class NavCanvas(wx.Panel):
 
         tb.Realize()
         ## fixme: remove this when the bug is fixed!
-        wx.CallAfter(self.HideShowHack) # this required on wxPython 2.8.1 onm OS-X
+        wx.CallAfter(self.HideShowHack) # this required on wxPython 2.8.3 on OS-X
 
         return tb
 
@@ -106,13 +85,9 @@ class NavCanvas(wx.Panel):
         self.ZoomButton.Show()
 
     def SetMode(self, Mode):
-
         self.Canvas.SetMode(Mode)
 
-
     def ZoomToFit(self,Event):
-
         self.Canvas.ZoomToBB()
-
         self.Canvas.SetFocus() # Otherwise the focus stays on the Button, and wheel events are lost.
 

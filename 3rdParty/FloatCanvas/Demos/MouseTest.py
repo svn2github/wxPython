@@ -35,7 +35,6 @@ class TestFrame(wx.Frame):
         self.canvas.AddRectangle((10,10), (100, 20), FillColor="red")
         
         self.canvas.SetMode(GUIMode.GUIMouse(self.canvas))
-        #self.canvas.SetMode(GUIMode.GUIZoomIn(self.canvas))
         
         wx.CallAfter(self.canvas.ZoomToBB)
                         

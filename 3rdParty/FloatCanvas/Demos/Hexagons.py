@@ -6,14 +6,12 @@ A simple demo to display a lot of hexagons
 This was an example someone had on the wxPython-users list
 
 """
-import wxversion
-wxversion.select("2.6")
 import wx
 import wx.lib.colourdb
 
 ## import local version:
 import sys
-sys.path.append("../")
+sys.path.append("..")
 from floatcanvas import NavCanvas, FloatCanvas
 
 ## import installed version
@@ -21,22 +19,17 @@ from floatcanvas import NavCanvas, FloatCanvas
 
 NumHexagons = 1000
 
-#from numpy import *
 import numpy as N
 from numpy.random import uniform
 
-
 import  random
-
 import time
 
 class DrawFrame(wx.Frame):
-
     """
     A frame used for the FloatCanvas Demo
 
     """
-
     def __init__(self, *args, **kwargs):
         wx.Frame.__init__(self, *args, **kwargs)
 
@@ -81,8 +74,6 @@ class DrawFrame(wx.Frame):
             #print Points
             cf = random.randint(0,len(self.colors)-1)
             Canvas.AddPolygon(Points, LineColor = None, FillColor = self.colors[cf])
-
-        
 
 app = wx.App(False)
 DrawFrame(None, -1, "FloatCanvas Demo App", wx.DefaultPosition, (700,700) )

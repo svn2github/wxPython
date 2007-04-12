@@ -1,11 +1,9 @@
 #!/usr/bin/env python2.4
 
 """
-
 PolyEditor: a simple app for editing polygons
 
 Used as a demo for FloatCanvas
-
 """
 import numpy as N
 import random
@@ -15,12 +13,12 @@ import numpy.random as RandomArray
 
 # import a local copy:
 import sys
-sys.path.append("../")
+sys.path.append("..")
 from floatcanvas import NavCanvas, FloatCanvas
 
 import wx
 
-ID_ABOUT_MENU = wx.NewId()
+ID_ABOUT_MENU = wx.ID_ABOUT
 ID_ZOOM_TO_FIT_MENU = wx.NewId()
 
 class DrawFrame(wx.Frame):
@@ -185,7 +183,10 @@ class DrawFrame(wx.Frame):
                                                   FillStyle = "CrossHatch",
                                                   InForeground = True)
             # Draw points on the Vertices of the Selected Poly:
-            self.SelectedPoints = Canvas.AddPointSet(Object.Points, Diameter = 4, Color = "Red", InForeground = True)
+            self.SelectedPoints = Canvas.AddPointSet(Object.Points,
+                                                     Diameter = 6,
+                                                     Color = "Red",
+                                                     InForeground = True)
             self.SelectedPoints.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.SelectPointHit)
             Canvas.Draw()
 
@@ -200,7 +201,8 @@ class DrawFrame(wx.Frame):
 
     def SelectPointHit(self, PointSet):
         PointSet.Index = PointSet.FindClosestPoint(PointSet.HitCoords)
-        Index = PointSet.Index
+        print "point #%i hit"%PointSet.Index
+        #Index = PointSet.Index
         self.PointSelected = True
 
 class PolyEditor(wx.App):

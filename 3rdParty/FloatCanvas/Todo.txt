@@ -1,6 +1,8 @@
 Notes on stuff to do on the FloatCanvas Project:
+* still some bugs on OS-X when trying to add stuff to the NavCanvas toolbar
 
-* fix hit-test bug on OS-X!
+* re-factor to use Refresh() and the occasional Update(), rather than a wxClientDC -- this should
+  speed things up, particularly on the Mac.
 
 * change font size scaling -- they are too small on OS-X! Maybe do a GetTextExtetnt on a "X", and go from there.
 
