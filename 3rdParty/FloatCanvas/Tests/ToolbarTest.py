@@ -1,6 +1,8 @@
 """
 A Panel to test RadioTools on a wxToolbar
 
+And test adding tools to a toolbar after the fact.
+
 """
 
 import wx
@@ -69,8 +71,7 @@ class TestCanvas(wx.Panel):
         print "setting mode to:", Mode
 
     def ZoomToFit(self,Event):
-        self.Canvas.ZoomToBB()
-        self.Canvas.SetFocus() # Otherwise the focus stays on the Button, and wheel events are lost.
+        print "Zooming To Fit"
 
 from wx import ImageFromStream, BitmapFromImage
 import cStringIO, zlib

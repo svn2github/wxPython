@@ -39,7 +39,7 @@ class DrawFrame(wx.Frame):
         
         Point = N.array((0,0))
         StartXY = (5,0)
-        EndXY = (0,5)
+        EndXY = (0,4)
         CenterXY = (0, 0)
         
         Arc = FloatCanvas.ArcPoint(StartXY,
@@ -47,7 +47,7 @@ class DrawFrame(wx.Frame):
                                    CenterXY,
                                    LineColor = "Black",
                                    LineStyle = "Solid",
-                                   LineWidth    = 1,
+                                   LineWidth    = 3,
                                    FillColor    = "Red",
                                    FillStyle    = "Solid",
                                    InForeground = False)              
