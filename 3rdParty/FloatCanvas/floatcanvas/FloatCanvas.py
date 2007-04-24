@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from __future__ import division
-#print "Using local FloatCanvas"
 
 try:
     import numpy as N
@@ -9,19 +8,17 @@ except ImportError:
     raise ImportError("I could not import numpy")
 
 from time import clock
+import wx
 
 from Utilities import BBox
 
-import wx
-
-#import GUIMode
 
 ## A global variable to hold the Pixels per inch that wxWindows thinks is in use
 ## This is used for scaling fonts.
 ## This can't be computed on module __init__, because a wx.App might not have initialized yet.
 global ScreenPPI
 
-## a custom Exceptions:
+## Custom Exceptions:
 
 class FloatCanvasError(Exception):
     pass
@@ -86,15 +83,10 @@ class _MouseEvent(wx.PyCommandEvent):
         self._NativeEvent = NativeEvent
         self.Coords = Coords
 
-# I don't think this is used.
-#    def SetCoords(self,Coords):
-#        self.Coords = Coords
-
     def GetCoords(self):
         return self.Coords
 
     def __getattr__(self, name):
-        #return eval(self.NativeEvent.__getattr__(name) )
         return getattr(self._NativeEvent, name)
 
 def _cycleidxs(indexcount, maxvalue, step):
@@ -120,14 +112,7 @@ def _colorGenerator():
     """
 
     depth = wx.GetDisplayDepth()
-    ## the rest of this code should be unnecessary:
-##    if sys.platform == 'darwin':
-##        depth = 24
-##    else:
-##        b = wx.EmptyBitmap(1,1)
-##        depth = b.GetDepth()
-
-    ## there have been problems with 16 bbp displays, to I'm disabling this for now.
+##    ##there have been problems with 16 bbp displays, to I'm disabling this for now.
 ##    if depth == 16:
 ##        print "Warning: There have been problems with hit-testing on 16bbp displays"
 ##        step = 8
@@ -139,7 +124,7 @@ def _colorGenerator():
         msg.append("actions on objects on the Canvas.")
         msg.append("Please set your display to 24bit")
         msg.append("Alternatively, the code could be adapted to 16 bit if that's required")
-        raise Exception(msg)
+        raise FloatCanvasError(msg)
     return _cycleidxs(indexcount=3, maxvalue=256, step=step)
 
 class DrawObject:
@@ -251,7 +236,7 @@ class DrawObject:
         self.HitAble = True
         self._Canvas.UseHitTest = True
         if self.InForeground and self._Canvas._ForegroundHTBitmap is None:
-            self._Canvas.MakeNewHTBitmap()
+            self._Canvas.MakeNewForegroundHTBitmap()
         elif self._Canvas._HTBitmap is None:
             self._Canvas.MakeNewHTBitmap()
         if not self.HitColor:
@@ -854,7 +839,7 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
         self.CalcBoundingBox()
         self.Diameter = Diameter
 
-        self.HitLineWidth = self.MinHitLineWidth
+        self.HitLineWidth = min(self.MinHitLineWidth, Diameter)
         self.SetColor(Color)
 
     def SetDiameter(self,Diameter):
@@ -1893,9 +1878,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         Scales and Draws the entire bitmap.
 
         """
-        print "In _DrawEntireBitmap, self.XY:", self.XY
         XY = WorldToPixel(self.XY)
-        print "PixelXY:", XY
         H = ScaleWorldToPixel(self.Height)[0]
         W = H * (self.bmpWidth / self.bmpHeight)
         if (self.ScaledBitmap is None) or (self.ScaledBitmap[0] != (0, 0, self.bmpWidth, self.bmpHeight, W, H) ):
@@ -2000,6 +1983,18 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
             print "Not Drawing -- no part of image is showing"
 
 class DotGrid:
+    """
+    An example of a Grid Object -- it is set on teh FloatCAnvas with one of: 
+    
+    FloatCanvas.GridUnder = Grid
+    FloatCanvas.GridOver = Grid
+    
+    It will be drawn every time, regardless of the viewport.
+    
+    In its _Draw method, it computes what to draw, given the ViewPortBB
+    of the Canvas it's being drawn on.
+    
+    """
     def __init__(self, Spacing, Size = 2, Color = "Black", Cross=False, CrossThickness = 1):
 
         self.Spacing = N.array(Spacing, N.float)
@@ -2441,8 +2436,14 @@ class FloatCanvas(wx.Panel):
         self._Buffer = wx.EmptyBitmap(*self.PanelSize)
         if self._ForeDrawList:
             self._ForegroundBuffer = wx.EmptyBitmap(*self.PanelSize)
+            if self.UseHitTest:
+                self.MakeNewHTBitmap()
+            else:
+                self._ForegroundHTBitmap = None
         else:
             self._ForegroundBuffer = None
+            self._ForegroundHTBitmap = None
+
         if self.UseHitTest:
             self.MakeNewHTBitmap()
         else:
@@ -2451,19 +2452,23 @@ class FloatCanvas(wx.Panel):
 
     def MakeNewHTBitmap(self):
         """
-        Off screen Bitmaps used for Hit tests
+        Off screen Bitmap used for Hit tests on background objects
         
         """
         self._HTBitmap = wx.EmptyBitmap(*self.PanelSize)
-        if self._ForeDrawList:
-            self._ForegroundHTBitmap = wx.EmptyBitmap(*self.PanelSize)
-        else:
-           self._ForegroundHTBitmap = None
+
+    def MakeNewForegroundHTBitmap(self):
+        ## Note: the foreground and backround HT bitmaps are in separate functions
+        ##       so that they can be created separate --i.e. when a foreground is
+        ##       added after the backgound is drawn
+        """
+        Off screen Bitmap used for Hit tests on foreground objects
+        
+        """
+        self._ForegroundHTBitmap = wx.EmptyBitmap(*self.PanelSize)
 
     def OnSize(self, event=None):
         self.InitializePanel()
-        ## for some reasin, FutureCall didn't work as well.
-        #wx.FutureCall(50, self.OnSizeTimer)
         self.SizeTimer.Start(50, oneShot=True)
 
     def OnSizeTimer(self, event=None):
@@ -2602,7 +2607,7 @@ class FloatCanvas(wx.Panel):
                 redrawlist.append(Object)
         #return redrawlist
         ##fixme: disabled this!!!!
-        return DrawList
+        return redrawlist
     _ShouldRedraw = staticmethod(_ShouldRedraw)
 
     def MoveImage(self,shift,CoordType):
@@ -2623,7 +2628,6 @@ class FloatCanvas(wx.Panel):
         in Floating point world coordinates
 
         """
-
         shift = N.asarray(shift,N.float)
         if CoordType == 'Panel':# convert from panel coordinates
             shift = shift * N.array((-1,1),N.float) *self.PanelSize/self.TransformVector
@@ -2866,7 +2870,7 @@ class FloatCanvas(wx.Panel):
         """
 
         Saves the current image as an image file. The default is in the
-        PNG format. Other formats can be spcified using the wx flags:
+        PNG format. Other formats can be specified using the wx flags:
 
         wx.BITMAP_TYPE_PNG
         wx.BITMAP_TYPE_JPG

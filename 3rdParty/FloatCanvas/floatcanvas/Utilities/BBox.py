@@ -8,6 +8,7 @@ A Bounding Box object and assorted utilities , subclassed from a numpy array
 import numpy as N
 
 class BBox(N.ndarray):
+
     """
     A Bounding Box object:
     
@@ -18,6 +19,7 @@ class BBox(N.ndarray):
      [MaxX, MaxY ]]
 
     It is a subclass of numpy.ndarray, so for the most part it can be used as 
+
     an array, and arrays that fit the above description can be used in it's place.
 
     """
@@ -66,23 +68,42 @@ class BBox(N.ndarray):
             return False
     
     def Merge(self, BB):
+
         """
+
         Joins this bounding box with the one passed in, maybe making this one bigger
+
         
+
         """ 
+
         if BB[0,0] < self[0,0]: self[0,0] = BB[0,0]
+
         if BB[0,1] < self[0,1]: self[0,1] = BB[0,1]
+
         if BB[1,0] > self[1,0]: self[1,0] = BB[1,0]
+
         if BB[1,1] > self[1,1]: self[1,1] = BB[1,1]
+
                               
+
     ### This could be used for a make BB form a bunch of BBs
+
     #~ def _getboundingbox(bboxarray): # lrk: added this
+
         #~ # returns the bounding box of a bunch of bounding boxes
+
         #~ upperleft = N.minimum.reduce(bboxarray[:,0])
+
         #~ lowerright = N.maximum.reduce(bboxarray[:,1])
+
         #~ return N.array((upperleft, lowerright), N.float_)
 
+
+
     #~ _getboundingbox = staticmethod(_getboundingbox)
+
+
 
        
     ## Save the ndarray __eq__ for internal use.
@@ -94,6 +115,7 @@ class BBox(N.ndarray):
         A == B if and only if all the entries are the same
 
         """
+
         return N.all(self.Array__eq__(BB))
         
 

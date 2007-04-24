@@ -289,7 +289,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
 
             """
             
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
 
             Range = (-10,10)
             colors = self.colors
@@ -430,7 +430,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             having to re-draw the whole background.
 
             """
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
             Range = (-10,10)
             self.Range = Range
 
@@ -543,7 +543,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             #print "Did %i frames in %f seconds"%(N, (time.time() - start) )
 
         def TestHitTest(self,event=None):
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
 
             self.UnBindAllMouseEvents()
             Canvas = self.Canvas
@@ -764,7 +764,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.Canvas.ZoomToBB()
 
         def TestHitTestForeground(self,event=None):
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
 
             self.UnBindAllMouseEvents()
             Canvas = self.Canvas
@@ -868,7 +868,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
 
 
         def TestText(self, event= None):
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
 
             self.BindAllMouseEvents()
             Canvas = self.Canvas
@@ -929,7 +929,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.Canvas.ZoomToBB()
 
         def TestScaledText(self, event= None):
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
 
             self.BindAllMouseEvents()
             Canvas = self.Canvas
@@ -984,7 +984,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.Canvas.ZoomToBB()
 
         def TestScaledTextBox(self, event= None):
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
 
             self.UnBindAllMouseEvents()
             Canvas = self.Canvas
@@ -1224,7 +1224,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.Log("I'm the TextBox")
 
         def TestBitmap(self, event= None):
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
 
             self.UnBindAllMouseEvents()
             Canvas = self.Canvas
@@ -1288,7 +1288,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.Canvas.ZoomToBB()
 
         def DrawMap(self,event = None):
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
             import os, time
             
             self.Canvas.InitAll()
@@ -1298,7 +1298,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
         ## Test of Actual Map Data
             #start = time.clock()
             self.Log("Loading Map from a File")
-            wx.GetApp().Yield() # so log text will get displayed now.
+            wx.GetApp().Yield(True) # so log text will get displayed now.
             Shorelines = self.Read_MapGen(os.path.join("data",'world.dat'),stats = 0)
             #print "It took %f seconds to load %i shorelines"%(time.clock() - start,len(Shorelines) )
             #start = time.clock()
@@ -1312,7 +1312,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
 
 
         def LineTest(self,event = None):
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
             import os, time
 #            import random
             colors = self.colors
@@ -1340,7 +1340,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             #print "It took %f seconds to draw %i lines"%(time.clock() - start,len(linepoints) )
 
         def ArrowLineTest(self,event = None):
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
             Canvas = self.Canvas
             Canvas.InitAll()
             #            import os, time
@@ -1368,7 +1368,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             Canvas.ZoomToBB()
 
         def SpeedTest(self,event=None):
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
             BigRange = (-1000,1000)
             colors = self.colors
 
@@ -1390,7 +1390,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             Canvas.ZoomToBB()
 
         def PropertiesChangeTest(self,event=None):
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
 
             Range = (-10,10)
             colors = self.colors
@@ -1532,7 +1532,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.Canvas.Draw(Force = True)
 
         def ArrowTest(self,event=None):
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
             self.UnBindAllMouseEvents()
             Canvas = self.Canvas
 
@@ -1555,10 +1555,12 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
 
             Canvas.AddText("Clickable Arrow", (4,18), Position = "bc")
             Arrow = Canvas.AddArrow((4,18), 80, Direction = 90 ,LineWidth = 3, LineColor = "Red",   ArrowHeadAngle = 30)
+            Arrow.HitLineWidth = 6
             Arrow.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.ArrowClicked)
 
             Canvas.AddText("Changable Arrow: try clicking it", (16,4), Position = "tc")
             self.RotArrow = Canvas.AddArrow((16,4), 80, Direction = 0 ,LineWidth = 3, LineColor = "Green",   ArrowHeadAngle = 30)
+            self.RotArrow.HitLineWidth = 6
             self.RotArrow.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.RotateArrow)
 
             Canvas.ZoomToBB()
@@ -1578,7 +1580,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.Canvas.Draw(Force = True)
 
         def HideTest(self, event=None):
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
 
             self.UnBindAllMouseEvents()
             Canvas = self.Canvas
@@ -1656,7 +1658,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             
             """
             
-            wx.GetApp().Yield()
+            wx.GetApp().Yield(True)
 
             self.UnBindAllMouseEvents()
             Canvas = self.Canvas

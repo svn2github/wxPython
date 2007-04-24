@@ -4,34 +4,26 @@ Notes on stuff to do on the FloatCanvas Project:
 * re-factor to use Refresh() and the occasional Update(), rather than a wxClientDC -- this should
   speed things up, particularly on the Mac.
 
-* change font size scaling -- they are too small on OS-X! Maybe do a GetTextExtetnt on a "X", and go from there.
+* change font size scaling -- they are too small on OS-X! 
 
 * make sure EVT_ERASE_BACKGOUND is being caught when it should -- maybe some flicker reduction will result!
 
 
 * Break out FloatCanvas.py into more modules:
-
   - One for Events?
-
   - One for DrawObjects
-
   - ???
-
 
 * Add a demo of the Grid to the main demo
 
-
 * Add a group demo to the main demo.
-
-
 
 * Make a "Relative Group" object -- with the coordinates relative to the group,
 
   rather thn world coords.
 
-
 * Keep track of the part of the BB that gets uncovered in a MoveImage
-  call, so it only draws what you need to. also have MoveImage blit the
+  call, so it only draws what you need to. Also have MoveImage blit the
   current buffer in the right place first, so that only the part that needs
   to be is blank
 
@@ -63,7 +55,9 @@ Canvas they are on.
   to shift things in the list.
 
 * Use new wx.FontFromPixelSize so that font scaling is consistant
-  across platforms: fonts are TOO SMALL on OS-X now!
+  across platforms: fonts are TOO SMALL on OS-X now! or maybe do a
+  GetTextExtetnt on an "X", and go from there.
+
 * Let the user define ppi, then set properties in points (or inches, or???).
 
 * Refactor the Projection code, to make it more flexible: ultimately

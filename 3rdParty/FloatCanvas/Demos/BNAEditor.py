@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 
-
 """
-
 BNA-Editor: a simple app for editing polygons in BNA files
 
-BNS is a simple text format for storing polygons in lat-long coordinates.
+BNA is a simple text format for storing polygons in lat-long coordinates.
 
 """
 import os, sys
@@ -14,16 +12,14 @@ import sets
 import numpy as N
 
 #### import local version:
-sys.path.append("../")
+sys.path.append("..")
 from floatcanvas import NavCanvas, FloatCanvas
 
 ## import the installed version
 ##from wx.lib.floatcanvas import NavCanvas, FloatCanvas
 import wx
-
-
-
 import sys
+
 if len(sys.argv) > 1:
     StartFileName = sys.argv[1]
 else:
@@ -60,7 +56,7 @@ class BNAData:
                 file.write("%.12f,%.12f\n"%(tuple(p)))
 
     def Load(self, filename):
-        print "Loading:", filename
+        #print "Loading:", filename
         file = open(filename,'rU')
 
         self.Filename = filename
@@ -86,11 +82,7 @@ class BNAData:
         file.close()
         return None
 
-
-
-
 class DrawFrame(wx.Frame):
-
     """
     A frame used for the BNA Editor
 
@@ -104,24 +96,24 @@ class DrawFrame(wx.Frame):
 
         FileMenu = wx.Menu()
 
-        OpenMenu = FileMenu.Append(wx.NewId(), "&Open","Open BNA")
+        OpenMenu = FileMenu.Append(wx.ID_ANY, "&Open","Open BNA")
         self.Bind(wx.EVT_MENU, self.OpenBNA, OpenMenu)
 
-        SaveMenu = FileMenu.Append(wx.NewId(), "&Save","Save BNA")
+        SaveMenu = FileMenu.Append(wx.ID_ANY, "&Save","Save BNA")
         self.Bind(wx.EVT_MENU, self.SaveBNA, SaveMenu)
 
-        CloseMenu = FileMenu.Append(wx.NewId(), "&Close","Close Application")
+        CloseMenu = FileMenu.Append(wx.ID_ANY, "&Close","Close Application")
         self.Bind(wx.EVT_MENU, self.OnQuit, CloseMenu)
 
         MenuBar.Append(FileMenu, "&File")
 
         view_menu = wx.Menu()
-        ZoomMenu = view_menu.Append(wx.NewId(), "Zoom to &Fit","Zoom to fit the window")
+        ZoomMenu = view_menu.Append(wx.ID_ANY, "Zoom to &Fit","Zoom to fit the window")
         self.Bind(wx.EVT_MENU, self.ZoomToFit, ZoomMenu)
         MenuBar.Append(view_menu, "&View")
 
         help_menu = wx.Menu()
-        AboutMenu = help_menu.Append(wx.NewId(), "&About",
+        AboutMenu = help_menu.Append(wx.ID_ANY, "&About",
                                 "More information About this program")
         self.Bind(wx.EVT_MENU, self.OnAbout, AboutMenu)
         MenuBar.Append(help_menu, "&Help")
@@ -139,7 +131,6 @@ class DrawFrame(wx.Frame):
 
         FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
         FloatCanvas.EVT_LEFT_UP(self.Canvas, self.OnLeftUp ) 
-
         FloatCanvas.EVT_LEFT_DOWN(self.Canvas, self.OnLeftDown)
 
         try:
@@ -204,7 +195,6 @@ class DrawFrame(wx.Frame):
     def OnMove(self, event):
         """
         Updates the status bar with the world coordinates
-
         And moves a point if there is one
 
         """
@@ -259,7 +249,7 @@ class DrawFrame(wx.Frame):
         if Object is self.SelectedPolyOrig:
             pass
         else:
-            if self.SelectedPoly:
+            if self.SelectedPoly is not None:
                 self.DeSelectPoly()
             self.SelectedPolyOrig = Object
             self.SelectedPoly = Canvas.AddPolygon(Object.Points,
@@ -273,12 +263,12 @@ class DrawFrame(wx.Frame):
                                                      Diameter = 4,
                                                      Color = "Red",
                                                      InForeground = True)
+            self.SelectedPoints.HitLineWidth = 8 # make it a bit easier to hit
             self.SelectedPoints.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.SelectPointHit)
             Canvas.Draw()
 
     def SelectPointHit(self, PointSet):
         PointSet.Index = PointSet.FindClosestPoint(PointSet.HitCoords)
-        #Index = PointSet.Index
         self.PointSelected = True
 
     def LoadBNA(self, filename):
@@ -294,7 +284,6 @@ class DrawFrame(wx.Frame):
                                        LineWidth = 1,
                                        LineColor = "Black",
                                        FillColor = "Brown",
-                                       ##FillStyle = None)
                                        FillStyle = 'Solid')
                 Poly.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.SelectPoly)
                 Poly.BNAIndex = i
@@ -303,7 +292,7 @@ class DrawFrame(wx.Frame):
             self.ChangedPolys = sets.Set()
             self.AllPolys = AllPolys
         except:
-            raise
+            #raise
             dlg = wx.MessageDialog(None,
                                    'There was something wrong with the selected bna file',
                                    'File Loading Error',
@@ -317,35 +306,6 @@ class BNAEditor(wx.App):
     Once you have a picture drawn, you can zoom in and out and move about
     the picture. There is a tool bar with three tools that can be
     selected. 
-
-    The magnifying glass with the plus is the zoom in tool. Once selected,
-    if you click the image, it will zoom in, centered on where you
-    clicked. If you click and drag the mouse, you will get a rubber band
-    box, and the image will zoom to fit that box when you release it.
-
-    The magnifying glass with the minus is the zoom out tool. Once selected,
-    if you click the image, it will zoom out, centered on where you
-    clicked. (note that this takes a while when you are looking at the map,
-    as it has a LOT of lines to be drawn. The image is double buffered, so
-    you don't see the drawing in progress)
-
-    The hand is the move tool. Once selected, if you click and drag on the
-    image, it will move so that the part you clicked on ends up where you
-    release the mouse. Nothing is changed while you are dragging. The
-    drawing is too slow for that.
-
-    I'd like the cursor to change as you change tools, but the stock
-    wxCursors didn't include anything I liked, so I stuck with the
-    pointer. Please let me know if you have any nice cursor images for me to
-    use.
-
-
-    Any bugs, comments, feedback, questions, and especially code are welcome:
-
-    -Chris Barker
-
-    Chris.Barker@noaa.gov
-
     """
 
     def __init__(self, *args, **kwargs):
@@ -365,7 +325,7 @@ class BNAEditor(wx.App):
         return True
 
 
-app = BNAEditor(0)# put in True if you want output to go to it's own window.
+app = BNAEditor(False)# put in True if you want output to go to it's own window.
 app.MainLoop()
 
     
