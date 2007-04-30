@@ -542,7 +542,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.Timer.Start(self.FrameDelay)
             #print "Did %i frames in %f seconds"%(N, (time.time() - start) )
 
-        def TestHitTest(self,event=None):
+        def TestHitTest(self, event=None):
             wx.GetApp().Yield(True)
 
             self.UnBindAllMouseEvents()
@@ -556,7 +556,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             dx = 80
             dy = 40
             x, y = 20, 20
-            FontSize = 8
+            FontSize = 12
 
             #Add one that is not HitAble
             Canvas.AddRectangle((x,y), (w, h), LineWidth = 2)
@@ -885,29 +885,29 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
 
             # Text
             String = "Some text"
-            self.Canvas.AddText("Top Left",Point,Size = 14,Color = "Yellow",BackgroundColor = "Blue", Position = "tl")
-            self.Canvas.AddText("Bottom Left",Point,Size = 14,Color = "Cyan",BackgroundColor = "Black",Position = "bl")
-            self.Canvas.AddText("Top Right",Point,Size = 14,Color = "Black",BackgroundColor = "Cyan",Position = "tr")
-            self.Canvas.AddText("Bottom Right",Point,Size = 14,Color = "Blue",BackgroundColor = "Yellow",Position = "br")
+            self.Canvas.AddText("Top Left",Point,Size = 16,Color = "Yellow",BackgroundColor = "Blue", Position = "tl")
+            self.Canvas.AddText("Bottom Left",Point,Size = 16,Color = "Cyan",BackgroundColor = "Black",Position = "bl")
+            self.Canvas.AddText("Top Right",Point,Size = 16,Color = "Black",BackgroundColor = "Cyan",Position = "tr")
+            self.Canvas.AddText("Bottom Right",Point,Size = 16,Color = "Blue",BackgroundColor = "Yellow",Position = "br")
             Canvas.AddPointSet((Point), Color = "White", Diameter = 2)
 
             Point  = (3, 2)
 
             Canvas.AddPointSet((Point), Color = "White", Diameter = 2)
-            self.Canvas.AddText("Top Center",Point,Size = 14,Color = "Black",Position = "tc")
-            self.Canvas.AddText("Bottom Center",Point,Size = 14,Color = "White",Position = "bc")
+            self.Canvas.AddText("Top Center",Point,Size = 16,Color = "Black",Position = "tc")
+            self.Canvas.AddText("Bottom Center",Point,Size = 16,Color = "White",Position = "bc")
 
             Point  = (3, 4)
 
             Canvas.AddPointSet((Point), Color = "White", Diameter = 2)
-            self.Canvas.AddText("Center Right",Point,Size = 14,Color = "Black",Position = "cr")
-            self.Canvas.AddText("Center Left",Point,Size = 14,Color = "Black",Position = "cl")
+            self.Canvas.AddText("Center Right",Point,Size = 16,Color = "Black",Position = "cr")
+            self.Canvas.AddText("Center Left",Point,Size = 16,Color = "Black",Position = "cl")
 
             Point  = (3, -2)
 
             Canvas.AddPointSet((Point), Color = "White", Diameter = 2)
             self.Canvas.AddText("Center Center",
-                                Point, Size = 14,
+                                Point, Size = 16,
                                 Color = "Black",
                                 Position = "cc")
 

@@ -16,7 +16,7 @@ from Utilities import BBox
 ## A global variable to hold the Pixels per inch that wxWindows thinks is in use
 ## This is used for scaling fonts.
 ## This can't be computed on module __init__, because a wx.App might not have initialized yet.
-global ScreenPPI
+#global ScreenPPI
 
 ## Custom Exceptions:
 
@@ -1090,7 +1090,7 @@ class TextObjectMixin(XYObjectMixin):
 
     FontList = {}
 
-    LayoutFontSize = 12 # font size used for calculating layout
+    LayoutFontSize = 16 # font size used for calculating layout
 
     def SetFont(self, Size, Family, Style, Weight, Underlined, FaceName):
         self.Font = self.FontList.setdefault( (Size,
@@ -1099,12 +1099,12 @@ class TextObjectMixin(XYObjectMixin):
                                                Weight,
                                                Underlined,
                                                FaceName),
-                                               wx.Font(Size,
-                                                       Family,
-                                                       Style,
-                                                       Weight,
-                                                       Underlined,
-                                                       FaceName) )
+                                               wx.FontFromPixelSize((0.45*Size,Size), # this seemed to give a decent height/width ratio on Windows
+                                                                    Family,
+                                                                    Style,
+                                                                    Weight,
+                                                                    Underlined,
+                                                                    FaceName) )
         return self.Font
 
     def SetColor(self, Color):
@@ -1193,7 +1193,7 @@ class Text(TextObjectMixin, DrawObject, ):
     """
 
     def __init__(self,String, xy,
-                 Size =  12,
+                 Size =  14,
                  Color = "Black",
                  BackgroundColor = None,
                  Family = wx.MODERN,
@@ -1209,7 +1209,7 @@ class Text(TextObjectMixin, DrawObject, ):
         self.String = String
         # Input size in in Pixels, compute points size from PPI info.
         # fixme: for printing, we'll have to do something a little different
-        self.Size = int(round(72.0 * Size/ScreenPPI))
+        self.Size = Size
 
         self.Color = Color
         self.BackgroundColor = BackgroundColor
@@ -1308,7 +1308,10 @@ class ScaledText(TextObjectMixin, DrawObject, ):
 
     """
 
-    def __init__(self, String, XY , Size,
+    def __init__(self,
+                 String,
+                 XY,
+                 Size,
                  Color = "Black",
                  BackgroundColor = None,
                  Family = wx.MODERN,
