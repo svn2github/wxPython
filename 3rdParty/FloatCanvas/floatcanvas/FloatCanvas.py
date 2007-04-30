@@ -16,7 +16,7 @@ from Utilities import BBox
 ## A global variable to hold the Pixels per inch that wxWindows thinks is in use
 ## This is used for scaling fonts.
 ## This can't be computed on module __init__, because a wx.App might not have initialized yet.
-#global ScreenPPI
+global FontScale
 
 ## Custom Exceptions:
 
@@ -1099,12 +1099,14 @@ class TextObjectMixin(XYObjectMixin):
                                                Weight,
                                                Underlined,
                                                FaceName),
-                                               wx.FontFromPixelSize((0.45*Size,Size), # this seemed to give a decent height/width ratio on Windows
-                                                                    Family,
-                                                                    Style,
-                                                                    Weight,
-                                                                    Underlined,
-                                                                    FaceName) )
+                                               #wx.FontFromPixelSize((0.45*Size,Size), # this seemed to give a decent height/width ratio on Windows
+                                               wx.Font(Size, 
+                                                       Family,
+                                                       Style,
+                                                       Weight,
+                                                       Underlined,
+                                                       FaceName) )
+        print "Font is %s in size", self.Font.GetPointSize()
         return self.Font
 
     def SetColor(self, Color):
@@ -1207,9 +1209,9 @@ class Text(TextObjectMixin, DrawObject, ):
         DrawObject.__init__(self,InForeground)
 
         self.String = String
-        # Input size in in Pixels, compute points size from PPI info.
+        # Input size in in Pixels, compute points size from FontScaleinfo.
         # fixme: for printing, we'll have to do something a little different
-        self.Size = Size
+        self.Size = Size * FontScale
 
         self.Color = Color
         self.BackgroundColor = BackgroundColor
@@ -2069,7 +2071,6 @@ class DotGrid:
 
 #---------------------------------------------------------------------------
 class FloatCanvas(wx.Panel):
-    ## fixme: could this be a wx.Window?
     """
     FloatCanvas.py
 
@@ -2155,13 +2156,7 @@ class FloatCanvas(wx.Panel):
 
         wx.Panel.__init__( self, parent, id, wx.DefaultPosition, size)
 
-        ## A global variable to hold the Pixels per inch that wxWindows
-        ## thinks is in use.
-        global ScreenPPI
-        dc = wx.ScreenDC()
-        ScreenPPI = dc.GetPPI()[1] # Pixel height
-        del dc
-
+        self.ComputeFontScale()
         self.InitAll()
 
         self.BackgroundBrush = wx.Brush(BackgroundColor,wx.SOLID)
@@ -2198,6 +2193,17 @@ class FloatCanvas(wx.Panel):
 
 #        self.CreateCursors()
 
+    def ComputeFontScale(self):
+        ## A global variable to hold the scaling from pixel size to point size.
+        global FontScale
+        dc = wx.ScreenDC()
+        dc.SetFont(wx.Font(16, wx.ROMAN, wx.NORMAL, wx.NORMAL))
+        E = dc.GetTextExtent("X")
+        print "A 16 points 'E' is %s pixels in size"%(E,)
+        FontScale = 16/E[1]
+        print "font Scale is %s"%FontScale
+        del dc
+        
     def InitAll(self):
         """
         InitAll() sets everything in the Canvas to default state.
