@@ -12,7 +12,8 @@ version of the code.
 """
 
 import wx
-## fixme: events should live in there own module,so FloatCanvas wouldn't have to be imported here.
+## fixme: events should live in their own module, so all of FloatCanvas
+##        wouldn't have to be imported here.
 import FloatCanvas, Resources
 import numpy as N
 

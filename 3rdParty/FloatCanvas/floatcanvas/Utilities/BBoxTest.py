@@ -21,7 +21,7 @@ class testCreator(unittest.TestCase):
 
     def testDataType(self):
         B = BBox(((0,0),(5,5)))
-        self.failUnless(B.dtype == N.dtype('<f8'))
+        self.failUnless(B.dtype == N.float)
 
     def testShape(self):
         B = BBox((0,0,5,5))
@@ -336,6 +336,20 @@ class testMerge(unittest.TestCase):
         A = self.A.copy()
         A.Merge(self.D)
         self.failUnless(A[0] == self.D[0] and A[1] == self.A[1])
+
+class testBBarray(unittest.TestCase):
+    BBarray = N.array( ( ((-23.5, 456), (56, 532.0)),
+                         ((-20.3, 460), (54, 465  )),
+                         ((-23.5, 456), (58, 540.0)),
+                         ((-26.5,  12), (56, 532.0)),
+                       ),
+                       dtype=N.float)
+    print BBarray
+    BB = asBBox( ((-26.5,  12.), ( 58. , 540.)) )
+
+    def testJoin(self):
+        BB = fromBBArray(self.BBarray)
+        self.failUnless(BB == self.BB, "Wrong BB was created. It was:\n%s \nit should have been:\n%s"%(BB, self.BB))
 
 
 if __name__ == "__main__":

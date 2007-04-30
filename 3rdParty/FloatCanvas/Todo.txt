@@ -4,10 +4,12 @@ Notes on stuff to do on the FloatCanvas Project:
 * re-factor to use Refresh() and the occasional Update(), rather than a wxClientDC -- this should
   speed things up, particularly on the Mac.
 
-* change font size scaling -- they are too small on OS-X! 
+* change font size scaling -- they are too small on OS-X! Maybe
+  use new wx.FontFromPixelSize so that font scaling is consistant
+  across platforms: fonts are TOO SMALL on OS-X now! or maybe do a
+  GetTextExtetnt on an "X", and go from there.
 
 * make sure EVT_ERASE_BACKGOUND is being caught when it should -- maybe some flicker reduction will result!
-
 
 * Break out FloatCanvas.py into more modules:
   - One for Events?
@@ -19,16 +21,15 @@ Notes on stuff to do on the FloatCanvas Project:
 * Add a group demo to the main demo.
 
 * Make a "Relative Group" object -- with the coordinates relative to the group,
-
-  rather thn world coords.
+  rather than world coords.
 
 * Keep track of the part of the BB that gets uncovered in a MoveImage
   call, so it only draws what you need to. Also have MoveImage blit the
   current buffer in the right place first, so that only the part that needs
   to be is blank
 
-* Use the new Bounding Box object everywhere to handle all the BB stuff: look at what
-  MPL has, maybe I can borrow that C++ code to make the BB object faster.
+* look at what MPL has for Bounding Box code, maybe I can borrow that 
+  to make the BB object faster (But first profile to see if there is any point!)
 
 * Can I use PyEventBinder and EvtHandler with the DrawObjects?
 
@@ -54,9 +55,6 @@ Canvas they are on.
   
   to shift things in the list.
 
-* Use new wx.FontFromPixelSize so that font scaling is consistant
-  across platforms: fonts are TOO SMALL on OS-X now! or maybe do a
-  GetTextExtetnt on an "X", and go from there.
 
 * Let the user define ppi, then set properties in points (or inches, or???).
 

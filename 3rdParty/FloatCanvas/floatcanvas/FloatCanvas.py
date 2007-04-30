@@ -219,17 +219,18 @@ class DrawObject:
             "DotDash"    : wx.DOT_DASH,
             }
 
-    def BBFromPoints(self, Points):
-        """!
-        Calculates a Bounding box from a set of points (NX2 array of coordinates)
-        \param Points (array?) 
-        """
-
-        ## fixme: this could be done with array.min() and vstack() in numpy.
-        ##        This could use the Utilities.BBox module now.
-        return N.array( (N.minimum.reduce(Points),
-                         N.maximum.reduce(Points) ),
-                        )
+#    def BBFromPoints(self, Points):
+#        """!
+#        Calculates a Bounding box from a set of points (NX2 array of coordinates)
+#        \param Points (array?) 
+#        """
+#
+#        ## fixme: this could be done with array.min() and vstack() in numpy.
+#        ##        This could use the Utilities.BBox module now.
+#        #return N.array( (N.minimum.reduce(Points),
+#        #                 N.maximum.reduce(Points) ),
+#        #                )
+#        return BBox.fromPoints(Points)
 
     def Bind(self, Event, CallBackFun):
         self.CallBackFuncs[Event] = CallBackFun
@@ -468,6 +469,7 @@ class XYObjectMixin:
     def CalcBoundingBox(self):
         ## This may get overwritten in some subclasses
         self.BoundingBox = N.array( (self.XY, self.XY), N.float )
+        self.BoundingBox = BBox.asBBox((self.XY, self.XY))
 
     def SetPoint(self, xy):
         xy = N.array(xy, N.float)
@@ -496,12 +498,12 @@ class PointsObjectMixin:
         Delta = N.asarray(Delta, N.float)
         Delta.shape = (2,)
         self.Points += Delta
-        self.BoundingBox += Delta##array((self.XY, (self.XY + self.WH)), N.float)
+        self.BoundingBox += Delta
         if self._Canvas:
             self._Canvas.BoundingBoxDirty = True
 
     def CalcBoundingBox(self):
-        self.BoundingBox = self.BBFromPoints(self.Points)
+        self.BoundingBox = BBox.fromPoints(self.Points)
         if self._Canvas:
             self._Canvas.BoundingBoxDirty = True
 
@@ -1028,7 +1030,7 @@ class RectEllipse(XYObjectMixin, LineAndFillMixin, DrawObject):
     def CalcBoundingBox(self):
         # you need this in case Width or Height are negative
         corners = N.array((self.XY, (self.XY + self.WH) ), N.float)
-        self.BoundingBox = self.BBFromPoints(corners)
+        self.BoundingBox = BBox.fromPoints(corners)
         if self._Canvas:
             self._Canvas.BoundingBoxDirty = True
 
@@ -1223,7 +1225,7 @@ class Text(TextObjectMixin, DrawObject, ):
             Weight             =  Font.GetWeight()
         self.SetFont(Size, Family, Style, Weight, Underlined, FaceName)
 
-        self.BoundingBox = N.array((xy, xy),N.float)
+        self.BoundingBox = BBox.asBBox((xy, xy))
 
         self.XY = N.asarray(xy)
         self.XY.shape = (2,)
@@ -1371,7 +1373,7 @@ class ScaledText(TextObjectMixin, DrawObject, ):
         w = w * ScaleFactor
         h = h * ScaleFactor
         x, y = self.ShiftFun(self.XY[0], self.XY[1], w, h, world = 1)
-        self.BoundingBox = N.array(((x, y-h ),(x + w, y)),N.float)
+        self.BoundingBox = BBox.asBBox(((x, y-h ),(x + w, y)))
 
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         (X,Y) = WorldToPixel( (self.XY) )
@@ -1661,7 +1663,7 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
 
         w, h = self.BoxWidth, self.BoxHeight
         x, y = self.ShiftFun(self.XY[0], self.XY[1], w, h, world=1)
-        self.BoundingBox = N.array(((x, y-h ),(x + w, y)),N.float)
+        self.BoundingBox = BBox.asBBox(((x, y-h ),(x + w, y)))
 
     def GetBoxRect(self):
         wh = (self.BoxWidth, self.BoxHeight)
@@ -1731,7 +1733,7 @@ class Bitmap(TextObjectMixin, DrawObject, ):
             self.Bitmap = wx.BitmapFromImage(Bitmap)
 
         # Note the BB is just the point, as the size in World coordinates is not fixed
-        self.BoundingBox = N.array((XY,XY),N.float)
+        self.BoundingBox = BBox.asBBox( (XY,XY) )
 
         self.XY = XY
 
@@ -1791,9 +1793,9 @@ class ScaledBitmap(TextObjectMixin, DrawObject, ):
 
     def CalcBoundingBox(self):
         ## this isn't exact, as fonts don't scale exactly.
-        w,h = self.Width, self.Height
+        w, h = self.Width, self.Height
         x, y = self.ShiftFun(self.XY[0], self.XY[1], w, h, world = 1)
-        self.BoundingBox = N.array(((x, y-h ),(x + w, y)),N.float)
+        self.BoundingBox = BBox.asBBox( ( (x, y-h ), (x + w, y) ) )
 
 
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
@@ -1858,7 +1860,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         ## this isn't exact, as fonts don't scale exactly.
         w,h = self.Width, self.Height
         x, y = self.ShiftFun(self.XY[0], self.XY[1], w, h, world = 1)
-        self.BoundingBox = N.array(((x, y-h ),(x + w, y)),N.float)
+        self.BoundingBox = BBox.asBBox( ((x, y-h ), (x + w, y)) )
 
     def WorldToBitmap(self, Pw):
         """
@@ -2667,7 +2669,7 @@ class FloatCanvas(wx.Panel):
             self.ViewPortCenter = center
         self.SetToNewScale()
 
-    def ZoomToBB(self, NewBB = None, DrawFlag = True):
+    def ZoomToBB(self, NewBB=None, DrawFlag=True):
 
         """
 
@@ -2675,6 +2677,7 @@ class FloatCanvas(wx.Panel):
         box of all the objects on the canvas, if none is given.
 
         """
+        
         if NewBB is not None:
             BoundingBox = NewBB
         else:
@@ -2699,18 +2702,15 @@ class FloatCanvas(wx.Panel):
                     except ZeroDivisionError: #zero size! (must be a single point)
                         self.Scale = 1
 
-            #self.TransformVector = N.array((self.Scale,-self.Scale),N.float)* self.MapProjectionVector
             if DrawFlag:
                 self._BackgroundDirty = True
-                #self.Draw()
-            self.SetToNewScale()
         else:
             # Reset the shifting and scaling to defaults when there is no BB
             self.ViewPortCenter= N.array( (0,0), N.float)
             self.Scale= 1
-            self.SetToNewScale()
+        self.SetToNewScale(DrawFlag=DrawFlag)
 
-    def SetToNewScale(self, DrawFlag = True):
+    def SetToNewScale(self, DrawFlag=True):
         Scale = self.Scale
         if self.MinScale is not None:
             Scale = max(Scale, self.MinScale)
@@ -2725,7 +2725,7 @@ class FloatCanvas(wx.Panel):
 
     def RemoveObjects(self, Objects):
         for Object in Objects:
-            self.RemoveObject(Object, ResetBB = False)
+            self.RemoveObject(Object, ResetBB=False)
         self.BoundingBoxDirty = True
 
     def RemoveObject(self, Object, ResetBB = True):
@@ -2760,22 +2760,14 @@ class FloatCanvas(wx.Panel):
         self.MakeNewBuffers()
         self.HitDict = None
 
-    def _getboundingbox(bboxarray): # lrk: added this
-        # returns the bounding box of a bunch of bounding boxes
-        upperleft = N.minimum.reduce(bboxarray[:,0])
-        lowerright = N.maximum.reduce(bboxarray[:,1])
-        return N.array((upperleft, lowerright), N.float)
-    _getboundingbox = staticmethod(_getboundingbox)
-
     def _ResetBoundingBox(self):
         if self._DrawList or self._ForeDrawList:
-            bboxarray = N.zeros((len(self._DrawList)+len(self._ForeDrawList),
-                               2, 2),N.float)
+            bblist = []
             for (i, obj) in enumerate(self._DrawList):
-                bboxarray[i] = obj.BoundingBox
+                bblist.append(obj.BoundingBox)
             for (j, obj) in enumerate(self._ForeDrawList):
-                bboxarray[i+j+1] = obj.BoundingBox
-            self.BoundingBox = self._getboundingbox(bboxarray)
+                bblist.append(obj.BoundingBox)
+            self.BoundingBox = BBox.fromBBArray(bblist)
         else:
             self.BoundingBox = None
             self.ViewPortCenter= N.array( (0,0), N.float)
@@ -2784,7 +2776,7 @@ class FloatCanvas(wx.Panel):
             self.Scale = 1
         self.BoundingBoxDirty = False
 
-    def PixelToWorld(self,Points):
+    def PixelToWorld(self, Points):
         """
         Converts coordinates from Pixel coordinates to world coordinates.
 
@@ -2792,7 +2784,7 @@ class FloatCanvas(wx.Panel):
         or a NX2 Numpy array of x,y coordinates.
 
         """
-        return  (((N.asarray(Points,N.float) -
+        return  (((N.asarray(Points, N.float) -
                    (self.PanelSize/2))/self.TransformVector) +
                  self.ViewPortCenter)
 

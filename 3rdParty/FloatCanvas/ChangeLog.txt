@@ -1,4 +1,11 @@
-The Change Log for FloatCanvas. 4/09/2007
+The Change Log for FloatCanvas.
+
+-4/25/2007
+
+* Replaced most (all?) of the BoundingBox code in FloatCanvas.py with calls to the BBox module.
+
+
+-4/09/2007
 
 * fixed hit-test bug on OS-X! This required a bit of a re-factor,
   but it works now.
