@@ -874,6 +874,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             Canvas = self.Canvas
             Canvas.InitAll()
             
+            DefaultSize = 12           
             Point  = (3, 0)
 
             ## Add a non-visible rectangle, just to get a Bounding Box
@@ -885,29 +886,29 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
 
             # Text
             String = "Some text"
-            self.Canvas.AddText("Top Left",Point,Size = 16,Color = "Yellow",BackgroundColor = "Blue", Position = "tl")
-            self.Canvas.AddText("Bottom Left",Point,Size = 16,Color = "Cyan",BackgroundColor = "Black",Position = "bl")
-            self.Canvas.AddText("Top Right",Point,Size = 16,Color = "Black",BackgroundColor = "Cyan",Position = "tr")
-            self.Canvas.AddText("Bottom Right",Point,Size = 16,Color = "Blue",BackgroundColor = "Yellow",Position = "br")
+            self.Canvas.AddText("Top Left",Point,Size = DefaultSize,Color = "Yellow",BackgroundColor = "Blue", Position = "tl")
+            self.Canvas.AddText("Bottom Left",Point,Size = DefaultSize,Color = "Cyan",BackgroundColor = "Black",Position = "bl")
+            self.Canvas.AddText("Top Right",Point,Size = DefaultSize,Color = "Black",BackgroundColor = "Cyan",Position = "tr")
+            self.Canvas.AddText("Bottom Right",Point,Size = DefaultSize,Color = "Blue",BackgroundColor = "Yellow",Position = "br")
             Canvas.AddPointSet((Point), Color = "White", Diameter = 2)
 
             Point  = (3, 2)
 
             Canvas.AddPointSet((Point), Color = "White", Diameter = 2)
-            self.Canvas.AddText("Top Center",Point,Size = 16,Color = "Black",Position = "tc")
-            self.Canvas.AddText("Bottom Center",Point,Size = 16,Color = "White",Position = "bc")
+            self.Canvas.AddText("Top Center",Point,Size = DefaultSize,Color = "Black",Position = "tc")
+            self.Canvas.AddText("Bottom Center",Point,Size = DefaultSize,Color = "White",Position = "bc")
 
             Point  = (3, 4)
 
             Canvas.AddPointSet((Point), Color = "White", Diameter = 2)
-            self.Canvas.AddText("Center Right",Point,Size = 16,Color = "Black",Position = "cr")
-            self.Canvas.AddText("Center Left",Point,Size = 16,Color = "Black",Position = "cl")
+            self.Canvas.AddText("Center Right",Point,Size = DefaultSize,Color = "Black",Position = "cr")
+            self.Canvas.AddText("Center Left",Point,Size = DefaultSize,Color = "Black",Position = "cl")
 
             Point  = (3, -2)
 
             Canvas.AddPointSet((Point), Color = "White", Diameter = 2)
             self.Canvas.AddText("Center Center",
-                                Point, Size = 16,
+                                Point, Size = DefaultSize,
                                 Color = "Black",
                                 Position = "cc")
 
