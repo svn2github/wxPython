@@ -1106,8 +1106,6 @@ class TextObjectMixin(XYObjectMixin):
                                                        Weight,
                                                        Underlined,
                                                        FaceName) )
-        print "Font is %s in size", self.Font.GetPointSize()
-        return self.Font
 
     def SetColor(self, Color):
         self.Color = Color
@@ -1373,7 +1371,8 @@ class ScaledText(TextObjectMixin, DrawObject, ):
         dc.SelectObject(bitmap) #wxMac needs a Bitmap selected for GetTextExtent to work.
         DrawingSize = 40 # pts This effectively determines the resolution that the BB is computed to.
         ScaleFactor = float(self.Size) / DrawingSize
-        dc.SetFont(self.SetFont(DrawingSize, self.Family, self.Style, self.Weight, self.Underlined, self.FaceName) )
+        self.SetFont(DrawingSize, self.Family, self.Style, self.Weight, self.Underlined, self.FaceName)
+        dc.SetFont(self.Font)
         (w,h) = dc.GetTextExtent(self.String)
         w = w * ScaleFactor
         h = h * ScaleFactor
@@ -1389,7 +1388,8 @@ class ScaledText(TextObjectMixin, DrawObject, ):
         ## If so, limit it. Would it be better just to not draw it?
         ## note that this limit is dependent on how much memory you have, etc.
         Size = min(Size, self.MaxFontSize)
-        dc.SetFont(self.SetFont(Size, self.Family, self.Style, self.Weight, self.Underlined, self.FaceName))
+        self.SetFont(Size, self.Family, self.Style, self.Weight, self.Underlined, self.FaceName)
+        dc.SetFont(self.Font)
         dc.SetTextForeground(self.Color)
         if self.BackgroundColor:
             dc.SetBackgroundMode(wx.SOLID)
@@ -2199,9 +2199,7 @@ class FloatCanvas(wx.Panel):
         dc = wx.ScreenDC()
         dc.SetFont(wx.Font(16, wx.ROMAN, wx.NORMAL, wx.NORMAL))
         E = dc.GetTextExtent("X")
-        print "A 16 points 'E' is %s pixels in size"%(E,)
         FontScale = 16/E[1]
-        print "font Scale is %s"%FontScale
         del dc
         
     def InitAll(self):
