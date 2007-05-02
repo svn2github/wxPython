@@ -2294,12 +2294,23 @@ class FloatCanvas(wx.Panel):
         self.GetEventHandler().ProcessEvent(evt)
 
     if wx.__version__ >= "2.8":
-        #print "Using hit test code for 2.8"
+        print "Using hit test code for 2.8"
+        DD = wx.GetDisplayDepth()
+        print "DisplayDepth is:", DD
+        if DD == 24:
+            PixelDataFunc = wx.NativePixelData
+        elif DD == 32:
+            PixelDataFunc = wx.AlphaPixelData
+        else:
+            raise RuntimeError("Hit-tesing only works on 24 and 32 bit displays")
+
         def GetHitTestColor(self, xy):
             if self._ForegroundHTBitmap:
-                pdata = wx.AlphaPixelData(self._ForegroundHTBitmap)
+                pdata = self.PixelDataFunc(self._ForegroundHTBitmap)
             else:
-                pdata = wx.AlphaPixelData(self._HTBitmap)
+                pdata = self.PixelDataFunc(self._HTBitmap)
+            if not pdata:
+                raise RuntimeError("Trouble Accessing Hit Test bitmap")
             pacc = pdata.GetPixels()
             pacc.MoveTo(pdata, xy[0], xy[1])
             return pacc.Get()[:3]
@@ -2464,7 +2475,7 @@ class FloatCanvas(wx.Panel):
         Off screen Bitmap used for Hit tests on background objects
         
         """
-        self._HTBitmap = wx.EmptyBitmap(*self.PanelSize)
+        self._HTBitmap = wx.EmptyBitmap(self.PanelSize[0],  self.PanelSize[1], depth=32)
 
     def MakeNewForegroundHTBitmap(self):
         ## Note: the foreground and backround HT bitmaps are in separate functions
@@ -2474,7 +2485,7 @@ class FloatCanvas(wx.Panel):
         Off screen Bitmap used for Hit tests on foreground objects
         
         """
-        self._ForegroundHTBitmap = wx.EmptyBitmap(*self.PanelSize)
+        self._ForegroundHTBitmap = wx.EmptyBitmap(self.PanelSize[0],  self.PanelSize[1], depth=32)
 
     def OnSize(self, event=None):
         self.InitializePanel()

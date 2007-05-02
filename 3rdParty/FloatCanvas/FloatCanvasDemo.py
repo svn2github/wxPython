@@ -874,6 +874,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             Canvas = self.Canvas
             Canvas.InitAll()
             
+
             DefaultSize = 12           
             Point  = (3, 0)
 
