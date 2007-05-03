@@ -2295,29 +2295,20 @@ class FloatCanvas(wx.Panel):
 
     if wx.__version__ >= "2.8":
         HitTestBitmapDepth = 32
-        print "Using hit test code for 2.8"
-        DD = wx.GetDisplayDepth()
-        print "DisplayDepth is:", DD
-        if DD == 24:
-            PixelDataFunc = wx.NativePixelData
-        elif DD == 32:
-            PixelDataFunc = wx.AlphaPixelData
-        else:
-            raise RuntimeError("Hit-tesing only works on 24 and 32 bit displays")
-
+        #print "Using hit test code for 2.8"
         def GetHitTestColor(self, xy):
             if self._ForegroundHTBitmap:
-                pdata = self.PixelDataFunc(self._ForegroundHTBitmap)
+                pdata = wx.AlphaPixelData(self._ForegroundHTBitmap)
             else:
-                pdata = self.PixelDataFunc(self._HTBitmap)
+                pdata = wx.AlphaPixelData(self._HTBitmap)
             if not pdata:
                 raise RuntimeError("Trouble Accessing Hit Test bitmap")
             pacc = pdata.GetPixels()
             pacc.MoveTo(pdata, xy[0], xy[1])
             return pacc.Get()[:3]
     else:
-        #print "using pre-2.8 hit test code"
         HitTestBitmapDepth = 24
+        #print "using pre-2.8 hit test code"
         def GetHitTestColor(self,  xy ):
             dc = wx.MemoryDC()
             if self._ForegroundHTBitmap:
