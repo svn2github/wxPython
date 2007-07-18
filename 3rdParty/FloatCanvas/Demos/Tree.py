@@ -86,8 +86,8 @@ class MovingCircle(FC.Circle, MovingObjectMixin, ConnectorObjectMixin):
 class MovingGroup(FC.Group, MovingObjectMixin, ConnectorObjectMixin):
     
     def GetConnectPoint(self):
-        return self.BoundingBox.sum(0) / 2.0 # note: this is now a Center() property of the BBox object, in SVN
-
+        return self.BoundingBox.Center
+        
 class NodeObject(FC.Group, MovingObjectMixin, ConnectorObjectMixin):
     """
     A version of the moving group for nodes -- an ellipse with text on it.
@@ -116,8 +116,8 @@ class NodeObject(FC.Group, MovingObjectMixin, ConnectorObjectMixin):
         FC.Group.__init__(self, [self.Ellipse, Label], InForeground, IsVisible)
 
     def GetConnectPoint(self):
-        return self.BoundingBox.sum(0) / 2.0 # note: this is now a Center() property of the BBox object, in SVN
-    
+        return self.BoundingBox.Center
+        
 
 class MovingText(FC.ScaledText, MovingObjectMixin, ConnectorObjectMixin):
     """
