@@ -95,7 +95,19 @@ class BBox(N.ndarray):
         if BB[0,1] < self[0,1]: self[0,1] = BB[0,1]
         if BB[1,0] > self[1,0]: self[1,0] = BB[1,0]
         if BB[1,1] > self[1,1]: self[1,1] = BB[1,1]
+
+    def _getWidth(self):
+        return self[1,0] - self[0,0]
+
+    def _getHeight(self):
+        return self[1,1] - self[0,1]
+        
+    Width = property(_getWidth)
+    Height = property(_getHeight)
     
+    def _getCenter(self):
+        return self.sum(0) / 2.0
+    Center = property(_getCenter)
     ### This could be used for a make BB from a bunch of BBs
 
     #~ def _getboundingbox(bboxarray): # lrk: added this

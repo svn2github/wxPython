@@ -233,6 +233,7 @@ class DrawObject:
 #        return BBox.fromPoints(Points)
 
     def Bind(self, Event, CallBackFun):
+        ##fixme: Way too much Canvas Manipulation here!
         self.CallBackFuncs[Event] = CallBackFun
         self.HitAble = True
         self._Canvas.UseHitTest = True
@@ -379,6 +380,37 @@ class Group(DrawObject):
     def SetFillStyle(self, FillStyle):
         for o in self.ObjectList:
             o.SetFillStyle(FillStyle)
+    def Move(self, Delta):
+        for obj in self.ObjectList:
+            obj.Move(Delta)
+
+    def Bind(self, Event, CallBackFun):
+        ## slight variation on DrawObject Bind Method:
+        ## fixme: There is a lot of repeated code from the DrawObject method, but
+        ## it all needs a l ot of cleaning up anyway.
+        self.CallBackFuncs[Event] = CallBackFun
+        self.HitAble = True
+        self._Canvas.UseHitTest = True
+        if self.InForeground and self._Canvas._ForegroundHTBitmap is None:
+            self._Canvas.MakeNewForegroundHTBitmap()
+        elif self._Canvas._HTBitmap is None:
+            self._Canvas.MakeNewHTBitmap()
+        if not self.HitColor:
+            if not self._Canvas.HitColorGenerator:
+                self._Canvas.HitColorGenerator = _colorGenerator()
+                self._Canvas.HitColorGenerator.next() # first call to prevent the background color from being used.
+            # Set all contained objects to the same Hit color:
+            self.HitColor = self._Canvas.HitColorGenerator.next()
+        for obj in self.ObjectList:
+            obj.SetHitPen(self.HitColor, self.HitLineWidth)
+            obj.SetHitBrush(self.HitColor)
+            obj.HitAble = True
+        # put the object in the hit dict, indexed by it's color
+        if not self._Canvas.HitDict:
+            self._Canvas.MakeHitDict()
+        self._Canvas.HitDict[Event][self.HitColor] = (self) # put the object in the hit dict, indexed by it's color 
+
+
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel = None, HTdc=None):
         for obj in self.ObjectList:
             obj._Draw(dc, WorldToPixel, ScaleWorldToPixel, HTdc)
