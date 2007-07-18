@@ -1,17 +1,29 @@
 The Change Log for FloatCanvas.
 
+-7/17/07
+
+* added a few new features to the BBox object.
+
+* added a Bind() method to the Group Object -- it captures events on all
+the objects in the groupo, and returns the group object.
+
+* Added a new demo -- Tree.py. It shows how to make an editable
+hierarchical tree with FloatCanvas.
+
 -4/30/2007
 
 * Replaced most (all?) of the BoundingBox code in FloatCanvas.py with
 calls to the BBox module.
 
-* Changed font code to calculate a font scaling by checking to see how many pixels tall a 
-"X" is. This scaling is used to compute form sizes form teh pixel sizes used internally by
-FloatCanvas. This should make fonts the same pixel size on all machines.
+* Changed font code to calculate a font scaling by checking to see how
+many pixels tall a "X" is. This scaling is used to compute form sizes
+form teh pixel sizes used internally by FloatCanvas. This should make
+fonts the same pixel size on all machines.
 
-I tried to use wx.FontFromPixelSize(), but on MS-Windows you need to specify a width too,
-and even though I found a width/height ratio that was OK, I think all letter were getting
-stretched and didn't look to good. Man, this is harder than it should be!
+I tried to use wx.FontFromPixelSize(), but on MS-Windows you need to
+specify a width too, and even though I found a width/height ratio that
+was OK, I think all letter were getting stretched and didn't look to
+good. Man, this is harder than it should be!
 
 -4/09/2007
 
