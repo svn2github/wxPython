@@ -1,5 +1,13 @@
 The Change Log for FloatCanvas.
 
+-8/27/07
+
+* Added PieChart object to Tests -- should it go in the main package?
+  Thanks for Tim Ansel for writing the first version
+  
+* fixed a bug so that in _ResetBoundingBox, if the overall bounding box
+has no width or height, the BB is set to None.
+
 -7/17/07
 
 * added a few new features to the BBox object.

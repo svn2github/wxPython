@@ -433,7 +433,7 @@ class ColorOnlyMixin:
 class LineOnlyMixin:
     """
 
-    Mixin class for objects that have just one color, rather than a fill
+    Mixin class for objects that have just a line, rather than a fill
     color and line color
 
     """
@@ -500,7 +500,6 @@ class XYObjectMixin:
 
     def CalcBoundingBox(self):
         ## This may get overwritten in some subclasses
-        self.BoundingBox = N.array( (self.XY, self.XY), N.float )
         self.BoundingBox = BBox.asBBox((self.XY, self.XY))
 
     def SetPoint(self, xy):
@@ -2099,6 +2098,87 @@ class DotGrid:
                     for xy in Points:
                         dc.DrawCircle(xy[0],xy[1], radius)
 
+class Arc(XYObjectMixin, LineAndFillMixin, DrawObject):
+    def __init__(self,
+                 StartXY,
+                 EndXY,
+                 CenterXY,
+                 LineColor = "Black",
+                 LineStyle = "Solid",
+                 LineWidth    = 1,
+                 FillColor    = None,
+                 FillStyle    = "Solid",
+                 InForeground = False):               
+        """
+        Draws an arc of a circle, centered on point CenterXY, from
+        the first point (StartXY) to the second (EndXY).
+
+        The arc is drawn in an anticlockwise direction from the start point to
+        the end point.
+        
+        Parameters:
+                 StartXY : start point
+                 EndXY : end point
+                 CenterXY: center point
+                 LineColor = "Black",
+                 LineStyle = "Solid",
+                 LineWidth    = 1,
+                 FillColor    = None,
+                 FillStyle    = "Solid",
+                 InForeground = False):               
+        
+        """
+
+        DrawObject.__init__(self, InForeground)
+       
+        # There is probably a more elegant way to do this next section
+        # The bounding box just gets set to the WH of a circle, with center at CenterXY
+        # This is suitable for a pie chart as it will be a circle anyway
+        radius = N.sqrt( (StartXY[0]-CenterXY[0])**2 + (StartXY[1]-CenterXY[1])**2 )
+        minX = CenterXY[0]-radius
+        minY = CenterXY[1]-radius
+        maxX = CenterXY[0]+radius
+        maxY = CenterXY[1]+radius      
+        XY = [minX,minY]
+        WH = [maxX-minX,maxY-minY]
+
+        self.XY = N.asarray( XY, N.float).reshape((2,))
+        self.WH = N.asarray( WH, N.float).reshape((2,))
+
+        self.StartXY = N.asarray(StartXY, N.float).reshape((2,))
+        self.CenterXY = N.asarray(CenterXY, N.float).reshape((2,))
+        self.EndXY = N.asarray(EndXY, N.float).reshape((2,))
+
+        #self.BoundingBox = array((self.XY, (self.XY + self.WH)), Float)
+        self.CalcBoundingBox()
+       
+        #Finish the setup; allocate color,style etc. 
+        self.LineColor = LineColor
+        self.LineStyle = LineStyle
+        self.LineWidth = LineWidth
+        self.FillColor = FillColor
+        self.FillStyle = FillStyle
+
+        self.HitLineWidth = max(LineWidth,self.MinHitLineWidth)
+
+        self.SetPen(LineColor, LineStyle, LineWidth)
+        self.SetBrush(FillColor, FillStyle)                  #Why isn't this working ???
+
+           
+    def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
+        self.SetUpDraw(dc , WorldToPixel, ScaleWorldToPixel, HTdc)
+        StartXY = WorldToPixel(self.StartXY)
+        EndXY = WorldToPixel(self.EndXY)
+        CenterXY = WorldToPixel(self.CenterXY)
+       
+        dc.DrawArcPoint(StartXY, EndXY, CenterXY)
+        if HTdc and self.HitAble:
+            HTdc.DrawArcPoint(StartXY, EndXY, CenterXY)
+
+    def CalcBoundingBox(self):
+        self.BoundingBox = BBox.asBBox( N.array((self.XY, (self.XY + self.WH) ), N.float) )
+        if self._Canvas:
+            self._Canvas.BoundingBoxDirty = True
 
 
 #---------------------------------------------------------------------------
@@ -2812,6 +2892,7 @@ class FloatCanvas(wx.Panel):
         self.HitDict = None
 
     def _ResetBoundingBox(self):
+        SetToNone=False
         if self._DrawList or self._ForeDrawList:
             bblist = []
             for (i, obj) in enumerate(self._DrawList):
@@ -2819,7 +2900,11 @@ class FloatCanvas(wx.Panel):
             for (j, obj) in enumerate(self._ForeDrawList):
                 bblist.append(obj.BoundingBox)
             self.BoundingBox = BBox.fromBBArray(bblist)
+            if self.BoundingBox.Width == 0 or self.BoundingBox.Height == 0:
+                SetToNone=True
         else:
+            SetToNone=True
+        if SetToNone:
             self.BoundingBox = None
             self.ViewPortCenter= N.array( (0,0), N.float)
             self.TransformVector = N.array( (1,-1), N.float)
