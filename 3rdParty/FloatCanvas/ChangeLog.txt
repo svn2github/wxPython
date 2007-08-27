@@ -2,11 +2,13 @@ The Change Log for FloatCanvas.
 
 -8/27/07
 
-* Added PieChart object to Tests -- should it go in the main package?
+* Added PieChart object to floatcanvas/SpecialObjects, and a deom of it in Demos.
   Thanks for Tim Ansel for writing the first version
   
 * fixed a bug so that in _ResetBoundingBox, if the overall bounding box
 has no width or height, the BB is set to None.
+
+* Added a Arc object to FloatCanvas.
 
 -7/17/07
 
