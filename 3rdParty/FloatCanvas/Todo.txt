@@ -1,10 +1,23 @@
 Notes on stuff to do on the FloatCanvas Project:
-* still some bugs on OS-X when trying to add stuff to the NavCanvas toolbar
 
-* re-factor to use Refresh() and the occasional Update(), rather than a wxClientDC -- this should
-  speed things up, particularly on the Mac.
+* refactor so that object properties are all stored in a dict -- this
+will make it cleaner and easier to update properties, save them, etc.
 
-* make sure EVT_ERASE_BACKGOUND is being caught when it should -- maybe some flicker reduction will result!
+* Add "Offset" value to any object where is makes sense (all XY
+objects?) -- so that they can be drawn relative (in pixels?) to a given
+position.
+
+* Make more "Scaled" and "UnScaled" objects -- maybe make them the
+same, but with a "Scaled" keyword, like the new PieChart object
+
+* still some bugs on OS-X when trying to add stuff to the NavCanvas
+toolbar
+
+* re-factor to use Refresh() and the occasional Update(), rather than a
+wxClientDC -- this should speed things up, particularly on the Mac.
+
+* make sure EVT_ERASE_BACKGOUND is being caught when it should -- maybe
+some flicker reduction will result!
 
 * Break out FloatCanvas.py into more modules:
   - One for Events?

@@ -10,7 +10,7 @@ import wx
 import sys
 sys.path.append("../")
 from floatcanvas import NavCanvas, FloatCanvas
-from floatcanvas.SpecialObjects.PieChart import PieChart
+from floatcanvas.SpecialObjects import PieChart
 
 
 import numpy as N
