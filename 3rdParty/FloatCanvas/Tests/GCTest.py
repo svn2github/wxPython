@@ -6,7 +6,6 @@ A simmple test for GraphicsContext
 """
 import wx
 
-
 class MyFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
         wx.Frame.__init__(self, *args, **kwargs)
@@ -36,6 +35,19 @@ class MyFrame(wx.Frame):
         Brush = GC.CreateLinearGradientBrush(20, 150, 300, 150, c1, c2)
         GC.SetBrush(Brush)
         GC.DrawRectangle(20, 150, 200, 1)
+        
+        Path = GC.CreatePath()
+        Path.MoveToPoint(0,0)
+        Path.AddLineToPoint(500,300)
+        Path.AddLineToPoint(500,298)
+        Path.AddLineToPoint(0,-2)
+        
+        GC.SetPen(wx.Pen("Blue", 3))
+        #GC.SetBrush(wx.Brush("Red"))
+        #GC.DrawPath(Path)
+        Brush = GC.CreateLinearGradientBrush(-2, -2, 500, 300, c1, c2)
+        GC.SetBrush(Brush)
+        GC.FillPath(Path)
         
 A = wx.App(0)
 F = MyFrame(None)
