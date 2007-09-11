@@ -90,22 +90,9 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
     def CalculatePoints(self):
         # add the zero point to start
         Values = N.vstack( ( (0,), self.Values) )
-        Diameter = self.Diameter
-
-        Fractions = Values/Values.sum()
-        Angles = 2*N.pi * Fractions
-        Angles = N.cumsum(Angles, axis=0)
-        Angles[-1,0] = 0 # this should be a full circle, and we want to avoid rounding error.
-        CirclePoints = N.hstack( (N.cos(Angles)*Diameter, N.sin(Angles)*Diameter) )
-        if self.Scaled:
-            CirclePoints += self.XY
-        else:
-            CirclePoints = CirclePoints * (1, -1) #(in pixel coords, y is down)
-        self.Points = CirclePoints
-        
+        self.Angles = 360. * Values.cumsum()/Values.sum()
         self.CalcBoundingBox()
         
-
     def SetBrushes(self):
         self.Brushes = []
         for FillColor, FillStyle in zip(self.FillColors, self.FillStyles):
@@ -127,13 +114,15 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         CenterXY = WorldToPixel(self.XY)
         if self.Scaled:
-            CirclePoints = WorldToPixel(self.Points)
+            Diameter = ScaleWorldToPixel( (self.Diameter,self.Diameter) )[0]
         else:
-            CirclePoints = self.Points + CenterXY
+            Diameter = self.Diameter
+        WH = N.array((Diameter,Diameter), dtype = N.float)
+        Corner = CenterXY - (WH / 2)
         dc.SetPen(self.Pen)
         for i, brush in enumerate(self.Brushes):
             dc.SetBrush( brush )
-            dc.DrawArcPoint(CirclePoints[i], CirclePoints[i+1], CenterXY)
+            dc.DrawEllipticArc(Corner[0], Corner[1], WH[0], WH[1], self.Angles[i], self.Angles[i+1])
         if HTdc and self.HitAble:
             if self.Scaled:
                 radius = (ScaleWorldToPixel(self.Diameter)/2)[0]# just the x-coord
@@ -142,3 +131,5 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
             HTdc.DrawCirclePoint(CenterXY, radius)
+
+
