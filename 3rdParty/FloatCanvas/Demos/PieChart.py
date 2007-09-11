@@ -8,7 +8,7 @@ import wx
 
 ## import a local version
 import sys
-sys.path.append("../")
+sys.path.append("..")
 from floatcanvas import NavCanvas, FloatCanvas
 from floatcanvas.SpecialObjects import PieChart
 
