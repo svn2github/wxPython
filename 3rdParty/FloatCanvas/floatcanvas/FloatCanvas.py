@@ -23,7 +23,7 @@ global FontScale
 class FloatCanvasError(Exception):
     pass
 
-## Create all the mouse events
+## Create all the mouse events -- this is for binding to Objects
 EVT_FC_ENTER_WINDOW = wx.NewEventType()
 EVT_FC_LEAVE_WINDOW = wx.NewEventType()
 EVT_FC_LEFT_DOWN = wx.NewEventType()
@@ -42,7 +42,7 @@ EVT_FC_MOUSEWHEEL = wx.NewEventType()
 EVT_FC_ENTER_OBJECT = wx.NewEventType()
 EVT_FC_LEAVE_OBJECT = wx.NewEventType()
 
-##Create all mouse event binding objects
+##Create all mouse event binding objects -- for binding to the Canvas
 EVT_LEFT_DOWN = wx.PyEventBinder(EVT_FC_LEFT_DOWN)
 EVT_LEFT_UP = wx.PyEventBinder(EVT_FC_LEFT_UP)
 EVT_LEFT_DCLICK = wx.PyEventBinder(EVT_FC_LEFT_DCLICK)
@@ -56,6 +56,7 @@ EVT_MOTION = wx.PyEventBinder(EVT_FC_MOTION)
 EVT_ENTER_WINDOW = wx.PyEventBinder(EVT_FC_ENTER_WINDOW)
 EVT_LEAVE_WINDOW = wx.PyEventBinder(EVT_FC_LEAVE_WINDOW)
 EVT_MOUSEWHEEL = wx.PyEventBinder(EVT_FC_MOUSEWHEEL)
+
 
 class _MouseEvent(wx.PyCommandEvent):
 
@@ -2290,6 +2291,9 @@ class FloatCanvas(wx.Panel):
         wx.EVT_RIGHT_DCLICK(self, self.RightDoubleCLickEvent)
         wx.EVT_MOTION(self, self.MotionEvent)
         wx.EVT_MOUSEWHEEL(self, self.WheelEvent)
+        wx.EVT_KEY_DOWN(self, self.KeyDownEvent)
+        wx.EVT_KEY_UP(self, self.KeyUpEvent)
+
 
         ## CHB: I'm leaving these out for now.
         #wx.EVT_ENTER_WINDOW(self, self. )
@@ -2555,6 +2559,16 @@ class FloatCanvas(wx.Panel):
     def RightUpEvent(self, event):
         if self.GUIMode:
             self.GUIMode.OnRightUp(event)
+        event.Skip()
+        
+    def KeyDownEvent(self, event):
+        if self.GUIMode:
+            self.GUIMode.OnKeyDown(event)
+        event.Skip()
+
+    def KeyUpEvent(self, event):
+        if self.GUIMode:
+            self.GUIMode.OnKeyUp(event)
         event.Skip()
 
     def MakeNewBuffers(self):

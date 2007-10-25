@@ -1,5 +1,14 @@
 The Change Log for FloatCanvas.
 
+-10/25/07
+
+* Applied a patch from Tim Ansel for the UnBindAll() DrawObject method.
+This turned up a bug in hit-testing for foreground objects, so I fixed
+that too.
+
+* Applied Tim Ansel's patch for adding KeyEvents
+
+
 -8/27/07
 
 * Added PieChart object to floatcanvas/SpecialObjects, and a deom of it in Demos.

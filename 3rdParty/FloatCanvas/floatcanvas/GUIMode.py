@@ -80,11 +80,15 @@ class GUIBase:
         pass
     def OnMove(self, event):
         pass
+    def OnKeyDown(self, event):
+        pass
+    def OnKeyUp(self, event):
+        pass
             
     def UpdateScreen(self):
         """
         Update gets called if the screen has been repainted in the middle of a zoom in
-        so the Rubber Band Box can get updated
+        so the Rubber Band Box can get updated. Other GUIModes may require something similar
         """
         pass
 
