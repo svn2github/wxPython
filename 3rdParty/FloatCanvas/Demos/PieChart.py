@@ -46,7 +46,7 @@ class DrawFrame(wx.Frame):
         Canvas.AddObject(Pie2)
           
         # test default colors
-        Values = (10, 15, 12, 24, 6, 12)
+        Values = (10, 15, 12, 24, 6, 10, 13, 11, 9, 13, 15, 12)
         Pie3 = PieChart(N.array((20, 20)), 10, Values, LineColor="Black")
         Canvas.AddObject(Pie3)
         

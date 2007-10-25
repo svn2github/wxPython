@@ -5,6 +5,7 @@ import wx
 
 from floatcanvas import FloatCanvas
 from floatcanvas.Utilities import BBox
+from floatcanvas.Utilities import Colors
 
 import numpy as N
 
@@ -40,7 +41,9 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
     
     
     ##fixme: this should be a longer and better designed set.
-    DefaultColorList = ["Red", "Green", "Blue", "Purple", "Yellow", "Cyan"]
+    ##       Maybe one from: http://geography.uoregon.edu/datagraphics/color_scales.htm
+    DefaultColorList = Colors.CategoricalColor1
+    #["Red", "Green", "Blue", "Purple", "Yellow", "Cyan"]
 
     def __init__(self,
                  XY,

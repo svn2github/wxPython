@@ -3,7 +3,6 @@
 
 Module that holds the GUI modes used by FloatCanvas
 
-
 Note that this can only be imported after a wx.App() has been created.
 
 This approach was inpired by Christian Blouin, who also wrote the initial
@@ -285,7 +284,7 @@ class GUIZoomIn(GUIBase):
             self.StartRBBox = None
 
     def OnMove(self, event):
-        # Allways raise the Move event.
+        # Always raise the Move event.
         self.parent._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
         if event.Dragging() and event.LeftIsDown() and not (self.StartRBBox is None):
             xy0 = self.StartRBBox

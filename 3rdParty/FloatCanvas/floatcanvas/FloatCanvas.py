@@ -255,11 +255,12 @@ class DrawObject:
 
     def UnBindAll(self):
         ## fixme: this only removes one from each list, there could be more.
+        ## + patch by Tim Ansel
         if self._Canvas.HitDict:
-            for List in self._Canvas.HitDict.itervalues():
+            for Event in self._Canvas.HitDict.itervalues():
                 try:
-                   List.remove(self)
-                except ValueError:
+                    del Event[self.HitColor]
+                except KeyError:
                     pass
         self.HitAble = False
 
@@ -2300,8 +2301,8 @@ class FloatCanvas(wx.Panel):
         # timer to give a delay when re-sizing so that buffers aren't re-built too many times.
         self.SizeTimer = wx.PyTimer(self.OnSizeTimer)
 
-        self.InitializePanel()
-        self.MakeNewBuffers()
+#        self.InitializePanel()
+#        self.MakeNewBuffers()
 
 #        self.CreateCursors()
 
@@ -2333,7 +2334,8 @@ class FloatCanvas(wx.Panel):
 
         self._DrawList = []
         self._ForeDrawList = []
-        self._ForegroundBuffer = None
+        self.InitializePanel()
+        self.MakeNewBuffers()
         self.BoundingBox = None
         self.BoundingBoxDirty = False
         self.MinScale = None
@@ -2556,13 +2558,14 @@ class FloatCanvas(wx.Panel):
         event.Skip()
 
     def MakeNewBuffers(self):
+        ##fixme: this looks like tortured logic!
         self._BackgroundDirty = True
         # Make new offscreen bitmap:
         self._Buffer = wx.EmptyBitmap(*self.PanelSize)
         if self._ForeDrawList:
             self._ForegroundBuffer = wx.EmptyBitmap(*self.PanelSize)
             if self.UseHitTest:
-                self.MakeNewHTBitmap()
+                self.MakeNewForegroundHTBitmap()
             else:
                 self._ForegroundHTBitmap = None
         else:
@@ -2581,9 +2584,7 @@ class FloatCanvas(wx.Panel):
         
         """
         self._HTBitmap = wx.EmptyBitmap(self.PanelSize[0],
-
                                         self.PanelSize[1],
-
                                         depth=self.HitTestBitmapDepth)
 
     def MakeNewForegroundHTBitmap(self):
@@ -2595,9 +2596,7 @@ class FloatCanvas(wx.Panel):
         
         """
         self._ForegroundHTBitmap = wx.EmptyBitmap(self.PanelSize[0],
-
                                                   self.PanelSize[1],
-
                                                   depth=self.HitTestBitmapDepth)
 
     def OnSize(self, event=None):
@@ -2609,16 +2608,10 @@ class FloatCanvas(wx.Panel):
         self.Draw()
 
     def InitializePanel(self):
-        self.PanelSize = self.GetClientSizeTuple()
-        if self.PanelSize == (0,0):
-            ## OS-X sometimes gives a Size event when the panel is size (0,0)
-            self.PanelSize = (2,2)
-        self.PanelSize  = N.array(self.PanelSize,  N.int32)
+        PanelSize  = N.array(self.GetClientSizeTuple(),  N.int32)
+        self.PanelSize  = N.maximum(PanelSize, (2,2)) ## OS-X sometimes gives a Size event when the panel is size (0,0)
         self.HalfPanelSize = self.PanelSize / 2 # lrk: added for speed in WorldToPixel
-        if self.PanelSize[0] == 0 or self.PanelSize[1] == 0:
-            self.AspectRatio = 1.0
-        else:
-            self.AspectRatio = float(self.PanelSize[0]) / self.PanelSize[1]
+        self.AspectRatio = float(self.PanelSize[0]) / self.PanelSize[1]
 
     def OnPaint(self, event):
         dc = wx.PaintDC(self)
@@ -2717,7 +2710,10 @@ class FloatCanvas(wx.Panel):
             self.GUIMode.UpdateScreen()
 
         if self.Debug: print "Drawing took %f seconds of CPU time"%(clock()-start)
-
+        
+        if self._HTBitmap is not None:
+            self._HTBitmap.SaveFile('junk.png', wx.BITMAP_TYPE_PNG)
+        
         ## Clear the font cache. If you don't do this, the X font server
         ## starts to take up Massive amounts of memory This is mostly a
         ## problem with very large fonts, that you get with scaled text
