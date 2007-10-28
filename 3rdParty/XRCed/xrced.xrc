@@ -593,241 +593,222 @@
       </object>
     </object>
   </object>
-  <object class="wxDialog" name="DIALOG_PREFS">
-    <title>XRCed Preferences</title>
-    <object class="wxBoxSizer">
-      <orient>wxVERTICAL</orient>
-      <object class="sizeritem">
-        <object class="wxListbook" name="listbook">
-          <object class="listbookpage">
-            <object class="wxPanel">
-              <object class="wxBoxSizer">
-                <orient>wxVERTICAL</orient>
-                <object class="sizeritem">
-                  <object class="wxStaticBoxSizer">
-                    <label>Defaults for new containers</label>
-                    <orient>wxVERTICAL</orient>
-                    <object class="sizeritem">
-                      <object class="wxFlexGridSizer">
-                        <cols>2</cols>
-                        <rows>2</rows>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="check_proportionContainer">
-                            <label>proportion</label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxSpinCtrl" name="spin_proportionContainer">
-                            <size>30,-1d</size>
-                          </object>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="check_flagContainer">
-                            <label>flag</label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxTextCtrl" name="text_flagContainer">
-                            <size>150,-1</size>
-                          </object>
-                        </object>
-                        <hgap>10</hgap>
-                      </object>
+  
+  <object class="wxPropertySheetDialog" name="DIALOG_PREFS">
+    <object class="propertysheetpage">
+      <object class="wxPanel">
+        <object class="wxBoxSizer">
+          <orient>wxVERTICAL</orient>
+          <object class="sizeritem">
+            <object class="wxStaticBoxSizer">
+              <label>Defaults for new containers</label>
+              <orient>wxVERTICAL</orient>
+              <object class="sizeritem">
+                <object class="wxFlexGridSizer">
+                  <cols>2</cols>
+                  <rows>2</rows>
+                  <object class="sizeritem">
+                    <object class="wxCheckBox" name="check_proportionContainer">
+                      <label>proportion</label>
+                    </object>
+                    <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxSpinCtrl" name="spin_proportionContainer">
+                      <size>30,-1d</size>
                     </object>
                   </object>
-                  <flag>wxALL</flag>
-                  <border>5</border>
-                </object>
-                <object class="sizeritem">
-                  <object class="wxStaticBoxSizer">
-                    <label>Defaults for new controls</label>
-                    <orient>wxVERTICAL</orient>
-                    <object class="sizeritem">
-                      <object class="wxFlexGridSizer">
-                        <cols>2</cols>
-                        <rows>2</rows>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="check_proportionControl">
-                            <label>proportion</label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxSpinCtrl" name="spin_proportionControl">
-                            <size>30,-1d</size>
-                          </object>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="check_flagControl">
-                            <label>flag</label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxTextCtrl" name="text_flagControl">
-                            <size>150,-1</size>
-                          </object>
-                        </object>
-                        <hgap>10</hgap>
-                      </object>
+                  <object class="sizeritem">
+                    <object class="wxCheckBox" name="check_flagContainer">
+                      <label>flag</label>
+                    </object>
+                    <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxTextCtrl" name="text_flagContainer">
+                      <size>150,-1</size>
                     </object>
                   </object>
-                  <flag>wxALL</flag>
-                  <border>5</border>
+                  <hgap>10</hgap>
                 </object>
               </object>
             </object>
-            <label>Defaults</label>
+            <flag>wxALL</flag>
+            <border>5</border>
           </object>
-          <object class="listbookpage">
-            <object class="wxPanel">
-              <object class="wxBoxSizer">
-                <orient>wxVERTICAL</orient>
-                <object class="sizeritem">
-                  <object class="wxCheckBox" name="check_AUI">
-                    <label>Use AUI</label>
-                  </object>
-                  <flag>wxALL</flag>
-                  <border>5</border>
-                </object>
-                <object class="sizeritem">
-                  <object class="wxRadioBox" name="radio_toolPanelType">
-                    <label>Component panel style</label>
-                    <dimension>0</dimension>
-                    <content>
-                      <item>ToolBook</item>
-                      <item>FoldPanelBar</item>
-                    </content>
-                    <style>wxRA_SPECIFY_COLS</style>
-                  </object>
-                  <flag>wxBOTTOM</flag>
-                  <border>5</border>
-                </object>
-                <object class="sizeritem">
-                  <object class="wxStaticBoxSizer">
-                    <object class="sizeritem">
-                      <object class="wxStaticBoxSizer">
-                        <object class="sizeritem">
-                          <object class="wxSlider" name="slider_thumbSize">
-                            <min>16</min>
-                            <max>48</max>
-                            <tickfreq>8</tickfreq>
-                            <pagesize>8</pagesize>
-                            <linesize>8</linesize>
-                            <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
-                          </object>
-                          <flag>wxEXPAND</flag>
-                        </object>
-                        <label>Group thumbnail size</label>
-                        <orient>wxVERTICAL</orient>
-                      </object>
-                      <flag>wxEXPAND</flag>
-                      <border>5</border>
+          <object class="sizeritem">
+            <object class="wxStaticBoxSizer">
+              <label>Defaults for new controls</label>
+              <orient>wxVERTICAL</orient>
+              <object class="sizeritem">
+                <object class="wxFlexGridSizer">
+                  <cols>2</cols>
+                  <rows>2</rows>
+                  <object class="sizeritem">
+                    <object class="wxCheckBox" name="check_proportionControl">
+                      <label>proportion</label>
                     </object>
-                    <object class="sizeritem">
-                      <object class="wxStaticBoxSizer">
-                        <object class="sizeritem">
-                          <object class="wxSlider" name="slider_iconScale">
-                            <min>10</min>
-                            <max>100</max>
-                            <tickfreq>10</tickfreq>
-                            <pagesize>10</pagesize>
-                            <linesize>10</linesize>
-                            <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
-                          </object>
-                          <flag>wxEXPAND</flag>
-                        </object>
-                        <label>Component icon scaling</label>
-                        <orient>wxVERTICAL</orient>
-                      </object>
-                      <flag>wxEXPAND</flag>
+                    <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxSpinCtrl" name="spin_proportionControl">
+                      <size>30,-1d</size>
                     </object>
-                    <label>Component palette</label>
-                    <orient>wxVERTICAL</orient>
                   </object>
-                  <flag>wxEXPAND</flag>
+                  <object class="sizeritem">
+                    <object class="wxCheckBox" name="check_flagControl">
+                      <label>flag</label>
+                    </object>
+                    <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxTextCtrl" name="text_flagControl">
+                      <size>150,-1</size>
+                    </object>
+                  </object>
+                  <hgap>10</hgap>
                 </object>
               </object>
             </object>
-            <label>Appearance</label>
-          </object>
-          <object class="listbookpage">
-            <object class="wxPanel">
-              <object class="wxBoxSizer">
-                <orient>wxVERTICAL</orient>
-                <object class="sizeritem">
-                  <object class="wxCheckBox" name="check_TB_file">
-                    <label>New/Open/Save</label>
-                  </object>
-                  <flag>wxTOP|wxLEFT</flag>
-                  <border>5</border>
-                </object>
-                <object class="sizeritem">
-                  <object class="wxCheckBox" name="check_TB_undo">
-                    <label>Undo/Redo</label>
-                  </object>
-                  <flag>wxTOP|wxLEFT</flag>
-                  <border>5</border>
-                </object>
-                <object class="sizeritem">
-                  <object class="wxCheckBox" name="check_TB_copy">
-                    <label>Cut/Copy/Paste</label>
-                  </object>
-                  <flag>wxTOP|wxLEFT</flag>
-                  <border>5</border>
-                </object>
-                <object class="sizeritem">
-                  <object class="wxCheckBox" name="check_TB_move">
-                    <label>Move</label>
-                  </object>
-                  <flag>wxTOP|wxLEFT</flag>
-                  <border>5</border>
-                </object>
-              </object>
-            </object>
-            <label>Toolbar</label>
-          </object>
-          <object class="listbookpage">
-            <object class="wxPanel">
-              <object class="wxBoxSizer">
-                <orient>wxVERTICAL</orient>
-                <object class="sizeritem">
-                  <object class="wxCheckBox" name="check_expandOnOpen">
-                    <label>Expand tree on open</label>
-                  </object>
-                  <flag>wxALL</flag>
-                  <border>5</border>
-                </object>
-                <object class="sizeritem">
-                  <object class="wxCheckBox" name="check_fitTestWin">
-                    <label>Fit test window</label>
-                  </object>
-                  <flag>wxTOP|wxLEFT|wxRIGHT</flag>
-                  <border>5</border>
-                </object>
-              </object>
-            </object>
-            <label>Misc</label>
+            <flag>wxALL</flag>
+            <border>5</border>
           </object>
         </object>
       </object>
-      <object class="sizeritem">
-        <object class="wxStdDialogButtonSizer">
-          <object class="button">
-            <object class="wxButton" name="wxID_OK">
-            </object>
-          </object>
-          <object class="button">
-            <object class="wxButton" name="wxID_CANCEL">
-            </object>
-          </object>
-        </object>
-        <flag>wxALL|wxALIGN_CENTRE_HORIZONTAL</flag>
-        <border>5</border>
-      </object>
+      <label>Defaults</label>
     </object>
+    <object class="propertysheetpage">
+      <object class="wxPanel">
+        <object class="wxBoxSizer">
+          <orient>wxVERTICAL</orient>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="check_AUI">
+              <label>Use AUI</label>
+            </object>
+            <flag>wxALL</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxRadioBox" name="radio_toolPanelType">
+              <label>Component panel style</label>
+              <dimension>0</dimension>
+              <content>
+                <item>ToolBook</item>
+                <item>FoldPanelBar</item>
+              </content>
+              <style>wxRA_SPECIFY_COLS</style>
+            </object>
+            <flag>wxBOTTOM</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticBoxSizer">
+              <object class="sizeritem">
+                <object class="wxStaticBoxSizer">
+                  <object class="sizeritem">
+                    <object class="wxSlider" name="slider_thumbSize">
+                      <min>16</min>
+                      <max>48</max>
+                      <tickfreq>8</tickfreq>
+                      <pagesize>8</pagesize>
+                      <linesize>8</linesize>
+                      <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
+                    </object>
+                    <flag>wxEXPAND</flag>
+                  </object>
+                  <label>Group thumbnail size</label>
+                  <orient>wxVERTICAL</orient>
+                </object>
+                <flag>wxEXPAND</flag>
+                <border>5</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticBoxSizer">
+                  <object class="sizeritem">
+                    <object class="wxSlider" name="slider_iconScale">
+                      <min>10</min>
+                      <max>100</max>
+                      <tickfreq>10</tickfreq>
+                      <pagesize>10</pagesize>
+                      <linesize>10</linesize>
+                      <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
+                    </object>
+                    <flag>wxEXPAND</flag>
+                  </object>
+                  <label>Component icon scaling</label>
+                  <orient>wxVERTICAL</orient>
+                </object>
+                <flag>wxEXPAND</flag>
+              </object>
+              <label>Component palette</label>
+              <orient>wxVERTICAL</orient>
+            </object>
+            <flag>wxEXPAND</flag>
+          </object>
+        </object>
+      </object>
+      <label>Appearance</label>
+    </object>
+    <object class="propertysheetpage">
+      <object class="wxPanel">
+        <object class="wxBoxSizer">
+          <orient>wxVERTICAL</orient>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="check_TB_file">
+              <label>New/Open/Save</label>
+            </object>
+            <flag>wxTOP|wxLEFT</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="check_TB_undo">
+              <label>Undo/Redo</label>
+            </object>
+            <flag>wxTOP|wxLEFT</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="check_TB_copy">
+              <label>Cut/Copy/Paste</label>
+            </object>
+            <flag>wxTOP|wxLEFT</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="check_TB_move">
+              <label>Move</label>
+            </object>
+            <flag>wxTOP|wxLEFT</flag>
+            <border>5</border>
+          </object>
+        </object>
+      </object>
+      <label>Toolbar</label>
+    </object>
+    <object class="propertysheetpage">
+      <object class="wxPanel">
+        <object class="wxBoxSizer">
+          <orient>wxVERTICAL</orient>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="check_expandOnOpen">
+              <label>Expand tree on open</label>
+            </object>
+            <flag>wxALL</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="check_fitTestWin">
+              <label>Fit test window</label>
+            </object>
+            <flag>wxTOP|wxLEFT|wxRIGHT</flag>
+            <border>5</border>
+          </object>
+        </object>
+      </object>
+      <label>Misc</label>
+    </object>
+    <buttons>wxOK|wxCANCEL</buttons>
+    <style>wxDEFAULT_DIALOG_STYLE</style>
   </object>
   <object class="wxPanel" name="PANEL_ATTRIBUTES">
     <object class="wxBoxSizer">
