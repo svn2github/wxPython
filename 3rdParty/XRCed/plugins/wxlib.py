@@ -5,7 +5,7 @@
 # RCS-ID:       $Id$
 
 from xh_wxlib import *
-from component import *
+from wx.tools.XRCed.component import *
 
 TRACE('*** creating wx.lib components')
 

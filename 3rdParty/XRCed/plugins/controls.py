@@ -4,8 +4,8 @@
 # Created:      31.05.2007
 # RCS-ID:       $Id: core.py 47823 2007-07-29 19:24:35Z ROL $
 
-from component import *
-import images
+from wx.tools.XRCed.component import *
+import wx.tools.XRCed.images as images
 import _bitmaps as bitmaps
 
 TRACE('*** creating control components')

@@ -9,7 +9,7 @@ import wx.xrc as xrc
 import wx.lib.foldpanelbar as fpb
 from wx.lib.ticker_xrc import wxTickerXmlHandler
 
-from globals import TRACE
+from wx.tools.XRCed.globals import TRACE
 
 class FoldPanelBarXmlHandler(xrc.XmlResourceHandler):
     def __init__(self):

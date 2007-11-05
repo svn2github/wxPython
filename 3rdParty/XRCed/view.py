@@ -88,10 +88,11 @@ class Frame(wx.Frame):
         # Init HTML help
         wx.FileSystem.AddHandler(wx.ZipFSHandler())
         self.htmlCtrl = wx.html.HtmlHelpController()
-        programPath = os.path.dirname(sys.argv[0])
+        programPath = os.path.dirname(__file__)
+        print '***', programPath
         if not (self.htmlCtrl.AddBook(os.path.join(programPath, "xrced.htb"))) :
             print >> sys.stderr, "Cannot load help file \"xrced.htb\""
-            self.GetMenuBar().Enable(wx.ID_HELP_CONTENTS, FALSE)        
+            self.GetMenuBar().Enable(wx.ID_HELP_CONTENTS, False)        
 
         # Create toolbar
         self.tb = tb = wx.ToolBar(self, -1, style=wx.TB_FLAT | wx.TB_NODIVIDER)
