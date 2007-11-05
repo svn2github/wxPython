@@ -89,7 +89,6 @@ class Frame(wx.Frame):
         wx.FileSystem.AddHandler(wx.ZipFSHandler())
         self.htmlCtrl = wx.html.HtmlHelpController()
         programPath = os.path.dirname(__file__)
-        print '***', programPath
         if not (self.htmlCtrl.AddBook(os.path.join(programPath, "xrced.htb"))) :
             print >> sys.stderr, "Cannot load help file \"xrced.htb\""
             self.GetMenuBar().Enable(wx.ID_HELP_CONTENTS, False)        
