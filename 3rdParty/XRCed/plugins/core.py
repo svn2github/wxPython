@@ -4,22 +4,22 @@
 # Created:      31.05.2007
 # RCS-ID:       $Id$
 
-from wx.tools.XRCed.component import *
-import wx.tools.XRCed.images as images
+from wx.tools.XRCed import component, images, attribute, params
+from wx.tools.XRCed.globals import TRACE
 import _bitmaps as bitmaps
 
 TRACE('*** creating core components')
 
 # Set panel images
-Manager.panelImages['Windows'] = images.getToolPanel_WindowsImage()
-Manager.panelImages['Menus'] = images.getToolPanel_MenusImage()
-Manager.panelImages['Sizers'] = images.getToolPanel_SizersImage()
-Manager.panelImages['Panels'] = images.getToolPanel_PanelsImage()
-Manager.panelImages['Gizmos'] = images.getToolPanel_GizmosImage()
+component.Manager.panelImages['Windows'] = images.getToolPanel_WindowsImage()
+component.Manager.panelImages['Menus'] = images.getToolPanel_MenusImage()
+component.Manager.panelImages['Sizers'] = images.getToolPanel_SizersImage()
+component.Manager.panelImages['Panels'] = images.getToolPanel_PanelsImage()
+component.Manager.panelImages['Gizmos'] = images.getToolPanel_GizmosImage()
 
 ### wxFrame
 
-class Frame(Container):
+class Frame(component.Container):
     def getChildObject(self, node, obj, index):
         # Do not count toolbar and menubar
         objects = filter(is_object, node.childNodes)
@@ -30,7 +30,7 @@ class Frame(Container):
             elif o.getAttribute('class') == 'wxToolBar':
                 if i == index:  return obj.GetToolBar()
                 elif i < index: index -= 1
-        return Container.getChildObject(self, node, obj, index)
+        return component.Container.getChildObject(self, node, obj, index)
 
 c = Frame('wxFrame', ['frame','window','top_level'], 
               ['pos', 'size', 'title', 'centered'],
@@ -46,17 +46,17 @@ c.addStyles('wxDEFAULT_FRAME_STYLE', 'wxDEFAULT_DIALOG_STYLE', 'wxCAPTION',
 c.addExStyles('wxFRAME_EX_CONTEXTHELP', 'wxWS_EX_VALIDATE_RECURSIVELY', 'wxFRAME_EX_METAL')
 c.addEvents('EVT_SIZE', 'EVT_CLOSE', 'EVT_MENU_HIGHLIGHT', 'EVT_ICONIZE', 'EVT_MAXIMIZE',
             'EVT_ACTIVATE', 'EVT_UPDATE_UI')
-Manager.register(c)
-Manager.setMenu(c, 'TOP_LEVEL', 'frame', 'wxFrame', 10)
-Manager.setTool(c, 'Windows', bitmaps.getwxFrameBitmap(), (0,0))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'TOP_LEVEL', 'frame', 'wxFrame', 10)
+component.Manager.setTool(c, 'Windows', bitmaps.getwxFrameBitmap(), (0,0))
 
 ### wxDialog
 
-c = Container('wxDialog', ['frame','window','top_level'], 
+c = component.Container('wxDialog', ['frame','window','top_level'], 
               ['pos', 'size', 'title', 'centered', 'icon'],
               image=images.getTreeFrameImage())
 c.isTopLevel = True
-c.setSpecial('icon', BitmapAttribute)
+c.setSpecial('icon', attribute.BitmapAttribute)
 c.addStyles('wxDEFAULT_DIALOG_STYLE', 'wxDEFAULT_FRAME_STYLE', 'wxCAPTION', 
             'wxSTAY_ON_TOP', 'wxSYSTEM_MENU', 'wxTHICK_FRAME',
             'wxRESIZE_BORDER', 'wxRESIZE_BOX', 'wxCLOSE_BOX',
@@ -66,24 +66,24 @@ c.addStyles('wxDEFAULT_DIALOG_STYLE', 'wxDEFAULT_FRAME_STYLE', 'wxCAPTION',
 c.addExStyles('wxDIALOG_EX_CONTEXTHELP', 'wxWS_EX_VALIDATE_RECURSIVELY', 'wxDIALOG_EX_METAL')
 c.addEvents('EVT_INIT_DIALOG', 'EVT_SIZE', 'EVT_CLOSE', 
             'EVT_ICONIZE', 'EVT_MAXIMIZE', 'EVT_ACTIVATE', 'EVT_UPDATE_UI')
-Manager.register(c)
-Manager.setMenu(c, 'TOP_LEVEL', 'dialog', 'wxDialog', 20)
-Manager.setTool(c, 'Windows', bitmaps.getwxDialogBitmap(), (0,1))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'TOP_LEVEL', 'dialog', 'wxDialog', 20)
+component.Manager.setTool(c, 'Windows', bitmaps.getwxDialogBitmap(), (0,1))
 
 ### wxPanel
 
-c = Container('wxPanel', ['window', 'top_level', 'control'], 
+c = component.Container('wxPanel', ['window', 'top_level', 'control'], 
               ['pos', 'size'],
               image=images.getTreePanelImage())
 c.addStyles('wxNO_3D', 'wxTAB_TRAVERSAL')
-Manager.register(c)
-Manager.setMenu(c, 'TOP_LEVEL', 'panel', 'wxPanel', 30)
-Manager.setMenu(c, 'container', 'panel', 'wxPanel', 10)
-Manager.setTool(c, 'Windows', bitmaps.getwxPanelBitmap(), (0,2))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'TOP_LEVEL', 'panel', 'wxPanel', 30)
+component.Manager.setMenu(c, 'container', 'panel', 'wxPanel', 10)
+component.Manager.setTool(c, 'Windows', bitmaps.getwxPanelBitmap(), (0,2))
 
 ### wxWizard
 
-class Wizard(Container):
+class Wizard(component.Container):
     genericStyles = genericExStyles = []
     def makeTestWin(self, res, name):
         wiz = wx.wizard.PreWizard()
@@ -104,26 +104,26 @@ c = Wizard('wxWizard', ['wizard', 'top_level'],
            ['pos', 'title', 'bitmap'],
            image=images.getTreePanelImage())
 c.addExStyles('wxWIZARD_EX_HELPBUTTON')
-c.setSpecial('bitmap', BitmapAttribute)
-Manager.register(c)
-Manager.setMenu(c, 'TOP_LEVEL', 'wizard', 'wxWizard', 40)
-Manager.setTool(c, 'Windows', bitmaps.getwxWizardBitmap(), (1,0), (1,2))
+c.setSpecial('bitmap', attribute.BitmapAttribute)
+component.Manager.register(c)
+component.Manager.setMenu(c, 'TOP_LEVEL', 'wizard', 'wxWizard', 40)
+component.Manager.setTool(c, 'Windows', bitmaps.getwxWizardBitmap(), (1,0), (1,2))
 
 ### wxWizardPage
 
-c = Container('wxWizardPage', ['wizard_page', 'window'], ['bitmap'],
+c = component.Container('wxWizardPage', ['wizard_page', 'window'], ['bitmap'],
               image=images.getTreePanelImage())
-c.setSpecial('bitmap', BitmapAttribute)
-Manager.register(c)
-Manager.setMenu(c, 'container', 'wizard page', 'wxWizardPage')
+c.setSpecial('bitmap', attribute.BitmapAttribute)
+component.Manager.register(c)
+component.Manager.setMenu(c, 'container', 'wizard page', 'wxWizardPage')
 
 ### wxWizardPageSimple
 
-c = Container('wxWizardPageSimple', ['wizard_page', 'window'], ['bitmap'],
+c = component.Container('wxWizardPageSimple', ['wizard_page', 'window'], ['bitmap'],
               image=images.getTreePanelImage())
-c.setSpecial('bitmap', BitmapAttribute)
-Manager.register(c)
-Manager.setMenu(c, 'container', 'simple wizard page', 'wxWizardPageSimple')
+c.setSpecial('bitmap', attribute.BitmapAttribute)
+component.Manager.register(c)
+component.Manager.setMenu(c, 'container', 'simple wizard page', 'wxWizardPageSimple')
 
 ### wxPropertySheetDialog
 
@@ -137,7 +137,7 @@ class ParamSheetStyle(params.ParamBinaryOr):
 # Tool book needs an image list
 #            'wxPROPSHEET_TOOLBOOK', 'wxPROPSHEET_BUTTONTOOLBOOK',
             'wxPROPSHEET_TREEBOOK', 'wxPROPSHEET_SHRINKTOFIT']
-c = SmartContainer('wxPropertySheetDialog', ['frame','book','window','top_level'], 
+c = component.SmartContainer('wxPropertySheetDialog', ['frame','book','window','top_level'], 
                    ['pos', 'size', 'title', 'centered', 'icon', 'sheetstyle', 'buttons'],
                    params={'buttons': ParamButtons, 'sheetstyle': ParamSheetStyle},
                    implicit_klass='propertysheetpage', 
@@ -146,8 +146,8 @@ c = SmartContainer('wxPropertySheetDialog', ['frame','book','window','top_level'
                    implicit_params={'label': params.ParamText, 'selected': params.ParamBool},
                    image=images.getTreeDialogImage())
 c.isTopLevel = True
-c.setSpecial('bitmap', BitmapAttribute)
-c.setSpecial('icon', BitmapAttribute)
+c.setSpecial('bitmap', attribute.BitmapAttribute)
+c.setSpecial('icon', attribute.BitmapAttribute)
 c.addStyles('wxDEFAULT_DIALOG_STYLE', 'wxCAPTION', 'wxFRAME_SHAPED',
             'wxTAB_TRAVERSAL', 'wxSTAY_ON_TOP', 'wxSYSTEM_MENU', 
             'wxRESIZE_BORDER', 'wxCLOSE_BOX', 'wxMAXIMIZE_BOX', 'wxMINIMIZE_BOX',
@@ -156,71 +156,71 @@ c.addStyles('wxDEFAULT_DIALOG_STYLE', 'wxCAPTION', 'wxFRAME_SHAPED',
 c.addExStyles('wxDIALOG_EX_CONTEXTHELP', 'wxWS_EX_VALIDATE_RECURSIVELY', 'wxDIALOG_EX_METAL')
 c.addEvents('EVT_INIT_DIALOG', 'EVT_SIZE', 'EVT_CLOSE', 
             'EVT_ICONIZE', 'EVT_MAXIMIZE', 'EVT_ACTIVATE', 'EVT_UPDATE_UI')
-Manager.register(c)
-Manager.setMenu(c, 'TOP_LEVEL', 'propery sheet dialog', 'wxPropertySheetDialog', 50)
-Manager.setTool(c, 'Windows', bitmaps.getwxPropertySheetDialogBitmap(), (1,1))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'TOP_LEVEL', 'propery sheet dialog', 'wxPropertySheetDialog', 50)
+component.Manager.setTool(c, 'Windows', bitmaps.getwxPropertySheetDialogBitmap(), (1,1))
 
 ### wxBoxSizer
 
-c = BoxSizer('wxBoxSizer', ['sizer'], ['orient'], 
+c = component.BoxSizer('wxBoxSizer', ['sizer'], ['orient'], 
              defaults={'orient': 'wxVERTICAL'},
              images=[images.getTreeSizerVImage(), images.getTreeSizerHImage()])
-Manager.register(c)
-Manager.setMenu(c, 'sizer', 'box sizer', 'wxBoxSizer', 10)
-Manager.setTool(c, 'Sizers', pos=(0,0))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'sizer', 'box sizer', 'wxBoxSizer', 10)
+component.Manager.setTool(c, 'Sizers', pos=(0,0))
 
 ### wxStaticBoxSizer
 
-c = BoxSizer('wxStaticBoxSizer', ['sizer'], ['label', 'orient'], 
+c = component.BoxSizer('wxStaticBoxSizer', ['sizer'], ['label', 'orient'], 
              defaults={'orient': 'wxVERTICAL'},
              images=[images.getTreeSizerVImage(), images.getTreeSizerHImage()])
-Manager.register(c)
-Manager.setMenu(c, 'sizer', 'static box sizer', 'wxStaticBoxSizer', 20)
-Manager.setTool(c, 'Sizers', pos=(0,2))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'sizer', 'static box sizer', 'wxStaticBoxSizer', 20)
+component.Manager.setTool(c, 'Sizers', pos=(0,2))
 
 ### wxGridSizer
 
-c = Sizer('wxGridSizer', ['sizer'],
+c = component.Sizer('wxGridSizer', ['sizer'],
           ['cols', 'rows', 'vgap', 'hgap'], 
           defaults={'cols': '2', 'rows': '2'},
           image=images.getTreeSizerGridImage())
-Manager.register(c)
-Manager.setMenu(c, 'sizer', 'grid sizer', 'wxGridSizer', 30)
-Manager.setTool(c, 'Sizers', pos=(0,1))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'sizer', 'grid sizer', 'wxGridSizer', 30)
+component.Manager.setTool(c, 'Sizers', pos=(0,1))
 
 ### wxFlexGridSizer
 
-c = Sizer('wxFlexGridSizer', ['sizer'],
+c = component.Sizer('wxFlexGridSizer', ['sizer'],
           ['cols', 'rows', 'vgap', 'hgap', 'growablecols', 'growablerows'],
           defaults={'cols': '2', 'rows': '2'},
           image=images.getTreeSizerFlexGridImage())
-c.setSpecial('growablecols', MultiAttribute)
+c.setSpecial('growablecols', attribute.MultiAttribute)
 c.setParamClass('growablecols', params.ParamIntList)
-c.setSpecial('growablerows', MultiAttribute)
+c.setSpecial('growablerows', attribute.MultiAttribute)
 c.setParamClass('growablerows', params.ParamIntList)
-Manager.register(c)
-Manager.setMenu(c, 'sizer', 'flex grid sizer', 'wxFlexGridSizer', 40)
-Manager.setTool(c, 'Sizers', pos=(1,0))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'sizer', 'flex grid sizer', 'wxFlexGridSizer', 40)
+component.Manager.setTool(c, 'Sizers', pos=(1,0))
 
 ### wxGridBagSizer
 
-c = Sizer('wxGridBagSizer', ['sizer'],
+c = component.Sizer('wxGridBagSizer', ['sizer'],
           ['vgap', 'hgap', 'growablecols', 'growablerows'],
           image=images.getTreeSizerGridBagImage(),
           implicit_attributes=['option', 'flag', 'border', 'minsize', 'ratio', 'cellpos', 'cellspan'])
-c.setSpecial('growablecols', MultiAttribute)
+c.setSpecial('growablecols', attribute.MultiAttribute)
 c.setParamClass('growablecols', params.ParamIntList)
-c.setSpecial('growablerows', MultiAttribute)
+c.setSpecial('growablerows', attribute.MultiAttribute)
 c.setParamClass('growablerows', params.ParamIntList)
 c.setImplicitParamClass('cellpos', params.ParamPosSize)
 c.setImplicitParamClass('cellspan', params.ParamPosSize)
-Manager.register(c)
-Manager.setMenu(c, 'sizer', 'grid bag sizer', 'wxGridBagSizer', 50)
-Manager.setTool(c, 'Sizers', pos=(1,1))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'sizer', 'grid bag sizer', 'wxGridBagSizer', 50)
+component.Manager.setTool(c, 'Sizers', pos=(1,1))
 
 ### wxStdDialogButtonSizer
 
-class StdDialogButtonSizer(Sizer):
+class StdDialogButtonSizer(component.Sizer):
     def getChildObject(self, node, obj, index):
         # This sizer orders buttons by fixed ordering, so we must
         # get the ID to find them
@@ -238,17 +238,17 @@ class StdDialogButtonSizer(Sizer):
 c = StdDialogButtonSizer('wxStdDialogButtonSizer', ['btnsizer'], [],
           implicit_klass='button', 
           implicit_attributes=[])
-Manager.register(c)
-Manager.setMenu(c, 'sizer', 'dialog button sizer', 'wxStdDialogButtonSizer', 60)
-#Manager.setTool(c, 'Sizers', pos=(0,2))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'sizer', 'dialog button sizer', 'wxStdDialogButtonSizer', 60)
+#component.Manager.setTool(c, 'Sizers', pos=(0,2))
 
 ### spacer
 
-c = SimpleComponent('spacer', ['spacer'], ['size', 'option', 'flag', 'border'])
+c = component.SimpleComponent('spacer', ['spacer'], ['size', 'option', 'flag', 'border'])
 c.hasName = False
-Manager.register(c)
-Manager.setMenu(c, 'sizer', 'spacer', 'spacer', 70)
-Manager.setTool(c, 'Sizers', pos=(1,2))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'sizer', 'spacer', 'spacer', 70)
+component.Manager.setTool(c, 'Sizers', pos=(1,2))
 
 ################################################################################
 # Containers
@@ -257,7 +257,7 @@ Manager.setTool(c, 'Sizers', pos=(1,2))
 
 ### wxScrolledWindow
 
-c = Component('wxScrolledWindow', ['window', 'control'], ['pos', 'size'])
+c = component.Component('wxScrolledWindow', ['window', 'control'], ['pos', 'size'])
 c.addStyles('wxHSCROLL', 'wxVSCROLL', 'wxNO_3D', 'wxTAB_TRAVERSAL')
 c.addEvents('EVT_SCROLLWIN_TOP',
             'EVT_SCROLLWIN_BOTTOM',
@@ -267,13 +267,13 @@ c.addEvents('EVT_SCROLLWIN_TOP',
             'EVT_SCROLLWIN_PAGEDOWN',
             'EVT_SCROLLWIN_THUMBTRACK',
             'EVT_SCROLLWIN_THUMBRELEASE')
-Manager.register(c)
-Manager.setMenu(c, 'container', 'scrolled window', 'wxScrolledWindow', 20)
-Manager.setTool(c, 'Panels', pos=(1,4))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'container', 'scrolled window', 'wxScrolledWindow', 20)
+component.Manager.setTool(c, 'Panels', pos=(1,4))
 
 ### wxSplitterWindow
 
-c = Container('wxSplitterWindow', ['book', 'window', 'control'],
+c = component.Container('wxSplitterWindow', ['book', 'window', 'control'],
               ['pos', 'size', 'orientation', 'sashpos', 'minsize'],
               params={'orientation': params.ParamOrientation, 
                       'sashpos': params.ParamUnit, 
@@ -283,13 +283,13 @@ c.addStyles('wxSP_3D', 'wxSP_3DSASH', 'wxSP_3DBORDER',
             'wxSP_NO_XP_THEME')
 c.addEvents('EVT_SPLITTER_SASH_POS_CHANGING', 'EVT_SPLITTER_SASH_POS_CHANGED',
             'EVT_SPLITTER_UNSPLIT', 'EVT_SPLITTER_DCLICK')
-Manager.register(c)
-Manager.setMenu(c, 'container', 'splitter window', 'wxSplitterWindow', 30)
-Manager.setTool(c, 'Panels', pos=(0,4))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'container', 'splitter window', 'wxSplitterWindow', 30)
+component.Manager.setTool(c, 'Panels', pos=(0,4))
 
 ### wxNotebook
 
-c = SmartContainer('wxNotebook', ['book', 'window', 'control'], ['pos', 'size'], 
+c = component.SmartContainer('wxNotebook', ['book', 'window', 'control'], ['pos', 'size'], 
                    implicit_klass='notebookpage', 
                    implicit_page='NotebookPage', 
                    implicit_attributes=['label', 'selected', 'bitmap'],
@@ -297,29 +297,29 @@ c = SmartContainer('wxNotebook', ['book', 'window', 'control'], ['pos', 'size'],
 c.addStyles('wxNB_TOP', 'wxNB_LEFT', 'wxNB_RIGHT', 'wxNB_BOTTOM',
             'wxNB_FIXEDWIDTH', 'wxNB_MULTILINE', 'wxNB_NOPAGETHEME', 
             'wxNB_FLAT')
-c.setSpecial('bitmap', BitmapAttribute)
+c.setSpecial('bitmap', attribute.BitmapAttribute)
 c.addEvents('EVT_NOTEBOOK_PAGE_CHANGED', 'EVT_NOTEBOOK_PAGE_CHANGING')
-Manager.register(c)
-Manager.setMenu(c, 'container', 'notebook', 'Notebook control', 40)
-Manager.setTool(c, 'Panels', pos=(1,0))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'container', 'notebook', 'Notebook control', 40)
+component.Manager.setTool(c, 'Panels', pos=(1,0))
 
 ### wxChoicebook
 
-c = SmartContainer('wxChoicebook', ['book', 'window', 'control'], ['pos', 'size'],
+c = component.SmartContainer('wxChoicebook', ['book', 'window', 'control'], ['pos', 'size'],
                    implicit_klass='choicebookpage', 
                    implicit_page='ChoicebookPage', 
                    implicit_attributes=['label', 'selected', 'bitmap'],
                    implicit_params={'label': params.ParamText, 'selected': params.ParamBool})
 c.addStyles('wxCHB_DEFAULT', 'wxCHB_LEFT', 'wxCHB_RIGHT', 'wxCHB_TOP', 'wxCHB_BOTTOM')
-c.setSpecial('bitmap', BitmapAttribute)
+c.setSpecial('bitmap', attribute.BitmapAttribute)
 c.addEvents('EVT_CHOICEBOOK_PAGE_CHANGED', 'EVT_CHOICEBOOK_PAGE_CHANGING')
-Manager.register(c)
-Manager.setMenu(c, 'container', 'choicebook', 'wxChoicebook', 50)
-Manager.setTool(c, 'Panels', pos=(1,3))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'container', 'choicebook', 'wxChoicebook', 50)
+component.Manager.setTool(c, 'Panels', pos=(1,3))
 
 ### wxListbook
 
-class ListBook(SmartContainer):
+class ListBook(component.SmartContainer):
     def getChildObject(self, node, obj, index):
         # Listbook's first child is ListView
         return obj.GetChildren()[index+1]
@@ -329,15 +329,15 @@ c = ListBook('wxListbook', ['book', 'window', 'control'], ['pos', 'size'],
              implicit_attributes=['label', 'selected', 'bitmap'],
              implicit_params={'label': params.ParamText, 'selected': params.ParamBool})
 c.addStyles('wxLB_DEFAULT', 'wxLB_LEFT', 'wxLB_RIGHT', 'wxLB_TOP', 'wxLB_BOTTOM')
-c.setSpecial('bitmap', BitmapAttribute)
+c.setSpecial('bitmap', attribute.BitmapAttribute)
 c.addEvents('EVT_LISTBOOK_PAGE_CHANGED', 'EVT_LISTBOOK_PAGE_CHANGING')
-Manager.register(c)
-Manager.setMenu(c, 'container', 'listbook', 'wxListbook', 60)
-Manager.setTool(c, 'Panels', pos=(0,3))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'container', 'listbook', 'wxListbook', 60)
+component.Manager.setTool(c, 'Panels', pos=(0,3))
 
 ### wxTreebook
 
-class TreeBook(SmartContainer):
+class TreeBook(component.SmartContainer):
     def getChildObject(self, node, obj, index):
         # Listbook's first child is ListView
         return obj.GetChildren()[index+1]
@@ -349,19 +349,19 @@ c = TreeBook('wxTreebook', ['book', 'window', 'control'], ['pos', 'size'],
                               'selected': params.ParamBool, 
                               'depth': params.ParamInt})
 c.addStyles('wxBK_DEFAULT', 'wxBK_LEFT', 'wxBK_RIGHT', 'wxBK_TOP', 'wxBK_BOTTOM')
-c.setSpecial('bitmap', BitmapAttribute)
+c.setSpecial('bitmap', attribute.BitmapAttribute)
 c.addEvents('EVT_TREEBOOK_PAGE_CHANGED', 'EVT_TREEBOOK_PAGE_CHANGING',
             'EVT_TREEBOOK_NODE_COLLAPSED', 'EVT_TREEBOOK_NODE_EXPANDED')
-Manager.register(c)
-Manager.setMenu(c, 'container', 'treebook', 'wxTreebook', 70)
-Manager.setTool(c, 'Panels', pos=(1,1), span=(1,2))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'container', 'treebook', 'wxTreebook', 70)
+component.Manager.setTool(c, 'Panels', pos=(1,1), span=(1,2))
 
 ################################################################################
 # Menus
 
 ### wxMenuBar
 
-class CMenuBar(SimpleContainer):
+class CMenuBar(component.SimpleContainer):
     # Menubar should be shown in a normal frame
     def makeTestWin(self, res, name):
         '''Method can be overrided by derived classes to create test view.'''
@@ -375,37 +375,37 @@ c = CMenuBar('wxMenuBar', ['menubar', 'top_level'], [],
              image=images.getTreeMenuBarImage())
 c.addStyles('wxMB_DOCKABLE')
 c.addEvents('EVT_MENU', 'EVT_MENU_OPEN', 'EVT_MENU_CLOSE', 'EVT_MENU_HIGHLIGHT_ALL')
-Manager.register(c)
-Manager.setMenu(c, 'TOP_LEVEL', 'menu bar', 'wxMenuBar', 40)
-Manager.setMenu(c, 'bar', 'menu bar', 'wxMenuBar', 10)
-Manager.setTool(c, 'Menus', pos=(1,0))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'TOP_LEVEL', 'menu bar', 'wxMenuBar', 40)
+component.Manager.setMenu(c, 'bar', 'menu bar', 'wxMenuBar', 10)
+component.Manager.setTool(c, 'Menus', pos=(1,0))
 
 ### wxMenu
 
-c = SimpleContainer('wxMenu', ['menu', 'top_level'], ['label', 'help'],
+c = component.SimpleContainer('wxMenu', ['menu', 'top_level'], ['label', 'help'],
                     image=images.getTreeMenuImage())
 c.addStyles('wxMENU_TEAROFF')
 c.addEvents('EVT_MENU', 'EVT_MENU_OPEN', 'EVT_MENU_CLOSE', 'EVT_MENU_HIGHLIGHT_ALL')
-Manager.register(c)
-Manager.setMenu(c, 'TOP_LEVEL', 'menu', 'wxMenu', 50)
-Manager.setMenu(c, 'ROOT', 'menu', 'wxMenu', 20)
-Manager.setTool(c, 'Menus', pos=(1,1), span=(2,1))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'TOP_LEVEL', 'menu', 'wxMenu', 50)
+component.Manager.setMenu(c, 'ROOT', 'menu', 'wxMenu', 20)
+component.Manager.setTool(c, 'Menus', pos=(1,1), span=(2,1))
 
 ### wxMenuItem
 
-c = SimpleComponent('wxMenuItem', ['menu_item'],
+c = component.SimpleComponent('wxMenuItem', ['menu_item'],
                     ['label', 'bitmap', 'accel', 'help',
                      'checkable', 'radio', 'enabled', 'checked'],
                     image=images.getTreeMenuItemImage())
-c.setSpecial('bitmap', BitmapAttribute)
+c.setSpecial('bitmap', attribute.BitmapAttribute)
 c.addEvents('EVT_MENU', 'EVT_MENU_HIGHLIGHT')
-Manager.register(c)
-Manager.setMenu(c, 'ROOT', 'menu item', 'wxMenuItem', 10)
-Manager.setTool(c, 'Menus', pos=(1,2))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'ROOT', 'menu item', 'wxMenuItem', 10)
+component.Manager.setTool(c, 'Menus', pos=(1,2))
 
 ### wxToolBar
 
-class CToolBar(SimpleContainer):
+class CToolBar(component.SimpleContainer):
     # Toolbar should be shown in a normal frame
     def makeTestWin(self, res, name):
         '''Method can be overrided by derived classes to create test view.'''
@@ -429,68 +429,68 @@ c.setParamClass('packing', params.ParamUnit)
 c.setParamClass('separation', params.ParamUnit)
 c.renameDict = {'dontattachtoframe': "don't attach"}
 c.addEvents('EVT_TOOL', 'EVT_TOOL_ENTER', 'EVT_TOOL_RCLICKED')
-Manager.register(c)
-Manager.setMenu(c, 'TOP_LEVEL', 'tool bar', 'wxToolBar', 50)
-Manager.setMenu(c, 'bar', 'tool bar', 'wxToolBar', 20)
-Manager.setTool(c, 'Menus', pos=(0,0))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'TOP_LEVEL', 'tool bar', 'wxToolBar', 50)
+component.Manager.setMenu(c, 'bar', 'tool bar', 'wxToolBar', 20)
+component.Manager.setTool(c, 'Menus', pos=(0,0))
 
 ### wxTool
 
-c = SimpleComponent('tool', ['tool'],
+c = component.SimpleComponent('tool', ['tool'],
                     ['bitmap', 'bitmap2', 'radio', 'toggle',
                      'tooltip', 'longhelp', 'label'],
                     image=images.getTreeToolImage())
-Manager.register(c)
-c.setSpecial('bitmap', BitmapAttribute)
-c.setSpecial('bitmap2', BitmapAttribute)
+component.Manager.register(c)
+c.setSpecial('bitmap', attribute.BitmapAttribute)
+c.setSpecial('bitmap2', attribute.BitmapAttribute)
 c.setParamClass('bitmap2', params.ParamBitmap)
 c.setParamClass('toggle', params.ParamBool)
 c.addEvents('EVT_TOOL', 'EVT_TOOL_ENTER', 'EVT_TOOL_RCLICKED')
-Manager.setMenu(c, 'ROOT', 'tool', 'wxTool', 10)
-Manager.setTool(c, 'Menus', pos=(0,1))
+component.Manager.setMenu(c, 'ROOT', 'tool', 'wxTool', 10)
+component.Manager.setTool(c, 'Menus', pos=(0,1))
 
 ### wxSeparator
 
-c = SimpleComponent('separator', ['separator'], [],
+c = component.SimpleComponent('separator', ['separator'], [],
                     image=images.getTreeSeparatorImage())
 c.hasName = False
-Manager.register(c)
-Manager.setMenu(c, 'ROOT', 'separator', 'separator', 20)
-Manager.setTool(c, 'Menus', pos=(0,2))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'ROOT', 'separator', 'separator', 20)
+component.Manager.setTool(c, 'Menus', pos=(0,2))
 
 ### wxStatusBar
 
-c = SimpleComponent('wxStatusBar', ['statusbar'], ['fields', 'widths', 'styles'])
+c = component.SimpleComponent('wxStatusBar', ['statusbar'], ['fields', 'widths', 'styles'])
 c.addStyles('wxST_SIZEGRIP')
 c.setParamClass('fields', params.ParamIntP)
-Manager.register(c)
-Manager.setMenu(c, 'bar', 'status bar', 'wxStatusBar', 30)
-Manager.setTool(c, 'Menus', pos=(2,0))
+component.Manager.register(c)
+component.Manager.setMenu(c, 'bar', 'status bar', 'wxStatusBar', 30)
+component.Manager.setTool(c, 'Menus', pos=(2,0))
 
 ################################################################################
 
 ### wxBitmap
 
-c = SimpleComponent('wxBitmap', ['top_level'], ['object'])
+c = component.SimpleComponent('wxBitmap', ['top_level'], ['object'])
 c.renameDict = {'object': ''}
-c.setSpecial('object', BitmapAttribute)
+c.setSpecial('object', attribute.BitmapAttribute)
 c.setParamClass('object', params.ParamBitmap)
-Manager.register(c)
-Manager.setMenu(c, 'TOP_LEVEL', 'bitmap', 'wxBitmap', 60)
+component.Manager.register(c)
+component.Manager.setMenu(c, 'TOP_LEVEL', 'bitmap', 'wxBitmap', 60)
 
 ### wxIcon
 
-c = SimpleComponent('wxIcon', ['top_level'], ['object'])
+c = component.SimpleComponent('wxIcon', ['top_level'], ['object'])
 c.renameDict = {'object': ''}
-c.setSpecial('object', BitmapAttribute)
+c.setSpecial('object', attribute.BitmapAttribute)
 c.setParamClass('object', params.ParamBitmap)
-Manager.register(c)
-Manager.setMenu(c, 'TOP_LEVEL', 'icon', 'wxIcon', 70)
+component.Manager.register(c)
+component.Manager.setMenu(c, 'TOP_LEVEL', 'icon', 'wxIcon', 70)
 
 ### wxXXX
 
-#c = Component('wxXXX', ['control','tool'],
+#c = component.Component('wxXXX', ['control','tool'],
 #              ['pos', 'size', ...])
 #c.addStyles(...)
-#Manager.register(c)
-#Manager.setMenu(c, 'control', 'XXX', 'wxXXX', NN)
+#component.Manager.register(c)
+#component.Manager.setMenu(c, 'control', 'XXX', 'wxXXX', NN)

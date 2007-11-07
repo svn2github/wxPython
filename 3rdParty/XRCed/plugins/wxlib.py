@@ -4,8 +4,10 @@
 # Created:      05.09.2007
 # RCS-ID:       $Id$
 
-from xh_wxlib import *
-from component import *
+import xh_wxlib 
+from wx.tools.XRCed import component, params
+from wx.tools.XRCed.globals import TRACE
+from wx.lib.ticker_xrc import wxTickerXmlHandler
 
 TRACE('*** creating wx.lib components')
 
@@ -13,7 +15,7 @@ TRACE('*** creating wx.lib components')
 
 ### wxWizard
 
-c = SmartContainer('FoldPanelBar', ['book', 'window', 'control'], 
+c = component.SmartContainer('FoldPanelBar', ['book', 'window', 'control'], 
                    ['pos', 'size'],
                    implicit_klass='foldpanel', 
                    implicit_page='FoldPanel', 
@@ -21,19 +23,19 @@ c = SmartContainer('FoldPanelBar', ['book', 'window', 'control'],
                    implicit_params={'collapsed': params.ParamBool})
 c.addStyles('FPB_DEFAULT_STYLE', 'FPB_SINGLE_FOLD', 'FPB_COLLAPSE_TO_BOTTOM',
             'FPB_EXCLUSIVE_FOLD', 'FPB_HORIZONTAL', 'FPB_VERTICAL')
-Manager.register(c)
-Manager.addXmlHandler(FoldPanelBarXmlHandler)
-Manager.setMenu(c, 'bar', 'fold panel bar', 'FoldPanelBar')
+component.Manager.register(c)
+component.Manager.addXmlHandler(xh_wxlib.FoldPanelBarXmlHandler)
+component.Manager.setMenu(c, 'bar', 'fold panel bar', 'FoldPanelBar')
 
 # wxTicker
 
 class ParamDirection(params.RadioBox):
     choices = {'right to left': 'rtl', 'left to right': 'ltr'}
     default = 'rtl'
-c = Component('wxTicker', ['control'], 
+c = component.Component('wxTicker', ['control'], 
               ['pos', 'size', 'start', 'text', 'ppf', 'fps', 'direction'],
               params={'ppf': params.ParamInt, 'fps': params.ParamInt,
                       'direction': ParamDirection})
-Manager.register(c)
-Manager.addXmlHandler(wxTickerXmlHandler)
-Manager.setMenu(c, 'control', 'ticker', 'Ticker')
+component.Manager.register(c)
+component.Manager.addXmlHandler(wxTickerXmlHandler)
+component.Manager.setMenu(c, 'control', 'ticker', 'Ticker')
