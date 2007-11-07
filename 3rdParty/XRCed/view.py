@@ -106,19 +106,21 @@ class Frame(wx.Frame):
         if g.useAUI:
             self.mgr = wx.aui.AuiManager()
             self.mgr.SetManagedWindow(self)
-            self.mgr.AddPane(tb, wx.aui.AuiPaneInfo().
-                             Name("tb").Caption("Toolbar").
-                             ToolbarPane().Top().LeftDockable(False).RightDockable(False))
             parent = self
-            
         else:
-            self.SetToolBar(tb)
-
-            # Horizontal sizer for toolbar and splitter
             splitter = wx.SplitterWindow(self, -1, style=wx.SP_3DSASH)
             self.splitter = splitter
             splitter.SetMinimumPaneSize(100)
             parent = splitter
+
+        # always use the native toolbar on Mac, it looks too sucky otherwise
+        if g.useAUI and wx.Platform != '__WXMAC__':  
+            self.mgr.AddPane(tb, wx.aui.AuiPaneInfo().
+                             Name("tb").Caption("Toolbar").
+                             ToolbarPane().Top().LeftDockable(False).RightDockable(False))
+        else:
+            self.SetToolBar(tb)
+
 
         global tree
         tree = XMLTree(parent)
@@ -131,7 +133,8 @@ class Frame(wx.Frame):
 
             panel = Panel(self)
             self.mgr.AddPane(panel, wx.aui.AuiPaneInfo().
-                             Name("panel").Caption("Attributes").
+                             Name("attrpanel").Caption("Attributes").
+                             MinSize(panel.GetBestSize()).
                              Right().CloseButton(True).MaximizeButton(False))
 
             self.miniFrame = None
@@ -445,42 +448,41 @@ class ScrolledMessageDialog(wx.Dialog):
 
 ################################################################################
 
-class PrefsDialog: #(wx.PropertySheetDialog): !!! not wrapper yed - wrap by hand
+class PrefsDialog(wx.Dialog): #(wx.PropertySheetDialog): !!! not wrapper yed - wrap by hand
 
     def __init__(self, parent):
-#        pre = wx.PreDialog()
-#        g.res.LoadOnDialog(pre, parent, "DIALOG_PREFS")
-#        self.PostCreate(pre)
-        self.this = g.res.LoadObject(parent, 'DIALOG_PREFS', 'wxPropertySheetDialog')
-        self.this.Fit()
+        pre = g.res.LoadObject(parent, 'DIALOG_PREFS', 'wxPropertySheetDialog')
+        self.PostCreate(pre)
+        
+        self.Fit()
         
         self.checkControls = {} # map of check IDs to (control,dict,param)
         conf = g.conf
 
         # Defaults
 
-        self.check_proportionContainer = xrc.XRCCTRL(self.this, 'check_proportionContainer')
+        self.check_proportionContainer = xrc.XRCCTRL(self, 'check_proportionContainer')
         id = self.check_proportionContainer.GetId()
-        wx.EVT_CHECKBOX(self.this, id, self.OnCheck)
-        self.checkControls[id] = (xrc.XRCCTRL(self.this, 'spin_proportionContainer'),
+        wx.EVT_CHECKBOX(self, id, self.OnCheck)
+        self.checkControls[id] = (xrc.XRCCTRL(self, 'spin_proportionContainer'),
                                   conf.defaultsContainer, 'option')
 
-        self.check_flagContainer = xrc.XRCCTRL(self.this, 'check_flagContainer')
+        self.check_flagContainer = xrc.XRCCTRL(self, 'check_flagContainer')
         id = self.check_flagContainer.GetId()
-        wx.EVT_CHECKBOX(self.this, id, self.OnCheck)
-        self.checkControls[id] = (xrc.XRCCTRL(self.this, 'text_flagContainer'),
+        wx.EVT_CHECKBOX(self, id, self.OnCheck)
+        self.checkControls[id] = (xrc.XRCCTRL(self, 'text_flagContainer'),
                                   conf.defaultsContainer, 'flag')
 
-        self.check_proportionControl = xrc.XRCCTRL(self.this, 'check_proportionControl')
+        self.check_proportionControl = xrc.XRCCTRL(self, 'check_proportionControl')
         id = self.check_proportionControl.GetId()
-        wx.EVT_CHECKBOX(self.this, id, self.OnCheck)
-        self.checkControls[id] = (xrc.XRCCTRL(self.this, 'spin_proportionControl'),
+        wx.EVT_CHECKBOX(self, id, self.OnCheck)
+        self.checkControls[id] = (xrc.XRCCTRL(self, 'spin_proportionControl'),
                                   conf.defaultsControl, 'option')
 
-        self.check_flagControl = xrc.XRCCTRL(self.this, 'check_flagControl')
+        self.check_flagControl = xrc.XRCCTRL(self, 'check_flagControl')
         id = self.check_flagControl.GetId()
-        wx.EVT_CHECKBOX(self.this, id, self.OnCheck)
-        self.checkControls[id] = (xrc.XRCCTRL(self.this, 'text_flagControl'),
+        wx.EVT_CHECKBOX(self, id, self.OnCheck)
+        self.checkControls[id] = (xrc.XRCCTRL(self, 'text_flagControl'),
                                   conf.defaultsControl, 'flag')
 
         for id,cdp in self.checkControls.items():
@@ -490,45 +492,38 @@ class PrefsDialog: #(wx.PropertySheetDialog): !!! not wrapper yed - wrap by hand
                     c.SetValue(int(d[p]))
                 else:
                     c.SetValue(d[p])
-                self.this.FindWindowById(id).SetValue(True)
+                self.FindWindowById(id).SetValue(True)
             except KeyError:
                 c.Enable(False)
 
         # Appearance
 
-        self.check_AUI = xrc.XRCCTRL(self.this, 'check_AUI')
+        self.check_AUI = xrc.XRCCTRL(self, 'check_AUI')
         self.check_AUI.SetValue(conf.useAUI)
-        self.radio_toolPanelType = xrc.XRCCTRL(self.this, 'radio_toolPanelType')
+        self.radio_toolPanelType = xrc.XRCCTRL(self, 'radio_toolPanelType')
         self.radio_toolPanelType.SetSelection(['TB','FPB'].index(conf.toolPanelType))
-        self.slider_thumbSize = xrc.XRCCTRL(self.this, 'slider_thumbSize')
+        self.slider_thumbSize = xrc.XRCCTRL(self, 'slider_thumbSize')
         self.slider_thumbSize.SetValue(conf.toolThumbSize)
-        self.slider_iconScale = xrc.XRCCTRL(self.this, 'slider_iconScale')
+        self.slider_iconScale = xrc.XRCCTRL(self, 'slider_iconScale')
         self.slider_iconScale.SetValue(conf.toolIconScale)
 
-        self.check_expandOnOpen = xrc.XRCCTRL(self.this, 'check_expandOnOpen')
+        self.check_expandOnOpen = xrc.XRCCTRL(self, 'check_expandOnOpen')
         self.check_expandOnOpen.SetValue(conf.expandOnOpen)
-        self.check_fitTestWin = xrc.XRCCTRL(self.this, 'check_fitTestWin')
+        self.check_fitTestWin = xrc.XRCCTRL(self, 'check_fitTestWin')
         self.check_fitTestWin.SetValue(conf.fitTestWin)
 
-        self.check_TB_file = xrc.XRCCTRL(self.this, 'check_TB_file')
+        self.check_TB_file = xrc.XRCCTRL(self, 'check_TB_file')
         self.check_TB_file.SetValue(conf.TB_file)
-        self.check_TB_undo = xrc.XRCCTRL(self.this, 'check_TB_undo')
+        self.check_TB_undo = xrc.XRCCTRL(self, 'check_TB_undo')
         self.check_TB_undo.SetValue(conf.TB_undo)
-        self.check_TB_copy = xrc.XRCCTRL(self.this, 'check_TB_copy')
+        self.check_TB_copy = xrc.XRCCTRL(self, 'check_TB_copy')
         self.check_TB_copy.SetValue(conf.TB_copy)
-        self.check_TB_move = xrc.XRCCTRL(self.this, 'check_TB_move')
+        self.check_TB_move = xrc.XRCCTRL(self, 'check_TB_move')
         self.check_TB_move.SetValue(conf.TB_move)
 
     def OnCheck(self, evt):
         self.checkControls[evt.GetId()][0].Enable(evt.IsChecked())
         evt.Skip()
-    # Wrappers
-    def ShowModal(self):
-        return self.this.ShowModal()
-    def Destroy(self):
-        self.this.Destroy()
-    def FindWindowById(self, id):
-        return self.this.FindWindowById(id)
 
 #############################################################################
 

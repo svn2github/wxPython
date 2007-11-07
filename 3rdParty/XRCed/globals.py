@@ -81,6 +81,7 @@ class Globals:
     conf = None
     useMeta = False              # use meta-components
     _CFuncPtr = None             # _CFuncPtr from ctypes
+    lastActiveFrame = None
     
     def _makeFonts(self):
         self._sysFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)

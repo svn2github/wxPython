@@ -40,8 +40,8 @@ class ScrolledPage(wx.ScrolledWindow):
 
 class Panel(wx.Panel):
     '''Attribute panel main class.'''
-    def __init__(self, parent):
-        wx.Panel.__init__(self, parent)
+    def __init__(self, *args, **kw):
+        wx.Panel.__init__(self, *args, **kw)
 
         # Set common sizes
         params.InitParams(self)

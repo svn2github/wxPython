@@ -49,6 +49,12 @@ class _Listener:
 #        wx.EVT_KEY_UP(frame, tools.OnKeyUp)
 #        wx.EVT_ICONIZE(frame, self.OnIconize)
 
+        frame.Bind(wx.EVT_ACTIVATE, self.OnFrameActivate)
+        if toolFrame:
+            toolFrame.Bind(wx.EVT_ACTIVATE, self.OnFrameActivate)
+        if frame.miniFrame:
+            frame.miniFrame.Bind(wx.EVT_ACTIVATE, self.OnFrameActivate)
+        
         # Menubar events
         # File
         frame.Bind(wx.EVT_MENU, self.OnRecentFile, id=wx.ID_FILE1, id2=wx.ID_FILE9)
@@ -827,5 +833,12 @@ Homepage: http://xrced.sourceforge.net\
         self.toolFrame.Show(False)
         conf.showToolPanel = False
 
+    def OnFrameActivate(self, evt):
+        if evt.GetActive():
+            TRACE('Setting active frame')
+            g.lastActiveFrame = evt.GetEventObject()
+        evt.Skip()
+
+        
 # Singleton class
 Listener = g.Listener = _Listener()

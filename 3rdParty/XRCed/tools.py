@@ -17,15 +17,15 @@ BitmapButton = wx.lib.buttons.GenBitmapButton
 #else:
 #    wx.BitmapButton.SetBezelWidth = lambda self, w: None
 
-class ToolPanel(wx.Panel):
+class ToolPanel(wx.PyPanel):
     '''Manages a Listbook with tool bitmap buttons.'''
     defaultPos = wx.GBPosition(*DEFAULT_POS)
     def __init__(self, parent):
         if wx.Platform == '__WXGTK__':
-            wx.Panel.__init__(self, parent, -1,
+            wx.PyPanel.__init__(self, parent, -1,
                              style=wx.RAISED_BORDER|wx.WANTS_CHARS)
         else:
-            wx.Panel.__init__(self, parent, -1, style=wx.WANTS_CHARS)
+            wx.PyPanel.__init__(self, parent, -1, style=wx.WANTS_CHARS)
         self.bg = wx.Colour(115, 180, 215)
         # Top sizer
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -67,12 +67,22 @@ class ToolPanel(wx.Panel):
                 p.AddWindow(panel, fpb.FPB_ALIGN_WIDTH)
         self.tp.Fit()
         
-        self.SetSizerAndFit(sizer)
+        self.SetSizer(sizer)
         # Allow to be resized in horizontal direction only
         # Events
 #        wx.EVT_KEY_DOWN(self, self.OnKeyDown)
 #        wx.EVT_KEY_UP(self, self.OnKeyUp)
         self.drag = None
+
+    def DoGetBestSize(self):
+        # Do our own DoGetBestSize because the FoldPanelBar doesn't
+        h = w = 0
+        for p in self.panels:
+            ems = p.GetEffectiveMinSize()
+            w = max(w, ems.width)
+            h = max(h, ems.height)
+        h += 64
+        return wx.Size(w,h)
 
     def AddButton(self, panel, pos, span, id, bmp, text):
         button = BitmapButton(panel, id, bmp, 

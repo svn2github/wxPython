@@ -81,8 +81,14 @@ class TestWindow:
         else: return self.object
 
     def Show(self, show=True):
+        TRACE('TestWindow.Show')
         self.GetFrame().Show(show)
 
+        # re-raise the main window so the test window doesn't steal
+        # the activation from it.
+        if g.lastActiveFrame:
+            g.lastActiveFrame.Raise()   
+        
     def IsShown(self):
         return bool(self.object) and self.object.IsShown()
 

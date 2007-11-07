@@ -28,6 +28,12 @@ import view
 import undo
 import plugin
 
+# for helping to attach to the process with gdb...
+#print "%s\nPID: %d\n" % (wx.version(), os.getpid()); #raw_input("Press Enter...")
+
+# to enable the widget inspector & its hot-key
+USE_INSPECTOR = False
+
 # Parse string in form var1=val1[,var2=val2]* as dictionary
 def ReadDictFromString(s):
     d = {}
@@ -40,8 +46,19 @@ def ReadDictFromString(s):
 def DictToString(d):
     return ','.join(map(':'.join, d.items()))
 
-class App(wx.App):
+
+if USE_INSPECTOR:
+    import wx.lib.mixins.inspection
+    AppBase = wx.lib.mixins.inspection.InspectableApp
+else:
+    AppBase = wx.App
+    
+
+class App(AppBase):
     def OnInit(self):
+        if USE_INSPECTOR:
+            self.Init()
+
         # Check version
         if wx.VERSION[:3] < MinWxVersion:
             wx.LogWarning('''\
