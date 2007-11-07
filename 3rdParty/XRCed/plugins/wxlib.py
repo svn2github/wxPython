@@ -5,7 +5,7 @@
 # RCS-ID:       $Id$
 
 from xh_wxlib import *
-from wx.tools.XRCed.component import *
+from component import *
 
 TRACE('*** creating wx.lib components')
 
@@ -13,7 +13,8 @@ TRACE('*** creating wx.lib components')
 
 ### wxWizard
 
-c = SmartContainer('FoldPanelBar', ['book', 'window'], ['pos', 'size'],
+c = SmartContainer('FoldPanelBar', ['book', 'window', 'control'], 
+                   ['pos', 'size'],
                    implicit_klass='foldpanel', 
                    implicit_page='FoldPanel', 
                    implicit_attributes=['label', 'collapsed'],
