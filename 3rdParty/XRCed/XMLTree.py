@@ -43,13 +43,11 @@ class XMLTree(wx.TreeCtrl):
 
         self.root = self.AddRoot('XML tree') #, self.rootImage)
         self.SetItemHasChildren(self.root)
-#        self.Expand(self.root)
 
     def Clear(self):
         '''Clear everything except the root item.'''
         self.UnselectAll()
         self.DeleteChildren(self.root)
-#        self.Expand(self.root)
 
     # Add tree item for given parent item if node is DOM element node with
     # object/object_ref tag
@@ -197,19 +195,15 @@ class XMLTree(wx.TreeCtrl):
                 if state: self.SetFullState(states, item)
             item = self.GetNextSibling(item)
 
-    # Fix for broken
+    # Fixes for broken and platform-incompatible functions
 
     def ItemHasChildren(self, item):
         return self.GetChildrenCount(item)
 
     if wx.Platform == '__WXMSW__':
-        def UnselectAll(self):
-            print self.GetSelections()
-            wx.TreeCtrl.UnselectAll(self)
-            print self.GetSelections()
-        
+
+        # Generate selection event
         def SelectItem(self, item):
-            print 'SelectItem',self.GetSelections()
             wx.TreeCtrl.SelectItem(self, item)
             evt = wx.TreeEvent(wx.EVT_TREE_SEL_CHANGED.typeId, self, item)
             wx.PostEvent(self, evt)

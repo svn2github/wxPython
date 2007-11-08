@@ -14,12 +14,6 @@ import images
 import wx.aui
 import wx.html
 
-if wx.Platform == '__WXMAC__': # wxOSX GetSize is broken
-    wx.Frame.GetSize = wx.Frame.GetClientSize
-    wx.MiniFrame.GetSize = wx.MiniFrame.GetClientSize
-    wx.Frame.SetSize = wx.Frame.SetClientSize
-    wx.MiniFrame.SetSize = wx.MiniFrame.SetClientSize
-
 def create_view():
     '''
     Create all necessary view objects. Some of them are set as module
@@ -53,6 +47,7 @@ def create_tools():
     else:
         # Tool panel on a MiniFrame
         toolFrame = wx.MiniFrame(frame, -1, 'Components', 
+                                 g.conf.toolPanelPos,
                                  style=wx.CAPTION|wx.CLOSE_BOX|wx.RESIZE_BORDER)
                                      # This causes hiding on KDE
                                      # |wx.FRAME_TOOL_WINDOW)

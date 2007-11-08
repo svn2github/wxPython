@@ -68,7 +68,6 @@ class PPanel(wx.Panel):
     isCheck = False
     def __init__(self, parent, name):
         wx.Panel.__init__(self, parent, -1, name=name)
-        self.freeze = False
         self.name = name
     def Enable(self, value):
         self.enabled = value
@@ -78,7 +77,6 @@ class PPanel(wx.Panel):
         #wx.Panel.Enable(self, value)
     # Common method to set modified state
     def OnChange(self, evt):
-        if self.freeze: return
         Presenter.setApplied(False)
         evt.Skip()
 
@@ -99,9 +97,7 @@ class ParamBinaryOr(PPanel):
     def GetValue(self):
         return self.combo.GetValue()
     def SetValue(self, value):
-        self.freeze = True
         self.combo.SetValue(value)
-        self.freeze = False
     def SetValues(self):
         self.combo.InsertItems(self.values, 0)
 
@@ -248,13 +244,11 @@ class ParamFont(PPanel):
         return font
         
     def SetValue(self, value):
-        self.freeze = True              # disable other handlers
         if not value:
             self.text.ChangeValue('')
         else:
             self.button.SetSelectedFont(self.dict2font(value))
         self.value = value
-        self.freeze = False
     def OnPickFont(self, evt):
         font = evt.GetFont()
         if font.GetEncoding() == wx.FONTENCODING_SYSTEM:
@@ -368,15 +362,13 @@ class ParamMultilineText(PPanel):
     def GetValue(self):
         return self.text.GetValue()
     def SetValue(self, value):
-        self.freeze = True              # disable other handlers
-        self.text.SetValue(value)
-        self.freeze = False             # disable other handlers
+        self.text.ChangeValue(value)
     def OnButtonEdit(self, evt):
         dlg = g.res.LoadDialog(self, 'DIALOG_TEXT')
         textCtrl = xrc.XRCCTRL(dlg, 'TEXT')
         textCtrl.SetValue(self.text.GetValue())
         if dlg.ShowModal() == wx.ID_OK:
-            self.text.SetValue(textCtrl.GetValue())
+            self.text.ChangeValue(textCtrl.GetValue())
             Presenter.setApplied(False)
         dlg.Destroy()
 
@@ -398,9 +390,7 @@ class ParamText(PPanel):
     def GetValue(self):
         return self.text.GetValue()
     def SetValue(self, value):
-        self.freeze = True              # disable other handlers
-        self.text.SetValue(value)
-        self.freeze = False             # disable other handlers
+        self.text.ChangeValue(value)
 
 def MetaParamText(textWidth, proportion=0):
     '''Return a L{ParamText} class with specified width and proportion.'''
@@ -587,12 +577,10 @@ class ParamContentCheckList(ParamContent):
             self.textModified = False
         dlg.Destroy()
     def SetValue(self, value):
-        self.freeze = True
         if not value: value = []
         self.value = value
         repr_ = '|'.join(map(str,value))
-        self.text.SetValue(repr_)  # update text ctrl
-        self.freeze = False        
+        self.text.ChangeValue(repr_)  # update text ctrl
 
 class IntListDialog(wx.Dialog):
     '''Dialog for editing integer lists.'''
@@ -673,13 +661,10 @@ class RadioBox(PPanel):
             wx.EVT_RADIOBUTTON(self, button.GetId(), self.OnRadioChoice)
         self.SetSizer(topSizer)
     def SetStringSelection(self, value):
-        self.freeze = True
         for i in self.choices.keys():
             self.FindWindowByName(i).SetValue(i == value)
         self.value = value
-        self.freeze = False
     def OnRadioChoice(self, evt):
-        if self.freeze: return
         if evt.GetSelection():
             self.value = evt.GetEventObject().GetName()
             Presenter.setApplied(False)
@@ -738,7 +723,7 @@ class ParamBitmap(PPanel):
         pre = wx.PrePanel()
         g.res.LoadOnPanel(pre, parent, 'PANEL_BITMAP')
         self.PostCreate(pre)
-        self.modified = self.freeze = False
+        self.modified = False
         self.radio_std = xrc.XRCCTRL(self, 'RADIO_STD')
         self.radio_file = xrc.XRCCTRL(self, 'RADIO_FILE')
         self.combo = xrc.XRCCTRL(self, 'COMBO_STD')
@@ -771,25 +756,21 @@ class ParamBitmap(PPanel):
             self.button.Enable(True)
             self.combo.Enable(False)
     def OnChange(self, evt):
-        if self.freeze: return
         Presenter.setApplied(False)
         self.textModified = True
     def OnCombo(self, evt):
-        if self.freeze: return
         Presenter.setApplied(False)
         self.value[0] = self.combo.GetValue()
     def GetValue(self):
         return [self.combo.GetValue(), self.text.GetValue()]
     def SetValue(self, value):
-        self.freeze = True
         if not value:
             self.value = ['', '']
         else:
             self.value = value
         self.combo.SetValue(self.value[0])
-        self.text.SetValue(self.value[1])  # update text ctrl
+        self.text.ChangeValue(self.value[1])  # update text ctrl
         self.updateRadios()
-        self.freeze = False
     def OnButtonBrowse(self, evt):
         if self.textModified:           # text has newer value
             self.value[1] = self.text.GetValue()
@@ -825,7 +806,7 @@ class ParamImage(PPanel):
     def GetValue(self):
         return self.text.GetValue()
     def SetValue(self, value):
-        self.text.SetValue(value)
+        self.text.ChangeValue(value)
     def OnButtonBrowse(self, evt):
         value = self.text.GetValue()
         dlg = wx.FileDialog(self,
@@ -860,9 +841,7 @@ class ParamCombo(PPanel):
     def GetValue(self):
         return self.combo.GetValue()
     def SetValue(self, value):
-        self.freeze = True
         self.combo.SetValue(value)
-        self.freeze = False
     def SetValues(self):
         for v in self.values:
             self.combo.Append(v)
