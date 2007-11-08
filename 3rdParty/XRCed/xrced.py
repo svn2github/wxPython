@@ -242,4 +242,11 @@ def main():
     app.MainLoop()
 
 if __name__ == '__main__':
+    # Substitute wx.tools.XRCed with local module
+    try:
+        from XRCed.xrced import main
+    except ImportError:
+        print >>sys.stderr, 'XRCed parent directory must be in PYTHONPATH for local running'
+        raise
+    sys.modules['wx.tools.XRCed'] = sys.modules['XRCed']
     main()
