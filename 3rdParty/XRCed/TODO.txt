@@ -28,4 +28,6 @@ TODO for XRCed with plugins
 
 + test with frame: use Fit
 
+- test with non-top-level: add resizing
+
 - implement templates
