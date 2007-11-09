@@ -77,7 +77,7 @@ class XMLTree(wx.TreeCtrl):
                                data=wx.TreeItemData(node))
         self.SetItemStyle(item, node)
         # Try to find children objects
-        if comp.isContainer:
+        if comp.isContainer():
             for n in filter(is_object, node.childNodes):
                 self.AddNode(item, comp.getTreeNode(n))
 
