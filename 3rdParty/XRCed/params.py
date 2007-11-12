@@ -143,6 +143,7 @@ class ParamColour(PPanel):
             self.button.SetBackgroundColour(self.GetBackgroundColour())
         self.button.Refresh()
     def OnChange(self, evt):
+        Presenter.setApplied(False)
         self.UpdateColour(evt.GetString())
         evt.Skip()
     def OnPaintButton(self, evt):
@@ -534,6 +535,7 @@ class ParamContent(PPanel):
     def OnChange(self, evt):
         Presenter.setApplied(False)
         self.textModified = True
+        evt.Skip()
     def GetValue(self):
         if self.textModified:           # text has newer value
             try:
@@ -758,6 +760,7 @@ class ParamBitmap(PPanel):
     def OnChange(self, evt):
         Presenter.setApplied(False)
         self.textModified = True
+        evt.Skip()
     def OnCombo(self, evt):
         Presenter.setApplied(False)
         self.value[0] = self.combo.GetValue()
@@ -803,6 +806,7 @@ class ParamImage(PPanel):
         self.text.Bind(wx.EVT_TEXT, self.OnChange)
     def OnChange(self, evt):
         Presenter.setApplied(False)
+        evt.Skip()
     def GetValue(self):
         return self.text.GetValue()
     def SetValue(self, value):
