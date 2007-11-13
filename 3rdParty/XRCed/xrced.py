@@ -237,6 +237,14 @@ Please upgrade wxWidgets to %d.%d.%d or higher.''' % MinWxVersion)
         conf.Flush()
 
 def main():
+    if 'wxMac' in wx.PlatformInfo:
+        # if running from an App bundle on Mac then there could be an
+        # unexpected -psb_blahblah command-line arg.  Blow it away.
+        for idx,arg in enumerate(sys.argv):
+            if arg.startswith('-psn'):
+                del sys.argv[idx]
+                break
+            
     app = App(0, useBestVisual=False)
     #app.SetAssertMode(wx.PYAPP_ASSERT_LOG)
     app.MainLoop()
