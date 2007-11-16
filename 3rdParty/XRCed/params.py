@@ -84,6 +84,7 @@ class ParamBinaryOr(PPanel):
     '''Editing binary flag attributes defined by a string separated by '|'.'''
     def __init__(self, parent, name):
         PPanel.__init__(self, parent, name)
+        self.freeze = False
         sizer = wx.BoxSizer()
         popup = CheckListBoxComboPopup(self.values)
         self.combo = wx.combo.ComboCtrl(self, size=(220,-1))
@@ -97,9 +98,16 @@ class ParamBinaryOr(PPanel):
     def GetValue(self):
         return self.combo.GetValue()
     def SetValue(self, value):
+        self.freeze = True
         self.combo.SetValue(value)
+        self.freeze = False
     def SetValues(self):
         self.combo.InsertItems(self.values, 0)
+    def OnChange(self, evt):
+        # ComboCtrl still generates events in SetValue
+        if self.freeze: return
+        Presenter.setApplied(False)
+        evt.Skip()        
 
 class ParamFlag(ParamBinaryOr):
     '''Sizer flag editing.'''
