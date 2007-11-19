@@ -5,7 +5,7 @@
 # RCS-ID:       $Id$
 
 from wx.tools.XRCed import component, images, attribute, params
-from wx.tools.XRCed.globals import TRACE
+from wx.tools.XRCed.globals import TRACE,is_object
 import _bitmaps as bitmaps
 
 TRACE('*** creating core components')

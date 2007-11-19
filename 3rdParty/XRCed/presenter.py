@@ -364,7 +364,10 @@ class _Presenter:
         node = view.tree.GetPyData(item)
         node = self.container.removeChild(parentNode, node)
         view.tree.Delete(item)
-        self.applied = True     # prevent updating unexisting item
+        # If deleting the top-level object, remove view
+        if view.testWin.IsShown() and view.testWin.item == item:
+            view.testWin.Destroy()
+        self.applied = True     # prevent updating nonexisting item
         self.setApplied()
         self.unselect()
         self.setModified()
