@@ -286,6 +286,8 @@ class Component(object):
     def copyAttributes(self, srcNode, dstNode):
         '''Copy relevant attribute nodes from srcNode to dstNode.'''
         dstComp = Manager.getNodeComp(dstNode)
+        if dstComp.hasName:
+            dstNode.setAttribute('name', srcNode.getAttribute('name'))
         for n in srcNode.childNodes:
             if n.nodeType == n.ELEMENT_NODE:
                 a = n.tagName
