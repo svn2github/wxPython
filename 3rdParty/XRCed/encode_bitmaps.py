@@ -5,11 +5,9 @@ A simple script to encode all the images the XRCed needs into a Python module
 import sys, os, glob
 from wx.tools import img2py
 
-def main():
-    output = 'images.py'
-
+def main(filemask, output):
     # get the list of PNG files
-    files = glob.glob('src-images/*.png')
+    files = glob.glob(filemask)
     files.sort()
 
     # Truncate the inages module
@@ -39,5 +37,6 @@ def main():
         img2py.main(cmd.split())
 
 if __name__ == "__main__":
-    main()
+    main('src-images/*.png', 'images.py')
+#    main('src-images/32x32/*.png', 'images_32x32.py')
 
