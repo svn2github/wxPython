@@ -16,7 +16,7 @@ class XMLTree(wx.TreeCtrl):
         wx.TreeCtrl.__init__(self, parent, style=style)
 
         # Color scheme
-        self.SetBackgroundColour(wx.Colour(224, 248, 224))
+        self.SetBackgroundColour(wx.Colour(222, 248, 222))
         self.COLOUR_COMMENT  = wx.Colour(0, 0, 255)
         self.COLOUR_REF      = wx.Colour(0, 0, 128)
         self.COLOUR_HIDDEN   = wx.Colour(128, 128, 128)
@@ -29,15 +29,26 @@ class XMLTree(wx.TreeCtrl):
                                     wx.FONTFLAG_ITALIC)
 
         # Create image list
-        il = wx.ImageList(16, 16, True)
+        il = wx.ImageList(22, 22, True)
         # 0 is the default image index
-        il.Add(images.getTreeDefaultImage().Scale(16,16).ConvertToBitmap())
-        # 1 is root
+        im = images.getTreeDefaultImage()
+        if im.GetWidth() != 22 or im.GetHeight() != 22:
+            im.Resize((22,22), ((22-im.GetWidth())/2,(22-im.GetHeight())/2))
+        il.Add(im.ConvertToBitmap())
+        # 1 is the default container image
+        im = images.getTreeDefaultContainerImage()
+        if im.GetWidth() != 22 or im.GetHeight() != 22:
+            im.Resize((22,22), ((22-im.GetWidth())/2,(22-im.GetHeight())/2))
+        il.Add(im.ConvertToBitmap())
+        # root icon
 #        self.rootImage = il.Add(images.getTreeRootImage().Scale(16,16).ConvertToBitmap())
         # Loop through registered components which have images
         for component in Manager.components.values():
             for im in component.images:
-                im.Id = il.Add(im.Scale(16,16).ConvertToBitmap())
+                # Resize image if necessary
+                if im.GetWidth() != 22 or im.GetHeight() != 22:
+                    im.Resize((22,22), ((22-im.GetWidth())/2,(22-im.GetHeight())/2))
+                im.Id = il.Add(im.ConvertToBitmap())
         self.il = il
         self.SetImageList(il)
 

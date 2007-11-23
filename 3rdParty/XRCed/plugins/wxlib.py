@@ -11,11 +11,9 @@ from wx.lib.ticker_xrc import wxTickerXmlHandler
 
 TRACE('*** creating wx.lib components')
 
-# FoldPanelBar
+# wx.lib.foldpanelbar.FoldPanelBar
 
-### wxWizard
-
-c = component.SmartContainer('FoldPanelBar', ['book', 'window', 'control'], 
+c = component.SmartContainer('wx.lib.foldpanelbar.FoldPanelBar', ['book', 'window', 'control'], 
                    ['pos', 'size'],
                    implicit_klass='foldpanel', 
                    implicit_page='FoldPanel', 
@@ -27,7 +25,7 @@ component.Manager.register(c)
 component.Manager.addXmlHandler(xh_wxlib.FoldPanelBarXmlHandler)
 component.Manager.setMenu(c, 'bar', 'fold panel bar', 'FoldPanelBar')
 
-# wxTicker
+# wx.lib.ticker.Ticker
 
 class ParamDirection(params.RadioBox):
     choices = {'right to left': 'rtl', 'left to right': 'ltr'}

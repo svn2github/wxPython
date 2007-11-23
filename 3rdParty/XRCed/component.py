@@ -176,6 +176,8 @@ class Component(object):
         try:
             return self.images[0].Id
         except IndexError:
+            if self.isContainer():
+                return 1
             return 0
 
     def getTreeText(self, node):

@@ -4,8 +4,9 @@
 # Created:      31.05.2007
 # RCS-ID:       $Id$
 
-from wx.tools.XRCed import component, images, attribute, params
-from wx.tools.XRCed.globals import TRACE,is_object
+import wx
+from wx.tools.XRCed import component, images, attribute, params, view
+from wx.tools.XRCed.globals import TRACE,is_object,STD_NAME
 import _bitmaps as bitmaps
 
 TRACE('*** creating core components')
@@ -54,7 +55,7 @@ component.Manager.setTool(c, 'Windows', bitmaps.getwxFrameBitmap(), (0,0))
 
 c = component.Container('wxDialog', ['frame','window','top_level'], 
               ['pos', 'size', 'title', 'centered', 'icon'],
-              image=images.getTreeFrameImage())
+              image=images.getTreeDialogImage())
 c.isTopLevel = True
 c.setSpecial('icon', attribute.BitmapAttribute)
 c.addStyles('wxDEFAULT_DIALOG_STYLE', 'wxDEFAULT_FRAME_STYLE', 'wxCAPTION', 
@@ -102,7 +103,7 @@ class Wizard(component.Container):
         return None, None
 c = Wizard('wxWizard', ['wizard', 'top_level'], 
            ['pos', 'title', 'bitmap'],
-           image=images.getTreePanelImage())
+           image=images.getTreeWizardImage())
 c.addExStyles('wxWIZARD_EX_HELPBUTTON')
 c.setSpecial('bitmap', attribute.BitmapAttribute)
 component.Manager.register(c)
@@ -244,7 +245,8 @@ component.Manager.setMenu(c, 'sizer', 'dialog button sizer', 'wxStdDialogButtonS
 
 ### spacer
 
-c = component.SimpleComponent('spacer', ['spacer'], ['size', 'option', 'flag', 'border'])
+c = component.SimpleComponent('spacer', ['spacer'], ['size', 'option', 'flag', 'border'],
+                              image=images.getTreeSpacerImage())
 c.hasName = False
 component.Manager.register(c)
 component.Manager.setMenu(c, 'sizer', 'spacer', 'spacer', 70)
@@ -277,7 +279,8 @@ c = component.Container('wxSplitterWindow', ['book', 'window', 'control'],
               ['pos', 'size', 'orientation', 'sashpos', 'minsize'],
               params={'orientation': params.ParamOrientation, 
                       'sashpos': params.ParamUnit, 
-                      'minsize': params.ParamUnit})
+                      'minsize': params.ParamUnit},
+              image=images.getTreeSplitterWindowImage())
 c.addStyles('wxSP_3D', 'wxSP_3DSASH', 'wxSP_3DBORDER', 
             'wxSP_FULLSASH', 'wxSP_NOBORDER', 'wxSP_PERMIT_UNSPLIT', 'wxSP_LIVE_UPDATE',
             'wxSP_NO_XP_THEME')
@@ -293,7 +296,8 @@ c = component.SmartContainer('wxNotebook', ['book', 'window', 'control'], ['pos'
                    implicit_klass='notebookpage', 
                    implicit_page='NotebookPage', 
                    implicit_attributes=['label', 'selected', 'bitmap'],
-                   implicit_params={'label': params.ParamText, 'selected': params.ParamBool})
+                   implicit_params={'label': params.ParamText, 'selected': params.ParamBool},
+                   image=images.getTreeNotebookImage())
 c.addStyles('wxNB_TOP', 'wxNB_LEFT', 'wxNB_RIGHT', 'wxNB_BOTTOM',
             'wxNB_FIXEDWIDTH', 'wxNB_MULTILINE', 'wxNB_NOPAGETHEME', 
             'wxNB_FLAT')
