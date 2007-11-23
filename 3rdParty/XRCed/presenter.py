@@ -80,7 +80,7 @@ class _Presenter:
 
     def setModified(self, state=True, setDirty=True):
         '''Set global modified state.'''
-        TRACE('setModified')
+        TRACE('setModified %s %s', state, setDirty)
         self.modified = state
         # Set applied flag
         if not state: self.applied = True
@@ -99,6 +99,7 @@ class _Presenter:
 
     def setApplied(self, state=True):
         '''Set panel state.'''
+        TRACE('setApplied %s', state)
         self.applied = state
         if not state and not self.modified: 
             self.setModified(setDirty=False)  # toggle global state
