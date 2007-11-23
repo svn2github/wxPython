@@ -804,7 +804,7 @@
           </object>
           <object class="sizeritem">
             <object class="wxRadioBox" name="radio_autoRefreshPolicy">
-              <label>Auto-update</label>
+              <label>Auto-refresh policy</label>
               <content>
                 <item>on selection change</item>
                 <item>on focus change</item>
