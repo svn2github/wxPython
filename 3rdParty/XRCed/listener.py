@@ -466,13 +466,8 @@ class _Listener:
 
     def OnRefresh(self, evt):
         if self.testWin.IsShown():
-            if not self.testWin.IsDirty():
-                Presenter.refreshTestWin()
-            else:
-                item = self.testWin.item
-                self.testWin.Destroy()
-                Presenter.createTestWin(item)
-                Presenter.highlight(item)
+            self.testWin.isDirty = True
+            Presenter.refreshTestWin()
 
     def OnAutoRefresh(self, evt):
         g.conf.autoRefresh = evt.IsChecked()

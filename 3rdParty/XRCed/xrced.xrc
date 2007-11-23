@@ -802,6 +802,17 @@
             <flag>wxTOP|wxLEFT|wxRIGHT</flag>
             <border>5</border>
           </object>
+          <object class="sizeritem">
+            <object class="wxRadioBox" name="radio_autoRefreshPolicy">
+              <label>Auto-update</label>
+              <content>
+                <item>on selection change</item>
+                <item>on focus change</item>
+              </content>
+            </object>
+            <flag>wxTOP|wxLEFT|wxRIGHT</flag>
+            <border>5</border>
+          </object>
         </object>
       </object>
       <label>Misc</label>

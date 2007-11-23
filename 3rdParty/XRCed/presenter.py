@@ -626,6 +626,8 @@ class _Presenter:
     def refreshTestWin(self):
         '''Refresh test window after some change.'''
         if not view.testWin.IsDirty(): return
+        if not self.applied:
+            self.update(self.item)
         TRACE('refreshTestWin')
         # Dumb refresh
         self.createTestWin(view.testWin.item)

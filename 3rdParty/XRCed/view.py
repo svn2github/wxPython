@@ -411,6 +411,7 @@ class Frame(wx.Frame):
             conf.toolIconScale = dlg.slider_iconScale.GetValue()
             conf.expandOnOpen = dlg.check_expandOnOpen.GetValue()
             conf.fitTestWin = dlg.check_fitTestWin.GetValue()
+            conf.autoRefreshPolicy = dlg.radio_autoRefreshPolicy.GetSelection()
             conf.TB_file = dlg.check_TB_file.GetValue()
             conf.TB_undo = dlg.check_TB_undo.GetValue()
             conf.TB_copy = dlg.check_TB_copy.GetValue()
@@ -506,6 +507,8 @@ class PrefsDialog(wx.Dialog): #(wx.PropertySheetDialog): !!! not wrapper yed - w
         self.check_expandOnOpen.SetValue(conf.expandOnOpen)
         self.check_fitTestWin = xrc.XRCCTRL(self, 'check_fitTestWin')
         self.check_fitTestWin.SetValue(conf.fitTestWin)
+        self.radio_autoRefreshPolicy = xrc.XRCCTRL(self, 'radio_autoRefreshPolicy')
+        self.radio_autoRefreshPolicy.SetSelection(conf.autoRefreshPolicy)
 
         self.check_TB_file = xrc.XRCCTRL(self, 'check_TB_file')
         self.check_TB_file.SetValue(conf.TB_file)

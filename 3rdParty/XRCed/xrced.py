@@ -141,7 +141,8 @@ Please upgrade wxWidgets to %d.%d.%d or higher.''' % MinWxVersion)
         # Settings
         conf = g.conf = wx.Config(style = wx.CONFIG_USE_LOCAL_FILE)
         conf.localconf = None
-        conf.autoRefresh = conf.ReadBool('autorefresh', True)
+        conf.autoRefresh = conf.ReadBool('autoRefresh', True)
+        conf.autoRefreshPolicy = conf.ReadInt('autoRefreshPolicy', 0)
         conf.pos = wx.Point(conf.ReadInt('x', -1), conf.ReadInt('y', -1))
         conf.size = wx.Size(conf.ReadInt('width', 800), conf.ReadInt('height', 600))
         g.useAUI = conf.useAUI = conf.ReadBool('useAUI', False)
@@ -194,7 +195,8 @@ Please upgrade wxWidgets to %d.%d.%d or higher.''' % MinWxVersion)
         # Write config
         conf = g.conf
         conf.SetPath('/')
-        conf.WriteInt('autorefresh', conf.autoRefresh)
+        conf.WriteBool('autoRefresh', conf.autoRefresh)
+        conf.WriteInt('autoRefreshPolicy', conf.autoRefreshPolicy)
         conf.WriteBool('useAUI', conf.useAUI)
         if g.useAUI:
             conf.Write('perspective', conf.perspective)

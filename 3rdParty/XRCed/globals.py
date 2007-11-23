@@ -57,6 +57,10 @@ class ID:
     REF = wx.NewId()
     COMMENT = wx.NewId()
 
+# Constants
+AUTO_REFRESH_POLICY_SELECTION = 0
+AUTO_REFRESH_POLICY_FOCUS = 0
+
 # Global variables
 
 _debug = False                  # default debug flag

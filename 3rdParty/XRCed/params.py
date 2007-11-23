@@ -21,6 +21,8 @@ def InitParams(panel):
 
     global Presenter
     from presenter import Presenter
+    global Listener
+    from listener import Listener
 
     dc = wx.ClientDC(panel)
     global textH, textB
@@ -686,7 +688,7 @@ class RadioBox(PPanel):
         if not value: value = self.default
         self.SetStringSelection(self.choicesInv[value])
 
-# Boxless radiobox
+# Base type for checkable parameters
 class CheckBox(PPanel):
     isCheck = True
     def __init__(self, parent, name='checkbox'):
@@ -700,6 +702,9 @@ class CheckBox(PPanel):
         Presenter.setApplied(False)
         if Presenter.panelIsDirty():
             Presenter.registerUndoEdit()
+        if g.conf.autoRefresh and g.conf.autoRefreshPolicy == AUTO_REFRESH_POLICY_FOCUS:
+            Listener.testWin.isDirty = True
+            wx.CallAfter(Presenter.refreshTestWin)
         evt.Skip()
 
 class ParamBool(CheckBox):
