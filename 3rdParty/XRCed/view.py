@@ -11,6 +11,8 @@ from AttributePanel import Panel, AttributePanel
 from TestWin import TestWindow
 from tools import *
 import images
+if wx.Platform == '__WXMAC__':
+    import images_32x32
 import wx.aui
 import wx.html
 
@@ -218,8 +220,9 @@ class Frame(wx.Frame):
         menu.Append(self.ID_UNSELECT, '&Unselect All', 'Clear tree selection')
         menu.Append(ID.COLLAPSE_ALL, '&Collapse All', 'Collapse tree')
         menu.AppendSeparator()
-        self.ID_LOCATE = wx.NewId()
+        menu.Append(wx.ID_FIND, '&Find\tCtrl-F', 'Find a named control')
         self.ART_LOCATE = 'ART_LOCATE'
+        self.ID_LOCATE = wx.NewId()
         menu.Append(self.ID_LOCATE, '&Locate\tCtrl-L', 'Locate control in test window and select it')
         
         menuBar.Append(menu, '&Edit')
