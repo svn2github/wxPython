@@ -81,6 +81,10 @@ class PPanel(wx.Panel):
     def OnChange(self, evt):
         Presenter.setApplied(False)
         evt.Skip()
+    def OnKillFocus(self, evt):
+        if g.conf.autoRefresh and g.conf.autoRefreshPolicy == AUTO_REFRESH_POLICY_FOCUS:
+            wx.CallAfter(Presenter.refreshTestWin)
+        evt.Skip()
 
 class ParamBinaryOr(PPanel):
     '''Editing binary flag attributes defined by a string separated by '|'.'''
@@ -97,6 +101,7 @@ class ParamBinaryOr(PPanel):
             sizer.Add(self.combo, 1, wx.ALL, 2)
         self.SetSizerAndFit(sizer)
         self.combo.Bind(wx.EVT_TEXT, self.OnChange)
+        self.combo.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
     def GetValue(self):
         return self.combo.GetValue()
     def SetValue(self, value):
@@ -139,6 +144,7 @@ class ParamColour(PPanel):
         self.textModified = False
         self.button.Bind(wx.EVT_PAINT, self.OnPaintButton)
         self.text.Bind(wx.EVT_TEXT, self.OnChange)
+        self.text.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
         self.button.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
     def GetValue(self):
         return self.text.GetValue()
@@ -301,6 +307,7 @@ class ParamInt(PPanel):
         self.spin.Bind(wx.EVT_SPIN_UP, self.OnSpinUp)
         self.spin.Bind(wx.EVT_SPIN_DOWN, self.OnSpinDown)
         self.text.Bind(wx.EVT_TEXT, self.OnChange)
+        self.text.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
         
     def GetValue(self):
         return self.text.GetValue()
@@ -370,6 +377,7 @@ class ParamMultilineText(PPanel):
         self.SetSizer(sizer)
         self.button.Bind(wx.EVT_BUTTON, self.OnButtonEdit)
         self.text.Bind(wx.EVT_TEXT, self.OnChange)
+        self.text.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
     def GetValue(self):
         return self.text.GetValue()
     def SetValue(self, value):
@@ -398,6 +406,7 @@ class ParamText(PPanel):
         sizer.Add(self.text, option, wx.ALIGN_CENTER_VERTICAL | wx.ALL, textB)
         self.SetSizer(sizer)
         self.text.Bind(wx.EVT_TEXT, self.OnChange)
+        self.text.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
     def GetValue(self):
         return self.text.GetValue()
     def SetValue(self, value):
@@ -942,6 +951,9 @@ class StylePanel(wx.Panel):
 
     def OnCheck(self, evt):
         Presenter.setApplied(False)
+        if g.conf.autoRefresh and g.conf.autoRefreshPolicy == AUTO_REFRESH_POLICY_FOCUS:
+            Listener.testWin.isDirty = True
+            wx.CallAfter(Presenter.refreshTestWin)
 
 #############################################################################
 

@@ -157,12 +157,20 @@ class TestWindow:
     def FindObjectRect(self, item):
         tree = view.tree
         if not item or item == tree.root: return None
+        if item == self.item:   # top-level
+            comp = Manager.getNodeComp(tree.GetPyData(item))
+            rects = comp.getRect(self.object)
+            if rects:
+                # Make rects relative to the object
+                offset = wx.Point(-rects[0].GetLeft(),-rects[0].GetTop())
+                [r.Offset(offset) for r in rects]
+            return rects
         # Traverse tree until we reach the root  or the test object
         items = [item]
         while 1:
             item = tree.GetItemParent(item)
-            if item == tree.root: return None # item outside if the test subtree
-            elif item == self.item: break
+            if item == self.item: break
+            elif item == tree.root: return None # item outside of the test subtree
             else: items.append(item)
         # Now traverse back from parents to children
         obj = self.object
