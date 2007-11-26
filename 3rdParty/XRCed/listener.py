@@ -79,6 +79,7 @@ class _Listener:
         wx.EVT_MENU(frame, wx.ID_DELETE, self.OnDelete)
         wx.EVT_MENU(frame, frame.ID_UNSELECT, self.OnUnselect)
         wx.EVT_MENU(frame, frame.ID_TOOL_PASTE, self.OnToolPaste)
+        wx.EVT_MENU(frame, wx.ID_FIND, self.OnFind)
         wx.EVT_MENU(frame, frame.ID_LOCATE, self.OnLocate)
         wx.EVT_MENU(frame, frame.ID_TOOL_LOCATE, self.OnLocate)
         # View
@@ -456,6 +457,43 @@ class _Listener:
         g.undoMan.RegisterUndo(undo.UndoGlobal()) 
         Presenter.moveRight()
         self.inIdle = False
+
+    def OnFind(self, evt):
+        name = wx.GetTextFromUser('Find name:', caption='Find')
+        if not name: return
+        if Presenter.item == self.tree.root:
+            item = self.tree.Find(self.tree.root, name)
+        else:
+            # Find from current position
+            item = Presenter.item
+            while item:
+                found = self.tree.Find(item, name)
+                if found: 
+                    item = found
+                    break
+                # Search the rest of the current subtree, then go up
+                next = self.tree.GetNextSibling(item)
+                while not next:
+                    next = self.tree.GetItemParent(item)
+                    if next == self.tree.root:
+                        next = None
+                        break
+                    item = next
+                    next = self.tree.GetNextSibling(next)
+                item = next
+            if not item: 
+                ask = wx.MessageBox('Search failed. Search from the root?', 
+                                    'Question', wx.YES_NO)
+                if ask == wx.YES:
+                    item = self.tree.Find(self.tree.root, name)
+                else:
+                    return
+        if not item: 
+            wx.LogError('No such name')
+            return
+        Presenter.unselect()
+        self.tree.EnsureVisible(item)
+        self.tree.SelectItem(item)        
 
     def OnLocate(self, evt):
         frame = self.testWin.GetFrame()

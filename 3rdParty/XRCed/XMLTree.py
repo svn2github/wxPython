@@ -206,6 +206,18 @@ class XMLTree(wx.TreeCtrl):
                 if state: self.SetFullState(states, item)
             item = self.GetNextSibling(item)
 
+    # Find item with given data (node)
+    def Find(self, item, name):
+        node = self.GetPyData(item)
+        if is_object(node) and node.getAttribute('name') == name:
+            return item
+        item,cookie = self.GetFirstChild(item)
+        while item:
+            found = self.Find(item, name)
+            if found: return found
+            item = self.GetNextSibling(item)
+        return None
+
     # Fixes for broken and platform-incompatible functions
 
     def ItemHasChildren(self, item):
