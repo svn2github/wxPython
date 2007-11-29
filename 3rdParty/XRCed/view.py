@@ -13,6 +13,7 @@ from tools import *
 import images
 if wx.Platform == '__WXMAC__':
     import images_32x32
+    # Substitute higher-res icons for Mac
     for k,v in images_32x32.__dict__.items():
         if k[:3] == 'get':
             images.__dict__[k] = v
@@ -96,10 +97,12 @@ class Frame(wx.Frame):
         # Create toolbar
         self.tb = tb = wx.ToolBar(self, -1, style=wx.TB_FLAT | wx.TB_NODIVIDER)
         # Use tango icons and slightly wider bitmap size on Mac
-        if wx.Platform == '__WXMSW__':
-            tb.SetToolBitmapSize((26,26))
-        elif wx.Platform == '__WXGTK__':
-            tb.SetToolBitmapSize((24,24))
+        if wx.Platform == '__WXMAC__':
+            tb.SetToolBitmapSize((32,32))
+#        if wx.Platform == '__WXMSW__':
+#            tb.SetToolBitmapSize((26,26))
+#        elif wx.Platform == '__WXGTK__':
+#            tb.SetToolBitmapSize((24,24))
 
         self.InitToolBar(g.useAUI or g.conf.embedPanel) # add tools
 
@@ -151,10 +154,12 @@ class Frame(wx.Frame):
             mf.tb = mf.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
 
             # Use tango icons and slightly wider bitmap size on Mac
-            if wx.Platform in ['__WXMAC__', '__WXMSW__']:
-                mf.tb.SetToolBitmapSize((26,26))
-            else:
-                mf.tb.SetToolBitmapSize((24,24))
+            if wx.Platform == '__WXMAC__':
+                mf.tb.SetToolBitmapSize((32,32))
+#            if wx.Platform == '__WXMSW__':
+#                mf.tb.SetToolBitmapSize((26,26))
+#            elif wx.Platform == '__WXGTK__':
+#                mf.tb.SetToolBitmapSize((24,24))
             self.InitMiniFrameToolBar(mf.tb)
 
             mfSizer = wx.BoxSizer()
@@ -563,8 +568,8 @@ class ToolArtProvider(wx.ArtProvider):
         if id in self.images:
             img = self.images[id]
             # Alpha not implemented completely there
-            if wx.Platform in ['__WXMAC__', '__WXMSW__']:
-                img.ConvertAlphaToMask()
+#            if wx.Platform in ['__WXMAC__', '__WXMSW__']:
+#                img.ConvertAlphaToMask()
             bmp = wx.BitmapFromImage(img)
         return bmp
 
