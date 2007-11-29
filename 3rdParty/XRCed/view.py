@@ -13,6 +13,9 @@ from tools import *
 import images
 if wx.Platform == '__WXMAC__':
     import images_32x32
+    for k,v in images_32x32.__dict__.items():
+        if k[:3] == 'get':
+            images.__dict__[k] = v
 import wx.aui
 import wx.html
 
@@ -62,7 +65,7 @@ def create_tools():
         minSize = toolFrame.GetSize()
         if minSize[0] < 320: minSize[0] = 320
         toolFrame.SetMinSize(minSize)
-        toolFrame.SetPosition(g.conf.toolPanelPos)
+        #toolFrame.SetPosition(g.conf.toolPanelPos)
         toolFrame.SetSize(g.conf.toolPanelSize)
         return toolFrame
 
@@ -93,9 +96,9 @@ class Frame(wx.Frame):
         # Create toolbar
         self.tb = tb = wx.ToolBar(self, -1, style=wx.TB_FLAT | wx.TB_NODIVIDER)
         # Use tango icons and slightly wider bitmap size on Mac
-        if wx.Platform in ['__WXMAC__', '__WXMSW__']:
+        if wx.Platform == '__WXMSW__':
             tb.SetToolBitmapSize((26,26))
-        else:
+        elif wx.Platform == '__WXGTK__':
             tb.SetToolBitmapSize((24,24))
 
         self.InitToolBar(g.useAUI or g.conf.embedPanel) # add tools

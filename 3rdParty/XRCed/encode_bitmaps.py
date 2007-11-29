@@ -38,5 +38,5 @@ def main(filemask, output):
 
 if __name__ == "__main__":
     main('src-images/*.png', 'images.py')
-#    main('src-images/32x32/*.png', 'images_32x32.py')
+    main('src-images/32x32/*.png', 'images_32x32.py')
 

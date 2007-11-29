@@ -163,6 +163,8 @@ Please upgrade wxWidgets to %d.%d.%d or higher.''' % MinWxVersion)
         
         conf.toolPanelPos = wx.Point(conf.ReadInt('toolPanelX', -1), 
                                      conf.ReadInt('toolPanelY', -1))
+        if wx.Platform == '__WXMAC__':
+            conf.toolPanelPos.y += 4  # OSX has some issues with miniframe
         conf.toolPanelSize = wx.Size(conf.ReadInt('toolPanelWidth', -1), 
                                      conf.ReadInt('toolPanelHeight', -1))
         
