@@ -37,7 +37,6 @@ class CreateCircleMode(GUIMode.GUIBase):
             Point = N.array(event.GetPosition(), N.float)
             distance = Point-self.Center
             Radius = N.hypot(distance[0], distance[1])
-            print "Radius is:", Radius
             dc = wx.ClientDC(self.parent)
             dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -46,6 +45,7 @@ class CreateCircleMode(GUIMode.GUIBase):
                 dc.DrawCirclePoint(*self.PrevCircle)
             self.PrevCircle = ( self.Center, Radius )
             dc.DrawCirclePoint( *self.PrevCircle )
+    
     def OnLeftUp(self, event):
         if self.Center is not None:
             Point = N.array(event.GetPosition(), N.float)
@@ -53,9 +53,10 @@ class CreateCircleMode(GUIMode.GUIBase):
             Radius = N.hypot(distance[0], distance[1])
             Center = self.parent.PixelToWorld(self.Center)
             Diameter = 2 * self.parent.ScalePixelToWorld((Radius, Radius))[0]
-            self.parent.AddCircle(Center,
-                                  Diameter,
-                                  **self.Properties)
+            if Diameter > 0:
+                self.parent.AddCircle(Center,
+                                      Diameter,
+                                      **self.Properties)
             
             self.Center = None
             self.PrevCircle = None
@@ -74,7 +75,7 @@ class DrawFrame(wx.Frame):
 
         # Add the Canvas
         self.CreateStatusBar()            
-        Canvas = NavCanvas.NavCanvas(self,-1,(500,500),
+        Canvas = NavCanvas.NavCanvas(self,#-1,(500,500),
                                           ProjectionFun = None,
                                           Debug = 0,
                                           BackgroundColor = "DARK SLATE BLUE",
