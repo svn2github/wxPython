@@ -99,6 +99,8 @@ class Frame(wx.Frame):
         # Use bigger icon size on Mac
         if wx.Platform == '__WXMAC__':
             tb.SetToolBitmapSize((32,32))
+        elif wx.Platform == '__WXMSW__':
+            tb.SetToolBitmapSize((22,22))
 
         self.InitToolBar(g.useAUI or g.conf.embedPanel) # add tools
 
@@ -152,6 +154,8 @@ class Frame(wx.Frame):
             # Use bigger icon size on Mac
             if wx.Platform == '__WXMAC__':
                 mf.tb.SetToolBitmapSize((32,32))
+            elif wx.Platform == '__WXMSW__':
+                mf.tb.SetToolBitmapSize((22,22))
             self.InitMiniFrameToolBar(mf.tb)
 
             mfSizer = wx.BoxSizer()
