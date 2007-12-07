@@ -1,4 +1,10 @@
 Notes on stuff to do on the FloatCanvas Project:
+* FloatCanvas.SetMode should set the Canvas on the GUI mode, then GUIModes
+  don't have to be initialized with a Canvas object.
+
+* Should the objects notify the Canvas when they are changed -- mark
+  it "dirty"? They mark the BB as dirty, but not the canvas itself. This
+  would help avoid having to call "Force" on the Draw calls.
 
 * refactor so that object properties are all stored in a dict -- this
 will make it cleaner and easier to update properties, save them, etc.

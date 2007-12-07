@@ -10,7 +10,7 @@ import wx
 
 ## import a local version
 import sys
-sys.path.append("../")
+sys.path.append("..")
 from floatcanvas import NavCanvas, FloatCanvas, Resources, Utilities
 from floatcanvas.Utilities import GUI
 ## import the installed version

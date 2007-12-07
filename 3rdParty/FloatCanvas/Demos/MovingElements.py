@@ -20,7 +20,7 @@ if ver == 'installed': ## import the installed version
 elif ver == 'local':
     ## import a local version
     import sys
-    sys.path.append("../")
+    sys.path.append("..")
     from floatcanvas import NavCanvas,  Resources
     from floatcanvas import FloatCanvas as FC
     from floatcanvas.Utilities import BBox
@@ -38,9 +38,9 @@ class MovingObjectMixin:
     def GetOutlinePoints(self):
         BB = self.BoundingBox
         OutlinePoints = N.array( ( (BB[0,0], BB[0,1]),
-                                   (BB[0,0], BB[1,1]),
-                                   (BB[1,0], BB[1,1]),
-                                   (BB[1,0], BB[0,1]),
+                                    (BB[0,0], BB[1,1]),
+                                    (BB[1,0], BB[1,1]),
+                                    (BB[1,0], BB[0,1]),
                                  )
                                )
 

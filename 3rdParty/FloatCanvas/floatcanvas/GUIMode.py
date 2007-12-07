@@ -266,8 +266,6 @@ class GUIZoomIn(GUIBase):
         self.parent.CaptureMouse()
 
     def OnLeftUp(self, event):
-        #if self.parent.HasCapture():
-        #        self.parent.ReleaseMouse()
         if event.LeftUp() and not self.StartRBBox is None:
             self.PrevRBBox = None
             EndRBBox = event.GetPosition()

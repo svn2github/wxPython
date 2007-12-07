@@ -13,12 +13,20 @@ from numpy import *
 
 ## import local version:
 import sys
-sys.path.append("../")
-from floatcanvas import NavCanvas, FloatCanvas
 
-# import installed version
-# from wx.lib.floatcanvas import FloatCanvas, NavCanvas
+ver = 'local'
+#ver = 'installed'
 
+if ver == 'installed': ## import the installed version
+    from wx.lib.floatcanvas import NavCanvas
+    from wx.lib.floatcanvas import FloatCanvas
+    print "using installed version:", wx.lib.floatcanvas.__version__
+elif ver == 'local':
+    ## import a local version
+    import sys
+    sys.path.append("..")
+    from floatcanvas import NavCanvas
+    from floatcanvas import FloatCanvas
 
 ID_DRAW_BUTTON = 100
 ID_QUIT_BUTTON = 101
