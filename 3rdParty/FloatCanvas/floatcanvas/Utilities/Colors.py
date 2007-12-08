@@ -3,7 +3,7 @@
 """
 Colors.py
 
-Assorted stuff for Colrsd support. At the moment, only a single item:
+Assorted stuff for Colors support. At the moment, only a single item:
 
 CatagoricalColor1: A list of colors that are distict.
 

@@ -17,6 +17,8 @@ import FloatCanvas, Resources
 import numpy as N
 
 ## create all the Cursors, so they don't need to be created each time.
+## fixme: this shouldn't be done on import!
+
 if "wxMac" in wx.PlatformInfo: # use 16X16 cursors for wxMac
     HandCursor = wx.CursorFromImage(Resources.getHand16Image())
     GrabHandCursor = wx.CursorFromImage(Resources.getGrabHand16Image())
@@ -52,8 +54,8 @@ class GUIBase:
     This one does nothing with any event
 
     """
-    def __init__(self, parent):
-        self.parent = parent
+    def __init__(self, Canvas):
+        self.Canvas = Canvas # set the FloatCanvas for the mode.
     
     Cursor = wx.NullCursor
 
@@ -105,71 +107,71 @@ class GUIMouse(GUIBase):
     # Handlers
     def OnLeftDown(self, event):
         EventType = FloatCanvas.EVT_FC_LEFT_DOWN
-        if not self.parent.HitTest(event, EventType):
-            self.parent._RaiseMouseEvent(event, EventType)
+        if not self.Canvas.HitTest(event, EventType):
+            self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnLeftUp(self, event):
         EventType = FloatCanvas.EVT_FC_LEFT_UP
-        if not self.parent.HitTest(event, EventType):
-            self.parent._RaiseMouseEvent(event, EventType)
+        if not self.Canvas.HitTest(event, EventType):
+            self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnLeftDouble(self, event):
         EventType = FloatCanvas.EVT_FC_LEFT_DCLICK
-        if not self.parent.HitTest(event, EventType):
-                self.parent._RaiseMouseEvent(event, EventType)
+        if not self.Canvas.HitTest(event, EventType):
+                self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnMiddleDown(self, event):
         EventType = FloatCanvas.EVT_FC_MIDDLE_DOWN
-        if not self.parent.HitTest(event, EventType):
-            self.parent._RaiseMouseEvent(event, EventType)
+        if not self.Canvas.HitTest(event, EventType):
+            self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnMiddleUp(self, event):
         EventType = FloatCanvas.EVT_FC_MIDDLE_UP
-        if not self.parent.HitTest(event, EventType):
-            self.parent._RaiseMouseEvent(event, EventType)
+        if not self.Canvas.HitTest(event, EventType):
+            self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnMiddleDouble(self, event):
         EventType = FloatCanvas.EVT_FC_MIDDLE_DCLICK
-        if not self.parent.HitTest(event, EventType):
-            self.parent._RaiseMouseEvent(event, EventType)
+        if not self.Canvas.HitTest(event, EventType):
+            self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnRightDown(self, event):
         EventType = FloatCanvas.EVT_FC_RIGHT_DOWN
-        if not self.parent.HitTest(event, EventType):
-            self.parent._RaiseMouseEvent(event, EventType)
+        if not self.Canvas.HitTest(event, EventType):
+            self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnRightUp(self, event):
         EventType = FloatCanvas.EVT_FC_RIGHT_UP
-        if not self.parent.HitTest(event, EventType):
-            self.parent._RaiseMouseEvent(event, EventType)
+        if not self.Canvas.HitTest(event, EventType):
+            self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnRightDouble(self, event):
         EventType = FloatCanvas.EVT_FC_RIGHT_DCLICK
-        if not self.parent.HitTest(event, EventType):
-            self.parent._RaiseMouseEvent(event, EventType)
+        if not self.Canvas.HitTest(event, EventType):
+            self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnWheel(self, event):
         EventType = FloatCanvas.EVT_FC_MOUSEWHEEL
-        self.parent._RaiseMouseEvent(event, EventType)
+        self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnMove(self, event):
         ## The Move event always gets raised, even if there is a hit-test
-        self.parent.MouseOverTest(event)
-        self.parent._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
+        self.Canvas.MouseOverTest(event)
+        self.Canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
 
 
 class GUIMove(GUIBase):
 
     Cursor = HandCursor
     GrabCursor = GrabHandCursor
-    def __init__(self, parent):
-        GUIBase.__init__(self, parent)
+    def __init__(self, canvas):
+        GUIBase.__init__(self, canvas)
         self.StartMove = None
         self.PrevMoveXY = None
 
     def OnLeftDown(self, event):
-        self.parent.SetCursor(self.GrabCursor)
-        self.parent.CaptureMouse()
+        self.Canvas.SetCursor(self.GrabCursor)
+        self.Canvas.CaptureMouse()
         self.StartMove = N.array( event.GetPosition() )
         self.PrevMoveXY = (0,0)
 
@@ -179,22 +181,22 @@ class GUIMove(GUIBase):
             EndMove = N.array(event.GetPosition())
             DiffMove = StartMove-EndMove
             if N.sum(DiffMove**2) > 16:
-                self.parent.MoveImage(DiffMove, 'Pixel')
+                self.Canvas.MoveImage(DiffMove, 'Pixel')
             self.StartMove = None
-        self.parent.SetCursor(self.Cursor)
+        self.Canvas.SetCursor(self.Cursor)
 
     def OnMove(self, event):
         # Allways raise the Move event.
-        self.parent._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
+        self.Canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
         if event.Dragging() and event.LeftIsDown() and not self.StartMove is None:
             xy1 = N.array( event.GetPosition() )
-            wh = self.parent.PanelSize
+            wh = self.Canvas.PanelSize
             xy_tl = xy1 - self.StartMove
-            dc = wx.ClientDC(self.parent)
+            dc = wx.ClientDC(self.Canvas)
             dc.BeginDrawing()
             x1,y1 = self.PrevMoveXY
             x2,y2 = xy_tl
-            w,h = self.parent.PanelSize
+            w,h = self.Canvas.PanelSize
             ##fixme: This sure could be cleaner!
             if x2 > x1 and y2 > y1:
                 xa = xb = x1
@@ -232,14 +234,14 @@ class GUIMove(GUIBase):
                 hb = y1 - y2
 
             dc.SetPen(wx.TRANSPARENT_PEN)
-            dc.SetBrush(self.parent.BackgroundBrush)
+            dc.SetBrush(self.Canvas.BackgroundBrush)
             dc.DrawRectangle(xa, ya, wa, ha)
             dc.DrawRectangle(xb, yb, wb, hb)
             self.PrevMoveXY = xy_tl
-            if self.parent._ForeDrawList:
-                dc.DrawBitmapPoint(self.parent._ForegroundBuffer,xy_tl)
+            if self.Canvas._ForeDrawList:
+                dc.DrawBitmapPoint(self.Canvas._ForegroundBuffer,xy_tl)
             else:
-                dc.DrawBitmapPoint(self.parent._Buffer,xy_tl)
+                dc.DrawBitmapPoint(self.Canvas._Buffer,xy_tl)
             dc.EndDrawing()
 
     def OnWheel(self, event):
@@ -247,23 +249,22 @@ class GUIMove(GUIBase):
            By default, zoom in/out by a 0.1 factor per Wheel event.
         """
         if event.GetWheelRotation() < 0:
-            self.parent.Zoom(0.9)
+            self.Canvas.Zoom(0.9)
         else:
-            self.parent.Zoom(1.1)
+            self.Canvas.Zoom(1.1)
 
 class GUIZoomIn(GUIBase):
  
     Cursor = MagPlusCursor
- 
-    def __init__(self, parent):
-        GUIBase.__init__(self, parent)
+    def __init__(self, canvas):
+        GUIBase.__init__(self, canvas)
         self.StartRBBox = None
         self.PrevRBBox = None
 
     def OnLeftDown(self, event):
         self.StartRBBox = N.array( event.GetPosition() )
         self.PrevRBBox = None
-        self.parent.CaptureMouse()
+        self.Canvas.CaptureMouse()
 
     def OnLeftUp(self, event):
         if event.LeftUp() and not self.StartRBBox is None:
@@ -273,29 +274,29 @@ class GUIZoomIn(GUIBase):
             # if mouse has moved less that ten pixels, don't use the box.
             if ( abs(StartRBBox[0] - EndRBBox[0]) > 10
                     and abs(StartRBBox[1] - EndRBBox[1]) > 10 ):
-                EndRBBox = self.parent.PixelToWorld(EndRBBox)
-                StartRBBox = self.parent.PixelToWorld(StartRBBox)
+                EndRBBox = self.Canvas.PixelToWorld(EndRBBox)
+                StartRBBox = self.Canvas.PixelToWorld(StartRBBox)
                 BB = N.array(((min(EndRBBox[0],StartRBBox[0]),
                                 min(EndRBBox[1],StartRBBox[1])),
                             (max(EndRBBox[0],StartRBBox[0]),
                                 max(EndRBBox[1],StartRBBox[1]))),N.float_)
-                self.parent.ZoomToBB(BB)
+                self.Canvas.ZoomToBB(BB)
             else:
-                Center = self.parent.PixelToWorld(StartRBBox)
-                self.parent.Zoom(1.5,Center)
+                Center = self.Canvas.PixelToWorld(StartRBBox)
+                self.Canvas.Zoom(1.5,Center)
             self.StartRBBox = None
 
     def OnMove(self, event):
         # Always raise the Move event.
-        self.parent._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
+        self.Canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
         if event.Dragging() and event.LeftIsDown() and not (self.StartRBBox is None):
             xy0 = self.StartRBBox
             xy1 = N.array( event.GetPosition() )
             wh  = abs(xy1 - xy0)
-            wh[0] = max(wh[0], int(wh[1]*self.parent.AspectRatio))
-            wh[1] = int(wh[0] / self.parent.AspectRatio)
+            wh[0] = max(wh[0], int(wh[1]*self.Canvas.AspectRatio))
+            wh[1] = int(wh[0] / self.Canvas.AspectRatio)
             xy_c = (xy0 + xy1) / 2
-            dc = wx.ClientDC(self.parent)
+            dc = wx.ClientDC(self.Canvas)
             dc.BeginDrawing()
             dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -312,38 +313,37 @@ class GUIZoomIn(GUIBase):
         so the Rubber Band Box can get updated
         """
         if self.PrevRBBox is not None:
-            dc = wx.ClientDC(self.parent)
+            dc = wx.ClientDC(self.Canvas)
             dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
             dc.SetLogicalFunction(wx.XOR)
             dc.DrawRectanglePointSize(*self.PrevRBBox)
 
     def OnRightDown(self, event):
-        self.parent.Zoom(1/1.5, event.GetPosition(), centerCoords="pixel")
+        self.Canvas.Zoom(1/1.5, event.GetPosition(), centerCoords="pixel")
 
     def OnWheel(self, event):
         if event.GetWheelRotation() < 0:
-            self.parent.Zoom(0.9)
+            self.Canvas.Zoom(0.9)
         else:
-            self.parent.Zoom(1.1)
+            self.Canvas.Zoom(1.1)
 
 class GUIZoomOut(GUIBase):
 
     Cursor = MagMinusCursor
-
     def OnLeftDown(self, event):
-        self.parent.Zoom(1/1.5, event.GetPosition(), centerCoords="pixel")
+        self.Canvas.Zoom(1/1.5, event.GetPosition(), centerCoords="pixel")
 
     def OnRightDown(self, event):
-        self.parent.Zoom(1.5, event.GetPosition(), centerCoords="pixel")
+        self.Canvas.Zoom(1.5, event.GetPosition(), centerCoords="pixel")
 
     def OnWheel(self, event):
         if event.GetWheelRotation() < 0:
-            self.parent.Zoom(0.9)
+            self.Canvas.Zoom(0.9)
         else:
-            self.parent.Zoom(1.1)
+            self.Canvas.Zoom(1.1)
 
     def OnMove(self, event):
         # Allways raise the Move event.
-        self.parent._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
+        self.Canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
 

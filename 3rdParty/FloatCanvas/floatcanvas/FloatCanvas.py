@@ -2384,8 +2384,8 @@ class FloatCanvas(wx.Panel):
             Set the GUImode to any of the availble mode.
             '''
             # Set mode
+            Mode.canvas = self # make sure the mode is linked to this canvas
             self.GUIMode = Mode
-            #self.GUIMode.SetCursor()
             self.SetCursor(self.GUIMode.Cursor)
 
     def MakeHitDict(self):
