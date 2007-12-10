@@ -7,7 +7,6 @@ image with the right mouse button.
 """
 
 import wx
-app = wx.App(False)
 
 import numpy as N
 
@@ -103,9 +102,11 @@ class DrawFrame(wx.Frame):
         print "Writing a jpeg file:"
         self.Canvas.SaveAsImage("junk.jpg",wx.BITMAP_TYPE_JPEG)
 
+if __name__ == "__main__":
 
-F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
-app.MainLoop()
+    app = wx.App(False)
+    F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
+    app.MainLoop()
 
 
 

@@ -8,7 +8,6 @@ It's in a bit of a broken state right now!!!
 """
 
 import wx
-app = wx.PySimpleApp()
 ## import the installed version
 #from wx.lib.floatcanvas import NavCanvas, FloatCanvas
 
@@ -261,9 +260,10 @@ class DrawFrame(wx.Frame):
         Mode.SelectObject(obj)
         self.Canvas.SetMode(Mode)
 
-
-DrawFrame(None, -1, "FloatCanvas Demo App", wx.DefaultPosition, (700,700) )
-app.MainLoop()
+if __name__ == "__main__":
+    app = wx.PySimpleApp()
+    DrawFrame(None, -1, "FloatCanvas Demo App", wx.DefaultPosition, (700,700) )
+    app.MainLoop()
 
 
 
