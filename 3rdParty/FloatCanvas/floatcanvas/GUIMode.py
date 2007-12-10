@@ -16,35 +16,38 @@ import wx
 import FloatCanvas, Resources
 import numpy as N
 
-## create all the Cursors, so they don't need to be created each time.
-## fixme: this shouldn't be done on import!
-
-if "wxMac" in wx.PlatformInfo: # use 16X16 cursors for wxMac
-    HandCursor = wx.CursorFromImage(Resources.getHand16Image())
-    GrabHandCursor = wx.CursorFromImage(Resources.getGrabHand16Image())
-
-    img = Resources.getMagPlus16Image()
-    img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 6)
-    img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 6)
-    MagPlusCursor = wx.CursorFromImage(img)
-
-    img = Resources.getMagMinus16Image()
-    img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 6)
-    img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 6)
-    MagMinusCursor = wx.CursorFromImage(img)
-else: # use 24X24 cursors for GTK and Windows
-    HandCursor = wx.CursorFromImage(Resources.getHandImage())
-    GrabHandCursor = wx.CursorFromImage(Resources.getGrabHandImage())
-
-    img = Resources.getMagPlusImage()
-    img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 9)
-    img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 9)
-    MagPlusCursor = wx.CursorFromImage(img)
-
-    img = Resources.getMagMinusImage()
-    img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 9)
-    img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 9)
-    MagMinusCursor = wx.CursorFromImage(img)
+class Cursors(object):
+    """
+    Class to hold the standard Cursors
+    
+    """
+    def __init__(self):
+        if "wxMac" in wx.PlatformInfo: # use 16X16 cursors for wxMac
+            self.HandCursor = wx.CursorFromImage(Resources.getHand16Image())
+            self.GrabHandCursor = wx.CursorFromImage(Resources.getGrabHand16Image())
+        
+            img = Resources.getMagPlus16Image()
+            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 6)
+            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 6)
+            self.MagPlusCursor = wx.CursorFromImage(img)
+        
+            img = Resources.getMagMinus16Image()
+            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 6)
+            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 6)
+            self.MagMinusCursor = wx.CursorFromImage(img)
+        else: # use 24X24 cursors for GTK and Windows
+            self.HandCursor = wx.CursorFromImage(Resources.getHandImage())
+            self.GrabHandCursor = wx.CursorFromImage(Resources.getGrabHandImage())
+        
+            img = Resources.getMagPlusImage()
+            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 9)
+            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 9)
+            self.MagPlusCursor = wx.CursorFromImage(img)
+        
+            img = Resources.getMagMinusImage()
+            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 9)
+            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 9)
+            self.MagMinusCursor = wx.CursorFromImage(img)
 
 
 class GUIBase:
@@ -56,7 +59,8 @@ class GUIBase:
     """
     def __init__(self, Canvas):
         self.Canvas = Canvas # set the FloatCanvas for the mode.
-    
+        self.Cursors = Cursors()
+
     Cursor = wx.NullCursor
 
     # Handlers
@@ -162,10 +166,10 @@ class GUIMouse(GUIBase):
 
 class GUIMove(GUIBase):
 
-    Cursor = HandCursor
-    GrabCursor = GrabHandCursor
     def __init__(self, canvas):
         GUIBase.__init__(self, canvas)
+        self.Cursor = self.Cursors.HandCursor
+        self.GrabCursor = self.Cursors.GrabHandCursor
         self.StartMove = None
         self.PrevMoveXY = None
 
@@ -185,64 +189,70 @@ class GUIMove(GUIBase):
             self.StartMove = None
         self.Canvas.SetCursor(self.Cursor)
 
+
     def OnMove(self, event):
         # Allways raise the Move event.
         self.Canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
         if event.Dragging() and event.LeftIsDown() and not self.StartMove is None:
-            xy1 = N.array( event.GetPosition() )
-            wh = self.Canvas.PanelSize
-            xy_tl = xy1 - self.StartMove
-            dc = wx.ClientDC(self.Canvas)
-            dc.BeginDrawing()
-            x1,y1 = self.PrevMoveXY
-            x2,y2 = xy_tl
-            w,h = self.Canvas.PanelSize
-            ##fixme: This sure could be cleaner!
-            if x2 > x1 and y2 > y1:
-                xa = xb = x1
-                ya = yb = y1
-                wa = w
-                ha = y2 - y1
-                wb = x2-  x1
-                hb = h
-            elif x2 > x1 and y2 <= y1:
-                xa = x1
-                ya = y1
-                wa = x2 - x1
-                ha = h
-                xb = x1
-                yb = y2 + h
-                wb = w
-                hb = y1 - y2
-            elif x2 <= x1 and y2 > y1:
-                xa = x1
-                ya = y1
-                wa = w
-                ha = y2 - y1
-                xb = x2 + w
-                yb = y1
-                wb = x1 - x2
-                hb = h - y2 + y1
-            elif x2 <= x1 and y2 <= y1:
-                xa = x2 + w
-                ya = y1
-                wa = x1 - x2
-                ha = h
-                xb = x1
-                yb = y2 + h
-                wb = w
-                hb = y1 - y2
+            self.MoveImage(event)
 
-            dc.SetPen(wx.TRANSPARENT_PEN)
-            dc.SetBrush(self.Canvas.BackgroundBrush)
-            dc.DrawRectangle(xa, ya, wa, ha)
-            dc.DrawRectangle(xb, yb, wb, hb)
-            self.PrevMoveXY = xy_tl
-            if self.Canvas._ForeDrawList:
-                dc.DrawBitmapPoint(self.Canvas._ForegroundBuffer,xy_tl)
-            else:
-                dc.DrawBitmapPoint(self.Canvas._Buffer,xy_tl)
-            dc.EndDrawing()
+    def MoveImage(self, event):
+        xy1 = N.array( event.GetPosition() )
+        wh = self.Canvas.PanelSize
+        xy_tl = xy1 - self.StartMove
+        dc = wx.ClientDC(self.Canvas)
+        dc.BeginDrawing()
+        x1,y1 = self.PrevMoveXY
+        x2,y2 = xy_tl
+        w,h = self.Canvas.PanelSize
+        ##fixme: This sure could be cleaner!
+        ##   This is all to fill in the background with the background color
+        ##   without flashing as the image moves.
+        if x2 > x1 and y2 > y1:
+            xa = xb = x1
+            ya = yb = y1
+            wa = w
+            ha = y2 - y1
+            wb = x2-  x1
+            hb = h
+        elif x2 > x1 and y2 <= y1:
+            xa = x1
+            ya = y1
+            wa = x2 - x1
+            ha = h
+            xb = x1
+            yb = y2 + h
+            wb = w
+            hb = y1 - y2
+        elif x2 <= x1 and y2 > y1:
+            xa = x1
+            ya = y1
+            wa = w
+            ha = y2 - y1
+            xb = x2 + w
+            yb = y1
+            wb = x1 - x2
+            hb = h - y2 + y1
+        elif x2 <= x1 and y2 <= y1:
+            xa = x2 + w
+            ya = y1
+            wa = x1 - x2
+            ha = h
+            xb = x1
+            yb = y2 + h
+            wb = w
+            hb = y1 - y2
+
+        dc.SetPen(wx.TRANSPARENT_PEN)
+        dc.SetBrush(self.Canvas.BackgroundBrush)
+        dc.DrawRectangle(xa, ya, wa, ha)
+        dc.DrawRectangle(xb, yb, wb, hb)
+        self.PrevMoveXY = xy_tl
+        if self.Canvas._ForeDrawList:
+            dc.DrawBitmapPoint(self.Canvas._ForegroundBuffer,xy_tl)
+        else:
+            dc.DrawBitmapPoint(self.Canvas._Buffer,xy_tl)
+        dc.EndDrawing()
 
     def OnWheel(self, event):
         """
@@ -255,11 +265,11 @@ class GUIMove(GUIBase):
 
 class GUIZoomIn(GUIBase):
  
-    Cursor = MagPlusCursor
     def __init__(self, canvas):
         GUIBase.__init__(self, canvas)
         self.StartRBBox = None
         self.PrevRBBox = None
+        self.Cursor = self.Cursors.MagPlusCursor
 
     def OnLeftDown(self, event):
         self.StartRBBox = N.array( event.GetPosition() )
@@ -330,7 +340,10 @@ class GUIZoomIn(GUIBase):
 
 class GUIZoomOut(GUIBase):
 
-    Cursor = MagMinusCursor
+    def __init__(self, Canvas):
+        GUIBase.__init__(self, Canvas)
+        self.Cursor = self.Cursors.MagMinusCursor
+        
     def OnLeftDown(self, event):
         self.Canvas.Zoom(1/1.5, event.GetPosition(), centerCoords="pixel")
 
