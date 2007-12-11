@@ -83,9 +83,12 @@ class EditCircleMode(GUIMode.GUIBase):
     
     def DrawOnTop(self, dc):
         if self.Circle is not None:
-            dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
+#            dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
+            dc.SetPen(wx.Pen('WHITE', 2))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
-            dc.SetLogicalFunction(wx.XOR)
+            #dc.SetLogicalFunction(wx.XOR)
+            dc.DrawCirclePoint( *self.Circle )
+            dc.SetPen(wx.Pen('BLACK', 2, wx.SHORT_DASH))
             dc.DrawCirclePoint( *self.Circle )
 
     def OnMove(self, event):
@@ -136,7 +139,9 @@ class CreateCircleMode(GUIMode.GUIBase):
         self.Circle = None
 
     def DrawOnTop(self, dc):
+        print "In DrawOnTop"
         if self.Circle is not None:
+            print "Drawing Circle:", self.Circle
             dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
             dc.SetLogicalFunction(wx.INVERT)
@@ -149,7 +154,7 @@ class CreateCircleMode(GUIMode.GUIBase):
 
     def OnMove(self, event):
         # always raise the move event
-        self.canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
+        self.Canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
         if event.Dragging() and event.LeftIsDown() and self.Circle is not None:
             Point = N.array(event.GetPosition(), N.float)
             distance = Point-self.Circle[0]
@@ -161,8 +166,8 @@ class CreateCircleMode(GUIMode.GUIBase):
             Point = N.array(event.GetPosition(), N.float)
             distance = Point-self.Circle[0]
             Radius = N.hypot(distance[0], distance[1])
-            Center = self.canvas.PixelToWorld(self.Circle[0])
-            Diameter = 2 * self.canvas.ScalePixelToWorld((Radius, Radius))[0]
+            Center = self.Canvas.PixelToWorld(self.Circle[0])
+            Diameter = 2 * self.Canvas.ScalePixelToWorld((Radius, Radius))[0]
             if Diameter > 0:
                 self.ObjectList.append(self.Canvas.AddCircle(Center,
                                                          Diameter,
@@ -249,7 +254,6 @@ class DrawFrame(wx.Frame):
         Updates the status bar with the world coordinates
         """
         self.SetStatusText("%.2f, %.2f"%tuple(event.Coords))
-
 
     def Clear(self, event=None):
         self.ObjectList = []

@@ -102,8 +102,8 @@ class DrawFrame(wx.Frame):
         print "Writing a jpeg file:"
         self.Canvas.SaveAsImage("junk.jpg",wx.BITMAP_TYPE_JPEG)
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     app = wx.App(False)
     F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
     app.MainLoop()
