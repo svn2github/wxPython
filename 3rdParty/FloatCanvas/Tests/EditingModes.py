@@ -14,7 +14,7 @@ import wx
 ## import the local version
 import sys
 sys.path.append("..")
-from floatcanvas import NavCanvas, FloatCanvas, GUIMode
+from floatcanvas import NavCanvas, FloatCanvas, GUIMode, Resources
 from floatcanvas.FloatCanvas import XYObjectMixin, LineOnlyMixin, DrawObject
 import numpy as N
 
@@ -64,11 +64,11 @@ class EditCircleMode(GUIMode.GUIBase):
         self.Moving = False
         self.StartPoint= None
         self.CenterHandle = None
-        self.PrevCircle = None        
+        self.PrevCircle = None
 
     def SelectObject(self, Circle):
-        self.Radius = Circle.Diameter / 2
-        self.CenterHandle = Canvas.AddBitmap(Resources.getMoveCursorBitmap(),
+        self.Radius = Circle.WH[0] / 2
+        self.CenterHandle = self.Canvas.AddBitmap(Resources.getMoveCursorBitmap(),
                                               Point,
                                               Position='cc',
                                               nForeground=True)
@@ -80,6 +80,13 @@ class EditCircleMode(GUIMode.GUIBase):
         if not self.Moving:
             self.Moving = True
             self.StartPoint = object.HitCoordsPixel
+    
+    def DrawOnTop(self, dc):
+        if self.Circle is not None:
+            dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
+            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.SetLogicalFunction(wx.XOR)
+            dc.DrawCirclePoint( *self.Circle )
 
     def OnMove(self, event):
         """
@@ -116,7 +123,6 @@ class EditCircleMode(GUIMode.GUIBase):
             self.Canvas.Draw(Force=True)
 
 
-
 class CreateCircleMode(GUIMode.GUIBase):
     def __init__(self, Canvas, Properties, ObjectList=None):
         GUIMode.GUIBase.__init__(self, Canvas)
@@ -125,50 +131,47 @@ class CreateCircleMode(GUIMode.GUIBase):
             self.ObjectList = []
         else:
             self.ObjectList = ObjectList
+
         self.Properties = Properties
-        self.Center = None
-        self.PrevCircle = None
-        
+        self.Circle = None
+
+    def DrawOnTop(self, dc):
+        if self.Circle is not None:
+            dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
+            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.SetLogicalFunction(wx.INVERT)
+            dc.DrawCirclePoint( *self.Circle )
+
     def OnLeftDown(self, event):
         # start a new circle
-        self.Center = N.array(event.GetPosition(), N.float)
+        self.Circle = [N.array(event.GetPosition(), N.float), 0]
         self.Canvas.CaptureMouse()
-        print "mouse clicked at:", self.Center
 
     def OnMove(self, event):
         # always raise the move event
         self.canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
-        if event.Dragging() and event.LeftIsDown() and not (self.Center is None):
+        if event.Dragging() and event.LeftIsDown() and self.Circle is not None:
             Point = N.array(event.GetPosition(), N.float)
-            distance = Point-self.Center
-            Radius = N.hypot(distance[0], distance[1])
-            dc = wx.ClientDC(self.canvas)
-            dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
-            dc.SetLogicalFunction(wx.XOR)
-            #if self.PrevCircle is not None:
-            #    dc.DrawCirclePoint(*self.PrevCircle)
-            self.PrevCircle = ( self.Center, Radius )
-            print "Drawing:", self.PrevCircle
-            dc.DrawCirclePoint( *self.PrevCircle )
-    
+            distance = Point-self.Circle[0]
+            self.Circle[1] = N.hypot(distance[0], distance[1])
+            self.Canvas.Refresh()
+
     def OnLeftUp(self, event):
-        if self.Center is not None:
+        if self.Circle is not None:
             Point = N.array(event.GetPosition(), N.float)
-            distance = Point-self.Center
+            distance = Point-self.Circle[0]
             Radius = N.hypot(distance[0], distance[1])
-            Center = self.canvas.PixelToWorld(self.Center)
+            Center = self.canvas.PixelToWorld(self.Circle[0])
             Diameter = 2 * self.canvas.ScalePixelToWorld((Radius, Radius))[0]
             if Diameter > 0:
                 self.ObjectList.append(self.Canvas.AddCircle(Center,
                                                          Diameter,
                                                          **self.Properties),
                                        )
-            self.Center = None
-            self.PrevCircle = None
-            self.canvas.Draw()
-            
-            
+            self.Circle = None
+            self.Canvas.Draw()
+
+
 class DrawFrame(wx.Frame):
     """
     A frame used for the FloatCanvas Demo
@@ -177,29 +180,49 @@ class DrawFrame(wx.Frame):
     def __init__(self, parent, id, title, position, size):
         wx.Frame.__init__(self,parent, id,title,position, size)
 
+
         # Add the Canvas
         self.CreateStatusBar()            
-        NC = NavCanvas.NavCanvas(self,#-1,(500,500),
+        self.NC = NavCanvas.NavCanvas(self,#-1,(500,500),
                                   ProjectionFun = None,
                                   Debug = 0,
                                   BackgroundColor = "DARK SLATE BLUE",
                                   )
         
-        self.Canvas = Canvas = NC.Canvas
+        self.Canvas = Canvas = self.NC.Canvas
+        
+        self.Properties = {"FillColor":"Red",
+                      "LineColor":"Purple",
+                      "LineWidth":3,
+                      }
+        self.ObjectList = []
+        self.CreateCircleMode = CreateCircleMode(self.Canvas, self.Properties, self.ObjectList)
 
         # Add some buttons to the Toolbar
-        tb = NC.ToolBar
+        tb = self.NC.ToolBar
         tb.AddSeparator()
 
         ClearButton = wx.Button(tb, wx.ID_ANY, "Clear")
         tb.AddControl(ClearButton)
         ClearButton.Bind(wx.EVT_BUTTON, self.Clear)
 
-        AddButton = wx.Button(tb, wx.ID_ANY, "Add Circles")
-        tb.AddControl(AddButton)
-        AddButton.Bind(wx.EVT_BUTTON, self.SetAddCircles)
-        self.AddButton = AddButton
+        #AddButton = wx.Button(tb, wx.ID_ANY, "Add Circles")
+        #tb.AddControl(AddButton)
+        #AddButton.Bind(wx.EVT_BUTTON, self.SetAddCircles)
+        #self.AddButton = AddButton
+        
+        self.AddCircleTool = tb.AddRadioTool(wx.ID_ANY,
+                                             bitmap=Resources.getMoveCursorBitmap(),
+                                             shortHelp = "Add Circle")
+        self.Bind(wx.EVT_TOOL, self.SetAddCircleMode, self.AddCircleTool)
 
+        self.EditCircleTool = tb.AddRadioTool(wx.ID_ANY,
+                                             bitmap=Resources.getMoveRLCursorBitmap(),
+                                             shortHelp = "Edit Circle")
+        #self.Bind(wx.EVT_TOOL, lambda evt : NC.SetMode(Mode=self.NC.MouseMode), self.EditCircleTool)
+        self.Bind(wx.EVT_TOOL, self.SetEditMode, self.EditCircleTool)
+
+        
         tb.Realize()
 
         FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
@@ -217,12 +240,8 @@ class DrawFrame(wx.Frame):
         self.Canvas.AddObject(cross)
         self.Show(True)
         self.Canvas.ZoomToBB()
-        self.Properties = {"FillColor":"Red",
-                      "LineColor":"Purple",
-                      "LineWidth":3,
-                      }
 
-        self.ObjectList = [Circle]
+        self.ObjectList.append(Circle)
         return None
     
     def OnMove(self, event):
@@ -237,25 +256,23 @@ class DrawFrame(wx.Frame):
         self.Canvas.ClearAll()
         self.Canvas.Draw()
 
-    def SetAddCircles(self, event=None):
-        label = self.AddButton.GetLabel()
-        if label == "Add Circles":
-            self.AddButton.SetLabel("Edit Circles")
-            self.Canvas.SetMode(CreateCircleMode(self.Canvas, self.Properties, self.ObjectList) )
-        elif label == "Edit Circles":
-            self.AddButton.SetLabel("Add Circles")
+    def SetAddCircleMode(self, event=None):
+        self.Canvas.SetMode(self.CreateCircleMode)
+        print "UnBinding all Objects"
+        self.Canvas.UnBindAll()
 
-            print "Setting Mode to Mouse Mode"
-            self.Canvas.SetMode(GUIMode.GUIMouse(self.Canvas))
-
-            self.BindAll()
-        else: # huh?
-            pass
+    def SetEditMode(self, event=None):
+        print "Setting Mode to Mouse Mode"
+        self.Canvas.SetMode(self.NC.GUIMouse)
+        self.BindAll()
+    
     def BindAll(self):
         for obj in self.ObjectList:
-            obj.Bind(FloatCanvas.EVT_LEFT_DOWN, self.SetCircleEdit)
+            print "Binding:", obj
+            obj.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.SetCircleEdit)
 
     def SetCircleEdit(self, obj):
+        print "In SetCircle Edit"
         Mode = EditCircleMode(self.Canvas)
         Mode.SelectObject(obj)
         self.Canvas.SetMode(Mode)

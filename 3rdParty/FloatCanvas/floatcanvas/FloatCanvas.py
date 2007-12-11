@@ -2435,7 +2435,12 @@ class FloatCanvas(wx.Panel):
                 dc.SelectObject(self._HTBitmap)
             hitcolor = dc.GetPixelPoint( xy )
             return hitcolor.Get()
-
+    def UnBindAll(self):
+        """
+        Removes all bindings to Objects
+        """
+        self.HitDict = None
+    
     def HitTest(self, event, HitEvent):
         if self.HitDict:
             # check if there are any objects in the dict for this event
@@ -2633,7 +2638,11 @@ class FloatCanvas(wx.Panel):
             dc.DrawBitmap(self._ForegroundBuffer,0,0)
         else:
             dc.DrawBitmap(self._Buffer,0,0)
-
+        try:
+            self.GUIMode.DrawOnTop(dc)
+        except AttributeError:
+            pass
+    
     def Draw(self, Force=False):
         """
 
