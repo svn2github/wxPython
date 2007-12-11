@@ -57,8 +57,8 @@ class GUIBase:
     This one does nothing with any event
 
     """
-    def __init__(self, Canvas):
-        self.Canvas = Canvas # set the FloatCanvas for the mode.
+    def __init__(self, Canvas=None):
+        self.Canvas = Canvas # set the FloatCanvas for the mode -- it now gets set when the Mode is set on the Canvas.
         self.Cursors = Cursors()
 
     Cursor = wx.NullCursor
@@ -166,7 +166,7 @@ class GUIMouse(GUIBase):
 
 class GUIMove(GUIBase):
 
-    def __init__(self, canvas):
+    def __init__(self, canvas=None):
         GUIBase.__init__(self, canvas)
         self.Cursor = self.Cursors.HandCursor
         self.GrabCursor = self.Cursors.GrabHandCursor
@@ -265,7 +265,7 @@ class GUIMove(GUIBase):
 
 class GUIZoomIn(GUIBase):
  
-    def __init__(self, canvas):
+    def __init__(self, canvas=None):
         GUIBase.__init__(self, canvas)
         self.StartRBBox = None
         self.PrevRBBox = None
@@ -340,7 +340,7 @@ class GUIZoomIn(GUIBase):
 
 class GUIZoomOut(GUIBase):
 
-    def __init__(self, Canvas):
+    def __init__(self, Canvas=None):
         GUIBase.__init__(self, Canvas)
         self.Cursor = self.Cursors.MagMinusCursor
         

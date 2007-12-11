@@ -11,6 +11,7 @@ from time import clock
 import wx
 
 from Utilities import BBox
+import GUIMode
 
 
 ## A global variable to hold the Pixels per inch that wxWindows thinks is in use
@@ -2300,7 +2301,7 @@ class FloatCanvas(wx.Panel):
         #wx.EVT_LEAVE_WINDOW(self, self. )
 
         self.SetProjectionFun(ProjectionFun)
-        self.GUIMode = None
+        self.SetMode(GUIMode.GUIMouse()) # make the default Mouse Mode.
 
         # timer to give a delay when re-sizing so that buffers aren't re-built too many times.
         self.SizeTimer = wx.PyTimer(self.OnSizeTimer)
@@ -2384,7 +2385,7 @@ class FloatCanvas(wx.Panel):
             Set the GUImode to any of the availble mode.
             '''
             # Set mode
-            Mode.canvas = self # make sure the mode is linked to this canvas
+            Mode.Canvas = self # make sure the mode is linked to this canvas
             self.GUIMode = Mode
             self.SetCursor(self.GUIMode.Cursor)
 
