@@ -127,8 +127,8 @@ class EditCircleMode(GUIMode.GUIBase):
 
 
 class CreateCircleMode(GUIMode.GUIBase):
-    def __init__(self, Canvas, Properties, ObjectList=None):
-        GUIMode.GUIBase.__init__(self, Canvas)
+    def __init__(self, Properties, ObjectList=None):
+        GUIMode.GUIBase.__init__(self)
 
         if ObjectList is None:
             self.ObjectList = []
@@ -176,6 +176,31 @@ class CreateCircleMode(GUIMode.GUIBase):
             self.Circle = None
             self.Canvas.Draw()
 
+class EditCanvas(NavCanvas.NavCanvas):
+    
+    def BuildToolbar(self):
+        """
+        over-rideing the native one -- so I can add some tools.
+        """
+        
+        self.Properties = {"FillColor":"Red",
+                           "LineColor":"Purple",
+                           "LineWidth":3,
+                           }
+        self.ObjectList = []
+        
+        tb = wx.ToolBar(self)
+        self.ToolBar = tb
+        tb.SetToolBitmapSize((24,24))
+        Modes = self.Modes
+        Modes.append(("AddCircles",
+                      CreateCircleMode(self.Properties, self.ObjectList),
+                      Resources.getMagPlusBitmap(),
+                      )
+                     )
+        self.AddToolbarModeButtons(tb, Modes)
+        self.AddToolbarZoomButton(tb)
+        tb.Realize()
 
 class DrawFrame(wx.Frame):
     """
@@ -185,25 +210,16 @@ class DrawFrame(wx.Frame):
     def __init__(self, parent, id, title, position, size):
         wx.Frame.__init__(self,parent, id,title,position, size)
 
-
         # Add the Canvas
         self.CreateStatusBar()            
-        self.NC = NavCanvas.NavCanvas(self,#-1,(500,500),
-                                  ProjectionFun = None,
-                                  Debug = 0,
-                                  BackgroundColor = "DARK SLATE BLUE",
-                                  )
+        self.NC = EditCanvas(self,
+                             BackgroundColor = "DARK SLATE BLUE",
+                             )
         
         self.Canvas = Canvas = self.NC.Canvas
         
-        self.Properties = {"FillColor":"Red",
-                      "LineColor":"Purple",
-                      "LineWidth":3,
-                      }
-        self.ObjectList = []
-        self.CreateCircleMode = CreateCircleMode(self.Canvas, self.Properties, self.ObjectList)
-
-        # Add some buttons to the Toolbar
+        self.ObjectList = self.NC.ObjectList
+        
         tb = self.NC.ToolBar
         tb.AddSeparator()
 
@@ -216,19 +232,18 @@ class DrawFrame(wx.Frame):
         #AddButton.Bind(wx.EVT_BUTTON, self.SetAddCircles)
         #self.AddButton = AddButton
         
-        self.AddCircleTool = tb.AddRadioTool(wx.ID_ANY,
-                                             bitmap=Resources.getMoveCursorBitmap(),
-                                             shortHelp = "Add Circle")
-        self.Bind(wx.EVT_TOOL, self.SetAddCircleMode, self.AddCircleTool)
-
-        self.EditCircleTool = tb.AddRadioTool(wx.ID_ANY,
-                                             bitmap=Resources.getMoveRLCursorBitmap(),
-                                             shortHelp = "Edit Circle")
+#        self.AddCircleTool = tb.AddRadioTool(wx.ID_ANY,
+#                                             bitmap=Resources.getMoveCursorBitmap(),
+#                                             shortHelp = "Add Circle")
+#        self.Bind(wx.EVT_TOOL, self.SetAddCircleMode, self.AddCircleTool)#
+#
+#        self.EditCircleTool = tb.AddRadioTool(wx.ID_ANY,
+#                                             bitmap=Resources.getMoveRLCursorBitmap(),
+#                                             shortHelp = "Edit Circle")
         #self.Bind(wx.EVT_TOOL, lambda evt : NC.SetMode(Mode=self.NC.MouseMode), self.EditCircleTool)
-        self.Bind(wx.EVT_TOOL, self.SetEditMode, self.EditCircleTool)
-
+        #self.Bind(wx.EVT_TOOL, self.SetEditMode, self.EditCircleTool)
         
-        tb.Realize()
+        #tb.Realize()
 
         FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
         
@@ -236,7 +251,6 @@ class DrawFrame(wx.Frame):
         Circle =  Canvas.AddCircle(Point, 10,
                                    FillColor = "cyan",
                                    LineColor = "Red",
-
                                    LineWidth = 2,
                                    )
 

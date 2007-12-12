@@ -1060,7 +1060,6 @@ class RectEllipse(XYObjectMixin, LineAndFillMixin, DrawObject):
         self.WH.shape = (2,)
         self.CalcBoundingBox()
 
-
     def CalcBoundingBox(self):
         # you need this in case Width or Height are negative
         corners = N.array((self.XY, (self.XY + self.WH) ), N.float)
