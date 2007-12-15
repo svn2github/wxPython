@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 """
 
 This is a small demo, showing how to make an object that can be moved around.
@@ -68,6 +68,14 @@ class MovingBitmap(FC.ScaledBitmap, MovingObjectMixin, ConnectorObjectMixin):
     pass
     
 class MovingCircle(FC.Circle, MovingObjectMixin, ConnectorObjectMixin):
+    """
+    ScaledBitmap Object that can be moved
+    """
+    ## All we need to do is is inherit from:
+    ##  ScaledBitmap, MovingObjectMixin and ConnectorObjectMixin
+    pass
+    
+class MovingArc(FC.Arc, MovingObjectMixin, ConnectorObjectMixin):
     """
     ScaledBitmap Object that can be moved
     """
@@ -210,11 +218,16 @@ class DrawFrame(wx.Frame):
         Line = ConnectorLine(Bitmaps[0], Bitmaps[1], LineWidth=3, LineColor="Red")
         Canvas.AddObject(Line)
         
+        
+        
         ## then add them to the Canvas, so they are on top of the line
         for bmp in Bitmaps:
             Canvas.AddObject(bmp)
             bmp.Bind(FC.EVT_FC_LEFT_DOWN, self.ObjectHit)
 
+        A = MovingArc((-5, 0),(-2, 2),(-5, 2), LineColor="Red", LineWidth=2)
+        self.Canvas.AddObject(A)    
+        A.Bind(FC.EVT_FC_LEFT_DOWN, self.ObjectHit)
 
         self.Show(True)
         self.Canvas.ZoomToBB()

@@ -2166,6 +2166,23 @@ class Arc(XYObjectMixin, LineAndFillMixin, DrawObject):
         self.SetPen(LineColor, LineStyle, LineWidth)
         self.SetBrush(FillColor, FillStyle)                  #Why isn't this working ???
 
+    def Move(self, Delta ):
+        """
+
+        Move(Delta): moves the object by delta, where delta is a
+        (dx,dy) pair. Ideally a Numpy array of shape (2,)
+
+        """
+
+        Delta = N.asarray(Delta, N.float)
+        self.XY += Delta
+        self.StartXY += Delta
+        self.CenterXY += Delta
+        self.EndXY += Delta
+        self.BoundingBox += Delta
+
+        if self._Canvas:
+            self._Canvas.BoundingBoxDirty = True
            
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         self.SetUpDraw(dc , WorldToPixel, ScaleWorldToPixel, HTdc)
