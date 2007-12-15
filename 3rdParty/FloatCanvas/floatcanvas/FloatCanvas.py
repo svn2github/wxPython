@@ -2655,10 +2655,12 @@ class FloatCanvas(wx.Panel):
             dc.DrawBitmap(self._ForegroundBuffer,0,0)
         else:
             dc.DrawBitmap(self._Buffer,0,0)
-        try:
-            self.GUIMode.DrawOnTop(dc)
-        except AttributeError:
-            pass
+        ## this was so that rubber band boxes and the like could get drawn here
+        ##  but it looks like a wx.ClientDC is a better bet still.
+        #try:
+        #    self.GUIMode.DrawOnTop(dc)
+        #except AttributeError:
+        #    pass
     
     def Draw(self, Force=False):
         """

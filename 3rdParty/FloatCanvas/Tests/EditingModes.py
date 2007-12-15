@@ -18,7 +18,6 @@ from floatcanvas import NavCanvas, FloatCanvas, GUIMode, Resources
 from floatcanvas.FloatCanvas import XYObjectMixin, LineOnlyMixin, DrawObject
 import numpy as N
 
-
 class Cross(XYObjectMixin, LineOnlyMixin, DrawObject,):
     def __init__(self,
                        XY,
@@ -91,6 +90,9 @@ class EditCircleMode(GUIMode.GUIBase):
             dc.SetPen(wx.Pen('BLACK', 2, wx.SHORT_DASH))
             dc.DrawCirclePoint( *self.Circle )
 
+    def OnLeftDown(self, event):
+        print "In EditCircleMode.OnLeftDown()"
+
     def OnMove(self, event):
         """
         Moves the Circle
@@ -137,19 +139,12 @@ class CreateCircleMode(GUIMode.GUIBase):
 
         self.Properties = Properties
         self.Circle = None
-
-    def DrawOnTop(self, dc):
-        print "In DrawOnTop"
-        if self.Circle is not None:
-            print "Drawing Circle:", self.Circle
-            dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
-            dc.SetLogicalFunction(wx.INVERT)
-            dc.DrawCirclePoint( *self.Circle )
+        self.OldCircle = None
 
     def OnLeftDown(self, event):
         # start a new circle
         self.Circle = [N.array(event.GetPosition(), N.float), 0]
+        self.OldCircle = None # just to make sure
         self.Canvas.CaptureMouse()
 
     def OnMove(self, event):
@@ -159,7 +154,14 @@ class CreateCircleMode(GUIMode.GUIBase):
             Point = N.array(event.GetPosition(), N.float)
             distance = Point-self.Circle[0]
             self.Circle[1] = N.hypot(distance[0], distance[1])
-            self.Canvas.Refresh()
+            dc = wx.ClientDC(self.Canvas)
+            dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
+            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.SetLogicalFunction(wx.INVERT)
+            if self.OldCircle is not None:
+                dc.DrawCirclePoint( *self.OldCircle )
+            dc.DrawCirclePoint( *self.Circle )
+            self.OldCircle = self.Circle[:]# need to make a copy
 
     def OnLeftUp(self, event):
         if self.Circle is not None:
@@ -174,7 +176,10 @@ class CreateCircleMode(GUIMode.GUIBase):
                                                          **self.Properties),
                                        )
             self.Circle = None
+            self.OldCircle = None
             self.Canvas.Draw()
+
+from Icons import CircleIcon, CircleEditIcon
 
 class EditCanvas(NavCanvas.NavCanvas):
     
@@ -193,11 +198,16 @@ class EditCanvas(NavCanvas.NavCanvas):
         self.ToolBar = tb
         tb.SetToolBitmapSize((24,24))
         Modes = self.Modes
-        Modes.append(("AddCircles",
+        Modes.append(("Add Circles",
                       CreateCircleMode(self.Properties, self.ObjectList),
-                      Resources.getMagPlusBitmap(),
-                      )
+                      CircleIcon.getBitmap(),
                      )
+                    )
+        Modes.append(("Edit Circles",
+                      EditCircleMode(),
+                      CircleEditIcon.getBitmap(),
+                     )
+                    )
         self.AddToolbarModeButtons(tb, Modes)
         self.AddToolbarZoomButton(tb)
         tb.Realize()
