@@ -50,7 +50,7 @@ class Cursors(object):
             self.MagMinusCursor = wx.CursorFromImage(img)
 
 
-class GUIBase:
+class GUIBase(object):
     """
     Basic Mouse mode and baseclass for other GUImode.
 

@@ -53,6 +53,41 @@ class Cross(XYObjectMixin, LineOnlyMixin, DrawObject,):
             HTdc.DrawLine(x, y+size, x, y-size-1)
             HTdc.DrawLine(x-size-1, y, x+size, y)
 
+class SelectObjectMode(GUIMode.GUIMouse):
+    def __init__(self, Canvas=None):
+       self._Canvas = Canvas
+        
+       self.ObjectList = []
+        
+    def set_Canvas(self, canvas):
+        ## gets called when the Canvas is set -- i.e. when the mode is used.
+        self._Canvas = canvas
+        self.BindAll()
+    
+    def get_Canvas(self):
+        return self._Canvas
+    Canvas = property(fget=get_Canvas, fset=set_Canvas)
+    
+    def BindAll(self):
+        """
+        Binds all the objects in self.ObjectList to a handler
+        """
+        ##fixme -- when do they get unbound???    
+        for obj in self.Objects:
+            obj.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnObjectHit)
+    def UnBindAll(self):
+        """
+        Binds all the objects in self.ObjectList to a handler
+        """
+        ##fixme -- when do they get unbound???    
+        for obj in self.Objects:
+            obj.UnBindAll()
+
+    def OnObjectHit(obj):
+        self.UnBindAll
+        self.Canvas.SetMode(EditCircleMode())
+        self.Canvas.Mode.SelectObject(obj)
+
 
 class EditCircleMode(GUIMode.GUIBase):
     def __init__(self, Canvas=None):
