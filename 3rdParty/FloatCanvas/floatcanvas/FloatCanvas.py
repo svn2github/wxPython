@@ -3005,7 +3005,7 @@ class FloatCanvas(wx.Panel):
             self._DrawList.append(obj)
             self._BackgroundDirty = True
         self.BoundingBoxDirty = True
-        return True
+        return obj
 
     def AddObjects(self, Objects):
         for Object in Objects:
