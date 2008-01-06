@@ -37,7 +37,7 @@ class ToolPanel(wx.PyPanel):
             thumbSize = g.conf.toolThumbSize
             il = wx.ImageList(thumbSize, thumbSize, True)
             # Default Id 0
-            il.Add(images.getToolPanel_DefaultImage().Scale(thumbSize, thumbSize).ConvertToBitmap())
+            il.Add(images.ToolPanel_Default.GetImage().Scale(thumbSize, thumbSize).ConvertToBitmap())
             self.il = il
             self.tp.AssignImageList(il)
         elif g.conf.toolPanelType == 'FPB':

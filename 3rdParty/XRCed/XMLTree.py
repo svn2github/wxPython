@@ -31,17 +31,17 @@ class XMLTree(wx.TreeCtrl):
         # Create image list
         il = wx.ImageList(22, 22, True)
         # 0 is the default image index
-        im = images.getTreeDefaultImage()
+        im = images.TreeDefault.GetImage()
         if im.GetWidth() != 22 or im.GetHeight() != 22:
             im.Resize((22,22), ((22-im.GetWidth())/2,(22-im.GetHeight())/2))
         il.Add(im.ConvertToBitmap())
         # 1 is the default container image
-        im = images.getTreeDefaultContainerImage()
+        im = images.TreeDefaultContainer.GetImage()
         if im.GetWidth() != 22 or im.GetHeight() != 22:
             im.Resize((22,22), ((22-im.GetWidth())/2,(22-im.GetHeight())/2))
         il.Add(im.ConvertToBitmap())
         # root icon
-#        self.rootImage = il.Add(images.getTreeRootImage().Scale(16,16).ConvertToBitmap())
+#        self.rootImage = il.Add(images.TreeRoot.GetImage().Scale(16,16).ConvertToBitmap())
         # Loop through registered components which have images
         for component in Manager.components.values():
             for im in component.images:

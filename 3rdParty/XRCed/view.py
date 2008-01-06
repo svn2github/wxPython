@@ -12,11 +12,9 @@ from TestWin import TestWindow
 from tools import *
 import images
 if wx.Platform == '__WXMAC__':
-    import images_32x32
     # Substitute higher-res icons for Mac
-    for k,v in images_32x32.__dict__.items():
-        if k[:3] == 'get':
-            images.__dict__[k] = v
+    import images_32x32
+    images.__dict__.update(images_32x32.__dict__)
 import wx.aui
 import wx.html
 
@@ -78,7 +76,7 @@ class Frame(wx.Frame):
         bar = self.CreateStatusBar(2)
         bar.SetStatusWidths([-1, 40])
         if wx.Platform != '__WXMAC__':
-            self.icns = wx.IconBundleFromIcon(images.getIconIcon())
+            self.icns = wx.IconBundleFromIcon(images.Icon.GetIcon())
             self.SetIcons(self.icns)
 
         self.InitMenuBar()
@@ -537,26 +535,26 @@ class ToolArtProvider(wx.ArtProvider):
     def __init__(self):
         wx.ArtProvider.__init__(self)
         self.images = {
-            'ART_LOCATE': images.getLocateImage(),
-            'ART_TEST': images.getTestImage(),
-            'ART_REFRESH': images.getRefreshImage(),
-            'ART_AUTO_REFRESH': images.getAutoRefreshImage(),
-            'ART_MOVEUP': images.getMoveUpImage(),
-            'ART_MOVEDOWN': images.getMoveDownImage(),
-            'ART_MOVELEFT': images.getMoveLeftImage(),
-            'ART_MOVERIGHT': images.getMoveRightImage(),
-            'ART_REMOVE': images.getRemoveImage()
+            'ART_LOCATE': images.Locate.GetImage(),
+            'ART_TEST': images.Test.GetImage(),
+            'ART_REFRESH': images.Refresh.GetImage(),
+            'ART_AUTO_REFRESH': images.AutoRefresh.GetImage(),
+            'ART_MOVEUP': images.MoveUp.GetImage(),
+            'ART_MOVEDOWN': images.MoveDown.GetImage(),
+            'ART_MOVELEFT': images.MoveLeft.GetImage(),
+            'ART_MOVERIGHT': images.MoveRight.GetImage(),
+            'ART_REMOVE': images.Remove.GetImage()
             }
         if wx.Platform in ['__WXMAC__', '__WXMSW__']:
             self.images.update({
-                    wx.ART_NORMAL_FILE: images.getNewImage(),
-                    wx.ART_FILE_OPEN: images.getOpenImage(),
-                    wx.ART_FILE_SAVE: images.getSaveImage(),
-                    wx.ART_UNDO: images.getUndoImage(),
-                    wx.ART_REDO: images.getRedoImage(),
-                    wx.ART_CUT: images.getCutImage(),
-                    wx.ART_COPY: images.getCopyImage(),
-                    wx.ART_PASTE: images.getPasteImage()
+                    wx.ART_NORMAL_FILE: images.New.GetImage(),
+                    wx.ART_FILE_OPEN: images.Open.GetImage(),
+                    wx.ART_FILE_SAVE: images.Save.GetImage(),
+                    wx.ART_UNDO: images.Undo.GetImage(),
+                    wx.ART_REDO: images.Redo.GetImage(),
+                    wx.ART_CUT: images.Cut.GetImage(),
+                    wx.ART_COPY: images.Copy.GetImage(),
+                    wx.ART_PASTE: images.Paste.GetImage()
                     })
 
     def CreateBitmap(self, id, client, size):
