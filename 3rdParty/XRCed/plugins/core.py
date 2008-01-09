@@ -49,7 +49,7 @@ c.addEvents('EVT_SIZE', 'EVT_CLOSE', 'EVT_MENU_HIGHLIGHT', 'EVT_ICONIZE', 'EVT_M
             'EVT_ACTIVATE', 'EVT_UPDATE_UI')
 component.Manager.register(c)
 component.Manager.setMenu(c, 'TOP_LEVEL', 'frame', 'wxFrame', 10)
-component.Manager.setTool(c, 'Windows', bitmaps.getwxFrameBitmap(), (0,0))
+component.Manager.setTool(c, 'Windows', bitmaps.wxFrame.GetBitmap(), (0,0))
 
 ### wxDialog
 
@@ -69,7 +69,7 @@ c.addEvents('EVT_INIT_DIALOG', 'EVT_SIZE', 'EVT_CLOSE',
             'EVT_ICONIZE', 'EVT_MAXIMIZE', 'EVT_ACTIVATE', 'EVT_UPDATE_UI')
 component.Manager.register(c)
 component.Manager.setMenu(c, 'TOP_LEVEL', 'dialog', 'wxDialog', 20)
-component.Manager.setTool(c, 'Windows', bitmaps.getwxDialogBitmap(), (0,1))
+component.Manager.setTool(c, 'Windows', bitmaps.wxDialog.GetBitmap(), (0,1))
 
 ### wxPanel
 
@@ -80,7 +80,7 @@ c.addStyles('wxNO_3D', 'wxTAB_TRAVERSAL')
 component.Manager.register(c)
 component.Manager.setMenu(c, 'TOP_LEVEL', 'panel', 'wxPanel', 30)
 component.Manager.setMenu(c, 'container', 'panel', 'wxPanel', 10)
-component.Manager.setTool(c, 'Windows', bitmaps.getwxPanelBitmap(), (0,2))
+component.Manager.setTool(c, 'Windows', bitmaps.wxPanel.GetBitmap(), (0,2))
 
 ### wxWizard
 
@@ -108,7 +108,7 @@ c.addExStyles('wxWIZARD_EX_HELPBUTTON')
 c.setSpecial('bitmap', attribute.BitmapAttribute)
 component.Manager.register(c)
 component.Manager.setMenu(c, 'TOP_LEVEL', 'wizard', 'wxWizard', 40)
-component.Manager.setTool(c, 'Windows', bitmaps.getwxWizardBitmap(), (1,0), (1,2))
+component.Manager.setTool(c, 'Windows', bitmaps.wxWizard.GetBitmap(), (1,0), (1,2))
 
 ### wxWizardPage
 
@@ -159,7 +159,7 @@ c.addEvents('EVT_INIT_DIALOG', 'EVT_SIZE', 'EVT_CLOSE',
             'EVT_ICONIZE', 'EVT_MAXIMIZE', 'EVT_ACTIVATE', 'EVT_UPDATE_UI')
 component.Manager.register(c)
 component.Manager.setMenu(c, 'TOP_LEVEL', 'propery sheet dialog', 'wxPropertySheetDialog', 50)
-component.Manager.setTool(c, 'Windows', bitmaps.getwxPropertySheetDialogBitmap(), (1,1))
+component.Manager.setTool(c, 'Windows', bitmaps.wxPropertySheetDialog.GetBitmap(), (1,1))
 
 ### wxBoxSizer
 

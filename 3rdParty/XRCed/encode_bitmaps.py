@@ -21,9 +21,9 @@ def main(filemask, output):
 
         # encode it
         if file == files[0]:
-            cmd = "-u -n %s %s %s" % (name, file, output)
+            cmd = "-F -u -n %s %s %s" % (name, file, output)
         else:
-            cmd = "-a -u -n %s %s %s" % (name, file, output)
+            cmd = "-a -F -u -n %s %s %s" % (name, file, output)
         img2py.main(cmd.split())
 
     # Encode icons
