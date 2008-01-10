@@ -189,14 +189,13 @@ class Panel(wx.Panel):
             self.nb.AddPage(self.pageIA, container.implicitPageName)
             self.SetValues(panel, node.parentNode)
 
-        if comp.events:
-            # Create code page
-            panel = CodePanel(self.pageCode, comp.events)
-            panel.node = node
-            panels.append(panel)
-            self.pageCode.SetPanel(panel)
-            self.nb.AddPage(self.pageCode, 'Code')
-            self.SetCodeValues(panel, comp.getAttribute(node, 'XRCED'))
+        # Create code page
+        panel = CodePanel(self.pageCode, comp.events)
+        panel.node = node
+        panels.append(panel)
+        self.pageCode.SetPanel(panel)
+        self.nb.AddPage(self.pageCode, 'Code')
+        self.SetCodeValues(panel, comp.getAttribute(node, 'XRCED'))
 
         # Select old page if possible and pin is down
         if g.conf.panelPinState:
