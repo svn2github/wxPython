@@ -259,7 +259,7 @@ component.Manager.setTool(c, 'Sizers', pos=(1,2))
 
 ### wxScrolledWindow
 
-c = component.Component('wxScrolledWindow', ['window', 'control'], ['pos', 'size'])
+c = component.Container('wxScrolledWindow', ['window', 'control'], ['pos', 'size'])
 c.addStyles('wxHSCROLL', 'wxVSCROLL', 'wxNO_3D', 'wxTAB_TRAVERSAL')
 c.addEvents('EVT_SCROLLWIN_TOP',
             'EVT_SCROLLWIN_BOTTOM',
