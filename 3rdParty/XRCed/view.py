@@ -214,7 +214,7 @@ class Frame(wx.Frame):
         menu.Append(wx.ID_CUT, 'Cut\tCtrl-X', 'Cut to the clipboard')
         menu.Append(wx.ID_COPY, '&Copy\tCtrl-C', 'Copy to the clipboard')
         menu.Append(ID.PASTE, '&Paste\tCtrl-V', 'Paste from the clipboard')
-        menu.Append(ID.PASTE_SIBLING, '&Paste sibling\tAlt-Ctrl-V', 
+        menu.Append(ID.PASTE_SIBLING, '&Paste Sibling\tAlt-Ctrl-V', 
                     'Paste clipboard as a sibling')
         menu.Append(wx.ID_DELETE, '&Delete\tCtrl-D', 'Delete object')
         menu.AppendSeparator()
@@ -223,6 +223,8 @@ class Frame(wx.Frame):
         menu.Append(ID.COLLAPSE_ALL, '&Collapse All', 'Collapse tree')
         menu.AppendSeparator()
         menu.Append(wx.ID_FIND, '&Find\tCtrl-F', 'Find a named control')
+        self.ID_FINDAGAIN = wx.NewId()
+        menu.Append(self.ID_FINDAGAIN, 'Find A&gain\tCtrl-G', 'Repeat last search')
         self.ART_LOCATE = 'ART_LOCATE'
         self.ID_LOCATE = wx.NewId()
         menu.Append(self.ID_LOCATE, '&Locate\tCtrl-L', 'Locate control in test window and select it')

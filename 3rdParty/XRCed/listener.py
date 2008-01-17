@@ -26,6 +26,7 @@ class _Listener:
         self.panel = panel
         self.toolFrame = toolFrame
         self.testWin = testWin
+        self.lastSearch = None
 
         self.dataElem = wx.CustomDataObject('XRCED_elem')
         self.dataNode = wx.CustomDataObject('XRCED_node')
@@ -80,6 +81,7 @@ class _Listener:
         wx.EVT_MENU(frame, frame.ID_UNSELECT, self.OnUnselect)
         wx.EVT_MENU(frame, frame.ID_TOOL_PASTE, self.OnToolPaste)
         wx.EVT_MENU(frame, wx.ID_FIND, self.OnFind)
+        wx.EVT_MENU(frame, frame.ID_FINDAGAIN, self.OnFindAgain)
         wx.EVT_MENU(frame, frame.ID_LOCATE, self.OnLocate)
         wx.EVT_MENU(frame, frame.ID_TOOL_LOCATE, self.OnLocate)
         # View
@@ -115,6 +117,7 @@ class _Listener:
         wx.EVT_UPDATE_UI(frame, wx.ID_PASTE, self.OnUpdateUI)
         wx.EVT_UPDATE_UI(frame, wx.ID_DELETE, self.OnUpdateUI)
         wx.EVT_UPDATE_UI(frame, frame.ID_LOCATE, self.OnUpdateUI)
+        wx.EVT_UPDATE_UI(frame, frame.ID_FINDAGAIN, self.OnUpdateUI)
         wx.EVT_UPDATE_UI(frame, frame.ID_TOOL_LOCATE, self.OnUpdateUI)
         wx.EVT_UPDATE_UI(frame, frame.ID_TOOL_PASTE, self.OnUpdateUI)
         wx.EVT_UPDATE_UI(frame, wx.ID_UNDO, self.OnUpdateUI)
@@ -461,6 +464,8 @@ class _Listener:
     def OnFind(self, evt):
         name = wx.GetTextFromUser('Find name:', caption='Find')
         if not name: return
+        self.lastSearch = name
+        self.frame.SetStatusText('Looking for "%s"' % name)
         if Presenter.item == self.tree.root:
             item = self.tree.Find(self.tree.root, name)
         else:
@@ -487,13 +492,57 @@ class _Listener:
                 if ask == wx.YES:
                     item = self.tree.Find(self.tree.root, name)
                 else:
+                    self.frame.SetStatusText('')
                     return
         if not item: 
+            self.frame.SetStatusText('Search failed')
             wx.LogError('No such name')
             return
+        self.frame.SetStatusText('Search succeded')
         Presenter.unselect()
         self.tree.EnsureVisible(item)
         self.tree.SelectItem(item)        
+
+    def OnFindAgain(self, evt):
+        self.frame.SetStatusText('Looking for "%s"' % self.lastSearch)
+        if Presenter.item == self.tree.root:
+            item = self.tree.Find(self.tree.root, self.lastSearch)
+        else:
+            # Find from current position
+            item = Presenter.item        
+            while item:
+                # Search the rest of the current subtree, then go up
+                next = self.tree.GetNextSibling(item)
+                while not next:
+                    next = self.tree.GetItemParent(item)
+                    if next == self.tree.root:
+                        next = None
+                        break
+                    item = next
+                    next = self.tree.GetNextSibling(next)
+                item = next
+                if item:
+                    found = self.tree.Find(item, self.lastSearch)
+                    if found: 
+                        item = found
+                        break
+            if not item: 
+                ask = wx.MessageBox('Search failed. Search from the root?', 
+                                    'Question', wx.YES_NO)
+                if ask == wx.YES:
+                    item = self.tree.Find(self.tree.root, name)
+                    if not item: 
+                        self.frame.SetStatusText('Search failed')
+                        wx.LogError('Search from the root failed.')
+                        return
+                else:
+                    self.frame.SetStatusText('')
+                    return
+        self.lastFoundItem = item
+        self.frame.SetStatusText('Search succeded')
+        Presenter.unselect()
+        self.tree.EnsureVisible(item)
+        self.tree.SelectItem(item)                
 
     def OnLocate(self, evt):
         frame = self.testWin.GetFrame()
@@ -666,6 +715,8 @@ Homepage: http://xrced.sourceforge.net\
         elif evt.GetId() in [self.frame.ID_LOCATE, self.frame.ID_TOOL_LOCATE,
                              wx.ID_REFRESH]:
             evt.Enable(self.testWin.IsShown())
+        elif evt.GetId() == self.frame.ID_FINDAGAIN:
+            evt.Enable(self.lastSearch is not None)
         elif evt.GetId() == wx.ID_UNDO:  evt.Enable(g.undoMan.CanUndo())
         elif evt.GetId() == wx.ID_REDO:  evt.Enable(g.undoMan.CanRedo())
         elif evt.GetId() in [ID.COLLAPSE, ID.EXPAND]:
