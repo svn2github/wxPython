@@ -902,11 +902,12 @@ paramDict = {
 
 class StylePanel(wx.Panel):
     '''Style panel.'''
-    def __init__(self, parent, styles, genericStyles=[]):
+    def __init__(self, parent, styles, genericStyles=[], tag='style'):
         wx.Panel.__init__(self, parent, -1)
         self.SetFont(g.smallerFont())
         self.node = None
         self.controls = []
+        self.tag = tag
         topSizer = wx.BoxSizer(wx.HORIZONTAL)
         if genericStyles:
             # Generic styles
@@ -942,7 +943,7 @@ class StylePanel(wx.Panel):
         checked = []
         for s,check in self.controls:
             if check.IsChecked(): checked.append(s)
-        return [('style', '|'.join(checked))]
+        return [(self.tag, '|'.join(checked))]
 
     def SetValues(self, values):
         styles = values[0][1].split('|')

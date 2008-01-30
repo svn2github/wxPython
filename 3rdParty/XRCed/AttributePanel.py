@@ -171,7 +171,8 @@ class Panel(wx.Panel):
 
         if comp.exStyles or comp.genericExStyles:
             # Create extra style page
-            panel = params.StylePanel(self.pageExStyle, comp.exStyles + comp.genericExStyles)
+            panel = params.StylePanel(self.pageExStyle, comp.exStyles + comp.genericExStyles, 
+                                      tag='exstyle')
             panels.append(panel)
             self.pageExStyle.SetPanel(panel)
             self.nb.AddPage(self.pageExStyle, 'ExStyle')
