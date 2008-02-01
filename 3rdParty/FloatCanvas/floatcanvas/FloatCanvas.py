@@ -2317,6 +2317,8 @@ class FloatCanvas(wx.Panel):
         #wx.EVT_LEAVE_WINDOW(self, self. )
 
         self.SetProjectionFun(ProjectionFun)
+        
+        self.GUIMode = None # making sure the arrribute exists
         self.SetMode(GUIMode.GUIMouse()) # make the default Mouse Mode.
 
         # timer to give a delay when re-sizing so that buffers aren't re-built too many times.
@@ -2401,6 +2403,8 @@ class FloatCanvas(wx.Panel):
             Set the GUImode to any of the availble mode.
             '''
             # Set mode
+            if self.GUIMode is not None:
+                self.GUIMode.UnSet() # this lets the old mode clean up.
             Mode.Canvas = self # make sure the mode is linked to this canvas
             self.GUIMode = Mode
             self.SetCursor(self.GUIMode.Cursor)

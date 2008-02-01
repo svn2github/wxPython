@@ -58,11 +58,17 @@ class GUIBase(object):
 
     """
     def __init__(self, Canvas=None):
-        self.Canvas = Canvas # set the FloatCanvas for the mode -- it now gets set when the Mode is set on the Canvas.
+        self.Canvas = Canvas # set the FloatCanvas for the mode
+                             # it gets set when the Mode is set on the Canvas.
         self.Cursors = Cursors()
 
     Cursor = wx.NullCursor
-
+    def UnSet(self):
+        """
+        this method gets called by FloatCanvas when a new mode is being set
+        on the Canvas
+        """
+        pass
     # Handlers
     def OnLeftDown(self, event):
         pass
@@ -90,7 +96,6 @@ class GUIBase(object):
         pass
     def OnKeyUp(self, event):
         pass
-            
     def UpdateScreen(self):
         """
         Update gets called if the screen has been repainted in the middle of a zoom in
@@ -188,7 +193,6 @@ class GUIMove(GUIBase):
                 self.Canvas.MoveImage(DiffMove, 'Pixel')
             self.StartMove = None
         self.Canvas.SetCursor(self.Cursor)
-
 
     def OnMove(self, event):
         # Allways raise the Move event.
@@ -357,6 +361,6 @@ class GUIZoomOut(GUIBase):
             self.Canvas.Zoom(1.1)
 
     def OnMove(self, event):
-        # Allways raise the Move event.
+        # Always raise the Move event.
         self.Canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
 
