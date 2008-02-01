@@ -68,6 +68,9 @@ class SelectObjectMode(GUIMode.GUIMouse):
         return self._Canvas
     Canvas = property(fget=get_Canvas, fset=set_Canvas)
     
+    def Unset(self):
+        self.UnBindAll()
+    
     def BindAll(self):
         """
         Binds all the objects in self.ObjectList to a handler
@@ -77,9 +80,11 @@ class SelectObjectMode(GUIMode.GUIMouse):
             obj.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnObjectHit)
     def UnBindAll(self):
         """
-        Binds all the objects in self.ObjectList to a handler
+        Unbinds all the objects in self.ObjectList to a handler
         """
-        ##fixme -- when do they get unbound???    
+        ##fixme: when does this get called?
+        ##     maybe there needs to be a method that gets called when a 
+        ##     Mode gets unset.
         for obj in self.Objects:
             obj.UnBindAll()
 
@@ -94,6 +99,14 @@ class EditCircleMode(GUIMode.GUIBase):
         self.Canvas = Canvas
         self.Reset()
 
+    def set_Canvas(self, canvas):
+        ## gets called when the Canvas is set -- i.e. when the mode is used.
+        self._Canvas = canvas
+    
+    def get_Canvas(self):
+        return self._Canvas
+    Canvas = property(fget=get_Canvas, fset=set_Canvas)
+
     def Reset(self):
         self.Moving = False
         self.StartPoint= None
@@ -101,16 +114,20 @@ class EditCircleMode(GUIMode.GUIBase):
         self.PrevCircle = None
 
     def SelectObject(self, Circle):
+        self.Circle = Circle
         self.Radius = Circle.WH[0] / 2
+        
         self.CenterHandle = self.Canvas.AddBitmap(Resources.getMoveCursorBitmap(),
-                                              Point,
+                                              Circle.Center,
                                               Position='cc',
-                                              nForeground=True)
+                                              InForeground=True)
 
         #cross = Cross(Circle.XY, InForeground=True)
-        self.CenterHandle.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnCenterHit)
+        self.CenterHandle.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.OnCenterHit)
+        self.Canvas.Draw(True)
 
     def OnCenterHit(self, object):
+        print "In OnCenterHit"
         if not self.Moving:
             self.Moving = True
             self.StartPoint = object.HitCoordsPixel
@@ -127,6 +144,9 @@ class EditCircleMode(GUIMode.GUIBase):
 
     def OnLeftDown(self, event):
         print "In EditCircleMode.OnLeftDown()"
+        EventType = FloatCanvas.EVT_FC_LEFT_DOWN
+        if not self.Canvas.HitTest(event, EventType):
+            self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnMove(self, event):
         """
@@ -137,7 +157,7 @@ class EditCircleMode(GUIMode.GUIBase):
 
         if self.Moving:
             dxy = event.GetPosition() - self.StartPoint
-            xy = self.Circle.XY
+            xy = self.Circle.Center
             xyp  = self.Canvas.WorldToPixel(xy) + dxy
             Radius = self.Canvas.ScaleWorldToPixel((self.Radius, self.Radius),)[0]
 
@@ -148,7 +168,7 @@ class EditCircleMode(GUIMode.GUIBase):
             dc.SetLogicalFunction(wx.XOR)
             if self.PrevCircle is not None:
                 dc.DrawCirclePoint(*self.PrevCircle)
-            self.PrevCircle = ( self.Center, Radius )
+            self.PrevCircle = ( xyp, Radius )
             dc.DrawCirclePoint( *self.PrevCircle )
 
 
@@ -217,7 +237,7 @@ class CreateCircleMode(GUIMode.GUIBase):
 from Icons import CircleIcon, CircleEditIcon
 
 class EditCanvas(NavCanvas.NavCanvas):
-    
+    ##fixme: could this be a mixin instead?
     def BuildToolbar(self):
         """
         over-rideing the native one -- so I can add some tools.
@@ -268,6 +288,10 @@ class DrawFrame(wx.Frame):
         tb = self.NC.ToolBar
         tb.AddSeparator()
 
+        EditCircleButton = wx.Button(tb, wx.ID_ANY, "Edit")
+        tb.AddControl(EditCircleButton)
+        EditCircleButton.Bind(wx.EVT_BUTTON, self.SetCircleEdit)
+
         ClearButton = wx.Button(tb, wx.ID_ANY, "Clear")
         tb.AddControl(ClearButton)
         ClearButton.Bind(wx.EVT_BUTTON, self.Clear)
@@ -288,7 +312,7 @@ class DrawFrame(wx.Frame):
         #self.Bind(wx.EVT_TOOL, lambda evt : NC.SetMode(Mode=self.NC.MouseMode), self.EditCircleTool)
         #self.Bind(wx.EVT_TOOL, self.SetEditMode, self.EditCircleTool)
         
-        #tb.Realize()
+        tb.Realize()
 
         FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
         
@@ -334,9 +358,11 @@ class DrawFrame(wx.Frame):
             print "Binding:", obj
             obj.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.SetCircleEdit)
 
-    def SetCircleEdit(self, obj):
+    def SetCircleEdit(self, obj=None):
         print "In SetCircle Edit"
         Mode = EditCircleMode(self.Canvas)
+        #if obj is None:
+        obj = self.ObjectList[0]
         Mode.SelectObject(obj)
         self.Canvas.SetMode(Mode)
 
