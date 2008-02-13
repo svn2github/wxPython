@@ -1,5 +1,9 @@
 The Change Log for FloatCanvas.
 
+-2/12/08
+
+* Transfered to wxPython add ons SVN server -- thanks Robin!
+
 -10/25/07
 
 * Applied a patch from Tim Ansel for the UnBindAll() DrawObject method.
