@@ -344,10 +344,21 @@ component.Manager.setTool(c, 'Controls', pos=(0,1))
 ### wxBitmapButton
 
 c = component.Component('wxBitmapButton', ['control', 'tool'],
-              ['pos', 'size', 'bitmap', 'selected', 'focus', 'disabled', 'default'],
+              ['pos', 'size', 'default', 
+               'bitmap', 'selected', 'focus', 'disabled', 'hover'],
               image=images.TreeBitmapButton.GetImage())
-c.addStyles('wxBU_AUTODRAW', 'wxBU_LEFT', 'wxBU_RIGHT', 'wxBU_TOP', 'wxBU_BOTTOM')
+c.addStyles('wxBU_AUTODRAW', 'wxBU_LEFT', 'wxBU_RIGHT', 'wxBU_TOP', 'wxBU_BOTTOM',
+            'wxBU_EXACTFIT')
+c.setParamClass('default', params.ParamBool)
 c.setSpecial('bitmap',  attribute.BitmapAttribute)
+c.setSpecial('selected',  attribute.BitmapAttribute)
+c.setParamClass('selected', params.ParamBitmap)
+c.setSpecial('focus',  attribute.BitmapAttribute)
+c.setParamClass('focus', params.ParamBitmap)
+c.setSpecial('disabled',  attribute.BitmapAttribute)
+c.setParamClass('disabled', params.ParamBitmap)
+c.setSpecial('hover',  attribute.BitmapAttribute)
+c.setParamClass('hover', params.ParamBitmap)
 c.addEvents('EVT_BUTTON')
 component.Manager.register(c)
 component.Manager.setMenu(c, 'button', 'bitmap button', 'wxBitmapButton', 20)

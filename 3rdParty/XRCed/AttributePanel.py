@@ -25,7 +25,7 @@ class ScrolledPage(wx.ScrolledWindow):
         self.topSizer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(self.topSizer)
         self.panel = None
-        self.SetScrollRate(1, 1)
+        self.SetScrollRate(5, 5)
 
     def Reset(self):
         if self.panel:
@@ -36,7 +36,8 @@ class ScrolledPage(wx.ScrolledWindow):
         self.Reset()
         self.panel = panel
         self.topSizer.Add(panel, 0, wx.ALL | wx.EXPAND, 2)
-        self.Layout()
+        self.topSizer.Layout()
+        self.SendSizeEvent()
 
 class Panel(wx.Panel):
     '''Attribute panel main class.'''
