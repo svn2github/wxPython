@@ -187,7 +187,7 @@ class XMLTree(wx.TreeCtrl):
         while item:
             if self.ItemHasChildren(item):
                 state = self.IsExpanded(item)
-                states.append(self.IsExpanded(item))
+                states.append(state)
                 if state: states.extend(self.GetFullState(item))
             item = self.GetNextSibling(item)
         return states

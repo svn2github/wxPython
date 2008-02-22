@@ -372,6 +372,7 @@ class _Presenter:
         self.setApplied()
         self.unselect()
         self.setModified()
+        return node
 
     def deleteMany(self, items):
         '''Delete selected object(s).'''
@@ -390,7 +391,7 @@ class _Presenter:
 
     def cut(self):
         self.copy()
-        self.delete(view.tree.GetSelection())
+        return self.delete(view.tree.GetSelection())
 
     def copy(self):
         # Update values from panel first

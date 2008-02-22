@@ -374,16 +374,20 @@ class _Listener:
 
     def OnCut(self, evt):
         '''wx.ID_CUT handler.'''
-        g.undoMan.RegisterUndo(undo.UndoGlobal()) # !!! TODO
-        Presenter.cut()
+        item = self.tree.GetSelection()
+        index = self.tree.ItemFullIndex(item)
+        state = self.tree.GetFullState()        
+        node = Presenter.cut()
+        g.undoMan.RegisterUndo(undo.UndoCutDelete(index, state, node))
 
     def OnDelete(self, evt):
         '''wx.ID_DELETE handler.'''
         if len(self.tree.GetSelections()) == 1:
             item = self.tree.GetSelection()
             index = self.tree.ItemFullIndex(item)
+            state = self.tree.GetFullState()
             node = Presenter.delete(self.tree.GetSelection())
-            g.undoMan.RegisterUndo(undo.UndoCutDelete(index, node))
+            g.undoMan.RegisterUndo(undo.UndoCutDelete(index, state, node))
         else:
             g.undoMan.RegisterUndo(undo.UndoGlobal())
             Presenter.deleteMany(self.tree.GetSelections())

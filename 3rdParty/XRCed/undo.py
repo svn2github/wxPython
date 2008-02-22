@@ -70,10 +70,10 @@ class Undo:
 
 class UndoCutDelete(Undo):
     label = 'cut/delete'
-    def __init__(self, itemIndex, node):
+    def __init__(self, itemIndex, state, node):
         self.itemIndex = itemIndex
         self.node = node
-        self.states = view.tree.GetFullState()
+        self.state = state
     def destroy(self):
         if self.node: self.node.unlink()
         self.states = None
@@ -91,7 +91,7 @@ class UndoCutDelete(Undo):
         parentNode.insertBefore(self.node, nextNode)
         # Update tree and presenter
         view.tree.Flush()
-        view.tree.SetFullState(self.states)
+        view.tree.SetFullState(self.state)
         item = view.tree.ItemAtFullIndex(self.itemIndex)
         view.tree.EnsureVisible(item)
         # This will generate events
