@@ -254,7 +254,8 @@ class ParamFont(PPanel):
         face = d.get('face','')
         enc = wx.FONTENCODING_DEFAULT
         mapper = wx.FontMapper()
-        if 'encoding' in d: enc = mapper.CharsetToEncoding(d['encoding'])
+        if 'encoding' in d and d['encoding'] != 'default': 
+            enc = mapper.CharsetToEncoding(d['encoding'])
         if error: wx.LogError('Invalid font specification')
         if enc == wx.FONTENCODING_DEFAULT: enc = wx.FONTENCODING_SYSTEM
         font = wx.Font(size, family, style, weight, underlined, face, enc)
