@@ -249,7 +249,7 @@ class ParamFont(PPanel):
             except KeyError:    error = True; wx.LogError('Invalid weight specification')
         else:
             weight = wx.NORMAL
-        try: underlined = bool(d.get('underlined', 0))
+        try: underlined = bool(int(d.get('underlined', '0')))
         except ValueError: error = True; wx.LogError('Invalid underlined flag specification')
         face = d.get('face','')
         enc = wx.FONTENCODING_DEFAULT
