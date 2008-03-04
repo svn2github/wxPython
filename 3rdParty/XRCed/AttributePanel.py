@@ -14,7 +14,7 @@ import undo
 import images
 
 
-labelSize = (80,-1)
+labelSize = (100,-1)
 
 # Panel class is the attribute panel containing class name, XRC ID and
 # a notebook with particular pages.
