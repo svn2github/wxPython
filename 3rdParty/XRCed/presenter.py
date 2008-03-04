@@ -633,7 +633,7 @@ class _Presenter:
         # Dumb refresh
         self.createTestWin(view.testWin.item)
         self.highlight(self.item)
-        if view.frame.miniFrame:
+        if view.frame.miniFrame and view.frame.miniFrame.IsShown():
             view.frame.miniFrame.Raise()
         else:
             view.frame.Raise()
