@@ -130,23 +130,23 @@ class Component(object):
         self.attributes = attributes
         self.styles = []
         self.exStyles = []
-        self.defaults = kargs.get('defaults', {})
+        self.defaults = kargs.pop('defaults', {})
         # Special Attribute classes if required
-        self.specials = kargs.get('specials', {})
+        self.specials = kargs.pop('specials', {})
         # Some default special attributes
         self.specials['font'] = FontAttribute
         self.specials['XRCED'] = CodeAttribute
         # Special Param classes if required
-        self.params = kargs.get('params', {})
+        self.params = kargs.pop('params', {})
         # Tree image
         if 'images' in kargs:
-            self.images = kargs['images']
+            self.images = kargs.pop('images')
         elif 'image' in kargs:
-            self.images = [kargs['image']]
+            self.images = [kargs.pop('image')]
         elif not 'image' in self.__dict__:
             self.images = []
         # Code generation data
-        self.events = kargs.get('events', [])
+        self.events = kargs.pop('events', [])
 
     def addStyles(self, *styles):
         '''Add more styles.'''
@@ -419,11 +419,11 @@ class SmartContainer(Container):
     implicitRenameDict = {}
     def __init__(self, klass, groups, attributes, **kargs):
         Container.__init__(self, klass, groups, attributes, **kargs)
-        self.implicitKlass = kargs['implicit_klass']
-        self.implicitPageName = kargs['implicit_page']
-        self.implicitAttributes = kargs['implicit_attributes']
+        self.implicitKlass = kargs.pop('implicit_klass')
+        self.implicitPageName = kargs.pop('implicit_page')
+        self.implicitAttributes = kargs.pop('implicit_attributes')
         # This is optional
-        self.implicitParams = kargs.get('implicit_params', {})
+        self.implicitParams = kargs.pop('implicit_params', {})
 
     def getTreeNode(self, node):
         if node.getAttribute('class') == self.implicitKlass:
@@ -566,7 +566,6 @@ class BoxSizer(Sizer):
     '''Sizers are not windows and have common implicit node.'''
 
     def __init__(self, klass, groups, attributes, **kargs):
-        self.images = kargs.get('images', None)
         Sizer.__init__(self, klass, groups, attributes, **kargs)
 
     def getTreeImageId(self, node):

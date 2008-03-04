@@ -601,7 +601,6 @@ Homepage: http://xrced.sourceforge.net\
                         +traceback.format_list(tblist))
                 print msg
 
-
     def OnEmbedPanel(self, evt):
         self.frame.EmbedUnembed(evt.IsChecked())
 

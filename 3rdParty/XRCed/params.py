@@ -194,11 +194,6 @@ fontFamiliesXml2wx = ReverseMap(fontFamiliesWx2Xml)
 fontStylesXml2wx = ReverseMap(fontStylesWx2Xml)
 fontWeightsXml2wx = ReverseMap(fontWeightsWx2Xml)
 
-# My font picker
-class FontPickerCtrl(wx.Button):
-    def __init__(self, parent, id=-1, font=wx.NullFont, size=wx.DefaultSize, style=0):
-        wx.Button.__init__(self, parent, id)
-
 class ParamFont(PPanel):
     '''Font attribute editing.'''
     def __init__(self, parent, name):
@@ -398,8 +393,8 @@ class ParamText(PPanel):
     proportion = 0
     def __init__(self, parent, name, style=0, **kargs):
         PPanel.__init__(self, parent, name)
-        textWidth = kargs.get('textWidth', self.textWidth)
-        option = kargs.get('proportion', self.proportion)
+        textWidth = kargs.pop('textWidth', self.textWidth)
+        option = kargs.pop('proportion', self.proportion)
         if textWidth == -1: option = 1
         # We use sizer even here to have the same size of text control
         sizer = wx.BoxSizer()
