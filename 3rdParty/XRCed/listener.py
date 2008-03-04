@@ -172,7 +172,11 @@ class _Listener:
         frame.Bind(wx.EVT_CLOSE, self.OnCloseTestWin)
         frame.Bind(wx.EVT_SIZE, self.OnSizeTestWin)
         frame.SetAcceleratorTable(self.accels)
-        frame.Bind(wx.EVT_MENU, lambda evt: self.frame.ProcessEvent(evt))
+        frame.Bind(wx.EVT_MENU, self.OnTestWinEvent)
+        frame.Bind(wx.EVT_BUTTON, self.OnTestWinEvent)
+
+    def OnTestWinEvent(self, evt):
+        TRACE('Test window event: %s', evt)
 
     def Uninstall(self):
         '''Unbind some event before destroying.'''
@@ -611,7 +615,7 @@ Homepage: http://xrced.sourceforge.net\
         
     def OnTest(self, evt):
         if not Presenter.item: return
-        object = Presenter.createTestWin(Presenter.item)
+        Presenter.createTestWin(Presenter.item)
 
     # Test window events
 

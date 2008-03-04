@@ -595,13 +595,16 @@ class _Presenter:
         try:
             try:
                 frame, object = comp.makeTestWin(res, name)
-                if not object: return None
+                if not object:  # skip the rest
+                    raise EOFError
                 # Reset previous tree item and locate tool
                 if testWin.item:
                     view.tree.SetItemBold(testWin.item, False)
                 testWin.SetView(frame, object, item)
                 testWin.Show()
                 view.tree.SetItemBold(item, True)
+            except EOFError:
+                pass
             except NotImplementedError:
                 wx.LogError('Test window not implemented for %s' % node.getAttribute('class'))
             except:
@@ -613,7 +616,6 @@ class _Presenter:
             res.Unload(TEST_FILE)
             xrc.XmlResource.Set(None)
             wx.MemoryFSHandler.RemoveFile(TEST_FILE)
-        return object
 
     def closeTestWin(self):
         TRACE('closeTestWin')

@@ -96,7 +96,7 @@ class Wizard(component.Container):
                 firstPage = w
                 break
         if firstPage:
-            wiz.RunWizard(w)
+            wiz.RunWizard(firstPage)
         else:
             wx.LogMessage('Wizard is empty')
         wiz.Destroy()
