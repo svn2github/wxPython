@@ -16,7 +16,7 @@ component.Manager.panelImages['Controls'] = images.ToolPanel_Controls.GetImage()
 ### wxStaticText
 
 c = component.Component('wxStaticText', ['control','tool'],
-              ['pos', 'size', 'label'], defaults={'label': 'LABEL'},
+              ['pos', 'size', 'label', 'wrap'], defaults={'label': 'LABEL'},
               image=images.TreeStaticText.GetImage())
 c.addStyles('wxALIGN_LEFT', 'wxALIGN_RIGHT', 'wxALIGN_CENTRE', 'wxST_NO_AUTORESIZE')
 component.Manager.register(c)

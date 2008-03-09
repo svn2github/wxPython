@@ -123,7 +123,8 @@ class ParamFlag(ParamBinaryOr):
               'wxALIGN_CENTRE', 'wxALIGN_LEFT', 'wxALIGN_RIGHT',
               'wxALIGN_TOP', 'wxALIGN_BOTTOM', 
               'wxALIGN_CENTRE_VERTICAL', 'wxALIGN_CENTRE_HORIZONTAL', 
-              'wxADJUST_MINSIZE', 'wxFIXED_MINSIZE'
+              'wxADJUST_MINSIZE', 'wxFIXED_MINSIZE',
+              'wxRESERVE_SPACE_EVEN_IF_HIDDEN',
               ]
     equal = {'wxALIGN_CENTER': 'wxALIGN_CENTRE',
              'wxALIGN_CENTER_VERTICAL': 'wxALIGN_CENTRE_VERTICAL',
@@ -892,7 +893,8 @@ paramDict = {
     'tooltip': ParamLongText, 
     # other
     'bitmap': ParamBitmap, 'icon': ParamBitmap,
-    'comment': ParamComment
+    'comment': ParamComment,
+    'wrap': ParamInt,
     }
 '''Default classes for standard attributes.'''
 

@@ -271,7 +271,7 @@ c.addEvents('EVT_SCROLLWIN_TOP',
             'EVT_SCROLLWIN_THUMBRELEASE')
 component.Manager.register(c)
 component.Manager.setMenu(c, 'container', 'scrolled window', 'wxScrolledWindow', 20)
-component.Manager.setTool(c, 'Panels', pos=(1,4))
+component.Manager.setTool(c, 'Panels', pos=(3,0))
 
 ### wxSplitterWindow
 
@@ -288,7 +288,7 @@ c.addEvents('EVT_SPLITTER_SASH_POS_CHANGING', 'EVT_SPLITTER_SASH_POS_CHANGED',
             'EVT_SPLITTER_UNSPLIT', 'EVT_SPLITTER_DCLICK')
 component.Manager.register(c)
 component.Manager.setMenu(c, 'container', 'splitter window', 'wxSplitterWindow', 30)
-component.Manager.setTool(c, 'Panels', pos=(0,4))
+component.Manager.setTool(c, 'Panels', pos=(2,3))
 
 ### wxNotebook
 
