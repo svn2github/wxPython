@@ -28,6 +28,21 @@ def YScaleFun(center):
     # center gets ignored in this case
     return N.array((1, float(NumChannels)/MaxValue), N.float)
 
+def ScaleWorldToPixel(self, Lengths):
+    """
+        This is a new version of a function that will get passed to the
+        drawing functions of the objects, to Change a length from world to
+        pixel coordinates.
+        
+        This version uses the "ceil" function, so that fractional pixel get
+        rounded up, rather than down.
+
+        Lengths should be a NX2 array of (x,y) coordinates, or
+        a 2-tuple, or sequence of 2-tuples.
+    """
+    return  N.ceil(( (N.asarray(Lengths, N.float)*self.TransformVector) )).astype('i')
+
+
 class DrawFrame(wx.Frame):
 
     """
@@ -41,6 +56,7 @@ class DrawFrame(wx.Frame):
         self.CreateStatusBar()
 
         # Add the Canvas
+        FloatCanvas.FloatCanvas.ScaleWorldToPixel = ScaleWorldToPixel
         NC = NavCanvas.NavCanvas(self,-1,
                                      size = (500,500),
                                      BackgroundColor = "DARK SLATE BLUE",
@@ -48,6 +64,7 @@ class DrawFrame(wx.Frame):
                                      )
         
         self.Canvas = Canvas = NC.Canvas
+        #self.Canvas.ScaleWorldToPixel = ScaleWorldToPixel
 
         FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
 
@@ -61,14 +78,15 @@ class DrawFrame(wx.Frame):
             Canvas.AddText("%i"%x, (x-1+self.BarWidth/2,0), Position="tc")
 
         for i, Value in enumerate(self.Values):
-            self.Bars.append(Canvas.AddRectangle(XY=(i, 0),
-                                                 WH=(self.BarWidth, Value),
-                                                 LineColor = None,
-                                                 LineStyle = "Solid",
-                                                 LineWidth    = 1,
-                                                 FillColor    = "Red",
-                                                 FillStyle    = "Solid",
-                                                 ))
+            bar = Canvas.AddRectangle(XY=(i, 0),
+                                      WH=(self.BarWidth, Value),
+                                      LineColor = None,
+                                      LineStyle = "Solid",
+                                      LineWidth    = 1,
+                                      FillColor    = "Red",
+                                      FillStyle    = "Solid",
+                                      )
+            self.Bars.append(bar)
         
         # Add a couple a button the Toolbar
 
