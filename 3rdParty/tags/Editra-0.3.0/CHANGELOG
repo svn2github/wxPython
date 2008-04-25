@@ -1,0 +1,68 @@
+Editra
+Author: Cody Precord
+Copyright: (c) Cody Precord 2005-2008
+License: wxWindows
+
+Change Log:
+
+#-----------------------------------------------------------------------------#
+Changes since last release:
+
+VERSION 0.3.0
+DATE 04/25/2008
+12th Alpha Release
+
+NEWS:
+  This release adds support for customizable keybindings and a keybinding
+editor to the preferences dialog. The keybindings can be saved in multiple key
+profiles to allow for switching keybindings on the fly.
+
+  The bundled CodeBrowser plugin has received an update to include a number of
+new languages and improvements to the previously existing ones. The Projects
+plugin has also been updated to fix a number of bugs that were mostly visible
+on the Windows platform.
+
+NEW: [features/improvements]
++Configurable Keybindings and Keybinding editor
++New version of CodeBrowser with added support for
+ (Ferite, haXe, Matlab, Octave, Scheme, System Verilog, Verilog)
++Add highlighting support for System Verilog (w/ help from Tim Corcoran)
++Add support for (C#, Vala, Squirrel)
++Improved support for (Caml, Objective C)
++Improved heuristics for guessing file encoding when regular detection fails
++Jump to matching Brace/Bracket command (default Ctrl+Shift+B)
++Combinded Add/Delete bookmark into single toggle action
++Add Serbian translation (contributed by Vladimir Lazic)
++Add Turkish translation (contributed by mustafa)
++Add Italian translation (contributed by Angelo)
++Improved api documentation
++Auto-(un)commenting support for Editra Style Sheets
++Fold Margin styling can be styled separate from rest of buffer
++Add option to set Indent Width separatly from Tab Width
++New bundled syntax highlighting style Dessert (contributed by Greg Allen)
++Option to highlight caret line
+
+BUG FIXES:
++Misc UI consistancy issues
++Add missing Objective C sample file for highlighting editor
++Add missing ActionScript sample file for highlighting editor
++Using 16x16 size toolbar icons on OSX
++Missing editra.ico file on source installs under Windows
++Handle PyDeadObjectErrors that can happen when one of the network threads
+started in the PluginManager returns after the manager has been closed.
++Fix bug in failing to convert file paths to unicode when opening from command
+line.
++Improper highlighting of documentation keywords
++Saving maximized state of window on Exit
+
+#-----------------------------------------------------------------------------#
+
+For Alpha 0.2 Release Series Changelog see docs/CHANGELOG_3
+
+#-----------------------------------------------------------------------------#
+
+For Alpha 0.1 Release Series Changelog see docs/CHANGELOG_2
+
+#-----------------------------------------------------------------------------#
+
+For Pre-Alpha Changelog see docs/CHANGELOG_1
