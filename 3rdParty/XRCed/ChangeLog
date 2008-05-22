@@ -1,3 +1,11 @@
+2008-05-22  Roman Rolinsky  <rolinsky@poisson>
+
+	* Revision 0.2.0-3. Added "use subclassing" preference for using
+	subclassing in the test view (providing the modules can be found
+	in the PYTHONPATH). Some small fixes. Temporary file is copied
+	instead of moved to the main file to avoid symbolic link
+	redefinition.
+
 2008-02-22  Roman Rolinsky  <rolinsky@hartman.femagsoft.com>
 
 	* Fixes for Cut/Delete undo/redo. wxBitmapButton attributes

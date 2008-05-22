@@ -67,10 +67,10 @@ class _Presenter:
         try:
             tmpFile,tmpName = tempfile.mkstemp(prefix='xrced-')
             os.close(tmpFile)
-            TRACE('Saving temporaty file: %s', tmpName)
+            TRACE('Saving temporary file: %s', tmpName)
             self.saveXML(tmpName)
-            TRACE('moving to main: %s', path)
-            shutil.move(tmpName, path)
+            TRACE('copying to the main file: %s', path)
+            shutil.copy(tmpName, path)
             self.path = path
             self.setModified(False)
         except:
@@ -580,10 +580,12 @@ class _Presenter:
         elem.setAttribute('name', STD_NAME)
         Model.setTestElem(elem)
         Model.saveTestMemoryFile()
-        xmlFlags = xrc.XRC_NO_SUBCLASSING
+        xmlFlags = 0
+        if not g.conf.useSubclassing:
+            xmlFlags |= xrc.XRC_NO_SUBCLASSING
         # Use translations if encoding is not specified
         if not Model.dom.encoding:
-            xmlFlags != xrc.XRC_USE_LOCALE
+            xmlFlags |= xrc.XRC_USE_LOCALE
         res = xrc.EmptyXmlResource(xmlFlags)
         xrc.XmlResource.Set(res)        # set as global
         # Init other handlers

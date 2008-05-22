@@ -366,9 +366,11 @@ component.Manager.setTool(c, 'Controls', pos=(1,1))
 
 ### wxRadioButton
 
-c = component.Component('wxRadioButton', ['control', 'tool'], ['pos', 'size', 'label', 'value'],
+c = component.Component('wxRadioButton', ['control', 'tool'], 
+                        ['pos', 'size', 'label', 'value'],
                         image=images.TreeRadioButton.GetImage())
 c.addStyles('wxRB_GROUP', 'wxRB_SINGLE')
+c.setParamClass('value', params.ParamBool)
 c.addEvents('EVT_RADIOBUTTON')
 component.Manager.register(c)
 component.Manager.setMenu(c, 'button', 'radio button', 'wxRadioButton', 30)

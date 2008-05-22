@@ -24,14 +24,15 @@ class Frame(component.Container):
     def getChildObject(self, node, obj, index):
         # Do not count toolbar and menubar
         objects = filter(is_object, node.childNodes)
+        indexOffset = 0         # count non-window children
         for i,o in enumerate(objects):
             if o.getAttribute('class') == 'wxMenuBar':
                 if i == index:  return obj.GetMenuBar()
-                elif i < index: index -= 1
+                elif i < index: indexOffset += 1
             elif o.getAttribute('class') == 'wxToolBar':
                 if i == index:  return obj.GetToolBar()
-                elif i < index: index -= 1
-        return component.Container.getChildObject(self, node, obj, index)
+                elif i < index: indexOffset += 1
+        return component.Container.getChildObject(self, node, obj, index - indexOffset)
 
 c = Frame('wxFrame', ['frame','window','top_level'], 
               ['pos', 'size', 'title', 'centered'],
@@ -112,8 +113,22 @@ component.Manager.setTool(c, 'Windows', bitmaps.wxWizard.GetBitmap(), (1,0), (1,
 
 ### wxWizardPage
 
-c = component.Container('wxWizardPage', ['wizard_page', 'window'], ['bitmap'],
-              image=images.TreePanel.GetImage())
+class WizardPage(component.Container):
+    def makeTestWin(self, res, name):
+        # Create single-page wizard
+        wiz = wx.wizard.Wizard(view.frame, title='Test Wizard')
+        print self.klass
+        import pdb;pdb.set_trace()
+        page = wx.wizard.PrePyWizardPage()
+        print res.LoadOnObject(page, wiz, STD_NAME, self.klass)
+#        page = res.LoadObject(wiz, STD_NAME, self.klass)
+        print page
+        wiz.RunWizard(page)
+        wiz.Destroy()
+        return None, None
+
+c = WizardPage('wxWizardPage', ['wizard_page', 'window'], ['bitmap'],
+               image=images.TreePanel.GetImage())
 c.setSpecial('bitmap', attribute.BitmapAttribute)
 component.Manager.register(c)
 component.Manager.setMenu(c, 'container', 'wizard page', 'wxWizardPage')
@@ -365,17 +380,16 @@ component.Manager.setTool(c, 'Panels', pos=(1,1), span=(1,2))
 
 ### wxMenuBar
 
-class CMenuBar(component.SimpleContainer):
+class MenuBar(component.SimpleContainer):
     # Menubar should be shown in a normal frame
     def makeTestWin(self, res, name):
-        '''Method can be overrided by derived classes to create test view.'''
         frame = wx.Frame(None, -1, '%s: %s' % (self.klass, name), name=STD_NAME)
         object = res.LoadMenuBarOnFrame(frame, STD_NAME)
         return None, frame
     def getRect(self, obj):
         return None
 
-c = CMenuBar('wxMenuBar', ['menubar', 'top_level'], [],
+c = MenuBar('wxMenuBar', ['menubar', 'top_level'], [],
              image=images.TreeMenuBar.GetImage())
 c.addStyles('wxMB_DOCKABLE')
 c.addEvents('EVT_MENU', 'EVT_MENU_OPEN', 'EVT_MENU_CLOSE', 'EVT_MENU_HIGHLIGHT_ALL')
@@ -409,17 +423,16 @@ component.Manager.setTool(c, 'Menus', pos=(1,2))
 
 ### wxToolBar
 
-class CToolBar(component.SimpleContainer):
+class ToolBar(component.SimpleContainer):
     # Toolbar should be shown in a normal frame
     def makeTestWin(self, res, name):
-        '''Method can be overrided by derived classes to create test view.'''
         frame = wx.Frame(None, -1, '%s: %s' % (self.klass, name), name=STD_NAME)
         object = res.LoadToolBar(frame, STD_NAME)
         return None, frame
     def getRect(self, obj):
         return None
 
-c = CToolBar('wxToolBar', ['toolbar', 'top_level'],
+c = ToolBar('wxToolBar', ['toolbar', 'top_level'],
              ['bitmapsize', 'margins', 'packing', 'separation',
               'dontattachtoframe', 'pos', 'size'],
              image=images.TreeToolBar.GetImage())

@@ -423,6 +423,7 @@ class Frame(wx.Frame):
             conf.TB_undo = dlg.check_TB_undo.GetValue()
             conf.TB_copy = dlg.check_TB_copy.GetValue()
             conf.TB_move = dlg.check_TB_move.GetValue()
+            conf.useSubclassing = dlg.check_useSubclassing.GetValue()
             wx.LogMessage('Restart may be needed for some settings to take effect.')
         dlg.Destroy()
 
@@ -525,6 +526,9 @@ class PrefsDialog(wx.Dialog): #(wx.PropertySheetDialog): !!! not wrapper yed - w
         self.check_TB_copy.SetValue(conf.TB_copy)
         self.check_TB_move = xrc.XRCCTRL(self, 'check_TB_move')
         self.check_TB_move.SetValue(conf.TB_move)
+
+        self.check_useSubclassing = xrc.XRCCTRL(self, 'check_useSubclassing')
+        self.check_useSubclassing.SetValue(conf.useSubclassing)
 
     def OnCheck(self, evt):
         self.checkControls[evt.GetId()][0].Enable(evt.IsChecked())

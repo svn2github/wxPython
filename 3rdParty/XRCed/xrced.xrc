@@ -683,6 +683,7 @@
           <object class="sizeritem">
             <object class="wxCheckBox" name="check_AUI">
               <label>Use AUI</label>
+              <tooltip>Use AUI subsystem for layout</tooltip>
             </object>
             <flag>wxALL</flag>
             <border>5</border>
@@ -791,6 +792,7 @@
           <object class="sizeritem">
             <object class="wxCheckBox" name="check_expandOnOpen">
               <label>Expand tree on open</label>
+              <tooltip>Expand XML tree after opening the resource file</tooltip>
             </object>
             <flag>wxALL</flag>
             <border>5</border>
@@ -798,6 +800,7 @@
           <object class="sizeritem">
             <object class="wxCheckBox" name="check_fitTestWin">
               <label>Fit test window</label>
+              <tooltip>Fit test window after creating</tooltip>
             </object>
             <flag>wxTOP|wxLEFT|wxRIGHT</flag>
             <border>5</border>
@@ -810,6 +813,14 @@
                 <item>atomic change</item>
               </content>
               <style>wxRA_SPECIFY_ROWS</style>
+            </object>
+            <flag>wxTOP|wxLEFT|wxRIGHT</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="check_useSubclassing">
+              <label>Use subclassing</label>
+              <tooltip>Use subclassing when creating the test view</tooltip>
             </object>
             <flag>wxTOP|wxLEFT|wxRIGHT</flag>
             <border>5</border>
