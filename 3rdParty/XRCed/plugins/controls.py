@@ -64,6 +64,7 @@ c.addStyles('wxTE_NO_VSCROLL',
             'wxTE_RIGHT',
             'wxTE_DONTWRAP',
             'wxTE_LINEWRAP',
+            'wxTE_CHARWRAP',
             'wxTE_WORDWRAP')
 c.setParamClass('value', params.ParamMultilineText)
 c.addEvents('EVT_TEXT', 'EVT_TEXT_ENTER', 'EVT_TEXT_URL', 'EVT_TEXT_MAXLEN')
@@ -415,6 +416,8 @@ component.Manager.setTool(c, 'Controls', pos=(4,1))
 c = component.Component('wxComboBox', ['control','tool'],
               ['pos', 'size', 'content', 'selection', 'value'],
               image=images.TreeComboBox.GetImage())
+c.addStyles('wxCB_SINGLE', 'wxCB_DROPDOWN', 'wxCB_READONLY',
+            'wxCB_SORT', 'wxCB_PROCESS_ENTER')
 c.setSpecial('content',  attribute.ContentAttribute)
 c.addEvents('EVT_COMBOBOX', 'EVT_TEXT', 'EVT_TEXT_ENTER')
 component.Manager.register(c)
@@ -439,6 +442,8 @@ component.Manager.setMenu(c, 'box', 'radio box', 'wxRadioBox', 30)
 c = component.Component('wxListBox', ['control','tool'],
                         ['pos', 'size', 'content', 'selection'],
                         image=images.TreeListBox.GetImage())
+c.addStyles('wxLB_SINGLE', 'wxLB_MULTIPLE', 'wxLB_EXTENDED', 'wxLB_HSCROLL',
+            'wxLB_ALWAYS_SB', 'wxLB_NEEDED_SB', 'wxLB_SORT')
 c.setSpecial('content',  attribute.ContentAttribute)
 c.addEvents('EVT_LISTBOX', 'EVT_LISTBOX_DCLICK')
 component.Manager.register(c)
@@ -449,6 +454,8 @@ component.Manager.setTool(c, 'Panels', pos=(0,0))
 
 c = component.Component('wxCheckListBox', ['control','tool'],
               ['pos', 'size', 'content', 'selection'])
+c.addStyles('wxLB_SINGLE', 'wxLB_MULTIPLE', 'wxLB_EXTENDED', 'wxLB_HSCROLL',
+            'wxLB_ALWAYS_SB', 'wxLB_NEEDED_SB', 'wxLB_SORT')
 c.setSpecial('content',  attribute.CheckContentAttribute)
 c.setParamClass('content', params.ParamContentCheckList)
 c.addEvents('EVT_CHECKLISTBOX')

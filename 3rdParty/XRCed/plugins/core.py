@@ -45,12 +45,79 @@ c.addStyles('wxDEFAULT_FRAME_STYLE', 'wxDEFAULT_DIALOG_STYLE', 'wxCAPTION',
             'wxFRAME_NO_TASKBAR', 'wxFRAME_SHAPED', 'wxFRAME_TOOL_WINDOW',
             'wxFRAME_FLOAT_ON_PARENT',
             'wxNO_3D', 'wxTAB_TRAVERSAL')
-c.addExStyles('wxFRAME_EX_CONTEXTHELP', 'wxWS_EX_VALIDATE_RECURSIVELY', 'wxFRAME_EX_METAL')
+c.addExStyles('wxFRAME_EX_CONTEXTHELP', 'wxFRAME_EX_METAL')
 c.addEvents('EVT_SIZE', 'EVT_CLOSE', 'EVT_MENU_HIGHLIGHT', 'EVT_ICONIZE', 'EVT_MAXIMIZE',
             'EVT_ACTIVATE', 'EVT_UPDATE_UI')
 component.Manager.register(c)
 component.Manager.setMenu(c, 'TOP_LEVEL', 'frame', 'wxFrame', 10)
 component.Manager.setTool(c, 'Windows', bitmaps.wxFrame.GetBitmap(), (0,0))
+
+### wxMDIParentFrame
+
+class MDIParentFrame(component.Container):
+    def getChildObject(self, node, obj, index):
+        # Do not count toolbar and menubar
+        objects = filter(is_object, node.childNodes)
+        indexOffset = 0         # count non-window children
+        for i,o in enumerate(objects):
+            if o.getAttribute('class') == 'wxMenuBar':
+                if i == index:  return obj.GetMenuBar()
+                elif i < index: indexOffset += 1
+            elif o.getAttribute('class') == 'wxToolBar':
+                if i == index:  return obj.GetToolBar()
+                elif i < index: indexOffset += 1
+        return obj.GetClientWindow().GetChildren()[index]
+
+c = MDIParentFrame('wxMDIParentFrame', ['mdi_parent_frame','top_level'], 
+              ['pos', 'size', 'title', 'centered'],
+              image=images.TreeFrame.GetImage())
+c.isTopLevel = True
+c.addStyles('wxDEFAULT_FRAME_STYLE', 'wxDEFAULT_DIALOG_STYLE', 'wxCAPTION', 
+            'wxSTAY_ON_TOP', 'wxSYSTEM_MENU', 'wxTHICK_FRAME',
+            'wxRESIZE_BORDER', 'wxRESIZE_BOX', 'wxCLOSE_BOX',
+            'wxMAXIMIZE_BOX', 'wxMINIMIZE_BOX',
+            'wxFRAME_NO_TASKBAR', 'wxFRAME_SHAPED', 'wxFRAME_TOOL_WINDOW',
+            'wxFRAME_FLOAT_ON_PARENT', 'wxFRAME_NO_WINDOW_MENU',
+            'wxNO_3D', 'wxTAB_TRAVERSAL')
+c.addExStyles('wxFRAME_EX_METAL')
+c.addEvents('EVT_SIZE', 'EVT_CLOSE', 'EVT_MENU_HIGHLIGHT', 'EVT_ICONIZE', 'EVT_MAXIMIZE',
+            'EVT_ACTIVATE', 'EVT_UPDATE_UI')
+component.Manager.register(c)
+component.Manager.setMenu(c, 'TOP_LEVEL', 'MDI parent frame', 'wxMDIParentFrame', 11)
+#component.Manager.setTool(c, 'Windows', bitmaps.wxFrame.GetBitmap(), (0,0))
+
+### wxMDIChildFrame
+
+class MDIChildFrame(component.Container):
+    def getChildObject(self, node, obj, index):
+        # Do not count toolbar and menubar
+        objects = filter(is_object, node.childNodes)
+        indexOffset = 0         # count non-window children
+        for i,o in enumerate(objects):
+            if o.getAttribute('class') == 'wxMenuBar':
+                if i == index:  return obj.GetMenuBar()
+                elif i < index: indexOffset += 1
+            elif o.getAttribute('class') == 'wxToolBar':
+                if i == index:  return obj.GetToolBar()
+                elif i < index: indexOffset += 1
+        return component.Container.getChildObject(self, node, obj, index - indexOffset)
+
+c = MDIChildFrame('wxMDIChildFrame', ['mdi_child_frame','window'], 
+              ['pos', 'size', 'title', 'centered'],
+              image=images.TreeFrame.GetImage())
+c.addStyles('wxDEFAULT_FRAME_STYLE', 'wxDEFAULT_DIALOG_STYLE', 'wxCAPTION', 
+            'wxSTAY_ON_TOP', 'wxSYSTEM_MENU', 'wxTHICK_FRAME',
+            'wxRESIZE_BORDER', 'wxRESIZE_BOX', 'wxCLOSE_BOX',
+            'wxMAXIMIZE_BOX', 'wxMINIMIZE_BOX',
+            'wxFRAME_NO_TASKBAR', 'wxFRAME_SHAPED', 'wxFRAME_TOOL_WINDOW',
+            'wxFRAME_FLOAT_ON_PARENT', 'wxFRAME_NO_WINDOW_MENU',
+            'wxNO_3D', 'wxTAB_TRAVERSAL')
+c.addExStyles('wxFRAME_EX_METAL')
+c.addEvents('EVT_SIZE', 'EVT_CLOSE', 'EVT_MENU_HIGHLIGHT', 'EVT_ICONIZE', 'EVT_MAXIMIZE',
+            'EVT_ACTIVATE', 'EVT_UPDATE_UI')
+component.Manager.register(c)
+component.Manager.setMenu(c, 'container', 'MDI child frame', 'wxMDIChildFrame', 12)
+#component.Manager.setTool(c, 'Windows', bitmaps.wxFrame.GetBitmap(), (0,0))
 
 ### wxDialog
 
@@ -65,7 +132,7 @@ c.addStyles('wxDEFAULT_DIALOG_STYLE', 'wxDEFAULT_FRAME_STYLE', 'wxCAPTION',
             'wxMAXIMIZE_BOX', 'wxMINIMIZE_BOX',
             'wxDIALOG_MODAL', 'wxDIALOG_MODELESS', 'wxDIALOG_NO_PARENT',
             'wxNO_3D', 'wxTAB_TRAVERSAL')
-c.addExStyles('wxDIALOG_EX_CONTEXTHELP', 'wxWS_EX_VALIDATE_RECURSIVELY', 'wxDIALOG_EX_METAL')
+c.addExStyles('wxDIALOG_EX_CONTEXTHELP', 'wxDIALOG_EX_METAL')
 c.addEvents('EVT_INIT_DIALOG', 'EVT_SIZE', 'EVT_CLOSE', 
             'EVT_ICONIZE', 'EVT_MAXIMIZE', 'EVT_ACTIVATE', 'EVT_UPDATE_UI')
 component.Manager.register(c)
@@ -169,7 +236,7 @@ c.addStyles('wxDEFAULT_DIALOG_STYLE', 'wxCAPTION', 'wxFRAME_SHAPED',
             'wxRESIZE_BORDER', 'wxCLOSE_BOX', 'wxMAXIMIZE_BOX', 'wxMINIMIZE_BOX',
             'wxDIALOG_MODAL', 'wxDIALOG_MODELESS', 'wxDIALOG_NO_PARENT',
             'wxNO_3D', 'wxTAB_TRAVERSAL')
-c.addExStyles('wxDIALOG_EX_CONTEXTHELP', 'wxWS_EX_VALIDATE_RECURSIVELY', 'wxDIALOG_EX_METAL')
+c.addExStyles('wxDIALOG_EX_CONTEXTHELP', 'wxDIALOG_EX_METAL')
 c.addEvents('EVT_INIT_DIALOG', 'EVT_SIZE', 'EVT_CLOSE', 
             'EVT_ICONIZE', 'EVT_MAXIMIZE', 'EVT_ACTIVATE', 'EVT_UPDATE_UI')
 component.Manager.register(c)

@@ -38,8 +38,12 @@ DEFAULT_POS = (1000,1000)
 parentChildGroups = {
     'root': ['top_level', 'component'],      # top-level objects
     'frame': ['toolbar', 'menubar', 'statusbar'],
+    'mdi_parent_frame': ['toolbar', 'menubar', 'statusbar', 'mdi_child_frame'],
+    'mdi_child_frame': ['toolbar', 'menubar', 'statusbar', 
+                        'control', 'window', 'sizer', 'btnsizer', 
+                        '!frame', '!mdi_child_frame'],
     'wizard': ['wizard_page'],
-    'window': ['control', 'window', 'sizer', 'btnsizer', '!frame'],
+    'window': ['control', 'window', 'sizer', 'btnsizer', '!frame', '!mdi_child_frame'],
     'sizer': ['control', 'sizer', 'btnsizer', 'spacer'],
     'book': ['control', 'window', '!sizer', '!btnsizer'],
     'btnsizer': ['stdbtn'],
@@ -72,8 +76,7 @@ class Component(object):
     genericExStyles = [
         'wxWS_EX_VALIDATE_RECURSIVELY',
         'wxWS_EX_BLOCK_EVENTS',
-        'wxWS_EX_TRANSIENT',
-        'wxFRAME_EX_CONTEXTHELP',
+#        'wxWS_EX_TRANSIENT',   # not processed by XRC (yet?)
         'wxWS_EX_PROCESS_IDLE',
         'wxWS_EX_PROCESS_UI_UPDATES'
         ]

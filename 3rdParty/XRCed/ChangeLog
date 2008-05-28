@@ -1,3 +1,8 @@
+2008-05-28  Roman Rolinsky  <rolinsky@poisson>
+
+	* Revision 0.2.0-4. Added wxListBox styles, fixed some other
+	styles. Experimental support for MDI.
+
 2008-05-22  Roman Rolinsky  <rolinsky@poisson>
 
 	* Revision 0.2.0-3. Added "use subclassing" preference for using
