@@ -1,0 +1,46 @@
+#!/bin/bash
+
+VERSION=`python -c "import floatcanvas; print floatcanvas.__version__"`
+
+RELDIR=FloatCanvas-$VERSION
+
+mkdir $RELDIR
+mkdir $RELDIR/floatcanvas
+mkdir $RELDIR/floatcanvas/Utilities
+mkdir $RELDIR/data
+mkdir $RELDIR/Demos
+
+cp floatcanvas/*.py $RELDIR/floatcanvas/ 
+cp floatcanvas/Utilities/*.py $RELDIR/floatcanvas/Utilities/
+ 
+cp FloatCanvasDemo.py $RELDIR
+cp Todo.txt           $RELDIR
+cp ChangeLog.txt      $RELDIR
+cp ReadMe.txt         $RELDIR
+cp install.py         $RELDIR
+cp FAQ.txt            $RELDIR
+
+cp data/world.dat     $RELDIR/data
+cp data/TestMap.png     $RELDIR/data
+
+cp Demos/*.py   $RELDIR/Demos
+## a few extra things:
+cp Demos/Tiny.bna $RELDIR/Demos
+
+# 
+# clean up the *.pyc files
+rm -f $RELDIR/floatcanvas/*.pyc
+rm -f $RELDIR/floatcanvas/Utilities/*.pyc
+
+
+echo "making zip file"
+zip -r Releases/FloatCanvas-$VERSION.zip $RELDIR 
+# FloatCanvasRelease -x \*CVS\* \*build \*.zip
+#echo "making a copy that isn't names *.zip"
+#cp Releases/FloatCanvas-$VERSION.zip Releases/FloatCanvas-$VERSION
+
+
+## Make a tarball:
+echo "making a tarball"
+tar -czvf Releases/FloatCanvas-$VERSION.tgz $RELDIR 
+
