@@ -1,0 +1,44 @@
+# Editra Launch Plugin
+# Author: Cody Precord
+# License: wxWindows License
+#
+
+#-----------------------------------------------------------------------------#
+
+Version: 0.3
+Date: 06/08/2008
+
++Add shortcut for running Launch (defaults to F5)
++Option to automatically clear buffer between runs
++Output text colors are configurable
++Fix error hotspot highlighting from perl ouput
+
+#-----------------------------------------------------------------------------#
+
+Version: 0.2
+Date: 03/14/2008
+
++ Use aliases for command names
++ Use Primary Font from Profile settings for output
++ Fix improper updating from events taking place in other windows
++ Support for Ada, PHP, Haskell, haXe, PostScript
+
+#-----------------------------------------------------------------------------#
+
+Version: 0.1
+Date: 02/02/2008
+
+  - Initial Release
+    - Support for launching the following file types
+      + Bash Shell
+      + Boo
+      + C-Shell
+      + Ferite
+      + Korn Shell
+      + Lua
+      + NSIS
+      + Perl
+      + Pike
+      + Python
+      + Ruby
+      + Tcl/Tk
