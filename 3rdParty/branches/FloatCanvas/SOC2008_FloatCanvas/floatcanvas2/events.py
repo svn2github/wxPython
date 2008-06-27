@@ -1,0 +1,94 @@
+# We'll use the wx.lib.pubsub module for event sending now, other possibilities
+# include pydispatcher or louie
+
+# note: pubsub isn't the most advanced modules of all. I am using it right now
+#       to minimize the number of external dependencies of fc.
+#       One shortcoming of pubsub is the restriction of using only strings as
+#       topics. pydispatcher does a lot better in that area. This is especially
+#       important if you want to register a subscriber only for a subset of
+#       objects, e.g. a modelChanged event is sent and you want a particular
+#       subscriber to receive only the modelChanged event for a specific model
+#       instead of receiving the modelChanged events of all models. With lots of
+#       objects this might also get a question of performance.
+
+from wx.lib.pubsub import Publisher
+
+class fcEventManager(object):
+
+    class EventTypeTemplate(type):
+        def __init__(cls, name, bases, dikt):
+            type.__init__(cls, name, bases, dikt)
+
+            def __init__(self, **keys):
+                self.__dict__.update(**keys)
+                self.vars = keys
+            
+            cls.__init__ = __init__
+        
+    def __init__(self):
+        self.publisher = Publisher()
+        self.event_types = {}
+        self._wrapper_funcs = {}
+        
+    def send(self, event_name, **keys):
+        try:
+            evt_type = self.event_types[ event_name ]
+        except KeyError:
+            evt_type = self.event_types[ event_name ] = self.EventTypeTemplate( event_name, (), {} )
+                
+        event_instance = evt_type( **keys )
+        
+        return self.publisher.sendMessage( event_name, event_instance )
+        
+    def subscribe(self, event_name, subscriber):
+        def wrap( msg ):
+            return subscriber( msg.data )
+        
+        # we need to add this into a dictionary, because we have to keep a
+        # reference to the wrap function. publisher uses weakrefs.
+        self._wrapper_funcs.setdefault( subscriber, {} )[event_name] = wrap
+        return self.publisher.subscribe( wrap, event_name )
+
+    def unsubscribe(self, subscriber, event_name = None):
+        if event_name is None:
+            func = self._wrapper_funcs[subscriber].values()[0]
+        else:
+            func = self._wrapper_funcs[subscriber][event_name]
+
+        result = self.publisher.unsubscribe( func, event_name )
+        
+        if event_name is None:
+            del self._wrapper_funcs[ subscriber ]
+        else:
+            del self._wrapper_funcs[ subscriber ][event_name]            
+            
+        return result
+
+
+def expandEventKeywords(func):
+    ''' Decorator to turn an event handler taking a single key argument into
+        a function taking keywords instead, e.g. instead of
+    
+        def myFunc(evt):
+            x = evt.arg1
+            y = evt.arg2
+            ...
+            
+        you can use
+    
+        @expandEventKeywords
+        def myFunc( x, y, ... ):
+            # use x and y here directly
+            pass
+    '''
+    def expand(*args):
+        evt = args[-1]
+        return func( *args[0:-1], **evt.vars )
+            
+    return expand
+
+defaultFcEventManager = fcEventManager()
+
+send = defaultFcEventManager.send
+subscribe = defaultFcEventManager.subscribe
+unsubscribe = defaultFcEventManager.unsubscribe
