@@ -27,7 +27,8 @@ import floatcanvas2 as fc
 # - groups (although a layer can be conceived a group)
 #
 
-class FlowerBedModel(fc.models.DefaultModelEventSender, fc.models.IRectangle):
+class FlowerBedModel(fc.models.DefaultModelEventSender):
+    #implements(fc.models.IRectangle)
     def __init__(self, name):
         self.name = name
         self.color = 'brown'
@@ -43,19 +44,23 @@ class FlowerModel(fc.models.DefaultModelEventSender):
         self.size = size
 
 
-class SimpleFlowerRenderer(object):
-    def Render(self, renderer, data):
+class SimpleFlowerView(object):
+    # can_view( FlowerModel )
+    def Render(self, renderer, model):
+        no_blades = model.no_blades
+        size = model.size
+        
         # draw the center part and dynamically generate and apply the look
-        look = fc.look.DefaultLook( line_colour = 'black', fill_colour = data.blade_colour )
+        look = fc.look.DefaultLook( line_colour = 'black', fill_colour = model.blade_colour )
         look.Apply( renderer )
-        renderer.DrawCircle( (0,0), data.size )
+        renderer.DrawCircle( (0,0), size )
         # draw a line per blade
-        for blade in range(data.no_blades):
+        for blade in range(no_blades):
             x, y = sin(no_blades / blade * 2 * PI) * size, cos(no_blades / blade * 2 * PI) * size
             renderer.DrawLine( (0,0), (x,y) )
 
-    def GetBoundingBox(self, data):
-        return (data.size, data.size)
+    def GetBoundingBox(self, model):
+        return (model.size, model.size)
 
 
 def loadFlowerbedModel():
@@ -80,7 +85,7 @@ def createViewFromModel(flowerBed, canvas):
     canvas.addChild( flowerLayer, where = 0 )
     canvas.addChild( labelLayer, where = 'front' )
     
-    genericFlowerRenderer = SimpleFlowerRenderer()
+    genericFlowerRenderer = SimpleFlowerView()
     #labelRenderer = fc.defaultRenderers.ScaledTextRenderer()
     #labelLook = fc.TextLook( base_size = 10, fill_colour = 'black' )
 

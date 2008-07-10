@@ -25,7 +25,7 @@ class DefaultLook(Look):
         self.line_colour = line_colour
         self.fill_colour = fill_colour
 
-        self.look_cacher = entries
+        self.look_cacher = Cacher()
         
     def Apply(self, renderer):
         try:
@@ -36,3 +36,7 @@ class DefaultLook(Look):
 
         renderer_specific_look.Apply()
         
+
+class NoLook(Look):
+    def Apply(self):
+        pass

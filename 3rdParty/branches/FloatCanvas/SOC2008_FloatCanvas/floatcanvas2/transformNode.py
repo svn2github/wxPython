@@ -5,8 +5,16 @@ import numpy
 
 class NodeWithTransform(Node):
     def __init__(self, *args, **keys):
+        try:
+            transform = keys['transform']
+        except KeyError:
+            self.transform = LinearTransform()
+        else:
+            self.transform = transform
+            del keys['transform']
+            
         Node.__init__(self, *args, **keys)
-        self.transform = LinearTransform()
+        
 
     def _getLocalTransform(self):
         return self.transform
@@ -45,6 +53,3 @@ class NodeWithTransform(Node):
 class NodeWithBounds(NodeWithTransform):
     pass
     #boundingBox = property( _getAABB, _setAABB )
-
-class RenderableNode( NodeWithBounds ):
-    pass
