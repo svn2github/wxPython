@@ -30,6 +30,13 @@ class GCRenderer(object):
             
         self.renderer = renderer
         self.GC = getattr(self.renderer, func)( window or dc or native_dinow or native_dc )
+        self.transformMatrix = self.CreateMatrix()
+
+    # transform fucntions
+    def SetTransform(self, transform):
+        self.transformMatrix.Set( *list(transform.transpose().flat) )
+        #self.transformMatrix.Set( transform[0][0], transform[1][0], transform[0][1], transform[1][1] ,transform[0][2], transform[1][2] )
+        self.GC.SetTransform( self.transformMatrix )
 
     # line functions
     def DrawLines(self, points, fillStyle = 'oddeven'):
@@ -51,7 +58,7 @@ class GCRenderer(object):
 
     def CreateFont(self, *args, **keys):
         return GCFont(self, *args, **keys)
-
+    
     # maps all the other functions
     def __getattr__(self, name):
         return getattr(self.GC, name)
@@ -100,6 +107,10 @@ class GCBrush(object):
             brush = GC.CreateLinearGradientBrush( *args, **keys )
         elif kind == 'radialGradient':
             brush = GC.CreateRadialGradientBrush( *args, **keys )
+        elif kind is None:
+            brush = GC.CreateBrush( wx.NullBrush )
+        else:
+            raise ValueError('Wrong kind for brush %s' % kind)
 
         self.brush = brush
 

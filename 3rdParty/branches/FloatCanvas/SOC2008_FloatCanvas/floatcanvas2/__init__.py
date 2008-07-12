@@ -19,7 +19,7 @@ import renderer
 #from events import None
 from gcrenderer import GCRenderer
 from canvas import Canvas, SimpleCanvas
-from look import Look, DefaultLook
+from look import Look, DefaultLook, SolidColourLook, OutlineLook, RadialGradientLook, LinearGradientLook
 from models import IRectangle, ICircle, IEllipse, ILine, IPolygon, IPoints, ISpline, IText, \
                    Rectangle, Circle, Ellipse, Line, Polygon, Points, Spline, Text, \
                    DefaultModelEventSender

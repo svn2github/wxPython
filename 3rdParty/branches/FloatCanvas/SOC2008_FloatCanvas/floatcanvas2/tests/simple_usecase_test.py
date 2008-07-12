@@ -19,19 +19,18 @@ def start():
         
     canvas = fc.canvas.SimpleCanvas( window = frame )
 
-    r1 = canvas.create( 'Rectangle', (200, 200) )
-    r2 = canvas.createRectangle( (200, 200), transform = (200, 200) )
-    r3 = canvas.create( 'Rectangle', (200, 200), look = ( 'red', 'black' ), name = 'Rectangle 3' )
-    r4 = canvas.createRectangle( (200, 200), look = fc.DefaultLook( 'red', 'black' ) )
-    r4 = canvas.createRectangle( (200, 200), look = fc.DefaultLook( line_colour = 'red', fill_colour = 'black' ) )
-    r5 = canvas.create( 'Rectangle', (200, 200), look = ( 'red', 'black' ), transform = (200, 200), parent = r2, name = 'Child' )
-
-    canvas.addChild( r1 )
-    canvas.addChild( r2, where = 'back' )
+    r1 = canvas.create( 'Rectangle', (100, 200), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )
+    semiTransparentGradientLook = fc.RadialGradientLook( 'blue', (0,0), (255,0,0,64), (0,0), 200, (0,0,255,128) )
+    r2 = canvas.createRectangle( (200, 100), position = (100, 100), look = semiTransparentGradientLook )
+    r3 = canvas.create( 'Rectangle', (20, 20), look = ( 'red', 'black' ), name = 'Rectangle 3', where = 'front' )
+    linearGradientLook = fc.LinearGradientLook( 'green', (-100,-100), (255,255,0,64), (100,100), (0,255,0,128) )
+    r5 = canvas.create( 'Rectangle', (150, 150), look = linearGradientLook, position = (200, 200), rotation = 45, scale = (2, 1), parent = r2, name = 'Child', where = 'front' )
 
     # the default cam, looking at 500, 500
-    canvas.camera.target = (500, 500)
+    canvas.camera.position = (500, 500)
     canvas.camera.zoom = (1.0, 1.0)
+    
+    canvas.Render()
 
     app.MainLoop()
 

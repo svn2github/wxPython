@@ -11,5 +11,11 @@ class DefaultRenderableNode(RenderableNode):
         self.model = model
         self.view = view
 
+    def DoRender(self, renderer):
+        return self.view.Render( renderer, self.model, self.worldTransform )
+
     def Render(self, renderer):
-        return self.view.Render( renderer, self.model )
+        self.DoRender(renderer)
+        # traverse children in back-front order (so front objects overdraw back ones)
+        for child in reversed(self.children):
+            child.Render( renderer )

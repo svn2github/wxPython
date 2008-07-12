@@ -1,7 +1,8 @@
-from node import Node
+from transformNode import NodeWithTransform
 
-class Camera(Node):
-    def __init__(self, name = '', parent = None, children = [], zoom = (1.0, 1.0)):
-        Node.__init__( self, name, parent, children )
-
+class Camera(NodeWithTransform):
+    def __init__(self, zoom = (1.0, 1.0), *args, **keys):
+        NodeWithTransform.__init__( self, *args, **keys )
         self.zoom = zoom
+
+    zoom = NodeWithTransform.scale

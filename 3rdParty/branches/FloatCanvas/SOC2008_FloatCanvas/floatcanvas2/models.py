@@ -43,16 +43,17 @@ class DefaultModelEventSender(object):
         object.__setattr__(self, name, value)
         events.send( 'modelChanged', object = self, attributeName = name, oldAttributeValue = old_value, newAttributeValue = value )
 
+import numpy
 
 class Rectangle(DefaultModelEventSender):
     implements( IRectangle )
     def __init__( self, size = (0,0) ):
-        self.size = size
+        self.size = numpy.array( size )
     
 class Ellipse(DefaultModelEventSender):
     implements( IEllipse )
     def __init__( self, size = (0,0) ):
-        self.size = size
+        self.size = numpy.array( size )
         
 class Circle(DefaultModelEventSender):
     implements( ICircle )

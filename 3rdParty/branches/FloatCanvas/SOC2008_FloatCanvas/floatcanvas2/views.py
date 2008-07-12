@@ -5,6 +5,8 @@ def can_render(*args):
 
 import events
 from models import IRectangle, IEllipse, ILine, IPolygon, IPoints, ISpline, IText
+from transform import LinearAndArbitraryCompoundTransform, LinearTransform2D
+import numpy
 
 ##class BaseView(object):
 ##    def __init__(self):
@@ -13,11 +15,30 @@ from models import IRectangle, IEllipse, ILine, IPolygon, IPoints, ISpline, ITex
 ##    def onModelChanged(self):
 ##        print 'Model changed'
 
+def setTransform(renderer, transform, coords):
+    if isinstance(transform, LinearTransform2D):
+        twoxthree_transform = transform.matrix[:-1, ...]
+        renderer.SetTransform( twoxthree_transform )
+        return coords
+    elif isinstance(transform, LinearAndArbitraryCompoundTransform):
+        twoxthree_transform = transform.matrix[:-1, ...]
+        renderer.SetTransform( twoxthree_transform )
+        return transform.transform2(coords)
+    else:
+        raise ValueError( 'NotImplemented %s %s' % (transform, type(transform)) )
+        
+    
+
 class DefaultRectangleRenderer(object):
     can_render( IRectangle )
     
-    def Render(self, renderer, model):
-        renderer.DrawRectangle( model.size )
+    def Render(self, renderer, model, transform):
+        half_size = model.size / 2.0
+        coords = numpy.array( [-half_size, half_size] )
+        coords = setTransform( renderer, transform, coords  )
+        x, y = coords[0].tolist()
+        w, h = (coords[1] - coords[0]).tolist()
+        renderer.DrawRectangle( x, y, w, h )
 
 # adopt circle to ellipse
 
@@ -63,7 +84,7 @@ class DefaultView(object):
         self.look = look
         self.primitive_renderer = primitive_renderer
 
-    def Render(self, renderer, model):
-        self.look.Apply()
-        self.primitive_renderer.Render( renderer, model )
+    def Render(self, renderer, model, transform):
+        self.look.Apply(renderer)
+        self.primitive_renderer.Render( renderer, model, transform )
             
