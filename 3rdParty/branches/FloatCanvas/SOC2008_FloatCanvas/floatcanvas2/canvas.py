@@ -18,6 +18,7 @@ class SimpleCanvas(Canvas):
         
         self.camera = Camera()
         self.renderer = GCRenderer( window = window, dc = dc, native_window = native_window, native_dc = native_dc, wx_renderer = wx_renderer )
+        self.window = window
         
         self._setupNodeFactory()
 
@@ -107,5 +108,6 @@ class SimpleCanvas(Canvas):
         pass
     
     def Render(self):
+        self.transform = self.camera.transform
+        self.transform.position += ( self.window.GetClientSize()[0] / 2, self.window.GetClientSize()[1] / 2 )
         super(SimpleCanvas, self).Render(self.renderer)
-

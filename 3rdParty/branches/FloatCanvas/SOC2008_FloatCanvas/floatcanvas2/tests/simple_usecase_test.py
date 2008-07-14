@@ -27,10 +27,20 @@ def start():
     r5 = canvas.create( 'Rectangle', (150, 150), look = linearGradientLook, position = (200, 200), rotation = 45, scale = (2, 1), parent = r2, name = 'Child', where = 'front' )
 
     # the default cam, looking at 500, 500
-    canvas.camera.position = (500, 500)
+    canvas.camera.position = (0, 0)
     canvas.camera.zoom = (1.0, 1.0)
     
-    canvas.Render()
+    dc = wx.ClientDC( frame )
+    
+    import time
+    for i in range(0, 200):
+        canvas.camera.position = (0, 0)
+        canvas.camera.rotation = -i
+        zoom = 1 + abs(i - 50) / 50.0
+        canvas.camera.zoom = ( zoom, zoom )
+        dc.Clear()
+        canvas.Render()
+        time.sleep(0.01)
 
     app.MainLoop()
 

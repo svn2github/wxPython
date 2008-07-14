@@ -1,7 +1,6 @@
 from node import Node
 from transform import LinearTransform2D, CompoundTransform
 from patterns.partial import partial
-import numpy
 
 
 class NodeWithTransform(Node):
@@ -18,10 +17,10 @@ class NodeWithTransform(Node):
         
 
     def _getLocalTransform(self):
-        return self.transform
+        return self._transform
 
     def _setLocalTransform(self, transform):
-        self.transform = transform
+        self._transform = transform
 
     def _getWorldTransform(self):
         # try to concatenate all transforms. This is very useful when you have
@@ -52,7 +51,7 @@ class NodeWithTransform(Node):
 
 
     worldTransform = property( _getWorldTransform, _setWorldTransform )
-    localTransform = property( _getLocalTransform, _setLocalTransform )
+    localTransform = transform = property( _getLocalTransform, _setLocalTransform )
 
     # these work only for linear transforms and are forwarded here for simple
     # access
@@ -77,7 +76,7 @@ class NodeWithTransform(Node):
 
     def _setRotation(which, self, rotation):
         t = getattr(self, which)
-        t.rotation = scale
+        t.rotation = rotation
         setattr(self, which, t)
 
     position = pos = translation = localPosition = localPos = localTranslation = property( partial(_getPosition, 'localTransform'), partial(_setPosition, 'localTransform') )
