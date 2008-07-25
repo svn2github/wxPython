@@ -12,10 +12,58 @@ class ConstantTable(object):
     get = classmethod(get)
 
 
+class DoubleBuffer(object):
+    def __init__(self, window):
+        self.window = window
+        self.window.Bind( wx.EVT_SIZE, self.OnSize )
+        self.client_dc = wx.ClientDC( self.window )
+        self._recreate()
+    
+    def OnSize(self, event):
+        self._recreate()
+        
+    def _recreate(self):
+        raise NotImplementedError()
+    
+    def Present(self):
+        pass
+
+    def Clear(self):
+        self.dc.Clear()
+
+# some double buffer info: http://wiki.wxpython.org/index.cgi/DoubleBufferedDrawing
+# also see wxAutoBufferedPaintDC (not mentioned in the wiki)
+class NativeDoubleBuffer(DoubleBuffer):
+    def _recreate(self):
+        w, h = self.window.GetClientSizeTuple()
+        self._doubleBufferBitmap = wx.EmptyBitmap(w, h)
+        self.dc = wx.BufferedDC( self.client_dc, self._doubleBufferBitmap, wx.BUFFER_VIRTUAL_AREA  )
+        
+class MemoryDoubleBuffer(DoubleBuffer):
+    def __init__(self, window):
+        self.dc = self.memory_dc = wx.MemoryDC()
+        DoubleBuffer.__init__( self, window )
+
+    def _recreate(self):
+        w, h = self.size = self.window.GetClientSizeTuple()
+        self._doubleBufferBitmap = wx.EmptyBitmap(w, h)
+        self.dc.SelectObject(self._doubleBufferBitmap)
+        
+    def Present(self):
+        self.client_dc.Blit(0, 0, self.size[0], self.size[1], self.memory_dc, 0, 0)        
+
+
 class GCRenderer(object):
     # implements(IRenderer)
 
-    def __init__(self, window = None, dc = None, native_window = None, native_dc = None, wx_renderer = None):
+    def __init__(self, window = None, dc = None, native_window = None, native_dc = None, wx_renderer = None, double_buffered = True):
+        if double_buffered and window and (not window.IsDoubleBuffered()):
+            self.double_buffer = MemoryDoubleBuffer( window )
+            window = None
+            dc = self.dc = self.double_buffer.dc
+            
+        self.double_buffered = double_buffered
+
         if window or dc:
             func = 'CreateContext'
         elif native_window:
@@ -31,6 +79,14 @@ class GCRenderer(object):
         self.renderer = renderer
         self.GC = getattr(self.renderer, func)( window or dc or native_dinow or native_dc )
         self.transformMatrix = self.CreateMatrix()
+        
+    def Clear(self):
+        if self.double_buffered:
+            self.double_buffer.Clear()
+    
+    def Present(self):
+        if self.double_buffered:
+            self.double_buffer.Present()
 
     # transform fucntions
     def SetTransform(self, transform):
@@ -59,6 +115,11 @@ class GCRenderer(object):
     def CreateFont(self, *args, **keys):
         return GCFont(self, *args, **keys)
     
+    def CreateRectangle(self, *args, **keys):
+        path = self.CreatePath()
+        path.AddRectangle( *args, **keys )
+        return GCRenderObject( self, path )
+       
     # maps all the other functions
     def __getattr__(self, name):
         return getattr(self.GC, name)
@@ -73,7 +134,7 @@ class GCPath(object):
         self.path = GC.CreatePath()
 
     def Draw(self, fillStyle = 'oddeven'):
-        return self.GC.DrawPath(path, ConstantTable.get(fillStyle) )
+        return self.GC.DrawPath(self.path, ConstantTable.get(fillStyle) )
     
     def Fill(self, fillStyle = 'oddeven'):
         return self.GC.DrawPath(self.path, ConstantTable.get(fillStyle) )    
@@ -150,3 +211,43 @@ class GCBitmap(object):
 
     def Draw(self, x, y, w, h):
         self.GC.DrawBitmap(self.bmp, x, y, w, h)
+
+
+from transform import LinearTransform2D
+
+class GCRenderObject(object):
+    transformMethod = 'global'          # 'global' or 'path'
+
+    def __init__(self, renderer, path):
+        self.renderer = renderer
+        self.path = path
+        self._transform = renderer.CreateMatrix()
+        self.lastTransform = LinearTransform2D()
+        
+    def Draw(self):
+        if self.transformMethod == 'global':
+            self.renderer.SetTransform( self.transform )
+        self.path.Draw()
+                       
+    def GetBoundingBox(self):
+        self.path.GetBox()
+        
+    def _getTransform(self):
+        return self._transform
+    
+    def _setTransform(self, transform):
+        method = self.transformMethod
+        if method == 'path':
+            m = ( transform * self.lastTransform.inverse ).matrix[ :-1, ... ]
+            self._transform.Set( *list(m.transpose().flat) )
+            self.path.Transform( self._transform )
+            self.lastTransform = transform
+        elif method == 'global':
+            self._transform = transform.matrix[ :-1, ... ]
+        else:
+            assert False
+        
+    transform = property( _getTransform, _setTransform )
+    
+    #boundingBox = property( _getBoundingBox )
+        

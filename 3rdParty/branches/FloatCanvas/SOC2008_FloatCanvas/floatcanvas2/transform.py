@@ -43,6 +43,9 @@ class LinearTransform(object):
     def __mul__(self, other):
         if isinstance(other, self.__class__):
             return self.__class__( (), matrix = numpy.dot( self.matrix, other.matrix ) )
+        elif isinstance(other, LinearAndArbitraryCompoundTransform):
+            linearPart = self.__class__( (), matrix = numpy.dot( self.matrix, other.transform1.matrix ) )
+            return LinearAndArbitraryCompoundTransform( linearPart, other.transform2 )
         else:
             return LinearAndArbitraryCompoundTransform( self, other )
 
@@ -96,8 +99,26 @@ class CompoundTransform(object):
     
 class LinearAndArbitraryCompoundTransform(CompoundTransform):
     def __getattr__(self, name):
-        return getattr( self.transform1, name )
+        #if name in ('transform1', 'transform2'):
+        #    return super( CompoundTransform, self ).__getattr__( name )
+        
+        if hasattr( self.transform1, name ):
+            return getattr( self.transform1, name )
+        elif hasattr( self.transform2, name ):
+            return getattr( self.transform2, name )
+        else:
+            raise NameError(name)   
 
+    def __setattr__(self, name, value):
+        if name in ('transform1', 'transform2'):
+            return super( CompoundTransform, self ).__setattr__( name, value )
+
+        if hasattr( self.transform1, name ):
+            return setattr( self.transform1, name, value )
+        elif hasattr( self.transform2, name ):
+            return setattr( self.transform2, name, value )
+        else:
+            raise NameError(name)   
 
 class MercatorTransform(object):
     #implements(ITransform)

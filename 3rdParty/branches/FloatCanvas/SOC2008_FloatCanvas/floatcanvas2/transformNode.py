@@ -4,15 +4,16 @@ from patterns.partial import partial
 
 
 class NodeWithTransform(Node):
-    def __init__(self, *args, **keys):
-        try:
-            transform = keys['transform']
-        except KeyError:
-            self.transform = LinearTransform2D()
-        else:
-            self.transform = transform
-            del keys['transform']
-            
+    def __init__(self, transform, *args, **keys):
+        self.transform = transform
+        #try:
+        #    transform = keys['transform']
+        #except KeyError:
+        #    self.transform = LinearTransform2D()
+        #else:
+        #    self.transform = transform
+        #    del keys['transform']
+        #    
         Node.__init__(self, *args, **keys)
         
 

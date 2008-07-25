@@ -40,27 +40,27 @@ class fcEventManager(object):
         
         return self.publisher.sendMessage( event_name, event_instance )
         
-    def subscribe(self, event_name, subscriber):
+    def subscribe(self, subscriber, event_name ):
         def wrap( msg ):
             return subscriber( msg.data )
         
         # we need to add this into a dictionary, because we have to keep a
         # reference to the wrap function. publisher uses weakrefs.
-        self._wrapper_funcs.setdefault( subscriber, {} )[event_name] = wrap
+        self._wrapper_funcs.setdefault( id(subscriber), {} )[event_name] = wrap
         return self.publisher.subscribe( wrap, event_name )
 
     def unsubscribe(self, subscriber, event_name = None):
         if event_name is None:
-            func = self._wrapper_funcs[subscriber].values()[0]
+            func = self._wrapper_funcs[id(subscriber)].values()[0]
         else:
-            func = self._wrapper_funcs[subscriber][event_name]
+            func = self._wrapper_funcs[id(subscriber)][event_name]
 
         result = self.publisher.unsubscribe( func, event_name )
         
         if event_name is None:
-            del self._wrapper_funcs[ subscriber ]
+            del self._wrapper_funcs[ id(subscriber) ]
         else:
-            del self._wrapper_funcs[ subscriber ][event_name]            
+            del self._wrapper_funcs[ id(subscriber) ][event_name]            
             
         return result
 

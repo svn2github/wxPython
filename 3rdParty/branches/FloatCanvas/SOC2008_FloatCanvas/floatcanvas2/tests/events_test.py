@@ -40,14 +40,14 @@ class TestNode(unittest.TestCase):
         events.send( 'testEvent', value1 = 1 )
         
         callChecker = CallChecker( value1 = 1 )
-        events.subscribe( 'testEvent', callChecker )
+        events.subscribe( callChecker, 'testEvent',  )
         events.send( 'testEvent', value1 = 1 )
         callChecker.verify(self)        
 
         events.unsubscribe( callChecker, 'testEvent' )
         callChecker.verifyNotCalled(self)     
 
-        events.subscribe( 'testEvent', callChecker.receiveKeywords )
+        events.subscribe( callChecker.receiveKeywords, 'testEvent' )
         events.send( 'testEvent', value1 = 1 )
         callChecker.verifyKeywords(self)        
 

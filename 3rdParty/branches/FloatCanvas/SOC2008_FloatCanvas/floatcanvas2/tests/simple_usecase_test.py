@@ -25,20 +25,19 @@ def start():
     r3 = canvas.create( 'Rectangle', (20, 20), look = ( 'red', 'black' ), name = 'Rectangle 3', where = 'front' )
     linearGradientLook = fc.LinearGradientLook( 'green', (-100,-100), (255,255,0,64), (100,100), (0,255,0,128) )
     r5 = canvas.create( 'Rectangle', (150, 150), look = linearGradientLook, position = (200, 200), rotation = 45, scale = (2, 1), parent = r2, name = 'Child', where = 'front' )
+    #mr = canvas.createPoints( [(70, 70)], transform = 'MercatorTransform', look = semiTransparentGradientLook, name = 'mercator' )
+    #mr.scale = (1, 100)
 
     # the default cam, looking at 500, 500
     canvas.camera.position = (0, 0)
     canvas.camera.zoom = (1.0, 1.0)
     
-    dc = wx.ClientDC( frame )
-    
     import time
     for i in range(0, 200):
         canvas.camera.position = (0, 0)
-        canvas.camera.rotation = -i
+        canvas.camera.rotation = i
         zoom = 1 + abs(i - 50) / 50.0
         canvas.camera.zoom = ( zoom, zoom )
-        dc.Clear()
         canvas.Render()
         time.sleep(0.01)
 

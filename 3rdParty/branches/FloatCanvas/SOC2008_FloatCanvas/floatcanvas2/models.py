@@ -48,7 +48,15 @@ import numpy
 class Rectangle(DefaultModelEventSender):
     implements( IRectangle )
     def __init__( self, size = (0,0) ):
-        self.size = numpy.array( size )
+        self.size = size
+        
+    def _setSize(self, value):
+        self._size = numpy.array( value )
+        
+    def _getSize(self):
+        return self._size
+    
+    size = property( _getSize, _setSize )
     
 class Ellipse(DefaultModelEventSender):
     implements( IEllipse )
