@@ -20,7 +20,6 @@ class _Presenter:
         self.path = ''
         # Global modified state
         self.setModified(False) # sets applied
-        self.undoSaved = True   # set to false when some pending undo data
         view.frame.Clear()
         view.tree.Clear()
         view.tree.SetPyData(view.tree.root, Model.mainNode)
@@ -81,6 +80,7 @@ class _Presenter:
     def setModified(self, state=True, setDirty=True):
         '''Set global modified state.'''
         TRACE('setModified %s %s', state, setDirty)
+#        import pdb;pdb.set_trace()
         self.modified = state
         # Set applied flag
         if not state: self.applied = True
@@ -105,12 +105,14 @@ class _Presenter:
             self.setModified(setDirty=False)  # toggle global state
 
     def createUndoEdit(self, item=None, page=None):
+        TRACE('createUndoEdit')
         # Create initial undo object
         if item is None: item = self.item
         if page is None: page = view.panel.nb.GetSelection()
         view.panel.undo = undo.UndoEdit(item, page)
 
     def registerUndoEdit(self):
+        TRACE('registerUndoEdit')
         g.undoMan.RegisterUndo(view.panel.undo)
         view.panel.undo = None
 
@@ -131,8 +133,6 @@ class _Presenter:
             TRACE('setData: root node')
             self.container = None
             self.comp = Manager.rootComponent
-#            self.panels = []
-#            view.panel.Clear()
             self.panels = view.panel.SetData(self.container, self.comp, Model.mainNode)
         else:
             node = view.tree.GetPyData(item)
@@ -272,7 +272,7 @@ class _Presenter:
         # Update panel
         view.tree.SelectItem(item)
         self.setModified()
-        return item
+        return oldNode
 
     def subclass(self, item, subclass):
         node = view.tree.GetPyData(item)
@@ -345,7 +345,6 @@ class _Presenter:
             view.tree.SetItemImage(item, self.comp.getTreeImageId(node))
             view.tree.SetItemText(item, self.comp.getTreeText(node))
         self.setApplied()
-        self.undoSaved = False
         # Set dirty flag
         if view.testWin.IsShown():
             view.testWin.isDirty = True
@@ -358,8 +357,18 @@ class _Presenter:
         view.tree.UnselectAll()
         self.setData(view.tree.root)
 
+    def flushSubtree(self, item=None, node=None):
+        # Remember test item index
+        TRACE('flushSubtree')
+        if view.testWin.item is not None:
+            itemIndex = view.tree.ItemFullIndex(view.testWin.item)
+        view.tree.FlushSubtree(item, node)
+        if view.testWin.item is not None:
+            view.testWin.item = view.tree.ItemAtFullIndex(itemIndex)
+
     def delete(self, item):
-        '''Delete selected object(s).'''
+        '''Delete selected object(s). Return removed XML node.'''
+        TRACE('delete')
         parentItem = view.tree.GetItemParent(item)
         parentNode = view.tree.GetPyData(parentItem)
         node = view.tree.GetPyData(item)
@@ -368,7 +377,6 @@ class _Presenter:
         # If deleting the top-level object, remove view
         if view.testWin.IsShown() and view.testWin.item == item:
             view.testWin.Destroy()
-        self.applied = True     # prevent updating nonexisting item
         self.setApplied()
         self.unselect()
         self.setModified()
@@ -384,7 +392,6 @@ class _Presenter:
             node = self.container.removeChild(parentNode, node)
             node.unlink()       # delete completely
             view.tree.Delete(item)
-        self.applied = True     # prevent updating unexisting item
         self.setApplied()
         self.unselect()
         self.setModified()
@@ -470,6 +477,7 @@ class _Presenter:
         for n in filter(is_object, node.childNodes):
             view.tree.AddNode(item, comp.getTreeNode(n))
         self.setModified()
+        return item
 
     def moveUp(self):
         parentItem = view.tree.GetItemParent(self.item)
@@ -482,7 +490,7 @@ class _Presenter:
         parent.removeChild(node)
         parent.insertBefore(node, prevNode)
         index = view.tree.ItemFullIndex(self.item)
-        view.tree.FlushSubtree(parentItem, parent)
+        self.flushSubtree(parentItem, parent)
         index[-1] -= 1
         self.item = view.tree.ItemAtFullIndex(index)
         self.setModified()
@@ -502,7 +510,7 @@ class _Presenter:
         parent.removeChild(node)
         parent.insertBefore(node, nextNode)
         index = view.tree.ItemFullIndex(self.item)
-        view.tree.FlushSubtree(parentItem, parent)
+        self.flushSubtree(parentItem, parent)
         index[-1] += 1
         self.item = view.tree.ItemAtFullIndex(index)
         self.setModified()
@@ -531,7 +539,7 @@ class _Presenter:
         else:
             grandParentComp.appendChild(grandParent, node)
         index = view.tree.ItemFullIndex(self.item)
-        view.tree.FlushSubtree(grandParentItem, grandParent)
+        self.flushSubtree(grandParentItem, grandParent)
         index.pop()
         index[-1] += 1
         self.item = view.tree.ItemAtFullIndex(index)
@@ -553,7 +561,7 @@ class _Presenter:
         newParentComp.appendChild(newParent, node)
         index = view.tree.ItemFullIndex(self.item)
         n = view.tree.GetChildrenCount(view.tree.GetPrevSibling(self.item))
-        view.tree.FlushSubtree(parentItem, parent)
+        self.flushSubtree(parentItem, parent)
         index[-1] -= 1
         index.append(n)
         self.item = view.tree.ItemAtFullIndex(index)
@@ -630,10 +638,10 @@ class _Presenter:
 
     def refreshTestWin(self):
         '''Refresh test window after some change.'''
+        TRACE('refreshTestWin')
         if not view.testWin.IsDirty(): return
         if not self.applied:
             self.update(self.item)
-        TRACE('refreshTestWin')
         # Dumb refresh
         self.createTestWin(view.testWin.item)
         self.highlight(self.item)

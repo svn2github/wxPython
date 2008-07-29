@@ -113,7 +113,7 @@ class XMLTree(wx.TreeCtrl):
 
     def FlushSubtree(self, item, node):
         '''Update all items after changes in model.'''
-        if item == self.root:
+        if item is None or item == self.root:
             self.Flush()
             return
         self.DeleteChildren(item)

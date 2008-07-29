@@ -82,7 +82,9 @@ class PPanel(wx.Panel):
         Presenter.setApplied(False)
         evt.Skip()
     def OnKillFocus(self, evt):
-        if g.conf.autoRefresh and g.conf.autoRefreshPolicy == AUTO_REFRESH_POLICY_FOCUS:
+        # Refresh test window if auto refresh policy on focus
+        if Listener.testWin.IsShown() and g.conf.autoRefresh and \
+                g.conf.autoRefreshPolicy == AUTO_REFRESH_POLICY_FOCUS:
             wx.CallAfter(Presenter.refreshTestWin)
         evt.Skip()
 
@@ -708,7 +710,8 @@ class CheckBox(PPanel):
         Presenter.setApplied(False)
         if Presenter.panelIsDirty():
             Presenter.registerUndoEdit()
-        if g.conf.autoRefresh and g.conf.autoRefreshPolicy == AUTO_REFRESH_POLICY_FOCUS:
+        if Listener.testWin.IsShown() and g.conf.autoRefresh and \
+                g.conf.autoRefreshPolicy == AUTO_REFRESH_POLICY_FOCUS:
             Listener.testWin.isDirty = True
             wx.CallAfter(Presenter.refreshTestWin)
         evt.Skip()
@@ -950,9 +953,11 @@ class StylePanel(wx.Panel):
 
     def OnCheck(self, evt):
         Presenter.setApplied(False)
-        if g.conf.autoRefresh and g.conf.autoRefreshPolicy == AUTO_REFRESH_POLICY_FOCUS:
+        if Listener.testWin.IsShown() and g.conf.autoRefresh and \
+                g.conf.autoRefreshPolicy == AUTO_REFRESH_POLICY_FOCUS:
             Listener.testWin.isDirty = True
             wx.CallAfter(Presenter.refreshTestWin)
+        evt.Skip()
 
 #############################################################################
 

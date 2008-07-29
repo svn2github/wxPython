@@ -306,7 +306,7 @@ class Component(object):
                 # Style and exstyle are not in attributes and can be treated specially
                 if a == 'style':
                     styles = self.getAttribute(srcNode, a).split('|')
-                    allStyles = dstComp.styles + params.genericStyles
+                    allStyles = dstComp.styles + self.genericStyles
                     dstStyles = [s for s in styles if s.strip() in allStyles]
                     if dstStyles:
                         dstComp.addAttribute(dstNode, a, '|'.join(dstStyles))
@@ -658,6 +658,8 @@ class _ComponentManager:
 
     def getNodeComp(self, node, defaultClass='unknown'):
         # For ref nodes without class name, need to find ref element
+        if node is Model.mainNode:
+            return self.rootComponent
         cls = node.getAttribute('class')
         if node.tagName == 'object_ref':
             if not cls:

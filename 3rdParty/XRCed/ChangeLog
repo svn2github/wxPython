@@ -1,3 +1,8 @@
+2008-07-29  Roman Rolinsky  <rolinsky@poisson>
+
+	* Revision 0.2.0-5. Undo/redo fixes and improvements. Undoing
+	panel edit while test window is open still has some bugs.
+
 2008-05-28  Roman Rolinsky  <rolinsky@poisson>
 
 	* Revision 0.2.0-4. Added wxListBox styles, fixed some other

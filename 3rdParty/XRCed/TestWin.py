@@ -90,7 +90,7 @@ class TestWindow:
             g.lastActiveFrame.Raise()   
         
     def IsShown(self):
-        return bool(self.object) and self.object.IsShown()
+        return self.object is not None and self.object.IsShown()
 
     def IsDirty(self):
         '''If test window must be refreshed.'''

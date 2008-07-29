@@ -184,19 +184,24 @@ class _Listener:
 
     def OnComponentCreate(self, evt):
         '''Hadnler for creating new elements.'''
+        state = self.tree.GetFullState() # state just before
         comp = Manager.findById(evt.GetId())
-        g.undoMan.RegisterUndo(undo.UndoGlobal()) # !!! TODO
         if comp.groups[0] == 'component':
             node = Model.createComponentNode('Component')
-            Presenter.create(comp, node)
+            item = Presenter.create(comp, node)
         else:
-            Presenter.create(comp)
+            item = Presenter.create(comp)
+        itemIndex = self.tree.ItemFullIndex(item)
+        g.undoMan.RegisterUndo(undo.UndoPasteCreate(itemIndex, state))
 
     def OnComponentReplace(self, evt):
         '''Hadnler for creating new elements.'''
         comp = Manager.findById(evt.GetId() - ID.SHIFT)
-        g.undoMan.RegisterUndo(undo.UndoGlobal()) # !!! TODO
-        Presenter.replace(comp)
+        item = self.tree.GetSelection()
+        index = self.tree.ItemFullIndex(item)
+        oldComp = Presenter.comp
+        oldNode = Presenter.replace(comp)
+        g.undoMan.RegisterUndo(undo.UndoReplace(index, oldComp, oldNode))
 
     def OnReference(self, evt):
         '''Create reference to an existing object.'''
@@ -393,6 +398,7 @@ class _Listener:
             node = Presenter.delete(self.tree.GetSelection())
             g.undoMan.RegisterUndo(undo.UndoCutDelete(index, state, node))
         else:
+            # Save all if multiselection
             g.undoMan.RegisterUndo(undo.UndoGlobal())
             Presenter.deleteMany(self.tree.GetSelections())
 
@@ -402,17 +408,22 @@ class _Listener:
 
     def OnMenuPaste(self, evt):
         '''wx.ID_PASTE handler (for XMLTreeMenu).'''
-        g.undoMan.RegisterUndo(undo.UndoGlobal()) # !!! TODO
-        Presenter.paste()
+        state = self.tree.GetFullState() # state just before
+        item = Presenter.paste()
+        itemIndex = self.tree.ItemFullIndex(item)
+        g.undoMan.RegisterUndo(undo.UndoPasteCreate(itemIndex, state))
 
     def OnCmdPaste(self, evt):
         '''ID.PASTE handler (for Edit menu and shortcuts).'''
+        TRACE('OnCmdPaste')
         state = wx.GetMouseState()
         forceSibling = state.AltDown()
         forceInsert = state.ShiftDown()
         g.Presenter.updateCreateState(forceSibling, forceInsert)
-        g.undoMan.RegisterUndo(undo.UndoGlobal()) 
-        Presenter.paste()
+        state = self.tree.GetFullState() # state just before
+        item = Presenter.paste()
+        itemIndex = self.tree.ItemFullIndex(item)
+        g.undoMan.RegisterUndo(undo.UndoPasteCreate(itemIndex, state))
 
     def OnToolPaste(self, evt):
         '''frame.ID_TOOL_PASTE handler.'''
@@ -425,17 +436,21 @@ class _Listener:
             forceSibling = state.ControlDown()
         forceInsert = state.ShiftDown()
         g.Presenter.updateCreateState(forceSibling, forceInsert)
-        g.undoMan.RegisterUndo(undo.UndoGlobal()) 
-        Presenter.paste()
+        treeState = self.tree.GetFullState() # state just before
+        item = Presenter.paste()
+        itemIndex = self.tree.ItemFullIndex(item)
+        g.undoMan.RegisterUndo(undo.UndoPasteCreate(itemIndex, treeState)) 
 
     def OnPasteSibling(self, evt):
         '''ID.PASTE_SIBLING handler.'''
         forceSibling = True
         state = wx.GetMouseState()
         forceInsert = state.ShiftDown()
-        g.Presenter.updateCreateState(forceSibling, forceInsert)        
-        g.undoMan.RegisterUndo(undo.UndoGlobal()) # !!! TODO
-        Presenter.paste()
+        g.Presenter.updateCreateState(forceSibling, forceInsert)
+        treeState = self.tree.GetFullState() # state just before
+        item = Presenter.paste()
+        itemIndex = self.tree.ItemFullIndex(item)
+        g.undoMan.RegisterUndo(undo.PasteCreate(itemIndex, treeState))
 
     def OnUnselect(self, evt):
         self.tree.UnselectAll()
@@ -740,7 +755,6 @@ Homepage: http://xrced.sourceforge.net\
             if item: Presenter.update(item)
 
         # Check clipboard
-#        self.clipboardHasData = True
         if not wx.TheClipboard.IsOpened():
             self.clipboardHasData = False
             if wx.TheClipboard.IsSupported(self.dataElem.GetFormat()):
@@ -837,8 +851,7 @@ Homepage: http://xrced.sourceforge.net\
             return
         # If panel has a pending undo, register it
         if Presenter.panelIsDirty():
-            g.undoMan.RegisterUndo(self.panel.undo)
-            self.panel.undo = None
+            Presenter.registerUndoEdit()
         evt.Skip()
 
     def OnTreeSelChanged(self, evt):
@@ -903,15 +916,16 @@ Homepage: http://xrced.sourceforge.net\
     def OnComponentTool(self, evt):
         '''Hadnler for creating new elements.'''
         comp = Manager.findById(evt.GetId())
-        
         # Check compatibility
         if Presenter.checkCompatibility(comp):
-            g.undoMan.RegisterUndo(undo.UndoGlobal()) # !!! TODO
+            state = self.tree.GetFullState() # state just before
             if comp.groups[0] == 'component':
                 node = Model.createComponentNode('Component')
-                Presenter.create(comp, node)
+                item = Presenter.create(comp, node)
             else:
-                Presenter.create(comp)
+                item = Presenter.create(comp)
+            itemIndex = self.tree.ItemFullIndex(item)
+            g.undoMan.RegisterUndo(undo.UndoPasteCreate(itemIndex, state))
         evt.Skip()
 
     def OnCloseToolFrame(self, evt):
