@@ -26,8 +26,6 @@ def start():
     canvas.camera.position = (0, 0)
     canvas.camera.zoom = (1.0, 1.0)
     
-    dc = wx.ClientDC( frame )
-    
     print 1, canvas.dirty, r1.dirty, r1.model.dirty
     #canvas.Render()
     print 2, canvas.dirty, r1.dirty, r1.model.dirty

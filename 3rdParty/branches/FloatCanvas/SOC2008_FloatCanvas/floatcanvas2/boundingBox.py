@@ -95,6 +95,20 @@ class BoundingBox(N.ndarray):
         if BB[0,1] < self[0,1]: self[0,1] = BB[0,1]
         if BB[1,0] > self[1,0]: self[1,0] = BB[1,0]
         if BB[1,1] > self[1,1]: self[1,1] = BB[1,1]
+        
+    def intersection(self, other):
+        # if other is a point instead of a bb, make a bb out of it
+        if isinstance( other, tuple ):
+            other = BoundingBox( ( other, other ) )
+        
+        # check intersection with bbox
+        if not self.Overlaps(other):
+            return 'none'
+        elif self.Inside(other):
+            return 'full'
+        else:
+            return 'partial'
+        
 
     def _getWidth(self):
         return self[1,0] - self[0,0]
@@ -110,16 +124,28 @@ class BoundingBox(N.ndarray):
 
     def _getMax(self):
         return self[1]
+    
+    def _getCorners(self):
+        center = self.center
+        half_size = self.Size / 2.0
+        
+        upper_right = center + half_size
+        lower_left  = center - half_size
+        lower_right = center + half_size * ( 1, -1)
+        upper_left  = center + half_size * (-1,  1)
 
-    Width = property(_getWidth)
-    Height = property(_getHeight)
+        return N.array( (lower_left, upper_right, lower_right, upper_left) )
+
+    width = property(_getWidth)
+    height = property(_getHeight)
     Size = property(_getSize)
-    Min = property(_getMin)
-    Max = property(_getMax)
+    min = property(_getMin)
+    max = property(_getMax)
+    corners = property(_getCorners)
     
     def _getCenter(self):
         return self.sum(0) / 2.0
-    Center = property(_getCenter)
+    center = property(_getCenter)
     ### This could be used for a make BB from a bunch of BBs
 
     #~ def _getboundingbox(bboxarray): # lrk: added this
@@ -192,15 +218,31 @@ def fromBBArray(BBarray):
    #return asBoundingBox( (upperleft, lowerright) ) * 2
    
 
-def fromRectangle(center, size):
+def fromRectangleCenterSize(center, size):
     half_size = size / 2.0
     
-    upper_right = center + half_size
-    lower_left  = center - half_size
-    lower_right = center + half_size * ( 1, -1)
-    upper_left  = center + half_size * (-1,  1)
+    #upper_right = center + half_size
+    #lower_left  = center - half_size
+    #lower_right = center + half_size * ( 1, -1)
+    #upper_left  = center + half_size * (-1,  1)
                             
-    points = [ upper_right, lower_left, lower_right, upper_left ]
+    #points = [ upper_right, lower_left, lower_right, upper_left ]
                              
-    return fromPoints( points )
+    #return fromPoints( points )
+    return BoundingBox( ( center - half_size, center + half_size ) )
    
+
+def fromRectangleCornerSize(corner, size):
+    #lower_left  = corner + size * ( 0, 0 )
+    #upper_right = corner + size * ( 1, 1 )
+    #lower_right = corner + size * ( 1, 0 )
+    #upper_left  = corner + size * ( 0, 1 )
+                            
+    #points = [ upper_right, lower_left, lower_right, upper_left ]
+                             
+    #return fromPoints( points )
+    return BoundingBox( ( corner, corner + size ) )
+
+
+def fromPoint(point):
+    return BoundingBox( ( point, point ) )

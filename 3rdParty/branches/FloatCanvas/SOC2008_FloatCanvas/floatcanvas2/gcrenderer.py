@@ -12,6 +12,17 @@ class ConstantTable(object):
     get = classmethod(get)
 
 
+class SingleBuffer(object):
+    def __init__(self, window):
+        self.window = window
+        self.client_dc = self.dc = wx.ClientDC( self.window )
+    
+    def Present(self):
+        pass
+
+    def Clear(self):
+        self.dc.Clear()
+
 class DoubleBuffer(object):
     def __init__(self, window):
         self.window = window
@@ -21,6 +32,7 @@ class DoubleBuffer(object):
     
     def OnSize(self, event):
         self._recreate()
+        event.Skip()
         
     def _recreate(self):
         raise NotImplementedError()
@@ -57,12 +69,19 @@ class GCRenderer(object):
     # implements(IRenderer)
 
     def __init__(self, window = None, dc = None, native_window = None, native_dc = None, wx_renderer = None, double_buffered = True):
-        if double_buffered and window and (not window.IsDoubleBuffered()):
-            self.double_buffer = MemoryDoubleBuffer( window )
-            window = None
-            dc = self.dc = self.double_buffer.dc
-            
         self.double_buffered = double_buffered
+
+        if double_buffered and window and (not window.IsDoubleBuffered()):
+            self.draw_buffer = MemoryDoubleBuffer( window )
+
+            def disable_event(*args,**keys):
+                pass            
+            window.Bind(wx.EVT_ERASE_BACKGROUND, disable_event)
+        else:
+            self.draw_buffer = SingleBuffer( window )
+            
+        window = None
+        dc = self.draw_buffer.dc
 
         if window or dc:
             func = 'CreateContext'
@@ -77,22 +96,20 @@ class GCRenderer(object):
             renderer = wx.GraphicsRenderer.GetDefaultRenderer()
             
         self.renderer = renderer
-        self.GC = getattr(self.renderer, func)( window or dc or native_dinow or native_dc )
+        self.GC = getattr(self.renderer, func)( window or dc or native_window or native_dc )
         self.transformMatrix = self.CreateMatrix()
         
     def Clear(self):
-        if self.double_buffered:
-            self.double_buffer.Clear()
+        self.draw_buffer.Clear()
     
     def Present(self):
-        if self.double_buffered:
-            self.double_buffer.Present()
+        self.draw_buffer.Present()
 
     # transform fucntions
-    def SetTransform(self, transform):
-        self.transformMatrix.Set( *list(transform.transpose().flat) )
-        #self.transformMatrix.Set( transform[0][0], transform[1][0], transform[0][1], transform[1][1] ,transform[0][2], transform[1][2] )
-        self.GC.SetTransform( self.transformMatrix )
+    #def SetTransform(self, transform):
+    #    self.transformMatrix.Set( *list(transform.transpose().flat) )
+    #    #self.transformMatrix.Set( transform[0][0], transform[1][0], transform[0][1], transform[1][1] ,transform[0][2], transform[1][2] )
+    #    self.GC.SetTransform( self.transformMatrix )
 
     # line functions
     def DrawLines(self, points, fillStyle = 'oddeven'):
@@ -120,6 +137,11 @@ class GCRenderer(object):
         path.AddRectangle( *args, **keys )
         return GCRenderObject( self, path )
        
+    def CreateEllipse(self, *args, **keys):
+        path = self.CreatePath()
+        path.AddEllipse( *args, **keys )
+        return GCRenderObject( self, path )
+
     # maps all the other functions
     def __getattr__(self, name):
         return getattr(self.GC, name)
@@ -214,6 +236,8 @@ class GCBitmap(object):
 
 
 from transform import LinearTransform2D
+import boundingBox as boundingBoxModule
+import numpy
 
 class GCRenderObject(object):
     transformMethod = 'global'          # 'global' or 'path'
@@ -221,33 +245,58 @@ class GCRenderObject(object):
     def __init__(self, renderer, path):
         self.renderer = renderer
         self.path = path
-        self._transform = renderer.CreateMatrix()
-        self.lastTransform = LinearTransform2D()
+        self._rendererTransform = renderer.CreateMatrix()
+        self._transform = LinearTransform2D()
+
+        x, y, w, h = self.path.GetBox()
+        corner = numpy.array( (x,y) )
+        size = numpy.array( (w,h) )
+        self._localBoundingBox = boundingBoxModule.fromRectangleCornerSize( corner, size )
+        self._recalculateBoundingBox()
         
-    def Draw(self):
+    def Draw(self, camera):
         if self.transformMethod == 'global':
-            self.renderer.SetTransform( self.transform )
+            self._rendererTransform.Set( *list( (camera.viewTransform * self.transform).matrix[ :-1, ... ].transpose().flat) )
+            self.renderer.SetTransform( self._rendererTransform )
         self.path.Draw()
-                       
-    def GetBoundingBox(self):
-        self.path.GetBox()
         
+    def intersects(self, primitive):
+        assert primitive.min == primitive.max, ('Can only test against points', primitive)
+        #print primitive.min
+        pnt = self.transform.inverse( (primitive.min,) )[0]
+        if self.path.Contains( *pnt.tolist() ):
+            return 'full'
+        else:
+            return 'none'
+                              
     def _getTransform(self):
         return self._transform
     
     def _setTransform(self, transform):
         method = self.transformMethod
         if method == 'path':
-            m = ( transform * self.lastTransform.inverse ).matrix[ :-1, ... ]
+            m = ( transform * self.transform.inverse ).matrix[ :-1, ... ]
             self._transform.Set( *list(m.transpose().flat) )
             self.path.Transform( self._transform )
-            self.lastTransform = transform
         elif method == 'global':
-            self._transform = transform.matrix[ :-1, ... ]
+            self._rendererTransform.Set( *list(transform.matrix[ :-1, ... ].transpose().flat) )
         else:
             assert False
+        self._transform = transform
+        self._recalculateBoundingBox()
         
     transform = property( _getTransform, _setTransform )
     
-    #boundingBox = property( _getBoundingBox )
-        
+    def _getLocalBoundingBox(self):
+        return self._localBoundingBox
+
+    localBoundingBox = property( _getLocalBoundingBox )
+    
+    def _recalculateBoundingBox(self):
+        bb = self.localBoundingBox
+        self._boundingBox = boundingBoxModule.fromPoints( self.transform( bb.corners ) )
+
+    def _getBoundingBox(self):
+        return self._boundingBox
+
+    boundingBox = property( _getBoundingBox )

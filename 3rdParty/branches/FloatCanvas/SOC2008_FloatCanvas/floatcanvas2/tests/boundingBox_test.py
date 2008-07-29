@@ -343,16 +343,16 @@ class testMerge(unittest.TestCase):
 class testWidthHeight(unittest.TestCase):
     B = BoundingBox( ( (1.0, 2.0), (5.0, 10.0) ) )
     def testWidth(self):
-        self.failUnless(self.B.Width == 4.0)
+        self.failUnless(self.B.width == 4.0)
 
     def testWidth(self):
-        self.failUnless(self.B.Height == 8.0)
+        self.failUnless(self.B.height == 8.0)
 
     def attemptSetWidth(self):
-        self.B.Width = 6
+        self.B.width = 6
 
     def attemptSetHeight(self):
-        self.B.Height = 6
+        self.B.height = 6
 
     def testSetW(self):
         self.failUnlessRaises(AttributeError, self.attemptSetWidth)
@@ -363,11 +363,11 @@ class testWidthHeight(unittest.TestCase):
 class testCenter(unittest.TestCase):
     B = BoundingBox( ( (1.0, 2.0), (5.0, 10.0) ) )
     def testCenter(self):
-        print self.B.Center 
-        self.failUnless( (self.B.Center == (3.0, 6.0)).all() )
+        #print self.B.center 
+        self.assert_( (self.B.center == (3.0, 6.0)).all() )
 
     def attemptSetCenter(self):
-        self.B.Center = (6, 5)
+        self.B.center = (6, 5)
 
     def testSetCenter(self):
         self.failUnlessRaises(AttributeError, self.attemptSetCenter)
@@ -384,16 +384,36 @@ class testBBarray(unittest.TestCase):
 
     def testJoin(self):
         BB = fromBBArray(self.BBarray)
-        self.failUnless(BB == self.BB, "Wrong BB was created. It was:\n%s \nit should have been:\n%s"%(BB, self.BB))
+        self.assert_( BB == self.BB, "Wrong BB was created. It was:\n%s \nit should have been:\n%s" % (BB, self.BB) )
 
 
 class testBBFromShapes(unittest.TestCase):
     def testRectangle(self):        
-        bb = fromRectangle( center = N.array( (0,0) ), size = N.array( (10, 10) ) )
-        self.failUnless( (bb.Center == (0.0, 0.0)).all() )
+        bb = fromRectangleCenterSize( center = N.array( (0,0) ), size = N.array( (10, 10) ) )
+        self.failUnless( (bb.center == (0.0, 0.0)).all() )
         self.failUnless( (bb.Size == (10.0, 10.0)).all() )
-        self.failUnless( (bb.Min == (-5, -5)).all() )
-        self.failUnless( (bb.Max == ( 5,  5)).all() )
+        self.failUnless( (bb.min == (-5, -5)).all() )
+        self.failUnless( (bb.max == ( 5,  5)).all() )
+        
+        
+class testIntersection(unittest.TestCase):
+    def testIntersection(self):
+        bb = fromRectangleCornerSize( corner = N.array( (0,0) ), size = N.array( (10, 10) ) )
+        # test points
+        self.assert_( bb.intersection( (0,0) ) == 'full' )
+        self.assert_( bb.intersection( (-1,0) ) == 'none' )
 
+        # test other rect fully inside
+        bb2 = fromRectangleCornerSize( corner = N.array( (5,5) ), size = N.array( (3, 3) ) )
+        self.assert_( bb.intersection( bb2 ) == 'full', bb.intersection( bb2 ) )
+        
+        # test this rect fully inside
+        bb3 = fromRectangleCornerSize( corner = N.array( (-10,-10) ), size = N.array( (30, 30) ) )
+        self.assert_( bb.intersection( bb3 ) == 'partial' )
+
+        # test partial overlap
+        bb4 = fromRectangleCornerSize( corner = N.array( (1,1) ), size = N.array( (10, 10) ) )
+        self.assert_( bb.intersection( bb4 ) == 'partial' )
+        
 if __name__ == "__main__":
     unittest.main()

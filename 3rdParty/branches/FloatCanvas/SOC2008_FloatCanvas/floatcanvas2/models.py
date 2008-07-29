@@ -1,7 +1,3 @@
-# todo: clear this up if/when we decide for an external interface package
-def implements(arg):
-    pass
-
 class IRectangle(object):
     # size prop
     pass
@@ -46,7 +42,8 @@ class DefaultModelEventSender(object):
 import numpy
 
 class Rectangle(DefaultModelEventSender):
-    implements( IRectangle )
+    implements_interfaces = IRectangle
+    
     def __init__( self, size = (0,0) ):
         self.size = size
         
@@ -59,22 +56,26 @@ class Rectangle(DefaultModelEventSender):
     size = property( _getSize, _setSize )
     
 class Ellipse(DefaultModelEventSender):
-    implements( IEllipse )
+    implements_interfaces = IEllipse
+
     def __init__( self, size = (0,0) ):
         self.size = numpy.array( size )
         
 class Circle(DefaultModelEventSender):
-    implements( ICircle )
+    implements_interfaces = ICircle
+
     def __init__( self, radius = 0 ):
         self.radius = radius
         
 class Line(DefaultModelEventSender):
-    implements( ILine )
+    implements_interfaces = ILine
+
     def __init__( self, length = 0 ):
         self.length = length
                 
 class Text(DefaultModelEventSender):
-    implements( IText )
+    implements_interfaces = IText
+
     def __init__( self, text = '' ):
         self.text = text
 
@@ -89,3 +90,23 @@ class Points(object):
 class Spline(object):
     # points prop
     pass
+
+
+
+class CircleToEllipseAdapter(object):
+    implements_interfaces = IEllipse
+    
+    def __init__(self, circle):
+        self.circle = circle
+        
+    def _getSize(self):
+        return numpy.array( (self.circle.radius, self.circle.radius) )
+    
+    def _setSize(self, value):
+        assert value[0] == value[1], 'Circle objects need to the same size in x and y directions'
+        self.circle.radius = value[0]
+        
+    size = property( _getSize, _setSize )
+
+from patterns.adapter import adapterRegistry
+adapterRegistry.register( ICircle, IEllipse, CircleToEllipseAdapter )

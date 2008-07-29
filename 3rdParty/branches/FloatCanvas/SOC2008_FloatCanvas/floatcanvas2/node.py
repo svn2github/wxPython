@@ -70,7 +70,7 @@ class Node(object):
         if child._parent is not None:
             child._parent.removeChild( child )
         
-        child._parent = self
+        child.parent = self
         
         
     def addChildren( self, children, where = 'back' ):
@@ -93,17 +93,17 @@ class Node(object):
         for child in children:
             if child._parent is not None:
                 child._parent.removeChild( child )
-            child._parent = self
+            child.parent = self
             
         
         
     def removeChild( self, child ):
-        child._parent = None
+        child.parent = None
         self._children.remove( child )
         
     def removeChildAt( self, childIndex ):
         child = self._children[ childIndex ]
-        child._parent = None
+        child.parent = None
         del self._children[childIndex]
 
     def removeChildren( self, children ):

@@ -41,7 +41,7 @@ class LinearTransform(object):
         return self.__class__( (), matrix = numpy.linalg.inv( self.matrix ) )
 
     def __mul__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, LinearTransform):
             return self.__class__( (), matrix = numpy.dot( self.matrix, other.matrix ) )
         elif isinstance(other, LinearAndArbitraryCompoundTransform):
             linearPart = self.__class__( (), matrix = numpy.dot( self.matrix, other.transform1.matrix ) )

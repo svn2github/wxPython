@@ -90,5 +90,23 @@ class NodeWithTransform(Node):
 
 
 class NodeWithBounds(NodeWithTransform):
-    pass
+    def intersection(self, primitive):
+        raise NotImplementedError()
+    
+    def _getParent(self):
+        return NodeWithTransform._getParent(self)
+    
+    def _setParent(self, value):
+        oldparent = self.parent        
+        if not oldparent is None:
+            self.root._unregisterBoundedNode(self)
+
+        result = NodeWithTransform._setParent(self, value)
+        
+        if not self.parent is None:
+            self.root._registerBoundedNode(self)
+
+        return result
+
+    parent = property( _getParent, _setParent )
     #boundingBox = property( _getAABB, _setAABB )

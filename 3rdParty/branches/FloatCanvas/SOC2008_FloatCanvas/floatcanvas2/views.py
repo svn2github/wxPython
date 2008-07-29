@@ -1,8 +1,3 @@
-# todo: clear this up if/when we decide for an external interface package
-
-def can_render(*args):
-    pass
-
 import events
 from models import IRectangle, IEllipse, ILine, IPolygon, IPoints, ISpline, IText
 from transform import LinearAndArbitraryCompoundTransform, LinearTransform2D
@@ -23,14 +18,19 @@ class BaseRenderer(object):
         self.renderer = renderer
         self.model = model
         self._lastNonLinearTransform = None
+        self._transform = LinearTransform2D()
         self.calcCoords()
         self.create()
     
-    def Render(self):
-        self.render_object.Draw()
+    def Render(self, camera):
+        self.render_object.Draw( camera )
         
     def create(self):
         self.render_object = self.doCreate( self.renderer, self.transformedCoords )
+        try:
+            self.render_object.transform = self._transform
+        except AttributeError:
+            pass
         
     def doCreate(self, coords):
         # override
@@ -65,22 +65,33 @@ class BaseRenderer(object):
     def doCalcCoords(self, model):
         # override
         raise NotImplementedError()
-                
+    
+    def intersection(self, primitive):
+        return self.render_object.intersects( primitive )
 
     def _setTransform(self, transform):
         self._transform = transform        
-        self.transformCoords()    
+        self.transformCoords()
         self.render_object.transform = self._transform
-
+        
     def _getTransform(self):
         return self._transform
 
     transform = property( _getTransform, _setTransform )
 
+    def _getBoundingBox(self):
+        return self.render_object.boundingBox
+            
+    boundingBox = property( _getBoundingBox )
+
+    def _getLocalBoundingBox(self):
+        return self.render_object.localBoundingBox
+            
+    localBoundingBox = property( _getLocalBoundingBox )
     
 
 class DefaultRectangleRenderer(BaseRenderer):
-    can_render( IRectangle )
+    can_render = IRectangle
     
     def doCalcCoords(self, model):
         half_size = model.size / 2.0
@@ -96,37 +107,46 @@ class DefaultRectangleRenderer(BaseRenderer):
 
 # adopt circle to ellipse
 
-class DefaultEllipseRenderer(object):
-    can_render( IEllipse )
-    def Render(self, renderer, model):
-        renderer.DrawRectangle( model.size )
+class DefaultEllipseRenderer(BaseRenderer):
+    can_render = IEllipse
+
+    def doCalcCoords(self, model):
+        half_size = model.size / 2.0
+        return numpy.array( [-half_size, half_size] )
+           
+    def doCreate(self, renderer, coords):
+        x, y = coords[0].tolist()
+        w, h = abs(coords[1] - coords[0]).tolist()
+
+        return renderer.CreateEllipse( x, y, w, h )
+
 
 class DefaultLineRenderer(object):
-    can_render( ILine )
+    can_render = ILine
     
     def Render(self, renderer, model):
         renderer.DrawRectangle( model.size )
 
 class DefaultPolygonRenderer(object):
-    can_render( IPolygon )
+    can_render = IPolygon
     
     def Render(self, renderer, model):
         renderer.DrawRectangle( model.size )
 
 class DefaultPointsRenderer(object):
-    can_render( IPoints )
+    can_render = IPoints
     
     def Render(self, renderer, model):
         renderer.DrawRectangle( model.size )
 
 class DefaultSplineRenderer(object):
-    can_render( ISpline )
+    can_render = ISpline
     
     def Render(self, renderer, model):
         renderer.DrawRectangle( model.size )
 
 class DefaultTextRenderer(object):
-    can_render( IText )
+    can_render = IText
 
     def Render(self, renderer, model):
         renderer.DrawRectangle( model.size )
@@ -138,18 +158,32 @@ class DefaultView(object):
         self.look = look
         self.primitive_renderer = primitive_renderer
 
-    def Render(self, renderer):
+    def Render(self, renderer, camera):
         self.look.Apply(renderer)
-        self.primitive_renderer.Render()
+        self.primitive_renderer.Render(camera)
         
     def rebuild(self):
         self.primitive_renderer.calcCoords()
         self.primitive_renderer.create()
+        
+    def intersection(self, primitive):
+        return self.primitive_renderer.intersection(primitive)
         
     def _getTransform(self):
         return self.primitive_renderer.transform
     
     def _setTransform(self, transform):
         self.primitive_renderer.transform = transform
-            
+
     transform = property( _getTransform, _setTransform )
+
+
+    def _getBoundingBox(self):
+        return self.primitive_renderer.boundingBox
+    
+    boundingBox = property( _getBoundingBox )
+    
+    def _getLocalBoundingBox(self):
+        return self.primitive_renderer.localBoundingBox
+    
+    localBoundingBox = property( _getLocalBoundingBox )

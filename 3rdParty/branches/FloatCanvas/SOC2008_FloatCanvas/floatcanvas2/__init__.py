@@ -26,3 +26,7 @@ from models import IRectangle, ICircle, IEllipse, ILine, IPolygon, IPoints, ISpl
 from node import Node
 from nodeVisitor import NodeVisitor, TextTreeFormatVisitor, GetNodesAsFlatListVisitor, FindNodesByNamesVisitor
 from renderableNode import RenderableNode
+
+# backwards compatability
+import timeMachine
+from timeMachine import NavCanvas, FloatCanvas, Resources

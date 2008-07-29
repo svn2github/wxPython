@@ -1,14 +1,24 @@
 import observables
-#from camera import Camera
-#from node import Node
 from gcrenderer import GCRenderer
 from patterns.factory import FactoryUsingDict
-#from renderableNode import DefaultRenderableNode
+from rtree import RTree
+from sceneQuery import QueryWithPrimitive
+import models
+import views
 
 class Canvas(observables.ObservableDefaultRenderableNode):
-    pass
-    #def __init__(self, *args, **keys):
-    #    Node.__init__(self, *args, **keys)
+    def __init__(self, *args, **keys):
+        observables.ObservableDefaultRenderableNode.__init__(self, *args, **keys)
+        self.rtree = RTree()
+        
+    def _registerBoundedNode(self, node):
+        self.rtree.addChild(node)
+
+    def _unregisterBoundedNode(self, node):
+        self.rtree.removeChild(node)
+
+    def performSpatialQuery( self, query ):
+        return self.rtree.performSpatialQuery( query )
 
 
 class DefaultUpdatePolicy(object):
@@ -28,44 +38,102 @@ class DefaultUpdatePolicy(object):
         
     def Render(self):
         if self.dirty:
-            print 'RENDER', self.canvas._children[0].model.size, self.canvas._children[0].model
+            print 'RENDER'
             self.canvas.Render()
             self.dirty = False
 
 
+class DefaultRenderPolicy(object):
+    def render(self, canvas, camera):        
+        canvas.renderer.Clear()
+        from camera import Viewport
+        camera.viewport = Viewport( canvas.window.GetClientSize() )
+        cam_transform = camera.viewTransform
+        super(SimpleCanvas, canvas).Render( canvas.renderer, camera )
+        canvas.renderer.Present()
+
+class CullingRenderPolicy(object):
+    def render(self, canvas, camera):        
+        canvas.renderer.Clear()
+        
+        from camera import Viewport
+        camera.viewport = Viewport( canvas.window.GetClientSize() )
+        cam_transform = camera.viewTransform
+        
+        # the following query could probably be cached
+        view_box = camera.viewBox
+        query = QueryWithPrimitive( view_box, exact = False )
+        nodes_to_render = canvas.performSpatialQuery( query )
+        
+        self.renderedNodes = nodes_to_render
+        for node in nodes_to_render:
+            node.Render( canvas.renderer, camera, renderChildren = False )
+            
+        canvas.renderer.Present()
+        
+        
 class SimpleCanvas(Canvas):
     ''' I provide an easy to use interface for a full-blown Canvas '''
 
     def __init__(self, window = None, dc = None, native_window = None, native_dc = None, wx_renderer = None, double_buffered = True, max_update_delay = 0.2, *args, **keys):
         if 'name' not in keys:
             keys['name'] = 'unnamed canvas'
-        Canvas.__init__(self, observables.ObservableLinearTransform2D(), None, None, *args, **keys)
-        
+        Canvas.__init__(self, None, None, observables.ObservableLinearTransform2D(), *args, **keys)
+               
         self.camera = observables.ObservableCamera( observables.ObservableLinearTransform2D() )
         self.renderer = GCRenderer( window = window, dc = dc, native_window = native_window, native_dc = native_dc, wx_renderer = wx_renderer, double_buffered = double_buffered )
         self.window = window
         
+        self.model_kinds = [ 'Rectangle', 'Circle', 'Ellipse' ]
+        self.primitive_kinds = [ 'Rectangle', 'Ellipse' ]
+
+        self._setupRegistries()
         self._setupNodeFactory()
         self.updatePolicy = DefaultUpdatePolicy( self, max_update_delay )
         self.subscribe( self.onDirty, 'attribChanged' )
 
+        #self.renderPolicy = DefaultRenderPolicy()
+        self.renderPolicy = CullingRenderPolicy()
+        
+    def _setupRegistries(self):
+        from registries import PrimitiveRendererRegistry, ViewRegistry, RenderNodeRegistry
+        self.primitiveRendererRegistry = PrimitiveRendererRegistry()
+        self.viewRegistry = ViewRegistry()
+        self.renderNodeRegistry = RenderNodeRegistry()
+        
+        for primitive_kind in self.primitive_kinds:
+            modelInterface = getattr(models, 'I%s' % primitive_kind)
+            primitiveRendererType = getattr(views, 'Default%sRenderer' % primitive_kind)
+            self.primitiveRendererRegistry.register( modelInterface, primitiveRendererType )
+            
+        for model_kind in self.model_kinds:
+            modelInterface = getattr(models, 'I%s' % model_kind)
+            def createDefaultView(model, look):
+                primitiveRendererConstructor, model = self.primitiveRendererRegistry.getRendererConstructor( model )
+                primitiveRenderer = primitiveRendererConstructor( self.renderer, model )
+                return observables.ObservableDefaultView( look, primitiveRenderer )
+            self.viewRegistry.register( modelInterface, createDefaultView )
+            
+        for model_kind in self.model_kinds:
+            modelInterface = getattr(models, 'I%s' % model_kind)
+            def createDefaultRenderableNode(model, transform, look, name):
+                viewConstructor, model = self.viewRegistry.getViewConstructor( model )
+                view = viewConstructor( model = model, look = look )
+                renderNode = observables.ObservableDefaultRenderableNode( model, view, transform, name = name )
+                return renderNode
+            self.renderNodeRegistry.register( modelInterface, createDefaultRenderableNode )
+        
+        
     def _setupNodeFactory(self):
         self.nodeFactory = FactoryUsingDict()
         self.create = self.nodeFactory.create
         self.registerNode = self.nodeFactory.register
         self.unregisterNode = self.nodeFactory.unregister
         self.isNodeRegistered = self.nodeFactory.is_registered
-
-        #import models
-        #import views
-        #from look import SolidColourLook, NoLook            
-        #import transform as transformModule
         
         from look import NoLook
         from patterns.partial import partial
-
-        kinds = [ 'Rectangle' ]
-        
+       
         keywords = { 'transform'    : None,
                      'pos'          : None,
                      'position'     : None,
@@ -83,10 +151,9 @@ class SimpleCanvas(Canvas):
                 pass
             return result
         
-        for kind in kinds:
-            def create(modelType, primitiveRendererType, *args, **keys):
+        for model_kind in self.model_kinds:
+            def create(modelType, *args, **keys):
                 model = modelType( *args )
-                primitiveRenderer = primitiveRendererType( self.renderer, model )
                                 
                 look = get_keyword(keys, 'look')
                 if look is None:
@@ -115,39 +182,31 @@ class SimpleCanvas(Canvas):
                     transform.rotation = rotation
                 
                 scale = get_keyword(keys, 'scale')
-                if rotation is not None:
+                if scale is not None:
                     # assume linear transform
                     transform.scale = scale
 
-                view = observables.ObservableDefaultView( look, primitiveRenderer ) 
-                node = observables.ObservableDefaultRenderableNode( model, view, transform = transform, name = keys.get('name', '<unnamed node>') )
+                renderNodeConstructor, model = self.renderNodeRegistry.getRenderNodeConstructor( model )
+                renderNode = renderNodeConstructor( model, transform = transform, look = look, name = keys.get('name', '<unnamed node>') )
 
-                self.addChild( node, where = where )
+                self.addChild( renderNode, where = where )
 
-                return node
+                return renderNode
 
-            #modelType = getattr(models, kind)
-            #primitiveRendererType = getattr(views, 'Default%sRenderer' % kind)
-            #
-            #self.registerNode( kind, create, modelType, primitiveRendererType )
-            modelType = getattr(observables, 'Observable%s' % kind)
-            primitiveRendererType = getattr(observables, 'ObservableDefault%sRenderer' % kind)
+            modelType = getattr(observables, 'Observable%s' % model_kind)
 
-            self.registerNode( kind, create, modelType, primitiveRendererType )
-            setattr( self, 'create%s' % kind, partial( create, modelType, primitiveRendererType ) )
+            self.registerNode( model_kind, create, modelType )
+            setattr( self, 'create%s' % model_kind, partial( create, modelType ) )
         
 
     def onDirty(self, evt):
         if self.dirty:
             self.updatePolicy.onDirty()
 
-    def DoRender(self, renderer):
+    def DoRender(self, renderer, camera):
         pass
     
-    def Render(self):
-        self.renderer.Clear()
-        cam_transform = self.camera.transform.inverse
-        cam_transform.position += ( self.window.GetClientSize()[0] / 2, self.window.GetClientSize()[1] / 2 )
-        self.transform = cam_transform
-        super(SimpleCanvas, self).Render(self.renderer)
-        self.renderer.Present()
+    def Render(self, camera = None, renderChildren = True):
+        if camera is None:
+            camera = self.camera
+        self.renderPolicy.render(self, camera)

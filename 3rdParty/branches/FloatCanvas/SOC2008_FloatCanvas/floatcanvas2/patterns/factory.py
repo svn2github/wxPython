@@ -24,7 +24,7 @@ class FactoryUsingDict(object):
     def register(self, entry_name, constructor, *args, **kargs):
         ''' register a constructor '''
         if self.is_registered(entry_name):
-            raise ValueError( entry_name )
+            raise ValueError( 'Duplicate %s' % entry_name )
         self.registered[entry_name] = partial(constructor, *args, **kargs)
         
     def unregister(self, entry_name):
