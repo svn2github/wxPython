@@ -3,13 +3,19 @@ import wx
 
 class ConstantTable(object):
     stringToWx = { 'oddeven' : wx.ODDEVEN_RULE,
-                   'winding' : wx.WINDING_RULE
+                   'winding' : wx.WINDING_RULE,
                  }
     
     def get(cls, string):
         return cls.stringToWx[string]
-
+    
     get = classmethod(get)
+
+    def getEnum(cls, kind, value):
+        enum_name = '%s_%s' % (kind.upper(), value.upper())
+        return getattr(wx, enum_name)
+
+    getEnum = classmethod(getEnum)
 
 
 class SingleBuffer(object):
@@ -99,6 +105,8 @@ class GCRenderer(object):
         self.GC = getattr(self.renderer, func)( window or dc or native_window or native_dc )
         self.transformMatrix = self.CreateMatrix()
         
+        self.active_font = self.active_brush = self.active_pen = None
+        
     def Clear(self):
         self.draw_buffer.Clear()
     
@@ -132,19 +140,47 @@ class GCRenderer(object):
     def CreateFont(self, *args, **keys):
         return GCFont(self, *args, **keys)
     
-    def CreateRectangle(self, *args, **keys):
+    # render object creators
+    def _getRenderObject(self, func_name, *args, **keys):
         path = self.CreatePath()
-        path.AddRectangle( *args, **keys )
-        return GCRenderObject( self, path )
-       
-    def CreateEllipse(self, *args, **keys):
+        getattr( path, func_name )( *args, **keys )
+        return GCRenderObjectPath( self, path )
+    
+    # primitives support by GC:
+    # Text, RotatedText, Bitmap, Icon, Line, Lines, LineSegments, Rectangle, Ellipse, RoundedRectangle, Curve, QuadCurve, Arc
+    def CreateRenderObject(self, kind, *args, **keys):
+        return self._getRenderObject( 'Add%s' % kind, *args, **keys )
+
+    def CreateRectangle(self, x, y, w, h):
         path = self.CreatePath()
-        path.AddEllipse( *args, **keys )
-        return GCRenderObject( self, path )
+        path.AddRectangle( x, y, w, h )
+        return GCRenderObjectPath( self, path )
+
+    def CreateRoundedRectangle(self, x, y, w, h, radius):
+        path = self.CreatePath()
+        path.AddRoundedRectangle( x, y, w, h, radius )
+        return GCRenderObjectPath( self, path )
+
+    def CreateEllipse(self, x, y, w, h):
+        path = self.CreatePath()
+        path.AddEllipse( x, y, w, h )
+        return GCRenderObjectPath( self, path )
+
+    def CreateText(self, *args, **keys):
+        return GCRenderObjectText( self, *args, **keys)
+
+    def CreateListRenderObject(self, kind, offsets, x, y, w, h):
+        path = self.CreatePath()
+        for offset in offsets:
+            path.AddRectangle( x[0] + offset[0], y[0] + offset[0], w, h )
+        return GCRenderObjectText( self, *args, **keys)
+
+
 
     # maps all the other functions
     def __getattr__(self, name):
         return getattr(self.GC, name)
+    
 
 
 class GCPath(object):
@@ -170,12 +206,19 @@ class GCPath(object):
 
 
 class GCFont(object):
-    def __init__(self, renderer, colour, *args, **keys):
+    def __init__(self, renderer, size, family, style, weight, underlined, faceName, colour):
         self.renderer = renderer
         self.GC = GC = renderer.GC
-        self.font = GC.CreateFont( wx.Font(*args, **keys), colour)
+        family = ConstantTable.getEnum( 'fontfamily', family)
+        style = ConstantTable.getEnum( 'fontstyle', style)
+        weight = ConstantTable.getEnum( 'fontweight', weight)
+        font = wx.Font( size, family, style, weight, underlined, faceName )
+        self.font = GC.CreateFont( font, colour )
 
     def Activate(self):
+        if self.renderer.active_font == self:
+            return
+        self.renderer.active_font = self
         self.GC.SetFont(self.font)
 
 
@@ -198,6 +241,9 @@ class GCBrush(object):
         self.brush = brush
 
     def Activate(self):
+        if self.renderer.active_brush == self:
+            return
+        self.renderer.active_brush = self
         self.GC.SetBrush(self.brush)
 
 class GCPen(object):
@@ -219,6 +265,9 @@ class GCPen(object):
         self.pen = GC.CreatePen( pen )
 
     def Activate(self):
+        if self.renderer.active_pen == self:
+            return
+        self.renderer.active_pen = self
         self.GC.SetPen(self.pen)
                 
 
@@ -239,25 +288,39 @@ from transform import LinearTransform2D
 import boundingBox as boundingBoxModule
 import numpy
 
-class GCRenderObject(object):
-    transformMethod = 'global'          # 'global' or 'path'
-
-    def __init__(self, renderer, path):
+class GCRenderObjectBase(object):
+    def __init__(self, renderer):
         self.renderer = renderer
-        self.path = path
         self._rendererTransform = renderer.CreateMatrix()
         self._transform = LinearTransform2D()
+        
+    def Draw(self, camera):
+        self._rendererTransform.Set( *list( (camera.viewTransform * self.transform).matrix[ :-1, ... ].transpose().flat) )
+        self.renderer.SetTransform( self._rendererTransform )
+                                     
+    def _getTransform(self):
+        return self._transform
+    
+    def _setTransform(self, transform):
+        self._rendererTransform.Set( *list(transform.matrix[ :-1, ... ].transpose().flat) )
+        self._transform = transform
+        
+    transform = property( _getTransform, _setTransform )
+    
+   
+    
+class GCRenderObjectPath(GCRenderObjectBase):
+    def __init__(self, renderer, path):
+        GCRenderObjectBase.__init__(self, renderer)
+        self.path = path
 
         x, y, w, h = self.path.GetBox()
         corner = numpy.array( (x,y) )
         size = numpy.array( (w,h) )
         self._localBoundingBox = boundingBoxModule.fromRectangleCornerSize( corner, size )
-        self._recalculateBoundingBox()
         
     def Draw(self, camera):
-        if self.transformMethod == 'global':
-            self._rendererTransform.Set( *list( (camera.viewTransform * self.transform).matrix[ :-1, ... ].transpose().flat) )
-            self.renderer.SetTransform( self._rendererTransform )
+        GCRenderObjectBase.Draw(self, camera)
         self.path.Draw()
         
     def intersects(self, primitive):
@@ -268,35 +331,39 @@ class GCRenderObject(object):
             return 'full'
         else:
             return 'none'
-                              
-    def _getTransform(self):
-        return self._transform
-    
-    def _setTransform(self, transform):
-        method = self.transformMethod
-        if method == 'path':
-            m = ( transform * self.transform.inverse ).matrix[ :-1, ... ]
-            self._transform.Set( *list(m.transpose().flat) )
-            self.path.Transform( self._transform )
-        elif method == 'global':
-            self._rendererTransform.Set( *list(transform.matrix[ :-1, ... ].transpose().flat) )
-        else:
-            assert False
-        self._transform = transform
-        self._recalculateBoundingBox()
         
-    transform = property( _getTransform, _setTransform )
-    
     def _getLocalBoundingBox(self):
         return self._localBoundingBox
 
     localBoundingBox = property( _getLocalBoundingBox )
-    
-    def _recalculateBoundingBox(self):
-        bb = self.localBoundingBox
-        self._boundingBox = boundingBoxModule.fromPoints( self.transform( bb.corners ) )
+        
+        
+class GCRenderObjectText(GCRenderObjectBase):
+    def __init__(self, renderer, text):
+        GCRenderObjectBase.__init__(self, renderer)
+        self.text = text
+        self.active_font = None
+        self._localBoundingBox = boundingBoxModule.BoundingBox( ( (0,0), (0,0) ) )
+        
+    def Draw(self, camera):
+        GCRenderObjectBase.Draw(self, camera)
 
-    def _getBoundingBox(self):
-        return self._boundingBox
+        offset = self.localBoundingBox.min
+        backgroundBrush = self.renderer.active_brush.brush
+        self.renderer.GC.DrawText( self.text, offset[0], offset[1], backgroundBrush )
+        #angle = 0
+        #self.renderer.GC.DrawRotatedText( self.text, 0, 0, angle, backgroundBrush )
+        
+    def intersects(self, primitive):
+        return True
+        
+    def _getLocalBoundingBox(self):
+        assert not ( (self.active_font is None) and (self.renderer.active_font is None) ), 'Could not get text bounding box, first need to set a font'
+        if self.active_font != self.renderer.active_font and self.renderer.active_font:
+            w, h = self.renderer.GC.GetTextExtent( self.text )
+            size = numpy.array( (w,h) )
+            self._localBoundingBox = boundingBoxModule.fromRectangleCenterSize( (0,0), size )
 
-    boundingBox = property( _getBoundingBox )
+        return self._localBoundingBox
+
+    localBoundingBox = property( _getLocalBoundingBox )

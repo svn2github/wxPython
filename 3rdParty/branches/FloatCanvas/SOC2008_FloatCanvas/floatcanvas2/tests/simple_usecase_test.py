@@ -5,12 +5,6 @@ sys.path.append( os.path.abspath( '../..' ) )
 import wx
 import floatcanvas2 as fc
 
-class MapPoint(object):
-    def __init__(self, name, pos):
-        self.name = name
-        self.pos = pos
-
-
 def start():
     #  setup very basic window
     app = wx.App(0)

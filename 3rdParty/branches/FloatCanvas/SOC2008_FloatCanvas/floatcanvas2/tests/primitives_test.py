@@ -4,11 +4,7 @@ sys.path.append( os.path.abspath( '../..' ) )
 
 import wx
 import floatcanvas2 as fc
-
-class MapPoint(object):
-    def __init__(self, name, pos):
-        self.name = name
-        self.pos = pos
+from worldData import points as mapPoints
 
 
 def start():
@@ -20,13 +16,21 @@ def start():
     canvas = fc.canvas.SimpleCanvas( window = frame )
     #canvas.dirty = False
     
-    kinds = [ ('Rectangle', (100, 100)), ('Circle', 125), ('Ellipse', (100, 150)) ]
+    kinds = [ ('Rectangle', (100, 100)), ('Circle', 125), ('Ellipse', (100, 150)), ('Text', 'wxPython') ]
     
     # create 1000 rectangles
     for i in range(0, 100):
         kind, sizes = kinds[ i % len(kinds) ]
-        r = canvas.create( kind, sizes, name = 'r%d' % i, pos = (i * 50, 0), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )
+        if kind != 'Text':
+            look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )
+        else:
+            semiTransparentGradientLook = fc.RadialGradientFillLook( (0,0), (0,255,0,128), (0,0), 150, (255,0,255,200) )
+            look = fc.TextLook( size = 20, faceName = 'Arial', background_fill_look = semiTransparentGradientLook )
+            
+        r = canvas.create( kind, sizes, name = 'r%d' % i, pos = (i * 100, 0), look = look  )
         #r._debugDrawBoundingBoxes = True
+        
+    #pts = canvas.create( 'Points', mapPoints, name = 'Map', pos = (0, 0), look = ( 'blue', 'red' ), transform = 'Mercator'  )
 
     # the default cam, looking at 0, 0
     canvas.camera.position = (0, 0)

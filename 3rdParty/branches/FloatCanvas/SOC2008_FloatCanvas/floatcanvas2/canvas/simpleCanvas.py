@@ -1,77 +1,5 @@
-import observables
-from gcrenderer import GCRenderer
-from patterns.factory import FactoryUsingDict
-from rtree import RTree
-from sceneQuery import QueryWithPrimitive
-import models
-import views
+from canvas import Canvas
 
-class Canvas(observables.ObservableDefaultRenderableNode):
-    def __init__(self, *args, **keys):
-        observables.ObservableDefaultRenderableNode.__init__(self, *args, **keys)
-        self.rtree = RTree()
-        
-    def _registerBoundedNode(self, node):
-        self.rtree.addChild(node)
-
-    def _unregisterBoundedNode(self, node):
-        self.rtree.removeChild(node)
-
-    def performSpatialQuery( self, query ):
-        return self.rtree.performSpatialQuery( query )
-
-
-class DefaultUpdatePolicy(object):
-    def __init__(self, canvas, interval):
-        self.canvas = canvas
-        self.interval = interval * 1000
-        self.dirty = False
-        import wx
-        self.timer = wx.CallLater( self.interval , self.onIntervalOver )
-        
-    def onDirty(self):
-        self.dirty = True
-            
-    def onIntervalOver(self):
-        self.Render()
-        self.timer.Restart( self.interval )
-        
-    def Render(self):
-        if self.dirty:
-            print 'RENDER'
-            self.canvas.Render()
-            self.dirty = False
-
-
-class DefaultRenderPolicy(object):
-    def render(self, canvas, camera):        
-        canvas.renderer.Clear()
-        from camera import Viewport
-        camera.viewport = Viewport( canvas.window.GetClientSize() )
-        cam_transform = camera.viewTransform
-        super(SimpleCanvas, canvas).Render( canvas.renderer, camera )
-        canvas.renderer.Present()
-
-class CullingRenderPolicy(object):
-    def render(self, canvas, camera):        
-        canvas.renderer.Clear()
-        
-        from camera import Viewport
-        camera.viewport = Viewport( canvas.window.GetClientSize() )
-        cam_transform = camera.viewTransform
-        
-        # the following query could probably be cached
-        view_box = camera.viewBox
-        query = QueryWithPrimitive( view_box, exact = False )
-        nodes_to_render = canvas.performSpatialQuery( query )
-        
-        self.renderedNodes = nodes_to_render
-        for node in nodes_to_render:
-            node.Render( canvas.renderer, camera, renderChildren = False )
-            
-        canvas.renderer.Present()
-        
-        
 class SimpleCanvas(Canvas):
     ''' I provide an easy to use interface for a full-blown Canvas '''
 
@@ -84,11 +12,12 @@ class SimpleCanvas(Canvas):
         self.renderer = GCRenderer( window = window, dc = dc, native_window = native_window, native_dc = native_dc, wx_renderer = wx_renderer, double_buffered = double_buffered )
         self.window = window
         
-        self.model_kinds = [ 'Rectangle', 'Circle', 'Ellipse' ]
-        self.primitive_kinds = [ 'Rectangle', 'Ellipse' ]
+        self.model_kinds = [ 'Rectangle', 'Circle', 'Ellipse', 'Text' ]
+        self.primitive_kinds = [ 'Rectangle', 'Ellipse', 'Text' ]
 
         self._setupRegistries()
         self._setupNodeFactory()
+        self._setupAdapters()
         self.updatePolicy = DefaultUpdatePolicy( self, max_update_delay )
         self.subscribe( self.onDirty, 'attribChanged' )
 
@@ -96,10 +25,14 @@ class SimpleCanvas(Canvas):
         self.renderPolicy = CullingRenderPolicy()
         
     def _setupRegistries(self):
+        from patterns.adapter import AdapterRegistry
         from registries import PrimitiveRendererRegistry, ViewRegistry, RenderNodeRegistry
-        self.primitiveRendererRegistry = PrimitiveRendererRegistry()
-        self.viewRegistry = ViewRegistry()
-        self.renderNodeRegistry = RenderNodeRegistry()
+        
+        self.adapterRegistry = adapterRegistry = AdapterRegistry()
+        
+        self.primitiveRendererRegistry = PrimitiveRendererRegistry( adapterRegistry )
+        self.viewRegistry = ViewRegistry( adapterRegistry )
+        self.renderNodeRegistry = RenderNodeRegistry( adapterRegistry )
         
         for primitive_kind in self.primitive_kinds:
             modelInterface = getattr(models, 'I%s' % primitive_kind)
@@ -108,21 +41,27 @@ class SimpleCanvas(Canvas):
             
         for model_kind in self.model_kinds:
             modelInterface = getattr(models, 'I%s' % model_kind)
-            def createDefaultView(model, look):
+            def createDefaultView(model, look, scaled):
                 primitiveRendererConstructor, model = self.primitiveRendererRegistry.getRendererConstructor( model )
-                primitiveRenderer = primitiveRendererConstructor( self.renderer, model )
+                primitiveRenderer = primitiveRendererConstructor( self.renderer, model, look, scaled )
                 return observables.ObservableDefaultView( look, primitiveRenderer )
             self.viewRegistry.register( modelInterface, createDefaultView )
             
         for model_kind in self.model_kinds:
             modelInterface = getattr(models, 'I%s' % model_kind)
-            def createDefaultRenderableNode(model, transform, look, name):
+            def createDefaultRenderableNode(model, transform, look, scaled, name):
                 viewConstructor, model = self.viewRegistry.getViewConstructor( model )
-                view = viewConstructor( model = model, look = look )
+                view = viewConstructor( model = model, look = look, scaled = scaled )
                 renderNode = observables.ObservableDefaultRenderableNode( model, view, transform, name = name )
                 return renderNode
             self.renderNodeRegistry.register( modelInterface, createDefaultRenderableNode )
         
+        
+    def _setupAdapters(self):
+        from models import defaultAdapters
+        for (from_interface, to_interface, adapter) in defaultAdapters:
+            self.adapterRegistry.register( from_interface, to_interface, adapter )
+
         
     def _setupNodeFactory(self):
         self.nodeFactory = FactoryUsingDict()
@@ -140,7 +79,8 @@ class SimpleCanvas(Canvas):
                      'rotation'     : None,
                      'scale'        : None,
                      'look'         : None,
-                     'where'        : 'back'
+                     'where'        : 'back',
+                     'scaled'       : True,
                    }
         
         def get_keyword(dikt, name):
@@ -186,8 +126,10 @@ class SimpleCanvas(Canvas):
                     # assume linear transform
                     transform.scale = scale
 
+                scaled = get_keyword(keys, 'scaled')
+
                 renderNodeConstructor, model = self.renderNodeRegistry.getRenderNodeConstructor( model )
-                renderNode = renderNodeConstructor( model, transform = transform, look = look, name = keys.get('name', '<unnamed node>') )
+                renderNode = renderNodeConstructor( model, transform = transform, look = look, name = keys.get('name', '<unnamed node>'), scaled = scaled )
 
                 self.addChild( renderNode, where = where )
 

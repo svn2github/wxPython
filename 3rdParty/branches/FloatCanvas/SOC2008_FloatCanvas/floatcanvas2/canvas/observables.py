@@ -22,7 +22,7 @@ from transformNode import NodeWithTransform, NodeWithBounds
 from renderableNode import RenderableNode, DefaultRenderableNode
 from camera import Camera
 
-from models import Rectangle, Circle, Ellipse
+from models import Rectangle, Circle, Ellipse, Text
 from views import DefaultRectangleRenderer, DefaultView
 from look import SolidColourLook, RadialGradientLook, LinearGradientLook, OutlineLook
 
@@ -45,6 +45,8 @@ info = \
     Rectangle               : ('size',),
     Circle                  : ('radius',),
     Ellipse                 : ('size',),
+    Text                    : ('text',),
+    #Points                  : ('points', 'shape', 'size'),
         
     DefaultRectangleRenderer: ('model', 'transform'),
     DefaultView             : ('look', 'transform'),
