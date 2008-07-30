@@ -2,7 +2,7 @@
 
 import sys
 import os.path
-sys.path.append( os.path.abspath( '../..' ) )
+sys.path.append( os.path.abspath( '..' ) )
 
 """
 Test code for the BoundingBox Object
@@ -11,7 +11,7 @@ Test code for the BoundingBox Object
 
 import unittest
 
-from floatcanvas2.boundingBox import *
+from floatcanvas.math.boundingBox import *
 
 class testCreator(unittest.TestCase):
     def testCreates(self):

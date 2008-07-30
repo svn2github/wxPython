@@ -1,9 +1,9 @@
 import sys
 import os.path
-sys.path.append( os.path.abspath( '../..' ) )
+sys.path.append( os.path.abspath( '..' ) )
 
 import wx
-import floatcanvas2 as fc
+import floatcanvas as fc
 
 def start():
     #  setup very basic window
@@ -11,7 +11,7 @@ def start():
     frame = wx.Frame( None, wx.ID_ANY, 'FloatCanvas2 demo', size = (800, 600) )
     frame.Show()
         
-    canvas = fc.canvas.SimpleCanvas( window = frame )
+    canvas = fc.SimpleCanvas( window = frame )
     #canvas.dirty = False
 
     r1 = canvas.create( 'Rectangle', (100, 200), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )

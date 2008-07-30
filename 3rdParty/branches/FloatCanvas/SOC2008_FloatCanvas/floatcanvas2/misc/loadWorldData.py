@@ -1,5 +1,5 @@
 import pickle
-f = open('world2.dat', 'rb')
+f = open('../data/world_numpy.dat', 'rb')
 data = pickle.load(f)
 points, lineLengths = data
 f.close()

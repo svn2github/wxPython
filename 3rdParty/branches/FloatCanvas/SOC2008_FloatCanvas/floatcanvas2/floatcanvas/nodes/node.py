@@ -17,19 +17,27 @@ class Node(object):
     def __init__( self, name = '', parent = None, children = [] ):
         self.name = name
         
-        self._parent = None
+        self._parentInternal = None
         self._children = []
         
         self.addChildren( children )
         self.parent = parent
+        
+    def _setParentInternal(self, parent):
+        self._parentInternal = parent
+
+    def _getParentInternal(self):
+        return self._parentInternal
             
+    _parent = property( _getParentInternal, _setParentInternal )
+
     def _getParent(self):
         return self._parent
             
     def _setParent(self, parent):
         try:
-            if self.parent is not None:
-                self.parent._children.remove(self)
+            if self._parent is not None:
+                self._parent._children.remove(self)
         except ValueError:
             pass
         
@@ -42,11 +50,11 @@ class Node(object):
     
     # Make children read-only. otherwise we'd have to use a custom class derived
     # from list which observes any changes made to it, so the node can react
-    # accordingly. This sounds to complicated though. So for 'write' access
+    # accordingly. This sounds too complicated though. So for 'write' access
     # use the addChild/removeChild/addChildren/removeChildren and
     # removeAllChildren methods
     def _getChildren(self):
-        return self._children
+        return self._children[:]
 
     children = property( _getChildren )
 
@@ -55,6 +63,11 @@ class Node(object):
         ''' Adds a child to this node
             where can be be 'front', 'back' or an integer index
         '''
+        if child._parent is not None:
+            child._parent.removeChild( child )
+
+        child._parent = self
+
         if where == 'back':
             self._children.append( child )
         elif where == 'front':
@@ -67,10 +80,6 @@ class Node(object):
                       an integer index. You supplied %s (%s)"
                 raise IndexError( msg % ( where, type(where) ) )
 
-        if child._parent is not None:
-            child._parent.removeChild( child )
-        
-        child.parent = self
         
         
     def addChildren( self, children, where = 'back' ):
@@ -78,6 +87,12 @@ class Node(object):
             calling node.addChild() from a loop, especially for many nodes.
             where can be be 'front', 'back' or an integer index
         '''
+        for child in children:
+            if child._parent is not None:
+                child._parent.removeChild( child )
+
+            child._parent = self
+
         if where == 'back':
             self._children.extend( children )
         elif where == 'front':
@@ -90,20 +105,17 @@ class Node(object):
                       an integer index. You supplied %s (%s)"
                 raise IndexError( msg % ( where, type(where) ) )
 
-        for child in children:
-            if child._parent is not None:
-                child._parent.removeChild( child )
-            child.parent = self
+            #child._parent = self
             
         
         
     def removeChild( self, child ):
-        child.parent = None
+        child._parent = None
         self._children.remove( child )
         
     def removeChildAt( self, childIndex ):
         child = self._children[ childIndex ]
-        child.parent = None
+        child._parent = None
         del self._children[childIndex]
 
     def removeChildren( self, children ):
@@ -120,12 +132,12 @@ class Node(object):
                   deep I am concerned about stack overflows, that's why this is
                   iterative rather than recursive
         '''
-        if self.parent is None:
+        if self._parent is None:
             return self
         
-        parent = self.parent
-        while parent.parent is not None:
-            parent = parent.parent
+        parent = self._parent
+        while parent._parent is not None:
+            parent = parent._parent
         
         return parent        
         

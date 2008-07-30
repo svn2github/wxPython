@@ -1,10 +1,9 @@
 import sys
 import os.path
-sys.path.append( os.path.abspath( '../..' ) )
+sys.path.append( os.path.abspath( '..' ) )
 
 import unittest
-from floatcanvas2.node import Node
-from floatcanvas2.nodeVisitor import TextTreeFormatVisitor, FindNodesByNamesVisitor, GetNodesAsFlatListVisitor
+from floatcanvas.nodes import Node, TextTreeFormatVisitor, FindNodesByNamesVisitor, GetNodesAsFlatListVisitor
 
 class TestNode(unittest.TestCase):
     def setUp(self):

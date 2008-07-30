@@ -2,10 +2,10 @@
 
 import sys
 import os.path
-sys.path.append( os.path.abspath( '../..' ) )
+sys.path.append( os.path.abspath( '..' ) )
 
 import unittest
-from floatcanvas2 import events
+from floatcanvas import events
 
 class CallChecker(object):
     def __init__(self, **expected_vars):

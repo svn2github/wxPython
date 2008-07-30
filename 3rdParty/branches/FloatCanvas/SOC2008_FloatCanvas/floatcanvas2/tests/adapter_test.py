@@ -2,10 +2,10 @@
 
 import sys
 import os.path
-sys.path.append( os.path.abspath( '../..' ) )
+sys.path.append( os.path.abspath( '..' ) )
 
 import unittest
-from floatcanvas2.patterns.adapter import AdapterRegistry, CouldNotAdoptException
+from floatcanvas.patterns.adapter import AdapterRegistry, CouldNotAdoptException
 
 # a few dummy interfaces
 class ILine(object):

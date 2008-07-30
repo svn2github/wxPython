@@ -1,6 +1,6 @@
 from node import Node
-from transform import LinearTransform2D, CompoundTransform
-from patterns.partial import partial
+from ..math import LinearTransform2D, CompoundTransform
+from ..patterns.partial import partial
 
 
 class NodeWithTransform(Node):
@@ -93,20 +93,20 @@ class NodeWithBounds(NodeWithTransform):
     def intersection(self, primitive):
         raise NotImplementedError()
     
-    def _getParent(self):
-        return NodeWithTransform._getParent(self)
+    def _getParentInternal(self):
+        return NodeWithTransform._getParentInternal(self)
     
-    def _setParent(self, value):
-        oldparent = self.parent        
+    def _setParentInternal(self, value):
+        oldparent = self._parent        
         if not oldparent is None:
             self.root._unregisterBoundedNode(self)
 
-        result = NodeWithTransform._setParent(self, value)
+        result = NodeWithTransform._setParentInternal(self, value)
         
-        if not self.parent is None:
+        if not self._parent is None:
             self.root._registerBoundedNode(self)
 
         return result
 
-    parent = property( _getParent, _setParent )
+    _parent = property( _getParentInternal, _setParentInternal )
     #boundingBox = property( _getAABB, _setAABB )

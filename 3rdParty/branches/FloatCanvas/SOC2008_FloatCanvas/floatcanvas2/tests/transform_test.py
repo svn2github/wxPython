@@ -1,10 +1,14 @@
 import sys
 import os.path
-sys.path.append( os.path.abspath( '../..' ) )
+sys.path.append( os.path.abspath( '..' ) )
+sys.path.append( os.path.abspath( '../misc' ) )
 
 import unittest
-import numpy
-from floatcanvas2.transform import LinearTransform, LinearTransform2D, ArbitraryTransform, MercatorTransform, ThreeDProjectionTransform
+from floatcanvas.math import numpy
+
+from floatcanvas.math import LinearTransform, LinearTransform2D, ArbitraryTransform, MercatorTransform, ThreeDProjectionTransform
+import loadWorldData as worldData
+
 
 class TestNode(unittest.TestCase):
     def setUp(self):
@@ -85,8 +89,6 @@ class TestNode(unittest.TestCase):
 
         tm = MercatorTransform(0)
         tas = ArbitraryTransform( lambda x: x**2 - 3*x + 2 )
-
-        import worldData
 
         def benchmark(kind, transform):
             import time

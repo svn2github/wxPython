@@ -1,19 +1,18 @@
 import sys
 import os.path
-sys.path.append( os.path.abspath( '../..' ) )
+sys.path.append( os.path.abspath( '..' ) )
 
 import unittest
-import numpy
-from floatcanvas2.transformNode import NodeWithTransform
-from floatcanvas2.transform import MercatorTransform, LinearAndArbitraryCompoundTransform
+from floatcanvas.math import numpy
+from floatcanvas import NodeWithTransform, MercatorTransform, LinearAndArbitraryCompoundTransform, LinearTransform2D
 
 class TestNode(unittest.TestCase):    
     def testAttribs(self):
-        node = NodeWithTransform()
+        node = NodeWithTransform( LinearTransform2D() )
         node.localTransform
         node.worldTransform
 
-        parent = NodeWithTransform()
+        parent = NodeWithTransform( LinearTransform2D() )
         node.parent = parent
         node.localTransform
         node.worldTransform

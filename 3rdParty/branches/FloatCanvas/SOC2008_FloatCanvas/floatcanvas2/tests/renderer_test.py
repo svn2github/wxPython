@@ -1,10 +1,10 @@
 import sys
 import os.path
-sys.path.append( os.path.abspath( '../..' ) )
+sys.path.append( os.path.abspath( '..' ) )
 
 import unittest
 import wx
-from floatcanvas2.gcrenderer import GCRenderer
+from floatcanvas import GCRenderer
 
 class TestNode(unittest.TestCase):
     def setUp(self):
@@ -17,7 +17,7 @@ class TestNode(unittest.TestCase):
 
     def testSome(self):
         # creation phase
-        renderer = GCRenderer( window = self.frame )
+        renderer = GCRenderer( window = self.frame, double_buffered = False )
 
         black_brush = renderer.CreateBrush( 'plain', 'black' )
         red_brush = renderer.CreateBrush( 'plain', 'red' )
@@ -26,10 +26,10 @@ class TestNode(unittest.TestCase):
         red_pen = renderer.CreatePen( wx.Colour(255,0,0,50), width = 10 )
         red_pen.Activate()
 
-        bmp = wx.BitmapFromImage( wx.Image( 'toucan.png' ) )
+        bmp = wx.BitmapFromImage( wx.Image( '../data/toucan.png' ) )
         bmp = renderer.CreateBitmap( bmp )
         
-        font = renderer.CreateFont( 'blue', 14, wx.FONTFAMILY_DEFAULT , wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_NORMAL, True )
+        font = renderer.CreateFont( 14, 'default', 'italic', 'normal', True, 'Arial', 'blue' )
         font.Activate()
 
         path = renderer.CreatePath()

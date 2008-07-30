@@ -1,6 +1,6 @@
 from baseRenderer import BaseRenderer
 from ..models import IText
-import numpy
+from ..math import numpy
 
 class DefaultTextRenderer(BaseRenderer):
     can_render = IText

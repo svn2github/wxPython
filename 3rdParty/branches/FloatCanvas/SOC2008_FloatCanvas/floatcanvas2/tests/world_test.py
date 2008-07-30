@@ -1,52 +1,23 @@
 import sys
 import os.path
-sys.path.append( os.path.abspath( '../..' ) )
+sys.path.append( os.path.abspath( '..' ) )
+sys.path.append( os.path.abspath( '../misc' ) )
 
 import unittest
 import wx
-from floatcanvas2.gcrenderer import GCRenderer
+from floatcanvas import GCRenderer
 
-import numpy
+from floatcanvas.math import numpy
 import math
+
 class WorldData(object):
-    def __init__(self, filename):
-        self.load(filename)
+    def __init__(self):
+        from loadWorldData import points, lineLengths
 
-    def load(self, filename):
-        f = open(filename, 'r')
-        self.points = points = []
+        self.points = points
+        self.lineLengths = lineLengths
 
-        lastStart = 0
-        i = 0
-        self.lineLengths = lineLengths = []
-        for line in f:
-            if line.startswith('#'):
-                if (i - lastStart) > 0:
-                    lineLengths.append(i - lastStart)
-                    lastStart = i
-                continue
-            long, lat = line.split()
-            points.append( ( float(long), float(lat) ) )
-            i += 1
-
-        self.points = numpy.array( points, dtype = 'float' )
-        def radians(x):
-            return x * (numpy.pi/180.0)
-        self.points = radians(self.points)
-        self.save()
         self.transform()
-
-    def save(self):
-        import pickle
-
-        f = open( './world2.dat', 'wb' )
-        pickle.dump( ( self.points, self.lineLengths ), f, pickle.HIGHEST_PROTOCOL )
-        f.close()
-
-        f = open( './worldData.py', 'w' )
-        f.write( "import pickle\nf = open('world2.dat', 'rb')\ndata = pickle.load(f)\npoints, lineLengths = data\nf.close()" )
-        f.close()
-
 
     def transform(self):
         centerLong = -190        
@@ -69,7 +40,7 @@ class TestNode(unittest.TestCase):
     def setUp(self):
         self.app = wx.App(0)
 
-        self.world = WorldData( '../../data/world.dat' )
+        self.world = WorldData()
         self.frame = wx.Frame(None, wx.ID_ANY, 'GC Renderer Test', size = (800,600))
         self.frame.Show()        
 
@@ -78,7 +49,7 @@ class TestNode(unittest.TestCase):
 
     def testWorldData(self):
         # creation phase
-        renderer = GCRenderer( window = self.frame )
+        renderer = GCRenderer( window = self.frame, double_buffered = False )
 
         black_pen = renderer.CreatePen( wx.Colour(0,0,0,255), width = 1 )
         black_pen.Activate()

@@ -1,7 +1,8 @@
 from interfaces import IEllipse, ICircle, IArc
 from common import ModelWithSize, registerModelAdapter
 from eventSender import DefaultModelEventSender
-import numpy
+from ..math import numpy
+
 
 class Ellipse(ModelWithSize, DefaultModelEventSender):
     implements_interfaces = IEllipse

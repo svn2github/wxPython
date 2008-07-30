@@ -1,4 +1,4 @@
-import numpy
+from ..math import numpy
 
 class ModelWithSize(object):
     def __init__( self, size ):

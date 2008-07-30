@@ -1,4 +1,16 @@
 from canvas import Canvas
+import observables
+from ..renderers import GCRenderer
+from ..patterns.adapter import AdapterRegistry
+from ..patterns.factory import FactoryUsingDict
+from registries import PrimitiveRendererRegistry, ViewRegistry, RenderNodeRegistry
+from .. import models, views
+from ..models import defaultAdapters
+from ..looks import NoLook
+from ..patterns.partial import partial
+from updatePolicies import DefaultUpdatePolicy
+from renderPolicies import CullingRenderPolicy, DefaultRenderPolicy
+
 
 class SimpleCanvas(Canvas):
     ''' I provide an easy to use interface for a full-blown Canvas '''
@@ -25,8 +37,6 @@ class SimpleCanvas(Canvas):
         self.renderPolicy = CullingRenderPolicy()
         
     def _setupRegistries(self):
-        from patterns.adapter import AdapterRegistry
-        from registries import PrimitiveRendererRegistry, ViewRegistry, RenderNodeRegistry
         
         self.adapterRegistry = adapterRegistry = AdapterRegistry()
         
@@ -58,7 +68,6 @@ class SimpleCanvas(Canvas):
         
         
     def _setupAdapters(self):
-        from models import defaultAdapters
         for (from_interface, to_interface, adapter) in defaultAdapters:
             self.adapterRegistry.register( from_interface, to_interface, adapter )
 
@@ -70,8 +79,6 @@ class SimpleCanvas(Canvas):
         self.unregisterNode = self.nodeFactory.unregister
         self.isNodeRegistered = self.nodeFactory.is_registered
         
-        from look import NoLook
-        from patterns.partial import partial
        
         keywords = { 'transform'    : None,
                      'pos'          : None,

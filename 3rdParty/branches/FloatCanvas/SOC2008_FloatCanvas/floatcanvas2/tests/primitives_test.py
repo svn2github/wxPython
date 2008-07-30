@@ -1,10 +1,11 @@
 import sys
 import os.path
-sys.path.append( os.path.abspath( '../..' ) )
+sys.path.append( os.path.abspath( '..' ) )
+sys.path.append( os.path.abspath( '../misc' ) )
 
 import wx
-import floatcanvas2 as fc
-from worldData import points as mapPoints
+import floatcanvas as fc
+from loadWorldData import points as mapPoints
 
 
 def start():
@@ -13,7 +14,7 @@ def start():
     frame = wx.Frame( None, wx.ID_ANY, 'FloatCanvas2 demo', size = (800, 600) )
     frame.Show()
         
-    canvas = fc.canvas.SimpleCanvas( window = frame )
+    canvas = fc.SimpleCanvas( window = frame )
     #canvas.dirty = False
     
     kinds = [ ('Rectangle', (100, 100)), ('Circle', 125), ('Ellipse', (100, 150)), ('Text', 'wxPython') ]

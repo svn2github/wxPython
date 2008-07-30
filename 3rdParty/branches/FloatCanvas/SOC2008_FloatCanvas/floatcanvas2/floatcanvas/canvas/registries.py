@@ -1,6 +1,6 @@
-from patterns.asSequence import asSequence
-from patterns.factory import FactoryUsingDict
-from patterns.adapter import CouldNotAdoptException
+from ..patterns.asSequence import asSequence
+from ..patterns.factory import FactoryUsingDict
+from ..patterns.adapter import CouldNotAdoptException
 
 class ObjectFromModelRegistry(FactoryUsingDict):
     def __init__(self, adapterRegistry):

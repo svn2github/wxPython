@@ -1,7 +1,10 @@
+from ..nodes.camera import Viewport
+from ..nodes.spatialQuery import QueryWithPrimitive
+
 class DefaultRenderPolicy(object):
     def render(self, canvas, camera):        
+        from simpleCanvas import SimpleCanvas
         canvas.renderer.Clear()
-        from camera import Viewport
         camera.viewport = Viewport( canvas.window.GetClientSize() )
         cam_transform = camera.viewTransform
         super(SimpleCanvas, canvas).Render( canvas.renderer, camera )
@@ -12,7 +15,6 @@ class CullingRenderPolicy(object):
     def render(self, canvas, camera):        
         canvas.renderer.Clear()
         
-        from camera import Viewport
         camera.viewport = Viewport( canvas.window.GetClientSize() )
         cam_transform = camera.viewTransform
         

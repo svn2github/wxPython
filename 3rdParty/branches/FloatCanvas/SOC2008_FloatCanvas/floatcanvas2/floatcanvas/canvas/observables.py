@@ -1,4 +1,4 @@
-from patterns.observer.recursiveAttributeObservable import RecursiveAttributeObservable, RecursiveListItemObservable
+from ..patterns.observer.recursiveAttributeObservable import RecursiveAttributeObservable, RecursiveListItemObservable
 
 
 def makeObservable( klass, attribs, msg, prefix = 'Observable', observer_type = RecursiveAttributeObservable ):    
@@ -15,16 +15,13 @@ def makeObservable( klass, attribs, msg, prefix = 'Observable', observer_type = 
         
 
 # create the observable versions of all classes here
-from transform import ArbitraryTransform, CompoundTransform, LinearAndArbitraryCompoundTransform, LinearTransform, LinearTransform2D, MercatorTransform
+from ..math import ArbitraryTransform, CompoundTransform, LinearAndArbitraryCompoundTransform, LinearTransform, LinearTransform2D, MercatorTransform
 
-from node import Node
-from transformNode import NodeWithTransform, NodeWithBounds
-from renderableNode import RenderableNode, DefaultRenderableNode
-from camera import Camera
+from ..nodes import Node, NodeWithTransform, NodeWithBounds, RenderableNode, DefaultRenderableNode, Camera
 
-from models import Rectangle, Circle, Ellipse, Text
-from views import DefaultRectangleRenderer, DefaultView
-from look import SolidColourLook, RadialGradientLook, LinearGradientLook, OutlineLook
+from ..models import Rectangle, Circle, Ellipse, Text
+from ..views import DefaultRectangleRenderer, DefaultView
+from ..looks import SolidColourLook, RadialGradientLook, LinearGradientLook, OutlineLook
 
 info = \
 {

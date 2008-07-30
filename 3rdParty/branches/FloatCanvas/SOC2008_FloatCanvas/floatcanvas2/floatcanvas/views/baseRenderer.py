@@ -1,5 +1,5 @@
-from ..transform import LinearAndArbitraryCompoundTransform, LinearTransform2D
-from .. import boundingBox as boundingBoxModule
+from ..math import LinearAndArbitraryCompoundTransform, LinearTransform2D
+from ..math import boundingBox as boundingBoxModule
 
 
 class BaseRenderer(object):

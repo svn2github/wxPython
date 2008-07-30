@@ -1,5 +1,5 @@
 import observables
-from rtree import RTree
+from ..nodes import RTree
 
 class Canvas(observables.ObservableDefaultRenderableNode):
     def __init__(self, *args, **keys):

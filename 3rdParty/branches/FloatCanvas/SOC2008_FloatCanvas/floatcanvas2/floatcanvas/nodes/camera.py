@@ -1,6 +1,5 @@
 from transformNode import NodeWithTransform
-import boundingBox
-import numpy
+from ..math import boundingBox, numpy
 
 class Viewport(object):
     def __init__(self, size):

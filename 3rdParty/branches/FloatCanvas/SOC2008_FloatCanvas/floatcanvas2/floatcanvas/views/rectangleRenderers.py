@@ -1,6 +1,7 @@
 from baseRenderer import BaseRenderer
 from ..models import IRectangle
-import numpy   
+from ..math import numpy
+ 
 
 class DefaultRectangleRenderer(BaseRenderer):
     can_render = IRectangle

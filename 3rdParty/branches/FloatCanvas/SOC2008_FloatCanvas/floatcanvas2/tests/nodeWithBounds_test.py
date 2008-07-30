@@ -1,11 +1,11 @@
 import sys
 import os.path
-sys.path.append( os.path.abspath( '../..' ) )
+sys.path.append( os.path.abspath( '..' ) )
 
 import unittest
-import numpy
-from floatcanvas2.canvas import SimpleCanvas
-from floatcanvas2.look import SolidColourLook
+from floatcanvas.math import numpy
+from floatcanvas.canvas import SimpleCanvas
+from floatcanvas.looks import SolidColourLook
 
 import wx
 

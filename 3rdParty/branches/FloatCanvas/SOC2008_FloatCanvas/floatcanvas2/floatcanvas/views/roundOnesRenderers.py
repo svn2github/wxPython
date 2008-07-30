@@ -1,6 +1,7 @@
 from baseRenderer import BaseRenderer
 from ..models import IEllipse
-import numpy
+from ..math import numpy
+
 
 class DefaultEllipseRenderer(BaseRenderer):
     can_render = IEllipse

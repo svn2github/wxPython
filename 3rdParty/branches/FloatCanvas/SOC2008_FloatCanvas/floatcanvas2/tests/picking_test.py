@@ -1,9 +1,11 @@
 import sys
 import os.path
-sys.path.append( os.path.abspath( '../..' ) )
+sys.path.append( os.path.abspath( '..' ) )
 
 import wx
-import floatcanvas2 as fc
+import floatcanvas as fc
+from floatcanvas.math.boundingBox import fromPoint
+from floatcanvas.nodes.spatialQuery import QueryWithPrimitive
 
 def start():
     #  setup very basic window
@@ -11,7 +13,7 @@ def start():
     frame = wx.Frame( None, wx.ID_ANY, 'FloatCanvas2 demo', size = (800, 600) )
     frame.Show()
         
-    canvas = fc.canvas.SimpleCanvas( window = frame )
+    canvas = fc.SimpleCanvas( window = frame )
     #canvas.dirty = False
 
     r1 = canvas.create( 'Rectangle', (100, 200), name = 'r1', pos = (200, 400), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )
@@ -22,8 +24,6 @@ def start():
     canvas.camera.zoom = (1.0, 1.0)
     
     def doQuery( (x, y), exact ):
-        from floatcanvas2.boundingBox import fromPoint
-        from floatcanvas2.sceneQuery import QueryWithPrimitive
         query = QueryWithPrimitive( primitive = fromPoint( (x, y) ), exact = exact )
         pickedNodes = canvas.performSpatialQuery( query )
         for node in pickedNodes:

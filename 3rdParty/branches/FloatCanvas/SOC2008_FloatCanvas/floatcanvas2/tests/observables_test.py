@@ -1,13 +1,13 @@
 import sys
 import os.path
-sys.path.append( os.path.abspath( '../..' ) )
+sys.path.append( os.path.abspath( '..' ) )
 
 import unittest
-from floatcanvas2.observables import makeObservable
-from floatcanvas2.patterns.observer.observable import Observable
-from floatcanvas2.patterns.observer.recursiveAttributeObservable import RecursiveListItemObservable
-from floatcanvas2.events import subscribe
-from floatcanvas2.transform import LinearAndArbitraryCompoundTransform, LinearTransform2D, MercatorTransform
+from floatcanvas.canvas.observables import makeObservable, ObservableDefaultRenderableNode, ObservableRectangle
+from floatcanvas.patterns.observer.observable import Observable
+from floatcanvas.patterns.observer.recursiveAttributeObservable import RecursiveListItemObservable
+from floatcanvas.events import subscribe
+from floatcanvas.math import LinearAndArbitraryCompoundTransform, LinearTransform2D, MercatorTransform
 
 class EventCatcher(object):
     def __init__(self):
@@ -118,8 +118,6 @@ class TestNode(unittest.TestCase):
         self.assert_( type(tl * tl) == type(tl) )
         
     def testObservableDefaultRenderableNode(self):
-        from floatcanvas2.observables import ObservableDefaultRenderableNode, ObservableRectangle
-
         o = ObservableDefaultRenderableNode( model = None, view = None, transform = 'empty_transform' )
         self.assert_( o.dirty )
         o.dirty = False
