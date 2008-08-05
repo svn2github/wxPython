@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 
 """
 This demonstrates how to use FloatCanvas with a coordinate system where

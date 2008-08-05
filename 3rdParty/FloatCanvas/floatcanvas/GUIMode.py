@@ -170,13 +170,15 @@ class GUIMouse(GUIBase):
 
 
 class GUIMove(GUIBase):
-
     def __init__(self, canvas=None):
         GUIBase.__init__(self, canvas)
         self.Cursor = self.Cursors.HandCursor
         self.GrabCursor = self.Cursors.GrabHandCursor
         self.StartMove = None
         self.PrevMoveXY = None
+        
+        ## timer to give a delay when moving so that buffers aren't re-built too many times.
+        self.MoveTimer = wx.PyTimer(self.OnMoveTimer)
 
     def OnLeftDown(self, event):
         self.Canvas.SetCursor(self.GrabCursor)
@@ -185,21 +187,21 @@ class GUIMove(GUIBase):
         self.PrevMoveXY = (0,0)
 
     def OnLeftUp(self, event):
-        if self.StartMove is not None:
-            StartMove = self.StartMove
-            EndMove = N.array(event.GetPosition())
-            DiffMove = StartMove-EndMove
-            if N.sum(DiffMove**2) > 16:
-                self.Canvas.MoveImage(DiffMove, 'Pixel')
-            self.StartMove = None
         self.Canvas.SetCursor(self.Cursor)
 
     def OnMove(self, event):
-        # Allways raise the Move event.
-        self.Canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
+        # Always raise the Move event.
+        self.Canvas._RaiseMouseEvent(event, FloatCanvas.EVT_FC_MOTION)
         if event.Dragging() and event.LeftIsDown() and not self.StartMove is None:
             self.MoveImage(event)
+            self.EndMove = N.array(event.GetPosition())
+            self.MoveTimer.Start(30, oneShot=True)
 
+    def OnMoveTimer(self, event=None):
+        DiffMove = self.StartMove-self.EndMove
+        self.Canvas.MoveImage(DiffMove, 'Pixel')
+        self.StartMove = self.EndMove
+        
     def MoveImage(self, event):
         xy1 = N.array( event.GetPosition() )
         wh = self.Canvas.PanelSize
@@ -257,6 +259,7 @@ class GUIMove(GUIBase):
         else:
             dc.DrawBitmapPoint(self.Canvas._Buffer,xy_tl)
         dc.EndDrawing()
+        self.Canvas.Update()
 
     def OnWheel(self, event):
         """

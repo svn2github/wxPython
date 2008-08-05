@@ -1991,7 +1991,8 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         Hs = int(scale * Hb + 0.5)
         if (self.ScaledBitmap is None) or (self.ScaledBitmap[0] != (Xb, Yb, Wb, Hb, Ws, Ws) ):
             Img = self.Image.GetSubImage(wx.Rect(Xb, Yb, Wb, Hb))
-            Img.Rescale(Ws, Hs)
+            print "rescaling with High quality"
+            Img.Rescale(Ws, Hs, quality=wx.IMAGE_QUALITY_HIGH)
             bmp = wx.BitmapFromImage(Img)
             self.ScaledBitmap = ((Xb, Yb, Wb, Hb, Ws, Ws), bmp)# this defines the cached bitmap
             #XY = self.ShiftFun(XY[0], XY[1], W, H)
@@ -2378,7 +2379,7 @@ class FloatCanvas(wx.Panel):
 
         self._BackgroundDirty = True
 
-    def SetProjectionFun(self,ProjectionFun):
+    def SetProjectionFun(self, ProjectionFun):
         if ProjectionFun == 'FlatEarth':
             self.ProjectionFun = self.FlatEarthProjection
         elif callable(ProjectionFun):
@@ -2755,10 +2756,10 @@ class FloatCanvas(wx.Panel):
         if self.GUIMode is not None:
             self.GUIMode.UpdateScreen()
 
-        if self.Debug: print "Drawing took %f seconds of CPU time"%(clock()-start)
-        
-        if self._HTBitmap is not None:
-            self._HTBitmap.SaveFile('junk.png', wx.BITMAP_TYPE_PNG)
+        if self.Debug:
+            print "Drawing took %f seconds of CPU time"%(clock()-start)
+            if self._HTBitmap is not None:
+                self._HTBitmap.SaveFile('junk.png', wx.BITMAP_TYPE_PNG)
         
         ## Clear the font cache. If you don't do this, the X font server
         ## starts to take up Massive amounts of memory This is mostly a
