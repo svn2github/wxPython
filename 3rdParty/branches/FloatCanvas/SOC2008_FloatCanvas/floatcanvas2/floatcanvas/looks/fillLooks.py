@@ -16,13 +16,16 @@ class FillLook(RendererSpecificLook):
     def createLook(self, renderer):
         return self.RendererSpecificFillLook( renderer, self.fill_kind, *self.args )
 
+
 class SolidColourFillLook(FillLook):
     def __init__(self, colour):
         FillLook.__init__( self, 'plain', colour )
 
+
 class RadialGradientFillLook(FillLook):
     def __init__(self, origin, colour_origin, center_circle_end, radius, colour_end):
         FillLook.__init__( self, 'radialGradient', origin[0], origin[1], center_circle_end[0], center_circle_end[1], radius, colour_origin, colour_end )
+
 
 class LinearGradientFillLook(FillLook):
     def __init__(self, origin, colour_origin, end, colour_end):

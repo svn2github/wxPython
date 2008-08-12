@@ -1,3 +1,5 @@
+from ..patterns.asSequence import asSequence
+
 class NodeVisitor(object):
     ''' Derive fro this class to visit a tree of nodes and override the pre- and
          postVisit methods to implement the custom behaviour.
@@ -24,7 +26,7 @@ class NodeVisitor(object):
         ''' This is the method you should call to do the work. Nodes is a
             sequence of nodes
         '''
-        for node in nodes:
+        for node in asSequence(nodes):
             if not node.visit(self, self.visitChildren):
                 return False
         return True
@@ -78,3 +80,23 @@ class FindNodesByNamesVisitor(NodeVisitor):
             self.nodes.append( node )
         
         return True
+    
+    
+class EnumerateNodesVisitor(NodeVisitor):
+    def __init__(self, visitChildren = True):
+        super( EnumerateNodesVisitor, self ).__init__( visitChildren )
+        self.node_to_number = {}
+        self.number_to_node = {}
+        self.current_number = 0
+        
+    def preVisit(self, node):
+        self.node_to_number[node] = self.current_number
+        self.number_to_node [self.current_number] = node
+        self.current_number += 1
+        return True
+    
+    def getPosition(self, node):
+        return self.node_to_number[node]
+    
+    def getNode(self, position):
+        return self.number_to_node[position]

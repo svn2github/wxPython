@@ -2,22 +2,19 @@ import sys
 import os.path
 sys.path.append( os.path.abspath( '..' ) )
 
-import unittest
 import wx
 from floatcanvas import GCRenderer
 
-class TestNode(unittest.TestCase):
-    def setUp(self):
+class RendererTest(object):
+    def run(self):
         self.app = wx.App(0)
         self.frame = wx.Frame(None, wx.ID_ANY, 'GC Renderer Test', size = (800,600))
         self.frame.Show()
 
-    def tearDown(self):
-        self.frame.Close()
-
-    def testSome(self):
         # creation phase
         renderer = GCRenderer( window = self.frame, double_buffered = False )
+
+        renderer.Clear( 'white' )
 
         black_brush = renderer.CreateBrush( 'plain', 'black' )
         red_brush = renderer.CreateBrush( 'plain', 'red' )
@@ -27,7 +24,6 @@ class TestNode(unittest.TestCase):
         red_pen.Activate()
 
         bmp = wx.BitmapFromImage( wx.Image( '../data/toucan.png' ) )
-        bmp = renderer.CreateBitmap( bmp )
         
         font = renderer.CreateFont( 14, 'default', 'italic', 'normal', True, 'Arial', 'blue' )
         font.Activate()
@@ -49,13 +45,13 @@ class TestNode(unittest.TestCase):
         path.Stroke()
         
         renderer.DrawRotatedText( 'Hello World!', 50, 300, angle = 30 )
-        bmp.Draw( 200, 200, 40, 40)
+        renderer.DrawBitmap( bmp, 200, 200, 40, 40)
 
-        import time
-        time.sleep(5)
-        
+        renderer.Present()
+
+        self.app.MainLoop()
         
         
     
 if __name__ == '__main__':
-    unittest.main()
+    RendererTest().run()

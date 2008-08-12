@@ -4,7 +4,7 @@ sys.path.append( os.path.abspath( '..' ) )
 
 import unittest
 from floatcanvas.math import numpy
-from floatcanvas.canvas import SimpleCanvas
+from floatcanvas.canvas import FloatCanvas
 from floatcanvas.looks import SolidColourLook
 
 import wx
@@ -15,7 +15,7 @@ class TestNode(unittest.TestCase):
         frame = wx.Frame( None, wx.ID_ANY, 'FloatCanvas2 demo', size = (800, 600) )
         frame.Show()
             
-        canvas = SimpleCanvas( window = frame )
+        canvas = FloatCanvas( window = frame )
     
         r1 = canvas.create( 'Rectangle', (100, 100), look = SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )
         self.assert_( r1.localBoundingBox.Size == (100, 100), r1.localBoundingBox.Size )

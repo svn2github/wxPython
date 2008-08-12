@@ -3,7 +3,7 @@ import os.path
 sys.path.append( os.path.abspath( '..' ) )
 
 import unittest
-from floatcanvas.nodes import Node, TextTreeFormatVisitor, FindNodesByNamesVisitor, GetNodesAsFlatListVisitor
+from floatcanvas.nodes import Node, TextTreeFormatVisitor, FindNodesByNamesVisitor, GetNodesAsFlatListVisitor, EnumerateNodesVisitor
 
 class TestNode(unittest.TestCase):
     def setUp(self):
@@ -131,6 +131,21 @@ class TestNodeVisitors(unittest.TestCase):
         self.assert_( gnaflv.nodes == nodes, gnaflv.nodes )
         
         
+    def testNodeEnumerationVisitor(self):
+        env = EnumerateNodesVisitor()        
+        env.visit( [self.rootNode, self.rootNode2] )
+        
+        self.assert_( env.getPosition( self.rootNode ) == 0 )
+        self.assert_( env.getPosition( self.level2Node2 ) == 5 )
+        self.assert_( env.getPosition( self.level3Node3 ) == 4 )
+        self.assert_( env.getPosition( self.level3Node2 ) == 6 )
+        self.assert_( env.getPosition( self.rootNode2 ) == 7)
+        
+        self.assert_( env.getNode( 0 ) == self.rootNode )
+        self.assert_( env.getNode( 5 ) == self.level2Node2 )
+        self.assert_( env.getNode( 4 ) == self.level3Node3 )
+        self.assert_( env.getNode( 6 ) == self.level3Node2 )
+        self.assert_( env.getNode( 7 ) == self.rootNode2 )
     
 if __name__ == '__main__':
     unittest.main()

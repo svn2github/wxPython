@@ -1,6 +1,5 @@
 from canvas import Canvas
 import observables
-from ..renderers import GCRenderer
 from ..patterns.adapter import AdapterRegistry
 from ..patterns.factory import FactoryUsingDict
 from registries import PrimitiveRendererRegistry, ViewRegistry, RenderNodeRegistry
@@ -10,22 +9,27 @@ from ..looks import NoLook
 from ..patterns.partial import partial
 from updatePolicies import DefaultUpdatePolicy
 from renderPolicies import CullingRenderPolicy, DefaultRenderPolicy
+from ..math import boundingBox
+from ..nodes.spatialQuery import QueryWithPrimitive
+from ..nodes import EnumerateNodesVisitor
 
 
 class SimpleCanvas(Canvas):
     ''' I provide an easy to use interface for a full-blown Canvas '''
 
-    def __init__(self, window = None, dc = None, native_window = None, native_dc = None, wx_renderer = None, double_buffered = True, max_update_delay = 0.2, *args, **keys):
+    def __init__(self, renderer, max_update_delay = 0.2, *args, **keys):
         if 'name' not in keys:
             keys['name'] = 'unnamed canvas'
-        Canvas.__init__(self, None, None, observables.ObservableLinearTransform2D(), *args, **keys)
+
+        self.renderer = renderer
+
+        Canvas.__init__(self, self.renderer, False, None, None, None, observables.ObservableLinearTransform2D(), *args, **keys)
                
         self.camera = observables.ObservableCamera( observables.ObservableLinearTransform2D() )
-        self.renderer = GCRenderer( window = window, dc = dc, native_window = native_window, native_dc = native_dc, wx_renderer = wx_renderer, double_buffered = double_buffered )
-        self.window = window
+        self.addChild( self.camera )
         
-        self.model_kinds = [ 'Rectangle', 'Circle', 'Ellipse', 'Text' ]
-        self.primitive_kinds = [ 'Rectangle', 'Ellipse', 'Text' ]
+        self.model_kinds = [ 'Rectangle', 'RoundedRectangle', 'Circle', 'Ellipse', 'Arc', 'Text', 'Line', 'LineLength', 'Lines', 'LinesList', 'LineSegments', 'LineSegmentsSeparate', 'Bitmap', 'CubicSpline', 'QuadraticSpline', 'Polygon', 'PolygonList', 'Arrow', 'AngleArrow' ]
+        self.primitive_kinds = [ 'Rectangle', 'RoundedRectangle', 'Ellipse', 'Arc', 'Text', 'LinesList', 'LineSegmentsSeparate', 'Bitmap', 'CubicSpline', 'QuadraticSpline', 'PolygonList', 'Arrow' ]
 
         self._setupRegistries()
         self._setupNodeFactory()
@@ -45,8 +49,8 @@ class SimpleCanvas(Canvas):
         self.renderNodeRegistry = RenderNodeRegistry( adapterRegistry )
         
         for primitive_kind in self.primitive_kinds:
-            modelInterface = getattr(models, 'I%s' % primitive_kind)
             primitiveRendererType = getattr(views, 'Default%sRenderer' % primitive_kind)
+            modelInterface = primitiveRendererType.can_render
             self.primitiveRendererRegistry.register( modelInterface, primitiveRendererType )
             
         for model_kind in self.model_kinds:
@@ -59,10 +63,10 @@ class SimpleCanvas(Canvas):
             
         for model_kind in self.model_kinds:
             modelInterface = getattr(models, 'I%s' % model_kind)
-            def createDefaultRenderableNode(model, transform, look, scaled, name):
+            def createDefaultRenderableNode(model, transform, look, scaled, name, render_to_surface, surface_size):
                 viewConstructor, model = self.viewRegistry.getViewConstructor( model )
                 view = viewConstructor( model = model, look = look, scaled = scaled )
-                renderNode = observables.ObservableDefaultRenderableNode( model, view, transform, name = name )
+                renderNode = observables.ObservableDefaultRenderableNode( self.renderer, render_to_surface, surface_size, model, view, transform, name = name )
                 return renderNode
             self.renderNodeRegistry.register( modelInterface, createDefaultRenderableNode )
         
@@ -71,23 +75,34 @@ class SimpleCanvas(Canvas):
         for (from_interface, to_interface, adapter) in defaultAdapters:
             self.adapterRegistry.register( from_interface, to_interface, adapter )
 
+
+    def create(self, *args, **keys):
+        return self.nodeFactory.create( *args, **keys )
+
+    def registerNode(self, model_kind, create, modelType):
+        setattr( self, 'create%s' % model_kind, partial( create, modelType ) )
+        return self.nodeFactory.register( model_kind, create, modelType )
+
+    def unregisterNode(self, *args, **keys):
+        return self.nodeFactory.unregister( *args, **keys )
+
+    def isNodeRegistered(self, *args, **keys):
+        return self.nodeFactory.is_registered( *args, **keys )
         
     def _setupNodeFactory(self):
-        self.nodeFactory = FactoryUsingDict()
-        self.create = self.nodeFactory.create
-        self.registerNode = self.nodeFactory.register
-        self.unregisterNode = self.nodeFactory.unregister
-        self.isNodeRegistered = self.nodeFactory.is_registered
-        
+        self.nodeFactory = FactoryUsingDict()        
        
-        keywords = { 'transform'    : None,
-                     'pos'          : None,
-                     'position'     : None,
-                     'rotation'     : None,
-                     'scale'        : None,
-                     'look'         : None,
-                     'where'        : 'back',
-                     'scaled'       : True,
+        keywords = { 'transform'            : None,
+                     'pos'                  : None,
+                     'position'             : None,
+                     'rotation'             : None,
+                     'scale'                : None,
+                     'look'                 : None,
+                     'where'                : 'back',
+                     'scaled'               : True,
+                     'render_to_surface'    : False,
+                     'surface_size'         : (500, 500),
+                     'parent'               : self,
                    }
         
         def get_keyword(dikt, name):
@@ -98,10 +113,42 @@ class SimpleCanvas(Canvas):
                 pass
             return result
         
-        for model_kind in self.model_kinds:
-            def create(modelType, *args, **keys):
+        def create(modelType, *args, **keys):                                       
+            # node  & nodeWithTransform properties
+            where = get_keyword(keys, 'where')
+            transform = get_keyword(keys, 'transform')
+            if transform is None:
+                transform = observables.ObservableLinearTransform2D()
+            elif isinstance( transform, basestring ):
+                transform = getattr(observables, transform)()
+                transform = observables.ObservableLinearTransform2D() * transform
+
+            pos = get_keyword(keys, 'pos') or get_keyword(keys, 'position')
+            if pos is not None:
+                # assume linear transform
+                transform.position = pos
+                
+            rotation = get_keyword(keys, 'rotation')
+            if rotation is not None:
+                # assume linear transform
+                transform.rotation = rotation
+            
+            scale = get_keyword(keys, 'scale')
+            if scale is not None:
+                # assume linear transform
+                transform.scale = scale
+
+            scaled = get_keyword(keys, 'scaled')
+            parent = get_keyword(keys, 'parent')
+
+
+            # renderable node properties
+            render_to_surface = get_keyword(keys, 'render_to_surface')
+            surface_size = get_keyword(keys, 'surface_size')
+
+            if not modelType is None:
                 model = modelType( *args )
-                                
+
                 look = get_keyword(keys, 'look')
                 if look is None:
                     raise ValueError( 'You need to supply a look! Use look.NoLook or "nolook" if you want none.')
@@ -109,44 +156,23 @@ class SimpleCanvas(Canvas):
                     look = NoLook
                 if isinstance(look, (tuple, list)):
                     look = observables.ObservableSolidColourLook(*look)
-                                        
-                where = get_keyword(keys, 'where')
-                transform = get_keyword(keys, 'transform')
-                if transform is None:
-                    transform = observables.ObservableLinearTransform2D()
-                elif isinstance( transform, basestring ):
-                    transform = getattr(observables, transform)()
-                    transform = observables.ObservableLinearTransform2D() * transform
-
-                pos = get_keyword(keys, 'pos') or get_keyword(keys, 'position')
-                if pos is not None:
-                    # assume linear transform
-                    transform.position = pos
-                    
-                rotation = get_keyword(keys, 'rotation')
-                if rotation is not None:
-                    # assume linear transform
-                    transform.rotation = rotation
-                
-                scale = get_keyword(keys, 'scale')
-                if scale is not None:
-                    # assume linear transform
-                    transform.scale = scale
-
-                scaled = get_keyword(keys, 'scaled')
-
+    
+    
                 renderNodeConstructor, model = self.renderNodeRegistry.getRenderNodeConstructor( model )
-                renderNode = renderNodeConstructor( model, transform = transform, look = look, name = keys.get('name', '<unnamed node>'), scaled = scaled )
+                renderNode = renderNodeConstructor( model, transform = transform, look = look, name = keys.get('name', '<unnamed node>'), scaled = scaled, render_to_surface = render_to_surface, surface_size = surface_size )
+            else:
+                renderNode = observables.ObservableDefaultRenderableNode( self.renderer, render_to_surface, surface_size, None, None, transform = transform, name = keys.get('name', '<unnamed node>') )
 
-                self.addChild( renderNode, where = where )
+            parent.addChild( renderNode, where = where )
 
-                return renderNode
-
-            modelType = getattr(observables, 'Observable%s' % model_kind)
-
-            self.registerNode( model_kind, create, modelType )
-            setattr( self, 'create%s' % model_kind, partial( create, modelType ) )
+            return renderNode
         
+        
+        for model_kind in self.model_kinds:
+            modelType = getattr(observables, 'Observable%s' % model_kind)
+            self.registerNode( model_kind, create, modelType )
+        
+        self.registerNode( 'Group', create, None )
 
     def onDirty(self, evt):
         if self.dirty:
@@ -155,7 +181,75 @@ class SimpleCanvas(Canvas):
     def DoRender(self, renderer, camera):
         pass
     
-    def Render(self, camera = None, renderChildren = True):
+    def Render(self, backgroundColor = None, camera = None, renderChildren = True):
         if camera is None:
             camera = self.camera
-        self.renderPolicy.render(self, camera)
+        self.renderPolicy.render(self, camera, backgroundColor)
+        camera.dirty = False
+        camera.transform.dirty = False
+        self.dirty = False
+        self._children.dirty = False
+        
+    def zoomToExtents(self, boundingBox = None, padding_percent = 0.05, maintain_aspect_ratio = True):
+        if boundingBox is None:
+            boundingBox = self.boundingBoxRecursive #self.rtree.boundingBox
+            
+        self.camera.zoomToExtents( boundingBox, padding_percent, maintain_aspect_ratio )
+        
+    def zoom(self, factor, center = None, centerCoords = 'world', alignment = 'cc'):
+        self.camera.zoom *= factor
+        
+        if not center is None:
+            if centerCoords == 'pixel':
+                center = self.pointToWorld( center )
+            self.camera.position = center
+        
+        
+    def pointToWorld(self, screen_pnt):
+        return self.camera.viewTransform.inverse( (screen_pnt,) )
+
+    def hitTest( self, screen_pnt, exact = True ):
+        world_pnt = self.pointToWorld( screen_pnt )
+        query = QueryWithPrimitive( primitive = boundingBox.fromPoint( world_pnt ), exact = exact )
+        pickedNodes = self.performSpatialQuery( query )
+        
+        # now sort the picked nodes by their (render) order, nodes that appear
+        # on top are first in the returned list
+        env = EnumerateNodesVisitor()
+        env.visit(self)        
+        pickedNodes.sort( key = lambda node: env.getPosition(node) )
+        
+        return pickedNodes
+
+
+    def getScreenshot(self, file_format):
+        return self.renderer.getScreenshot( file_format )
+    
+    def saveScreenshot(self, filename):
+        import os.path        
+        extension = os.path.splitext(filename)[1][1:]
+        data = self.getScreenshot( extension )
+        f = file( filename, 'wb' )
+        f.write( data )
+        f.close()
+        
+        
+        
+    def _getBoundingBox(self):
+        return boundingBox.BoundingBox( [ (0,0), (0,0) ] )
+    
+    boundingBox = property( _getBoundingBox )
+    
+    def _getLocalBoundingBox(self):
+        return boundingBox.BoundingBox( [ (0,0), (0,0) ] )
+    
+    localBoundingBox = property( _getLocalBoundingBox )
+    
+    
+    def _getScreenSize(self):
+        return self.renderer.framebuffer.size
+    
+    def _setScreenSize(self, size):
+        self.renderer.framebuffer.size = size
+        
+    screen_size = property( _getScreenSize, _setScreenSize )

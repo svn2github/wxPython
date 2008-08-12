@@ -1,6 +1,6 @@
 from ...math import LinearTransform2D, numpy
 from ...math import boundingBox as boundingBoxModule
-
+import wx
 
 class GCRenderObjectBase(object):
     def __init__(self, renderer):
@@ -11,6 +11,11 @@ class GCRenderObjectBase(object):
     def Draw(self, camera):
         self._rendererTransform.Set( *list( (camera.viewTransform * self.transform).matrix[ :-1, ... ].transpose().flat) )
         self.renderer.SetTransform( self._rendererTransform )
+        self.DoDraw( camera )
+        
+        #self.renderer.SwitchToGreyscale()
+        
+        #self.DoDraw( camera )
                                      
     def _getTransform(self):
         return self._transform
@@ -32,9 +37,9 @@ class GCRenderObjectPath(GCRenderObjectBase):
         size = numpy.array( (w,h) )
         self._localBoundingBox = boundingBoxModule.fromRectangleCornerSize( corner, size )
         
-    def Draw(self, camera):
-        GCRenderObjectBase.Draw(self, camera)
-        self.path.Draw()
+    def DoDraw(self, camera):
+        #GCRenderObjectBase.Draw(self, camera)
+        self.path.Render()
         
     def intersects(self, primitive):
         assert primitive.min == primitive.max, ('Can only test against points', primitive)
@@ -58,8 +63,8 @@ class GCRenderObjectText(GCRenderObjectBase):
         self.active_font = None
         self._localBoundingBox = boundingBoxModule.BoundingBox( ( (0,0), (0,0) ) )
         
-    def Draw(self, camera):
-        GCRenderObjectBase.Draw(self, camera)
+    def DoDraw(self, camera):
+        #GCRenderObjectBase.Draw(self, camera)
 
         offset = self.localBoundingBox.min
         backgroundBrush = self.renderer.active_brush.brush
@@ -77,6 +82,46 @@ class GCRenderObjectText(GCRenderObjectBase):
             size = numpy.array( (w,h) )
             self._localBoundingBox = boundingBoxModule.fromRectangleCenterSize( (0,0), size )
 
+        return self._localBoundingBox
+
+    localBoundingBox = property( _getLocalBoundingBox )
+
+
+class GCRenderObjectBitmap(GCRenderObjectBase):
+    def __init__(self, renderer, pixels, use_real_size):
+        GCRenderObjectBase.__init__(self, renderer)
+        self.pixels = pixels
+        self.use_real_size = use_real_size
+        
+        if isinstance( pixels, wx.Bitmap ):
+            self.bitmap = pixels
+            w, h = pixels.GetWidth(), pixels.GetHeight()
+        else:
+            w, h, components = pixels.shape
+    
+            if components == 3:
+                self.bitmap = wx.BitmapFromBuffer(w, h, pixels)
+            elif components == 4:                
+                self.bitmap = wx.BitmapFromBufferRGBA(w, h, pixels)
+            else:
+                raise ValueError( 'pixels must be a 2d-array where each pixel has either 3 (RGB) or 4 (RGBA) components' )
+        
+        if not use_real_size:
+            w, h = 1, 1
+
+        self.width, self.height = w, h        
+        self._localBoundingBox = boundingBoxModule.fromRectangleCenterSize( (0,0), numpy.array( (w, h) ) )
+        
+    def DoDraw(self, camera):
+        #GCRenderObjectBase.Draw(self, camera)
+
+        offset = self.localBoundingBox.min
+        self.renderer.GC.DrawBitmap( self.bitmap, offset[0], offset[1], self.width, self.height )
+        
+    def intersects(self, primitive):
+        return True
+        
+    def _getLocalBoundingBox(self):
         return self._localBoundingBox
 
     localBoundingBox = property( _getLocalBoundingBox )

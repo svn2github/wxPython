@@ -1,13 +1,14 @@
-from interfaces import ILine, ILineLength, ILines, ILineSegments, ILineSegmentsSeparate
+from interfaces import ILine, ILineLength, ILines, ILinesList, ILineSegments, ILineSegmentsSeparate
 from eventSender import DefaultModelEventSender
 from common import ModelWithPoints
+from ..math import numpy
 
 class Line(DefaultModelEventSender):
-    implements_interfaces = ILineLength
+    implements_interfaces = ILine
 
     def __init__( self, startPoint, endPoint ):
         self.startPoint = startPoint
-        self.endPoint = tartPoint
+        self.endPoint = endPoint
 
     def _setStartPoint(self, value):
         self._startPoint = numpy.array( value )
@@ -34,7 +35,22 @@ class LineLength(DefaultModelEventSender):
         
 class Lines(ModelWithPoints, DefaultModelEventSender):
     implements_interfaces = ILines
+
     
+class LinesList(DefaultModelEventSender):
+    implements_interfaces = ILinesList
+
+    def __init__(self, lines_list):
+        self.lines_list = lines_list
+        
+    def _setLinesList(self, lines_list):
+        self._lines_list = [ numpy.array( [ pnt for pnt in lines] ) for lines in lines_list ]
+        
+    def _getLinesList(self):
+        return self._lines_list
+
+    lines_list = property( _getLinesList, _setLinesList )
+
     
 class LineSegments( ModelWithPoints, DefaultModelEventSender):
     implements_interfaces = ILineSegments
@@ -77,10 +93,10 @@ class LineLengthToLineAdapter(object):
         self.lineWithLength = lineWithLength
         
     def _getStartPoint(self):
-        return numpy.array( ( -self.lineWithLength / 2.0 , 0 ) )
+        return numpy.array( ( -self.lineWithLength.length / 2.0 , 0 ) )
     
     def _getEndPoint(self):
-        return numpy.array( ( +self.lineWithLength / 2.0 , 0 ) )
+        return numpy.array( ( +self.lineWithLength.length / 2.0 , 0 ) )
         
     startPoint = property( _getStartPoint )
     endPoint = property( _getEndPoint )
@@ -119,22 +135,39 @@ class LineToLineSegmentsSeparateAdapter(object):
         self.line.startPoint = numpy.array( points[0] )
         
     def _getStartPoints(self):
-        return self.line.startPoint
+        return [ self.line.startPoint ]
     
     def _setEndPoints(self, points):
         assert len(points) == 1
         self.line.endPoint = numpy.array( points[0] )
         
     def _getEndPoints(self):
-        return self.line.endPoint
+        return [ self.line.endPoint ]
     
     startPoints = property( _getStartPoints, _setStartPoints)
     endPoints = property( _getEndPoints, _setEndPoints)
 
 
+class LinesToLinesListAdapter(object):
+    implements_interfaces = ILinesList
+    
+    def __init__(self, lines):
+        self.lines = lines
+        
+    def _setLinesList(self, lines_list):
+        assert len(lines_list) == 1
+        self.lines.points = numpy.array( lines_list[0] )
+        
+    def _getLinesList(self):
+        return [ self.lines.points ]
+       
+    lines_list = property( _getLinesList, _setLinesList)
+    
+
 from common import registerModelAdapter
 registerModelAdapter( ILineLength, ILine, LineLengthToLineAdapter )
 registerModelAdapter( ILineSegments, ILineSegmentsSeparate, LineSegmentsToLineSegmentsSeparateAdapter )
-#registerModelAdapter( ILine, ILineSegmentsSeparate, LineToLinesAdapter )
+registerModelAdapter( ILine, ILineSegmentsSeparate, LineToLineSegmentsSeparateAdapter )
+registerModelAdapter( ILines, ILinesList, LinesToLinesListAdapter )
 
     

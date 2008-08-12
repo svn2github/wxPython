@@ -35,9 +35,9 @@ class WorldDataConverter(object):
         pickle.dump( ( self.points, self.lineLengths ), f, pickle.HIGHEST_PROTOCOL )
         f.close()
 
-        f = open( './loadWorldData.py', 'w' )
-        f.write( "import pickle\nf = open('%s', 'rb')\ndata = pickle.load(f)\npoints, lineLengths = data\nf.close()" % filename )
-        f.close()
+        #f = open( './loadWorldData.py', 'w' )
+        #f.write( "import pickle\nf = open('%s', 'rb')\ndata = pickle.load(f)\npoints, lineLengths = data\nf.close()" % filename )
+        #f.close()
 
 if __name__ == '__main__':
     WorldDataConverter( '../data/world.dat', '../data/world_numpy.dat' )

@@ -11,7 +11,7 @@ def start():
     frame = wx.Frame( None, wx.ID_ANY, 'FloatCanvas2 demo', size = (800, 600) )
     frame.Show()
         
-    canvas = fc.SimpleCanvas( window = frame )
+    canvas = fc.FloatCanvas( window = frame )
     #canvas.dirty = False
 
     r1 = canvas.create( 'Rectangle', (100, 200), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )

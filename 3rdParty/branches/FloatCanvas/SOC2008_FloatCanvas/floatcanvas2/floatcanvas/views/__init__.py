@@ -1,4 +1,9 @@
 from defaultView import DefaultView
-from roundOnesRenderers import DefaultEllipseRenderer
-from rectangleRenderers import DefaultRectangleRenderer
+from roundOnesRenderers import DefaultEllipseRenderer, DefaultArcRenderer
+from rectangleRenderers import DefaultRectangleRenderer, DefaultRoundedRectangleRenderer
+from lineRenderers import DefaultLinesListRenderer, DefaultLineSegmentsSeparateRenderer
 from textRenderer import DefaultTextRenderer
+from bitmapRenderer import DefaultBitmapRenderer
+from splineRenderers import DefaultCubicSplineRenderer, DefaultQuadraticSplineRenderer
+from polygonRenderer import DefaultPolygonListRenderer
+from arrowsRenderers import DefaultArrowRenderer

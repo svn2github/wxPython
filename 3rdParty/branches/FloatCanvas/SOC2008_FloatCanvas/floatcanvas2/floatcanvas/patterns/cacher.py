@@ -7,3 +7,6 @@ class Cacher(object):
 
     def get(self, key):
         return self.entries[key]
+
+    def remove(self, key):
+        del self.entries[key]

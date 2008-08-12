@@ -1,3 +1,42 @@
-class IPolygon(object):
-    # points prop
-    pass
+from interfaces import IPolygon, IPolygonList
+from eventSender import DefaultModelEventSender
+from common import ModelWithPoints
+
+class Polygon(ModelWithPoints, DefaultModelEventSender):
+    implements_interfaces = IPolygon
+    
+class PolygonList(DefaultModelEventSender):
+    implements_interfaces = IPolygonList
+    
+    def __init__(self, polygon_list):
+        self.polygon_list = polygon_list
+        
+    def _setPolygonList(self, polygon_list):
+        self._polygon_list = [ numpy.array( [ pnt for pnt in polygon] ) for polygon in polygon_list ]
+        
+    def _getPolygonList(self):
+        return self._polygon_list
+
+    polygon_list = property( _getPolygonList, _setPolygonList )
+    
+    
+class PolygonToPolygonListAdapter(object):
+    implements_interfaces = IPolygonList
+    
+    def __init__(self, polygon):
+        self.polygon = polygon
+        
+    def _setPolygonList(self, polygon_list):
+        assert len(polygon_list) == 1
+        self.polygon.points = numpy.array( polygon_list[0] )
+        
+    def _getPolygonList(self):
+        return [ self.polygon.points ]
+       
+    polygon_list = property( _getPolygonList, _setPolygonList)
+    
+
+from common import registerModelAdapter
+registerModelAdapter( IPolygon, IPolygonList, PolygonToPolygonListAdapter )
+
+    

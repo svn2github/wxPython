@@ -6,6 +6,9 @@ class DefaultView(object):
     def Render(self, renderer, camera):
         self.look.Apply(renderer)
         self.primitive_renderer.Render(camera)
+        self.look.dirty = False
+        self.transform.dirty = False
+        self.dirty = False
         
     def rebuild(self):
         self.primitive_renderer.rebuild()

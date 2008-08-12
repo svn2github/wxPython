@@ -44,7 +44,11 @@ class ILineLength(object):
 class ILines(object):
     # points prop
     pass
-    
+
+class ILinesList(object):
+    # lines_list prop
+    pass
+
 class ILineSegments(object):
     # points prop
     pass
@@ -58,6 +62,11 @@ class ILineSegmentsSeparate(object):
 class IPolygon(object):
     # points prop
     pass
+
+class IPolygonList(object):
+    # polygon_list prop
+    pass
+
 
 class IPoints(object):
     # points prop
@@ -75,6 +84,21 @@ class IBitmap(object):
     pass
 
 
+class IArrow(object):
+    # startPoint, endPoint props
+    # headSize
+    # headFilled
+    pass
+
+class IAngleArrow(object):
+    # startPoint, angle prop
+    # length
+    # headSize
+    # headFilled
+    pass
+
 # fc1 objects:
-# Polygon, Line, Spline, Arrow, ArrowLine, PointSet, Point, SquarePoint, Rectangle, Ellipse, Circle, Text, ScaledTextBox, Bitmap, DotGrid, Arc, PieChart
+# Polygon, Line, Spline, PointSet, Point, SquarePoint, Rectangle, Ellipse, Circle, Text, ScaledTextBox, Bitmap, Arc, Arrow, ArrowLine, DotGrid, PieChart
 # remaining: Arrow, ArrowLine, PieChart, DotGrid, scaled variants
+# actually implemented: Line, Rectangle, Ellipse, Circle, Text, Bitmap, Arc, Spline, 
+# actually missing: Polygon, 

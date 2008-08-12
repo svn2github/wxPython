@@ -40,6 +40,9 @@ class LinearTransform(object):
     def _getInverse(self):
         return self.__class__( (), matrix = numpy.linalg.inv( self.matrix ) )
 
+    def _getTranspose(self):
+        return self.__class__( (), matrix = numpy.transpose( self.matrix ) )
+
     def __mul__(self, other):
         if isinstance(other, LinearTransform):
             return self.__class__( (), matrix = numpy.dot( self.matrix, other.matrix ) )
@@ -53,6 +56,7 @@ class LinearTransform(object):
     position = pos = translation
     scale = property( _getScale, _setScale )
     inverse = property( _getInverse )
+    transpose = property( _getTranspose )
 
 
 class LinearTransform2D(LinearTransform):
@@ -135,6 +139,8 @@ class MercatorTransform(object):
         result = numpy.array( coords )
         result[::,::2] -= self.longitudeCenter
         result[::,1::2] = mercator_lat( result[::,1::2] )
+        
+        result *= 100
         
         return result
 

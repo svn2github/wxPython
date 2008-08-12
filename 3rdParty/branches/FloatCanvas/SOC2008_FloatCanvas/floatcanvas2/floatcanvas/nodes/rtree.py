@@ -4,6 +4,8 @@
 # in packaged form. If huge trees/lots of spatial queries become an issue
 # we might take a look at it again (or write a pure python implementation).
 
+from ..math.boundingBox import BoundingBox
+
 class RTree(object):
     children = []
     
@@ -13,3 +15,13 @@ class RTree(object):
     
     def addChild( self, child ):
         self.children.append( child )
+
+    
+    def _getBoundingBox(self):
+        bb = BoundingBox( [ [0,0], [0,0] ] )
+        for child in self.children:
+            bb.Merge( child.boundingBox )
+            
+        return bb
+
+    boundingBox = property( _getBoundingBox )

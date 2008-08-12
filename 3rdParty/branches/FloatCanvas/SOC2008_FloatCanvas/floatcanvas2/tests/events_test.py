@@ -6,6 +6,7 @@ sys.path.append( os.path.abspath( '..' ) )
 
 import unittest
 from floatcanvas import events
+from floatcanvas import EventSender
 
 class CallChecker(object):
     def __init__(self, **expected_vars):
@@ -56,6 +57,24 @@ class TestNode(unittest.TestCase):
         #import gc
         #gc.collect()
         #events.send( 'testEvent', value2 = 3 )
+        
+    def testEventSender(self):
+        e = EventSender()
+        
+        e.send( 'testEvent', value1 = 1 )
+        
+        callChecker = CallChecker( value1 = 1 )
+        e.subscribe( callChecker, 'testEvent',  )
+        e.send( 'testEvent', value1 = 1 )
+        callChecker.verify(self)        
+
+        e.unsubscribe( callChecker, 'testEvent' )
+        callChecker.verifyNotCalled(self)     
+
+        e.subscribe( callChecker.receiveKeywords, 'testEvent' )
+        e.send( 'testEvent', value1 = 1 )
+        callChecker.verifyKeywords(self)        
+        
     
 if __name__ == '__main__':
     unittest.main()

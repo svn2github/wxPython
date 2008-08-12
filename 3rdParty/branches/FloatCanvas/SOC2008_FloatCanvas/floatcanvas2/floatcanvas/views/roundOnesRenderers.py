@@ -1,5 +1,5 @@
 from baseRenderer import BaseRenderer
-from ..models import IEllipse
+from ..models import IEllipse, IArc
 from ..math import numpy
 
 
@@ -15,3 +15,15 @@ class DefaultEllipseRenderer(BaseRenderer):
         w, h = abs(coords[1] - coords[0]).tolist()
 
         return renderer.CreateEllipse( x, y, w, h )
+
+
+class DefaultArcRenderer(BaseRenderer):
+    can_render = IArc
+
+    def doCalcCoords(self, model):
+        return numpy.array( [0, 0] )
+           
+    def doCreate(self, renderer, coords):
+        x, y = coords.tolist()
+
+        return renderer.CreateArc( x, y, self.model.radius, self.model.startAngle, self.model.endAngle, self.model.clockwise )

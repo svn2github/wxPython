@@ -18,12 +18,11 @@ class Circle(DefaultModelEventSender):
 class Arc(object):
     implements_interfaces = IArc
 
-    def __init__( self, radius ):
+    def __init__( self, radius, startAngle, endAngle, clockwise ):
         self.radius = radius
-    # radius prop
-    # startAngle, endAngle props
-    # clockwise prop
-    pass
+        self.startAngle = startAngle
+        self.endAngle = endAngle
+        self.clockwise = clockwise
 
 
 # ----- adapters -------

@@ -12,6 +12,12 @@ class ConstantTable(object):
 
     def getEnum(cls, kind, value):
         enum_name = '%s_%s' % (kind.upper(), value.upper())
-        return getattr(wx, enum_name)
+        return cls.getValue(enum_name)
 
     getEnum = classmethod(getEnum)
+
+
+    def getValue(cls, value):
+        return getattr(wx, value.upper())
+
+    getValue = classmethod(getValue)

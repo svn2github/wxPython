@@ -6,17 +6,27 @@ class GCPath(object):
     
     def __init__(self, renderer):
         self.renderer = renderer
-        self.GC = GC = renderer.GC
-        self.path = GC.CreatePath()
+        self.path = renderer.wx_renderer.CreatePath()
+        
+    def Render(self, fillStyle = 'oddeven'):
+        fill_mode = self.renderer.fill_mode
+        if fill_mode == 'line':
+            self.Stroke()
+        elif fill_mode == 'fill':
+            self.Fill()
+        elif fill_mode == 'fill_and_line':
+            self.FillAndStroke()
+        else:
+            raise ValueError(' invalid fill_mode %s' % fill_mode )
 
-    def Draw(self, fillStyle = 'oddeven'):
-        return self.GC.DrawPath(self.path, ConstantTable.get(fillStyle) )
+    def FillAndStroke(self, fillStyle = 'oddeven'):
+        return self.renderer.GC.DrawPath(self.path, ConstantTable.get(fillStyle) )
     
     def Fill(self, fillStyle = 'oddeven'):
-        return self.GC.DrawPath(self.path, ConstantTable.get(fillStyle) )    
+        return self.renderer.GC.FillPath(self.path, ConstantTable.get(fillStyle) )    
 
     def Stroke(self):
-        return self.GC.StrokePath(self.path)
+        return self.renderer.GC.StrokePath(self.path)
 
     # maps all the other functions
     def __getattr__(self, name):
@@ -26,67 +36,86 @@ class GCPath(object):
 class GCFont(object):
     def __init__(self, renderer, size, family, style, weight, underlined, faceName, colour):
         self.renderer = renderer
-        self.GC = GC = renderer.GC
-        family = ConstantTable.getEnum( 'fontfamily', family)
-        style = ConstantTable.getEnum( 'fontstyle', style)
-        weight = ConstantTable.getEnum( 'fontweight', weight)
-        font = wx.Font( size, family, style, weight, underlined, faceName )
-        self.font = GC.CreateFont( font, colour )
+        self.size = size
+        self.family = family
+        self.style = style
+        self.weight = weight
+        self.underlined = underlined
+        self.faceName = faceName
+        self.colour = colour
+        self.create()
+        
+    def create(self):
+        family = ConstantTable.getEnum( 'fontfamily', self.family)
+        style = ConstantTable.getEnum( 'fontstyle', self.style)
+        weight = ConstantTable.getEnum( 'fontweight', self.weight)
+        font = wx.Font( self.size, family, style, weight, self.underlined, self.faceName )
+        self.font = self.renderer.wx_renderer.CreateFont( font, self.colour )
 
     def Activate(self):
-        if self.renderer.active_font == self:
-            return
+        #if self.renderer.active_font == self:
+        #    return
         self.renderer.active_font = self
-        self.GC.SetFont(self.font)
+        self.renderer.GC.SetFont(self.font)
 
 
 class GCBrush(object):
     def __init__(self, renderer, kind, *args, **keys):
         self.renderer = renderer
-        self.GC = GC = renderer.GC
+        wx_renderer = renderer.wx_renderer
         self.kind = kind
         if kind == 'plain':
-            brush = GC.CreateBrush( wx.Brush( *args, **keys ) )
+            brush = wx_renderer.CreateBrush( wx.Brush( *args, **keys ) )
         elif kind == 'linearGradient':
-            brush = GC.CreateLinearGradientBrush( *args, **keys )
+            brush = wx_renderer.CreateLinearGradientBrush( *args, **keys )
         elif kind == 'radialGradient':
-            brush = GC.CreateRadialGradientBrush( *args, **keys )
+            brush = wx_renderer.CreateRadialGradientBrush( *args, **keys )
         elif kind is None:
-            brush = GC.CreateBrush( wx.NullBrush )
+            brush = wx_renderer.CreateBrush( wx.NullBrush )
         else:
             raise ValueError('Wrong kind for brush %s' % kind)
 
         self.brush = brush
 
     def Activate(self):
-        if self.renderer.active_brush == self:
-            return
+        #if self.renderer.active_brush == self:
+        #    return
         self.renderer.active_brush = self
-        self.GC.SetBrush(self.brush)
+        self.renderer.GC.SetBrush(self.brush)
 
 class GCPen(object):
-    def __init__(self, renderer, colour, **keys):
-        # keys: width = 1, style = 'solid', stipple_bmp = None, cap = 'round', dashes = None, join = 'round', pen = None        
-
+    def __init__(self, renderer, colour, width, style, cap, join, dashes, stipple, wx_pen):
         self.renderer = renderer
-        self.GC = GC = renderer.GC
+        self.colour = colour
+        self.width = width
+        self.style = style
+        self.cap = cap
+        self.join = join
+        self.dashes = dashes
+        self.stipple = stipple
+        self.wx_pen = wx_pen
+        self.create()
         
-        if 'pen' in keys:
-            pen = keys['pen']
-            del keys['pen']
+    def create(self):
+        if self.wx_pen is not None:
+            pen = self.wx_pen
         else:
-            pen = wx.Pen(colour)
+            pen = wx.Pen( self.colour, self.width, ConstantTable.getValue( self.style ) )
             
-        for name, value in keys.iteritems():
-            getattr( pen, 'Set%s' % (name.capitalize(),))( value )
-
-        self.pen = GC.CreatePen( pen )
+        pen.SetCap( ConstantTable.getEnum( 'cap', self.cap) )
+        pen.SetJoin( ConstantTable.getEnum( 'join', self.join) )
+        if self.dashes is not None:
+            pen.SetDashes( self.dashes )
+        if self.stipple is not None:
+            pen.SetStipple( self.stipple )
+            
+        self.pen = self.renderer.wx_renderer.CreatePen( pen )
 
     def Activate(self):
-        if self.renderer.active_pen == self:
-            return
+        #if self.renderer.active_pen == self:
+        #    return
         self.renderer.active_pen = self
-        self.GC.SetPen(self.pen)
+        self.renderer.GC.SetPen(self.pen)
                 
 
 class GCBitmap(object):
@@ -94,9 +123,8 @@ class GCBitmap(object):
 
     def __init__(self, renderer, bmp):
         self.renderer = renderer
-        self.GC = renderer.GC
         #self.bitmap = renderer.CreateBitmap()
         self.bmp = bmp
 
     def Draw(self, x, y, w, h):
-        self.GC.DrawBitmap(self.bmp, x, y, w, h)
+        self.renderer.GC.DrawBitmap(self.bmp, x, y, w, h)

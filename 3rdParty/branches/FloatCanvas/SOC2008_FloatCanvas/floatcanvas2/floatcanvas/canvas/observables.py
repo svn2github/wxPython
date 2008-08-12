@@ -17,10 +17,10 @@ def makeObservable( klass, attribs, msg, prefix = 'Observable', observer_type = 
 # create the observable versions of all classes here
 from ..math import ArbitraryTransform, CompoundTransform, LinearAndArbitraryCompoundTransform, LinearTransform, LinearTransform2D, MercatorTransform
 
-from ..nodes import Node, NodeWithTransform, NodeWithBounds, RenderableNode, DefaultRenderableNode, Camera
+from ..nodes import Node, NodeWithTransform, NodeWithBounds, RenderableNode, BasicRenderableNode, DefaultRenderableNode, Camera
 
-from ..models import Rectangle, Circle, Ellipse, Text
-from ..views import DefaultRectangleRenderer, DefaultView
+from ..models import Rectangle, RoundedRectangle, Circle, Ellipse, Arc, Text, Line, LineLength, Lines, LinesList, LineSegments, LineSegmentsSeparate, Bitmap, CubicSpline, QuadraticSpline, Polygon, PolygonList, Arrow, AngleArrow
+from ..views import DefaultRectangleRenderer, DefaultRoundedRectangleRenderer, DefaultEllipseRenderer, DefaultArcRenderer, DefaultTextRenderer, DefaultLinesListRenderer, DefaultLineSegmentsSeparateRenderer, DefaultBitmapRenderer, DefaultCubicSplineRenderer, DefaultQuadraticSplineRenderer, DefaultPolygonListRenderer, DefaultArrowRenderer, DefaultView
 from ..looks import SolidColourLook, RadialGradientLook, LinearGradientLook, OutlineLook
 
 info = \
@@ -36,16 +36,40 @@ info = \
     NodeWithTransform       : ('transform', '_parent', '_children'),
     NodeWithBounds          : ('transform', '_parent', '_children'),
     RenderableNode          : ('transform', '_parent', '_children'),
-    DefaultRenderableNode   : ('transform', '_parent', '_children', 'model', 'view'),
+    BasicRenderableNode     : ('transform', '_parent', '_children', 'model', 'view'),
+    DefaultRenderableNode   : ('transform', '_parent', '_children', 'model', 'view', 'render_to_surface_enabled'),
     Camera                  : ('transform', '_parent', '_children'),
         
     Rectangle               : ('size',),
+    RoundedRectangle        : ('size', 'radius'),
     Circle                  : ('radius',),
     Ellipse                 : ('size',),
+    Arc                     : ('radius', 'startAngle', 'endAngle', 'clockwise'),
     Text                    : ('text',),
+    Line                    : ('startPoint', 'endPoint'),
+    LineLength              : ('length',),
+    Lines                   : ('points',),
+    LinesList               : ('lines_list',),
+    LineSegments            : ('points',),
+    LineSegmentsSeparate    : ('startPoints', 'endPoints'),
+    Bitmap                  : ('pixels', 'useRealSize'),
+    CubicSpline             : ('points',),
+    QuadraticSpline         : ('points',),
+    Polygon                 : ('points',),
+    PolygonList             : ('polygons',),
+    Arrow                   : ('startPoint', 'endPoint', 'headSize', 'headFilled'),
+    AngleArrow              : ('startPoint', 'length', 'angle', 'headSize', 'headFilled'),
     #Points                  : ('points', 'shape', 'size'),
         
     DefaultRectangleRenderer: ('model', 'transform'),
+    DefaultRoundedRectangleRenderer: ('model', 'transform'),
+    DefaultEllipseRenderer  : ('model', 'transform'),
+    DefaultArcRenderer      : ('model', 'transform'),
+    DefaultTextRenderer     : ('model', 'transform'),
+    DefaultLinesListRenderer : ('model', 'transform'),
+    DefaultLineSegmentsSeparateRenderer : ('model', 'transform'),
+    DefaultBitmapRenderer   : ('model', 'transform'),
+    DefaultPolygonListRenderer : ('model', 'transform'),
     DefaultView             : ('look', 'transform'),
         
     SolidColourLook         : ('line_colour', 'fill_kind', 'args'),

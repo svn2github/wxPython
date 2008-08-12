@@ -15,13 +15,14 @@ class RecursiveAttributeObservable(DirtyObservable):
 
         object.__setattr__( self, name, value )
         
+
         if name in self.observer_attribs:
-            self.dirty = True
-            
             try:
                 getattr(self, name).subscribe( self._forwardDirty, self.notify_msg )
             except:
                 pass
+
+            self.dirty = True
             
     def _forwardDirty(self, *args, **keys):
         self.dirty = True

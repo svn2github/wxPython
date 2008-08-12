@@ -4,8 +4,6 @@ sys.path.append( os.path.abspath( '..' ) )
 
 import wx
 import floatcanvas as fc
-from floatcanvas.math.boundingBox import fromPoint
-from floatcanvas.nodes.spatialQuery import QueryWithPrimitive
 
 def start():
     #  setup very basic window
@@ -13,19 +11,26 @@ def start():
     frame = wx.Frame( None, wx.ID_ANY, 'FloatCanvas2 demo', size = (800, 600) )
     frame.Show()
         
-    canvas = fc.SimpleCanvas( window = frame )
+    canvas = fc.FloatCanvas( window = frame )
     #canvas.dirty = False
 
-    r1 = canvas.create( 'Rectangle', (100, 200), name = 'r1', pos = (200, 400), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )
-    r2 = canvas.create( 'Rectangle', (200, 100), name = 'r2', pos = (300, 300), rotation = 20, look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )    
+    r1 = canvas.create( 'Rectangle', (100, 200), name = 'r1', pos = (0, 0), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )
+    r2 = canvas.create( 'Rectangle', (200, 100), name = 'r2', pos = (100, 100), rotation = 20, look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )    
+    r2 = canvas.create( 'Circle', 200, name = 'c1', pos = (200, 200), rotation = 20, look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red', line_width = 50 )  )
+    
+
+    crazyTransform = False
+    if crazyTransform:
+        canvas.camera.position = (100, 73)
+        canvas.camera.rotation = 12
+        canvas.camera.zoom = (0.5, 0.8)
+    else:
+        canvas.zoomToExtents()
 
     # the default cam, looking at 500, 500
-    canvas.camera.position = (0, 0)
-    canvas.camera.zoom = (1.0, 1.0)
     
-    def doQuery( (x, y), exact ):
-        query = QueryWithPrimitive( primitive = fromPoint( (x, y) ), exact = exact )
-        pickedNodes = canvas.performSpatialQuery( query )
+    def doQuery( screen_pnt, exact ):
+        pickedNodes = canvas.hitTest( screen_pnt, exact )
         for node in pickedNodes:
             print 'Picked: ', node.name
         print '-' * 20

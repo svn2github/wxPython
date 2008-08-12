@@ -3,7 +3,7 @@ import os.path
 sys.path.append( os.path.abspath( '..' ) )
 
 import unittest
-from floatcanvas.canvas.observables import makeObservable, ObservableDefaultRenderableNode, ObservableRectangle
+from floatcanvas.canvas.observables import makeObservable, ObservableDefaultRenderableNode, ObservableRectangle, ObservableLinearTransform2D, ObservableMercatorTransform, ObservableLinearAndArbitraryCompoundTransform
 from floatcanvas.patterns.observer.observable import Observable
 from floatcanvas.patterns.observer.recursiveAttributeObservable import RecursiveListItemObservable
 from floatcanvas.events import subscribe
@@ -36,10 +36,10 @@ class Test(object):
     def __init__(self):
         self.x = 5
 
-ObservableTest = makeObservable( Test, ['x'], 'changeEvt' )
-ObservableLinearAndArbitraryCompoundTransform = makeObservable( LinearAndArbitraryCompoundTransform, ['transform1', 'transform2'], 'changeEvt' )
-ObservableLinearTransform2D = makeObservable( LinearTransform2D, ['translation', 'position', 'pos', 'scale', 'rotation'], 'changeEvt' )
-ObservableMercatorTransform = makeObservable( MercatorTransform, ['longitudeCenter'], 'changeEvt' )
+ObservableTest = makeObservable( Test, ['x'], 'attribChanged' )
+#ObservableLinearAndArbitraryCompoundTransform = makeObservable( LinearAndArbitraryCompoundTransform, ['transform1', 'transform2'], 'changeEvt' )
+#ObservableLinearTransform2D = makeObservable( LinearTransform2D, ['translation', 'position', 'pos', 'scale', 'rotation'], 'changeEvt' )
+#ObservableMercatorTransform = makeObservable( MercatorTransform, ['longitudeCenter'], 'changeEvt' )
 
 class TestNode(unittest.TestCase):
     def setUp(self):
@@ -68,7 +68,7 @@ class TestNode(unittest.TestCase):
         o = ObservableTest()
         eventCatcher.checkNotCalled( self )
 
-        o.subscribe( eventCatcher, 'changeEvt' )
+        o.subscribe( eventCatcher, 'attribChanged' )
         eventCatcher.checkCalled( self )
         o.dirty = False
         
@@ -100,7 +100,7 @@ class TestNode(unittest.TestCase):
         tm = ObservableMercatorTransform()
         tc = ObservableLinearAndArbitraryCompoundTransform(tl, tm)
 
-        tc.subscribe( eventCatcher, 'changeEvt' )
+        tc.subscribe( eventCatcher, 'attribChanged' )
         eventCatcher.checkCalled( self )
         tc.dirty = tl.dirty = tm.dirty = False
 
@@ -118,7 +118,7 @@ class TestNode(unittest.TestCase):
         self.assert_( type(tl * tl) == type(tl) )
         
     def testObservableDefaultRenderableNode(self):
-        o = ObservableDefaultRenderableNode( model = None, view = None, transform = 'empty_transform' )
+        o = ObservableDefaultRenderableNode( model = None, view = None, transform = ObservableLinearTransform2D(), render_to_surface_enabled = False, surface_size = None, renderer = None )
         self.assert_( o.dirty )
         o.dirty = False
         self.assert_( not o.dirty )
@@ -132,8 +132,17 @@ class TestNode(unittest.TestCase):
         self.assert_( o.model.dirty )
         self.assert_( o.dirty )
         o.dirty = False
+        o.model.dirty = False
         
-        o2 = ObservableDefaultRenderableNode( model = None, view = None, transform = 'empty_transform' )
+        self.assert_( not o.transform.dirty )
+        self.assert_( not o.dirty )
+        o.transform.position = (666, 666)
+        self.assert_( o.transform.dirty )
+        self.assert_( o.dirty )
+        o.transform = False
+        o.dirty = False
+
+        o2 = ObservableDefaultRenderableNode( model = None, view = None, transform = ObservableLinearTransform2D(), render_to_surface_enabled = False, surface_size = None, renderer = None )
         o2.dirty = False
         o.addChild( o2 )
         self.assert_( o2.dirty )
@@ -145,14 +154,14 @@ class TestNode(unittest.TestCase):
         
         eventCatcher.checkNotCalled( self )
         o = RecursiveListItemObservable()
-        o.notify_msg = 'changeEvt'
+        o.notify_msg = 'attribChanged'
         o2 = RecursiveListItemObservable()
-        o2.notify_msg = 'changeEvt'
+        o2.notify_msg = 'attribChanged'
         o3 = ObservableTest()
         o3.dirty = False
         eventCatcher.checkNotCalled( self )
 
-        o.subscribe( eventCatcher, 'changeEvt' )
+        o.subscribe( eventCatcher, 'attribChanged' )
         eventCatcher.checkNotCalled( self )
 
         o.append( o2 )

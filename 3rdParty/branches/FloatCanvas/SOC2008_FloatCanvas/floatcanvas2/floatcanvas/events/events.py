@@ -1,15 +1,8 @@
 # We'll use the wx.lib.pubsub module for event sending now, other possibilities
 # include pydispatcher or louie
 
-# note: pubsub isn't the most advanced modules of all. I am using it right now
-#       to minimize the number of external dependencies of fc.
-#       One shortcoming of pubsub is the restriction of using only strings as
-#       topics. pydispatcher does a lot better in that area. This is especially
-#       important if you want to register a subscriber only for a subset of
-#       objects, e.g. a modelChanged event is sent and you want a particular
-#       subscriber to receive only the modelChanged event for a specific model
-#       instead of receiving the modelChanged events of all models. With lots of
-#       objects this might also get a question of performance.
+# note: The main reason for using pubsub is to minimize the number of external
+#       dependencies of fc.
 
 from wx.lib.pubsub import Publisher
 
@@ -37,7 +30,6 @@ class fcEventManager(object):
             evt_type = self.event_types[ event_name ] = self.EventTypeTemplate( event_name, (), {} )
                 
         event_instance = evt_type( **keys )
-        
         return self.publisher.sendMessage( event_name, event_instance )
         
     def subscribe(self, subscriber, event_name ):

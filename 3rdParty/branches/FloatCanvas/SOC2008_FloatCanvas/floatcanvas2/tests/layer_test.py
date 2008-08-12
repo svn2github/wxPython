@@ -14,15 +14,17 @@ def start():
         
     canvas = fc.FloatCanvas( window = frame )
     #canvas.dirty = False
-    
+
+    parent = canvas.create( 'Group', name = 'group node', pos = (100, 0), render_to_surface = True, surface_size = (800, 100) )
     # create 1000 rectangles
-    for i in range(0, 100):
-        r = canvas.create( 'Rectangle', (100, 100), name = 'r%d' % i, pos = (i * 50, 0), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )
+    for i in range(0, 50):
+        r = canvas.create( 'Circle', 80, parent = parent, name = 'r%d' % i, pos = (i * 50, 0), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = (255,0,0,128) )  )
         #r._debugDrawBoundingBoxes = True
 
     # the default cam, looking at 0, 0
     canvas.camera.position = (0, 0)
-    canvas.camera.zoom = (1.0, 1.0)
+    canvas.camera.rotation = 0
+    canvas.camera.zoom = (0.8, 0.8)
     
     def print_culled_nodes():
         try:
@@ -36,17 +38,12 @@ def start():
     rotate = True
     if rotate:
         import time
-        for i in range(0, 361):
-            canvas.camera.rotation = i
-            zoom = 1.0 / (i+1) * 25
-            canvas.camera.zoom = ( zoom, zoom )
+        for i in range(-600, 3000, 5):
+            #parent.rotation = i
+            canvas.camera.position = (i, 0)
             canvas.Render()
-            
-            if i == 50:
-                canvas.saveScreenshot( 'culling_test_screenshot.png' )
-            
             print_culled_nodes()
-            time.sleep(0.01)
+            #time.sleep(0.01)
         
     wx.CallLater( 1000, print_culled_nodes )
     

@@ -104,7 +104,12 @@ class NodeWithBounds(NodeWithTransform):
         result = NodeWithTransform._setParentInternal(self, value)
         
         if not self._parent is None:
-            self.root._registerBoundedNode(self)
+            try:
+                rbn = self.root._registerBoundedNode
+            except AttributeError:
+                pass
+            else:
+                rbn(self)
 
         return result
 

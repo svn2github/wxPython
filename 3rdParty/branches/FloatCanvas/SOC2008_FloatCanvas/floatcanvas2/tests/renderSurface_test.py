@@ -15,11 +15,17 @@ def start():
     canvas = fc.FloatCanvas( window = frame )
     #canvas.dirty = False
     
+    #parent = canvas.create( 'Group', name = 'parent', render_to_surface = False, look = fc.NoLook )
     # create 1000 rectangles
-    for i in range(0, 100):
-        r = canvas.create( 'Rectangle', (100, 100), name = 'r%d' % i, pos = (i * 50, 0), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )
+    #for i in range(0, 100):
+    #    r = canvas.create( 'Rectangle', (100, 100), parent = parent, name = 'r%d' % i, pos = (i * 50, 0), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )
         #r._debugDrawBoundingBoxes = True
-
+    
+    # the render to surface node
+    r = canvas.create( 'Rectangle', (100, 100), name = 'rect', pos = (300, 0), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' ), render_to_surface = True )
+    # the overlay to verify the correct rendering
+    r = canvas.create( 'Rectangle', (100, 100), name = 'rect', pos = (300, 0), look = fc.OutlineLook( line_colour = 'black', width = 5 ), render_to_surface = False, where = 'front' )
+    
     # the default cam, looking at 0, 0
     canvas.camera.position = (0, 0)
     canvas.camera.zoom = (1.0, 1.0)
@@ -37,16 +43,12 @@ def start():
     if rotate:
         import time
         for i in range(0, 361):
-            canvas.camera.rotation = i
+            #canvas.camera.rotation = i
             zoom = 1.0 / (i+1) * 25
             canvas.camera.zoom = ( zoom, zoom )
-            canvas.Render()
-            
-            if i == 50:
-                canvas.saveScreenshot( 'culling_test_screenshot.png' )
-            
+            canvas.Render( 'white' )
             print_culled_nodes()
-            time.sleep(0.01)
+            #time.sleep(0.01)
         
     wx.CallLater( 1000, print_culled_nodes )
     

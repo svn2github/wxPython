@@ -48,15 +48,16 @@ class BaseRenderer(object):
             # check if the non-linear part is the same. If it is, no need to
             # recreate the shape
             if self._lastNonLinearTransform != transform.transform2:
-                self.transformedCoords = transform.transform2( self.coords )
+                if type(self.coords) == list:
+                    self.transformedCoords = [ transform.transform2( coord ) for coord in self.coords ]
+                else:
+                    self.transformedCoords = transform.transform2( self.coords )
                 # need to recreate our object since the coords changed
                 self.create()
         else:
             raise ValueError( 'NotImplemented %s %s' % (transform, type(transform)) )
 
-        self.transformedCoords = self.coords
-
-        
+       
     def doCalcCoords(self, model):
         # override
         raise NotImplementedError()
@@ -77,7 +78,11 @@ class BaseRenderer(object):
 
     def _recalculateBoundingBox(self):
         bb = self.localBoundingBox
-        self._boundingBox = boundingBoxModule.fromPoints( self.transform( bb.corners ) )
+        try:
+            transform = self.transform.transform1
+        except AttributeError:
+            transform = self.transform
+        self._boundingBox = boundingBoxModule.fromPoints( transform( bb.corners ) )
 
     def _getBoundingBox(self):
         return self._boundingBox

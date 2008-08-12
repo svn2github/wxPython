@@ -2,51 +2,74 @@ import wx
 from constantTable import ConstantTable
 from buffering import MemoryDoubleBuffer, SingleBuffer
 from graphicsObjects import GCPath, GCFont, GCBrush, GCPen, GCBitmap
-from renderObjects import GCRenderObjectPath, GCRenderObjectText
+from renderObjects import GCRenderObjectPath, GCRenderObjectText, GCRenderObjectBitmap
+from renderSurface import RenderSurface
 
 class GCRenderer(object):
     # implements(IRenderer)
 
     def __init__(self, window = None, dc = None, native_window = None, native_dc = None, wx_renderer = None, double_buffered = True):
+        if wx_renderer is None:
+            wx_renderer = wx.GraphicsRenderer.GetDefaultRenderer()
+            
+        self.wx_renderer = wx_renderer
+
         self.double_buffered = double_buffered
 
-        if double_buffered and window and (not window.IsDoubleBuffered()):
-            self.draw_buffer = MemoryDoubleBuffer( window )
+        # force drawing to memory for now. This way we can easily switch the bitmap
+        # for render to surface operations. if the gc was created with a client dc
+        # this is not easily possible
+        #if double_buffered and window and (not window.IsDoubleBuffered()):
+        if True:
+            self.main_render_surface = self.active_render_surface = self.CreateRenderSurface( window.GetClientSizeTuple() )
+            self.framebuffer = MemoryDoubleBuffer( window, self.main_render_surface )
 
             def disable_event(*args,**keys):
                 pass            
             window.Bind(wx.EVT_ERASE_BACKGROUND, disable_event)
         else:
-            self.draw_buffer = SingleBuffer( window )
+            self.framebuffer = SingleBuffer( window )
             
-        window = None
-        dc = self.draw_buffer.dc
+        #window = None
+        #dc = self.dc        
+        #
+        #if window or dc:
+        #    func = 'CreateContext'
+        #elif native_window:
+        #    func = 'CreateContextFromNativeWindow'
+        #elif native_dc:
+        #    func = 'CreateContextFromNativeContext'
+        #else:
+        #    raise ValueError('You have to supply exactly one of the window, dc, native_context or native_dc arguments!')
 
-        if window or dc:
-            func = 'CreateContext'
-        elif native_window:
-            func = 'CreateContextFromNativeWindow'
-        elif native_dc:
-            func = 'CreateContextFromNativeContext'
-        else:
-            raise ValueError('You have to supply exactly one of the window, dc, native_context or native_dc arguments!')
-
-        if wx_renderer is None:
-            renderer = wx.GraphicsRenderer.GetDefaultRenderer()
-            
-        self.renderer = renderer
-        self.GC = getattr(self.renderer, func)( window or dc or native_window or native_dc )
-        self.transformMatrix = self.CreateMatrix()
+        #self.GC = getattr(self.renderer, func)( window or dc or native_window or native_dc )
+        #self.transformMatrix = self.CreateMatrix()
         
         self.active_font = self.active_brush = self.active_pen = None
+        self.fill_mode = 'fill_and_line'
         
-    def Clear(self):
-        self.draw_buffer.Clear()
+    def CreateRenderSurface(self, size):
+        rs = RenderSurface( size, self )
+        return rs
+        
+    def Clear(self, background_color = None):
+        self.framebuffer.Clear( background_color )
     
     def Present(self):
-        self.draw_buffer.Present()
+        self.framebuffer.Present()
 
-    # transform fucntions
+    def getScreenshot(self, file_format):
+        return self.main_render_surface.getData( file_format )
+
+    def _setSize(self, size):
+        self.framebuffer.size = size
+        
+    def _getSize(self):
+        return self.framebuffer.size
+        
+    screen_size = property( _getSize, _setSize )
+    
+        # transform fucntions
     #def SetTransform(self, transform):
     #    self.transformMatrix.Set( *list(transform.transpose().flat) )
     #    #self.transformMatrix.Set( transform[0][0], transform[1][0], transform[0][1], transform[1][1] ,transform[0][2], transform[1][2] )
@@ -63,8 +86,8 @@ class GCRenderer(object):
     def CreateBitmap(self, bmp):
         return GCBitmap(self, bmp)
 
-    def CreatePen(self, colour, **keys ):
-        return GCPen(self, colour, **keys)
+    def CreatePen(self, colour, width = 1, style = 'solid', cap = 'round', join = 'round', dashes = None, stipple = None, wx_pen = None ):
+        return GCPen(self, colour, width, style, cap, join, dashes, stipple, wx_pen)
 
     # kind = 'plain', 'linearGradient', 'radialGradient'
     def CreateBrush(self, kind, *args, **keys):
@@ -73,17 +96,6 @@ class GCRenderer(object):
     def CreateFont(self, *args, **keys):
         return GCFont(self, *args, **keys)
     
-    # render object creators
-    def _getRenderObject(self, func_name, *args, **keys):
-        path = self.CreatePath()
-        getattr( path, func_name )( *args, **keys )
-        return GCRenderObjectPath( self, path )
-    
-    # primitives support by GC:
-    # Text, RotatedText, Bitmap, Icon, Line, Lines, LineSegments, Rectangle, Ellipse, RoundedRectangle, Curve, QuadCurve, Arc
-    def CreateRenderObject(self, kind, *args, **keys):
-        return self._getRenderObject( 'Add%s' % kind, *args, **keys )
-
     def CreateRectangle(self, x, y, w, h):
         path = self.CreatePath()
         path.AddRectangle( x, y, w, h )
@@ -99,119 +111,70 @@ class GCRenderer(object):
         path.AddEllipse( x, y, w, h )
         return GCRenderObjectPath( self, path )
 
+    def CreateArc(self, x, y, r, startAngle, endAngle, clockwise):
+        path = self.CreatePath()
+        path.AddArc( x, y, r, startAngle, endAngle, clockwise )
+        return GCRenderObjectPath( self, path )
+
+    def CreateQuadraticSpline(self, controlPoints):
+        path = self.CreatePath()
+        if len(controlPoints) != 3:
+            raise ValueError( 'controlPoints needs to be of length 3, got %d' % len(controlPoints) )
+        path.MoveToPoint( controlPoints[0][0], controlPoints[0][1] )
+        path.AddQuadCurveToPoint( controlPoints[1][0], controlPoints[1][1], controlPoints[2][0], controlPoints[2][1] )
+        return GCRenderObjectPath( self, path )
+
+    def CreateCubicSpline(self, controlPoints):
+        path = self.CreatePath()
+        if len(controlPoints) != 4:
+            raise ValueError( 'controlPoints needs to be of length 4, got %d' % len(controlPoints) )
+        path.MoveToPoint( controlPoints[0][0], controlPoints[0][1] )
+        path.AddCurveToPoint( controlPoints[1][0], controlPoints[1][1], controlPoints[2][0], controlPoints[2][1], controlPoints[3][0], controlPoints[3][1] )
+        return GCRenderObjectPath( self, path )
+
     def CreateText(self, *args, **keys):
         return GCRenderObjectText( self, *args, **keys)
 
-    def CreateListRenderObject(self, kind, offsets, x, y, w, h):
+    def CreateLinesList(self, lines_list, close = False):
         path = self.CreatePath()
-        for offset in offsets:
-            path.AddRectangle( x[0] + offset[0], y[0] + offset[0], w, h )
-        return GCRenderObjectText( self, *args, **keys)
+        for line in lines_list:
+            points = line
+            if len(points) > 0:
+                path.MoveToPoint( points[0][0], points[0][1] )
+                for pnt in points[1:]:
+                    path.AddLineToPoint( pnt[0], pnt[1] )
+                if close:
+                    path.CloseSubpath()
+        return GCRenderObjectPath( self, path)
 
-
-
-    # maps all the other functions
-    def __getattr__(self, name):
-        return getattr(self.GC, name)
-    
-
-
-class GCPath(object):
-    # implements(IPath)
-    
-    def __init__(self, renderer):
-        self.renderer = renderer
-        self.GC = GC = renderer.GC
-        self.path = GC.CreatePath()
-
-    def Draw(self, fillStyle = 'oddeven'):
-        return self.GC.DrawPath(self.path, ConstantTable.get(fillStyle) )
-    
-    def Fill(self, fillStyle = 'oddeven'):
-        return self.GC.DrawPath(self.path, ConstantTable.get(fillStyle) )    
-
-    def Stroke(self):
-        return self.GC.StrokePath(self.path)
-
-    # maps all the other functions
-    def __getattr__(self, name):
-        return getattr(self.path, name)
-
-
-class GCFont(object):
-    def __init__(self, renderer, size, family, style, weight, underlined, faceName, colour):
-        self.renderer = renderer
-        self.GC = GC = renderer.GC
-        family = ConstantTable.getEnum( 'fontfamily', family)
-        style = ConstantTable.getEnum( 'fontstyle', style)
-        weight = ConstantTable.getEnum( 'fontweight', weight)
-        font = wx.Font( size, family, style, weight, underlined, faceName )
-        self.font = GC.CreateFont( font, colour )
-
-    def Activate(self):
-        if self.renderer.active_font == self:
-            return
-        self.renderer.active_font = self
-        self.GC.SetFont(self.font)
-
-
-class GCBrush(object):
-    def __init__(self, renderer, kind, *args, **keys):
-        self.renderer = renderer
-        self.GC = GC = renderer.GC
-        self.kind = kind
-        if kind == 'plain':
-            brush = GC.CreateBrush( wx.Brush( *args, **keys ) )
-        elif kind == 'linearGradient':
-            brush = GC.CreateLinearGradientBrush( *args, **keys )
-        elif kind == 'radialGradient':
-            brush = GC.CreateRadialGradientBrush( *args, **keys )
-        elif kind is None:
-            brush = GC.CreateBrush( wx.NullBrush )
-        else:
-            raise ValueError('Wrong kind for brush %s' % kind)
-
-        self.brush = brush
-
-    def Activate(self):
-        if self.renderer.active_brush == self:
-            return
-        self.renderer.active_brush = self
-        self.GC.SetBrush(self.brush)
-
-class GCPen(object):
-    def __init__(self, renderer, colour, **keys):
-        # keys: width = 1, style = 'solid', stipple_bmp = None, cap = 'round', dashes = None, join = 'round', pen = None        
-
-        self.renderer = renderer
-        self.GC = GC = renderer.GC
+    def CreateLineSegmentsSeparate(self, startPoints, endPoints):
+        path = self.CreatePath()
+        if len(startPoints) != len(endPoints):
+            raise ValueError( 'number of start and end points must be equal (%s %s)' % (startPoints, endPoints))
         
-        if 'pen' in keys:
-            pen = keys['pen']
-            del keys['pen']
-        else:
-            pen = wx.Pen(colour)
+        for startPoint, endPoint in zip( startPoints, endPoints ):
+            path.MoveToPoint( startPoint[0], startPoint[1] )
+            path.AddLineToPoint( endPoint[0], endPoint[1] )
             
-        for name, value in keys.iteritems():
-            getattr( pen, 'Set%s' % (name.capitalize(),))( value )
+        return GCRenderObjectPath( self, path)
 
-        self.pen = GC.CreatePen( pen )
-
-    def Activate(self):
-        if self.renderer.active_pen == self:
-            return
-        self.renderer.active_pen = self
-        self.GC.SetPen(self.pen)
-                
-
-class GCBitmap(object):
-    # implements (IBitmap)
-
-    def __init__(self, renderer, bmp):
-        self.renderer = renderer
-        self.GC = renderer.GC
-        #self.bitmap = renderer.CreateBitmap()
-        self.bmp = bmp
-
-    def Draw(self, x, y, w, h):
-        self.GC.DrawBitmap(self.bmp, x, y, w, h)
+    def CreateBitmap(self, pixels, use_real_size):
+        return GCRenderObjectBitmap( self, pixels, use_real_size )
+    
+    def CreateCompositeRenderObject(self, subobjects):
+        # if all subobjects are path object, then merge the pathes into one
+        for subobject in subobjects:
+            if not isinstance( subobject, GCRenderObjectPath ):
+                raise ValueError( 'All composite subobjects must be path objects!' )
+            
+        path = self.CreatePath()
+        for subobject in subobjects:
+            path.AddPath( subobject.path.path )
+            
+        return GCRenderObjectPath( self, path )
+    
+    # maps all the other functions
+    def __getattr__(self, name):
+        if name == 'GC':
+            return self.active_render_surface.gc
+        return getattr(self.active_render_surface.gc, name)
