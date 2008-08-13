@@ -332,3 +332,16 @@ class SimpleCanvas(Canvas):
         self.renderer.framebuffer.size = size
         
     screen_size = property( _getScreenSize, _setScreenSize )
+    
+     
+    def _getBoundingBox(self):
+        return boundingBox.BoundingBox( [ (0,0), (0,0) ] )
+    
+    boundingBox = property( _getBoundingBox )
+    
+    def _getLocalBoundingBox(self):
+        return boundingBox.BoundingBox( [ (0,0), (0,0) ] )
+    
+    localBoundingBox = property( _getLocalBoundingBox )
+    
+    
