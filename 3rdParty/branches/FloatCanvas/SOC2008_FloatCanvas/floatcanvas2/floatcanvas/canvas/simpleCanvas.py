@@ -23,6 +23,12 @@ class SimpleCanvas(Canvas):
 
         self.renderer = renderer
 
+        if 'backgroundColor' in keys:
+            self.backgroundColor = keys['backgroundColor']
+            del keys['backgroundColor']
+        else:
+            self.backgroundColor = None
+        
         Canvas.__init__(self, self.renderer, False, None, None, None, observables.ObservableLinearTransform2D(), *args, **keys)
                
         self.camera = observables.ObservableCamera( observables.ObservableLinearTransform2D() )
@@ -182,6 +188,7 @@ class SimpleCanvas(Canvas):
         pass
     
     def Render(self, backgroundColor = None, camera = None, renderChildren = True):
+        backgroundColor = backgroundColor or self.backgroundColor or 'green'
         if camera is None:
             camera = self.camera
         self.renderPolicy.render(self, camera, backgroundColor)

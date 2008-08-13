@@ -4,8 +4,9 @@ from constantTable import ConstantTable
 class RenderSurface(object):
     _activeSurfaces = []
     
-    def __init__(self, size, renderer):
+    def __init__(self, size, renderer, hasAlpha):
         self.renderer = renderer
+        self.hasAlpha = hasAlpha
         self.active = False
         self._size = None
         self.size = size
@@ -17,6 +18,8 @@ class RenderSurface(object):
         #print size
         w, h = self._size = size
         self._bitmap = wx.EmptyBitmap(w, h, 32)
+        if self.hasAlpha:
+            self._bitmap.UseAlpha()
         
         self.dc = wx.MemoryDC( self._bitmap )
         self.gc = self.renderer.wx_renderer.CreateContext( self.dc )
@@ -37,8 +40,14 @@ class RenderSurface(object):
             backgroundBrush = wx.Brush( background_color, style = wx.SOLID )
         else:
             backgroundBrush = wx.NullBrush
+        
         self.dc.SetBackground( backgroundBrush )
         self.dc.Clear()
+        if self.hasAlpha:
+            print 'Warning, alpha channel not cleared because of performance'
+        #for pixel in wx.AlphaPixelData( self._bitmap ):
+        #    values = pixel.Get()[0:3] + (255, )
+        #    pixel.Set( *values )
 
     def Activate(self):
         RenderSurface._activeSurfaces.append( self )
@@ -55,11 +64,6 @@ class RenderSurface(object):
             raise Exception( 'You need to deactivate render surfaces in "stack" order' )
         
         self.active = False
-        # todo: fixme: Now for the weirdest call of all...
-        self.bitmap.UseAlpha()
-        
-        #self._trash = wx.EmptyBitmap(1, 1, 32)
-        #self.dc.SelectObject( self._trash )
         
         try:
             prev_surface = RenderSurface._activeSurfaces[-1]
@@ -77,18 +81,12 @@ class RenderSurface(object):
         if file_format == 'raw':     
             return wx.NativePixelData(self.bitmap).GetPixels().Get()
         
-        img = self.bitmap.ConvertToImage()
-        
-        pixelData = wx.AlphaPixelData(self.bitmap)
-        alphaData = ''
-        for pixel in pixelData:
-            alphaData += chr( pixel.Get()[3] )
-        img.SetAlphaData( alphaData )
+        img = self.bitmap.ConvertToImage()        
         
         import cStringIO
         outputStream = cStringIO.StringIO()
         img.SaveStream( wx.OutputStream(outputStream), ConstantTable.getEnum( 'bitmap_type', file_format ) )
         data = outputStream.getvalue()
         outputStream.close()
-               
+              
         return data

@@ -14,7 +14,7 @@ def start():
     #  setup very basic window
     app = wx.App(0)
     frame = wx.Frame( None, wx.ID_ANY, 'FloatCanvas2 demo', size = (800, 600) )
-    canvas = fc.NavCanvas( frame )
+    canvas = fc.NavCanvas( frame, backgroundColor = 'white' )
     frame.Show()
            
     from loadWorldData import mapPointsAsLineList

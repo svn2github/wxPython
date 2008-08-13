@@ -12,7 +12,7 @@ def start():
     frame = wx.Frame( None, wx.ID_ANY, 'FloatCanvas2 demo', size = (800, 600) )
     frame.Show()
         
-    canvas = fc.FloatCanvas( window = frame )
+    canvas = fc.FloatCanvas( window = frame, backgroundColor = 'white' )
     #canvas.dirty = False
 
     parent = canvas.create( 'Group', name = 'group node', pos = (100, 0), render_to_surface = True, surface_size = (800, 100) )

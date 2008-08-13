@@ -141,7 +141,7 @@ class DefaultRenderableNode(BasicRenderableNode):
         self.render_to_surface_enabled = render_to_surface_enabled
         self.render_view = None
         if render_to_surface_enabled:            
-            self.surface = renderer.CreateRenderSurface( surface_size )
+            self.surface = renderer.CreateRenderSurface( surface_size, hasAlpha = True )
             self.camera = Camera( LinearTransform2D(), name = 'render to surface cam' )
             self.camera.viewport = Viewport( self.surface.size )
             self.regenerate = True

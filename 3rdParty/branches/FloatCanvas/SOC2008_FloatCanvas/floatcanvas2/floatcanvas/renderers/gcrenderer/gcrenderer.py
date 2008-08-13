@@ -21,7 +21,7 @@ class GCRenderer(object):
         # this is not easily possible
         #if double_buffered and window and (not window.IsDoubleBuffered()):
         if True:
-            self.main_render_surface = self.active_render_surface = self.CreateRenderSurface( window.GetClientSizeTuple() )
+            self.main_render_surface = self.active_render_surface = self.CreateRenderSurface( window.GetClientSizeTuple(), hasAlpha = False )
             self.framebuffer = MemoryDoubleBuffer( window, self.main_render_surface )
 
             def disable_event(*args,**keys):
@@ -48,11 +48,11 @@ class GCRenderer(object):
         self.active_font = self.active_brush = self.active_pen = None
         self.fill_mode = 'fill_and_line'
         
-    def CreateRenderSurface(self, size):
-        rs = RenderSurface( size, self )
+    def CreateRenderSurface(self, size, hasAlpha):
+        rs = RenderSurface( size, self, hasAlpha )
         return rs
         
-    def Clear(self, background_color = None):
+    def Clear(self, background_color):
         self.framebuffer.Clear( background_color )
     
     def Present(self):
