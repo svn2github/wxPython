@@ -1,4 +1,7 @@
 class DefaultView(object):
+    ''' The default view holds a look and a primitive_renderer. Those two
+        define how an object will be rendereed.
+    '''
     def __init__(self, look, primitive_renderer):
         self.look = look
         self.primitive_renderer = primitive_renderer

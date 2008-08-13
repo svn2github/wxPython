@@ -2,6 +2,7 @@ import wx
 from constantTable import ConstantTable
 
 class GCPath(object):
+    ''' an object encapsulating a wxGraphicsPath '''
     # implements(IPath)
     
     def __init__(self, renderer):
@@ -9,6 +10,9 @@ class GCPath(object):
         self.path = renderer.wx_renderer.CreatePath()
         
     def Render(self, fillStyle = 'oddeven'):
+        ''' Renders the path with the given fillstyle (one of 'line', 'fill' or
+            'fill_and_line')
+        '''
         fill_mode = self.renderer.fill_mode
         if fill_mode == 'line':
             self.Stroke()
@@ -34,6 +38,7 @@ class GCPath(object):
 
 
 class GCFont(object):
+    ''' A wrapper around a wxGraphicsFont font '''
     def __init__(self, renderer, size, family, style, weight, underlined, faceName, colour):
         self.renderer = renderer
         self.size = size
@@ -60,6 +65,7 @@ class GCFont(object):
 
 
 class GCBrush(object):
+    ''' A wrapper around a wxGraphicsBrush brush '''
     def __init__(self, renderer, kind, *args, **keys):
         self.renderer = renderer
         wx_renderer = renderer.wx_renderer
@@ -84,6 +90,7 @@ class GCBrush(object):
         self.renderer.GC.SetBrush(self.brush)
 
 class GCPen(object):
+    ''' A wrapper around a wxGraphicsPen pen '''
     def __init__(self, renderer, colour, width, style, cap, join, dashes, stipple, wx_pen):
         self.renderer = renderer
         self.colour = colour
@@ -120,6 +127,11 @@ class GCPen(object):
 
 class GCBitmap(object):
     # implements (IBitmap)
+    ''' An object which can render a bitmap.
+        Todo: with the upcoming wxWidgets 2.9 there will be a wxGraphicsBitmap
+        object which optimizes performance since no conversion of the bitmap
+        has to happen. Add this when possible.
+    '''
 
     def __init__(self, renderer, bmp):
         self.renderer = renderer

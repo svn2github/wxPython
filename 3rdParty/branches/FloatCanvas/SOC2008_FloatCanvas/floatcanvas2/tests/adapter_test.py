@@ -1,4 +1,4 @@
-# todo: tests have to be a lot more thorough to be dubbed tests
+''' Tests the adapter registry and the adaption mechanism '''
 
 import sys
 import os.path

@@ -1,3 +1,7 @@
+''' An informal collection of interfaces. The comments indicate which properties
+    or attributes an object implementing the interface is expected to have.
+'''
+
 class IRectangle(object):
     # size prop
     pass
@@ -87,18 +91,15 @@ class IBitmap(object):
 class IArrow(object):
     # startPoint, endPoint props
     # headSize
-    # headFilled
     pass
 
 class IAngleArrow(object):
     # startPoint, angle prop
     # length
     # headSize
-    # headFilled
     pass
 
 # fc1 objects:
 # Polygon, Line, Spline, PointSet, Point, SquarePoint, Rectangle, Ellipse, Circle, Text, ScaledTextBox, Bitmap, Arc, Arrow, ArrowLine, DotGrid, PieChart
-# remaining: Arrow, ArrowLine, PieChart, DotGrid, scaled variants
-# actually implemented: Line, Rectangle, Ellipse, Circle, Text, Bitmap, Arc, Spline, 
-# actually missing: Polygon, 
+# remaining: ArrowLine, PieChart, DotGrid, scaled variants
+# not applicable: PointSet, Point, SquarePoint, because GC can't render a point

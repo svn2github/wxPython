@@ -1,4 +1,7 @@
 class Cacher(object):
+    ''' A simple wrapper around a dictionary which is can be used to cache an 
+        object with an associated key.
+    '''
     def __init__(self):
         self.entries = {}
 

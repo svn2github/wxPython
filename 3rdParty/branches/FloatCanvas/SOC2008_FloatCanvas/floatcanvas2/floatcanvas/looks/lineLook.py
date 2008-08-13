@@ -1,6 +1,7 @@
 from rendererSpecificLook import RendererSpecificLook
 
 class LineLook(RendererSpecificLook):
+    ''' The sub-look controlling the rendering of the outline of an object '''
     class RendererSpecificLineLook(object):
         def __init__(self, renderer, line_colour, width = 1, style = 'solid', cap = 'round', join = 'round', dashes = None, stipple = None ):
             self.renderer = renderer

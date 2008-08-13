@@ -1,3 +1,5 @@
+''' Displays a report of a previous profile run '''
+
 
 mode= 'cProfile'
 

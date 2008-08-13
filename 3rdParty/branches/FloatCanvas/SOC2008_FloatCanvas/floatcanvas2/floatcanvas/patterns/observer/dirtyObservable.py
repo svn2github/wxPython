@@ -1,6 +1,11 @@
 from observable import Observable
 
 class DirtyObservable(Observable):
+    ''' An observable which has an attribute dirty and which notifies any
+        observers when dirty changes to True. Important: it does not notify
+        the observers every time dirty is set to True. Only when it switches
+        from False to True.
+    '''
     def __init__(self):
         self._dirty = False
     

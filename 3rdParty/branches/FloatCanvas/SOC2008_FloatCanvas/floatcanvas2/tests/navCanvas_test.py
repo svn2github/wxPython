@@ -1,3 +1,7 @@
+''' Tests the NavCanvas and events (click on object, move cursor over small
+    circle)
+'''
+
 import sys
 import os.path
 sys.path.append( os.path.abspath( '..' ) )

@@ -1,3 +1,9 @@
+''' Provides an implementation for partial function application which is similar
+    to currying.
+    Python 2.5 provides already a module for this, so in this case we just
+    use it. If the module is not present we provide a custom implementation.
+'''
+
 try:
     import functools
 except ImportError:

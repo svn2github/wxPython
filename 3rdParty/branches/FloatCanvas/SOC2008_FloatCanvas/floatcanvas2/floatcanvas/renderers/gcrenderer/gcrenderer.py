@@ -6,27 +6,48 @@ from renderObjects import GCRenderObjectPath, GCRenderObjectText, GCRenderObject
 from renderSurface import RenderSurface
 
 class GCRenderer(object):
+    ''' The GraphicsContext renderer. It's the main and only fc renderer right
+        now.
+    '''
     # implements(IRenderer)
 
     def __init__(self, window = None, dc = None, native_window = None, native_dc = None, wx_renderer = None, double_buffered = True):
+        ''' A GC be created from a window, dc, native_window or native_dc.
+            So exactly one of those needs to be different from none.
+            Note: right now this only works when window is given.
+            Creates its own wx.GraphicsRenderer if none given.
+        '''
         if wx_renderer is None:
             wx_renderer = wx.GraphicsRenderer.GetDefaultRenderer()
             
         self.wx_renderer = wx_renderer
 
-        self.double_buffered = double_buffered
-
-        # force drawing to memory for now. This way we can easily switch the bitmap
-        # for render to surface operations. if the gc was created with a client dc
-        # this is not easily possible
-        #if double_buffered and window and (not window.IsDoubleBuffered()):
-        if True:
-            self.main_render_surface = self.active_render_surface = self.CreateRenderSurface( window.GetClientSizeTuple(), hasAlpha = False )
-            self.framebuffer = MemoryDoubleBuffer( window, self.main_render_surface )
-
+        # deal with double buffering
+        # todo: NativeDoubleBuffer not used here atm
+        
+        # if a window was passed and the window is already double-buffered,
+        # don't make a double buffer on our own
+        #if window and window.IsDoubleBuffered():
+        #    double_buffered = False
+            
+        if window is not None:
+            self.window = window
+            size = window.GetClientSizeTuple()
             def disable_event(*args,**keys):
                 pass            
             window.Bind(wx.EVT_ERASE_BACKGROUND, disable_event)
+        else:
+            raise ValueError( 'right now window may not be none!' )
+            
+        if dc:
+            self.dc = dc
+            size = dc.GetSize()
+
+        self.double_buffered = double_buffered
+               
+        if double_buffered:
+            self.main_render_surface = self.active_render_surface = self.CreateRenderSurface( size, hasAlpha = False )
+            self.framebuffer = MemoryDoubleBuffer( window, self.main_render_surface )
         else:
             self.framebuffer = SingleBuffer( window )
             
@@ -49,22 +70,35 @@ class GCRenderer(object):
         self.fill_mode = 'fill_and_line'
         
     def CreateRenderSurface(self, size, hasAlpha):
+        ''' Creates a render surface.
+            If hasAlpha is True, the renderSurface will have an alpha channel,
+             otherwise not.
+            Size is a 2d tuple.
+        '''
         rs = RenderSurface( size, self, hasAlpha )
         return rs
         
     def Clear(self, background_color):
+        ''' Clears the framebuffer with background_color '''
         self.framebuffer.Clear( background_color )
     
     def Present(self):
+        ''' Presents the current framebuffer '''
         self.framebuffer.Present()
 
     def getScreenshot(self, file_format):
+        ''' Returns the rendered picture as a string with file_format, where
+            file format can be something like 'png', 'jpg' or 'raw' or any other
+            kind of supported image format.
+        '''
         return self.main_render_surface.getData( file_format )
 
     def _setSize(self, size):
+        ''' Sets the size of the framebuffer '''
         self.framebuffer.size = size
         
     def _getSize(self):
+        ''' Gets the size of the framebuffer '''
         return self.framebuffer.size
         
     screen_size = property( _getSize, _setSize )

@@ -1,3 +1,8 @@
+''' Checks the model event sender whether it sends the appropriate
+    'modelChanged' events.
+    todo: make more elaborate
+'''
+
 import sys
 import os.path
 sys.path.append( os.path.abspath( '..' ) )

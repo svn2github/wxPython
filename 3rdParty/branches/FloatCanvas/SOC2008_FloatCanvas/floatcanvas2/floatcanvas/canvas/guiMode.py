@@ -1,30 +1,25 @@
-#!/usr/bin/env python
-"""
+'''
 
 Module that holds the GUI modes used by FloatCanvas
-
-Note that this can only be imported after a wx.App() has been created.
 
 This approach was inpired by Christian Blouin, who also wrote the initial
 version of the code.
 
-"""
+'''
 
 import wx
 from ..timeMachine import Resources
 from ..patterns.partial import partial
 import numpy as N
 
-import wx
-
 
 class Cursors(object):
-    """
-    Class to hold the standard Cursors
-    
-    """
+    '''
+         Singleton-like class to hold the standard Cursors    
+    '''
     
     def __init__(self):
+        ''' Build a list with the default cursors, specialize for mac '''
         self.cursors = { 'default' : wx.NullCursor }
         
         if "wxMac" in wx.PlatformInfo: # use 16X16 cursors for wxMac
@@ -40,6 +35,7 @@ class Cursors(object):
 
             
     def addCursor(self, name, img, hotspot = None):
+        ''' Adds a cursor to our inventory '''
         if hotspot is not None:
             img.SetOptionInt( wx.IMAGE_OPTION_CUR_HOTSPOT_X, hotspot[0] )
             img.SetOptionInt( wx.IMAGE_OPTION_CUR_HOTSPOT_Y, hotspot[1] )
@@ -49,6 +45,11 @@ class Cursors(object):
         
             
     def get(cls, name):
+        ''' Retrieve a cursor from the inventory. If there's no instance present
+             yet, create one and use it for future requests. This makes for some
+             lazy binding, because we can import this module now without having
+             to create wx.App object first.
+        '''
         if not hasattr(cls, 'instance'):
             cls.instance = Cursors()
             
@@ -58,29 +59,31 @@ class Cursors(object):
 
 
 class GUIModeBase(object):
-    """
-    Basic Mouse mode and baseclass for other GUImode.
+    '''
+    Basic mouse mode and baseclass for other GUIModes.
 
-    This one does nothing with any event
-
-    """
+    This one can (un-)register to all events and derived classes are free to
+    implement any handlers. The default handler tries to find a method on_x
+    where x is the name of the event (e.g. 'left_down') and calls it if present.
+    This default behaviour allows derived classes to easily implement event
+    handlers.
+    '''
   
     active = False
 
     def Deactivate(self):
-        """
-        this method gets called by FloatCanvas when a new mode is being set
-        on the Canvas
-        """
+        '''
+        Deactivate this mode, we're likely to switch to a different mode.
+        Unregister events.
+        '''
         self._unregisterEvents()
         del self.canvas
         self.active = False
     
     def Activate(self, canvas):
-        """
-        this method gets called by FloatCanvas when a new mode is being set
-        on the Canvas
-        """
+        '''
+        Activate this mode, register events.
+        '''
         assert not self.active
         self.active = True
         self.canvas = canvas
@@ -94,18 +97,24 @@ class GUIModeBase(object):
                       }
     
     def _registerEvents(self):
+        ''' Register to all wx events we're interested in '''
         for fc_evt_name in self.evt_names:
             wx_evt_name = self.fc_to_wx_events.get( fc_evt_name, fc_evt_name )
             wx_evt = getattr( wx, 'EVT_%s' % (wx_evt_name.upper(),) )
             self.canvas.Bind( wx_evt, partial( self.OnEvent, fc_evt_name ) )
 
     def _unregisterEvents(self):        
+        ''' Unregister all the events we registered to '''
         for fc_evt_name in self.evt_names:
             wx_evt_name = self.fc_to_wx_events.get( fc_evt_name, fc_evt_name )
             wx_evt = getattr( wx, 'EVT_%s' % (wx_evt_name.upper(),) )
             self.canvas.Unbind( wx_evt )
 
     def OnEvent(self, fc_evt_name, wx_event):
+        ''' If any wx event occurs, this one is called. It does some boilerplate
+            work like enriching the event with world coordinates and then
+            tries to get a handler for it and calls it if present.
+        '''
         world_pnt = self.canvas.pointToWorld( wx_event.GetPosition() )
 
         handler = self._get_handler( fc_evt_name )
@@ -117,6 +126,10 @@ class GUIModeBase(object):
         wx_event.Skip()
         
     def _get_handler(self, fc_event):
+        ''' by default return a handler named like on_x where x is the name of
+            the event (e.g. 'left_down'). This allows derived classes to easily
+            implement event handlers.
+        '''
         method_name = 'on_%s' % fc_event
 
         #print method_name
@@ -127,14 +140,12 @@ class GUIModeBase(object):
         else:
             return handler
     
-    def UpdateScreen(self):
-        """
-        Update gets called if the screen has been repainted in the middle of a zoom in
-        so the Rubber Band Box can get updated. Other GUIModes may require something similar
-        """
-        pass
 
     def raiseEvent(self, event_name, event):
+        ''' can be called by derived classes to perform a hittest and send an
+            event to any hit nodes. If no node was hit, the event is sent to the
+            background, the canvas node itself.
+        '''
         screen_pnt = event.GetPosition()
         world_pnt = self.canvas.pointToWorld( screen_pnt )
         
@@ -148,24 +159,25 @@ class GUIModeBase(object):
         
         
 class GUIModeMouse(GUIModeBase):
-    """
-
-    Mouse mode checks for a hit test, and if nothing is hit,
-    raises a FloatCanvas mouse event for each event.
-
-    """
+    '''
+    Mouse mode just raises any event it receives.
+    '''
 
     def Activate(self, canvas):
         canvas.window.Cursor = Cursors.get('default')
         return super( GUIModeMouse, self ).Activate( canvas )
 
     def _get_handler(self, fc_event):
+        ''' We just raise the event we got to the appropriate node '''
         return partial( self.raiseEvent, fc_event )
 
 
 from ..math import numpy
 
 class GUIModeMove(GUIModeBase):
+    ''' Move mode allows the user to drag the canvas around by using a hand-like
+        tool. It also allows zooming with the scroll wheel.
+    '''
     def __init__(self, canvas=None):
         GUIModeBase.__init__(self, canvas)
         self.startMove = None
@@ -175,17 +187,21 @@ class GUIModeMove(GUIModeBase):
         return super( GUIModeMove, self ).Activate( canvas )
 
     def on_left_down(self, event):
+        ''' Record where on the canvas the button went down and capture mouse
+        '''
         self.canvas.window.Cursor = Cursors.get('GrabHand')
         self.canvas.window.CaptureMouse()
         self.startMove = event.GetPosition()
         self.startCamPos = self.canvas.camera.position.copy()
  
     def on_left_up(self, event):
+        ''' Release mouse and restore cursor '''
         self.canvas.window.Cursor = Cursors.get('Hand')
         self.canvas.window.ReleaseMouse()
         self.startMove = None
 
     def on_move(self, event):
+        ''' If the user is dragging the mouse, move the camera of the canvas '''
         wx_event = event
         if wx_event.Dragging() and wx_event.LeftIsDown() and not self.startMove is None:
             transform = self.canvas.camera.transform
@@ -193,9 +209,9 @@ class GUIModeMove(GUIModeBase):
             self.canvas.camera.position = self.startCamPos - transform( [event.GetPosition() - self.startMove] )[0]
 
     def on_wheel(self, event):
-        """
-           By default, zoom in/out by a 0.1 factor per Wheel event.
-        """
+        ''' By default, zoom in/out by a 0.1 factor per Wheel event.
+            todo: make this configurable.
+        '''
         if event.GetWheelRotation() < 0:
             self.canvas.zoom( 0.9 )
         else:
@@ -205,7 +221,12 @@ class GUIModeMove(GUIModeBase):
 from ..math import boundingBox
 
 class GUIModeZoomIn(GUIModeBase):
-
+    ''' Zoom in mode allows the user to zoom in on parts of the canvas. He can
+        either left_click which centers the view at the clicked position and
+        zooms a bit in. The user can also drag a 'rubberband box' to select an
+        area he wants to view. Or he can right click to zoom out. Or scroll to
+        zoom.
+    '''
     def Activate(self, canvas):
         canvas.window.Cursor = Cursors.get( 'MagPlus' )
         return super( GUIModeZoomIn, self ).Activate( canvas )
@@ -216,6 +237,10 @@ class GUIModeZoomIn(GUIModeBase):
         self.canvas.window.CaptureMouse()
 
     def on_left_up(self, event):
+        ''' zoom in either by using a rubberband box or at the specific point.
+            todo: make minimum cursor movement (5,5) and default zoom factor
+                   (1.5) configurable
+        '''
         if event.LeftUp() and not self.startBox is None:
             box = boundingBox.fromPoints( ( self.startBox, event.GetPosition() ) )
             # if mouse has moved less that five pixels, don't use the box.
@@ -232,6 +257,7 @@ class GUIModeZoomIn(GUIModeBase):
             self.canvas.window.ReleaseMouse()
 
     def on_move(self, event):
+        ''' Take care of drawing the rubberband box '''
         if event.Dragging() and event.LeftIsDown() and not (self.startBox is None):
             dc = wx.ClientDC( self.canvas.window )
             dc.BeginDrawing()
@@ -246,22 +272,28 @@ class GUIModeZoomIn(GUIModeBase):
             
             self.prevBox = thisBox
             
-    def UpdateScreen(self):
-        """
-        Update gets called if the screen has been repainted in the middle of a zoom in
-        so the Rubber Band Box can get updated
-        """
-        if self.PrevRBBox is not None:
-            dc = wx.ClientDC(self.Canvas)
-            dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
-            dc.SetLogicalFunction(wx.XOR)
-            dc.DrawRectanglePointSize(*self.PrevRBBox)
+    #def UpdateScreen(self):
+    #    """
+    #    Update gets called if the screen has been repainted in the middle of a zoom in
+    #    so the Rubber Band Box can get updated
+    #    """
+    #    if self.PrevRBBox is not None:
+    #        dc = wx.ClientDC(self.Canvas)
+    #        dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
+    #        dc.SetBrush(wx.TRANSPARENT_BRUSH)
+    #        dc.SetLogicalFunction(wx.XOR)
+    #        dc.DrawRectanglePointSize(*self.PrevRBBox)
 
     def on_right_down(self, event):
+        ''' zoom out.
+            todo: make default zoom factor (1.5) configurable
+        '''
         self.canvas.zoom( 1 / 1.5, event.coords, centerCoords = 'world' )
 
     def on_wheel(self, event):
+        ''' By default, zoom in/out by a 0.1 factor per Wheel event.
+            todo: make this configurable.
+        '''
         if event.GetWheelRotation() < 0:
             self.canvas.zoom( 0.9 )
         else:
@@ -269,17 +301,30 @@ class GUIModeZoomIn(GUIModeBase):
             
 
 class GUIModeZoomOut(GUIModeBase):
+    ''' Zoom out mode allows the user to zoom out off parts of the canvas. He
+        can either left_click which centers the view at the clicked position and
+        zooms a bit out. Or he can right click to zoom in. Or scroll to zoom.
+    '''
     def Activate(self, canvas):
         canvas.window.Cursor = Cursors.get( 'MagMinus' )
         return super( GUIModeZoomOut, self ).Activate( canvas )
 
     def on_left_down(self, event):
+        ''' zoom out.
+            todo: make default zoom factor (1.5) configurable
+        '''
         self.canvas.zoom( 1 / 1.5, event.coords, centerCoords = 'world' )
 
     def on_right_down(self, event):
+        ''' zoom in.
+            todo: make default zoom factor (1.5) configurable
+        '''
         self.canvas.zoom( 1.5, event.coords, centerCoords = 'world' )
 
     def on_wheel(self, event):
+        ''' By default, zoom in/out by a 0.1 factor per Wheel event.
+            todo: make this configurable.
+        '''
         if event.GetWheelRotation() < 0:
             self.canvas.zoom( 0.9 )
         else:

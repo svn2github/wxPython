@@ -1,7 +1,15 @@
+''' module with two default render policies. Render policies control the exact
+    rendering of the nodes on the canvas
+'''
+
 from ..nodes.camera import Viewport
 from ..nodes.spatialQuery import QueryWithPrimitive
 
 class DefaultRenderPolicy(object):
+    ''' This is the simplest possible rendering policy. It just clears the
+        framebuffer, setups the camera, renders the canvas (and its children)
+        and finally presents the result.
+    '''
     def render(self, canvas, camera, backgroundColor):        
         from simpleCanvas import SimpleCanvas
         canvas.renderer.Clear( backgroundColor )
@@ -12,6 +20,11 @@ class DefaultRenderPolicy(object):
 
 
 class CullingRenderPolicy(object):
+    ''' This rendering policy is more complex. It performs a spatial query to
+        determine all nodes within the cameras viewBox. If there are lots of
+        nodes and the camera is only viewing a small subset of them, this speeds
+        up things considerably.
+    '''
     def render(self, canvas, camera, backgroundColor):        
         canvas.renderer.Clear( backgroundColor )
         

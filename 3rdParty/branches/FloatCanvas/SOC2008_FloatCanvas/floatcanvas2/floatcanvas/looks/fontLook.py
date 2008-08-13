@@ -1,6 +1,7 @@
 from rendererSpecificLook import RendererSpecificLook
 
 class FontLook(RendererSpecificLook):
+    ''' The sub-look controlling the look of a rendered font '''
     class RendererSpecificFontLook(object):
         def __init__(self, renderer, size, family, style, weight, underlined, faceName, colour):
             self.font = renderer.CreateFont( size, family, style, weight, underlined, faceName, colour )

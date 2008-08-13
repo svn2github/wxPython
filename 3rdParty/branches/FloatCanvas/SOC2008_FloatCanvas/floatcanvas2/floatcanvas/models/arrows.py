@@ -4,6 +4,10 @@ from eventSender import DefaultModelEventSender
 from ..math import numpy
 
 class Arrow(Line):
+    ''' Arrow model. Has startPoint and endPoint and a headSize which is a
+        2-element tuple (x-size = head size along arrow direction, y-size =
+        "broadness" of arrow head).
+    '''
     implements_interfaces = IArrow
 
     def __init__( self, startPoint, endPoint, headSize ):
@@ -20,6 +24,9 @@ class Arrow(Line):
     
 
 class AngleArrow(DefaultModelEventSender):
+    ''' Arrow model. Is specified with startPoint, length and angle and
+        headSize. For the meaning of the headSize parameter, see Arrow.
+    '''
     implements_interfaces = IAngleArrow
 
     def __init__( self, startPoint, length, angle, headSize ):
@@ -46,6 +53,7 @@ class AngleArrow(DefaultModelEventSender):
 
 
 class AngleArrowToArrowAdapter(object):
+    ''' Adapts AngleArrows to Arrows '''
     implements_interfaces = IAngleArrow
     
     def __init__(self, angleArrow):

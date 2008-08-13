@@ -1,7 +1,12 @@
 from look import Look
 from ..patterns.cacher import Cacher
 
-class RendererSpecificLook(Look):    
+class RendererSpecificLook(Look):
+    ''' a baseclass for looks whose implementations are renderer specific.
+        the look can maintain a renderer independent description and then create
+        renderer-dependent looks from it on request and caches them after
+        creation.
+    '''
     def __init__(self):
         self.look_cacher = Cacher()
         

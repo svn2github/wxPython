@@ -1,7 +1,7 @@
-"""
-A Panel that includes the FloatCanvas and Navigation controls
-
-"""
+'''
+A special canvas that includes the FloatCanvas and Navigation controls on a
+panel.
+'''
 
 import wx
 import floatCanvas
@@ -11,6 +11,7 @@ from ..patterns.partial import partial
 
 
 class GUIModeDescription(object):
+    ''' Little helper to hold info about a GUIMode '''
     def __init__(self, name, guiMode, bitmap):
         self.name = name
         self.guiMode = guiMode
@@ -18,13 +19,10 @@ class GUIModeDescription(object):
 
 
 class NavCanvas(floatCanvas.FloatCanvas):
-    """
-    NavCanvas.py
-
+    '''
     This is a high level window that encloses the FloatCanvas in a panel
     and adds a Navigation toolbar.
-
-    """
+    '''
 
     def __init__(self,
                    parent,
@@ -57,6 +55,7 @@ class NavCanvas(floatCanvas.FloatCanvas):
         self.active_mode = 'Pointer'
 
     def _setActiveMode(self, mode):
+        ''' Takes care of switching the active gui mode. '''
         try:
             mode = self.name_to_mode_description[mode].guiMode
         except KeyError:
@@ -78,9 +77,9 @@ class NavCanvas(floatCanvas.FloatCanvas):
     active_mode = property( _getActiveMode, _setActiveMode )
 
     def BuildToolbar(self):
-        """
-        This is here so it can be over-ridden in a ssubclass, to add extra tools, etc
-        """
+        ''' Build up the navigation toolbar. This is here so it can be over-ridden
+        in a subclass, to add extra tools, etc
+        '''
         tb = wx.ToolBar(self.mainPanel)
         self.ToolBar = tb
         tb.SetToolBitmapSize((24,24))
@@ -92,18 +91,19 @@ class NavCanvas(floatCanvas.FloatCanvas):
         self.active_mode = mode
 
     def AddToolbarModeButtons(self, tb, mode_descriptions):
-            
+        ''' Add a button for each gui mode to the navigation toolbar '''
         for mode_descr in mode_descriptions:
             tool = tb.AddRadioTool( wx.ID_ANY, shortHelp = mode_descr.name, bitmap = mode_descr.bitmap )
             self.mainPanel.Bind( wx.EVT_TOOL, partial( self.setMode, mode_descr.name ), tool )
 
     def AddToolbarZoomButton(self, tb):
+        ''' Add the 'Zoom to Fit' button to the toolbar '''
         tb.AddSeparator()
 
         def ZoomToFit(Event):
             self.zoomToExtents()
             self.canvasPanel.SetFocus() # Otherwise the focus stays on the Button, and wheel events are lost.
 
-        self.ZoomButton = wx.Button(tb, label="Zoom To Fit")
+        self.ZoomButton = wx.Button(tb, label = 'Zoom To Fit' )
         tb.AddControl(self.ZoomButton)
         self.ZoomButton.Bind(wx.EVT_BUTTON, ZoomToFit)

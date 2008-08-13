@@ -1,3 +1,5 @@
+''' Test the canvas.observables module '''
+
 import sys
 import os.path
 sys.path.append( os.path.abspath( '..' ) )

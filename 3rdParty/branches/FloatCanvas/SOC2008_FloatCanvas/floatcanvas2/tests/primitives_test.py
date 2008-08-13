@@ -1,3 +1,5 @@
+''' Tests almost all present default primitives and models '''
+
 import sys
 import os.path
 sys.path.append( os.path.abspath( '..' ) )

@@ -1,4 +1,10 @@
+''' Module implementing different transforms '''
+
 class ITransform(object):
+    ''' Interface for all transforms. A transform must be callable.
+        When called, coords are transformed and the transformed coordinates are
+        returned.
+    '''
     def __call__(self, coords):
         pass
 
@@ -7,15 +13,30 @@ import numpy
 from math import radians, degrees
 
 class LinearTransform(object):
+    ''' Implements an arbitrary n-dimensional linear homogenous transform.
+        It's based around a matrix which is 3x3 for a 2-dimensional transform.
+        The matrix holds scale and translation of an object.
+        Inverse and transpose can also be computed.
+        The linear transform can also be concatenated with different other
+        transforms.
+        
+        Todo: The concatenation of transforms should be moved into some kind of
+        'TransformManager' which decides how to concatenate the different
+        transforms.
+    '''
     #implements(ITransform)
     def __init__(self, dimension, matrix = None ):
         if not matrix is None:
             self.matrix = matrix
         else:
             self.matrix = numpy.eye( *dimension )     # identity matrix
-
-    # a bit messy, it basically appends 1s to the coordinates and later removes them again
+    
     def __call__(self, coords):
+        ''' transforms coords (which need to be an array of 2-vectors
+             (numpy.arrays of size 2) ).
+            A bit messy, it basically appends 1s to the coordinates and later
+            removes them again.
+        '''
         return numpy.dot( numpy.column_stack( (coords, numpy.ones(len(coords))) ), numpy.transpose( self.matrix ) )[ ..., :-1 ]
 
     def _getTranslation(self):
@@ -26,7 +47,13 @@ class LinearTransform(object):
 
     # can probably be rewritten 
     def _getScale(self):
-        # self.matrix = t * r * s --> s = r^-1 * t^-1 * self.matrix
+        ''' returns the scale of this transform.
+            The assumption is that our matrix is composed like
+               self.matrix = t * r * s --> s = r^-1 * t^-1 * self.matrix
+            where t = translation, r = rotation and = scale.
+            The scale can then be computed by the length of the column vectors
+            in the matrix upper 2x2.
+        '''
         temp =  numpy.transpose(self.matrix[:-1, :-1])  # eliminate t part
         normalized = numpy.array( [ col / numpy.sqrt( numpy.dot( col, col ) ) for col in temp ] )
         scaleMatrix = numpy.dot( temp, numpy.linalg.inv( normalized ) ) # same as self.matrix * inv(normalized)
@@ -44,6 +71,11 @@ class LinearTransform(object):
         return self.__class__( (), matrix = numpy.transpose( self.matrix ) )
 
     def __mul__(self, other):
+        ''' multiplies this transform by another one.
+            Todo: The concatenation of transforms should be moved into some kind
+            of 'TransformManager' which decides how to concatenate the different
+            transforms.
+        '''
         if isinstance(other, LinearTransform):
             return self.__class__( (), matrix = numpy.dot( self.matrix, other.matrix ) )
         elif isinstance(other, LinearAndArbitraryCompoundTransform):
@@ -60,15 +92,19 @@ class LinearTransform(object):
 
 
 class LinearTransform2D(LinearTransform):
+    ''' A specialized linear transform for the 2D case. Also supports rotation.
+    '''
     def __init__(self, dimension = (3,3), matrix = None):
         LinearTransform.__init__( self, dimension = (3, 3), matrix = matrix )
         
     def _getRotation(self):
-        # only returns meaningful results if the matrix is orthogonal
+        ''' only returns meaningful results if the matrix is orthogonal '''
         return degrees( numpy.arctan2( self.matrix[1][0] / self.scale[0], self.matrix[0][0] / self.scale[0] ) )
         
     def _setRotation(self, angle_in_degree):
-        # don't want to generalize this to n-dimensional rotations now
+        ''' Angle in degrees, NOT radians.
+            Don't want to generalize this to n-dimensional rotations now
+        '''
         angle_in_radian = radians( angle_in_degree )
         self.matrix[0][:-1] = ( numpy.cos( angle_in_radian ), -numpy.sin( angle_in_radian ) )
         self.matrix[1][:-1] = ( numpy.sin( angle_in_radian ),  numpy.cos( angle_in_radian ) )
@@ -77,6 +113,11 @@ class LinearTransform2D(LinearTransform):
     
     
 class ArbitraryTransform(object):
+    ''' An arbitrary transform which transforms the coords by calling a function
+        which returns the transformed coords.
+        Concatenated by executing the function one after another of the result
+        of the previous function applied to the coords.
+    '''
     #implements(ITransform)
     def __init__(self, func = lambda x: x):
         self.func = func
@@ -89,6 +130,7 @@ class ArbitraryTransform(object):
     
     
 class CompoundTransform(object):
+    ''' A transform which consists of two other transforms '''
     #implements(ITransform)
     def __init__(self, transform1, transform2):
         self.transform1 = transform1
@@ -102,6 +144,7 @@ class CompoundTransform(object):
     
     
 class LinearAndArbitraryCompoundTransform(CompoundTransform):
+    ''' A transform which consists of a linear part and another transform '''
     def __getattr__(self, name):
         #if name in ('transform1', 'transform2'):
         #    return super( CompoundTransform, self ).__getattr__( name )
@@ -125,9 +168,15 @@ class LinearAndArbitraryCompoundTransform(CompoundTransform):
             raise NameError(name)   
 
 class MercatorTransform(object):
+    ''' Implements a mercator projection, see 
+        http://en.wikipedia.org/wiki/Mercator_projection . Input coords are
+        2-tuples of (longitude, latitude), result is in cartesian system.
+        
+    '''
     #implements(ITransform)
-    def __init__(self, longitudeCenter = 0):
+    def __init__(self, longitudeCenter = 0, scaleFactor = 100):
         self.longitudeCenter = longitudeCenter
+        self.scaleFactor = scaleFactor
     
     # can probably be made faster
     def __call__(self, coords):
@@ -140,12 +189,17 @@ class MercatorTransform(object):
         result[::,::2] -= self.longitudeCenter
         result[::,1::2] = mercator_lat( result[::,1::2] )
         
-        result *= 100
+        result *= self.scaleFactor
         
         return result
 
 
 class ThreeDProjectionTransform(LinearTransform):
+    ''' An experimental transform to show that floatcanvas can handle arbitrary
+        input coordinats. For example 3-tuples which are 3d positions. These can
+        then be projected onto a 2d surface. Could be used to render a 3d wire-
+        frame cube.
+    '''
     def __init__(self, width, height, fov, znear, zfar):
         LinearTransform.__init__( self, (4,4) )
 

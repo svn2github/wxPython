@@ -2,6 +2,9 @@ import wx
 from constantTable import ConstantTable
 
 class RenderSurface(object):
+    ''' A render surface is a surface where things can be rendered to and from.
+        To accomplish this task it has an associated bitmap and GC.
+    '''
     _activeSurfaces = []
     
     def __init__(self, size, renderer, hasAlpha):
@@ -12,6 +15,8 @@ class RenderSurface(object):
         self.size = size
            
     def _setSize(self, size):
+        ''' Sets the size. If it changes, recreate the associated bitmap and GC.
+        '''
         if size == self._size:
             return
         
@@ -36,6 +41,11 @@ class RenderSurface(object):
     bitmap = property( _getBitmap )
         
     def Clear(self, background_color):
+        ''' Clears the surface with background_color.
+            Todo: This does not work properly for surfaces which have an alpha
+                    channel, because the DC Clear() methods don't affect the
+                    alpha channel at all.
+        '''
         if background_color:
             backgroundBrush = wx.Brush( background_color, style = wx.SOLID )
         else:
@@ -50,10 +60,14 @@ class RenderSurface(object):
         #    pixel.Set( *values )
 
     def Activate(self):
+        ''' Activates this surface '''
         RenderSurface._activeSurfaces.append( self )
         self._doActivate()
     
     def Deactivate(self):
+        ''' Deactivates this surface. Raises an exception if you are trying
+            to deactivate the wrong surface.
+        '''
         try:
             lastSurface = RenderSurface._activeSurfaces.pop()
         except IndexError:
@@ -78,6 +92,10 @@ class RenderSurface(object):
         self.active = True
  
     def getData(self, file_format):
+        ''' Returns the picture of this surface as a string with file_format.
+            where file format can be something like 'png', 'jpg' or 'raw' or any
+            other kind of supported image format.
+        '''
         if file_format == 'raw':     
             return wx.NativePixelData(self.bitmap).GetPixels().Get()
         

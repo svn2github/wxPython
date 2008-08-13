@@ -1,3 +1,5 @@
+''' Tests layer functionality (a group with children rendered to a surface) '''
+
 import sys
 import os.path
 sys.path.append( os.path.abspath( '..' ) )

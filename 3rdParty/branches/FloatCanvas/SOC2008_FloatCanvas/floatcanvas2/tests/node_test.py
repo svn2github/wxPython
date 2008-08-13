@@ -1,3 +1,5 @@
+''' Tests the Node and various node visitor classes '''
+
 import sys
 import os.path
 sys.path.append( os.path.abspath( '..' ) )

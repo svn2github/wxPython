@@ -1,3 +1,5 @@
+''' Tests the math.transform module '''
+
 import sys
 import os.path
 sys.path.append( os.path.abspath( '..' ) )
@@ -79,6 +81,13 @@ class TestNode(unittest.TestCase):
         t.scale = (2,2)
 
         self.assert_( numpy.allclose( t.inverse.matrix, [ [0.5,0,-2.5], [0,0.5,-1.5], [0,0,1] ]), t.inverse.matrix )
+
+    def testTranspose(self):
+        t = LinearTransform2D()        
+        t.pos = (5, 3)
+
+        self.assert_( numpy.allclose( t.transpose.matrix, [ [1,0,0], [0,1,0], [5,3,1] ]), t.transpose.matrix )
+
 
     def testSpeed(self):
         # run world_test to generate world2.dat if not present

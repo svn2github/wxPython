@@ -1,4 +1,4 @@
-# todo: tests have to be a lot more thorough to be dubbed tests
+''' Tests the events subpackage '''
 
 import sys
 import os.path

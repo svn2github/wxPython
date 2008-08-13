@@ -3,6 +3,10 @@ from ...math import boundingBox as boundingBoxModule
 import wx
 
 class GCRenderObjectBase(object):
+    ''' Base class for a "render object" which is an object with a
+        wxGraphicsMatrix that can be drawn.
+    '''
+    
     def __init__(self, renderer):
         self.renderer = renderer
         self._rendererTransform = renderer.CreateMatrix()
@@ -28,6 +32,9 @@ class GCRenderObjectBase(object):
    
     
 class GCRenderObjectPath(GCRenderObjectBase):
+    ''' A path render object. Draws a path graphics object and knows hot to get
+        its bounding box and perform an intersection test with a point.
+    '''
     def __init__(self, renderer, path):
         GCRenderObjectBase.__init__(self, renderer)
         self.path = path
@@ -38,10 +45,14 @@ class GCRenderObjectPath(GCRenderObjectBase):
         self._localBoundingBox = boundingBoxModule.fromRectangleCornerSize( corner, size )
         
     def DoDraw(self, camera):
+        ''' Just draws the path '''
         #GCRenderObjectBase.Draw(self, camera)
         self.path.Render()
         
     def intersects(self, primitive):
+        ''' Returns true if the primitive - which must be a point - is inside
+            the path.
+        '''
         assert primitive.min == primitive.max, ('Can only test against points', primitive)
         #print primitive.min
         pnt = self.transform.inverse( (primitive.min,) )[0]
@@ -57,6 +68,9 @@ class GCRenderObjectPath(GCRenderObjectBase):
         
         
 class GCRenderObjectText(GCRenderObjectBase):
+    ''' A text render object. Draws a text object and knows hot to get
+        its bounding box and perform an intersection test with a point.
+    '''
     def __init__(self, renderer, text):
         GCRenderObjectBase.__init__(self, renderer)
         self.text = text
@@ -88,6 +102,9 @@ class GCRenderObjectText(GCRenderObjectBase):
 
 
 class GCRenderObjectBitmap(GCRenderObjectBase):
+    ''' A bitmap render object. Draws a bitmap object and knows hot to get
+        its bounding box and perform an intersection test with a point.
+    '''
     def __init__(self, renderer, pixels, use_real_size):
         GCRenderObjectBase.__init__(self, renderer)
         self.pixels = pixels

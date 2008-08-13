@@ -4,6 +4,7 @@ from common import ModelWithPoints
 from ..math import numpy
 
 class Line(DefaultModelEventSender):
+    ''' A line model. Has startPoint and endPoint. '''
     implements_interfaces = ILine
 
     def __init__( self, startPoint, endPoint ):
@@ -27,6 +28,9 @@ class Line(DefaultModelEventSender):
     
     
 class LineLength(DefaultModelEventSender):
+    ''' A line model. Has only a length attribute, line is assumed to be
+        centered around the origin.
+    '''
     implements_interfaces = ILineLength
 
     def __init__( self, length ):
@@ -34,10 +38,15 @@ class LineLength(DefaultModelEventSender):
         
         
 class Lines(ModelWithPoints, DefaultModelEventSender):
+    ''' Lines model. It's a collection of points where one point is connected
+        to the next one. The lines are not automatically closed between last and
+        first point.
+    '''
     implements_interfaces = ILines
 
     
 class LinesList(DefaultModelEventSender):
+    ''' A model which is a list of lines. '''
     implements_interfaces = ILinesList
 
     def __init__(self, lines_list):
@@ -53,10 +62,19 @@ class LinesList(DefaultModelEventSender):
 
     
 class LineSegments( ModelWithPoints, DefaultModelEventSender):
+    ''' A model for line segments. Two points are considered to be a line.
+        E.g. points[0] and points[1] form the first line, points[2] and
+        points[3] form the 2nd line and so on.
+    '''
     implements_interfaces = ILineSegments
 
 
 class LineSegmentsSeparate( DefaultModelEventSender):
+    ''' A model for line segments. Starting points are stored in startPoints,
+        end points in endPoints. So the first line goes from startPoints[0] to
+        endPoints[0], the second one from startPoints[1] to endPoints[1] and so
+        on.
+    '''
     implements_interfaces = ILineSegmentsSeparate
 
     def __init__(self, startPoints, endPoints):

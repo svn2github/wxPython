@@ -7,8 +7,14 @@
 from wx.lib.pubsub import Publisher
 
 class fcEventManager(object):
+    ''' Simple wrapper around pubsub to allow for easy exchange against other
+        event libraries. Could probably need a rewrite. I am not sure the
+        EventTypeTemplate and **keys methods are the best way to do this.
+        Maybe just wrap send, subscribe, ... directly.
+    '''
 
     class EventTypeTemplate(type):
+        ''' Meta-class to create a specific event-type'''
         def __init__(cls, name, bases, dikt):
             type.__init__(cls, name, bases, dikt)
 

@@ -1,3 +1,7 @@
+''' Tests the NavCanvas with a mercator transform and optional render-to-surface
+    to possibly speed up rendering.
+'''
+
 # set this one to True if you want to render the world map to a surface
 use_layer = False
     

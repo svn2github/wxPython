@@ -3,9 +3,11 @@ from eventSender import DefaultModelEventSender
 from common import ModelWithPoints
 
 class Polygon(ModelWithPoints, DefaultModelEventSender):
+    ''' A polygon model. The polygon is defined by points. '''
     implements_interfaces = IPolygon
     
 class PolygonList(DefaultModelEventSender):
+    ''' Multiple polygon points in a list '''
     implements_interfaces = IPolygonList
     
     def __init__(self, polygon_list):

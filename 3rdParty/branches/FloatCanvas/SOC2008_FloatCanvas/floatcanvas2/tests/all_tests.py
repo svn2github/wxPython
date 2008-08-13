@@ -1,3 +1,5 @@
+''' Runs all unit tests in this folder. '''
+
 import unittest
 import glob
 

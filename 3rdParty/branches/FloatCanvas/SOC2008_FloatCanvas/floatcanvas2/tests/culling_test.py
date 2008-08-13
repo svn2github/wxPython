@@ -1,3 +1,5 @@
+''' Tests the culling render policy. Renders only the actually visible nodes '''
+
 import sys
 import os.path
 sys.path.append( os.path.abspath( '..' ) )

@@ -1,3 +1,7 @@
+''' Render-to-surface test. The black rectangle should coincide with the blue
+    on red square one.
+'''
+
 import sys
 import os.path
 sys.path.append( os.path.abspath( '..' ) )

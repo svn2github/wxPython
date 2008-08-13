@@ -1,6 +1,6 @@
-# taken from http://code.activestate.com/recipes/306864/
+'''
+taken from http://code.activestate.com/recipes/306864/
 
-"""
 Implement an observer pattern for lists and dictionaries.
 
 A subclasses for dicts and lists are defined which send information
@@ -8,7 +8,7 @@ about changes to an observer.
 
 The observer is sent enough information about the change so that the
 observer can undo the change, if desired.
-"""
+'''
 
 class dict_observer(dict):
     """

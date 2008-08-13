@@ -1,6 +1,7 @@
 from ..math import numpy
 
 class ModelWithSize(object):
+    ''' Base class for a model which has a size parameter '''
     def __init__( self, size ):
         self.size = size
         
@@ -14,6 +15,7 @@ class ModelWithSize(object):
     
     
 class ModelWithPoints(object):
+    ''' Base class for a model which has a points parameter '''
     def __init__( self, points ):
         self.points = points
         
@@ -29,4 +31,5 @@ class ModelWithPoints(object):
 defaultAdapters = []
 
 def registerModelAdapter( from_interface, to_interface, adapter ):
+    ''' Adds an adapter to the list of default model adapters. '''
     return defaultAdapters.append( ( from_interface, to_interface, adapter ) )

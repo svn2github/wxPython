@@ -1,9 +1,15 @@
 from dirtyObservable import DirtyObservable
     
 class RecursiveAttributeObservable(DirtyObservable):
-    ''' Very simple observable. This can be optimized by using the notify
-        decorator at the appropriate places. This class probably generates
-        lots of redundant calls and is inefficient in many situations.        
+    ''' Very simple observable. If an attribute is set which is in the
+        observer_attribs list, then it marks itself dirty. When an attribute is
+        set it also checks whether it can subscribe for any attribChanged events
+        and marks itself dirty if one of its attributes is dirty. This works
+        fine as long as there are no cycles :-)
+    
+        This can be optimized by using the notify decorator at the appropriate
+        places. This class probably generates lots of redundant calls and is
+        inefficient in many situations.        
     '''
     
     def __setattr__(self, name, value):
@@ -30,6 +36,7 @@ class RecursiveAttributeObservable(DirtyObservable):
 
 from listObserver import list_observer
 class RecursiveListItemObservable(DirtyObservable, list_observer):
+    ''' The list version of RecursiveAttributeObservable. '''
     def __init__(self, initialvalue = []):
         DirtyObservable.__init__(self)
         list_observer.__init__(self, [], self)

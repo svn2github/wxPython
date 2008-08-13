@@ -1,3 +1,5 @@
+''' Tests whether the canvas redraws itself when a model changes '''
+
 import sys
 import os.path
 sys.path.append( os.path.abspath( '..' ) )

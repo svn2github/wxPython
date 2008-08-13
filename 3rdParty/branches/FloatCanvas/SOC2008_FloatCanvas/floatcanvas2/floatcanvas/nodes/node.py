@@ -110,19 +110,23 @@ class Node(object):
         
         
     def removeChild( self, child ):
+        ''' Remove a child from this node '''
         child._parent = None
         self._children.remove( child )
         
     def removeChildAt( self, childIndex ):
+        ''' Remove the child at index childIndex from this node '''
         child = self._children[ childIndex ]
         child._parent = None
         del self._children[childIndex]
 
     def removeChildren( self, children ):
+        ''' Remove a sequence of children from this node '''
         for child in children:
             self.removeChild( child )
 
     def removeAllChildren( self ):
+        ''' Remove all children from this node '''
         self.removeChildren( self._children[:] )
         
                 

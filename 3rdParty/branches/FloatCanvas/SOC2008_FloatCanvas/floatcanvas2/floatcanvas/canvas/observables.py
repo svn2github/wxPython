@@ -1,7 +1,13 @@
+''' Module which creates observable forms of all important classes. The method
+used is really simpled and can be refined. Observables are important to know
+when something has changed so we can redraw.
+'''
+
 from ..patterns.observer.recursiveAttributeObservable import RecursiveAttributeObservable, RecursiveListItemObservable
 
 
-def makeObservable( klass, attribs, msg, prefix = 'Observable', observer_type = RecursiveAttributeObservable ):    
+def makeObservable( klass, attribs, msg, prefix = 'Observable', observer_type = RecursiveAttributeObservable ):
+    ''' Create an observable class from a 'normal' class '''
     name = '%s%s' % (prefix, klass.__name__)
     new_observable_klass = type( name, (observer_type, klass), {} )
     def __init__(self, *args, **keys):
@@ -30,7 +36,7 @@ info = \
     LinearAndArbitraryCompoundTransform      : ('transform1', 'transform2'),
     LinearTransform         : ('position', 'pos', 'translation', 'scale'),
     LinearTransform2D       : ('position', 'pos', 'translation', 'scale', 'rotation'),
-    MercatorTransform       : ('longitudeCenter',),
+    MercatorTransform       : ('longitudeCenter', 'scaleFactor'),
         
     Node                    : ('_parent', '_children'),
     NodeWithTransform       : ('transform', '_parent', '_children'),
@@ -80,9 +86,13 @@ info = \
 }
 
 class ObservableChildren(RecursiveListItemObservable):
+    ''' Children are special observables since they are a list '''
     notify_msg = 'attribChanged'
 
-def createObservableClass(klass, attribs, prefix = 'Observable'):        
+def createObservableClass(klass, attribs, prefix = 'Observable'):
+    ''' Creates an observable class from a normal klass. Attribs are the
+        attributes which should be watched for changes.
+    '''
     observer_class = makeObservable( klass, attribs, 'attribChanged', prefix )
     globals()[observer_class.__name__] = observer_class
     

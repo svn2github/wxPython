@@ -1,3 +1,5 @@
+''' simply tries rendering a map of the world with a GC object '''
+
 import sys
 import os.path
 sys.path.append( os.path.abspath( '..' ) )

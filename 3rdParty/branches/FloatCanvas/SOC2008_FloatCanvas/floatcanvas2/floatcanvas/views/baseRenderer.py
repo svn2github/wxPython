@@ -3,6 +3,19 @@ from ..math import boundingBox as boundingBoxModule
 
 
 class BaseRenderer(object):
+    ''' Base class for all default primitive renderers.
+        It mainly deals with transformation issues. To do so, it splits its
+        transformation in linear and arbitrary transform. Then it calculates
+        pre-transformed coordinates by putting the coordinates which it gets
+        from doCalcCoords (implemented in derived class) into the arbitary
+        transform. Then those coordinates are fed into doCreate (which is also
+        implemented in the derived classes). When the arbitrary transform
+        changes it will re-transform the pre-transformed coordinates and
+        re-create the render_object.
+        It forwards things like boundingBox and intersection check code to its
+        render_object.
+        Derived classes should implement the doCreate and doCalcCoords methods.
+    '''
     def __init__(self, renderer, model, look, scaled = True):
         self.renderer = renderer
         self.model = model
@@ -13,9 +26,11 @@ class BaseRenderer(object):
         self.rebuild()
     
     def Render(self, camera):
+        ''' Renders the render_object '''
         self.render_object.Draw( camera )
         
     def create(self):
+        ''' Called to create the render object '''
         self.render_object = self.doCreate( self.renderer, self.transformedCoords )
         try:
             self.render_object.transform = self._transform
@@ -23,19 +38,27 @@ class BaseRenderer(object):
             pass
         
     def doCreate(self, coords):
-        # override
+        ''' Base classes should override this one. It's fed with the
+            pre-transformed coordinates and should return the render_object
+            to be used for drawing.
+        '''
         raise NotImplementedError()
 
     def rebuild(self):
+        ''' Rebuild everything '''
         self.calcCoords()
         self.create()
         self._recalculateBoundingBox()
 
-    def calcCoords(self):
+    def calcCoords(self):        
+        ''' Get coordinates and pre-transform them '''
         self.coords = self.doCalcCoords( self.model )
         self.transformCoords()
         
     def transformCoords(self):
+        ''' Pre-transform the coordinates with the non-linear parts of the
+            transform and re-create if neccessary.
+        '''
         try:
             transform = self._transform
         except AttributeError:
@@ -59,13 +82,18 @@ class BaseRenderer(object):
 
        
     def doCalcCoords(self, model):
-        # override
+        ''' Base classes should override this one. Should return the
+            untransformed coordinates for creation of the object.
+        '''
         raise NotImplementedError()
     
     def intersection(self, primitive):
         return self.render_object.intersects( primitive )
 
     def _setTransform(self, transform):
+        ''' If the transform changes, we probably need to retransform our
+            coordinates and the bounding box might change, too.
+        '''
         self._transform = transform        
         self.transformCoords()
         self.render_object.transform = self._transform
@@ -77,6 +105,9 @@ class BaseRenderer(object):
     transform = property( _getTransform, _setTransform )
 
     def _recalculateBoundingBox(self):
+        ''' Calculates the bounding box by applying the linear part of our
+            transform on our local bounding box.
+        '''
         bb = self.localBoundingBox
         try:
             transform = self.transform.transform1

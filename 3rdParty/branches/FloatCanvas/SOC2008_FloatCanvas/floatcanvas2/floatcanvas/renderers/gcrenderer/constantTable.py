@@ -1,6 +1,7 @@
 import wx
 
 class ConstantTable(object):
+    ''' Mapping strings to the enums '''
     stringToWx = { 'oddeven' : wx.ODDEVEN_RULE,
                    'winding' : wx.WINDING_RULE,
                  }

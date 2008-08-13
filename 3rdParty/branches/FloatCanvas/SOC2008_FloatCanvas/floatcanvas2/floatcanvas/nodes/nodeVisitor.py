@@ -1,8 +1,8 @@
 from ..patterns.asSequence import asSequence
 
 class NodeVisitor(object):
-    ''' Derive fro this class to visit a tree of nodes and override the pre- and
-         postVisit methods to implement the custom behaviour.
+    ''' Derive from this class to visit a tree of nodes and override the pre-
+         and postVisit methods to implement the custom behaviour.
         Traversal is depth-first.
     '''
     def __init__(self, visitChildren = True):
@@ -83,6 +83,11 @@ class FindNodesByNamesVisitor(NodeVisitor):
     
     
 class EnumerateNodesVisitor(NodeVisitor):
+    ''' Enumerates the nodes with numbers from 0 to n. Each node is assigned a
+        number in the order they're visited.
+        Later the number of a node, or the node belonging to a number can be
+        retrieved.
+    '''
     def __init__(self, visitChildren = True):
         super( EnumerateNodesVisitor, self ).__init__( visitChildren )
         self.node_to_number = {}
@@ -90,13 +95,16 @@ class EnumerateNodesVisitor(NodeVisitor):
         self.current_number = 0
         
     def preVisit(self, node):
+        ''' Insert node to our bookkeeping and increment the number '''
         self.node_to_number[node] = self.current_number
         self.number_to_node [self.current_number] = node
         self.current_number += 1
         return True
     
     def getPosition(self, node):
+        ''' Returns the number of a given node '''
         return self.node_to_number[node]
     
     def getNode(self, position):
+        ''' Returns the node of a given number '''
         return self.number_to_node[position]

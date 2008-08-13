@@ -1,3 +1,5 @@
+''' Tests 'Group' nodes. '''
+
 import sys
 import os.path
 sys.path.append( os.path.abspath( '..' ) )

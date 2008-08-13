@@ -1,12 +1,16 @@
 from transformNode import NodeWithBounds
 
 class RenderableNode(NodeWithBounds):
+    ''' Base class for a node that can be rendered '''
     pass
-    #def __init__(self, *args, **keys):
-    #    NodeWithBounds.__init__(self, *args, **keys)
 
 
 class BasicRenderableNode(RenderableNode):
+    ''' A basic renderable node. It has a model and according view and uses them
+         to render itself and to get the bounding information.
+        Todo: clean up the dirty marking.
+    '''
+
     def __init__(self, model, view, *args, **keys):
         RenderableNode.__init__(self, *args, **keys)
         self.model = model
@@ -17,6 +21,7 @@ class BasicRenderableNode(RenderableNode):
         self.subscribe( self.onSelfDirty, 'attribChanged' )        
            
     def onSelfDirty(self, evt):
+        ''' If we're dirty, update what's necessary. '''
         if not self.view:
             return
                 
@@ -27,11 +32,13 @@ class BasicRenderableNode(RenderableNode):
             self.view.rebuild()
         
     def DoRender(self, renderer, camera):
+        ''' Render ourselves. '''
         if self.view is None:
             return 
         return self.view.Render( renderer, camera )
 
     def Render(self, renderer, camera, renderChildren = True):
+        ''' Render ourselves and probably our children. '''
         if not self.shown:
             return False
         
@@ -59,9 +66,13 @@ class BasicRenderableNode(RenderableNode):
             self._drawDebugBoundingBoxes(renderer, camera)
             
     def intersection(self, primitive):
-        return self.view.intersection(primitive)
+        ''' Tests whether we intersect with the given primitive. This is used
+             by exact spatial queries.
+        '''
+        return self.view.intersection( primitive )
             
     def _drawDebugBoundingBoxes(self, renderer, camera):
+        ''' Internal function to visualize the bounding boxes. '''
         from look import OutlineLook
         from models import Rectangle
         from views import DefaultRectangleRenderer
@@ -84,7 +95,9 @@ class BasicRenderableNode(RenderableNode):
         #view.Render( camera )
         
     def _update_view_transform(self):
-        # todo: fixme
+        ''' updates the transform of our view with our own transform.
+            Todo: fixme
+        '''
         
         if not hasattr(self, 'xxx'):
             self.view.transform = self.worldTransform
@@ -95,6 +108,13 @@ class BasicRenderableNode(RenderableNode):
         self.xxx = self.worldTransform
         
     def _getBoundingBox(self):
+        ''' returns our bounding box in world space. If we don't have a view
+            then consider the bounding box of our children as our own bounding
+            box.
+            Todo: Check whether the no-view handling should be moved into a
+            class of its own or if this should be moved to the
+            recursiveBoundingBox property.
+        '''
         if self.view is None:
             if not self.children:
                 raise ValueError('A renderable node either has to have a view or children')
@@ -111,11 +131,15 @@ class BasicRenderableNode(RenderableNode):
     boundingBox = property( _getBoundingBox )
     
     def _getLocalBoundingBox(self):
+        ''' Returns the bounding box in the local frame '''
         return self.view.localBoundingBox
     
     localBoundingBox = property( _getLocalBoundingBox )
     
     def _getBoundingBoxRecursive(self):
+        ''' Returns the bounding box of this node including the bounding boxes
+            of all children.
+        '''
         bb = self.boundingBox
         for child in self.children:
             try:
@@ -135,6 +159,13 @@ from ..math.transform import LinearTransform2D
 from ..nodes.camera import Camera, Viewport
 
 class DefaultRenderableNode(BasicRenderableNode):
+    ''' The standard renderable node used in fc.
+        It features render-to-surface functionality which can be used for things
+        like layers.
+        Set the regenerate attribute to True if you want the node to rerender
+        the surface. You can also customize the shouldRenderToSurface method
+        to determine when to re-render to surface.
+    '''
     def __init__(self, renderer, render_to_surface_enabled, surface_size, model, view, *args, **keys):
         BasicRenderableNode.__init__(self, model, view, *args, **keys)
         self.renderer = renderer
@@ -147,6 +178,9 @@ class DefaultRenderableNode(BasicRenderableNode):
             self.regenerate = True
         
     def Render(self, renderer, camera, renderChildren = True):
+        ''' Override the base class render method to implement the
+            render-to-surface functionality.
+        '''
         if not self.render_to_surface_enabled:
             return super(DefaultRenderableNode, self).Render( renderer, camera, renderChildren )
         

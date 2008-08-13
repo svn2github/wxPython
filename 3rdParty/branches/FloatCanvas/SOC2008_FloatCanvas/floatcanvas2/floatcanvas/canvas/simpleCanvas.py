@@ -1,3 +1,7 @@
+''' A canvas which provides default implementations for various things.
+    This is basically the most important one of all the canvasses.
+'''
+
 from canvas import Canvas
 import observables
 from ..patterns.adapter import AdapterRegistry
@@ -15,9 +19,24 @@ from ..nodes import EnumerateNodesVisitor
 
 
 class SimpleCanvas(Canvas):
-    ''' I provide an easy to use interface for a full-blown Canvas '''
+    ''' I provide an various methods for a functional canvas.
+        This includes registries so I can create according nodes/views/
+        primitive renderers when given a model.
+        I also provide a bunch of default models (and know how to map them
+        to their views).
+        I provide a default camera.
+        Rendering and updates can be customized with policies.
+        Other things I do include: zooming, screen shots, hit-testing, adapter
+        registry. 
+    '''
 
     def __init__(self, renderer, max_update_delay = 0.2, *args, **keys):
+        ''' Inits this canvas.
+            Things setupped: background color, default camera, node factory,
+            model/view/primitve renderer registries, adapter registry and
+            render/update policies.
+        '''
+        
         if 'name' not in keys:
             keys['name'] = 'unnamed canvas'
 
@@ -40,14 +59,33 @@ class SimpleCanvas(Canvas):
         self._setupRegistries()
         self._setupNodeFactory()
         self._setupAdapters()
-        self.updatePolicy = DefaultUpdatePolicy( self, max_update_delay )
+
+        if 'updatePolicy' in keys:
+            self.updatePolicy = keys['updatePolicy']
+            del keys['updatePolicy']
+        else:
+            #self.renderPolicy = DefaultRenderPolicy()
+            self.updatePolicy = DefaultUpdatePolicy( self, max_update_delay )
+
+        if 'renderPolicy' in keys:
+            self.renderPolicy = keys['renderPolicy']
+            del keys['renderPolicy']
+        else:
+            #self.renderPolicy = DefaultRenderPolicy()
+            self.renderPolicy = CullingRenderPolicy()
+        
         self.subscribe( self.onDirty, 'attribChanged' )
 
-        #self.renderPolicy = DefaultRenderPolicy()
-        self.renderPolicy = CullingRenderPolicy()
-        
+
     def _setupRegistries(self):
-        
+        ''' Setups the registries. First one is the adapter registry which
+            has all the information how models can be adapted to different
+            interfaces.
+            The other registries know how to map a model interface to a node()
+            view/primitive renderer.
+            They're fed with the default objects (all kinds of models, primitive
+            renderers, ...)
+        '''
         self.adapterRegistry = adapterRegistry = AdapterRegistry()
         
         self.primitiveRendererRegistry = PrimitiveRendererRegistry( adapterRegistry )
@@ -78,24 +116,41 @@ class SimpleCanvas(Canvas):
         
         
     def _setupAdapters(self):
+        ''' Internal. Feeds the adapter registries with the default model adapters '''
         for (from_interface, to_interface, adapter) in defaultAdapters:
             self.adapterRegistry.register( from_interface, to_interface, adapter )
 
 
     def create(self, *args, **keys):
+        ''' Creates a node from a model. 
+            Forwarded from nodeFactory.
+        '''            
         return self.nodeFactory.create( *args, **keys )
 
     def registerNode(self, model_kind, create, modelType):
+        ''' registers a node constructor for a model type.
+            Forwarded from nodeFactory.
+        '''
         setattr( self, 'create%s' % model_kind, partial( create, modelType ) )
         return self.nodeFactory.register( model_kind, create, modelType )
 
     def unregisterNode(self, *args, **keys):
+        ''' unregisters a node constructor for a model type.
+            Forwarded from nodeFactory.
+        '''
         return self.nodeFactory.unregister( *args, **keys )
 
     def isNodeRegistered(self, *args, **keys):
+        ''' is a node constructor for a model type registered?
+            Forwarded from nodeFactory.
+        '''
         return self.nodeFactory.is_registered( *args, **keys )
         
     def _setupNodeFactory(self):
+        ''' Internal. Sets up the node factory. The keyword argument for the
+            create method is done here, as well as adding the createRectangle,
+            create* methods to self.
+        '''
         self.nodeFactory = FactoryUsingDict()        
        
         keywords = { 'transform'            : None,
@@ -178,16 +233,23 @@ class SimpleCanvas(Canvas):
             modelType = getattr(observables, 'Observable%s' % model_kind)
             self.registerNode( model_kind, create, modelType )
         
+        # the group node is a special one, it doesn't need any model
         self.registerNode( 'Group', create, None )
 
     def onDirty(self, evt):
+        ''' If we're dirty, tell the update policy '''
         if self.dirty:
             self.updatePolicy.onDirty()
 
     def DoRender(self, renderer, camera):
+        ''' The canvas itself doesn't have to render anything '''
         pass
     
     def Render(self, backgroundColor = None, camera = None, renderChildren = True):
+        ''' Render all objects on the canvas with camera. By default the default
+            camera is used.
+            Calls the render policy.
+        '''
         backgroundColor = backgroundColor or self.backgroundColor or 'green'
         if camera is None:
             camera = self.camera
@@ -198,12 +260,24 @@ class SimpleCanvas(Canvas):
         self._children.dirty = False
         
     def zoomToExtents(self, boundingBox = None, padding_percent = 0.05, maintain_aspect_ratio = True):
+        ''' Tells the default camera to fit the entire canvas nodes on the
+            screen.
+        '''
         if boundingBox is None:
             boundingBox = self.boundingBoxRecursive #self.rtree.boundingBox
             
         self.camera.zoomToExtents( boundingBox, padding_percent, maintain_aspect_ratio )
         
     def zoom(self, factor, center = None, centerCoords = 'world', alignment = 'cc'):
+        ''' Zooms and possibly recenters the default camera on the canvas. The
+            center coordinates can be given in 'world' and 'pixel' coordinates.
+            Todo: Make alignment work. This specifies how to zoom (for example
+            should the left upper corner stay the same and the rest is zoomed).
+            Todo: Make the world/pixel a property of the coordinate. Then we can
+                  do something like center.world() which retrieves the
+                  coordinate in world units, no matter if it was in pixel
+                  or world coordinates before.
+        '''
         self.camera.zoom *= factor
         
         if not center is None:
@@ -213,9 +287,14 @@ class SimpleCanvas(Canvas):
         
         
     def pointToWorld(self, screen_pnt):
+        ''' Transform a point on screen to world coordinates (if possible) '''
         return self.camera.viewTransform.inverse( (screen_pnt,) )
 
     def hitTest( self, screen_pnt, exact = True ):
+        ''' Performs a hit test given a point on screen.
+            For the meaning of the exact parameter, see the performSpatialQuery
+            function.
+        '''
         world_pnt = self.pointToWorld( screen_pnt )
         query = QueryWithPrimitive( primitive = boundingBox.fromPoint( world_pnt ), exact = exact )
         pickedNodes = self.performSpatialQuery( query )
@@ -230,9 +309,14 @@ class SimpleCanvas(Canvas):
 
 
     def getScreenshot(self, file_format):
+        ''' Returns the rendered picture as a string with file_format, where
+            file format can be something like 'png', 'jpg' or 'raw' or any other
+            kind of supported image format.
+        '''
         return self.renderer.getScreenshot( file_format )
     
     def saveScreenshot(self, filename):
+        ''' Saves the rendered picture as a file to disk '''
         import os.path        
         extension = os.path.splitext(filename)[1][1:]
         data = self.getScreenshot( extension )
@@ -241,18 +325,6 @@ class SimpleCanvas(Canvas):
         f.close()
         
         
-        
-    def _getBoundingBox(self):
-        return boundingBox.BoundingBox( [ (0,0), (0,0) ] )
-    
-    boundingBox = property( _getBoundingBox )
-    
-    def _getLocalBoundingBox(self):
-        return boundingBox.BoundingBox( [ (0,0), (0,0) ] )
-    
-    localBoundingBox = property( _getLocalBoundingBox )
-    
-    
     def _getScreenSize(self):
         return self.renderer.framebuffer.size
     

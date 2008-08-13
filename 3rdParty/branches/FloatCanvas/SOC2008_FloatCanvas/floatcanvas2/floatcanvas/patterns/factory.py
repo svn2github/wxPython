@@ -1,8 +1,18 @@
-# inspired by
-# http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/86900
+''' inspired by
+    http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/86900
+'''
 from partial import partial
 
 class FactoryUsingMethods(object):
+    ''' A factory where you can register a constructor with a name.
+        E.g.
+
+        f = FactoryUsingMethods()
+        
+        f.register( 'createCircle', Circle )
+        c = f.createCircle( radius = 7 )
+    '''
+        
     def register(self, methodName, constructor, *args, **kargs):
         ''' register a constructor '''
         if self.is_registered(methodName):
@@ -18,6 +28,15 @@ class FactoryUsingMethods(object):
 
 
 class FactoryUsingDict(object):
+    ''' A factory where you can register a constructor with a name.
+        E.g.
+
+        f = FactoryUsingDict()
+        
+        f.register( 'Circle', Circle )
+        c = f.create( 'Circle', radius = 7 )
+    '''
+
     def __init__(self):
         self.registered = {}
         

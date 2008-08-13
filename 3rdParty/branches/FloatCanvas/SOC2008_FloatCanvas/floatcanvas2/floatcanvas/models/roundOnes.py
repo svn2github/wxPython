@@ -5,10 +5,16 @@ from ..math import numpy
 
 
 class Ellipse(ModelWithSize, DefaultModelEventSender):
+    ''' Model of an ellipse which is assumed to be centered around (0,0) which
+        has a 2d tuple size attribute.
+    '''
     implements_interfaces = IEllipse
 
         
 class Circle(DefaultModelEventSender):
+    ''' Model of an ellipse which is assumed to be centered around (0,0) which
+        has a radius attribute.
+    '''
     implements_interfaces = ICircle
 
     def __init__( self, radius ):
@@ -16,6 +22,11 @@ class Circle(DefaultModelEventSender):
 
 
 class Arc(object):
+    ''' Model of an arc (a piece of a circle). Radius specifies the radius of
+        the circle, startAngle and endAngle specify which piece of the circle
+        to take and clockwise is a bool which specifies whether the clockwise or
+        anticlockwise piece between startAngle and endAngle are taken.
+    '''
     implements_interfaces = IArc
 
     def __init__( self, radius, startAngle, endAngle, clockwise ):
