@@ -1,11 +1,11 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 
 """
 This demonstrates how to use FloatCanvas with a coordinate system where
 X and Y have different scales. In the example, a user had:
 
 X data in the range: 50e-6 to 2000e-6
-Y data in teh range: 0 to 50000
+Y data in the range: 0 to 50000
 
 -chb
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 """
 
 A small test app that uses FloatCanvas to draw a plot, and have an

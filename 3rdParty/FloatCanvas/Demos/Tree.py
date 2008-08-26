@@ -210,7 +210,7 @@ class TriangleShape1(FC.Polygon, MovingObjectMixin):
         return Points
 
 ### Tree Utilities
-### And some hard codes data...
+### And some hard coded data...
 
 class TreeNode:
     dx = 15
@@ -317,7 +317,7 @@ class DrawFrame(wx.Frame):
         TraverseTree(root, CreateObject)
         ## create the Connectors
         TraverseTree(root, AddConnectors)
-        ## Add the conenctos to the Canvas first, so they are underneither the nodes
+        ## Add the conenctos to the Canvas first, so they are undernieth the nodes
         self.Canvas.AddObjects(Connectors) 
         ## now add the nodes
         self.Canvas.AddObjects(Nodes) 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 """
 
 This is a small demo, showing how to make an object that can be moved around.

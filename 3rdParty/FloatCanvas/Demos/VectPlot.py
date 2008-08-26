@@ -1,11 +1,10 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 """
 
 A small test app that uses FloatCanvas to draw a vector plot.
 
 """
 
-from time import clock
 import wx
 import numpy as N
 import random

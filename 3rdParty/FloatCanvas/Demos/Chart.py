@@ -24,22 +24,24 @@ class DrawFrame(wx.Frame):
         self.CreateStatusBar()
 
         # Add the Canvas
-#        Canvas = NavCanvas.NavCanvas(self,-1,
-#                                     size = (500,500),
-#                                     ProjectionFun = None,
-#                                     Debug = 0,
-#                                     BackgroundColor = "White",
-#                                     ).Canvas
-        Canvas = FloatCanvas.FloatCanvas(self,-1,
+        Canvas = NavCanvas.NavCanvas(self,-1,
                                      size = (500,500),
                                      ProjectionFun = None,
                                      Debug = 0,
                                      BackgroundColor = "White",
-                                     )
+                                     ).Canvas
+#        Canvas = FloatCanvas.FloatCanvas(self,-1,
+#                                     size = (500,500),
+#                                     ProjectionFun = None,
+#                                     Debug = 0,
+#                                     BackgroundColor = "White",
+#                                     )
         
         self.Canvas = Canvas
 
         FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
+        FloatCanvas.EVT_LEFT_DOWN(self.Canvas, self.OnLeft)
+
 
         # Some default sizes:
         self.LineHeight = 1
@@ -51,6 +53,8 @@ class DrawFrame(wx.Frame):
         self.BuildChartBackground()
         self.AddLabels()
         self.Show()
+        Canvas.MinScale=28
+        Canvas.MaxScale=28
         Canvas.ZoomToBB()
 
     def BuildChartBackground(self):
@@ -95,6 +99,14 @@ class DrawFrame(wx.Frame):
 
         """
         self.SetStatusText("%.2f, %.2f"%tuple(event.Coords))
+
+    def OnLeft(self, event):
+        """
+        Prints various info about the state of the canvas to stdout
+
+        """
+        print "Scale is:", self.Canvas.Scale
+
 
 app = wx.App(False)
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )

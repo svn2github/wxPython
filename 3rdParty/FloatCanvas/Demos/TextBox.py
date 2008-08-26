@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 """
 
 A test and demo of  the features of the ScaledTextBox
