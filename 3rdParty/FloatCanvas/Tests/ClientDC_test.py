@@ -6,6 +6,9 @@ A simple test for drawing multiple times to a ClientDC from inside an event
 """
 import wx
 import random
+import time
+
+NumToDraw = 1000
 
 class MyFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
@@ -14,6 +17,7 @@ class MyFrame(wx.Frame):
         # put a "Animate" button in
         B = wx.Button(self, label="Run")
         B.Bind(wx.EVT_BUTTON, self.OnRun)
+        #B.Bind(wx.EVT_BUTTON, self.OnRun2)
         
         # A Panel to do the animation on
         self.DrawPanel = wx.Panel(self)
@@ -24,8 +28,39 @@ class MyFrame(wx.Frame):
         S.Add(self.DrawPanel, 1, wx.EXPAND)
         
         self.SetSizer(S)
-        #self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
         
+    def OnPaint(self, evt):
+        print "Ini OnPaint"
+        pass
+
+    def OnRun2(self, evt):
+        print "Drawing"
+        dc = wx.ClientDC(self.DrawPanel)
+        dc.Clear()
+        del dc
+        w = 30
+        h = 20
+        pw, ph = self.DrawPanel.Size
+        start = time.clock()
+        for i in xrange(NumToDraw):
+            print "drawing %i"%i
+            dc = wx.ClientDC(self.DrawPanel)
+            dc.SetPen(wx.TRANSPARENT_PEN)
+            dc.SetBrush(wx.BLUE_BRUSH)
+            dc.SetTextForeground(wx.Colour(255,255,255))
+            dc.SetTextBackground(wx.Colour(255,0,0))
+            x = random.randint(0, pw)
+            y = random.randint(0, ph)
+            dc.DrawRectangle(x, y, w, h)
+            dc.DrawText(`i`, x+4, y+2)
+            del dc
+            self.DrawPanel.Update()
+            # something to create a delay
+            #for x in range(1000):
+            #    z = x**10
+        print "It took %f seconds to draw"%(time.clock() - start)
+
     def OnRun(self, evt):
         print "Drawing"
         dc = wx.ClientDC(self.DrawPanel)
@@ -38,47 +73,20 @@ class MyFrame(wx.Frame):
         w = 30
         h = 20
         pw, ph = self.DrawPanel.Size
-        for i in xrange(1000):
+        start = time.clock()
+
+        for i in xrange(NumToDraw):
             x = random.randint(0, pw)
             y = random.randint(0, ph)
             dc.DrawRectangle(x, y, w, h)
             dc.DrawText(`i`, x+4, y+2)
+            self.DrawPanel.Update()
             # something to create a delay
-            for x in range(1000):
-                z = x**10
-        
-    
-#    def Draw(self, DC):
-#        print "In Draw"
-#        DC.SetBackground(wx.Brush("White"))
-#        DC.Clear()
-#        
-#        GC = wx.GraphicsContext.Create(DC)
-#        
-#        Pen = GC.CreatePen(wx.Pen("Black", 4))
-#        
-#        GC.SetPen(Pen)
-#        GC.DrawLines([(0,0),(100,100),(300,100)])
-#        GC.SetPen(wx.TRANSPARENT_PEN)
-#        c1 = wx.Color(255, 0, 0, 255)
-#        c2 = wx.Color(255, 0, 0, 0)
-#        Brush = GC.CreateLinearGradientBrush(20, 150, 300, 150, c1, c2)
-#        GC.SetBrush(Brush)
-#        GC.DrawRectangle(20, 150, 200, 1)
-#        
-#        Path = GC.CreatePath()
-#        Path.MoveToPoint(0,0)
-#        Path.AddLineToPoint(500,300)
-#        Path.AddLineToPoint(500,298)
-#        Path.AddLineToPoint(0,-2)
-#        
-#        GC.SetPen(wx.Pen("Blue", 3))
-#        #GC.SetBrush(wx.Brush("Red"))
-#        #GC.DrawPath(Path)
-#        Brush = GC.CreateLinearGradientBrush(-2, -2, 500, 300, c1, c2)
-#        GC.SetBrush(Brush)
-#        GC.FillPath(Path)
-#        
+            #for x in range(1000):
+            #    z = x**10
+        print "It took %f seconds to draw"%(time.clock() - start)
+
+
 A = wx.App(0)
 F = MyFrame(None, size=(600,600))
 F.Show()
