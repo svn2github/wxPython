@@ -31,7 +31,8 @@ def add_entry( path ):
     exec info_code in globals, globals
     name = globals['name']
 
-    ugly_name = ''.join( os.path.basename(path).split( '-' )[1:] or path )
+    ugly_name = os.path.basename(path)
+    ugly_name = ugly_name[ ugly_name.find( '-' ) + 1: ]
 
     html_file = os.path.join( path, '%s.html' % ugly_name )
     py_file = os.path.join( path, '%s.py' % ugly_name )
