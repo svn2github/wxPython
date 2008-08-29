@@ -327,7 +327,7 @@ class SimpleCanvas(Canvas):
         
     def pointToWorld(self, screen_pnt):
         ''' Transform a point on screen to world coordinates (if possible) '''
-        return self.camera.viewTransform.inverse( (screen_pnt,) )
+        return self.camera.viewTransform.inverse( (screen_pnt,) )[0]
 
     def hitTest( self, screen_pnt, exact = True, order = True ):
         ''' Performs a hit test given a point on screen.

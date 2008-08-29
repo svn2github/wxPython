@@ -27,6 +27,9 @@ class Cursors(object):
         self.addCursor( 'GrabHand', Resources.getGrabHandImage() )
         self.addCursor( 'MagPlus', navCanvasIcons.getviewmag_plusImage(), (9, 9) )
         self.addCursor( 'MagMinus', navCanvasIcons.getviewmag_minusImage(), (9, 9) )        
+        self.addCursor( 'Move', navCanvasIcons.getpackage_games_arcadeImage(), (9, 9) )        
+        self.addCursor( 'Rotate', navCanvasIcons.getdesignerImage(), (9, 9) )        
+        self.addCursor( 'Scale', navCanvasIcons.getviewmagfitImage(), (9, 9) )        
 
             
     def addCursor(self, name, img, hotspot = None):
@@ -114,7 +117,16 @@ class GUIModeBase(object):
         world_pnt = self.canvas.pointToWorld( wx_event.GetPosition() )
 
         handler = self._get_handler( fc_evt_name )
+
+        screen_pnt = wx_event.GetPosition()
+        world_pnt = self.canvas.pointToWorld( screen_pnt )
+        
+        nodes = self.canvas.hitTest(screen_pnt, True)
+        if not nodes:
+            nodes = ( self.canvas, )
+
         wx_event.coords = world_pnt
+        wx_event.nodes = nodes
 
         if handler:
             handler( wx_event )
@@ -142,15 +154,9 @@ class GUIModeBase(object):
             event to any hit nodes. If no node was hit, the event is sent to the
             background, the canvas node itself.
         '''
-        screen_pnt = event.GetPosition()
-        world_pnt = self.canvas.pointToWorld( screen_pnt )
-        
-        nodes = self.canvas.hitTest(screen_pnt, True)
-        if not nodes:
-            nodes = ( self.canvas, )
 
         # send the event only to the topmost node for now
-        nodes[0].send( event_name, wx_event = event, nodes = nodes, coords = event.coords )
+        event.nodes[0].send( event_name, wx_event = event, nodes = event.nodes, coords = event.coords )
         
         
         
@@ -325,3 +331,66 @@ class GUIModeZoomOut(GUIModeBase):
             self.canvas.zoom( 0.9 )
         else:
             self.canvas.zoom( 1.1 )
+
+
+
+from ..math import numpy
+class GUIModeObjectManipulation(GUIModeBase):
+    ''' Base class for the move, rotate and scale modes.
+    '''
+    def Activate(self, canvas):
+        canvas.window.Cursor = Cursors.get( self.cursor )
+        self.node = None
+        return super( GUIModeObjectManipulation, self ).Activate( canvas )
+
+    def on_left_down(self, event):
+        ''' get the node and remember where we clicked it '''
+        node = event.nodes[0]
+        if event.nodes[0] == self.canvas:
+            return
+        
+        self.node = node
+        self.downCoords = event.coords
+        self.offset =  self.node.position - self.downCoords
+        self.downRotation =  self.node.rotation
+        self.downScale =  self.node.scale
+        self.downSize = self.node.boundingBox.Size
+
+    def on_left_up(self, event):
+        self.node = None
+
+
+class GUIModeMoveObjects(GUIModeObjectManipulation):
+    ''' Can be used to move objects on canvas.
+    '''
+    cursor = 'Move'
+    
+    def on_move(self, event):
+        ''' move the object '''
+        if self.node:
+            self.node.position = event.coords + self.offset
+
+from ..math import get_angle
+class GUIModeRotateObjects(GUIModeObjectManipulation):
+    ''' Can be used to move objects on canvas.
+    '''
+    cursor = 'Rotate'
+    
+    def on_move(self, event):
+        ''' rotate the object '''
+        if self.node:
+            angle = get_angle( self.offset, event.coords - self.node.position )
+            self.node.rotation = self.downRotation + angle
+
+class GUIModeScaleObjects(GUIModeObjectManipulation):
+    ''' Can be used to move objects on canvas.
+    '''
+    cursor = 'Scale'
+    
+    def on_move(self, event):
+        ''' move the object '''
+        if self.node:
+            extra_scale = (event.coords - self.downCoords) / self.downSize
+            new_scale = self.downScale + extra_scale
+            if abs(new_scale).all() > 0.001:
+                self.node.scale = new_scale

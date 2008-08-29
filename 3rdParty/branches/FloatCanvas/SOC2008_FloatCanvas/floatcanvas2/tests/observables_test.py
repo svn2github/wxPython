@@ -5,7 +5,7 @@ import os.path
 sys.path.append( os.path.abspath( '..' ) )
 
 import unittest
-from floatcanvas.canvas.observables import makeObservable, ObservableDefaultRenderableNode, ObservableRectangle, ObservableLinearTransform2D, ObservableMercatorTransform, ObservableLinearAndArbitraryCompoundTransform
+from floatcanvas.canvas.observables import makeObservable, ObservableDefaultRenderableNode, ObservableRectangle, ObservableLinearTransform2D, ObservableMercatorTransform, ObservableLinearAndArbitraryCompoundTransform, ObservableCamera
 from floatcanvas.patterns.observer.observable import Observable
 from floatcanvas.patterns.observer.recursiveAttributeObservable import RecursiveListItemObservable
 from floatcanvas.events import subscribe
@@ -119,8 +119,19 @@ class TestNode(unittest.TestCase):
         tc( [ [0,0] ] )
         self.assert_( type(tl * tl) == type(tl) )
         
+    def testObservableCamera(self):
+        c = ObservableCamera( transform = ObservableLinearTransform2D() )
+        self.assert_( c.dirty )
+        c.dirty = False
+        c.transform.dirty = False
+        self.assert_( not c.dirty )
+
+        c.position = 5
+        self.assert_( c.dirty )
+
+
     def testObservableDefaultRenderableNode(self):
-        o = ObservableDefaultRenderableNode( model = None, view = None, transform = ObservableLinearTransform2D(), render_to_surface_enabled = False, surface_size = None, renderer = None )
+        o = ObservableDefaultRenderableNode( model = None, view = None, transform = ObservableLinearTransform2D(), render_to_surface_enabled = False, surface_size = None, filter = None, renderer = None )
         self.assert_( o.dirty )
         o.dirty = False
         self.assert_( not o.dirty )
@@ -144,7 +155,7 @@ class TestNode(unittest.TestCase):
         o.transform = False
         o.dirty = False
 
-        o2 = ObservableDefaultRenderableNode( model = None, view = None, transform = ObservableLinearTransform2D(), render_to_surface_enabled = False, surface_size = None, renderer = None )
+        o2 = ObservableDefaultRenderableNode( model = None, view = None, transform = ObservableLinearTransform2D(), render_to_surface_enabled = False, surface_size = None, filter = None, renderer = None )
         o2.dirty = False
         o.addChild( o2 )
         self.assert_( o2.dirty )

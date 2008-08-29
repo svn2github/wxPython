@@ -37,6 +37,9 @@ class NavCanvas(floatCanvas.FloatCanvas):
                   ( 'Zoom In',  guiMode.GUIModeZoomIn(),  navCanvasIcons.getviewmag_plusBitmap() ),
                   ( 'Zoom Out', guiMode.GUIModeZoomOut(), navCanvasIcons.getviewmag_minusBitmap() ),
                   ( 'Pan',      guiMode.GUIModeMove(),    Resources.getHandBitmap() ),
+                  ( 'Move',     guiMode.GUIModeMoveObjects(),    navCanvasIcons.getpackage_games_arcadeBitmap() ),
+                  ( 'Rotate',     guiMode.GUIModeRotateObjects(),    navCanvasIcons.getdesignerBitmap() ),
+                  ( 'Scale',     guiMode.GUIModeScaleObjects(),   navCanvasIcons.getviewmagfitBitmap() ),
                 ]
         
         self.mode_descriptions = [ GUIModeDescription(*mode_info) for mode_info in modes ]
