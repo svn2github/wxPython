@@ -1285,6 +1285,8 @@ class Text(TextObjectMixin, DrawObject, ):
             HTdc.DrawRectanglePointSize(XY, (self.TextWidth, self.TextHeight) )
 
 class ScaledText(TextObjectMixin, DrawObject, ):
+    ##fixme: this can be depricated and jsut use ScaledTextBox with different defaults.
+    
     """
     This class creates a text object that is scaled when zoomed.  It is
     placed at the coordinates, x,y. the "Position" argument is a two
@@ -1387,7 +1389,8 @@ class ScaledText(TextObjectMixin, DrawObject, ):
         # Windows and OS-X seem to be better behaved in this regard.
         # They may not draw it, but they don't crash either!
         self.MaxFontSize = 1000
-
+        self.MinFontSize = 1 # this can be changed to set a minimum size
+        self.DisapearWhenSmall = True
         self.ShiftFun = self.ShiftFunDict[Position]
 
         self.CalcBoundingBox()
@@ -1421,25 +1424,30 @@ class ScaledText(TextObjectMixin, DrawObject, ):
         ## If so, limit it. Would it be better just to not draw it?
         ## note that this limit is dependent on how much memory you have, etc.
         Size = min(Size, self.MaxFontSize)
-        self.SetFont(Size, self.Family, self.Style, self.Weight, self.Underlined, self.FaceName)
-        dc.SetFont(self.Font)
-        dc.SetTextForeground(self.Color)
-        if self.BackgroundColor:
-            dc.SetBackgroundMode(wx.SOLID)
-            dc.SetTextBackground(self.BackgroundColor)
-        else:
-            dc.SetBackgroundMode(wx.TRANSPARENT)
-        (w,h) = dc.GetTextExtent(self.String)
-        # compute the shift, and adjust the coordinates, if neccesary
-        # This had to be put in here, because it changes with Zoom, as
-        # fonts don't scale exactly.
-        xy = self.ShiftFun(X, Y, w, h)
+        Size = max(Size, self.MinFontSize) # smallest size you want - default to 0
 
-        dc.DrawTextPoint(self.String, xy)
-        if HTdc and self.HitAble:
-            HTdc.SetPen(self.HitPen)
-            HTdc.SetBrush(self.HitBrush)
-            HTdc.DrawRectanglePointSize(xy, (w, h) )
+        # Draw the Text
+        if not( self.DisappearWhenSmall and Size <=  self.MinFontSize) : # don't try to draw a zero sized font!
+            self.SetFont(Size, self.Family, self.Style, self.Weight, self.Underlined, self.FaceName)
+            dc.SetFont(self.Font)
+            dc.SetTextForeground(self.Color)
+            if self.BackgroundColor:
+                dc.SetBackgroundMode(wx.SOLID)
+                dc.SetTextBackground(self.BackgroundColor)
+            else:
+                dc.SetBackgroundMode(wx.TRANSPARENT)
+            (w,h) = dc.GetTextExtent(self.String)
+            # compute the shift, and adjust the coordinates, if neccesary
+            # This had to be put in here, because it changes with Zoom, as
+            # fonts don't scale exactly.
+            xy = self.ShiftFun(X, Y, w, h)
+
+            dc.DrawTextPoint(self.String, xy)
+
+            if HTdc and self.HitAble:
+                HTdc.SetPen(self.HitPen)
+                HTdc.SetBrush(self.HitBrush)
+                HTdc.DrawRectanglePointSize(xy, (w, h) )
 
 class ScaledTextBox(TextObjectMixin, DrawObject):
     """
@@ -1572,6 +1580,9 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
         # They may not draw it, but they don't crash either!
 
         self.MaxFontSize = 1000
+        self.MinFontSize = 1 # this can be changed to set a larger minimum size
+        self.DisappearWhenSmall = True
+
         self.ShiftFun = self.ShiftFunDict[Position]
 
         self.String = String
@@ -1723,11 +1734,8 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
         ## If so, limit it. Would it be better just to not draw it?
         ## note that this limit is dependent on how much memory you have, etc.
         Size = min(Size, self.MaxFontSize)
-
-        self.SetFont(Size, self.Family, self.Style, self.Weight, self.Underlined, self.FaceName)
-        dc.SetFont(self.Font)
-        dc.SetTextForeground(self.Color)
-        dc.SetBackgroundMode(wx.TRANSPARENT)
+        
+        Size = max(Size, self.MinFontSize) # smallest size you want - default to 1
 
         # Draw The Box
         if (self.LineStyle and self.LineColor) or self.BackgroundColor:
@@ -1736,7 +1744,12 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
             dc.DrawRectanglePointSize(xy , wh)
 
         # Draw the Text
-        dc.DrawTextList(self.Words, Points)
+        if not( self.DisappearWhenSmall and Size <=  self.MinFontSize) : # don't try to draw a zero sized font!
+            self.SetFont(Size, self.Family, self.Style, self.Weight, self.Underlined, self.FaceName)
+            dc.SetFont(self.Font)
+            dc.SetTextForeground(self.Color)
+            dc.SetBackgroundMode(wx.TRANSPARENT)
+            dc.DrawTextList(self.Words, Points)
 
         # Draw the hit box.
         if HTdc and self.HitAble:
@@ -3056,7 +3069,7 @@ class FloatCanvas(wx.Panel):
 
 
 def _makeFloatCanvasAddMethods(): ## lrk's code for doing this in module __init__
-    classnames = ["Circle", "Ellipse", "Rectangle", "ScaledText", "Polygon",
+    classnames = ["Circle", "Ellipse", "Arc", "Rectangle", "ScaledText", "Polygon",
                   "Line", "Text", "PointSet","Point", "Arrow", "ArrowLine", "ScaledTextBox",
                   "SquarePoint","Bitmap", "ScaledBitmap", "Spline", "Group"]
     for classname in classnames:

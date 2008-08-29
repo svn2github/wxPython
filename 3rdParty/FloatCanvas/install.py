@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 '''!
    A script that installs the floatcanvas package in the wxPython lib It
    also installs the demo into the wxPython demo directory, if you set
@@ -24,7 +24,7 @@ Demodir = ''
 
 # ##########################################################################
 
-# Remove the old package if its there the package there.
+# Remove the old package if its there.
 if os.path.isdir(InstallDir):
     shutil.rmtree(InstallDir)
 else:

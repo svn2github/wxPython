@@ -1,7 +1,14 @@
 #!/usr/bin/env python
 
 import wx
-from wx.lib.floatcanvas import NavCanvas
+
+## import the installed version
+#from wx.lib.floatcanvas import NavCanvas, FloatCanvas
+
+## import a local version
+import sys
+sys.path.append("../")
+from floatcanvas import NavCanvas, FloatCanvas
 
 class MyFrame(wx.Frame):
     def __init__(self, *args, **kwargs):

@@ -36,25 +36,20 @@ class DrawFrame(wx.Frame):
         FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
 
         Point = (45,40)
-        Box = Canvas.AddScaledTextBox("A Two Line\nString",
+        Text = Canvas.AddScaledText("A String",
                                       Point,
-                                      2,
+                                      20,
                                       Color = "Black",
                                       BackgroundColor = None,
-                                      LineColor = "Red",
-                                      LineStyle = "Solid",
-                                      LineWidth = 1,
-                                      Width = None,
-                                      PadSize = 5,
                                       Family = wx.ROMAN,
                                       Style = wx.NORMAL,
                                       Weight = wx.NORMAL,
                                       Underlined = False,
-                                      Position = 'br',
-                                      Alignment = "left",
+                                      Position = 'bl',
                                       InForeground = False)
+        Text.MinFontSize = 4
+        Text.DisappearWhenSmall = True
 
-        Box.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Binding)
         self.Show()
         Canvas.ZoomToBB()
 
@@ -64,13 +59,6 @@ class DrawFrame(wx.Frame):
 
         """
         self.SetStatusText("%.2f, %.2f"%tuple(event.Coords))
-
-    def Binding(self, event):
-        print "Writing a png file:"
-        self.Canvas.SaveAsImage("junk.png")
-        print "Writing a jpeg file:"
-        self.Canvas.SaveAsImage("junk.jpg",wx.BITMAP_TYPE_JPEG)
-
 
 app = wx.App(False)
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
