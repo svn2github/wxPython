@@ -42,6 +42,7 @@ def start():
         for i in range(0, 361):
             parent.rotation = i
             canvas.Render()
+            wx.Yield()
             print_culled_nodes()
             #time.sleep(0.01)
         
