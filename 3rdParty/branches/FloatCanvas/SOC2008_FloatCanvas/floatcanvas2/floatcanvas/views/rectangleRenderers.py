@@ -1,32 +1,28 @@
-from baseRenderer import BaseRenderer
 from ..models import IRectangle, IRoundedRectangle
 from ..math import numpy
- 
+from viewModel import ViewModel
+from viewModelInterfaces import IRectangleViewModel,IRoundedRectangleViewModel
 
-class DefaultRectangleRenderer(BaseRenderer):
+class DefaultRectangleRenderer(object):
     can_render = IRectangle
+    implements_interfaces = IRectangleViewModel
     
-    def doCalcCoords(self, model):
+    def getCoords(self, model):
         half_size = model.size / 2.0
         return numpy.array( [-half_size, half_size] )
            
-    def doCreate(self, renderer, coords):
-        x, y = coords[0].tolist()
-        w, h = abs(coords[1] - coords[0]).tolist()
-
-        return renderer.CreateRectangle( x, y, w, h )
+    def getViewModel(self, model, coords):
+        return ViewModel( 'Rectangle', corner = coords[0], size = abs(coords[1] - coords[0]) )
         
 
-class DefaultRoundedRectangleRenderer(BaseRenderer):
+class DefaultRoundedRectangleRenderer(object):
     can_render = IRoundedRectangle
+    implements_interfaces = IRoundedRectangleViewModel
     
-    def doCalcCoords(self, model):
+    def getCoords(self, model):
         half_size = model.size / 2.0
         return numpy.array( [-half_size, half_size] )
            
-    def doCreate(self, renderer, coords):
-        x, y = coords[0].tolist()
-        w, h = abs(coords[1] - coords[0]).tolist()
-
-        return renderer.CreateRoundedRectangle( x, y, w, h, self.model.radius )
+    def getViewModel(self, model, coords):
+        return ViewModel( 'RoundedRectangle', corner = coords[0], size = abs(coords[1] - coords[0]), radius = model.radius )
         

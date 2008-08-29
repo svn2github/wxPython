@@ -18,7 +18,7 @@ def start():
 
     r1 = canvas.create( 'Rectangle', (100, 200), name = 'r1', pos = (0, 0), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )
     r2 = canvas.create( 'Rectangle', (200, 100), name = 'r2', pos = (100, 100), rotation = 20, look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )    
-    r2 = canvas.create( 'Circle', 200, name = 'c1', pos = (200, 200), rotation = 20, look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red', line_width = 50 )  )
+    r2 = canvas.create( 'Circle', 100, name = 'c1', pos = (200, 200), rotation = 20, look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red', line_width = 50 )  )
     
 
     crazyTransform = False

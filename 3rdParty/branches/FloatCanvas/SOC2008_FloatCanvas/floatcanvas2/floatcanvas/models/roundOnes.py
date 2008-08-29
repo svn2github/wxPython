@@ -45,7 +45,7 @@ class CircleToEllipseAdapter(object):
         self.circle = circle
         
     def _getSize(self):
-        return numpy.array( (self.circle.radius, self.circle.radius) )
+        return numpy.array( (self.circle.radius, self.circle.radius) ) * 2
     
     def _setSize(self, value):
         assert value[0] == value[1], 'Circle objects need to the same size in x and y directions'

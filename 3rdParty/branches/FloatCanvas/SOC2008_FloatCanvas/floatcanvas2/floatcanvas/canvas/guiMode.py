@@ -8,7 +8,7 @@ version of the code.
 '''
 
 import wx
-from ..timeMachine import Resources
+from ..resources import Resources, navCanvasIcons
 from ..patterns.partial import partial
 import numpy as N
 
@@ -21,17 +21,12 @@ class Cursors(object):
     def __init__(self):
         ''' Build a list with the default cursors, specialize for mac '''
         self.cursors = { 'default' : wx.NullCursor }
-        
-        if "wxMac" in wx.PlatformInfo: # use 16X16 cursors for wxMac
-            self.addCursor( 'Hand', Resources.getHand16Image() )
-            self.addCursor( 'GrabHand', Resources.getGrabHand16Image() )
-            self.addCursor( 'MagPlus', Resources.getMagPlus16Image(), (6, 6) )
-            self.addCursor( 'MagMinus', Resources.getMagMinus16Image(), (6, 6) )        
-        else: # use 24X24 cursors for GTK and Windows
-            self.addCursor( 'Hand', Resources.getHandImage() )
-            self.addCursor( 'GrabHand', Resources.getGrabHandImage() )
-            self.addCursor( 'MagPlus', Resources.getMagPlusImage(), (9, 9) )
-            self.addCursor( 'MagMinus', Resources.getMagMinusImage(), (9, 9) )        
+
+        # cursor are automatically downscaled to 16x16 on the mac      
+        self.addCursor( 'Hand', Resources.getHandImage() )
+        self.addCursor( 'GrabHand', Resources.getGrabHandImage() )
+        self.addCursor( 'MagPlus', navCanvasIcons.getviewmag_plusImage(), (9, 9) )
+        self.addCursor( 'MagMinus', navCanvasIcons.getviewmag_minusImage(), (9, 9) )        
 
             
     def addCursor(self, name, img, hotspot = None):
@@ -40,6 +35,7 @@ class Cursors(object):
             img.SetOptionInt( wx.IMAGE_OPTION_CUR_HOTSPOT_X, hotspot[0] )
             img.SetOptionInt( wx.IMAGE_OPTION_CUR_HOTSPOT_Y, hotspot[1] )
 
+        img.ConvertAlphaToMask()
         self.cursors[ name ] = cursor = wx.CursorFromImage( img )
         return cursor
         

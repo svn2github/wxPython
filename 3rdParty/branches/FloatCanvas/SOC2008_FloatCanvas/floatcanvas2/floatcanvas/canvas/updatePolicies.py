@@ -18,6 +18,9 @@ class DefaultUpdatePolicy(object):
         self.dirty = False
         self.timer = wx.CallLater( self.interval , self.onIntervalOver )
         
+    def stop(self):
+        self.timer.Stop()
+        
     def onDirty(self):
         self.dirty = True
             

@@ -21,14 +21,7 @@ class RenderSurface(object):
             return
         
         #print size
-        w, h = self._size = size
-        self._bitmap = wx.EmptyBitmap(w, h, 32)
-        if self.hasAlpha:
-            self._bitmap.UseAlpha()
-        
-        self.dc = wx.MemoryDC( self._bitmap )
-        self.gc = self.renderer.wx_renderer.CreateContext( self.dc )
-        
+        self._size = size        
         
     def _getSize(self):
         return self._size
@@ -40,6 +33,20 @@ class RenderSurface(object):
     
     bitmap = property( _getBitmap )
         
+    def BeginRendering(self):
+        # recreate the bitmap if our size changed or there wasn't one created yet
+        if not hasattr(self, '_bitmap') or (self._bitmap.GetSize() != self.size):
+            self._bitmap = wx.EmptyBitmap(self.size[0], self.size[1], 32)
+            if self.hasAlpha:
+                self._bitmap.UseAlpha()
+
+        self.dc = wx.MemoryDC( self._bitmap )
+        self.gc = self.renderer.wx_renderer.CreateContext( self.dc )
+        
+    def EndRendering(self):
+        del self.dc
+        del self.gc
+
     def Clear(self, background_color):
         ''' Clears the surface with background_color.
             Todo: This does not work properly for surfaces which have an alpha
@@ -96,15 +103,33 @@ class RenderSurface(object):
             where file format can be something like 'png', 'jpg' or 'raw' or any
             other kind of supported image format.
         '''
-        if file_format == 'raw':     
-            return wx.NativePixelData(self.bitmap).GetPixels().Get()
+        if file_format == 'raw':
+            if self.bitmap.HasAlpha():
+                return wx.AlphaPixelData(self.bitmap).GetPixels().Get()
+            else:
+                return wx.NativePixelData(self.bitmap).GetPixels().Get()
         
         img = self.bitmap.ConvertToImage()        
         
         import cStringIO
         outputStream = cStringIO.StringIO()
+        if file_format == 'jpg':
+            file_format = 'jpeg'
         img.SaveStream( wx.OutputStream(outputStream), ConstantTable.getEnum( 'bitmap_type', file_format ) )
         data = outputStream.getvalue()
         outputStream.close()
               
         return data
+    
+    def _getBitmapPixels(self):
+        from ...math import numpy
+        comps = 3
+        if self.bitmap.HasAlpha():
+            comps = 4
+       
+        from arrayFromImage import arrayFromImage
+        img = self.bitmap.ConvertToImage()
+
+        return arrayFromImage( img )
+        
+    bitmapPixels = property( _getBitmapPixels )

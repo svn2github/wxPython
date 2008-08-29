@@ -1,29 +1,26 @@
-from baseRenderer import BaseRenderer
 from ..models import IEllipse, IArc
 from ..math import numpy
+from viewModel import ViewModel
+from viewModelInterfaces import IEllipseViewModel, IArcViewModel
 
-
-class DefaultEllipseRenderer(BaseRenderer):
+class DefaultEllipseRenderer(object):
     can_render = IEllipse
+    implements_interfaces = IEllipseViewModel
 
-    def doCalcCoords(self, model):
+    def getCoords(self, model):
         half_size = model.size / 2.0
         return numpy.array( [-half_size, half_size] )
            
-    def doCreate(self, renderer, coords):
-        x, y = coords[0].tolist()
-        w, h = abs(coords[1] - coords[0]).tolist()
-
-        return renderer.CreateEllipse( x, y, w, h )
+    def getViewModel(self, model, coords):
+        return ViewModel( 'Ellipse', corner = coords[0], size = abs(coords[1] - coords[0]) )
 
 
-class DefaultArcRenderer(BaseRenderer):
+class DefaultArcRenderer(object):
     can_render = IArc
+    implements_interfaces = IArcViewModel
 
-    def doCalcCoords(self, model):
+    def getCoords(self, model):
         return numpy.array( [0, 0] )
            
-    def doCreate(self, renderer, coords):
-        x, y = coords.tolist()
-
-        return renderer.CreateArc( x, y, self.model.radius, self.model.startAngle, self.model.endAngle, self.model.clockwise )
+    def getViewModel(self, model, coords):
+        return ViewModel( 'CircularArc', center = coords, radius = model.radius, startAngle = model.startAngle, endAngle = model.endAngle, clockwise = model.clockwise )

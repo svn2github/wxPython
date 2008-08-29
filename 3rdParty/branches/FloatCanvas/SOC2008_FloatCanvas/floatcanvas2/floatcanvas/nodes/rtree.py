@@ -10,8 +10,9 @@ class RTree(object):
 
     Maintains a flat list of nodes and performs queries in linear fashion. '''
 
-    children = []
-    
+    def __init__(self):
+        self.children = []
+  
     def performSpatialQuery( self, query ):
         ''' perform a spatial query on the tree '''
         return query.GetIntersection( self )
@@ -19,6 +20,9 @@ class RTree(object):
     def addChild( self, child ):
         ''' add a child to the tree '''
         self.children.append( child )
+        
+    def removeChild( self, child ):
+        self.children.remove( child )
 
     
     def _getBoundingBox(self):

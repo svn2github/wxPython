@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>Making objects do: Events and input handling</title>
+
+<h2>Making objects do: Events and input handling</h2>
+<hr>
+
+<p>FloatCanvas can do more than just draw objects. You can also interact with them.
+For example you can be notified when a user presses the left mouse button on a
+shape or moves the mouse over it. Keyboard events are also sent, so if the user
+presses a key while you're over a shape with your mouse cursor, this shape will
+receive a key down event which you can handle.</p>
+<p>If you want to receive an event from a shape, you do it like this:</p>
+<pre>
+node = canvas.create( ... )
+def event_handler(event):
+    print '%s event on nodes %s at pos %s, wx_event: %s' % ( event.__class__.__name__, event.nodes, event.coords, event.wx_event )
+node.subscribe( event_handler, 'left_down' )
+</pre>
+<p>Possible events are:</p>
+<blockquote>
+left_down, left_up, left_dlick,
+middle_down, middle_up, middle_dlick,
+right_down, right_up, right_dlick, 
+move, wheel, key_down, key_up
+</blockquote>
+
+<p>If you want to get at the original wxPython event which contains data such as
+the mouse position, you can access event.wx_event.</p>
+<p>Event provides other properties like event.coords (world position where the
+event occured) as well event.nodes (all nodes at events.coords).</p>
+
+<p>By default input event handling works only on a NavCanvas. If you want to use
+your own canvas with input event handling, you can do the same thing NavCanvas
+does. It uses the floatcanvas.canvas.guiModes module to bind all wx events to
+raise the events for the shapes. Using it is as simple as doing this:</p>
+<pre>
+mode = floatcanvas.canvas.guiMode.GUIModeMouse()
+mode.Activate( canvas )
+</pre>
+<p>where canvas should be a subclass floatcanvas.canvas.floatCanvas.FloatCanvas of.
+See the navCanvas module for inspiration how the different gui modes work. It's
+not difficult.</p>
+<br><br>
+<h5>Hit-testing excourse:</h5>
+
+<p>The underlying mechanism to do this consists of multiple parts. The integral
+part at the bottom is called hit-testing. Maybe you have noticed that
+SimpleCanvas has a method called hitTest. It looks like this:</p>
+<pre>
+def hitTest( screen_pnt, exact = True, order = True )
+</pre>
+<p>You give it a point in screen coordinates (like the position of the mouse
+cursor). The function transforms this point into world coordinates (the
+coordinate system you've put all your shapes in) and then determines which nodes
+intersect with the world point and returns those.</p>
+<p>Hit-testing is just one form of a spatial query. By default FloatCanvas supports
+another kind of spatial query: the bounding box query. A bounding box query
+allows you to get all the nodes within a specific box. This is useful if you
+wanted to implement a sweep selection mechanism for example. FloatCanvas uses
+the same mechanism internally to cull all nodes before rendering, so only the
+ones which actually end up in the window later will be rendered.</p>
+<p>Take a look at the Canvas.performSpatialQuery and SimpleCanvas.hitTest function
+for usage.</p>
+<p>With hit-testing we have the basic mechanics in place to determine the specific
+objects where events should be sent to.</p>
+
+</html>

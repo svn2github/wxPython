@@ -69,6 +69,8 @@ class BasicRenderableNode(RenderableNode):
         ''' Tests whether we intersect with the given primitive. This is used
              by exact spatial queries.
         '''
+        if not self.view:
+            return False
         return self.view.intersection( primitive )
             
     def _drawDebugBoundingBoxes(self, renderer, camera):
@@ -154,10 +156,61 @@ class BasicRenderableNode(RenderableNode):
     boundingBoxRecursive = property( _getBoundingBoxRecursive )
     
     
-    
+
+class NodeToSurfaceRenderer(object):
+    ''' renders a node to a bitmap
+        todo: could share surfaces between nodes
+    '''
+    def __init__(self, node, surface_size, render):
+        self.node = node
+        self.renderer = node.renderer
+        self.render = render
+        self.surface_size = surface_size
+        self._createRenderSurface( surface_size )
+
+    def _createRenderSurface(self, surface_size):
+        self.surface = self.renderer.CreateRenderSurface( surface_size, hasAlpha = True )
+        self.camera = Camera( LinearTransform2D(), name = 'render to surface cam' )
+        self.camera.viewport = Viewport( self.surface.size )
+        
+    def renderNodeToSurface(self, padding = 0.05):
+        node = self.node
+            
+        print 'Rendering to surface ...'
+        self.surface.Activate()
+        self.surface.BeginRendering()
+        self.surface.Clear( background_color = (0,0,0,0) )
+
+        self.camera.zoomToExtents( node.boundingBoxRecursive, padding_percent = padding, maintain_aspect_ratio = False)
+        extra_scale = (1 + padding) / self.camera.viewTransform.scale
+
+        self.render( self.renderer, self.camera, True )
+
+        self.surface.EndRendering()
+        self.surface.Deactivate()
+        print '... done'
+        
+        from ..views import BaseRenderer, DefaultBitmapRenderer
+        from ..models.bitmap import Bitmap
+        self.bitmap_model = Bitmap( self.surface.bitmap )
+        self.render_view = BaseRenderer( self.renderer, look = None, model = self.bitmap_model, primitiveRenderer = DefaultBitmapRenderer() )
+        self.initial_transform = LinearTransform2D( matrix = node.worldTransform.matrix.copy() )
+        
+    def renderSurface(self, camera):
+        #self.render_view.transform = self.worldTransform * self.initial_transform.inverse * self.camera.transform
+        self.render_view.transform = LinearTransform2D( matrix = self.node.worldTransform.matrix.copy() ) * self.initial_transform.inverse * self.camera.transform
+        self.render_view.Render( camera )
+        
+
+
 from ..math.transform import LinearTransform2D
 from ..nodes.camera import Camera, Viewport
 
+# todo: change this class so it uses only filters
+#       render_to_surface can be expressed as a filter
+#       plus we can establish filter chains where the output of one filter
+#       is fed to that of another filter (or multiple filters)
+#       this allows us to create entire filter graphs
 class DefaultRenderableNode(BasicRenderableNode):
     ''' The standard renderable node used in fc.
         It features render-to-surface functionality which can be used for things
@@ -166,59 +219,64 @@ class DefaultRenderableNode(BasicRenderableNode):
         the surface. You can also customize the shouldRenderToSurface method
         to determine when to re-render to surface.
     '''
-    def __init__(self, renderer, render_to_surface_enabled, surface_size, model, view, *args, **keys):
+    def __init__(self, renderer, render_to_surface_enabled, surface_size, model, view, filter, *args, **keys):
         BasicRenderableNode.__init__(self, model, view, *args, **keys)
         self.renderer = renderer
+        self.surface_size = surface_size
         self.render_to_surface_enabled = render_to_surface_enabled
-        self.render_view = None
-        if render_to_surface_enabled:            
-            self.surface = renderer.CreateRenderSurface( surface_size, hasAlpha = True )
-            self.camera = Camera( LinearTransform2D(), name = 'render to surface cam' )
-            self.camera.viewport = Viewport( self.surface.size )
-            self.regenerate = True
+        self.filter = filter
+        if filter:
+            self.filter.create( self, self.RenderWithoutFilter )
+
+        self.regenerate = True
+        if self.render_to_surface_enabled:
+            self.surface_renderer = NodeToSurfaceRenderer( self, surface_size, self.RenderDirect )
         
+    def RenderDirect(self, renderer, camera, renderChildren):
+        return super(DefaultRenderableNode, self).Render( renderer, camera, renderChildren )
+    
+    def RenderWithoutFilter(self, renderer, camera, renderChildren):
+        if not self.render_to_surface_enabled:
+            return self.RenderDirect( renderer, camera, renderChildren )
+        
+        renderToSurface = self.shouldRenderToSurface(renderer, camera, renderChildren)
+        
+        if renderToSurface:
+            self.surface_renderer.renderNodeToSurface()
+            self.regenerate = False
+            
+        self.surface_renderer.renderSurface( camera )
+
+    
     def Render(self, renderer, camera, renderChildren = True):
         ''' Override the base class render method to implement the
             render-to-surface functionality.
         '''
-        if not self.render_to_surface_enabled:
-            return super(DefaultRenderableNode, self).Render( renderer, camera, renderChildren )
-        
-        renderToSurface = self.shouldRenderToSurface(renderer, camera, renderChildren)
-        
-        if renderToSurface or (self.render_view is None):
-            print 'Rendering to surface ...'
-            self.surface.Activate()
-            self.surface.Clear( background_color = (0,0,0,0) )
-
-            padding = 0.05
-            self.camera.zoomToExtents( self.boundingBoxRecursive, padding_percent = padding, maintain_aspect_ratio = False)
-            extra_scale = (1 + padding) / self.camera.viewTransform.scale
-
-            super(DefaultRenderableNode, self).Render( renderer, self.camera, True )
-
-            self.surface.Deactivate()
-            print '... done'
-
-            #self.render_object = renderer.CreateBitmap( self.surface.bitmap, True )
-            from ..views.bitmapRenderer import DefaultBitmapRenderer
-            from ..models.bitmap import Bitmap
-            bitmap_model = Bitmap( self.surface.bitmap )
-            self.render_view = DefaultBitmapRenderer( renderer, bitmap_model, look = None )
-            #self.render_object = renderer.CreateBitmap( self.surface.bitmap )
-            #self.render_object.transform = self.transform
-            self.initial_transform = LinearTransform2D( matrix = self.worldTransform.matrix.copy() )
-
-            #f = file( 'renderSurface_test.png', 'wb' )
-            #f.write( self.surface.getData('png') )
-            #f.close()
-            self.regenerate = False
-            
-
-        #self.render_view.transform = self.worldTransform * self.initial_transform.inverse * self.camera.transform
-        self.render_view.transform = LinearTransform2D( matrix = self.worldTransform.matrix.copy() ) * self.initial_transform.inverse * self.camera.transform
-        self.render_view.Render( camera )
+        if self.filter:
+            self.filter.render( renderer, camera, renderChildren )
+        else:
+            self.RenderWithoutFilter( renderer, camera, renderChildren )
 
 
     def shouldRenderToSurface(self, renderer, camera, renderChildren):
         return self.regenerate
+    
+    def _setRenderToSurfaceEnabled(self, value):
+        if hasattr(self, '_render_to_surface_enabled') and value == self._render_to_surface_enabled:            # no change
+            return
+        self._render_to_surface_enabled = value
+        self.regenerate = True
+
+    def _getRenderToSurfaceEnabled(self):
+        return self._render_to_surface_enabled
+
+    render_to_surface_enabled = property( _getRenderToSurfaceEnabled, _setRenderToSurfaceEnabled )
+    
+
+    def _getLocalBoundingBox(self):
+        ''' Returns the bounding box in the local frame '''
+        if self.filter:
+            return self.filter.localBoundingBox
+        return self.view.localBoundingBox
+    
+    localBoundingBox = property( _getLocalBoundingBox )

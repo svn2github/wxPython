@@ -60,10 +60,17 @@ class Camera(NodeWithTransform):
         new_zoom = (self.viewport.size / boundingBox.Size) * ( 1 - padding_percent )
         if maintain_aspect_ratio:
             old_zoom = self.zoom
-            old_aspect = old_zoom[0] / old_zoom[1]
-            if old_aspect > 1:                
-                new_zoom = ( new_zoom[0], new_zoom[0] / old_aspect )
+            old_aspect = old_zoom[1] / old_zoom[0]
+
+            # say new_zoom = (6, 9) and aspect ratio was 3
+            # then we get p1 = (6, 27) and p2 = (3, 9)
+            # so we chose p2, because it has less zoom and nothing is cut off
+            possibility1 = ( new_zoom[0], new_zoom[0] * old_aspect )
+            possibility2 = ( new_zoom[1] / old_aspect, new_zoom[1] )
+
+            if possibility1[1] > new_zoom[1]:
+                new_zoom = possibility2
             else:
-                new_zoom = ( new_zoom[1] * old_aspect, new_zoom[1] )
+                new_zoom = possibility1
 
         self.zoom = new_zoom

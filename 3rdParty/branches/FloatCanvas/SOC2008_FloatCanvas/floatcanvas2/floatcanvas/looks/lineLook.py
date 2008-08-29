@@ -11,6 +11,13 @@ class LineLook(RendererSpecificLook):
             self.pen.Activate()
             
     def __init__(self, line_colour, width = 1, style = 'solid', cap = 'round', join = 'round', dashes = None, stipple = None):
+        # Call SetCap if you need to specify how the ends of thick lines should
+        # look: round (the default) specifies rounded ends,
+        #       projecting specifies a square projection on either end
+        #       butt specifies that the ends should be square and should
+        #         not project.
+        # join styles: round, bevel and miter
+
         RendererSpecificLook.__init__(self)
         self.line_colour = line_colour
         self.width = width

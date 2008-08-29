@@ -27,3 +27,12 @@ class RendererSpecificLook(Look):
 
     def _addLook(self, renderer, renderer_specific_look):
         return self.look_cacher.add( renderer, renderer_specific_look )
+    
+    def __getstate__(self):
+        d = self.__dict__.copy()
+        del d['look_cacher']
+        return d
+    
+    def __setstate__(self, state):
+        self.__dict__ = state
+        self.look_cacher = Cacher()

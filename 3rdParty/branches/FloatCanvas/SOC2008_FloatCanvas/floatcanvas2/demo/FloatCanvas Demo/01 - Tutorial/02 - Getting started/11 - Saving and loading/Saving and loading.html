@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>Saving and loading</title>
+
+<h2>Saving and loading</h2>
+<hr>
+
+<p>Often it is desirable to save the current state of the canvas and reload it if
+desired. For example you made a nice drawing and want to send it to a colleague
+so he can enjoy it. Or you just want to save the canvas for other purposes.</p>
+
+<p>FloatCanvas has different builtin serialization and export methods:</p>
+
+<ol>
+<li>Simple "export as an image" - allows you to export the current view in a
+    variety of image formats like png, jpg, bmp, gif and many more</li>
+<li>Native serialization and unserialization. This saves the state of the whole
+    canvas, along with the models you've put onto it. Later you can load the
+    saved data again and access nodes etc. like nothing has happenened. This
+    method preserves all information and allows you to continue working on the
+    canvas where you left off.</li>
+<li>SVG export - This exports the current canvas and view to an svg file which
+    can later be viewed in programs supporting svg like many internet browser</li>
+</ol>
+<p>The export variants can only export data. This means you cannot load from an svg
+or image file once you have saved it in this format. It's certainly possible to
+implement a whole svg loader, but this requires some work on a parser and has
+not yet been attempted. If you want to do one, we're certainly interested!</p>
+
+<p>For the rest of this lesson we'll deal with methods 1) and 2). Method 3) - SVG
+export will be discussed in the next lesson.</p>
+
+<p>Exporting to images is really easy. You just call this:</p>
+
+<pre>canvas.saveScreenshot( 'test_image.png' )</pre>
+
+<p>and the current view will be saved in a file called test_image.png. The format
+of the image is automatically determined by its extension.</p>
+<p>Instead of saving to a file, you can also just get the data as a string with </p>
+
+<pre>imageData = canvas.getScreenshot( format )</pre>
+
+<p>where format looks like 'png', 'jpg', 'gif', ... . One special format is 'raw'
+which returns the raw image data without the data being embedded in a file
+format.</p>
+
+<p>Saving the canvas to the native file format (method (2)) is just as easy as
+exporting the canvas to an image.</p>
+<p>You do it like</p>
+
+<pre>canvas.serializeToFile( 'savedcanvas.fcsf' )</pre>
+
+<p>or the no-file, data version:</p>
+
+<pre>canvas.serialize( 'fcsf' )</pre>
+
+<p>'fcsf' stands for 'floatcanvas save file'. You need to give your files this
+extension, otherwise you need to call</p>
+
+<pre>canvas.serializeToFile( 'savedcanvas.otherextension', 'fcsf' )</pre>
+
+<p>You can load the saved data by doing</p>
+
+<pre>canvas.unserializeFromFile( 'savedcanvas.fcsf' )</pre>
+
+<p>or the no-file, data version:</p>
+
+<pre>canvas.unserialize( data, 'fcsf' )</pre>
+
+<p>The fcsf format saves all nodes on the canvas with all their non-transient
+properties. It also saves the models, so be sure your models are pickable!</p>
+
+<p>The example code shows how to save and load a bunch of objects.</p>
+
+</html>

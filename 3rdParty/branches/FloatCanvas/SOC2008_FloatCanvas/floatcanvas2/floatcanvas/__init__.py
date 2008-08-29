@@ -7,6 +7,7 @@ except ImportError:
 # for people who like structured namespaces
 import canvas
 import events
+import filters
 import looks
 import math
 import models
@@ -17,6 +18,7 @@ import views
 # for people who like flat namespaces
 from canvas import *
 from events import *
+from filters import *
 from looks import *
 from math import *
 from models import *

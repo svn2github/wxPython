@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>SVG export</title>
+
+<h2>SVG export</h2>
+<hr>
+
+<p>SVG export is not much different from native serialization which you got to
+know in the last lesson. You use the same calls, just with a different
+extension:</p>
+
+<pre>canvas.serializeToFile( 'savedcanvas.svg' )</pre>
+
+<p>or the no-file, data version:</p>
+
+<pre>canvas.serialize( 'svg' )</pre>
+
+<p>The current svg exporter tries to export svgs so they look the same as outputted
+by the wx backend. Sometimes this does not work if you specify strings for
+colours like 'green', because svg and wx associate different rgb values with
+them. So if you want to look images exactly the same, try to use rgb(a) values.</p>
+
+<blockquote>Note: svg export does not show render-to-surface nodes and filter as
+on-screen at the moment.</blockquote>
+
+
+</html>

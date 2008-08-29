@@ -26,7 +26,7 @@ from ..math import ArbitraryTransform, CompoundTransform, LinearAndArbitraryComp
 from ..nodes import Node, NodeWithTransform, NodeWithBounds, RenderableNode, BasicRenderableNode, DefaultRenderableNode, Camera
 
 from ..models import Rectangle, RoundedRectangle, Circle, Ellipse, Arc, Text, Line, LineLength, Lines, LinesList, LineSegments, LineSegmentsSeparate, Bitmap, CubicSpline, QuadraticSpline, Polygon, PolygonList, Arrow, AngleArrow
-from ..views import DefaultRectangleRenderer, DefaultRoundedRectangleRenderer, DefaultEllipseRenderer, DefaultArcRenderer, DefaultTextRenderer, DefaultLinesListRenderer, DefaultLineSegmentsSeparateRenderer, DefaultBitmapRenderer, DefaultCubicSplineRenderer, DefaultQuadraticSplineRenderer, DefaultPolygonListRenderer, DefaultArrowRenderer, DefaultView
+from ..views import DefaultRectangleRenderer, DefaultRoundedRectangleRenderer, DefaultEllipseRenderer, DefaultArcRenderer, DefaultTextRenderer, DefaultLinesListRenderer, DefaultLineSegmentsSeparateRenderer, DefaultBitmapRenderer, DefaultCubicSplineRenderer, DefaultQuadraticSplineRenderer, DefaultPolygonListRenderer, DefaultArrowRenderer, DefaultView, BaseRenderer, RemoveNonLinearTransformFromCoords
 from ..looks import SolidColourLook, RadialGradientLook, LinearGradientLook, OutlineLook
 
 info = \
@@ -43,7 +43,7 @@ info = \
     NodeWithBounds          : ('transform', '_parent', '_children'),
     RenderableNode          : ('transform', '_parent', '_children'),
     BasicRenderableNode     : ('transform', '_parent', '_children', 'model', 'view'),
-    DefaultRenderableNode   : ('transform', '_parent', '_children', 'model', 'view', 'render_to_surface_enabled'),
+    DefaultRenderableNode   : ('transform', '_parent', '_children', 'model', 'view', 'render_to_surface_enabled', 'filter'),
     Camera                  : ('transform', '_parent', '_children'),
         
     Rectangle               : ('size',),
@@ -67,16 +67,19 @@ info = \
     AngleArrow              : ('startPoint', 'length', 'angle', 'headSize', 'headFilled'),
     #Points                  : ('points', 'shape', 'size'),
         
-    DefaultRectangleRenderer: ('model', 'transform'),
-    DefaultRoundedRectangleRenderer: ('model', 'transform'),
-    DefaultEllipseRenderer  : ('model', 'transform'),
-    DefaultArcRenderer      : ('model', 'transform'),
-    DefaultTextRenderer     : ('model', 'transform'),
-    DefaultLinesListRenderer : ('model', 'transform'),
-    DefaultLineSegmentsSeparateRenderer : ('model', 'transform'),
-    DefaultBitmapRenderer   : ('model', 'transform'),
-    DefaultPolygonListRenderer : ('model', 'transform'),
+    BaseRenderer            : ('model', 'transform'),
+    #DefaultRectangleRenderer: ('model', 'transform'),
+    #DefaultRoundedRectangleRenderer: ('model', 'transform'),
+    #DefaultEllipseRenderer  : ('model', 'transform'),
+    #DefaultArcRenderer      : ('model', 'transform'),
+    #DefaultTextRenderer     : ('model', 'transform'),
+    #DefaultLinesListRenderer : ('model', 'transform'),
+    #DefaultLineSegmentsSeparateRenderer : ('model', 'transform'),
+    #DefaultBitmapRenderer   : ('model', 'transform'),
+    #DefaultPolygonListRenderer : ('model', 'transform'),
     DefaultView             : ('look', 'transform'),
+    #RemoveNonLinearTransformFromCoords  :  ( 'transform' ),
+        
         
     SolidColourLook         : ('line_colour', 'fill_kind', 'args'),
     RadialGradientLook      : ('line_colour', 'fill_kind', 'args'),
@@ -102,6 +105,8 @@ def createObservableClass(klass, attribs, prefix = 'Observable'):
             org_init(self, *args, **keys)
             self._children = ObservableChildren( self._children )
         observer_class.__init__ = __init__
+        
+    return observer_class
 
 for klass, attribs in info.items():
     createObservableClass( klass, attribs )

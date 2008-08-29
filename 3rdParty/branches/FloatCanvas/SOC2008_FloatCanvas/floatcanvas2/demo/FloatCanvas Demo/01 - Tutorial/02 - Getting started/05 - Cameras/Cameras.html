@@ -1,0 +1,23 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>Cameras</title>
+
+<h2>Cameras</h2>
+<hr>
+<p>A typical fc.SimpleCanvas (fc.NavCanvas is just a specialized form of 
+fc.SimpleCanvas) holds a default camera which is accessible via the .camera
+attribute of the canvas. A camera is very similar to a regular node, it has a
+transform and can be moved around. The camera is the eye through which you see
+the scene. So if you want to take a look at different parts, or see a bigger
+area, you want to move the camera or set its zoom factor like camera.zoom = 3.
+(for really interested people: the view transform is the inverse of the camera
+transform, so zoom is the reciprocal of scale).</p>
+<p>Instead of accessing the camera directly you can also use the canvas.zoom*
+methods which were discussed in the "Default Shapes" section above.</p>
+<p>You can also use multiple cameras with FloatCanvas so you can switch between
+different views in the scene easily.</p>
+<p>The source code for this demo is not really great, it shows a view of the things
+you can do with the camera, but nothing really exciting.</p>
+
+
+</html>

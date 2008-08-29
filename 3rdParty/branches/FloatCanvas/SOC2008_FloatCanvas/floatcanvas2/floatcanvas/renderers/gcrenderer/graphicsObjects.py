@@ -61,7 +61,15 @@ class GCFont(object):
         #if self.renderer.active_font == self:
         #    return
         self.renderer.active_font = self
-        self.renderer.GC.SetFont(self.font)
+        try:
+            gc = self.renderer.GC
+        except AttributeError:  # this can happen if there's no active gc
+            pass
+        else:
+            gc.SetFont(self.font)
+            
+        # always inform the measuring context about the font
+        self.renderer.measuringContext.SetFont( self.font )
 
 
 class GCBrush(object):
@@ -87,7 +95,12 @@ class GCBrush(object):
         #if self.renderer.active_brush == self:
         #    return
         self.renderer.active_brush = self
-        self.renderer.GC.SetBrush(self.brush)
+        try:
+            gc = self.renderer.GC
+        except AttributeError:  # this can happen if there's no active gc
+            pass
+        else:
+            gc.SetBrush(self.brush)
 
 class GCPen(object):
     ''' A wrapper around a wxGraphicsPen pen '''
@@ -122,7 +135,12 @@ class GCPen(object):
         #if self.renderer.active_pen == self:
         #    return
         self.renderer.active_pen = self
-        self.renderer.GC.SetPen(self.pen)
+        try:
+            gc = self.renderer.GC
+        except AttributeError:  # this can happen if there's no active gc
+            pass
+        else:
+            gc.SetPen( self.pen )
                 
 
 class GCBitmap(object):

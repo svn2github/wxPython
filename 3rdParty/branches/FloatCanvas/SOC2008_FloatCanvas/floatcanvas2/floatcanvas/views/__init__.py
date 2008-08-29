@@ -7,3 +7,4 @@ from bitmapRenderer import DefaultBitmapRenderer
 from splineRenderers import DefaultCubicSplineRenderer, DefaultQuadraticSplineRenderer
 from polygonRenderer import DefaultPolygonListRenderer
 from arrowsRenderers import DefaultArrowRenderer
+from baseRenderer import BaseRenderer, RemoveNonLinearTransformFromCoords

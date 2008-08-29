@@ -1,0 +1,752 @@
+FloatCanvas2 tutorial
+-----------------------
+
+TODO: insert link to FloatCanvas website here
+Mailing list: xxxxxxxxxxx
+
+filter ideas: grey-out (disable), pixelize
+
+Content:
+
+Basics
+  1. What is FloatCanvas and why would I want to use it?
+  2. Are there any examples/demos I can look at to get an impression of FloatCanvas?
+  3. What can FloatCanvas do? What are its features?
+  4. How do I install FloatCanvas?
+
+Getting Started
+  5. A simple example
+  6. Default shapes
+  7. Looks
+  8. Transformations
+  9. Cameras
+ 10. Groups
+ 11. Animation
+ 12. Making objects do: Events and input handling
+ 13. Render-to-surface and layers
+ 14. Filters and Effects
+ 15. Saving and loading
+ 16. SVG export
+
+Advanced Topics
+ 30. Adapters: Visualizing custom data with a default view
+ 31. Creating a custom view to visualize custom data (creating a pie-chart)
+ 32. Creating a custom transformation (creating a whirl transform)
+ 33. Creating a custom node (sample illustrating how to create a drop shadow/glow effect)
+
+Miscellaneous
+ 40. Migration from the old FloatCanvas package to FloatCanvas2
+ 41. Performance problems, how to optimize my drawing?
+ 
+Known issues, bugs, questions, feedback
+ 50. Known issues
+ 51. I think I've found a bug and want to report it. What's the best way to do so?
+ 52. I don't understand how to do X, can you help me?
+ 53. FloatCanvas could work better in regards to X/needs feature Y? Tell us!
+
+
+                              ******************************
+                              ****        BASICS        ****
+                              ******************************
+
+
+
+1. What is FloatCanvas and why would I want to use it?
+---------------------------------------------------------
+
+FloatCanvas is a python library that helps to visualize your data. It can draw objects like rectangles and spheres (and more complex ones like text, arrows and splines) onto your screen. These objects can be animated, moved around and rotated. You can zoom around them or bind events to each object (e.g. if you click the sphere, it makes the rectangle turn).
+The usage possibilities are very wide, ranging from map drawing applications to visualising flow graphs. You could also use FloatCanvas to make a small presentation creation program or to draw pie charts, it's up to you!
+
+
+2. Are there any examples/demos I can look at to get an impression of FloatCanvas?
+--------------------------------------------------------------------------------------
+
+Yes, check out the FloatCanvas website (TODO: insert link here). There you'll find some screenshots of FloatCanvas in action.
+After you have installed FloatCanvas (see section 4 below) you can check out the demo application to get a better impression.
+
+
+3. What can FloatCanvas do? What are its features?
+----------------------------------------------------
+
+
+- Render objects: Rectangles, Circles, Ellipses, Lines, Bitmaps, Text, Splines, Arrows, Polygons, ...
+- Anti-aliased drawing
+- Drawing objects with transparency (alpha channel)
+- Your data can be anything
+- You can create custom draw objects to visualize your data in the optimum way
+- Sophisticated looks which can give different appearances to the same object
+- Layers
+- Filters and Effects
+- Navigation around the objects
+- Cameras
+- Can do render-to-surface which allows for massive speedups if you have lots of static objects
+- Based on a model-view pattern. If your model changes the view updates automatically (if desired).
+- Almost arbitrary transforms of the objects, for example you can use a mercator transform if you want to visualize map coordinates given in (latitude, longitude) format.
+
+
+4. How do I install FloatCanvas?
+----------------------------------
+
+FloatCanvas is part of wxPython Go to http://www.wxpython.org and download the latest release. FloatCanvas comes along with this.
+Be sure to download the Docs-Demo package. It comes along with the FloatCanvas Demo. After starting the demo, just enter FloatCanvas into the search bar at the bottom. The demo will then show up on the tree at the left side. Click it and follow the instructions on the right side.
+
+FloatCanvas itself is built on top of wxPython.
+
+
+
+
+                          ***************************************
+                          ****        GETTING STARTED        ****
+                          ***************************************
+
+
+5. A simple example
+---------------------
+
+Let's get started for real now. The next few lines tell you how to get something
+on screen. You can find the accompanying source code in the
+floatcanvas/docs/tutorial/src folder. You can also just run the FloatCanvas
+wxPython demo (see section 4) and select the Tutorial tab.
+When you run the code, you should see a black circle on a purple rectangle which
+sits on one of its edges. How was it done?
+First, the run_standalone function is called. This one creates the neccessary
+wxPython application and a frame window where we are going to put our canvas in.
+Then we actually create the canvas and its contents via the "start" function.
+After it was created, the window is shown and the application is run. So
+run_standlone just contains some boilerplate code. The real magic is happening
+in the start function which we'll take a closer look at now.
+
+At the very top of "start" you can see we first create a canvas:
+
+canvas = fc.NavCanvas( frame, backgroundColor = 'white' )
+
+In this case we use the "NavCanvas" provided by fc. It allows the user to
+Navigate around the contents of the canvas later. E.g. it provides buttons to do
+zooming and panning. We tell the canvas to use white as the background color.
+The canvas is the most important part of floatcanvas. It's the thing where
+everything is drawn on. So you will very likely always create one.
+Remember that the wxPython demo allows you to modify the code. So if you want to
+play with the background color, change 'white' to 'blue' in the code, run the
+modified version and see what happens.
+The next step is creating a circle. This is done with the line
+
+canvas.create( 'Circle', 150, name = 'my first circle', pos = (0, 0), look = ('white', 'black') )
+
+150 is the radius, a name is given to it, the center of the circle is put at
+(0,0) and it gets a simple "outline white, inner part black" look.
+This is the standard way to add an object to the canvas. You call canvas.create
+followed with the kind of object you want to add. Here it's a 'Circle', more
+objects like 'Rectangle' and 'Polygon' are shown in the next example.
+Alternatively, you could have written
+
+canvas.createCircle( 150, name = 'my first circle', pos = (0, 0), look = ('white', 'black') )
+
+which does exactly the same thing.
+
+What both of these calls really do is this:
+The canvas is basically the root node of a tree. The calls above create a
+DefaultRenderableNode and attach it as a child to the tree. You can verify this
+by examining the return value of the create call ( node = canvas.create( ... )).
+You'll learn more about how this all works in the next examples.
+
+Ok, let's progress to the next line. It reads:
+
+look =  fc.LinearGradientLook( 'purple', (0,0), 'white', (30, 0), 'pink' )
+
+This one is a bit more interesting. Here we create a "look". A look basically
+defines what a specific object will visually look like. A look can be applied
+to multiple objects giving them the same appearance.
+In this case we create a "gradient" look where one color ('white') is blended to
+another color ('pink'). The outline is 'purple'.
+This is the look we're going to apply on the background rectangle object next:
+
+canvas.createRectangle( (300, 300), pos = (0, 0), rotation = 45, look = look )
+
+You can see how we set the look of a rectangle of size (300, 300) to the look
+we've just created. Additionally we rotated the rectangle by 45 degrees.
+
+Now the canvas is setupped and ready to be rendered (which happens
+automatically).
+
+Tadaaa, this concludes the first example. Hope you continue!
+
+
+6. Default shapes
+-------------------
+
+As you have seen in the previous example you can create circle and rectangle
+objects. But there are many more. Here's a list with all of the possible shapes
+along with the parameters you need to pass to them:
+
+Circle                radius
+Ellipse               (sizeX, sizeY)
+RoundedRectangle      (sizeX, sizeY), cornerRadius
+Text                  'string'
+Line                  (startPointX, startPointY), (endPointX, endPointY)
+LineLength            length
+Lines                 [ (point1X,point1Y), (point2X, point2Y), (point3X, point3Y), ... ]
+LinesList             [ line1 (for format see line above), line2, line3, ... ]
+LineSegments          [ (startPoint1X,startPoint1Y), (endPoint1X, endPoint1Y), (startPoint2X,startPoint2Y), (endPoint2X, endPoint2Y), ... ]
+LineSegmentsSeparate  [ (startPoint1X,startPoint1Y), (startPoint2X,startPoint2Y), ... ], [ (endPoint1X, endPoint1Y), (endPoint2X, endPoint2Y), ... ]
+Bitmap                pixels (in width x height x 3 or in width x height x 4 form or wx.Bitmap), displayAsTrueSize
+Arc                   radius, startAngleInRadians, endAngleInRadians, clockwise
+CubicSpline           list of 2d-controlpoints
+QuadraticSpline       list of 2d-controlpoints
+Arrow                 startPoint, endPoint, headSize
+AngleArrow            startPoint, length, angle, headSize
+Polygon               list of 2d points
+PolygonList           list of lists of 2d points
+
+Examples:
+
+Circle                125
+Ellipse               (100, 150)
+RoundedRectangle      (100, 100), 30
+Text                  'wxPython'
+Line                  (0,0), (100,0)
+LineLength            100
+Lines                 [ (0,0), (20, 30), (90, 70), (10, -20) ]
+LinesList             [ [(146, 399), (163, 403), (170, 393), (169, 391)] ]
+LineSegments          [ (0,0), (20, 90), (40, 30), (90,  35) ]
+LineSegmentsSeparate  [ (0,0), (40, 30) ], [ (20, 90), (90,35) ]
+Bitmap                toucanData
+Bitmap                toucanBitmap
+Bitmap                toucanData, False
+Arc                   75, 4.5, 1.5, False
+CubicSpline           [ (0,0), (90, 70), (90, 20), (0, 50) ]
+QuadraticSpline       [ (0,0), (20, 50), (80, 0) ]
+Arrow                 (0,0), (40, -20), (20, 10)
+AngleArrow            (0,0), 50, 20, (30, 10)
+Polygon               [ (0,0), (20, 30), (90, 70), (10, -20) ]
+PolygonList           [ [ (0,5), (50, 50), (5,0) ], [ (0,-5), (50, -50), (5,0) ], [ (0,-5), (-50, -50), (-5,0) ], [ (0,5), (-50, 50), (-5,0) ] ]
+
+The source code to this lesson "Default shapes" works just like the source code
+of the previous lesson. There are just more shapes created.
+These lines here
+
+    toucanImg = wx.Image( 'toucan.png' )
+    toucanData = fc.arrayFromImage( toucanImg )
+    toucanBitmap = wx.BitmapFromImage( toucanImg.AdjustChannels( 0, 2, 0, 1 ) )
+
+just load the image of a toucan (with alpha channel) and then create a numpy
+array from it (2nd line) and a differently coloured bitmap (3rd line).
+The final line is something which often comes in handy:
+
+    canvas.zoomToExtents()
+
+This tellst he view to encompass all of the objects on it. You can also call it
+with canvas.zoomToExtents( boundingBox ) to zoom into a specific area of the
+canvas. 
+It's signature looks like
+
+zoomToExtents(boundingBox = None, padding_percent = 0.05, maintain_aspect_ratio = True)
+
+Then there's also the canvas.zoom function with a signature of
+
+zoom(factor, center = None, centerCoords = 'world')
+
+which allow you to zoom/in out of the current view and center the view onto a
+specific point.
+For more information refer to the docstrings of the zoomToExtents/zoom methods.
+Most functions in fc have docstrings which should be able to help you.
+
+
+7. Looks
+----------
+
+This part tells you about "looks". As we've seen earlier a look defines the
+visual appearance of a node. If you run this example, you can see a few
+different looks applied on different primitives which you got to learn in the
+previous section.
+FloatCanvas provides these looks:
+
+fc.OutlineLook
+  Determines how the outline of the object is drawn. This includes line colour,
+  line width, dashes, line capping and line join styles.
+  The inner part of the object is not filled.
+  If line_colour is None, no line is drawn. Since the object is not filled, it
+  will effectively be invisible (don't use it for this purpose though, there are
+  better methods to do this).
+
+fc.SolidColourLook
+  Determines how the outline is drawn (see fc.OutlineLook) and fills the inner
+  part of the object with a single, solid colour. If line_colour is None, then
+  no outline is drawn.
+
+fc.LinearGradientLook
+  Determines how the outline is drawn (see fc.OutlineLook). The inner part of
+  the object will be filled with a linear gradient. This means  you specify a
+  start colour at some point and an end colour at another point and the colours
+  in-between will be interpolated (blended) between those two points.
+  The gradient pattern will be repeated if neccessary to fill the entiry object.
+  
+fc.RadialGradientLook
+  Determines how the outline is drawn (see fc.OutlineLook). The inner part of
+  the object will be filled with a radial gradient. This means you specify a
+  center of a circle and colour, plus the center of another circle with radius
+  plus colour the colours on the object will be interpolated accordingly.
+
+fc.TextLook
+  This one is a bit special as it can only be applied to text nodes. It defines
+  how text is rendered.
+  Available settings include size, family, style, weight, underlining, faceName,
+  colour and a background fill look of the font.
+  
+Except for TextLook all looks can be applied on all shapes. Colours can be
+defined as strings (like 'red', 'green', ...) or tuples of 3 or 4 number in the
+range of 0-255, e.g. (255,0,0,128) for a semi-transparent red. The 4-tuple form
+is (R,G,B,A). Take a look at the __init__ methods of the looks above to see
+all the parameters they can take.
+
+
+8. Transformations
+-------------------
+
+As you have seen in previous example, we placed objects at different positions
+on our canvas. This was done by using the pos = (100,0) argument to the create
+method. Alternative ways of spelling this would've been position = (100,0) or
+translation = (100,0).
+In the first example, you have also seen how to rotate an object, you did this
+by feeding a rotation = 45 argument to create.
+In addition you can also scale the object by feeding a scale = (2.5, 3.1)
+argument to the create function. This causes the object to be scaled 2.5 times
+along the x-axis and 3.1 times along the y-axis.
+The create function takes those arguments and then creates a single transform
+out of them. A transform is an object which describes the position, size and
+orientation of an object. It is applied to a set of incoming coordinates which
+are then transformed into the outgoing coordinates. For example if your
+transform scales an object by 2,2 it means if the incoming coordinates are 5,5
+then the outgoing ones are 10,10.
+By default FloatCanvas creates a 2d linear transform (which is basically a 3x3
+homogeneous matrix) out of the arguments you pass to create. You can see this
+transform by taking a look at node.transform if node was created like
+node = canvas.create( ... ). If you want to see the associated matrix, try
+node.transform.matrix. I won't go into the details of linear transformation, if
+you want to know how they really work, take a look at a good linear algebra or
+computer graphics book. Right now all you need to know is about the position,
+rotation and scale properties.
+You can also change the position/rotation/scale of an object after creation. To
+accomplish this, you can just do node.position = (5,6) or node.rotate = 90 or
+node.scale = (2,2) on the node. This moves the objects on the canvas. In one of
+the later chapters we'll see how to do animation with this.
+Finally, FloatCanvas allows you to do something more fancy than linear
+transforms. You can supply any kind of transform you want. For exampel if you
+are a cartographer it is very likely your coordinates are not given in a simple
+cartesian coordinate system, but you have a set of (longitude, latitude)-pairs
+instead. These need to be transformed into cartesian space to be drawn. So you
+can employ a Mercator projection for example which does this job. As an example
+the mercator projection is already built in in floatcanvas. A later chapter
+shows how you can add your custom transforms and projections suited to your own
+data.
+You can also set the transform in the create method directly, via using
+transform = fc.LinearTransform2D( someMatrix ) for example.
+The source code to this lesson shows different ways of modifying the position/
+rotation/scale of an object by modifying the respective properties and also
+shows a small example of using the Mercator transform. The outermost points on
+the equator plus both poles are the input coordinates, output coordinates look
+like a diamond, which is what is to be expected (poles up and down, equator
+points left and right).
+You can also see the where = 'front' parameter is being used when constructing
+the lines used with the mercator projection. This means the new shape is created
+on top (front in z-order) of the already present shapes. The where parameter
+defaults to 'back'. So if we didn't set it to 'front', most of the black lines
+would've been hidden under the purple circle.
+
+
+9. Cameras
+------------
+
+A typical fc.SimpleCanvas (fc.NavCanvas is just a specialized form of 
+fc.SimpleCanvas) holds a default camera which is accessible via the .camera
+attribute of the canvas. A camera is very similar to a regular node, it has a
+transform and can be moved around. The camera is the eye through which you see
+the scene. So if you want to take a look at different parts, or see a bigger
+area, you want to move the camera or set its zoom factor like camera.zoom = 3.
+(for really interested people: the view transform is the inverse of the camera
+transform, so zoom is the reciprocal of scale).
+Instead of accessing the camera directly you can also use the canvas.zoom*
+methods which were discussed in the "Default Shapes" section above.
+You can also use multiple cameras with FloatCanvas so you can switch between
+different views in the scene easily.
+The source code for this demo is not really great, it shows a view of the things
+you can do with the camera, but nothing really exciting.
+
+
+10. Groups
+----------
+
+So far we have only created individual models. Now it's time to explore groups.
+As we discussed earlier the canvas is just a tree of nodes. When we added
+shapes to the canvas we added lots of children to the root node. So the root
+node (the canvas) can be perceived as a group.
+You can create now groups on your own by doing this: First you create the parent
+node which is kind of like the "head" of the group. Then you create multiple
+other nodes and add them as children of this parent/"head" node. Voila, your
+group was created. Any node can serve as a group, so if you create a rectangle
+you can add a circle as a child to that rectangle. There's also a special group
+node without any shape where you can add children too.
+Now, if you move the parent node the children will follow it! If you scale the
+parent, the children will get bigger too. You can also create groups in groups.
+A practical example: Say you want to display an image gallery. You could make a
+group for every row and then put all rows into a gallery group. Finally you 
+put all individual galleries into an "all galleries" group.
+If you want to know how groups work in detail please read on. 
+
+Warning: The next two paragraphs might be hard to understand if you never dealt
+with similar things before. If it seems incomprehensible, just skip them and
+take a look at the practical part of groups
+
+Now what's so special about groups and children and parents? I hope you still
+remember what transforms are, we dealt with this topic earlier. Now a child
+inherits the transform of its parent node. The transform of the child is now
+relative to its parent node. In simple words, this means if you move the parent
+node 5 units to the left, all its child nodes will move 5 units to left.
+In detail: Say the parent is at position (5,0). Now the child transform has a
+position of (0,5). This means the child appears at (5,5). Now if you move the
+parent by 3 units on the y-axis, the parent position is (5,3). The local child
+transform is still (0, 5) because you did not change this. But the child's
+*world* transform is (5,8) now. The world transform defines where the object is
+rendered later. The local transform of the object defines the offset relative to
+the parent.
+Important things to keep in mind: A node has a local and a world transform. The
+world transform is just the local transforms of all its parents multiplied with
+each other and then multiplied by the nodes own local transform.
+The first part of the source shows how to use groups in a practical and
+intuitive way without you having to think about all this transform mumbo-jumbo. 
+The mechanics of the local and world transforms are investigated in the second part
+of the source.
+
+
+11. Animation
+--------------
+
+Sometimes you have the need to move things on screen. This can happen in a
+variety of ways. You can put objects on a path and change their position
+accordingly or you can tell an object to rotate around itself. You could
+also want to change its color over time.
+There's no special code for this in floatcanvas since the way you are animating
+the objects is highly dependent on your application.
+If you take a look at the source code, you get an idea, how you can move a few
+objects around based on a simple wx.Timer.
+There's room for future improvements in FloatCanvas here. For example it could
+support linear interpolators, spline interpolator etc. out of the box.
+
+
+12. Making objects do: Events and input handling
+--------------------------------------------------
+
+FloatCanvas can do more than just draw objects. You can also interact with them.
+For example you can be notified when a user presses the left mouse button on a
+shape or moves the mouse over it. Keyboard events are also sent, so if the user
+presses a key while you're over a shape with your mouse cursor, this shape will
+receive a key down event which you can handle.
+If you want to receive an event from a shape, you do it like this:
+
+node = canvas.create( ... )
+def event_handler(event):
+    print '%s event on nodes %s at pos %s, wx_event: %s' % ( event.__class__.__name__, event.nodes, event.coords, event.wx_event )
+node.subscribe( event_handler, 'left_down' )
+
+Possible events are:
+
+left_down, left_up, left_dlick,
+middle_down, middle_up, middle_dlick,
+right_down, right_up, right_dlick, 
+move, wheel, key_down, key_up
+
+If you want to get at the original wxPython event which contains data such as
+the mouse position, you can access event.wx_event.
+Event provides other properties like event.coords (world position where the
+event occured) as well event.nodes (all nodes at events.coords).
+
+By default input event handling works only on a NavCanvas. If you want to use
+your own canvas with input event handling, you can do the same thing NavCanvas
+does. It uses the floatcanvas.canvas.guiModes module to bind all wx events to
+raise the events for the shapes. Using it is as simple as doing this:
+
+mode = floatcanvas.canvas.guiMode.GUIModeMouse()
+mode.Activate( canvas )
+
+where canvas should be a subclass floatcanvas.canvas.floatCanvas.FloatCanvas of.
+See the navCanvas module for inspiration how the different gui modes work. It's
+not difficult.
+
+
+Hit-testing excourse:
+
+The underlying mechanism to do this consists of multiple parts. The integral
+part at the bottom is called hit-testing. Maybe you have noticed that
+SimpleCanvas has a method called hitTest. It looks like this:
+
+def hitTest( screen_pnt, exact = True, order = True )
+
+You give it a point in screen coordinates (like the position of the mouse
+cursor). The function transforms this point into world coordinates (the
+coordinate system you've put all your shapes in) and then determines which nodes
+intersect with the world point and returns those.
+Hit-testing is just one form of a spatial query. By default FloatCanvas supports
+another kind of spatial query: the bounding box query. A bounding box query
+allows you to get all the nodes within a specific box. This is useful if you
+wanted to implement a sweep selection mechanism for example. FloatCanvas uses
+the same mechanism internally to cull all nodes before rendering, so only the
+ones which actually end up in the window later will be rendered.
+Take a look at the Canvas.performSpatialQuery and SimpleCanvas.hitTest function
+for usage.
+With hit-testing we have the basic mechanics in place to determine the specific
+objects where events should be sent to.
+
+
+
+13. Render-to-surface and layers
+---------------------------------
+
+Now for a more advanced feature of FloatCanvas. Until now you created primitives
+which were rendered right to the screen. Well, in reality they were first
+rendered to an offscreen bitmap and then blitted at once to the screen. This
+technique is known as double buffering and helps to prevent flicker.
+The same mechanism can now be exploited to render a node (with all its children)
+to an offscreen bitmap. Then you render this bitmap instead of the individual
+nodes. We will call this render-to-surface - the surface being the bitmap.
+Say you have 1000 small circle nodes. Rendering them is getting a bit slow. So
+you render all of those circle nodes to a bitmap and render the single bitmap
+instead. This saves you rendering 999 nodes! You need to regenerate the bitmap
+whenever one of the circles moves though.
+In conjunction with the groups feature we discussed earlier you can now create
+multiple layers, each one a bitmap with nodes. This allows to create very
+dense drawings which still run at high speeds.
+To render a node to a surface you do it like this:
+
+
+getting image of surface
+
+Render-to-surface has another very interesting application which we'll discuss
+in the next part of this tutorial.
+
+
+14. Filters and Effects
+-------------------------
+
+
+15. Saving and loading
+------------------------
+
+Often it is desirable to save the current state of the canvas and reload it if
+desired. For example you made a nice drawing and want to send it to a colleague
+so he can enjoy it. Or you just want to save the canvas for other purposes.
+
+FloatCanvas has different builtin serialization and export methods:
+
+1) Simple "export as an image" - allows you to export the current view in a
+    variety of image formats like png, jpg, bmp, gif and many more
+2) Native serialization and unserialization. This saves the state of the whole
+    canvas, along with the models you've put onto it. Later you can load the
+    saved data again and access nodes etc. like nothing has happenened. This
+    method preserves all information and allows you to continue working on the
+    canvas where you left off.
+3) SVG export - This exports the current canvas and view to an svg file which
+    can later be viewed in programs supporting svg like many internet browser
+
+The export variants can only export data. This means you cannot load from an svg
+or image file once you have saved it in this format. It's certainly possible to
+implement a whole svg loader, but this requires some work on a parser and has
+not yet been attempted. If you want to do one, we're certainly interested!
+
+For the rest of this lesson we'll deal with methods 1) and 2). Method 3) - SVG
+export will be discussed in the next lesson.
+
+Exporting to images is really easy. You just call this:
+
+canvas.saveScreenshot( 'test_image.png' )
+
+and the current view will be saved in a file called test_image.png. The format
+of the image is automatically determined by its extension. 
+Instead of saving to a file, you can also just get the data as a string with 
+
+imageData = canvas.getScreenshot( format )
+
+where format looks like 'png', 'jpg', 'gif', ... . One special format is 'raw'
+which returns the raw image data without the data being embedded in a file
+format.
+
+Saving the canvas to the native file format (method (2)) is just as easy as
+exporting the canvas to an image.
+You do it like
+
+canvas.serializeToFile( 'savedcanvas.fcsf' )
+
+or the no-file, data version:
+
+canvas.serialize( 'fcsf' )
+
+'fcsf' stands for 'floatcanvas save file'. You need to give your files this
+extension, otherwise you need to call
+
+canvas.serializeToFile( 'savedcanvas.otherextension', 'fcsf' )
+
+You can load the saved data by doing
+
+canvas.unserializeFromFile( 'savedcanvas.fcsf' )
+
+or the no-file, data version:
+
+canvas.unserialize( data, 'fcsf' )
+
+The fcsf format saves all nodes on the canvas with all their non-transient
+properties. It also saves the models, so be sure your models are pickable!
+
+The example code shows how to save and load a bunch of objects.
+
+
+16. SVG export
+----------------
+
+SVG export is not much different from native serialization which you got to
+know in the last lesson. You use the same calls, just with a different
+extension:
+
+canvas.serializeToFile( 'savedcanvas.svg' )
+
+or the no-file, data version:
+
+canvas.serialize( 'svg' )
+
+The current svg exporter tries to export svgs so they look the same as outputted
+by the wx backend. Sometimes this does not work if you specify strings for
+colours like 'green', because svg and wx associate different rgb values with
+them. So if you want to look images exactly the same, try to use rgb(a) values.
+Note: svg export does not work with render_to_surface or filters enabled right
+now.
+
+
+
+                          ***************************************
+                          ****         MISCELLANEOUS         ****
+                          ***************************************
+
+
+40. Migration from the old FloatCanvas package to FloatCanvas2
+----------------------------------------------------------------
+
+If you are a user of the old FloatCanvas package and want to use FloatCanvas2,
+you need to (partially) rewrite your application. This is because FloatCanvas2
+differs from FloatCanvas in several ways and writing a compatability layer
+seemed to be too much work for the marginal merits it gives.
+
+So what do you need to pay attention to when writing for FloatCanvas2?
+
+First of all you should really, really work through this tutorial from start
+to end. It tells you almost everything you'll need.
+Most of the functionality present in fc1 is also present in fc2. It might be
+called differently, it might work differently, but fc2 allows you to do almost
+everything that fc1 did plus a lot more.
+Things which are missing are the unscaled primitives (constant screen size ones)
+right now. They're possible to do, but they have just not been done. If you
+really want them, you can always provide a patch of course :-)
+A little dictionary to get you started on your migration from version 1 to
+version 2. Also ask on the mailing list if there's something unclear!
+
+                  fc1                  |                    fc2
+---------------------------------------+----------------------------------------
+                                       |
+ Groups                                | Any node can be a group now, just call
+                                       |  addChild(ren)
+                                       |
+ Projection function                   | Use the transform keyword when creating
+                                       |  a node.
+                                       |
+ FillColor, LineColor, LineWidth, ...  | See the "looks" section of this
+                                       |  document
+                                       |
+ Hit-testing                           | Not 100% exact, see known issues
+                                       |
+ InForeground (foreground/background)  | See section "layers" in this document.
+                                       |
+ Input event handlers (OnLeftDown,     | See section "Events and input handling"
+  fc.EVT_FC_LEFT_DOWN)                 |  in this document
+                                       |
+ Position="cc" etc.                    | Not yet implemented, see known issues.
+                                       |
+                                       
+
+41. Performance problems, how to optimize my drawing?
+-------------------------------------------------------
+
+If your drawing is two slow it can have two reasons:
+
+1) You're expect FloatCanvas to do the impossible - like processing lots of data
+   or drawing numerous full-screen objects per frame. 
+2) FloatCanvas doesn't process your efficiently enough.
+
+Which reason is actually responsible for your slowdown depends on your very
+case.
+
+Common pitfalls:
+- Moving lots of objects per frame (maybe moving them indirectly by moving the
+   parent node)
+- Rendering speed is proportional to fillrate (the number of pixels which are
+   drawn on screen). A huge circle consumes more fillrate than a small one.
+   So if you draw lots of possibly overlapping huge objects, this demands a lot
+   of fillrate.
+- Alpha drawing might slow things down additionally
+- Render-to-surface with huge surfaces might be slow, reduce their size to speed
+   things up. Doing render-to-surface too frequently also causes slowdowns. If
+   you're doing render-to-surface on a per-frame basis, consider to drop render-
+   to-surface altogether as there are no benefits.
+- Rendering bitmaps might be slow on some platforms
+- Your hardware is too old and doesn't support wx.GraphicsContext efficiently
+
+Possible solutions:
+- Make use of the render-to-surface feature and organize your nodes in logically
+   separated layers. Say you have 500 static nodes and 20 moving ones, then it
+   makes sense to render the static ones into a layer with render-to-surface
+   enabled. On subsequent draws, you'll render only 21 objects instead of the
+   520 you had to render before. This often speeds things up.
+- Avoid moving lots of objects repeadetly if possible. If you want to rotate a
+   rectangle, instead of rotating the rectangle, consider rotating the camera
+   instead.
+- employ custom rendering and/or update policies
+
+If your workload seems reasonable and FloatCanvas is still too slow, please send
+us a sample reproducing your problem and we'll take a look at it. For details
+how to send the sample, please take a look at the "Bugs/Feedback" section in
+this document-
+
+
+
+
+      *****************************************************************
+      ****         KNOWN ISSUES, BUGS, QUESTIONS, FEEDBACK         ****
+      *****************************************************************
+
+
+50. Known issues
+-------------------
+ 
+ - Unscaled (constant screen size) primitives do not work
+ - Hit-testing does not work exactly if the outline of an object is very wide or
+    if a low alpha value makes the object almost invisble.
+ - Offset (alignment, "Position = 'cc'" in fc1) parameter not yet implemented
+ - The internal dirty marking seems to have some problems at times
+
+
+51. I think I've found a bug and want to report it. What's the best way to do so?
+-----------------------------------------------------------------------------------
+
+Please contact us on the mailing list (see the very top of this document) so we
+can take a look at the issue and verify it's a bug. In case it's a bug, we'll
+tell you what to do. Usually this means either you or us file a bug report (or
+even fix it).
+Of course patches are always welcome!
+ 
+
+52. I don't understand how to do X, can you help me?
+-----------------------------------------------------
+
+Sure, post to the mailing list (see the very top of this document) and we'll
+try to work something out.
+
+
+53. FloatCanvas could work better in regards to X/needs feature Y? Tell us!
+----------------------------------------------------------------------------
+
+Again, please post to the mailing list (see the very top of this document).

@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>Performance problems, Optimizing</title>
+
+<h2>Performance problems, Optimizing</h2>
+<hr>
+
+<p>If your drawing is two slow it can have two reasons:</p>
+<br><br>
+<ol>
+<li>You're expect FloatCanvas to do the impossible - like processing lots of data
+     or drawing numerous full-screen objects per frame. 
+<li>FloatCanvas doesn't process your efficiently enough.
+</ol>
+
+<p>Which reason is actually responsible for your slowdown depends on your very
+case.</p>
+
+<p>Common pitfalls:</p>
+<br><br>
+<ul>
+<li>Moving lots of objects per frame (maybe moving them indirectly by moving the
+   parent node)
+<li>Rendering speed is proportional to fillrate (the number of pixels which are
+   drawn on screen). A huge circle consumes more fillrate than a small one.
+   So if you draw lots of possibly overlapping huge objects, this demands a lot
+   of fillrate.
+<li>Alpha drawing might slow things down additionally
+<li>Render-to-surface with huge surfaces might be slow, reduce their size to speed
+   things up. Doing render-to-surface too frequently also causes slowdowns. If
+   you're doing render-to-surface on a per-frame basis, consider to drop render-
+   to-surface altogether as there are no benefits.
+<li>Rendering bitmaps might be slow on some platforms
+<li>Your hardware is too old and doesn't support wx.GraphicsContext efficiently
+</ul>
+
+<p>Possible solutions:</p>
+<br><br>
+<ul>
+<li>Make use of the render-to-surface feature and organize your nodes in logically
+   separated layers. Say you have 500 static nodes and 20 moving ones, then it
+   makes sense to render the static ones into a layer with render-to-surface
+   enabled. On subsequent draws, you'll render only 21 objects instead of the
+   520 you had to render before. This often speeds things up.
+<li>Avoid moving lots of objects repeadetly if possible. If you want to rotate a
+   rectangle, instead of rotating the rectangle, consider rotating the camera
+   instead.
+<li>employ custom rendering and/or update policies
+</ul>
+
+<p>If your workload seems reasonable and FloatCanvas is still too slow, please send
+us a sample reproducing your problem and we'll take a look at it. For details
+how to send the sample, please take a look at the "Bugs/Feedback" section in
+this document.</p>
+
+</html>

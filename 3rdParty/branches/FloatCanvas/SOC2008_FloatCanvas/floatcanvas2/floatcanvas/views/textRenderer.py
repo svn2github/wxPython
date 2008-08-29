@@ -1,24 +1,14 @@
-from baseRenderer import BaseRenderer
 from ..models import IText
 from ..math import numpy
+from viewModel import ViewModel
+from viewModelInterfaces import ITextViewModel
 
-class DefaultTextRenderer(BaseRenderer):
+class DefaultTextRenderer(object):
     can_render = IText
+    implements_interfaces = ITextViewModel
 
-    def doCalcCoords(self, model):
+    def getCoords(self, model):
         return numpy.array( () )
            
-    def doCreate(self, renderer, coords):
-        return renderer.CreateText( self.model.text )
-
-    def _getBoundingBox(self):
-        self.look.Apply( self.renderer )
-        return self._boundingBox
-
-    boundingBox = property( _getBoundingBox )
-
-    def _getLocalBoundingBox(self):
-        self.look.Apply( self.renderer )
-        return self.render_object.localBoundingBox
-            
-    localBoundingBox = property( _getLocalBoundingBox )
+    def getViewModel(self, model, coords):
+        return ViewModel( 'Text', text = model.text )

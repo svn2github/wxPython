@@ -35,6 +35,8 @@ class GCRenderObjectPath(GCRenderObjectBase):
     ''' A path render object. Draws a path graphics object and knows hot to get
         its bounding box and perform an intersection test with a point.
     '''
+    boundingBoxDependentOnLook = False
+
     def __init__(self, renderer, path):
         GCRenderObjectBase.__init__(self, renderer)
         self.path = path
@@ -71,6 +73,8 @@ class GCRenderObjectText(GCRenderObjectBase):
     ''' A text render object. Draws a text object and knows hot to get
         its bounding box and perform an intersection test with a point.
     '''
+    boundingBoxDependentOnLook = True
+
     def __init__(self, renderer, text):
         GCRenderObjectBase.__init__(self, renderer)
         self.text = text
@@ -81,7 +85,10 @@ class GCRenderObjectText(GCRenderObjectBase):
         #GCRenderObjectBase.Draw(self, camera)
 
         offset = self.localBoundingBox.min
-        backgroundBrush = self.renderer.active_brush.brush
+        if self.renderer.active_brush is not None:
+            backgroundBrush = self.renderer.active_brush.brush
+        else:
+            backgroundBrush = wx.NullGraphicsBrush
         self.renderer.GC.DrawText( self.text, offset[0], offset[1], backgroundBrush )
         #angle = 0
         #self.renderer.GC.DrawRotatedText( self.text, 0, 0, angle, backgroundBrush )
@@ -92,7 +99,7 @@ class GCRenderObjectText(GCRenderObjectBase):
     def _getLocalBoundingBox(self):
         assert not ( (self.active_font is None) and (self.renderer.active_font is None) ), 'Could not get text bounding box, first need to set a font'
         if self.active_font != self.renderer.active_font and self.renderer.active_font:
-            w, h = self.renderer.GC.GetTextExtent( self.text )
+            w, h = self.renderer.measuringContext.GetTextExtent( self.text )
             size = numpy.array( (w,h) )
             self._localBoundingBox = boundingBoxModule.fromRectangleCenterSize( (0,0), size )
 
@@ -105,6 +112,8 @@ class GCRenderObjectBitmap(GCRenderObjectBase):
     ''' A bitmap render object. Draws a bitmap object and knows hot to get
         its bounding box and perform an intersection test with a point.
     '''
+    boundingBoxDependentOnLook = False
+
     def __init__(self, renderer, pixels, use_real_size):
         GCRenderObjectBase.__init__(self, renderer)
         self.pixels = pixels
@@ -116,9 +125,11 @@ class GCRenderObjectBitmap(GCRenderObjectBase):
         else:
             w, h, components = pixels.shape
     
+            pixels = numpy.ascontiguousarray(pixels, dtype = 'B' )
+ 
             if components == 3:
-                self.bitmap = wx.BitmapFromBuffer(w, h, pixels)
-            elif components == 4:                
+                self.bitmap = wx.BitmapFromBuffer(w, h, pixels )
+            elif components == 4:
                 self.bitmap = wx.BitmapFromBufferRGBA(w, h, pixels)
             else:
                 raise ValueError( 'pixels must be a 2d-array where each pixel has either 3 (RGB) or 4 (RGBA) components' )

@@ -1,0 +1,21 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>Animation</title>
+
+<h2>Animation</h2>
+<hr>
+
+<p>Sometimes you have the need to move things on screen. This can happen in a
+variety of ways. You can put objects on a path and change their position
+accordingly or you can tell an object to rotate around itself. You could
+also want to change its color over time.</p>
+<p>There's no special code for this in floatcanvas since the way you are animating
+the objects is highly dependent on your application.</p>
+<p>If you take a look at the source code, you get an idea, how you can move a few
+objects around based on a simple wx.CallLater. A timer doesn't stall the application
+like a simple loop would do. Other approaches might use threads or a simple loop
+with an occasional wx.Yield.</p>
+<p>There's room for future improvements in FloatCanvas here. For example it could
+support linear interpolators, spline interpolator etc. out of the box.</p>
+
+</html>

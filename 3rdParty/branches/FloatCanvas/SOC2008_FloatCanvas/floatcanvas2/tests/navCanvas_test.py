@@ -26,8 +26,8 @@ def start():
 
     r1 = canvas.create( 'Rectangle', (100, 200), name = 'r1', pos = (0, 0), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )
     r2 = canvas.create( 'Rectangle', (200, 100), name = 'r2', pos = (100, 100), rotation = 20, look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )    
-    c1 = canvas.create( 'Circle', 200, name = 'c1', pos = (200, 200), rotation = 20, look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red', line_width = 50 )  )    
-    c2 = canvas.create( 'Circle', 20, name = 'c2', pos = (500, 200), rotation = 20, look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red', line_width = 2 )  )    
+    c1 = canvas.create( 'Circle', 100, name = 'c1', pos = (200, 200), rotation = 20, look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red', line_width = 50 )  )    
+    c2 = canvas.create( 'Circle', 10, name = 'c2', pos = (500, 200), rotation = 20, look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red', line_width = 2 )  )    
 
     # the default cam, looking at 500, 500
     canvas.camera.position = (100, 73)

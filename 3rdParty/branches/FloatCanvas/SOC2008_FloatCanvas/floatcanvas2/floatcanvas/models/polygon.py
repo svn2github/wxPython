@@ -1,6 +1,7 @@
 from interfaces import IPolygon, IPolygonList
 from eventSender import DefaultModelEventSender
 from common import ModelWithPoints
+from ..math import numpy
 
 class Polygon(ModelWithPoints, DefaultModelEventSender):
     ''' A polygon model. The polygon is defined by points. '''

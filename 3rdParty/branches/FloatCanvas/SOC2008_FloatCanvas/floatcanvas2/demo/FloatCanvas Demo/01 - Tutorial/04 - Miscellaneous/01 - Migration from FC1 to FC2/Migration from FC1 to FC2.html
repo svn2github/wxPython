@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>Migration from the old FloatCanvas package to FloatCanvas2</title>
+
+<h2>Migration from the old FloatCanvas package to FloatCanvas2</h2>
+<hr>
+
+<p>If you are a user of the old FloatCanvas package and want to use FloatCanvas2,
+you need to (partially) rewrite your application. This is because FloatCanvas2
+differs from FloatCanvas in several ways and writing a compatability layer
+seemed to be too much work for the marginal merits it gives.</p>
+
+<p>So what do you need to pay attention to when writing for FloatCanvas2?</p>
+
+<p>First of all you should really, really work through this tutorial from start
+to end. It tells you almost everything you'll need.</p>
+<p>Most of the functionality present in fc1 is also present in fc2. It might be
+called differently, it might work differently, but fc2 allows you to do almost
+everything that fc1 did plus a lot more.</p>
+<p>Things which are missing are the unscaled primitives (constant screen size ones)
+right now. They're possible to do, but they have just not been done. If you
+really want them, you can always provide a patch of course :-)</p>
+<p>A little dictionary to get you started on your migration from version 1 to
+version 2. Also ask on the mailing list if there's something unclear!</p>
+
+<pre>
+                  fc1                  |                    fc2
+---------------------------------------+----------------------------------------
+                                       |
+ Groups                                | Any node can be a group now, just call
+                                       |  addChild(ren)
+                                       |
+ Projection function                   | Use the transform keyword when creating
+                                       |  a node.
+                                       |
+ FillColor, LineColor, LineWidth, ...  | See the "looks" section of this
+                                       |  document
+                                       |
+ Hit-testing                           | Not 100% exact, see known issues
+                                       |
+ InForeground (foreground/background)  | See section "layers" in this document.
+                                       |
+ Input event handlers (OnLeftDown,     | See section "Events and input handling"
+  fc.EVT_FC_LEFT_DOWN)                 |  in this document
+                                       |
+ Position="cc" etc.                    | Not yet implemented, see known issues.
+                                       |
+</pre>
+
+</html>

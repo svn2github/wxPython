@@ -34,6 +34,7 @@ class RecursiveAttributeObservable(DirtyObservable):
         self.dirty = True
 
 
+
 from listObserver import list_observer
 class RecursiveListItemObservable(DirtyObservable, list_observer):
     ''' The list version of RecursiveAttributeObservable. '''
@@ -43,50 +44,63 @@ class RecursiveListItemObservable(DirtyObservable, list_observer):
         if initialvalue:
             self.extend( initialvalue )
         
-    def _forwardDirty(self, *args, **keys):
-        self.dirty = True
+        # place this here. for some reason it fails if it's a regular method
+        # it seems like id(self._forwardDirty) differs in those cases
+        #def _forwardDirtyx(self, *args, **keys):
+        #    self.dirty = True
+        #self._forwardDirtyx = _forwardDirtyx
 
+    def _forwardDirtyx(self, *args, **keys):
+        self.dirty = True
+        
     #def list_create(self, key):
     #    # what's this good for?! Is list_observer flawed and has a copy'n'psate
     #    #  error from dict_observer? Not so likely...
     #    pass
     
     def list_set(self, self2, key, oldvalue):
+        assert self is self2
         self._unsubscribeItem( oldvalue )
         self._subscribeItem( self[key] )
         self.dirty = True
         
     def list_del(self, self2, key, oldvalue):
+        assert self is self2
         self._unsubscribeItem( oldvalue )
         self.dirty = True
         
     def list_append(self, self2):
+        assert self is self2
         self._subscribeItem( self[-1] )
         self.dirty = True
 
     def list_pop(self, self2, oldvalue):
+        assert self is self2
         self._unsubscribeItem( oldvalue )
         self.dirty = True
 
     def list_extend(self, self2, newvalue):
+        assert self is self2
         for item in newvalue:
             self._subscribeItem( item )
         self.dirty = True
 
     def list_insert(self, self2, key, value):
+        assert self is self2
         self._subscribeItem( value )
         self.dirty = True
 
     def list_remove(self, self2, key, oldvalue):
+        assert self is self2
         self._unsubscribeItem( oldvalue )
         self.dirty = True
 
 
     def _subscribeItem(self, item):
-        item.subscribe( self._forwardDirty, self.notify_msg )
+        item.subscribe( self._forwardDirtyx, self.notify_msg )
         
     def _unsubscribeItem(self, item):
-        item.unsubscribe( self._forwardDirty, self.notify_msg )
+        item.unsubscribe( self._forwardDirtyx, self.notify_msg )
         
         
     def notImplemented(*args):

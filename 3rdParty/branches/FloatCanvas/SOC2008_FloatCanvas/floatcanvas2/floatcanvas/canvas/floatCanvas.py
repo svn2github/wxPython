@@ -16,6 +16,7 @@ class FloatCanvas(SimpleCanvas):
         self.camera.viewport = Viewport( self.screen_size )
         self.window.Bind( wx.EVT_PAINT, self.OnPaint )
         self.window.Bind( wx.EVT_SIZE, self.OnSize )
+        self.window.Bind( wx.EVT_WINDOW_DESTROY, lambda evt: self.destroy() )
 
     def OnPaint(self, evt):
         ''' redraw ourselves '''

@@ -50,6 +50,7 @@ class GCRenderer(object):
             self.framebuffer = MemoryDoubleBuffer( window, self.main_render_surface )
         else:
             self.framebuffer = SingleBuffer( window )
+            self.active_render_surface = self.framebuffer
             
         #window = None
         #dc = self.dc        
@@ -66,6 +67,8 @@ class GCRenderer(object):
         #self.GC = getattr(self.renderer, func)( window or dc or native_window or native_dc )
         #self.transformMatrix = self.CreateMatrix()
         
+        # we keep this context around to do the font measurements
+        self.measuringContext = self.wx_renderer.CreateMeasuringContext()
         self.active_font = self.active_brush = self.active_pen = None
         self.fill_mode = 'fill_and_line'
         
@@ -82,6 +85,22 @@ class GCRenderer(object):
         ''' Clears the framebuffer with background_color '''
         self.framebuffer.Clear( background_color )
     
+    def BeginRendering(self):
+        ''' Call this before doing any draw operations so the renderer can
+            setup itself (especially creating DCs/GCs)
+        '''
+        return self.framebuffer.BeginRendering()
+
+    def EndRendering(self):
+        ''' Call this after doing any draw operations so the renderer can
+            setup itself (especially deleting DCs/GCs)
+        '''
+        return self.framebuffer.EndRendering()
+
+    def Present(self):
+        ''' Presents the current framebuffer '''
+        return self.framebuffer.Present()
+
     def Present(self):
         ''' Presents the current framebuffer '''
         self.framebuffer.Present()
@@ -116,6 +135,15 @@ class GCRenderer(object):
     # factory functions
     def CreatePath(self):
         return GCPath(self)
+    
+    def CreateRenderObject( self, kind, **keys ):
+        if kind != 'CompositeObject':
+            createMethod = getattr( self, 'Create%s' % kind )
+            return createMethod( **keys )
+        else:
+            sub_objs = [ self.CreateRenderObject( obj.kind, **obj.elements ) for obj in keys['subobjects'] ]
+            return self.CreateCompositeRenderObject( sub_objs )
+                
 
     def CreateBitmap(self, bmp):
         return GCBitmap(self, bmp)
@@ -130,24 +158,24 @@ class GCRenderer(object):
     def CreateFont(self, *args, **keys):
         return GCFont(self, *args, **keys)
     
-    def CreateRectangle(self, x, y, w, h):
+    def CreateRectangle(self, corner, size):
         path = self.CreatePath()
-        path.AddRectangle( x, y, w, h )
+        path.AddRectangle( corner[0], corner[1], size[0], size[1] )
         return GCRenderObjectPath( self, path )
 
-    def CreateRoundedRectangle(self, x, y, w, h, radius):
+    def CreateRoundedRectangle(self, corner, size, radius):
         path = self.CreatePath()
-        path.AddRoundedRectangle( x, y, w, h, radius )
+        path.AddRoundedRectangle( corner[0], corner[1], size[0], size[1], radius )
         return GCRenderObjectPath( self, path )
 
-    def CreateEllipse(self, x, y, w, h):
+    def CreateEllipse(self, corner, size):
         path = self.CreatePath()
-        path.AddEllipse( x, y, w, h )
+        path.AddEllipse( corner[0], corner[1], size[0], size[1] )
         return GCRenderObjectPath( self, path )
 
-    def CreateArc(self, x, y, r, startAngle, endAngle, clockwise):
+    def CreateCircularArc(self, center, radius, startAngle, endAngle, clockwise):
         path = self.CreatePath()
-        path.AddArc( x, y, r, startAngle, endAngle, clockwise )
+        path.AddArc( center[0], center[1], radius, startAngle, endAngle, clockwise )
         return GCRenderObjectPath( self, path )
 
     def CreateQuadraticSpline(self, controlPoints):
@@ -166,8 +194,8 @@ class GCRenderer(object):
         path.AddCurveToPoint( controlPoints[1][0], controlPoints[1][1], controlPoints[2][0], controlPoints[2][1], controlPoints[3][0], controlPoints[3][1] )
         return GCRenderObjectPath( self, path )
 
-    def CreateText(self, *args, **keys):
-        return GCRenderObjectText( self, *args, **keys)
+    def CreateText(self, text):
+        return GCRenderObjectText( self, text )
 
     def CreateLinesList(self, lines_list, close = False):
         path = self.CreatePath()
@@ -211,4 +239,7 @@ class GCRenderer(object):
     def __getattr__(self, name):
         if name == 'GC':
             return self.active_render_surface.gc
-        return getattr(self.active_render_surface.gc, name)
+        try:
+            return getattr(self.wx_renderer, name)
+        except AttributeError:
+            return getattr(self.active_render_surface.gc, name)

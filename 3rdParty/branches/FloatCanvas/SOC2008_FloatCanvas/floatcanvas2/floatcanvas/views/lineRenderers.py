@@ -1,24 +1,27 @@
-from baseRenderer import BaseRenderer
 from ..models import ILinesList, ILineSegmentsSeparate
 from ..math import numpy
+from viewModel import ViewModel
+from viewModelInterfaces import ILinesListViewModel, ILineSegmentsSeparateViewModel
 
-class DefaultLinesListRenderer(BaseRenderer):
+class DefaultLinesListRenderer(object):
     can_render = ILinesList
+    implements_interfaces = ILinesListViewModel
     
-    def doCalcCoords(self, model):
+    def getCoords(self, model):
         return model.lines_list
            
-    def doCreate(self, renderer, coords):
-        return renderer.CreateLinesList( coords )
+    def getViewModel(self, model, coords):
+        return ViewModel( 'LinesList', lines_list = coords )
         
         
-class DefaultLineSegmentsSeparateRenderer(BaseRenderer):
+class DefaultLineSegmentsSeparateRenderer(object):
     can_render = ILineSegmentsSeparate
+    implements_interfaces = ILineSegmentsSeparateViewModel
     
-    def doCalcCoords(self, model):
-        self.startPntIndex = len(model.startPoints)
+    def getCoords(self, model):
+        self.startPntIndex = len( model.startPoints )
         return numpy.concatenate( (model.startPoints, model.endPoints ) )
            
-    def doCreate(self, renderer, coords):
-        return renderer.CreateLineSegmentsSeparate( coords[:self.startPntIndex], coords[self.startPntIndex:] )
+    def getViewModel(self, model, coords):
+        return ViewModel( 'LineSegmentsSeparate', startPoints = coords[:self.startPntIndex], endPoints = coords[self.startPntIndex:] )
         

@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>Groups</title>
+
+<h2>Groups</h2>
+<hr>
+
+<p>So far we have only created individual models. Now it's time to explore groups.
+As we discussed earlier the canvas is just a tree of nodes. When we added
+shapes to the canvas we added lots of children to the root node. So the root
+node (the canvas) can be perceived as a group.</p>
+<p>You can create now groups on your own by doing this: First you create the parent
+node which is kind of like the "head" of the group. Then you create multiple
+other nodes and add them as children of this parent/"head" node. Voila, your
+group was created. Any node can serve as a group, so if you create a rectangle
+you can add a circle as a child to that rectangle. There's also a special group
+node without any shape where you can add children too.</p>
+<p>Now, if you move the parent node the children will follow it! If you scale the
+parent, the children will get bigger too. You can also create groups in groups.
+A practical example: Say you want to display an image gallery. You could make a
+group for every row and then put all rows into a gallery group. Finally you 
+put all individual galleries into an "all galleries" group.</p>
+<p>If you want to know how groups work in detail please read on. </p>
+
+<blockquote>Warning: The next two paragraphs might be hard to understand if you never dealt
+with similar things before. If it seems incomprehensible, just skip them and
+take a look at the practical part of groups</blockquote>
+
+<p>Now what's so special about groups and children and parents? I hope you still
+remember what transforms are, we dealt with this topic earlier. Now a child
+inherits the transform of its parent node. The transform of the child is now
+relative to its parent node. In simple words, this means if you move the parent
+node 5 units to the left, all its child nodes will move 5 units to left.</p>
+<p>In detail: Say the parent is at position (5,0). Now the child transform has a
+position of (0,5). This means the child appears at (5,5). Now if you move the
+parent by 3 units on the y-axis, the parent position is (5,3). The local child
+transform is still (0, 5) because you did not change this. But the child's
+*world* transform is (5,8) now. The world transform defines where the object is
+rendered later. The local transform of the object defines the offset relative to
+the parent.</p>
+<p>Important things to keep in mind: A node has a local and a world transform. The
+world transform is just the local transforms of all its parents multiplied with
+each other and then multiplied by the nodes own local transform.</p>
+<p>The first part of the source shows how to use groups in a practical and
+intuitive way without you having to think about all this transform mumbo-jumbo. 
+The mechanics of the local and world transforms are investigated in the second part
+of the source.</p>
+
+
+</html>

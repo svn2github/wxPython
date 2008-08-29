@@ -20,7 +20,7 @@ def start():
     parent = canvas.create( 'Group', name = 'group node', pos = (100, 0), render_to_surface = True, surface_size = (800, 100) )
     # create 1000 rectangles
     for i in range(0, 50):
-        r = canvas.create( 'Circle', 80, parent = parent, name = 'r%d' % i, pos = (i * 50, 0), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = (255,0,0,128) )  )
+        r = canvas.create( 'Circle', 40, parent = parent, name = 'r%d' % i, pos = (i * 50, 0), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = (255,0,0,128) )  )
         #r._debugDrawBoundingBoxes = True
 
     # the default cam, looking at 0, 0

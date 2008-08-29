@@ -1,21 +1,24 @@
-from baseRenderer import BaseRenderer
 from ..models import ICubicSpline, IQuadraticSpline
 from ..math import numpy
+from viewModel import ViewModel
+from viewModelInterfaces import ICubicSplineViewModel, IQuadraticSplineViewModel
 
-class DefaultCubicSplineRenderer(BaseRenderer):
+class DefaultCubicSplineRenderer(object):
     can_render = ICubicSpline
+    implements_interfaces = ICubicSplineViewModel
     
-    def doCalcCoords(self, model):
+    def getCoords(self, model):
         return numpy.array( model.points )
            
-    def doCreate(self, renderer, coords):
-        return renderer.CreateCubicSpline( coords )
+    def getViewModel(self, model, coords):
+        return ViewModel( 'CubicSpline', controlPoints = coords )
     
-class DefaultQuadraticSplineRenderer(BaseRenderer):
+class DefaultQuadraticSplineRenderer(object):
     can_render = IQuadraticSpline
+    implements_interfaces = IQuadraticSplineViewModel
     
-    def doCalcCoords(self, model):
+    def getCoords(self, model):
         return numpy.array( model.points )
            
-    def doCreate(self, renderer, coords):
-        return renderer.CreateQuadraticSpline( coords )
+    def getViewModel(self, model, coords):
+        return ViewModel( 'QuadraticSpline', controlPoints = coords )

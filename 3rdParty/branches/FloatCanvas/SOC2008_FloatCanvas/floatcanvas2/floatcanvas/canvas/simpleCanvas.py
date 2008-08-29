@@ -15,8 +15,6 @@ from updatePolicies import DefaultUpdatePolicy
 from renderPolicies import CullingRenderPolicy, DefaultRenderPolicy
 from ..math import boundingBox
 from ..nodes.spatialQuery import QueryWithPrimitive
-from ..nodes import EnumerateNodesVisitor
-
 
 class SimpleCanvas(Canvas):
     ''' I provide an various methods for a functional canvas.
@@ -48,9 +46,16 @@ class SimpleCanvas(Canvas):
         else:
             self.backgroundColor = None
         
-        Canvas.__init__(self, self.renderer, False, None, None, None, observables.ObservableLinearTransform2D(), *args, **keys)
+        if 'renderPolicy' in keys:
+            self.renderPolicy = keys['renderPolicy']
+            del keys['renderPolicy']
+        else:
+            #self.renderPolicy = DefaultRenderPolicy()
+            self.renderPolicy = CullingRenderPolicy()
+
+        Canvas.__init__(self, self.renderer, False, None, None, None, None, observables.ObservableLinearTransform2D(), *args, **keys)
                
-        self.camera = observables.ObservableCamera( observables.ObservableLinearTransform2D() )
+        self.camera = observables.ObservableCamera( observables.ObservableLinearTransform2D(), name = 'default camera' )
         self.addChild( self.camera )
         
         self.model_kinds = [ 'Rectangle', 'RoundedRectangle', 'Circle', 'Ellipse', 'Arc', 'Text', 'Line', 'LineLength', 'Lines', 'LinesList', 'LineSegments', 'LineSegmentsSeparate', 'Bitmap', 'CubicSpline', 'QuadraticSpline', 'Polygon', 'PolygonList', 'Arrow', 'AngleArrow' ]
@@ -64,15 +69,8 @@ class SimpleCanvas(Canvas):
             self.updatePolicy = keys['updatePolicy']
             del keys['updatePolicy']
         else:
-            #self.renderPolicy = DefaultRenderPolicy()
             self.updatePolicy = DefaultUpdatePolicy( self, max_update_delay )
 
-        if 'renderPolicy' in keys:
-            self.renderPolicy = keys['renderPolicy']
-            del keys['renderPolicy']
-        else:
-            #self.renderPolicy = DefaultRenderPolicy()
-            self.renderPolicy = CullingRenderPolicy()
         
         self.subscribe( self.onDirty, 'attribChanged' )
 
@@ -85,6 +83,8 @@ class SimpleCanvas(Canvas):
             view/primitive renderer.
             They're fed with the default objects (all kinds of models, primitive
             renderers, ...)
+            Finally, there's the serialization registry where you can register
+            serializers for nodes.
         '''
         self.adapterRegistry = adapterRegistry = AdapterRegistry()
         
@@ -101,18 +101,60 @@ class SimpleCanvas(Canvas):
             modelInterface = getattr(models, 'I%s' % model_kind)
             def createDefaultView(model, look, scaled):
                 primitiveRendererConstructor, model = self.primitiveRendererRegistry.getRendererConstructor( model )
-                primitiveRenderer = primitiveRendererConstructor( self.renderer, model, look, scaled )
+                primitiveRenderer = primitiveRendererConstructor()
+                primitiveRenderer = observables.ObservableBaseRenderer( self.renderer, look, model, primitiveRenderer, scaled )
                 return observables.ObservableDefaultView( look, primitiveRenderer )
             self.viewRegistry.register( modelInterface, createDefaultView )
             
         for model_kind in self.model_kinds:
             modelInterface = getattr(models, 'I%s' % model_kind)
-            def createDefaultRenderableNode(model, transform, look, scaled, name, render_to_surface, surface_size):
+            def createDefaultRenderableNode(model, transform, look, scaled, name, render_to_surface, surface_size, filter):
                 viewConstructor, model = self.viewRegistry.getViewConstructor( model )
                 view = viewConstructor( model = model, look = look, scaled = scaled )
-                renderNode = observables.ObservableDefaultRenderableNode( self.renderer, render_to_surface, surface_size, model, view, transform, name = name )
+                renderNode = observables.ObservableDefaultRenderableNode( self.renderer, render_to_surface, surface_size, model, view, filter, transform, name = name )
                 return renderNode
-            self.renderNodeRegistry.register( modelInterface, createDefaultRenderableNode )
+            self.renderNodeRegistry.register( modelInterface, createDefaultRenderableNode )        
+
+
+        # create serialization registries
+        self.serializerRegistry = FactoryUsingDict()
+        self.unserializerRegistry = FactoryUsingDict()
+
+        def createNativeSerializer():
+            # import those two here, because they might need to import the simpleCanvas module itself
+            # so importing here avoids a circular dependency
+            from ..serialization.serializer import Serializer
+            from ..serialization import defaultSerializers
+            serializer = Serializer()
+            defaultSerializers.registerDefaultSerializers( serializer.nodeSerializerRegistry )
+            return serializer
+
+        # register our native serializer and unserializer here
+        self.serializerRegistry.register( 'fcsf', createNativeSerializer )
+        self.unserializerRegistry.register( 'fcsf', createNativeSerializer )
+        
+        def createSvgSerializer():
+            # import those two here, because they might need to import the simpleCanvas module itself
+            # so importing here avoids a circular dependency
+            from ..serialization.svg import SVGExporter
+            from ..serialization.svg import defaultSVGSerializers
+            serializer = SVGExporter( self.adapterRegistry )
+            defaultSVGSerializers.registerDefaultSVGSerializers( serializer.elementCreatorRegistry )
+            defaultSVGSerializers.registerDefaultNodeSerializers( serializer.nodeSerializerRegistry )
+
+            # register the viewNodel-from-model connections to the svg exporter
+            for model_kind in self.model_kinds:
+                modelInterface = getattr(models, 'I%s' % model_kind)
+                def createViewModel(model, look):
+                    viewModelConstructor, model = self.primitiveRendererRegistry.getRendererConstructor( model )
+                    viewModel = viewModelConstructor()
+                    return viewModel, model
+                serializer.viewModelCreatorRegistry.register( modelInterface, createViewModel )
+
+            return serializer
+
+        # register svg exporter, no importer defined        
+        self.serializerRegistry.register( 'svg', createSvgSerializer )
         
         
     def _setupAdapters(self):
@@ -145,14 +187,8 @@ class SimpleCanvas(Canvas):
             Forwarded from nodeFactory.
         '''
         return self.nodeFactory.is_registered( *args, **keys )
-        
-    def _setupNodeFactory(self):
-        ''' Internal. Sets up the node factory. The keyword argument for the
-            create method is done here, as well as adding the createRectangle,
-            create* methods to self.
-        '''
-        self.nodeFactory = FactoryUsingDict()        
-       
+    
+    def createFromModel(self, model, **keys):
         keywords = { 'transform'            : None,
                      'pos'                  : None,
                      'position'             : None,
@@ -163,78 +199,81 @@ class SimpleCanvas(Canvas):
                      'scaled'               : True,
                      'render_to_surface'    : False,
                      'surface_size'         : (500, 500),
+                     'filter'               : None,
                      'parent'               : self,
                    }
         
         def get_keyword(dikt, name):
-            result = dikt.get( name, keywords[name] )
-            try:
-                del dikt[name]
-            except KeyError:
-                pass
-            return result
-        
-        def create(modelType, *args, **keys):                                       
-            # node  & nodeWithTransform properties
-            where = get_keyword(keys, 'where')
-            transform = get_keyword(keys, 'transform')
-            if transform is None:
-                transform = observables.ObservableLinearTransform2D()
-            elif isinstance( transform, basestring ):
-                transform = getattr(observables, transform)()
-                transform = observables.ObservableLinearTransform2D() * transform
+            return dikt.pop( name, keywords[name] )
 
-            pos = get_keyword(keys, 'pos') or get_keyword(keys, 'position')
-            if pos is not None:
-                # assume linear transform
-                transform.position = pos
-                
-            rotation = get_keyword(keys, 'rotation')
-            if rotation is not None:
-                # assume linear transform
-                transform.rotation = rotation
+        where = get_keyword(keys, 'where')
+        transform = get_keyword(keys, 'transform')
+        if transform is None:
+            transform = observables.ObservableLinearTransform2D()
+        elif isinstance( transform, basestring ):
+            transform = getattr(observables, transform)()
+            transform = observables.ObservableLinearTransform2D() * transform
+
+        pos = get_keyword(keys, 'pos') or get_keyword(keys, 'position')
+        if pos is not None:
+            # assume linear transform
+            transform.position = pos
             
-            scale = get_keyword(keys, 'scale')
-            if scale is not None:
-                # assume linear transform
-                transform.scale = scale
-
-            scaled = get_keyword(keys, 'scaled')
-            parent = get_keyword(keys, 'parent')
-
-
-            # renderable node properties
-            render_to_surface = get_keyword(keys, 'render_to_surface')
-            surface_size = get_keyword(keys, 'surface_size')
-
-            if not modelType is None:
-                model = modelType( *args )
-
-                look = get_keyword(keys, 'look')
-                if look is None:
-                    raise ValueError( 'You need to supply a look! Use look.NoLook or "nolook" if you want none.')
-                if look == 'nolook':
-                    look = NoLook
-                if isinstance(look, (tuple, list)):
-                    look = observables.ObservableSolidColourLook(*look)
-    
-    
-                renderNodeConstructor, model = self.renderNodeRegistry.getRenderNodeConstructor( model )
-                renderNode = renderNodeConstructor( model, transform = transform, look = look, name = keys.get('name', '<unnamed node>'), scaled = scaled, render_to_surface = render_to_surface, surface_size = surface_size )
-            else:
-                renderNode = observables.ObservableDefaultRenderableNode( self.renderer, render_to_surface, surface_size, None, None, transform = transform, name = keys.get('name', '<unnamed node>') )
-
-            parent.addChild( renderNode, where = where )
-
-            return renderNode
+        rotation = get_keyword(keys, 'rotation')
+        if rotation is not None:
+            # assume linear transform
+            transform.rotation = rotation
         
+        scale = get_keyword(keys, 'scale')
+        if scale is not None:
+            # assume linear transform
+            transform.scale = scale
+
+        scaled = get_keyword(keys, 'scaled')
+        parent = get_keyword(keys, 'parent')
+
         
+        # renderable node properties
+        render_to_surface = get_keyword(keys, 'render_to_surface')
+        surface_size = get_keyword(keys, 'surface_size')
+
+        filter = get_keyword(keys, 'filter')
+
+        if not model is None:
+            look = get_keyword(keys, 'look')
+            if look is None:
+                raise ValueError( 'You need to supply a look! Use look.NoLook or "nolook" if you want none.')
+            if look == 'nolook':
+                look = NoLook
+            if isinstance(look, (tuple, list)):
+                look = observables.ObservableSolidColourLook(*look)
+
+            renderNodeConstructor, model = self.renderNodeRegistry.getRenderNodeConstructor( model )
+            renderNode = renderNodeConstructor( model, transform = transform, look = look, name = keys.get('name', '<unnamed node>'), scaled = scaled, render_to_surface = render_to_surface, surface_size = surface_size, filter = filter )
+        else:
+            renderNode = observables.ObservableDefaultRenderableNode( self.renderer, render_to_surface, surface_size, None, None, filter, transform = transform, name = keys.get('name', '<unnamed node>') )
+
+        parent.addChild( renderNode, where = where )
+
+        return renderNode        
+        
+    def _setupNodeFactory(self):
+        ''' Internal. Sets up the node factory. The keyword argument for the
+            create method is done here, as well as adding the createRectangle,
+            create* methods to self.
+        '''
+        self.nodeFactory = FactoryUsingDict()        
+               
+        def create(modelType, *args, **keys):                                       
+            model = modelType( *args )
+            return self.createFromModel( model, **keys )
+                
         for model_kind in self.model_kinds:
             modelType = getattr(observables, 'Observable%s' % model_kind)
             self.registerNode( model_kind, create, modelType )
         
         # the group node is a special one, it doesn't need any model
-        self.registerNode( 'Group', create, None )
+        self.registerNode( 'Group', self.createFromModel, None )
 
     def onDirty(self, evt):
         ''' If we're dirty, tell the update policy '''
@@ -290,20 +329,14 @@ class SimpleCanvas(Canvas):
         ''' Transform a point on screen to world coordinates (if possible) '''
         return self.camera.viewTransform.inverse( (screen_pnt,) )
 
-    def hitTest( self, screen_pnt, exact = True ):
+    def hitTest( self, screen_pnt, exact = True, order = True ):
         ''' Performs a hit test given a point on screen.
             For the meaning of the exact parameter, see the performSpatialQuery
             function.
         '''
         world_pnt = self.pointToWorld( screen_pnt )
         query = QueryWithPrimitive( primitive = boundingBox.fromPoint( world_pnt ), exact = exact )
-        pickedNodes = self.performSpatialQuery( query )
-        
-        # now sort the picked nodes by their (render) order, nodes that appear
-        # on top are first in the returned list
-        env = EnumerateNodesVisitor()
-        env.visit(self)        
-        pickedNodes.sort( key = lambda node: env.getPosition(node) )
+        pickedNodes = self.performSpatialQuery( query, order = order )
         
         return pickedNodes
 
@@ -333,7 +366,41 @@ class SimpleCanvas(Canvas):
         
     screen_size = property( _getScreenSize, _setScreenSize )
     
+    
+    def serialize(self, format):
+        serializer = self.serializerRegistry.create( format )
+        return serializer.serialize( self, self.camera )
+    
+    def unserialize(self, data, format):
+        unserializer = self.unserializerRegistry.create( format )
+        return unserializer.unserialize( self, data )
+           
+    def serializeToFile(self, filename, format = None):
+        if format is None:  # auto-detect by filename extension
+            import os.path        
+            format = os.path.splitext( filename )[1][1:].lower()
+            
+        data = self.serialize( format )
+        
+        f = file( filename, 'wb' )
+        f.write( data )
+        f.close()        
+        return data
      
+    def unserializeFromFile(self, filename, format = None):
+        if format is None:  # auto-detect by filename extension
+            import os.path        
+            format = os.path.splitext( filename )[1][1:].lower()
+
+        f = file( filename, 'rb' )
+        data = f.read()
+        f.close()        
+        return self.unserialize( data, format )
+    
+    def destroy(self):
+        self.updatePolicy.stop()
+
+    # todo: need to revisit this, maybe allow NodesWithBounds to return None 
     def _getBoundingBox(self):
         return boundingBox.BoundingBox( [ (0,0), (0,0) ] )
     

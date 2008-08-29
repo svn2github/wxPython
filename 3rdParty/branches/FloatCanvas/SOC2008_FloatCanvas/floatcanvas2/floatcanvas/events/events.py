@@ -48,6 +48,11 @@ class fcEventManager(object):
         return self.publisher.subscribe( wrap, event_name )
 
     def unsubscribe(self, subscriber, event_name = None):
+        try:
+            self._wrapper_funcs[id(subscriber)]
+        except KeyError:        # isn't subscribed here, ignore it
+            return
+        
         if event_name is None:
             func = self._wrapper_funcs[id(subscriber)].values()[0]
         else:

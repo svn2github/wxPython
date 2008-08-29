@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>Render-to-surface and layers</title>
+
+<h2>Render-to-surface and layers</h2>
+<hr>
+
+<p>Now for a more advanced feature of FloatCanvas. Until now you created primitives
+which were rendered right to the screen. Well, in reality they were first
+rendered to an offscreen bitmap and then blitted at once to the screen. This
+technique is known as double buffering and helps to prevent flicker.</p>
+<p>The same mechanism can now be exploited to render a node (with all its children)
+to an offscreen bitmap. Then you render this bitmap instead of the individual
+nodes. We will call this render-to-surface - the surface being the bitmap.</p>
+<p>Say you have 1000 small circle nodes. Rendering them is getting a bit slow. So
+you render all of those circle nodes to a bitmap and render the single bitmap
+instead. This saves you rendering 999 nodes! You need to regenerate the bitmap
+whenever one of the circles moves though.</p>
+<p>In conjunction with the groups feature we discussed earlier you can now create
+multiple layers, each one a bitmap with nodes. This allows to create very
+dense drawings which still run at high speeds.</p>
+<p>To render a node to a surface you do it like this:</p>
+
+getting image of surface
+
+<p>Render-to-surface has another very interesting application which we'll discuss
+in the next part of this tutorial.</p>
+
+</html>

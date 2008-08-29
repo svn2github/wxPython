@@ -1,12 +1,13 @@
-from baseRenderer import BaseRenderer
 from ..models import IArrow
 from ..math import numpy
+from viewModel import ViewModel
+from viewModelInterfaces import IArrowViewModel
 
-
-class DefaultArrowRenderer(BaseRenderer):
+class DefaultArrowRenderer(object):
     can_render = IArrow
+    implements_interfaces = IArrowViewModel
     
-    def doCalcCoords(self, model):
+    def getCoords(self, model):
         tip = model.endPoint
         arrow_dir = model.endPoint - model.startPoint
         arrow_dir = arrow_dir / numpy.sqrt( numpy.dot( arrow_dir, arrow_dir ) )   # normalize
@@ -19,7 +20,7 @@ class DefaultArrowRenderer(BaseRenderer):
 
         return [ model.startPoint, head_base, tip, left, right ]
            
-    def doCreate(self, renderer, coords):
+    def getViewModel(self, model, coords):
         # ,- line -, ,-- head --,
         #
         #           + \
@@ -29,8 +30,8 @@ class DefaultArrowRenderer(BaseRenderer):
         #           + /
         start, head_base, tip, left, right = coords
         
-        line = renderer.CreateLinesList( [(start, head_base)] )
-        head = renderer.CreateLinesList( [(tip, right, left)], True )
+        line = ViewModel( 'LinesList', lines_list = [ numpy.array( (start, head_base) ) ] )
+        head = ViewModel( 'LinesList', lines_list = [ numpy.array( (tip, right, left) ) ], close = True )
         
-        return renderer.CreateCompositeRenderObject( [line, head] )
+        return ViewModel( 'CompositeObject', subobjects = [line, head] )
 

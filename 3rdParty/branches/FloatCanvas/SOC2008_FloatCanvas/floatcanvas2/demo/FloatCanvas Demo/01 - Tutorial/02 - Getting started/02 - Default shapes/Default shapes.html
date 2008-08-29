@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>Default shapes</title>
+
+<h2>Default shapes</h2>
+<hr>
+
+<p>
+As you have seen in the previous example you can create circle and rectangle
+objects. But there are many more. Here's a list with all of the possible shapes
+along with the parameters you need to pass to them:
+</p>
+
+<pre>
+Circle                radius
+Ellipse               (sizeX, sizeY)
+RoundedRectangle      (sizeX, sizeY), cornerRadius
+Text                  'string'
+Line                  (startPointX, startPointY), (endPointX, endPointY)
+LineLength            length
+Lines                 [ (point1X,point1Y), (point2X, point2Y), (point3X, point3Y), ... ]
+LinesList             [ line1 (for format see line above), line2, line3, ... ]
+LineSegments          [ (startPoint1X,startPoint1Y), (endPoint1X, endPoint1Y), (startPoint2X,startPoint2Y), (endPoint2X, endPoint2Y), ... ]
+LineSegmentsSeparate  [ (startPoint1X,startPoint1Y), (startPoint2X,startPoint2Y), ... ], [ (endPoint1X, endPoint1Y), (endPoint2X, endPoint2Y), ... ]
+Bitmap                pixels (in width x height x 3 or in width x height x 4 form or wx.Bitmap), displayAsTrueSize
+Arc                   radius, startAngleInRadians, endAngleInRadians, clockwise
+CubicSpline           list of 2d-controlpoints
+QuadraticSpline       list of 2d-controlpoints
+Arrow                 startPoint, endPoint, headSize
+AngleArrow            startPoint, length, angle, headSize
+Polygon               list of 2d points
+PolygonList           list of lists of 2d points</pre>
+
+<p>Examples:</p>
+
+<pre>
+Circle                125
+Ellipse               (100, 150)
+RoundedRectangle      (100, 100), 30
+Text                  'wxPython'
+Line                  (0,0), (100,0)
+LineLength            100
+Lines                 [ (0,0), (20, 30), (90, 70), (10, -20) ]
+LinesList             [ [(146, 399), (163, 403), (170, 393), (169, 391)] ]
+LineSegments          [ (0,0), (20, 90), (40, 30), (90,  35) ]
+LineSegmentsSeparate  [ (0,0), (40, 30) ], [ (20, 90), (90,35) ]
+Bitmap                toucanData
+Bitmap                toucanBitmap
+Bitmap                toucanData, False
+Arc                   75, 4.5, 1.5, False
+CubicSpline           [ (0,0), (90, 70), (90, 20), (0, 50) ]
+QuadraticSpline       [ (0,0), (20, 50), (80, 0) ]
+Arrow                 (0,0), (40, -20), (20, 10)
+AngleArrow            (0,0), 50, 20, (30, 10)
+Polygon               [ (0,0), (20, 30), (90, 70), (10, -20) ]
+PolygonList           [ [ (0,5), (50, 50), (5,0) ], [ (0,-5), (50, -50), (5,0) ], [ (0,-5), (-50, -50), (-5,0) ], [ (0,5), (-50, 50), (-5,0) ] ]</pre>
+
+<p>
+The source code to this lesson "Default shapes" works just like the source code
+of the previous lesson. There are just more shapes created.</p>
+<p>These lines here</p>
+<pre>
+    toucanImg = wx.Image( 'toucan.png' )
+    toucanData = fc.arrayFromImage( toucanImg )
+    toucanBitmap = wx.BitmapFromImage( toucanImg.AdjustChannels( 0, 2, 0, 1 ) )</pre>
+<p>
+just load the image of a toucan (with alpha channel) and then create a numpy
+array from it (2nd line) and a differently coloured bitmap (3rd line).</p>
+<p>The final line is something which often comes in handy:</p>
+<pre>
+    canvas.zoomToExtents()</pre>
+
+<p>This tellst he view to encompass all of the objects on it. You can also call it
+with canvas.zoomToExtents( boundingBox ) to zoom into a specific area of the
+canvas. </p>
+<p>It's signature looks like</p>
+<pre>
+zoomToExtents(boundingBox = None, padding_percent = 0.05, maintain_aspect_ratio = True)</pre>
+<p>
+Then there's also the canvas.zoom function with a signature of
+</p>
+<pre>
+zoom(factor, center = None, centerCoords = 'world')</pre>
+<p>
+which allow you to zoom/in out of the current view and center the view onto a
+specific point.</p>
+<p>For more information refer to the docstrings of the zoomToExtents/zoom methods.
+Most functions in fc have docstrings which should be able to help you.</p>
+
+</html>

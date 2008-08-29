@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>Looks</title>
+
+<h2>Looks</h2>
+<hr>
+<p>This part tells you about "looks". As we've seen earlier a look defines the
+visual appearance of a node. If you run this example, you can see a few
+different looks applied on different primitives which you got to learn in the
+previous section.</p>
+<p>FloatCanvas provides these looks:</p>
+
+<p><b>fc.OutlineLook</b></p>
+<blockquote>
+  Determines how the outline of the object is drawn. This includes line colour,
+  line width, dashes, line capping and line join styles.
+  The inner part of the object is not filled.
+  If line_colour is None, no line is drawn. Since the object is not filled, it
+  will effectively be invisible (don't use it for this purpose though, there are
+  better methods to do this).
+</blockquote>
+
+<p><b>fc.SolidColourLook</b></p>
+<blockquote>
+  Determines how the outline is drawn (see fc.OutlineLook) and fills the inner
+  part of the object with a single, solid colour. If line_colour is None, then
+  no outline is drawn.
+</blockquote>
+
+<p><b>fc.LinearGradientLook</b></p>
+<blockquote>
+  Determines how the outline is drawn (see fc.OutlineLook). The inner part of
+  the object will be filled with a linear gradient. This means  you specify a
+  start colour at some point and an end colour at another point and the colours
+  in-between will be interpolated (blended) between those two points.
+  The gradient pattern will be repeated if neccessary to fill the entiry object.
+</blockquote>
+  
+<p><b>fc.RadialGradientLook</b></p>
+<blockquote>
+  Determines how the outline is drawn (see fc.OutlineLook). The inner part of
+  the object will be filled with a radial gradient. This means you specify a
+  center of a circle and colour, plus the center of another circle with radius
+  plus colour the colours on the object will be interpolated accordingly.
+</blockquote>
+
+<p><b>fc.TextLook</b></p>
+<blockquote>
+  This one is a bit special as it can only be applied to text nodes. It defines
+  how text is rendered.
+  Available settings include size, family, style, weight, underlining, faceName,
+  colour and a background fill look of the font.
+</blockquote>
+
+<p>  
+Except for TextLook all looks can be applied on all shapes. Colours can be
+defined as strings (like 'red', 'green', ...) or tuples of 3 or 4 number in the
+range of 0-255, e.g. (255,0,0,128) for a semi-transparent red. The 4-tuple form
+is (R,G,B,A). Take a look at the __init__ methods of the looks above to see
+all the parameters they can take.
+</p>
+
+</html>

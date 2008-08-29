@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>A simple example</title>
+
+<h2>A simple example</h2>
+<hr>
+
+<p>
+Let's get started for real now. The next few lines tell you how to get something on screen. You can find the accompanying source code in the
+floatcanvas/docs/tutorial/src folder. You can also just run the FloatCanvas wxPython demo (see section 4) and select the Tutorial tab.
+</p>
+
+<p>
+When you run the code, you should see a black circle on a purple rectangle which sits on one of its edges. How was it done?
+</p>
+
+<p>
+First, the run_standalone function is called. This one creates the neccessary
+wxPython application and a frame window where we are going to put our canvas in.
+Then we actually create the canvas and its contents via the "start" function.
+After it was created, the window is shown and the application is run. So
+run_standlone just contains some boilerplate code. The real magic is happening
+in the start function which we'll take a closer look at now.
+</p>
+
+<p>At the very top of "start" you can see we first create a canvas:</p>
+
+<pre>canvas = fc.NavCanvas( frame, backgroundColor = 'white' )</pre>
+
+<p>
+In this case we use the "NavCanvas" provided by fc. It allows the user to
+Navigate around the contents of the canvas later. E.g. it provides buttons to do
+zooming and panning. We tell the canvas to use white as the background color.
+The canvas is the most important part of floatcanvas. It's the thing where
+everything is drawn on. So you will very likely always create one. </p><p>
+Remember that the wxPython demo allows you to modify the code. So if you want to
+play with the background color, change 'white' to 'blue' in the code, run the
+modified version and see what happens.
+</p>
+<p>
+The next step is creating a circle. This is done with the line
+</p>
+
+<pre>canvas.create( 'Circle', 75, name = 'my first circle', pos = (0, 0), look = ('white', 'black') )</pre>
+
+<p>
+75 is the radius, a name is given to it, the center of the circle is put at
+(0,0) and it gets a simple "outline white, inner part black" look. </p><p>
+This is the standard way to add an object to the canvas. You call canvas.create
+followed with the kind of object you want to add. Here it's a 'Circle', more
+objects like 'Rectangle' and 'Polygon' are shown in the next example.
+</p>
+<p>
+Alternatively, you could have written
+</p>
+
+<pre>canvas.createCircle( 75, name = 'my first circle', pos = (0, 0), look = ('white', 'black') )</pre>
+
+<p>
+which does exactly the same thing.
+</p>
+
+<p>
+What both of these calls really do is this:
+The canvas is basically the root node of a tree. The calls above create a
+DefaultRenderableNode and attach it as a child to the tree. You can verify this
+by examining the return value of the create call ( node = canvas.create( ... )).
+You'll learn more about how this all works in the next examples.
+</p>
+
+<p>
+Ok, let's progress to the next line. It reads:
+</p>
+
+<pre>look =  fc.LinearGradientLook( 'purple', (0,0), 'white', (30, 0), 'pink' )</pre>
+
+<p>
+This one is a bit more interesting. Here we create a "look". A look basically
+defines what a specific object will visually look like. A look can be applied
+to multiple objects giving them the same appearance. </p><p>
+In this case we create a "gradient" look where one color ('white') is blended to
+another color ('pink'). The outline is 'purple'. </p><p>
+This is the look we're going to apply on the background rectangle object next:
+</p>
+
+<pre>canvas.createRectangle( (300, 300), pos = (0, 0), rotation = 45, look = look )</pre>
+
+<p>
+You can see how we set the look of a rectangle of size (300, 300) to the look
+we've just created. Additionally we rotated the rectangle by 45 degrees.
+</p>
+
+<p>
+Now the canvas is setupped and ready to be rendered (which happens
+automatically).
+</p>
+
+<p>
+Tadaaa, this concludes the first example. Hope you continue!
+</p>
+
+</html>

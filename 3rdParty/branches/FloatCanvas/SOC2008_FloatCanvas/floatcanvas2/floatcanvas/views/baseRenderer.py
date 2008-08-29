@@ -1,6 +1,65 @@
 from ..math import LinearAndArbitraryCompoundTransform, LinearTransform2D
 from ..math import boundingBox as boundingBoxModule
+from ..events import EventSender
 
+
+class RemoveNonLinearTransformFromCoords(EventSender):
+    def __init__(self, getUntransformedCoords):
+        self.getUntransformedCoords = getUntransformedCoords
+        self._transform = LinearTransform2D()
+        self.linearTransform = LinearTransform2D()
+        self.lastNonLinearTransform = None
+        self.calcCoords()
+
+    def calcCoords(self):        
+        ''' Get coordinates and pre-transform them '''
+        self.coords = self.getUntransformedCoords()
+        self.transformCoords()
+        
+    def transformCoords(self):
+        ''' Pre-transform the coordinates with the non-linear parts of the
+            transform and re-create if neccessary.
+        '''
+        try:
+            transform = self._transform
+        except AttributeError:
+            self.transformedCoords = self.coords
+            return
+        
+        if isinstance(transform, LinearTransform2D):
+            self.transformedCoords = self.coords
+            self.linearTransform = transform
+            self.lastNonLinearTransform = None
+            
+        elif isinstance(transform, LinearAndArbitraryCompoundTransform):
+            # check if the non-linear part is the same. If it is, no need to
+            # recreate the shape
+            if self.lastNonLinearTransform != transform.transform2:
+                if type(self.coords) == list:
+                    self.transformedCoords = [ transform.transform2( coord ) for coord in self.coords ]
+                else:
+                    self.transformedCoords = transform.transform2( self.coords )
+
+                self.linearTransform = transform.transform1                    
+                self.lastNonLinearTransform = transform.transform2
+                # need to recreate our object since the coords changed
+                self.send( 'coordsChanged', coords = self.transformedCoords )
+        else:
+            raise ValueError( 'NotImplemented %s %s' % (transform, type(transform)) )
+
+       
+    def _setTransform(self, transform):
+        self._transform = transform        
+        self.transformCoords()
+        
+    def _getTransform(self):
+        return self._transform
+
+    transform = property( _getTransform, _setTransform )
+
+
+
+from ..patterns.partial import partial
 
 class BaseRenderer(object):
     ''' Base class for all default primitive renderers.
@@ -16,76 +75,40 @@ class BaseRenderer(object):
         render_object.
         Derived classes should implement the doCreate and doCalcCoords methods.
     '''
-    def __init__(self, renderer, model, look, scaled = True):
+    def __init__(self, renderer, look, model, primitiveRenderer, scaled = True):
         self.renderer = renderer
-        self.model = model
         self.look = look
         self.scaled = scaled
-        self._lastNonLinearTransform = None
-        self._transform = LinearTransform2D()
-        self.rebuild()
+        self.model = model
+        
+        self.getCoords = partial( primitiveRenderer.getCoords, model )
+        self.getViewModel = primitiveRenderer.getViewModel
+
+        self.transformer = RemoveNonLinearTransformFromCoords( self.getCoords )
+        self.transformer.subscribe( self.on_create, 'coordsChanged' )
+        self.create( self.transformer.transformedCoords )
     
     def Render(self, camera):
         ''' Renders the render_object '''
         self.render_object.Draw( camera )
         
-    def create(self):
+    def on_create(self, event):
+        self.create( event.coords )
+        
+    def create(self, coords):
         ''' Called to create the render object '''
-        self.render_object = self.doCreate( self.renderer, self.transformedCoords )
+        viewModel = self.getViewModel( self.model, coords )
+        self.render_object = self.renderer.CreateRenderObject( viewModel.kind, **viewModel.elements )
         try:
-            self.render_object.transform = self._transform
+            self.render_object.transform = self.transform
         except AttributeError:
             pass
+        self._recalculateBoundingBox()
         
-    def doCreate(self, coords):
-        ''' Base classes should override this one. It's fed with the
-            pre-transformed coordinates and should return the render_object
-            to be used for drawing.
-        '''
-        raise NotImplementedError()
-
     def rebuild(self):
         ''' Rebuild everything '''
-        self.calcCoords()
-        self.create()
-        self._recalculateBoundingBox()
-
-    def calcCoords(self):        
-        ''' Get coordinates and pre-transform them '''
-        self.coords = self.doCalcCoords( self.model )
-        self.transformCoords()
-        
-    def transformCoords(self):
-        ''' Pre-transform the coordinates with the non-linear parts of the
-            transform and re-create if neccessary.
-        '''
-        try:
-            transform = self._transform
-        except AttributeError:
-            self.transformedCoords = self.coords
-            return
-        
-        if isinstance(transform, LinearTransform2D):
-            self.transformedCoords = self.coords
-        elif isinstance(transform, LinearAndArbitraryCompoundTransform):
-            # check if the non-linear part is the same. If it is, no need to
-            # recreate the shape
-            if self._lastNonLinearTransform != transform.transform2:
-                if type(self.coords) == list:
-                    self.transformedCoords = [ transform.transform2( coord ) for coord in self.coords ]
-                else:
-                    self.transformedCoords = transform.transform2( self.coords )
-                # need to recreate our object since the coords changed
-                self.create()
-        else:
-            raise ValueError( 'NotImplemented %s %s' % (transform, type(transform)) )
-
-       
-    def doCalcCoords(self, model):
-        ''' Base classes should override this one. Should return the
-            untransformed coordinates for creation of the object.
-        '''
-        raise NotImplementedError()
+        self.transformer.calcCoords()
+        self.create( self.transformer.transformedCoords )
     
     def intersection(self, primitive):
         return self.render_object.intersects( primitive )
@@ -94,13 +117,12 @@ class BaseRenderer(object):
         ''' If the transform changes, we probably need to retransform our
             coordinates and the bounding box might change, too.
         '''
-        self._transform = transform        
-        self.transformCoords()
-        self.render_object.transform = self._transform
+        self.transformer.transform = transform
+        self.render_object.transform = self.transformer.linearTransform
         self._recalculateBoundingBox()
         
     def _getTransform(self):
-        return self._transform
+        return self.transformer.transform
 
     transform = property( _getTransform, _setTransform )
 
@@ -109,11 +131,8 @@ class BaseRenderer(object):
             transform on our local bounding box.
         '''
         bb = self.localBoundingBox
-        try:
-            transform = self.transform.transform1
-        except AttributeError:
-            transform = self.transform
-        self._boundingBox = boundingBoxModule.fromPoints( transform( bb.corners ) )
+        bbtransform = self.transformer.linearTransform
+        self._boundingBox = boundingBoxModule.fromPoints( bbtransform( bb.corners ) )
 
     def _getBoundingBox(self):
         return self._boundingBox
@@ -121,6 +140,8 @@ class BaseRenderer(object):
     boundingBox = property( _getBoundingBox )
 
     def _getLocalBoundingBox(self):
+        if self.render_object.boundingBoxDependentOnLook:
+            self.look.Apply( self.renderer )
         return self.render_object.localBoundingBox
             
     localBoundingBox = property( _getLocalBoundingBox )

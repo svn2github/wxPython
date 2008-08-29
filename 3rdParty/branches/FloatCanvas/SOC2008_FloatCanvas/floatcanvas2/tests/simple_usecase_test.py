@@ -11,9 +11,8 @@ def start():
     #  setup very basic window
     app = wx.App(0)
     frame = wx.Frame( None, wx.ID_ANY, 'FloatCanvas2 demo', size = (800, 600) )
-    frame.Show()
-        
-    canvas = fc.SimpleCanvas( window = frame )
+    canvas = fc.FloatCanvas( window = frame )
+    frame.Show()        
 
     r1 = canvas.create( 'Rectangle', (100, 200), look = fc.SolidColourLook( line_colour = 'blue', fill_colour = 'red' )  )
     semiTransparentGradientLook = fc.RadialGradientLook( 'blue', (0,0), (255,0,0,64), (0,0), 200, (0,0,255,128) )

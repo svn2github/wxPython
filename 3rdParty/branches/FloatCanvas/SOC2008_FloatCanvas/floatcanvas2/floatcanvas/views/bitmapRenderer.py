@@ -1,12 +1,14 @@
-from baseRenderer import BaseRenderer
 from ..models import IBitmap
 from ..math import numpy
+from viewModel import ViewModel
+from viewModelInterfaces import IBitmapViewModel
 
-class DefaultBitmapRenderer(BaseRenderer):
+class DefaultBitmapRenderer(object):
     can_render = IBitmap
+    implements_interfaces = IBitmapViewModel
     
-    def doCalcCoords(self, model):
+    def getCoords(self, model):
         return ()
            
-    def doCreate(self, renderer, coords):
-        return renderer.CreateBitmap( self.model.pixels, self.model.useRealSize )
+    def getViewModel(self, model, coords):
+        return ViewModel( 'Bitmap', pixels = model.pixels, use_real_size = model.useRealSize )

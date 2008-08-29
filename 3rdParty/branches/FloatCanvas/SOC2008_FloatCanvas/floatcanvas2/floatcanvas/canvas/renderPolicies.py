@@ -4,6 +4,7 @@
 
 from ..nodes.camera import Viewport
 from ..nodes.spatialQuery import QueryWithPrimitive
+from ..math.boundingBox import BoundingBox
 
 class DefaultRenderPolicy(object):
     ''' This is the simplest possible rendering policy. It just clears the
@@ -12,10 +13,19 @@ class DefaultRenderPolicy(object):
     '''
     def render(self, canvas, camera, backgroundColor):        
         from simpleCanvas import SimpleCanvas
+        canvas.renderer.BeginRendering()
         canvas.renderer.Clear( backgroundColor )
         camera.viewport = Viewport( canvas.screen_size )
         cam_transform = camera.viewTransform
-        super(SimpleCanvas, canvas).Render( canvas.renderer, camera )
+
+        bb = BoundingBox( ( (-1e10,-1e10), (1e10, 1e10) ) )
+        query = QueryWithPrimitive( bb, exact = False )
+        nodes_to_render = canvas.performSpatialQuery( query )
+
+        self.renderedNodes = []
+        for node in reversed(nodes_to_render):
+            node.Render( canvas.renderer, camera )
+        canvas.renderer.EndRendering()
         canvas.renderer.Present()
 
 
@@ -26,6 +36,7 @@ class CullingRenderPolicy(object):
         up things considerably.
     '''
     def render(self, canvas, camera, backgroundColor):        
+        canvas.renderer.BeginRendering()
         canvas.renderer.Clear( backgroundColor )
         
         camera.viewport = Viewport( canvas.screen_size )
@@ -35,7 +46,7 @@ class CullingRenderPolicy(object):
         view_box = camera.viewBox
         query = QueryWithPrimitive( view_box, exact = False )
         nodes_to_render = canvas.performSpatialQuery( query )
-        
+
         self.renderedNodes = []
         for node in reversed(nodes_to_render):
             #  check whether some parent of the node is a
@@ -60,4 +71,5 @@ class CullingRenderPolicy(object):
             # if we got here, render this node
             node.Render( canvas.renderer, camera, renderChildren = False )
             
+        canvas.renderer.EndRendering()
         canvas.renderer.Present()

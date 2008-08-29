@@ -1,12 +1,14 @@
-from baseRenderer import BaseRenderer
 from ..models import IPolygonList
 from ..math import numpy
+from viewModel import ViewModel
+from viewModelInterfaces import IPolygonListViewModel
 
-class DefaultPolygonListRenderer(BaseRenderer):
+class DefaultPolygonListRenderer(object):
     can_render = IPolygonList
-    
-    def doCalcCoords(self, model):
+    implements_interfaces = IPolygonListViewModel
+
+    def getCoords(self, model):
         return numpy.array( model.polygon_list )
            
-    def doCreate(self, renderer, coords):
-        return renderer.CreateLinesList( coords, True )
+    def getViewModel(self, model, coords):
+        return ViewModel( 'LinesList', lines_list = coords, close = True )

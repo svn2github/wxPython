@@ -33,7 +33,7 @@ def start():
         
         # some more exotic lines
         fc.RadialGradientLook( 'pink', (0,0), (0,255,0,128), (0,0), 150, (255,0,255,200), line_style = 'dot', line_width = 10, line_cap = 'butt', line_join = 'bevel' ),
-        fc.LinearGradientLook( 'pink', (-5,-5), 'orange', (5,5), 'blue', line_style = 'long_dash', line_width = 5 ),
+        fc.LinearGradientLook( 'red', (-5,-5), 'orange', (5,5), 'blue', line_style = 'long_dash', line_width = 5 ),
         fc.SolidColourLook( line_colour = 'green', fill_colour = 'red', line_style = 'solid', line_width = 13, line_cap = 'projecting', line_join = 'miter' ),        
         fc.SolidColourLook( line_colour = 'black', fill_colour = 'red', line_style = 'solid', line_width = 13, line_cap = 'projecting', line_join = 'round' ),        
     ]
@@ -45,15 +45,18 @@ def start():
         look = looks[ i % len(looks) ]
         r = canvas.create( 'Rectangle', (100, 100), name = 'r%d' % i, pos = (i * 110, 0), look = look  )
         rr = canvas.create( 'RoundedRectangle', (100, 100), 30, name = 'r%d' % i, pos = (i * 110, 200), look = look  )
-        c = canvas.create( 'Circle', 100, name = 'r%d' % i, pos = (i * 110, 400), look = look  )
+        c = canvas.create( 'Circle', 50, name = 'r%d' % i, pos = (i * 110, 400), look = look  )
         e = canvas.create( 'Ellipse', (100, 75), name = 'r%d' % i, pos = (i * 110, 600), look = look  )
         l = canvas.create( 'Lines', thingy, name = 'r%d' % i, pos = (i * 110, 800), look = look  )
         p = canvas.create( 'Polygon', thingy, name = 'r%d' % i, pos = (i * 110, 1000), look = look  )
+        a = canvas.create( 'Arc', 50, 0, 2.14, True, name = 'a%d' % i, pos = (i * 110, 1200), look = look  )
         #r._debugDrawBoundingBoxes = True
 
     # the default cam, looking at 0, 0
     canvas.camera.position = (600, 500)
     canvas.camera.zoom = (0.4, 0.4)
+    
+    canvas.zoomToExtents()
        
     wx.CallLater( 1000, canvas.saveScreenshot, 'look_test_screenshot.png' )
                 

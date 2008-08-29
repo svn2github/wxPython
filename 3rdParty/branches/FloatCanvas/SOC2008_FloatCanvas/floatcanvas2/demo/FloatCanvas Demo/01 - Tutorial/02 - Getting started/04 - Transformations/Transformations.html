@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>Transformations</title>
+
+<h2>Transformations</h2>
+<hr>
+
+<p>As you have seen in previous example, we placed objects at different positions
+on our canvas. This was done by using the pos = (100,0) argument to the create
+method. Alternative ways of spelling this would've been position = (100,0) or
+translation = (100,0).</p>
+<p>In the first example, you have also seen how to rotate an object, you did this
+by feeding a rotation = 45 argument to create.</p>
+<p>In addition you can also scale the object by feeding a scale = (2.5, 3.1)
+argument to the create function. This causes the object to be scaled 2.5 times
+along the x-axis and 3.1 times along the y-axis.</p>
+<p>The create function takes those arguments and then creates a single transform
+out of them. A transform is an object which describes the position, size and
+orientation of an object. It is applied to a set of incoming coordinates which
+are then transformed into the outgoing coordinates. For example if your
+transform scales an object by 2,2 it means if the incoming coordinates are 5,5
+then the outgoing ones are 10,10.</p>
+<p>By default FloatCanvas creates a 2d linear transform (which is basically a 3x3
+homogeneous matrix) out of the arguments you pass to create. You can see this
+transform by taking a look at node.transform if node was created like
+node = canvas.create( ... ). If you want to see the associated matrix, try
+node.transform.matrix. I won't go into the details of linear transformation, if
+you want to know how they really work, take a look at a good linear algebra or
+computer graphics book. Right now all you need to know is about the position,
+rotation and scale properties.</p>
+<p>You can also change the position/rotation/scale of an object after creation. To
+accomplish this, you can just do node.position = (5,6) or node.rotate = 90 or
+node.scale = (2,2) on the node. This moves the objects on the canvas. In one of
+the later chapters we'll see how to do animation with this.</p>
+<p>Finally, FloatCanvas allows you to do something more fancy than linear
+transforms. You can supply any kind of transform you want. For exampel if you
+are a cartographer it is very likely your coordinates are not given in a simple
+cartesian coordinate system, but you have a set of (longitude, latitude)-pairs
+instead. These need to be transformed into cartesian space to be drawn. So you
+can employ a Mercator projection for example which does this job. As an example
+the mercator projection is already built in in floatcanvas. A later chapter
+shows how you can add your custom transforms and projections suited to your own
+data.</p>
+<p>You can also set the transform in the create method directly, via using
+transform = fc.LinearTransform2D( someMatrix ) for example.</p>
+<p>The source code to this lesson shows different ways of modifying the position/
+rotation/scale of an object by modifying the respective properties and also
+shows a small example of using the Mercator transform. The outermost points on
+the equator plus both poles are the input coordinates, output coordinates look
+like a diamond, which is what is to be expected (poles up and down, equator
+points left and right).</p>
+<p>You can also see the where = 'front' parameter is being used when constructing
+the lines used with the mercator projection. This means the new shape is created
+on top (front in z-order) of the already present shapes. The where parameter
+defaults to 'back'. So if we didn't set it to 'front', most of the black lines
+would've been hidden under the purple circle.</p>
+
+</html>
