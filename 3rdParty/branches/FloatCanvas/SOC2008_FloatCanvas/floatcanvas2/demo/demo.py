@@ -32,7 +32,7 @@ class FloatCanvasDemo(object):
 
 def get_bitmap(name):
     import os.path
-    filename = '%s/icons/%s.png' % ( os.path.dirname(__file__), name)
+    filename = os.path.join(os.path.dirname(__file__), "icons", name+".png")
     return wx.Bitmap( filename, wx.BITMAP_TYPE_PNG )
 
 def get_icon(name):
