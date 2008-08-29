@@ -1,0 +1,2 @@
+name = 'Looks'
+icon = None

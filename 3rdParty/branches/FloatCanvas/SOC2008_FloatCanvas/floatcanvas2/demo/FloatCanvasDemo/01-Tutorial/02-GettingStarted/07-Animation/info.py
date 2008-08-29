@@ -1,0 +1,2 @@
+name = 'Animation'
+icon = None

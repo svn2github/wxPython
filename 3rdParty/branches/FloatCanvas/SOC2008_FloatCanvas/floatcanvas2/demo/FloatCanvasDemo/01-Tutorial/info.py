@@ -1,0 +1,2 @@
+name = 'Tutorial'
+icon = None

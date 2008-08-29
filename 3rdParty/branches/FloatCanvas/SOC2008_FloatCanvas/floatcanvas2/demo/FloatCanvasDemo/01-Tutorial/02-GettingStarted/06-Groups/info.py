@@ -1,0 +1,2 @@
+name = 'Groups'
+icon = None

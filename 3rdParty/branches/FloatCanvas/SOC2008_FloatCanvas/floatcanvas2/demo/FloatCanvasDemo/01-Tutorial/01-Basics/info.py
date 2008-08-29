@@ -1,0 +1,2 @@
+name = 'Basics'
+icon = None

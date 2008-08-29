@@ -276,6 +276,28 @@ class DefaultRenderableNodeSerializer(object):
             dikt[ attrib_name ] = 'rgb( %s )' % elements
             dikt[ attrib_name_opacity ] = colour[3] / 255.0
         
+        ## font
+        try:
+            font_look = look.font_look
+        except AttributeError:
+            font_look = None
+        # 'font-family'
+        # 'font-style'        # 	normal | italic | oblique
+        # 'font-weight'       #   normal | bold | bolder | lighter | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
+        # 'font-size'
+        # fill="blue" stroke="red" stroke-width="1"
+        if font_look:
+            font_attrs = element.attributes
+            font_attrs['font-family'] = font_look.family
+            font_attrs['font-style'] = { 'slant' : 'oblique' }.get( font_look.style.lower(), font_look.style )
+            font_attrs['font-weight'] = { 'light' : 'lighter' }.get( font_look.weight.lower(), font_look.weight )
+            font_attrs['font-size'] = font_look.size
+            if font_look.underlined:
+                font_attrs['text-decoration'] = 'underline'
+            format_color_attrib( 'fill', font_look.colour, font_attrs )
+            return
+
+
         ## OUTLINES
         try:
             line_look = look.line_look
@@ -386,25 +408,6 @@ class DefaultRenderableNodeSerializer(object):
         # stop offset="0%" stop-color = fill_look.colour_origin[0:3] stop-opacity = fill_look.colour_origin[3]
         # stop offset="100%" stop-color = fill_look.colour_end[0:3] stop-opacity = fill_look.colour_end[3]
 
-        # font
-        try:
-            font_look = look.font_look
-        except AttributeError:
-            font_look = None
-        # 'font-family'
-        # 'font-style'        # 	normal | italic | oblique
-        # 'font-weight'       #   normal | bold | bolder | lighter | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
-        # 'font-size'
-        # fill="blue" stroke="red" stroke-width="1"
-        if font_look:
-            font_attrs = element.attributes
-            font_attrs['font-family'] = font_look.family
-            font_attrs['font-style'] = { 'slant' : 'oblique' }.get( font_look.style.lower(), font_look.style )
-            font_attrs['font-weight'] = { 'light' : 'lighter' }.get( font_look.weight.lower(), font_look.weight )
-            font_attrs['font-size'] = font_look.size
-            if font_look.underlined:
-                font_attrs['text-decoration'] = 'underline'
-            format_color_attrib( 'fill', font_look.colour, font_attrs )
 
 
     def serialize(cls, node, serializer):        

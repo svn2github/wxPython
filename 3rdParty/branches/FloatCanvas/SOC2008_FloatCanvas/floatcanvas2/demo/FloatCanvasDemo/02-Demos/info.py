@@ -1,0 +1,2 @@
+name = 'Demos'
+icon = None

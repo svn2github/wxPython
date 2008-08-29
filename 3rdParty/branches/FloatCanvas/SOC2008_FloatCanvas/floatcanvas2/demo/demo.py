@@ -30,10 +30,10 @@ class FloatCanvasDemo(object):
         self.app.MainLoop()
 
 
+import icons.icons
+
 def get_bitmap(name):
-    import os.path
-    filename = os.path.join(os.path.dirname(__file__), "icons", name+".png")
-    return wx.Bitmap( filename, wx.BITMAP_TYPE_PNG )
+    return icons.icons.catalog[name].GetBitmap()
 
 def get_icon(name):
     return wx.IconFromBitmap( get_bitmap(name) )
@@ -71,7 +71,7 @@ class MainFrame(wx.Frame):
         self.SetIcons( icons )
          
         self.Centre( wx.BOTH )
-        self.Maximize()
+        #self.Maximize()
         self.CreateStatusBar( 1, wx.ST_SIZEGRIP )
         
         ## Create a Notebook
@@ -95,8 +95,6 @@ class MainFrame(wx.Frame):
         self.overview_win.Bind( wx.html.EVT_HTML_LINK_CLICKED, OnLinkClicked )
         notebook.AddPage( self.overview_win, 'Overview', imageId = 0 )
         
-        self.codePage = DemoCodePanel( notebook, self )
-
         if 'gtk2' in wx.PlatformInfo:
             self.overview_win.SetStandardFonts()
         
@@ -188,22 +186,33 @@ class MainFrame(wx.Frame):
         
     def enableCodePage(self, enable = True):
         if enable:
+            self.codePage = DemoCodePanel( self.notebook, self )
             self.notebook.AddPage( self.codePage, 'Code', imageId = 1 )
         else:
             if 1 in range(0, self.notebook.PageCount):
-                self.notebook.RemovePage( 1 )
+                self.notebook.DeletePage( 1 )
 
        
     def LoadDemo(self, entry):        
+        self.enableCodePage()
+
         code_file_content = file( entry.code_filename, 'r' ).read()
         self.codePage.LoadDemoSource( code_file_content )
-        self.enableCodePage()
         
         globals = {}
         old_dir = os.getcwd()
-        os.chdir( os.path.dirname( entry.code_filename ) )
+        code_dir = os.path.dirname( entry.code_filename )
+        os.chdir( code_dir )
         try:
-            exec code_file_content in globals, globals
+            #import sys
+            #try:
+            #    sys.path.insert( 0, code_dir )
+            #    module = __import__( os.path.splitext( os.path.basename(entry.code_filename) )[0] )
+            #finally:
+            #    sys.path.remove( code_dir )
+            
+            code = compile( code_file_content, entry.code_filename, 'exec' )
+            exec code in globals, globals
             
             self.DeleteNotebookPage(2)
             resultPanel = wx.Panel( self.notebook, -1 )        
@@ -248,7 +257,7 @@ class DemoTree(ExpansionState, wx.TreeCtrl):
     def SetItems(self, items):        
         self.DeleteAllItems()
                 
-        #self.AddRoot( 'FloatCanvas demos', image = self.addIcon( 'kpaint16x16' ) )
+        self.AddRoot( 'FloatCanvas demos', image = self.addIcon( 'kpaint16x16' ) )
 
         category_name_to_item = {}
         for entry in items:
@@ -262,7 +271,9 @@ class DemoTree(ExpansionState, wx.TreeCtrl):
                 parent = category_name_to_item[ category_parents ]
                 
             icon_index = self.addIcon( '%s16x16' % entry.icon )
-            category_item = self.AppendItem( parent, category_name, image = icon_index )            
+            #item_name = '%02d - %s' % ( self.GetChildrenCount(parent, False) + 1, entry.display_name )
+            item_name = entry.display_name
+            category_item = self.AppendItem( parent, item_name, image = icon_index )            
             self.SetPyData( category_item, entry )
             category_name_to_item[ category_parts ] = category_item
 

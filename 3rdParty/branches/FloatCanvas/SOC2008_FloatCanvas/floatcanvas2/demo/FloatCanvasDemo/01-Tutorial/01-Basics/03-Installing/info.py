@@ -1,0 +1,2 @@
+name = 'Installing'
+icon = None
