@@ -96,18 +96,6 @@ class TestNode(unittest.TestCase):
         canvas.serializeToFile( 'test_look.svg' )
         
     def testPrimitives(self):
-        def convertImageToBuffer(img):
-            from floatcanvas.math import numpy
-            w, h = img.GetWidth(), img.GetHeight()
-            img_data = numpy.array( img.GetDataBuffer(), dtype = 'c' ).reshape( (w, h, 3) )
-            if not img.HasAlpha():
-                return img_data
-            else:
-                data = numpy.empty( (w,h,4), 'c' )
-                data[...,:3] = img_data
-                data[...,3] = numpy.array( img.GetAlphaBuffer(), dtype = 'c' ).reshape(w,h)
-                return data
-        
         app = wx.App(0)
         frame = wx.Frame( None, wx.ID_ANY, 'FloatCanvas2 demo', size = (800, 600) )
         frame.Show()
@@ -115,7 +103,7 @@ class TestNode(unittest.TestCase):
         canvas = fc.FloatCanvas( window = frame )
     
         toucanImg = wx.Image( '../data/toucan.png' )
-        toucanData = convertImageToBuffer( toucanImg )
+        toucanData = fc.arrayFromImage( toucanImg )
         toucanBitmap = wx.BitmapFromImage( toucanImg.AdjustChannels( 0, 2, 0, 1 ) )
     
         # setup a small list of primitives we want to test

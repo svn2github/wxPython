@@ -48,6 +48,7 @@ class WorldTest(object):
         # creation phase
         renderer = GCRenderer( window = self.frame, double_buffered = False )
 
+        renderer.BeginRendering()
         black_pen = renderer.CreatePen( wx.Colour(0,0,0,255), width = 1 )
         black_pen.Activate()
 
@@ -58,6 +59,7 @@ class WorldTest(object):
             renderer.DrawLines( self.world.points[currentPos:currentPos+lineLength] )
             currentPos += lineLength
 
+        renderer.EndRendering()
         renderer.Present()
 
         self.app.MainLoop()        
