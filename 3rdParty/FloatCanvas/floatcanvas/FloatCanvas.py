@@ -1050,6 +1050,10 @@ class RectEllipse(XYObjectMixin, LineAndFillMixin, DrawObject):
 
         self.HitLineWidth = max(LineWidth,self.MinHitLineWidth)
 
+        # these define the behaviour when zooming makes the objects really small.
+        self.MinSize = 1
+        self.DisappearWhenSmall = True
+
         self.SetPen(LineColor,LineStyle,LineWidth)
         self.SetBrush(FillColor,FillStyle)
 
@@ -1075,10 +1079,12 @@ class Rectangle(RectEllipse):
                                     WorldToPixel,
                                     ScaleWorldToPixel,
                                     HTdc)
-        dc.DrawRectanglePointSize(XY, WH)
-        if HTdc and self.HitAble:
-            HTdc.DrawRectanglePointSize(XY, WH)
-
+        WH[WH==0] = self.MinSize
+        WH = N.sign(WH) * N.maximum(N.abs(WH), self.MinSize)
+        if not( self.DisappearWhenSmall and N.abs(WH).min() <=  self.MinSize) : # don't try to draw it too tiny
+            dc.DrawRectanglePointSize(XY, WH)
+            if HTdc and self.HitAble:
+                HTdc.DrawRectanglePointSize(XY, WH)
 
 
 class Ellipse(RectEllipse):
@@ -1088,9 +1094,12 @@ class Ellipse(RectEllipse):
                                     WorldToPixel,
                                     ScaleWorldToPixel,
                                     HTdc)
-        dc.DrawEllipsePointSize(XY, WH)
-        if HTdc and self.HitAble:
-            HTdc.DrawEllipsePointSize(XY, WH)
+        WH[WH==0] = self.MinSize
+        WH = N.sign(WH) * N.maximum(N.abs(WH), self.MinSize)
+        if not( self.DisappearWhenSmall and N.abs(WH).min() <=  self.MinSize) : # don't try to draw it too tiny
+            dc.DrawEllipsePointSize(XY, WH)
+            if HTdc and self.HitAble:
+                HTdc.DrawEllipsePointSize(XY, WH)
 
 class Circle(Ellipse):
     ## fixme: this should probably be use the DC.DrawCircle!
@@ -1390,7 +1399,7 @@ class ScaledText(TextObjectMixin, DrawObject, ):
         # They may not draw it, but they don't crash either!
         self.MaxFontSize = 1000
         self.MinFontSize = 1 # this can be changed to set a minimum size
-        self.DisapearWhenSmall = True
+        self.DisappearWhenSmall = True
         self.ShiftFun = self.ShiftFunDict[Position]
 
         self.CalcBoundingBox()

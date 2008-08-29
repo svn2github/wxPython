@@ -47,11 +47,16 @@ class DrawFrame(wx.Frame):
                                       Underlined = False,
                                       Position = 'bl',
                                       InForeground = False)
-        Text.MinFontSize = 4
-        Text.DisappearWhenSmall = True
+        Text.MinFontSize = 4 # the default is 1
+        Text.DisappearWhenSmall = False #the default is True
+
+        Rect = Canvas.AddRectangle((50, 20), (40,10), FillColor="Red", LineStyle = None)
+        Rect.MinSize = 4 # default is 1
+        Rect.DisappearWhenSmall = False # defualt is True
 
         self.Show()
         Canvas.ZoomToBB()
+
 
     def OnMove(self, event):
         """
