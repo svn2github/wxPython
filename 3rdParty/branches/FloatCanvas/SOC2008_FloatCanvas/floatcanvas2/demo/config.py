@@ -26,7 +26,7 @@ entries = []
 import glob
 def add_entry( path ):
     info_file = os.path.join( path, 'info.py' )
-    info_code = compile( file(info_file).read(), info_file, 'exec' )
+    info_code = compile( file(info_file, 'rU').read(), info_file, 'exec' )
     globals = {}
     exec info_code in globals, globals
     name = globals['name']

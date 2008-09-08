@@ -176,7 +176,7 @@ class MainFrame(wx.Frame):
             self.DeleteNotebookPage(2)
             self.enableCodePage( False )
     
-            overview_text = file( entry.text_filename, 'r' ).read()
+            overview_text = file( entry.text_filename, 'rU' ).read()
             self.SetOverview( entry.name, overview_text )
 
             if entry.code_filename is not None:
@@ -196,7 +196,7 @@ class MainFrame(wx.Frame):
     def LoadDemo(self, entry):        
         self.enableCodePage()
 
-        code_file_content = file( entry.code_filename, 'r' ).read()
+        code_file_content = file( entry.code_filename, 'Ur' ).read()
         self.codePage.LoadDemoSource( code_file_content )
         
         globals = {}
