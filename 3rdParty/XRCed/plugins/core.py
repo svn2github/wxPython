@@ -467,8 +467,10 @@ component.Manager.setTool(c, 'Menus', pos=(1,0))
 
 ### wxMenu
 
-c = component.SimpleContainer('wxMenu', ['menu', 'top_level'], ['label', 'help'],
-                    image=images.TreeMenu.GetImage())
+c = component.SimpleContainer('wxMenu', ['menu', 'top_level'], 
+                              ['label', 'help', 'enabled'],
+                              image=images.TreeMenu.GetImage())
+#c.setSpecial('bitmap', attribute.BitmapAttribute)
 c.addStyles('wxMENU_TEAROFF')
 c.addEvents('EVT_MENU', 'EVT_MENU_OPEN', 'EVT_MENU_CLOSE', 'EVT_MENU_HIGHLIGHT_ALL')
 component.Manager.register(c)
