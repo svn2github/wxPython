@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 
 
 TestFileName = "../data/TestMap.png"
@@ -9,7 +9,7 @@ import wx
 #from wx.lib.floatcanvas import NavCanvas, FloatCanvas
 
 import sys
-sys.path.append("../")
+sys.path.append("..")
 from floatcanvas import NavCanvas, FloatCanvas
 
 

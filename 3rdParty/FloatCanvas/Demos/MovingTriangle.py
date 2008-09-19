@@ -17,7 +17,7 @@ if ver == 'installed': ## import the installed version
 elif ver == 'local':
     ## import a local version
     import sys
-    sys.path.append("../")
+    sys.path.append("..")
     from floatcanvas import NavCanvas,  Resources
     from floatcanvas import FloatCanvas as FC
 
@@ -38,7 +38,7 @@ class TriangleShape1(FC.Polygon, ShapeMixin):
     def __init__(self, XY, L):
 
         """
-        An equalateral triangle object
+        An equilateral triangle object
 
         XY is the middle of the triangle
 

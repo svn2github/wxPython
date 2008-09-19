@@ -20,7 +20,7 @@ if ver == 'installed': ## import the installed version
 elif ver == 'local':
     ## import a local version
     import sys
-    sys.path.append("../")
+    sys.path.append("..")
     from floatcanvas import NavCanvas,  Resources
     from floatcanvas import FloatCanvas as FC
     from floatcanvas.Utilities import BBox
@@ -58,7 +58,7 @@ class ConnectorObjectMixin:
     """
     Mixin class for DrawObjects that can be connected with lines
     
-    Note that this versionony works for Objects that have an "XY" attribute:
+    Note that this version only works for Objects that have an "XY" attribute:
       that is, one that is derived from XHObjectMixin.
     
     """
