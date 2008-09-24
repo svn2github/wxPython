@@ -333,7 +333,7 @@ class _Listener:
         dlg.Destroy()
         wx.Yield()
         if say == wx.ID_YES:
-            self.OnSaveOrSaveAs(wx.CommandEvent(wx.ID_SAVE))
+            self.OnSaveOrSaveAs(wx.CommandEvent(wx.EVT_MENU.typeId, wx.ID_SAVE))
             # If save was successful, modified flag is unset
             if not Presenter.modified: return True
         elif say == wx.ID_NO:
