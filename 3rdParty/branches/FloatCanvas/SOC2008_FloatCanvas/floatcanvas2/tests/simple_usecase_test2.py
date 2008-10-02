@@ -47,13 +47,8 @@ class TestFrame(wx.Frame):
                             parent = r2,
                             name = 'Child',
                             where = 'front' )
-        #mr = canvas.createPoints( [(70, 70)],
-        #                          transform = 'MercatorTransform',
-        #                          look = semiTransparentGradientLook,
-        #                          name = 'mercator' )
-        #mr.scale = (1, 100)
 
-        # the default cam, looking at 500, 500
+        # the default cam, looking at 0, 0
         canvas.camera.position = (0, 0)
         canvas.camera.zoom = (1.0, 1.0)
 
@@ -62,17 +57,15 @@ class TestFrame(wx.Frame):
     def RunSequence(self):
         import time
         canvas = self.canvas
-        #for i in range(200):
         for i in range(10):
             print "interation: %i"%i
-        for i in (0):
             canvas.camera.position = (0, 0)
             canvas.camera.rotation = i
             zoom = 1 + abs(i - 50) / 50.0
             canvas.camera.zoom = ( zoom, zoom )
             canvas.Render()
             wx.GetApp().Yield()
-            #time.sleep(0.01)
+            #time.sleep(0.5)
 
 def start():
     #  setup very basic window

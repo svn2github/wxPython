@@ -48,6 +48,7 @@ class RenderSurface(object):
         self.gc = self.renderer.wx_renderer.CreateContext( self.dc )
         
     def EndRendering(self):
+        self.dc.SelectObject( wx.EmptyBitmap(5,5)  )
         del self.dc
         del self.gc
 

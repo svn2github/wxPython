@@ -20,8 +20,9 @@ class FloatCanvas(SimpleCanvas):
 
     def OnPaint(self, evt):
         ''' redraw ourselves '''
+        print "In canvas OnPaint"
         self.dirty = True
-        evt.Skip()
+        #evt.Skip()
 
     def OnSize(self, evt):
         ''' redraw ourselves '''
