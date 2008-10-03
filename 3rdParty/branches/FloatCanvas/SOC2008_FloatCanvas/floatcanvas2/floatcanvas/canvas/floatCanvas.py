@@ -22,7 +22,13 @@ class FloatCanvas(SimpleCanvas):
         ''' redraw ourselves '''
         print "In canvas OnPaint"
         self.dirty = True
-        #evt.Skip()
+        if wx.Platform == '__WXMSW__':
+            # Skip() must be called, or Windows doesn't think the window has been painted
+            #    resulting in endless recusive paint events. Hoever, if you call Skip() on OS-X,
+            #    nothing gets rendered. I"m not sure aobut GTK at this point. 
+            #    another option is to create a wx.PaintDC and don't use it, but I figured:
+            #    why waste the time on platforms that don't need it?
+            evt.Skip()
 
     def OnSize(self, evt):
         ''' redraw ourselves '''

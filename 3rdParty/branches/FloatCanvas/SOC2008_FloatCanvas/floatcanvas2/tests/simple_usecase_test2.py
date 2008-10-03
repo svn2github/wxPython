@@ -57,7 +57,7 @@ class TestFrame(wx.Frame):
     def RunSequence(self):
         import time
         canvas = self.canvas
-        for i in range(10):
+        for i in range(200):
             print "interation: %i"%i
             canvas.camera.position = (0, 0)
             canvas.camera.rotation = i
