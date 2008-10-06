@@ -450,7 +450,7 @@ class _Listener:
         treeState = self.tree.GetFullState() # state just before
         item = Presenter.paste()
         itemIndex = self.tree.ItemFullIndex(item)
-        g.undoMan.RegisterUndo(undo.PasteCreate(itemIndex, treeState))
+        g.undoMan.RegisterUndo(undo.UndoPasteCreate(itemIndex, treeState))
 
     def OnUnselect(self, evt):
         self.tree.UnselectAll()
