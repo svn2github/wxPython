@@ -809,4 +809,6 @@ class FourWaySplitter(wx.PyPanel):
         if self._expanded != expanded:
             self._expanded = expanded
             self._SizeWindows()
+
+
     

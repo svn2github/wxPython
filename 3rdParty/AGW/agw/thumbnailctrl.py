@@ -1924,3 +1924,6 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         self._checktext = True
 
         self.Refresh()
+
+
+
