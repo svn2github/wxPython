@@ -13,12 +13,12 @@ sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import supertooltip as STT
+    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.supertooltip as STT
+    bitmapDir = "agw/bitmaps/"
 
 import images
-
-bitmapDir = "bitmaps/"
 
 
 class SuperToolTipDemo(wx.Frame):

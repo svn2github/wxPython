@@ -15,13 +15,13 @@ sys.path.append(os.path.split(dirName)[0])
 try:
     from agw import labelbook as LB
     from agw.fmresources import *
+    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.labelbook as LB
     from wx.lib.agw.fmresources import *
+    bitmapDir = "agw/bitmaps/"
 
 import images
-
-bitmapDir = "bitmaps/"
 
 _pageTexts = ["Hello", "From", "wxPython", "LabelBook", "Demo"]
 _pageIcons = ["roll.png", "charge.png", "add.png", "decrypted.png", "news.png"]

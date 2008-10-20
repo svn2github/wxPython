@@ -21,7 +21,6 @@ if wx.Platform == "__WXMSW__":
             import win32api
             import win32con
             import winxpgui
-            import win32gui
             _libimported = "MH"
         except:
             try:
@@ -487,7 +486,7 @@ class RendererMSOffice2007(RendererBase):
     def GetTextColourEnable(self):
         """ Returns the colour used for text colour when enabled. """
 
-    	return wx.NamedColor("MIDNIGHT BLUE")
+    	return wx.NamedColour("MIDNIGHT BLUE")
     
     
 # ---------------------------------------------------------------------------- #
@@ -582,11 +581,11 @@ class ArtManager(wx.EvtHandler):
     def FillStockBitmaps(self):
 
         bmp = self.ConvertToBitmap(arrow_down, alpha=None)
-        bmp.SetMask(wx.Mask(bmp, wx.Color(0, 128, 128)))
+        bmp.SetMask(wx.Mask(bmp, wx.Colour(0, 128, 128)))
         self._bitmaps.update({"arrow_down": bmp})
 
         bmp = self.ConvertToBitmap(arrow_up, alpha=None)
-        bmp.SetMask(wx.Mask(bmp, wx.Color(0, 128, 128)))
+        bmp.SetMask(wx.Mask(bmp, wx.Colour(0, 128, 128)))
         self._bitmaps.update({"arrow_up": bmp})
 
 
@@ -649,7 +648,7 @@ class ArtManager(wx.EvtHandler):
         g = color.Green() + ((i*gd*100)/high)/100
         b = color.Blue() + ((i*bd*100)/high)/100
 
-        return wx.Color(r, g, b)
+        return wx.Colour(r, g, b)
 
 
     def DarkColour(self, color, percent):
@@ -667,7 +666,7 @@ class ArtManager(wx.EvtHandler):
         g = color.Green() + ((i*gd*100)/high)/100
         b = color.Blue() + ((i*bd*100)/high)/100
 
-        return wx.Color(r, g, b)
+        return wx.Colour(r, g, b)
 
 
     def PaintStraightGradientBox(self, dc, rect, startColor, endColor, vertical=True):
@@ -913,7 +912,7 @@ class ArtManager(wx.EvtHandler):
         greenOffset = float((secondColor.Green() * (100 - percent) / 100) - (firstColor.Green() * percent / 100))
         blueOffset = float((secondColor.Blue() * (100 - percent) / 100) -  (firstColor.Blue() * percent / 100))
 
-        return wx.Color(firstColor.Red() + redOffset, firstColor.Green() + greenOffset,
+        return wx.Colour(firstColor.Red() + redOffset, firstColor.Green() + greenOffset,
                         firstColor.Blue() + blueOffset)
 
 
@@ -1423,7 +1422,7 @@ class ArtManager(wx.EvtHandler):
         """
 
         if not useLightColours and not self.IsDark(self.FrameColour()):
-            return wx.NamedColor("GOLD")
+            return wx.NamedColour("GOLD")
         else:
             return self.LightColour(self.FrameColour(), 30)
 

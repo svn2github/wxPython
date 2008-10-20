@@ -862,7 +862,7 @@ class TreeTextCtrl(ExpandoTextCtrl):
             wcheck, hcheck = self._owner._imageListCheck.GetSize(checkimage)
             wcheck += 4
         else:
-            wcheck = 0            
+            wcheck = hcheck = 0
 
         if wnd:
             h = max(hcheck, image_h)
@@ -4878,7 +4878,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             event = TreeEvent(wxEVT_TREE_ITEM_MENU, self.GetId())
             event._item = self._current
             # Use the left edge, vertical middle
-            event._pointDrag = wx.Point(ItemRect.GetX(), ItemRect.GetY() + ItemRect.GetHeight()/2)
+            event._pointDrag = wx.Point(itemRect.GetX(), itemRect.GetY() + itemRect.GetHeight()/2)
             event.SetEventObject(self)
             self.GetEventHandler().ProcessEvent(event)
                 

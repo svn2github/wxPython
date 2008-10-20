@@ -732,7 +732,7 @@ class ButtonPanelDemo(wx.Frame):
             bpArt.SetColor(bp.BP_BUTTONTEXT_COLOR, wx.Colour(70,143,255))
             bpArt.SetColor(bp.BP_SEPARATOR_COLOR,
                            bp.BrightenColour(wx.Colour(60, 11, 112), 0.85))
-            bpArt.SetColor(bp.BP_SELECTION_BRUSH_COLOR, wx.Color(225, 225, 255))
+            bpArt.SetColor(bp.BP_SELECTION_BRUSH_COLOR, wx.Colour(225, 225, 255))
             bpArt.SetColor(bp.BP_SELECTION_PEN_COLOR, wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION))
 
         else:

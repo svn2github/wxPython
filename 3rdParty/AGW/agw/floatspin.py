@@ -129,6 +129,7 @@ or no range:
 #----------------------------------------------------------------------
 
 import wx
+from math import ceil, floor
 
 # Set The Styles For The Underline wx.TextCtrl
 FS_READONLY = 1
@@ -600,7 +601,7 @@ class FloatSpin(wx.PyControl):
         they are ignored.
         """
 
-        self.SetRangeDontClampValue(min_value, max_value)
+        self.SetRangeDontClampValue(min_val, max_val)
 
         value = self.ClampValue(self._value)
         if (value != self._value):

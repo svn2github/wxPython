@@ -126,7 +126,7 @@ except ImportError:
     
     raise Exception(errstr)
 
-from math import pi, ceil
+from math import pi
 
 
 #----------------------------------------------------------------------
@@ -147,7 +147,6 @@ def GetMondrianBitmap():
     return wx.BitmapFromImage(GetMondrianImage())
 
 def GetMondrianImage():
-    import cStringIO
     stream = cStringIO.StringIO(GetMondrianData())
     return wx.ImageFromStream(stream)
 

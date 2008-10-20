@@ -170,7 +170,7 @@ class GradientButton(wx.PyControl):
         g = color.Green() + ((i*gd*100)/high)/100
         b = color.Blue() + ((i*bd*100)/high)/100
 
-        return wx.Color(r, g, b)
+        return wx.Colour(r, g, b)
 
 
     def OnSize(self, event):

@@ -168,7 +168,7 @@ class AquaButton(wx.PyControl):
         g = color.Green() + ((i*gd*100)/high)/100
         b = color.Blue() + ((i*bd*100)/high)/100
 
-        return wx.Color(r, g, b)
+        return wx.Colour(r, g, b)
 
     
     def OnPaint(self, event):
@@ -205,7 +205,7 @@ class AquaButton(wx.PyControl):
         path2 = self.GetPath(gc, rc2, 10)        
         br2 = gc.CreateRadialGradientBrush(rc2.x, rc2.y,
                                            rc2.x+rc2.width, rc2.y+rc2.height,
-                                           rc2.width, wx.NamedColor("grey"), wx.WHITE)
+                                           rc2.width, wx.NamedColour("grey"), wx.WHITE)
 
         # Create top water color to give "aqua" effect
         rc3 = wx.Rect(*rc1)

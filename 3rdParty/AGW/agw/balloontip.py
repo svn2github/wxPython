@@ -312,9 +312,9 @@ class BalloonFrame(wx.Frame):
         bmp = wx.EmptyBitmap(size.x,size.y)
         dc = wx.BufferedDC(None, bmp)
         dc.BeginDrawing()
-        dc.SetBackground(wx.Brush(wx.Color(0,0,0), wx.SOLID))
+        dc.SetBackground(wx.Brush(wx.Colour(0,0,0), wx.SOLID))
         dc.Clear()
-        dc.SetPen(wx.Pen(wx.Color(0,0,0), 1, wx.TRANSPARENT))
+        dc.SetPen(wx.Pen(wx.Colour(0,0,0), 1, wx.TRANSPARENT))
 
         if self._shape == BT_ROUNDED:
             dc.DrawRoundedRectangle(0, 20, boxwidth, boxheight-20, 12)
@@ -336,7 +336,7 @@ class BalloonFrame(wx.Frame):
 
         dc.EndDrawing()
 
-        r = wx.RegionFromBitmapColour(bmp, wx.Color(0,0,0))
+        r = wx.RegionFromBitmapColour(bmp, wx.Colour(0,0,0))
         self.hasShape = self.SetShape(r)
 
         if self._tipstyle == BT_BUTTON:
@@ -750,7 +750,7 @@ class BalloonTip(object):
         """ Sets the BalloonTip background colour."""
 
         if colour is None:
-            colour = wx.Color(255, 250, 205)
+            colour = wx.Colour(255, 250, 205)
 
         self._ballooncolour = colour
 

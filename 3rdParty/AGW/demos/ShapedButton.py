@@ -13,18 +13,18 @@ sys.path.append(os.path.split(dirName)[0])
 
 try:
     import agw.shapedbutton
-    from agw.shapedbutton import SButton, SBitmapButton, SBitmapTextButton
-    from agw.shapedbutton import SToggleButton, SBitmapToggleButton, SBitmapTextToggleButton
+    from agw.shapedbutton import SButton, SBitmapButton
+    from agw.shapedbutton import SBitmapToggleButton, SBitmapTextToggleButton
     docs = agw.shapedbutton.__doc__
+    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.shapedbutton
-    from wx.lib.agw.shapedbutton import SButton, SBitmapButton, SBitmapTextButton
-    from wx.lib.agw.shapedbutton import SToggleButton, SBitmapToggleButton, SBitmapTextToggleButton
+    from wx.lib.agw.shapedbutton import SButton, SBitmapButton
+    from wx.lib.agw.shapedbutton import SBitmapToggleButton, SBitmapTextToggleButton
     docs = wx.lib.agw.shapedbutton.__doc__
+    bitmapDir = "agw/bitmaps/"
 
 import images
-
-bitmapDir = "bitmaps/"
 
 #----------------------------------------------------------------------
 # Beginning Of SHAPEDBUTTON Demo wxPython Code
@@ -196,9 +196,9 @@ class ShapedButtonDemo(wx.Frame):
 
         # We Build 9 Buttons With Different Colours And A Nice Text Rotation
 
-        colours = [None, wx.BLUE, wx.RED, wx.GREEN, wx.NamedColor("Gold"),
-                   wx.NamedColor("Cyan"), wx.NamedColor("Yellow"),
-                   wx.NamedColor("Orange"), wx.NamedColor("Magenta")]
+        colours = [None, wx.BLUE, wx.RED, wx.GREEN, wx.NamedColour("Gold"),
+                   wx.NamedColour("Cyan"), wx.NamedColour("Yellow"),
+                   wx.NamedColour("Orange"), wx.NamedColour("Magenta")]
 
         labels = ["These", "Are", "Some", "Nice", "Text", "Appended",
                   "To Different", "Buttons", "Nice Eh?"]
@@ -212,7 +212,7 @@ class ShapedButtonDemo(wx.Frame):
                  wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Tahoma"),
                  fnt, wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, True, "Verdana")]
 
-        lcolours = [None, wx.WHITE, wx.NamedColor("Yellow"), wx.WHITE,
+        lcolours = [None, wx.WHITE, wx.NamedColour("Yellow"), wx.WHITE,
                     None, None, wx.BLUE, wx.WHITE, wx.WHITE]
 
         bsizer = wx.FlexGridSizer(3, 3, 5, 5)
@@ -265,7 +265,7 @@ class ShapedButtonDemo(wx.Frame):
         btn2.Bind(wx.EVT_BUTTON, self.OnTogglePlayStop)
 
         btn3 = SButton(self.panel, -1, "Rotated")
-        btn3.SetButtonColour(wx.NamedColor("Cyan"))
+        btn3.SetButtonColour(wx.NamedColour("Cyan"))
         btn3.SetLabelColour(wx.WHITE)
         btn3.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD, False))
         btn3.SetAngleOfRotation(90)

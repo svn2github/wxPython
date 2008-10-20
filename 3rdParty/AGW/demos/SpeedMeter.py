@@ -14,10 +14,10 @@ sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import speedmeter as SM
+    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.speedmeter as SM
-
-bitmapDir = "bitmaps/"
+    bitmapDir = "agw/bitmaps/"
 
 
 #----------------------------------------------------------------------

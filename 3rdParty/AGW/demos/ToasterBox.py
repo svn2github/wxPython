@@ -14,16 +14,16 @@ sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import toasterbox as TB
+    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.toasterbox as TB
+    bitmapDir = "agw/bitmaps/"
 
 # In case of TB_COMPLEX style, create a panel that contains an image, some
 # text, an hyperlink and a ticker.
 
 import wx.lib.hyperlink as hyperlink
 from wx.lib.ticker import Ticker
-
-bitmapDir = "bitmaps/"
 
 # ------------------------------------------------------------------------------ #
 # Class ToasterBoxDemo

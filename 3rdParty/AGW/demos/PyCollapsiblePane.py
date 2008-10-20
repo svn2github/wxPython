@@ -1,6 +1,5 @@
 import wx
 import wx.lib.buttons as buttons
-import cStringIO
 
 import os
 import sys

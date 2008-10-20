@@ -13,12 +13,12 @@ sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import customtreectrl as CT
+    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.customtreectrl as CT
+    bitmapDir = "agw/bitmaps/"
 
 import images
-
-bitmapDir = "bitmaps/"
 
 #---------------------------------------------------------------------------
 

@@ -12,10 +12,10 @@ sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import gradientbutton as GB
+    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.gradientbutton as GB
-
-bitmapDir = "bitmaps/"
+    bitmapDir = "agw/bitmaps/"
 
             
 class GradientButtonDemo(wx.Panel):

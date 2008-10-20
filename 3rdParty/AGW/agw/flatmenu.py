@@ -2827,7 +2827,7 @@ class FlatMenuItem:
         backColor = artMgr.GetMenuFaceColour()
         penColor  = backColor
         backBrush = wx.Brush(backColor)
-        lightColour = wx.NamedColor("LIGHT GREY")
+        lightColour = wx.NamedColour("LIGHT GREY")
         leftMarginWidth = self._parentMenu.GetLeftMarginWidth()
         
         pen = wx.Pen(penColor)

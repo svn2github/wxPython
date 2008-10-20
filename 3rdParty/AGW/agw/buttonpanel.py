@@ -236,7 +236,7 @@ def BrightenColour(color, factor):
     else:
         blue = val
 
-    return wx.Color(red, green, blue) 
+    return wx.Colour(red, green, blue) 
 
 
 def GrayOut(anImage):
@@ -321,7 +321,7 @@ class BPArt:
             self._gradient_type = BP_GRADIENT_NONE
             
         self._buttontext_inactive_color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_GRAYTEXT)
-        self._selection_brush = wx.Brush(wx.Color(225, 225, 255))
+        self._selection_brush = wx.Brush(wx.Colour(225, 225, 255))
         self._selection_pen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION))
         
         sysfont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
@@ -976,7 +976,7 @@ class ButtonInfo(Control):
         self._shortHelp = shortHelp
         self._longHelp = longHelp
 
-        if bmp:
+        if bmp and bmp.IsOk():
             disabledbmp = GrayOut(bmp)
         else:
             disabledbmp = wx.NullBitmap

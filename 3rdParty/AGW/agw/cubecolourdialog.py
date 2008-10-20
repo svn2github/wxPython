@@ -82,7 +82,6 @@ __docformat__ = "epytext"
 #----------------------------------------------------------------------
 
 import wx
-import string
 import colorsys
 
 from math import pi, sin, cos, sqrt, atan2

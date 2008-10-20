@@ -16,13 +16,13 @@ sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import hypertreelist as HTL
+    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.hypertreelist as HTL
+    bitmapDir = "agw/bitmaps/"
 
 import ListCtrl
 import images
-
-bitmapDir = "bitmaps/"
 
 
 penstyle = ["wx.SOLID", "wx.TRANSPARENT", "wx.DOT", "wx.LONG_DASH", "wx.DOT_DASH", "wx.USER_DASH",

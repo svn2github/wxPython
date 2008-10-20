@@ -15,13 +15,15 @@ sys.path.append(os.path.split(dirName)[0])
 try:
     from agw import flatmenu as FM
     from agw.artmanager import ArtManager, RendererBase, DCSaver
-    from agw.fmresources import LargeIcons, SmallIcons, ControlFocus, ControlPressed
+    from agw.fmresources import ControlFocus, ControlPressed
     from agw.fmresources import FM_OPT_SHOW_CUSTOMIZE, FM_OPT_SHOW_TOOLBAR, FM_OPT_MINIBAR
+    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.flatmenu as FM
     from wx.lib.agw.artmanager import ArtManager, RendererBase, DCSaver
-    from wx.lib.agw.fmresources import LargeIcons, SmallIcons, ControlFocus, ControlPressed
+    from wx.lib.agw.fmresources import ControlFocus, ControlPressed
     from wx.lib.agw.fmresources import FM_OPT_SHOW_CUSTOMIZE, FM_OPT_SHOW_TOOLBAR, FM_OPT_MINIBAR
+    bitmapDir = "agw/bitmaps/"
 
 import images
 
@@ -38,8 +40,6 @@ else:
         AuiManager = AUI.FrameManager
     except:
         _hasAUI = False
-
-bitmapDir = "bitmaps/"
 
 #-------------------------------
 # Menu items IDs
@@ -67,7 +67,7 @@ MENU_PASTE = 10011
 
 def switchRGBtoBGR(color):
 
-    return wx.Color(color.Blue(), color.Green(), color.Red())
+    return wx.Colour(color.Blue(), color.Green(), color.Red())
 
 #------------------------------------------------------------
 # A custom renderer class for FlatMenu

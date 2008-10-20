@@ -161,7 +161,7 @@ class ToasterBox(wx.Timer):
                                     self._popupsize[0], 0)
        # bottom left
        elif pos == 2:
-           popupposition = wxPoint(0, wx.GetDisplaySize().GetHeight() -
+           popupposition = wx.Point(0, wx.GetDisplaySize().GetHeight() -
                                    self._popupsize[1])
        # bottom right
        elif pos == 3:

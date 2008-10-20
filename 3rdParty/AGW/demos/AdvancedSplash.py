@@ -13,10 +13,10 @@ sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import advancedsplash as AS
+    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.advancedsplash as AS
-
-bitmapDir = "bitmaps/"
+    bitmapDir = "agw/bitmaps/"
 
 
 class TestPanel(wx.Panel):
