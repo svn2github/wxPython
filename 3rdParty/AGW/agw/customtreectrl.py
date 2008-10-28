@@ -3172,6 +3172,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             if self.HasFlag(TR_HIDE_ROOT):
                 # can't select virtual root
                 id = self.GetNext(id)
+                if idParent == self.GetRootItem(): 
+                    # no tree item selected and idParent is not reachable 
+                    return id 
             
             # and try all the items (stop when we get to the one we started from)
             while id != idParent and not self.GetItemText(id).lower().startswith(prefix):
