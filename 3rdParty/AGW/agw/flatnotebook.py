@@ -1275,7 +1275,7 @@ class FNBRenderer:
             # Get proper highlight color for focus rectangle from the
             # current Mac theme.  kThemeBrushFocusHighlight is
             # available on Mac OS 8.5 and higher
-            if wx.VERSION > (2, 9, 0, 0):
+            if hasattr(wx, 'MacThemeColour'):
                 c = wx.MacThemeColour(Carbon.Appearance.kThemeBrushFocusHighlight)
             else:
                 brush = wx.Brush(wx.BLACK)
