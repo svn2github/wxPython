@@ -1079,8 +1079,7 @@ class Rectangle(RectEllipse):
                                     WorldToPixel,
                                     ScaleWorldToPixel,
                                     HTdc)
-        WH[WH==0] = self.MinSize
-        WH = N.sign(WH) * N.maximum(N.abs(WH), self.MinSize)
+        WH[N.abs(WH) < self.MinSize] = self.MinSize
         if not( self.DisappearWhenSmall and N.abs(WH).min() <=  self.MinSize) : # don't try to draw it too tiny
             dc.DrawRectanglePointSize(XY, WH)
             if HTdc and self.HitAble:
@@ -1094,29 +1093,63 @@ class Ellipse(RectEllipse):
                                     WorldToPixel,
                                     ScaleWorldToPixel,
                                     HTdc)
-        WH[WH==0] = self.MinSize
-        WH = N.sign(WH) * N.maximum(N.abs(WH), self.MinSize)
+        WH[N.abs(WH) < self.MinSize] = self.MinSize
         if not( self.DisappearWhenSmall and N.abs(WH).min() <=  self.MinSize) : # don't try to draw it too tiny
             dc.DrawEllipsePointSize(XY, WH)
             if HTdc and self.HitAble:
                 HTdc.DrawEllipsePointSize(XY, WH)
 
-class Circle(Ellipse):
-    ## fixme: this should probably be use the DC.DrawCircle!
-    def __init__(self, XY, Diameter, **kwargs):
-        self.Center = N.array(XY, N.float)
-        Diameter = float(Diameter)
-        RectEllipse.__init__(self ,
-                             self.Center - Diameter/2.0,
-                             (Diameter, Diameter),
-                             **kwargs)
+class Circle(XYObjectMixin, LineAndFillMixin, DrawObject):
+    def __init__(self, XY, Diameter, 
+                 LineColor = "Black",
+                 LineStyle = "Solid",
+                 LineWidth    = 1,
+                 FillColor    = None,
+                 FillStyle    = "Solid",
+                 InForeground = False):
+        DrawObject.__init__(self, InForeground)
+
+        print "Using new Circle code"
+        self.XY = N.array(XY, N.float)
+        self.WH = N.array((Diameter/2, Diameter/2), N.float) # just to keep it compatible with others
+        self.CalcBoundingBox()
+
+        self.LineColor = LineColor
+        self.LineStyle = LineStyle
+        self.LineWidth = LineWidth
+        self.FillColor = FillColor
+        self.FillStyle = FillStyle
+
+        self.HitLineWidth = max(LineWidth,self.MinHitLineWidth)
+
+        # these define the behaviour when zooming makes the objects really small.
+        self.MinSize = 1
+        self.DisappearWhenSmall = True
+
+        self.SetPen(LineColor,LineStyle,LineWidth)
+        self.SetBrush(FillColor,FillStyle)
 
     def SetDiameter(self, Diameter):
-        Diameter = float(Diameter)
-        XY = self.Center - (Diameter/2.0)
-        self.SetShape(XY,
-                      (Diameter, Diameter)
-                      )
+        self.WH = N.array((Diameter/2, Diameter/2), N.float) # just to keep it compatible with others
+
+    def CalcBoundingBox(self):
+        # you need this in case Width or Height are negative
+        self.BoundingBox = BBox.fromPoints( (self.XY+self.WH, self.XY-self.WH) )
+        if self._Canvas:
+            self._Canvas.BoundingBoxDirty = True
+
+    def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
+        ( XY, WH ) = self.SetUpDraw(dc,
+                                    WorldToPixel,
+                                    ScaleWorldToPixel,
+                                    HTdc)
+        
+        WH[N.abs(WH) < self.MinSize] = self.MinSize
+        if not( self.DisappearWhenSmall and N.abs(WH).min() <=  self.MinSize) : # don't try to draw it too tiny
+            dc.DrawCirclePoint(XY, WH[0])
+            if HTdc and self.HitAble:
+                HTdc.DrawCirclePoint(XY, WH[0])
+
 
 class TextObjectMixin(XYObjectMixin):
     """
