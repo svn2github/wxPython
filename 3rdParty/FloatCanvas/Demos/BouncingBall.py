@@ -33,11 +33,6 @@ class Ball(FloatCanvas.Circle):
         self.Velocity = np.asarray(Velocity, np.float).reshape((2,))
         FloatCanvas.Circle.__init__(self, XY, Diameter=4, FillColor="red")
 
-
-class BallFrame(wx.Frame):
-    def __init__(self, *args, **kwargs):
-        wx.Frame.__init__(self, *args, **kwargs)
-
 class DrawFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
         wx.Frame.__init__(self, *args, **kwargs)
@@ -135,6 +130,7 @@ class DrawFrame(wx.Frame):
         pos += dt * vel 
     
         self.Canvas.Draw(True)
+        wx.GetApp().Yield()
     
 class DemoApp(wx.App):
     def OnInit(self):
