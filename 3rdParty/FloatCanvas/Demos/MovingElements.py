@@ -275,6 +275,7 @@ class DrawFrame(wx.Frame):
                 self.MoveTri = None
             self.Canvas.Draw(True)
 
-app = wx.PySimpleApp(0)
-DrawFrame(None, -1, "FloatCanvas Moving Object App", wx.DefaultPosition, (700,700) )
-app.MainLoop()
+if __name__ == "__main__":
+    app = wx.PySimpleApp(0)
+    DrawFrame(None, -1, "FloatCanvas Moving Object App", wx.DefaultPosition, (700,700) )
+    app.MainLoop()

@@ -341,6 +341,7 @@ class GUIZoomIn(GUIBase):
         Update gets called if the screen has been repainted in the middle of a zoom in
         so the Rubber Band Box can get updated
         """
+        #if False:
         if self.PrevRBBox is not None:
             dc = wx.ClientDC(self.Canvas)
             dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))

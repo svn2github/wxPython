@@ -27,12 +27,32 @@ elif ver == 'local':
     from floatcanvas import NavCanvas
     from floatcanvas import FloatCanvas
 
+FC = FloatCanvas
 
-class Ball(FloatCanvas.Circle):
-    def __init__(self, XY, Velocity, Radius=2.0):
+class MovingObjectMixin: # Borrowed from MovingElements.py
+    """
+    Methods required for a Moving object
+    
+    """
+
+    def GetOutlinePoints(self):
+        BB = self.BoundingBox
+        OutlinePoints = np.array( ( (BB[0,0], BB[0,1]),
+                                    (BB[0,0], BB[1,1]),
+                                    (BB[1,0], BB[1,1]),
+                                    (BB[1,0], BB[0,1]),
+                                 )
+                               )
+
+        return OutlinePoints
+
+
+class Ball(MovingObjectMixin, FloatCanvas.Circle):
+    def __init__(self, XY, Velocity, Radius=2.0, **kwargs):
         self.Velocity = np.asarray(Velocity, np.float).reshape((2,))
         self.Radius = Radius
-        FloatCanvas.Circle.__init__(self, XY, Diameter=Radius*2, FillColor="red", InForeground=False)
+        self.Moving = False
+        FloatCanvas.Circle.__init__(self, XY, Diameter=Radius*2, FillColor="red", **kwargs)
 
 class DrawFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
@@ -97,62 +117,84 @@ class DrawFrame(wx.Frame):
     def Initialize(self, event=None):
         Canvas = self.Canvas   
         
-        #Add a rectangle to set the domain
-        Canvas.AddRectangle((0, 0), (100, 100), FillColor=None, LineWidth=2, LineColor="Black")
-
+        #Add the floor
+        Canvas.AddLine(( (0, 0), (100, 0) ), LineWidth=4, LineColor="Black")
         # add the wall:
         Canvas.AddRectangle( (0,0), (10,50), FillColor='green')
 
         # add the ball:
-        self.Ball = Ball( (5, 52), (2, 0) ) 
+        self.Ball = Ball( (5, 52), (2, 0), InForeground=True ) 
         Canvas.AddObject( self.Ball )
+        # to capture the mouse to move the ball
+        self.Ball.Bind(FC.EVT_FC_LEFT_DOWN, self.BallHit)
+        Canvas.Bind(FC.EVT_MOTION, self.OnMove ) 
+        Canvas.Bind(FC.EVT_LEFT_UP, self.OnLeftUp ) 
         
         wx.CallAfter(Canvas.ZoomToBB)
+
+    def BallHit(self, object):
+        print "the ball was clicked"
+        self.Ball.Moving = True
+
+    def OnMove(self, event):
+        """
+        Updates the status bar with the world coordinates
+        and moves the object it is clicked on
+
+        """
+        self.SetStatusText("%.4f, %.4f"%tuple(event.Coords))
+        if self.Ball.Moving:
+            self.Ball.SetPoint(event.Coords)
+            self.Canvas.Draw(True)
+
+    def OnLeftUp(self, event):
+        self.Ball.Moving = False
         
-    def OnReset(self, event):
+    def OnReset(self, event=None):
         self.Ball.SetPoint( (5, 52) )
         self.Ball.Velocity = np.array((1.5, 0.0))
         self.Canvas.Draw(True)
         
-    def OnStart(self, event):
+    def OnStart(self, event=None):
         self.timer.Start(20)
 
-    def OnStop(self, event):
+    def OnStop(self, event=None):
         self.timer.Stop()
 
     def MoveBall(self, event=None):
+        ball = self.Ball
+
         dt = .1
         g = 9.806
         m = 1
-        Cd = 0.05
-        ball = self.Ball
-        vel = ball.Velocity
-        pos = ball.XY
+        A = np.pi*(ball.Radius/100)**2 # radius in cm
+        Cd = 0.47
+        rho = 1.3
+        
+        if not ball.Moving: # don't do this if the user is moving it
+            vel = ball.Velocity
+            pos = ball.XY
 
-        # check if it's on the wall
-        if pos[1] <= 102 and pos[0] <= 10:
-            #reverse velocity
-            vel[1] = 0
-        # check if it's hit the floor
-        elif pos[1] <= ball.Radius:
-            #reverse velocity
-            vel[1] *= -1.0
-        else:
+            # apply drag
+            vel -= np.sign(vel) * ((0.5 * Cd * rho * A * vel**2) / m * dt)
             # apply gravity
             vel[1] -= g * dt 
-            # apply drag
-            vel -= (Cd*vel**2) / m * dt
-        # move the ball
-        pos += dt * vel 
-        if pos[1] < ball.Radius:
-            # push to the surface:
-            pos[1] = ball.Radius    
+            # move the ball
+            pos += dt * vel 
+            # check if it's on the wall
+            if pos[1] <= 52. and pos[0] <= 10.:
+                #reverse velocity
+                vel[1] *= -1.0
+                pos[1] = 52.
+            # check if it's hit the floor
+            elif pos[1] <= ball.Radius:
+                #reverse velocity
+                vel[1] *= -1.0
+                pos[1] = ball.Radius
 
-        #print "The ball is at:", pos, "with vel:", vel
-        self.Ball.SetPoint( pos ) 
-        
-        self.Canvas.Draw(True)
-        #wx.GetApp().Yield(onlyIfNeeded=True)
+            self.Ball.SetPoint( pos ) 
+            self.Canvas.Draw(True)
+            wx.GetApp().Yield(onlyIfNeeded=True)
         
 class DemoApp(wx.App):
     def OnInit(self):
