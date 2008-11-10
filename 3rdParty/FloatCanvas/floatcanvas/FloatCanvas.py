@@ -480,10 +480,8 @@ class LineAndFillMixin(LineOnlyMixin):
 
 class XYObjectMixin:
     """
-
     This is a mixin class that provides some methods suitable for use
     with objects that have a single (x,y) coordinate pair.
-
     """
 
     def Move(self, Delta ):
@@ -1109,7 +1107,6 @@ class Circle(XYObjectMixin, LineAndFillMixin, DrawObject):
                  InForeground = False):
         DrawObject.__init__(self, InForeground)
 
-        print "Using new Circle code"
         self.XY = N.array(XY, N.float)
         self.WH = N.array((Diameter/2, Diameter/2), N.float) # just to keep it compatible with others
         self.CalcBoundingBox()
@@ -2841,7 +2838,7 @@ class FloatCanvas(wx.Panel):
         return redrawlist
     _ShouldRedraw = staticmethod(_ShouldRedraw)
 
-    def MoveImage(self,shift,CoordType):
+    def MoveImage(self, shift, CoordType, ReDraw=True):
         """
         move the image in the window.
 
@@ -2873,7 +2870,8 @@ class FloatCanvas(wx.Panel):
         self.MapProjectionVector = self.ProjectionFun(self.ViewPortCenter)
         self.TransformVector = N.array((self.Scale,-self.Scale),N.float) * self.MapProjectionVector
         self._BackgroundDirty = True
-        self.Draw()
+        if ReDraw:
+            self.Draw()
 
     def Zoom(self, factor, center = None, centerCoords="world"):
 
@@ -3052,7 +3050,6 @@ class FloatCanvas(wx.Panel):
         Lengths should be a NX2 array of (x,y) coordinates, or
         a 2-tuple, or sequence of 2-tuples.
         """
-
         return  (N.asarray(Lengths,N.float) / self.TransformVector)
 
     def AddObject(self, obj):

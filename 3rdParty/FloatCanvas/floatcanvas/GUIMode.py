@@ -175,6 +175,7 @@ class GUIMove(GUIBase):
         self.Cursor = self.Cursors.HandCursor
         self.GrabCursor = self.Cursors.GrabHandCursor
         self.StartMove = None
+        self.MidMove = None
         self.PrevMoveXY = None
         
         ## timer to give a delay when moving so that buffers aren't re-built too many times.
@@ -184,26 +185,37 @@ class GUIMove(GUIBase):
         self.Canvas.SetCursor(self.GrabCursor)
         self.Canvas.CaptureMouse()
         self.StartMove = N.array( event.GetPosition() )
+        self.MidMove = self.StartMove
         self.PrevMoveXY = (0,0)
 
     def OnLeftUp(self, event):
         self.Canvas.SetCursor(self.Cursor)
+        if self.StartMove is not None:
+            self.EndMove = N.array(event.GetPosition())
+            DiffMove = self.MidMove-self.EndMove
+            self.Canvas.MoveImage(DiffMove, 'Pixel', ReDraw=True)
 
     def OnMove(self, event):
         # Always raise the Move event.
         self.Canvas._RaiseMouseEvent(event, FloatCanvas.EVT_FC_MOTION)
         if event.Dragging() and event.LeftIsDown() and not self.StartMove is None:
-            self.MoveImage(event)
             self.EndMove = N.array(event.GetPosition())
+            self.MoveImage(event)
+            DiffMove = self.MidMove-self.EndMove
+            self.Canvas.MoveImage(DiffMove, 'Pixel', ReDraw=False)# reset the canvas without re-drawing
+            self.MidMove = self.EndMove
             self.MoveTimer.Start(30, oneShot=True)
 
     def OnMoveTimer(self, event=None):
-        DiffMove = self.StartMove-self.EndMove
-        self.Canvas.MoveImage(DiffMove, 'Pixel')
-        self.StartMove = self.EndMove
-        
-    def MoveImage(self, event):
-        xy1 = N.array( event.GetPosition() )
+        self.Canvas.Draw()
+
+    def UpdateScreen(self):
+        ## The screen has been re-drawn, so StartMove needs to be reset.
+        self.StartMove = self.MidMove
+
+    def MoveImage(self, event ):
+        #xy1 = N.array( event.GetPosition() )
+        xy1 = self.EndMove
         wh = self.Canvas.PanelSize
         xy_tl = xy1 - self.StartMove
         dc = wx.ClientDC(self.Canvas)
@@ -259,7 +271,7 @@ class GUIMove(GUIBase):
         else:
             dc.DrawBitmapPoint(self.Canvas._Buffer,xy_tl)
         dc.EndDrawing()
-        self.Canvas.Update()
+        #self.Canvas.Update()
 
     def OnWheel(self, event):
         """
