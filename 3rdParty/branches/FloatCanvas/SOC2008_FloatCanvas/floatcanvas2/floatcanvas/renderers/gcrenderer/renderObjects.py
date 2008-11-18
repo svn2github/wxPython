@@ -119,7 +119,11 @@ class GCRenderObjectBitmap(GCRenderObjectBase):
         self.pixels = pixels
         self.use_real_size = use_real_size
         
-        if isinstance( pixels, wx.Bitmap ):
+        if isinstance( pixels, wx.Image ):
+            # arrayFromImage is a lot slower here...
+            self.bitmap = wx.BitmapFromImage( pixels )
+            w, h = pixels.GetWidth(), pixels.GetHeight()
+        elif isinstance( pixels, wx.Bitmap ):
             self.bitmap = pixels
             w, h = pixels.GetWidth(), pixels.GetHeight()
         else:
