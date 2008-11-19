@@ -14,7 +14,9 @@ class EventSender(object):
             return '%d' % ( id(self), )
     
     def send(self, event_name, **keys):
-        return send( self._getMessage( event_name ), **keys )
+        result1 = send( self._getMessage( event_name ), **keys )
+        result2 = send( '%s.%d' % ( event_name, id(self) ), **keys )
+        return [result1, result2]
         
     def subscribe(self, subscriber, event_name ):
         return subscribe( subscriber, self._getMessage( event_name ) )

@@ -127,6 +127,12 @@ class GUIModeBase(object):
 
         wx_event.coords = world_pnt
         wx_event.nodes = nodes
+        try:
+            node = nodes[0]
+        except IndexError:
+            node = None
+
+        wx_event.node = node
 
         if handler:
             handler( wx_event )
@@ -156,7 +162,7 @@ class GUIModeBase(object):
         '''
 
         # send the event only to the topmost node for now
-        event.nodes[0].send( event_name, wx_event = event, nodes = event.nodes, coords = event.coords )
+        event.nodes[0].send( event_name, wx_event = event, nodes = event.nodes, node = event.node, coords = event.coords )
         
         
         
