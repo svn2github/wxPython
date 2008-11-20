@@ -108,7 +108,7 @@ class MemoryDoubleBuffer(object):
         self.render_surface.EndRendering()
 
     def Present(self):
-        print "in MemoryDoubleBuffer.Present",
+        #print "in MemoryDoubleBuffer.Present",
         assert self.render_surface.active
         client_dc = wx.ClientDC( self.window )
         
@@ -116,7 +116,7 @@ class MemoryDoubleBuffer(object):
             self.count += 1
         except AttributeError:
             self.count = 0
-        print "render called for the %ith time"%self.count
+        #print "render called for the %ith time"%self.count
         #print 'saving the bitmap to : "Junk%i.png"'%self.count
         #self.render_surface.bitmap.SaveFile("Junk%i.png"%self.count, wx.BITMAP_TYPE_PNG)
         

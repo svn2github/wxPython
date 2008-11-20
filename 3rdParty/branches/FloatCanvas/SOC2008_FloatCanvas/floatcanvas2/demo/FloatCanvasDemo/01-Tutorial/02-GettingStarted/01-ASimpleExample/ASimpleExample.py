@@ -27,7 +27,7 @@ def start(frame):
     # The center of the rectangle will be placed at (0,0).
     # Additionally the rectangle will be rotated by 45 degrees and the look
     # we've created in the line above will be assigned.
-    canvas.createRectangle( (250, 250), pos = (0, 0), rotation = 45, look = look )
+    canvas.createRectangle( (250, 250), pos = (0, 0), rotation = 45, look = look, where = 'back' )
     
     
 def run_standalone():

@@ -18,6 +18,7 @@ def start(frame):
     
     f = file('lion.svg', 'r')
     importer = SimpleSVGImporter( f.read(), canvas )
+    canvas.zoomToExtents()
     
 
 # not a good example how to write a parser, but I don't want this to grow into

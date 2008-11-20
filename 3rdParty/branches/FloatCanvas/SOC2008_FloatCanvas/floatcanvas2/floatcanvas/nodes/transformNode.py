@@ -6,7 +6,7 @@ from ..patterns.partial import partial
 class NodeWithTransform(Node):
     ''' A node with a transform property.
     '''
-    def __init__(self, transform, *args, **keys):
+    def __init__(self, transform, name = '', parent = None, children = []):
         self.transform = transform
         #try:
         #    transform = keys['transform']
@@ -16,7 +16,7 @@ class NodeWithTransform(Node):
         #    self.transform = transform
         #    del keys['transform']
         #    
-        Node.__init__(self, *args, **keys)
+        Node.__init__(self, name, parent, children)
         
 
     def _getLocalTransform(self):

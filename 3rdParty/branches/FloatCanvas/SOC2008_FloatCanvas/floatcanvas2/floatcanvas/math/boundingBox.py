@@ -246,3 +246,17 @@ def fromRectangleCornerSize(corner, size):
 
 def fromPoint(point):
     return BoundingBox( ( point, point ) )
+
+def getAlignedCoordinate(box, aligned):
+    vert = aligned[0]
+    horiz = aligned[1]
+
+    # check if values are allowed
+    if horiz not in ('l', 'c', 'm', 'r'):
+        raise ValueError( 'Horizontal alignment needs to be either l, c, m or r' )
+    if vert not in ('t', 'c', 'm', 'b'):
+        raise ValueError( 'Vertical alignment needs to be either t, c, m or b' )
+
+    multipliers = { 'l' : 0, 'c' : 0.5, 'm' : 0.5, 'r' : 1, 't' : 0, 'b' : 1 }
+
+    return box.min + box.Size * N.array( (multipliers[horiz], multipliers[vert]) )

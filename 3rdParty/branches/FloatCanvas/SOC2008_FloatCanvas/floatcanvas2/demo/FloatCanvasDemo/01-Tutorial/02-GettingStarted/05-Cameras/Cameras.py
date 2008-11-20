@@ -16,7 +16,7 @@ def start(frame):
     canvas.create( 'Circle', 75, name = 'my first circle', pos = (0, 0), look = ('white', 'black') )
 
     look =  fc.LinearGradientLook( 'purple', (0,0), 'white', (30, 0), 'pink' )
-    canvas.createRectangle( (300, 300), pos = (0, 0), rotation = 45, look = look )
+    canvas.createRectangle( (300, 300), pos = (0, 0), rotation = 45, look = look, where = 'back' )
     
     # here come there camera parts
     print canvas.camera.position        # default position is (0, 0)

@@ -2,7 +2,6 @@
     rendering of the nodes on the canvas
 '''
 
-from ..nodes.camera import Viewport
 from ..nodes.spatialQuery import QueryWithPrimitive
 from ..math.boundingBox import BoundingBox
 
@@ -15,7 +14,7 @@ class DefaultRenderPolicy(object):
         from simpleCanvas import SimpleCanvas
         canvas.renderer.BeginRendering()
         canvas.renderer.Clear( backgroundColor )
-        camera.viewport = Viewport( canvas.screen_size )
+        camera.viewport.size = canvas.screen_size
         cam_transform = camera.viewTransform
 
         bb = BoundingBox( ( (-1e10,-1e10), (1e10, 1e10) ) )
@@ -39,7 +38,7 @@ class CullingRenderPolicy(object):
         canvas.renderer.BeginRendering()
         canvas.renderer.Clear( backgroundColor )
         
-        camera.viewport = Viewport( canvas.screen_size )
+        camera.viewport.size = canvas.screen_size
         cam_transform = camera.viewTransform
         
         # the following query could probably be cached
@@ -59,7 +58,7 @@ class CullingRenderPolicy(object):
             parent = node.parent
             doRender = True
             while parent:
-                if parent.render_to_surface_enabled:
+                if parent.render_to_surface:
                     doRender = False
                     break
                 parent = parent.parent

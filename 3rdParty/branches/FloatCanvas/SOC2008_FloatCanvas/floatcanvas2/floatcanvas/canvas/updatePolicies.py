@@ -30,6 +30,6 @@ class DefaultUpdatePolicy(object):
         
     def Render(self):
         if self.dirty:
-            print 'RENDER'
+            #print 'RENDER'
             self.canvas.Render()
             self.dirty = False

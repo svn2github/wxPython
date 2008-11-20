@@ -14,8 +14,6 @@ class PieChart(object):
         self.radius = radius
         self.values = values
         
-ObservablePieChart = fc.canvas.observables.createObservableClass( PieChart, ( 'radius', 'values' ) )
- 
 class PieChartVisualizer(object):
     def __init__(self, piechart, parentNode, looks, labelLook = None, labelFilter = None, drawLabels = True):
         self.parentNode = parentNode
@@ -43,7 +41,8 @@ class PieChartVisualizer(object):
         canvas = self.parentNode.root
         self.parentNode.removeChildren( self.nodes )
         self.nodes = []
-        
+
+        textNodes = []
         current_position = 0
         for i, value in enumerate(normalizedValues):
             next_position = current_position + value
@@ -69,9 +68,14 @@ class PieChartVisualizer(object):
                 textShadow = fc.ShadowFilter(  sigma = 3, kernel_size = (8, 8), offset = (1.5,1.5), surface_size = (100, 100), shadow_colour = (0,0,0,128) )
                 text = canvas.createText( '%.1f%%' % (value * 100), pos = coords3, name = name, look = self.labelLook, filter = textShadow, parent = self.parentNode, where = 'front' )
                 self.nodes.append( text )
+                textNodes.append( text )
 
             current_position = next_position
-            
+
+        # raise all text nodes over the arc nodes
+        for node in textNodes:
+            node.moveFrontBack( 'front' )
+
         piechart.dirty = False
  
 def start(frame):
@@ -82,16 +86,26 @@ def start(frame):
     #canvas = fc.NavCanvas( frame, backgroundColor = 'white', renderPolicy = DefaultRenderPolicy() )
     canvas = fc.NavCanvas( frame, backgroundColor = 'white' )
 
+    PieChartClass = canvas.registerModel( 'PieChart', PieChart, ('radius', 'values') )
+    ## Todo
+    ## # tell the canvas about our PieChart model and viewer
+    ## canvas.registerModelAndView( 'PieChart', PieChart, ('radius', 'values'), True, PieChartVisualizer )
+
     colors = [ 'red', 'green', 'blue', 'yellow', 'cyan', 'magenta' ]
     looks = [ fc.RadialGradientLook( (128,128,128,128), (10,0), (255,255,255,160), (50,0), 300, color, line_width = 0.2 ) for color in colors ]
     labelLook = fc.TextLook( 8, colour = (0,0,0,192), background_fill_look = fc.SolidColourFillLook( None ) )
     threedFilter = fc.ThreeDFilter(  sigma = 100, kernel_size = (10, 10), offset = (0,0), scale = (0.95, 0.95), surface_size = (100, 100), shadow_colour = (0,0,0,128) )
 
-
-    pieChart = ObservablePieChart( 100, [1,3,8,5,24,9] )
+    pieChart = PieChartClass( 100, [1,3,8,5,24,9] )
     pieNode = canvas.createGroup( filter = threedFilter )
     visualizer = PieChartVisualizer( pieChart, pieNode, looks, labelLook )
-    
+
+    ## Todo
+    ## pieNode = canvas.createPieChart( 100, [1,3,8,5,24,9], filter = threedFilter, piece_looks = looks, label_look = labelLook, look = 'nolook' )
+    ## # you could also do:
+    ## # pieChart = PieChart( 100, [1,3,8,5,24,9] )
+    ## # canvas.createFromModel( pieChart, filter = threedFilter, piece_looks = looks, label_look = labelLook )
+
     buttonLook = fc.LinearGradientLook( 'black', (-50,-50), (0,0,255,128), (50,50), (128,128,255,0) )
     shadowFilter = fc.ShadowFilter(  sigma = 3, kernel_size = (8, 8), offset = (3,3), surface_size = (100, 100), shadow_colour = (0,0,255,128) )
     rect = canvas.createRoundedRectangle( (60, 30), 15, look = buttonLook, pos = (200, 0), filter = shadowFilter )

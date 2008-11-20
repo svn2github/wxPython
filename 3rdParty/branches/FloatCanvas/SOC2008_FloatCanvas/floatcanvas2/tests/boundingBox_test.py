@@ -387,14 +387,36 @@ class testBBarray(unittest.TestCase):
         self.assert_( BB == self.BB, "Wrong BB was created. It was:\n%s \nit should have been:\n%s" % (BB, self.BB) )
 
 
-class testBBFromShapes(unittest.TestCase):
+class testStandaloneFuncs(unittest.TestCase):
     def testRectangle(self):        
         bb = fromRectangleCenterSize( center = N.array( (0,0) ), size = N.array( (10, 10) ) )
         self.failUnless( (bb.center == (0.0, 0.0)).all() )
         self.failUnless( (bb.Size == (10.0, 10.0)).all() )
         self.failUnless( (bb.min == (-5, -5)).all() )
         self.failUnless( (bb.max == ( 5,  5)).all() )
+
+    def testgetAlignedCoordinate(self):
+        bb = fromRectangleCornerSize( corner = N.array( (0,0) ), size = N.array( (10, 10) ) )
+        self.failUnless( (getAlignedCoordinate(bb, 'tl') == (0,0)).all() )
+        self.failUnless( (getAlignedCoordinate(bb, 'cl') == (0,5)).all() )
+        self.failUnless( (getAlignedCoordinate(bb, 'ml') == (0,5)).all() )
+        self.failUnless( (getAlignedCoordinate(bb, 'bl') == (0,10)).all() )
+        self.failUnless( (getAlignedCoordinate(bb, 'tc') == (5,0)).all() )
+        self.failUnless( (getAlignedCoordinate(bb, 'tm') == (5,0)).all() )
+        self.failUnless( (getAlignedCoordinate(bb, 'cc') == (5,5)).all() )
+        self.failUnless( (getAlignedCoordinate(bb, 'mm') == (5,5)).all() )
+        self.failUnless( (getAlignedCoordinate(bb, 'mc') == (5,5)).all() )
+        self.failUnless( (getAlignedCoordinate(bb, 'cm') == (5,5)).all() )
+        self.failUnless( (getAlignedCoordinate(bb, 'bc') == (5,10)).all() )
+        self.failUnless( (getAlignedCoordinate(bb, 'bm') == (5,10)).all() )
         
+        self.failUnless( (getAlignedCoordinate(bb, 'tr') == (10,0)).all() )
+        self.failUnless( (getAlignedCoordinate(bb, 'cr') == (10,5)).all() )
+        self.failUnless( (getAlignedCoordinate(bb, 'mr') == (10,5)).all() )
+        self.failUnless( (getAlignedCoordinate(bb, 'br') == (10,10)).all() )
+        
+        self.assertRaises( ValueError, getAlignedCoordinate, bb, 'ql' )
+        self.assertRaises( ValueError, getAlignedCoordinate, bb, 'lq' )
         
 class testIntersection(unittest.TestCase):
     def testIntersection(self):

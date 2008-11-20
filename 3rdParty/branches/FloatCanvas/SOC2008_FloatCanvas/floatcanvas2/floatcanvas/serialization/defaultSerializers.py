@@ -85,13 +85,13 @@ class DefaultRenderableNodeSerializer(object):
             look = node.view.look
         except AttributeError:
             look = None
-        thisData = ( NodeWithTransformSerializer.serialize( node, serializer ), node.model, look, node.shown, node.render_to_surface_enabled, surface_size )
+        thisData = ( NodeWithTransformSerializer.serialize( node, serializer ), node.model, look, node.shown, node.render_to_surface, surface_size )
 
         return thisData
 
     def unserialize(data, serializer, node = None):
         if node is None:
-            node = serializer.canvas.createFromModel( model = data[1], look = data[2], shown = data[3], render_to_surface_enabled = data[3], surface_size = data[4] )
+            node = serializer.canvas.createFromModel( model = data[1], look = data[2], show = data[3], render_to_surface = data[4], surface_size = data[5] )
         else:
             if not isinstance(node, SimpleCanvas):
                 raise NotImplementedError()
@@ -144,5 +144,3 @@ defaultSerializers = [
                        (ObservableDefaultRenderableNode, DefaultRenderableNodeSerializer), (DefaultRenderableNode, DefaultRenderableNodeSerializer),
                        (NavCanvas, SimpleCanvasSerializer), (FloatCanvas, SimpleCanvasSerializer), (SimpleCanvas, SimpleCanvasSerializer)
                      ]
-
-

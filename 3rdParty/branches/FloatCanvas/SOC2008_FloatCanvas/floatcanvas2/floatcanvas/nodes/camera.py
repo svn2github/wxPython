@@ -4,7 +4,15 @@ from ..math import boundingBox, numpy
 class Viewport(object):
     ''' The viewport of a camera, basically just a size '''
     def __init__(self, size):
-        self.size = numpy.array( size )
+        self.size = size
+
+    def _getSize(self):
+        return self._size
+
+    def _setSize(self, size):
+        self._size = numpy.asarray( size )
+
+    size = property( _getSize, _setSize )
 
 class Camera(NodeWithTransform):
     ''' A camera node. It has a viewport, viewBox ( = viewport in world coords )
@@ -13,7 +21,7 @@ class Camera(NodeWithTransform):
     def __init__(self, transform, zoom = (1.0, 1.0), *args, **keys):
         NodeWithTransform.__init__( self, transform, *args, **keys )
         self.zoom = zoom
-        self.viewport = None
+        self.viewport = Viewport( [1, 1] )
         
     def _getZoom(self):
         ''' camera zoom is the inverse of the node's scale '''

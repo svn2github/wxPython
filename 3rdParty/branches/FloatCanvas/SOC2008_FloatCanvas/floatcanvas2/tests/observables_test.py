@@ -131,7 +131,7 @@ class TestNode(unittest.TestCase):
 
 
     def testObservableDefaultRenderableNode(self):
-        o = ObservableDefaultRenderableNode( model = None, view = None, transform = ObservableLinearTransform2D(), render_to_surface_enabled = False, surface_size = None, filter = None, renderer = None )
+        o = ObservableDefaultRenderableNode( model = None, view = None, transform = ObservableLinearTransform2D(), render_to_surface = False, surface_size = None, filter = None, renderer = None )
         self.assert_( o.dirty )
         o.dirty = False
         self.assert_( not o.dirty )
@@ -155,7 +155,7 @@ class TestNode(unittest.TestCase):
         o.transform = False
         o.dirty = False
 
-        o2 = ObservableDefaultRenderableNode( model = None, view = None, transform = ObservableLinearTransform2D(), render_to_surface_enabled = False, surface_size = None, filter = None, renderer = None )
+        o2 = ObservableDefaultRenderableNode( model = None, view = None, transform = ObservableLinearTransform2D(), render_to_surface = False, surface_size = None, filter = None, renderer = None )
         o2.dirty = False
         o.addChild( o2 )
         self.assert_( o2.dirty )

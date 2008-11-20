@@ -108,10 +108,10 @@ class SimpleCanvas(Canvas):
             
         for model_kind in self.model_kinds:
             modelInterface = getattr(models, 'I%s' % model_kind)
-            def createDefaultRenderableNode(model, transform, look, scaled, name, render_to_surface, surface_size, filter):
+            def createDefaultRenderableNode(model, renderer, transform, look, scaled, name, render_to_surface, surface_size, filter, show):
                 viewConstructor, model = self.viewRegistry.getViewConstructor( model )
                 view = viewConstructor( model = model, look = look, scaled = scaled )
-                renderNode = observables.ObservableDefaultRenderableNode( self.renderer, render_to_surface, surface_size, model, view, filter, transform, name = name )
+                renderNode = observables.ObservableDefaultRenderableNode( renderer, render_to_surface, surface_size, filter, model, view, transform, show, name )
                 return renderNode
             self.renderNodeRegistry.register( modelInterface, createDefaultRenderableNode )        
 
@@ -176,6 +176,7 @@ class SimpleCanvas(Canvas):
         setattr( self, 'create%s' % model_kind, partial( create, modelType ) )
         return self.nodeFactory.register( model_kind, create, modelType )
 
+
     def unregisterNode(self, *args, **keys):
         ''' unregisters a node constructor for a model type.
             Forwarded from nodeFactory.
@@ -195,12 +196,14 @@ class SimpleCanvas(Canvas):
                      'rotation'             : None,
                      'scale'                : None,
                      'look'                 : None,
-                     'where'                : 'back',
+                     'where'                : 'front',
                      'scaled'               : True,
                      'render_to_surface'    : False,
                      'surface_size'         : (500, 500),
                      'filter'               : None,
                      'parent'               : self,
+                     'name'                 : '<unnamed node>',
+                     'show'                 : True,
                    }
         
         def get_keyword(dikt, name):
@@ -212,6 +215,8 @@ class SimpleCanvas(Canvas):
             transform = observables.ObservableLinearTransform2D()
         elif isinstance( transform, basestring ):
             transform = getattr(observables, transform)()
+            transform = observables.ObservableLinearTransform2D() * transform
+        else:
             transform = observables.ObservableLinearTransform2D() * transform
 
         pos = get_keyword(keys, 'pos') or get_keyword(keys, 'position')
@@ -231,6 +236,8 @@ class SimpleCanvas(Canvas):
 
         scaled = get_keyword(keys, 'scaled')
         parent = get_keyword(keys, 'parent')
+        name = get_keyword(keys, 'name')
+        show = get_keyword(keys, 'show')
 
         
         # renderable node properties
@@ -249,9 +256,9 @@ class SimpleCanvas(Canvas):
                 look = observables.ObservableSolidColourLook(*look)
 
             renderNodeConstructor, model = self.renderNodeRegistry.getRenderNodeConstructor( model )
-            renderNode = renderNodeConstructor( model, transform = transform, look = look, name = keys.get('name', '<unnamed node>'), scaled = scaled, render_to_surface = render_to_surface, surface_size = surface_size, filter = filter )
+            renderNode = renderNodeConstructor( model, renderer = self.renderer, transform = transform, look = look, name = name, scaled = scaled, render_to_surface = render_to_surface, surface_size = surface_size, filter = filter, show = show, **keys )
         else:
-            renderNode = observables.ObservableDefaultRenderableNode( self.renderer, render_to_surface, surface_size, None, None, filter, transform = transform, name = keys.get('name', '<unnamed node>') )
+            renderNode = observables.ObservableDefaultRenderableNode( self.renderer, render_to_surface, surface_size, filter, None, None, transform = transform, name = name )
 
         parent.addChild( renderNode, where = where )
 
@@ -264,16 +271,27 @@ class SimpleCanvas(Canvas):
         '''
         self.nodeFactory = FactoryUsingDict()        
                
+        for model_kind in self.model_kinds:
+            modelType = getattr(observables, 'Observable%s' % model_kind)
+            self.registerModel( model_kind, modelType, None, False )
+        
+        # the group node is a special one, it doesn't need any model
+        self.registerNode( 'Group', self.createFromModel, None )
+
+    def registerModel(self, name, modelClass, observableAttributes, makeObservable = True):
         def create(modelType, *args, **keys):                                       
             model = modelType( *args )
             return self.createFromModel( model, **keys )
                 
-        for model_kind in self.model_kinds:
-            modelType = getattr(observables, 'Observable%s' % model_kind)
-            self.registerNode( model_kind, create, modelType )
+        if makeObservable:
+            modelClass = observables.createObservableClass( modelClass, observableAttributes )
+
+        self.registerNode( name, create, modelClass )
+        return modelClass
         
-        # the group node is a special one, it doesn't need any model
-        self.registerNode( 'Group', self.createFromModel, None )
+    def registerModelAndView(self, name, modelClass, observableAttributes, makeObservable, nodeConstructor):
+        modelClass = self.registerModel( name, modelClass, observableAttributes, makeObservable )
+        self.renderNodeRegistry.register( modelClass, nodeConstructor )
 
     def onDirty(self, evt):
         ''' If we're dirty, tell the update policy '''
@@ -331,8 +349,14 @@ class SimpleCanvas(Canvas):
 
     def hitTest( self, screen_pnt, exact = True, order = True ):
         ''' Performs a hit test given a point on screen.
-            For the meaning of the exact parameter, see the performSpatialQuery
-            function.
+            If exact is False then an intersection test only against the bounding boxes
+            of the nodes is performed. exact = True is only valid for point
+            queries and does not only check the node bounding boxes against this
+            query's point, but performs more elaborate checks to see if the
+            query point is inside the bounds of the node.
+            The return value is a list of the nodes which have been hit. If order
+            is True, the nodes in the list are ordered front-to-back, meaning the
+            first element is the top-most node, the last element is the "back-most" node.
         '''
         world_pnt = self.pointToWorld( screen_pnt )
         query = QueryWithPrimitive( primitive = boundingBox.fromPoint( world_pnt ), exact = exact )

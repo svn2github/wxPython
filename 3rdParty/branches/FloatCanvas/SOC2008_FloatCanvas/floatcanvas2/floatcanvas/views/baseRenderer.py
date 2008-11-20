@@ -25,7 +25,7 @@ class RemoveNonLinearTransformFromCoords(EventSender):
         except AttributeError:
             self.transformedCoords = self.coords
             return
-        
+
         if isinstance(transform, LinearTransform2D):
             self.transformedCoords = self.coords
             self.linearTransform = transform
@@ -34,13 +34,13 @@ class RemoveNonLinearTransformFromCoords(EventSender):
         elif isinstance(transform, LinearAndArbitraryCompoundTransform):
             # check if the non-linear part is the same. If it is, no need to
             # recreate the shape
+            self.linearTransform = transform.transform1                    
             if self.lastNonLinearTransform != transform.transform2:
                 if type(self.coords) == list:
                     self.transformedCoords = [ transform.transform2( coord ) for coord in self.coords ]
                 else:
                     self.transformedCoords = transform.transform2( self.coords )
 
-                self.linearTransform = transform.transform1                    
                 self.lastNonLinearTransform = transform.transform2
                 # need to recreate our object since the coords changed
                 self.send( 'coordsChanged', coords = self.transformedCoords )
@@ -49,7 +49,7 @@ class RemoveNonLinearTransformFromCoords(EventSender):
 
        
     def _setTransform(self, transform):
-        self._transform = transform        
+        self._transform = transform
         self.transformCoords()
         
     def _getTransform(self):
@@ -100,7 +100,7 @@ class BaseRenderer(object):
         viewModel = self.getViewModel( self.model, coords )
         self.render_object = self.renderer.CreateRenderObject( viewModel.kind, **viewModel.elements )
         try:
-            self.render_object.transform = self.transform
+            self.render_object.transform = self.transformer.linearTransform
         except AttributeError:
             pass
         self._recalculateBoundingBox()

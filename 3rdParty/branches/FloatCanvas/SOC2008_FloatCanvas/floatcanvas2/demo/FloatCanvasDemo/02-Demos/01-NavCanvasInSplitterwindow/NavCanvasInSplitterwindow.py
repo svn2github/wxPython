@@ -5,7 +5,7 @@ import wx.lib.floatcanvas.floatcanvas2 as fc
 
   
 def OnOpenFrame( evt ):
-    frame = wx.Frame( None, -1, 'NavCanvas in wx.SplitterWindow', size = (600, 500) )
+    frame = wx.Frame( None, -1, 'NavCanvas in wx.SplitterWindow', size = (700, 500) )
     splitter = wx.SplitterWindow( frame, -1, style = wx.SP_LIVE_UPDATE )
     panel_left = wx.Panel( splitter, -1 )
     panel_left.SetBackgroundColour( wx.RED )
@@ -15,10 +15,10 @@ def OnOpenFrame( evt ):
     canvas.create( 'Circle', 150, name = 'my first circle', pos = (0, 0), look = ('white', 'black') )
 
     look =  fc.LinearGradientLook( 'purple', (0,0), 'white', (30, 0), 'pink' )
-    canvas.createRectangle( (300, 300), pos = (0, 0), rotation = 45, look = look )
+    canvas.createRectangle( (300, 300), pos = (0, 0), rotation = 45, look = look, where = 'back' )
        
     splitter.SplitVertically( panel_left, canvas.mainPanel, 10 )
-    splitter.SetMinimumPaneSize( 100 )
+    splitter.SetMinimumPaneSize( 50 )
 
     frame.Show()
 

@@ -14,7 +14,7 @@ def start(frame):
     # Let's create a canvas, in this case a NavCanvas
     canvas = fc.NavCanvas( frame, backgroundColor = 'white' )
     
-    circle = canvas.create( 'Circle', 75, name = 'my first circle', pos = (2, 0), scale = (5, 3), rotate = 30, look = ('white', 'pink') )
+    circle = canvas.create( 'Circle', 75, name = 'my first circle', pos = (2, 0), scale = (5, 3), rotation = 30, look = ('white', 'pink') )
 
     # show how to access the different transform properties
     

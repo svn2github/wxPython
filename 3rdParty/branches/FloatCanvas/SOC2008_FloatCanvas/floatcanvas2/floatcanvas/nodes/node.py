@@ -128,8 +128,15 @@ class Node(object):
     def removeAllChildren( self ):
         ''' Remove all children from this node '''
         self.removeChildren( self._children[:] )
-        
-                
+
+    def moveFrontBack( self, where = 'front' ):
+        ''' Moves this node to the front of its parent node (if there is one)
+            where can either be 'front', 'back' or the sibling node in front of it
+        '''
+        parent = self.parent
+        parent.removeChild( self )
+        parent.addChild( self, where )
+                        
     def _getRoot(self):
         ''' Returns the root (the topmost) node of this node.
             Note: Could be recursively implemented, but if the tree gets very

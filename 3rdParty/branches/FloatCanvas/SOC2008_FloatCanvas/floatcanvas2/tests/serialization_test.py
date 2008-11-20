@@ -64,13 +64,13 @@ class TestNode(unittest.TestCase):
 
 
     #def testRenderableNode(self):
-    #    o = ObservableDefaultRenderableNode( model = None, view = None, transform = LinearTransform2D(), render_to_surface_enabled = False, surface_size = (0,0), renderer = None )
+    #    o = ObservableDefaultRenderableNode( model = None, view = None, transform = LinearTransform2D(), render_to_surface = False, surface_size = (0,0), renderer = None )
     #
     #    o = self.doSaveLoad( o )
     #
     #def testRenderableNodeWithModel(self):        
     #    model = ObservableRectangle( (10, 10) )
-    #    o = ObservableDefaultRenderableNode( model = model, view = None, transform = LinearTransform2D(), render_to_surface_enabled = False, surface_size = (0,0), renderer = None )
+    #    o = ObservableDefaultRenderableNode( model = model, view = None, transform = LinearTransform2D(), render_to_surface = False, surface_size = (0,0), renderer = None )
     #
     #    o = self.doSaveLoad( o )
 

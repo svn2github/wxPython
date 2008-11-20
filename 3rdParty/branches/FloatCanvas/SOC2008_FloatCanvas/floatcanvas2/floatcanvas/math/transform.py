@@ -37,6 +37,8 @@ class LinearTransform(object):
             A bit messy, it basically appends 1s to the coordinates and later
             removes them again.
         '''
+        if len(coords) == 0:
+            return coords
         return numpy.dot( numpy.column_stack( (coords, numpy.ones(len(coords))) ), numpy.transpose( self.matrix ) )[ ..., :-1 ]
 
     def _getTranslation(self):
@@ -166,6 +168,9 @@ class LinearAndArbitraryCompoundTransform(CompoundTransform):
             return setattr( self.transform2, name, value )
         else:
             raise NameError(name)   
+
+    def __mul__(self, other):
+        return LinearAndArbitraryCompoundTransform( self.transform1, CompoundTransform( self.transform2, other ) )
 
 class MercatorTransform(object):
     ''' Implements a mercator projection, see 

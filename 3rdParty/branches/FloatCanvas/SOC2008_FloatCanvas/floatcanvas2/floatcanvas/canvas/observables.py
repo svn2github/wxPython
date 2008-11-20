@@ -42,8 +42,8 @@ info = \
     NodeWithTransform       : ('transform', '_parent', '_children'),
     NodeWithBounds          : ('transform', '_parent', '_children'),
     RenderableNode          : ('transform', '_parent', '_children'),
-    BasicRenderableNode     : ('transform', '_parent', '_children', 'model', 'view'),
-    DefaultRenderableNode   : ('transform', '_parent', '_children', 'model', 'view', 'render_to_surface_enabled', 'filter'),
+    BasicRenderableNode     : ('transform', '_parent', '_children', 'model', 'view', 'shown'),
+    DefaultRenderableNode   : ('transform', '_parent', '_children', 'model', 'view', 'shown', 'render_to_surface', 'filter'),
     Camera                  : ('transform', '_parent', '_children'),
         
     Rectangle               : ('size',),

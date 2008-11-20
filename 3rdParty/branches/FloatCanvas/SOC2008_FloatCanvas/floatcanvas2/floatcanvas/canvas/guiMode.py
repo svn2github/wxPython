@@ -9,7 +9,6 @@ version of the code.
 
 import wx
 from ..resources import Resources, navCanvasIcons
-from ..patterns.partial import partial
 import numpy as N
 
 
@@ -75,7 +74,7 @@ class GUIModeBase(object):
         Deactivate this mode, we're likely to switch to a different mode.
         Unregister events.
         '''
-        self._unregisterEvents()
+        self.canvas.unsubscribe( self.OnEvent, 'raw_input' )
         del self.canvas
         self.active = False
     
@@ -86,65 +85,20 @@ class GUIModeBase(object):
         assert not self.active
         self.active = True
         self.canvas = canvas
-        self._registerEvents()
+        self.canvas.subscribe( self.OnEvent, 'raw_input' )
 
-    evt_names = [ '%s_%s' % (btn_name, btn_kind) for btn_name in [ 'left', 'middle', 'right' ] for btn_kind in [ 'down', 'up', 'dclick' ] ]
-    evt_names += [ 'move', 'wheel', 'key_down', 'key_up' ]
 
-    fc_to_wx_events = { 'move'     : 'MOTION',
-                        'wheel'    : 'MOUSEWHEEL',
-                      }
-    
-    def _registerEvents(self):
-        ''' Register to all wx events we're interested in '''
-        for fc_evt_name in self.evt_names:
-            wx_evt_name = self.fc_to_wx_events.get( fc_evt_name, fc_evt_name )
-            wx_evt = getattr( wx, 'EVT_%s' % (wx_evt_name.upper(),) )
-            self.canvas.Bind( wx_evt, partial( self.OnEvent, fc_evt_name ) )
-
-    def _unregisterEvents(self):        
-        ''' Unregister all the events we registered to '''
-        for fc_evt_name in self.evt_names:
-            wx_evt_name = self.fc_to_wx_events.get( fc_evt_name, fc_evt_name )
-            wx_evt = getattr( wx, 'EVT_%s' % (wx_evt_name.upper(),) )
-            self.canvas.Unbind( wx_evt )
-
-    def OnEvent(self, fc_evt_name, wx_event):
-        ''' If any wx event occurs, this one is called. It does some boilerplate
-            work like enriching the event with world coordinates and then
-            tries to get a handler for it and calls it if present.
-        '''
-        world_pnt = self.canvas.pointToWorld( wx_event.GetPosition() )
-
-        handler = self._get_handler( fc_evt_name )
-
-        screen_pnt = wx_event.GetPosition()
-        world_pnt = self.canvas.pointToWorld( screen_pnt )
-        
-        nodes = self.canvas.hitTest(screen_pnt, True)
-        if not nodes:
-            nodes = ( self.canvas, )
-
-        wx_event.coords = world_pnt
-        wx_event.nodes = nodes
-        try:
-            node = nodes[0]
-        except IndexError:
-            node = None
-
-        wx_event.node = node
-
+    def OnEvent(self, evt):
+        handler = self._get_handler( evt.type )
         if handler:
-            handler( wx_event )
+            handler( evt )
         
-        wx_event.Skip()
-        
-    def _get_handler(self, fc_event):
+    def _get_handler(self, fc_event_name):
         ''' by default return a handler named like on_x where x is the name of
             the event (e.g. 'left_down'). This allows derived classes to easily
             implement event handlers.
         '''
-        method_name = 'on_%s' % fc_event
+        method_name = 'on_%s' % fc_event_name
 
         #print method_name
         try:
@@ -155,16 +109,7 @@ class GUIModeBase(object):
             return handler
     
 
-    def raiseEvent(self, event_name, event):
-        ''' can be called by derived classes to perform a hittest and send an
-            event to any hit nodes. If no node was hit, the event is sent to the
-            background, the canvas node itself.
-        '''
-
-        # send the event only to the topmost node for now
-        event.nodes[0].send( event_name, wx_event = event, nodes = event.nodes, node = event.node, coords = event.coords )
-        
-        
+      
         
 class GUIModeMouse(GUIModeBase):
     '''
@@ -175,9 +120,18 @@ class GUIModeMouse(GUIModeBase):
         canvas.window.Cursor = Cursors.get('default')
         return super( GUIModeMouse, self ).Activate( canvas )
 
-    def _get_handler(self, fc_event):
+    def _get_handler(self, fc_event_name):
         ''' We just raise the event we got to the appropriate node '''
-        return partial( self.raiseEvent, fc_event )
+        return self.raiseEvent
+    
+    def raiseEvent(self, event):
+        ''' can be called by derived classes to perform a hittest and send an
+            event to any hit nodes. If no node was hit, the event is sent to the
+            background, the canvas node itself.
+        '''
+        # send the event only to the topmost node for now
+        self.canvas.sendEvent( 'input.%s' % event.type, event )
+        event.node.sendEvent( event.type, event )
 
 
 from ..math import numpy
@@ -210,11 +164,10 @@ class GUIModeMove(GUIModeBase):
 
     def on_move(self, event):
         ''' If the user is dragging the mouse, move the camera of the canvas '''
-        wx_event = event
-        if wx_event.Dragging() and wx_event.LeftIsDown() and not self.startMove is None:
+        if event.Dragging() and event.LeftIsDown() and not self.startMove is None:
             transform = self.canvas.camera.transform
             transform.translation = (0,0)
-            self.canvas.camera.position = self.startCamPos - transform( [event.GetPosition() - self.startMove] )[0]
+            self.canvas.camera.position = self.startCamPos - transform( [event.coords.screen - self.startMove] )[0]
 
     def on_wheel(self, event):
         ''' By default, zoom in/out by a 0.1 factor per Wheel event.
@@ -250,7 +203,7 @@ class GUIModeZoomIn(GUIModeBase):
                    (1.5) configurable
         '''
         if event.LeftUp() and not self.startBox is None:
-            box = boundingBox.fromPoints( ( self.startBox, event.GetPosition() ) )
+            box = boundingBox.fromPoints( ( self.startBox, event.coords.screen ) )
             # if mouse has moved less that five pixels, don't use the box.
             if ( box.Size > (5,5) ).all():
                 start = self.canvas.pointToWorld( box.min )
@@ -274,7 +227,7 @@ class GUIModeZoomIn(GUIModeBase):
             dc.SetLogicalFunction( wx.XOR )
             if not self.prevBox is None:
                 dc.DrawRectanglePointSize( self.prevBox.min, self.prevBox.Size )
-            thisBox = boundingBox.fromPoints( ( self.startBox, event.GetPosition() ) )
+            thisBox = boundingBox.fromPoints( ( self.startBox, event.coords.screen ) )
             dc.DrawRectanglePointSize( thisBox.min, thisBox.Size )
             dc.EndDrawing()
             
@@ -296,7 +249,7 @@ class GUIModeZoomIn(GUIModeBase):
         ''' zoom out.
             todo: make default zoom factor (1.5) configurable
         '''
-        self.canvas.zoom( 1 / 1.5, event.coords, centerCoords = 'world' )
+        self.canvas.zoom( 1 / 1.5, event.coords.world, centerCoords = 'world' )
 
     def on_wheel(self, event):
         ''' By default, zoom in/out by a 0.1 factor per Wheel event.
@@ -321,13 +274,13 @@ class GUIModeZoomOut(GUIModeBase):
         ''' zoom out.
             todo: make default zoom factor (1.5) configurable
         '''
-        self.canvas.zoom( 1 / 1.5, event.coords, centerCoords = 'world' )
+        self.canvas.zoom( 1 / 1.5, event.coords.world, centerCoords = 'world' )
 
     def on_right_down(self, event):
         ''' zoom in.
             todo: make default zoom factor (1.5) configurable
         '''
-        self.canvas.zoom( 1.5, event.coords, centerCoords = 'world' )
+        self.canvas.zoom( 1.5, event.coords.world, centerCoords = 'world' )
 
     def on_wheel(self, event):
         ''' By default, zoom in/out by a 0.1 factor per Wheel event.
@@ -356,7 +309,7 @@ class GUIModeObjectManipulation(GUIModeBase):
             return
         
         self.node = node
-        self.downCoords = event.coords
+        self.downCoords = event.coords.world
         self.offset =  self.node.position - self.downCoords
         self.downRotation =  self.node.rotation
         self.downScale =  self.node.scale
@@ -374,7 +327,7 @@ class GUIModeMoveObjects(GUIModeObjectManipulation):
     def on_move(self, event):
         ''' move the object '''
         if self.node:
-            self.node.position = event.coords + self.offset
+            self.node.position = event.coords.world + self.offset
 
 from ..math import get_angle
 class GUIModeRotateObjects(GUIModeObjectManipulation):
@@ -385,7 +338,7 @@ class GUIModeRotateObjects(GUIModeObjectManipulation):
     def on_move(self, event):
         ''' rotate the object '''
         if self.node:
-            angle = get_angle( self.offset, event.coords - self.node.position )
+            angle = get_angle( self.offset, event.coords.world - self.node.position )
             self.node.rotation = self.downRotation + angle
 
 class GUIModeScaleObjects(GUIModeObjectManipulation):
@@ -396,7 +349,7 @@ class GUIModeScaleObjects(GUIModeObjectManipulation):
     def on_move(self, event):
         ''' move the object '''
         if self.node:
-            extra_scale = (event.coords - self.downCoords) / self.downSize
+            extra_scale = (event.coords.world - self.downCoords) / self.downSize
             new_scale = self.downScale + extra_scale
             if abs(new_scale).all() > 0.001:
                 self.node.scale = new_scale

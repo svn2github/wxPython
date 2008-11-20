@@ -11,12 +11,15 @@ class BasicRenderableNode(RenderableNode):
         Todo: clean up the dirty marking.
     '''
 
-    def __init__(self, model, view, *args, **keys):
-        RenderableNode.__init__(self, *args, **keys)
+    def __init__(self, model, view, transform, show = True, name = '', parent = None, children = []):
+        RenderableNode.__init__(self, transform, name, parent, children)
         self.model = model
         self.view = view
         self._debugDrawBoundingBoxes = False
-        self.shown = True
+        self.shown = show
+        if self.model:
+            # we can set this here to False, because the view of it has already been built
+            self.model.dirty = False
         #self.model.subscribe( self.onModelChanged, 'attribChanged' )
         self.subscribe( self.onSelfDirty, 'attribChanged' )        
            
@@ -30,6 +33,7 @@ class BasicRenderableNode(RenderableNode):
         
         if self.model.dirty:
             self.view.rebuild()
+            self.model.dirty = False
         
     def DoRender(self, renderer, camera):
         ''' Render ourselves. '''
@@ -218,25 +222,25 @@ class DefaultRenderableNode(BasicRenderableNode):
         Set the regenerate attribute to True if you want the node to rerender
         the surface. You can also customize the shouldRenderToSurface method
         to determine when to re-render to surface.
-    '''
-    def __init__(self, renderer, render_to_surface_enabled, surface_size, model, view, filter, *args, **keys):
-        BasicRenderableNode.__init__(self, model, view, *args, **keys)
+    ''' 
+    def __init__(self, renderer, render_to_surface, surface_size, filter, model, view, transform, show = True, name = '', parent = None, children = []):
+        BasicRenderableNode.__init__(self, model, view, transform, show, name, parent, children)
         self.renderer = renderer
         self.surface_size = surface_size
-        self.render_to_surface_enabled = render_to_surface_enabled
+        self.render_to_surface = render_to_surface
         self.filter = filter
         if filter:
             self.filter.create( self, self.RenderWithoutFilter )
 
         self.regenerate = True
-        if self.render_to_surface_enabled:
+        if self.render_to_surface:
             self.surface_renderer = NodeToSurfaceRenderer( self, surface_size, self.RenderDirect )
         
     def RenderDirect(self, renderer, camera, renderChildren):
         return super(DefaultRenderableNode, self).Render( renderer, camera, renderChildren )
     
     def RenderWithoutFilter(self, renderer, camera, renderChildren):
-        if not self.render_to_surface_enabled:
+        if not self.render_to_surface:
             return self.RenderDirect( renderer, camera, renderChildren )
         
         renderToSurface = self.shouldRenderToSurface(renderer, camera, renderChildren)
@@ -262,15 +266,15 @@ class DefaultRenderableNode(BasicRenderableNode):
         return self.regenerate
     
     def _setRenderToSurfaceEnabled(self, value):
-        if hasattr(self, '_render_to_surface_enabled') and value == self._render_to_surface_enabled:            # no change
+        if hasattr(self, '_render_to_surface_enabled') and value == self._render_to_surface:            # no change
             return
-        self._render_to_surface_enabled = value
+        self._render_to_surface = value
         self.regenerate = True
 
     def _getRenderToSurfaceEnabled(self):
-        return self._render_to_surface_enabled
+        return self._render_to_surface
 
-    render_to_surface_enabled = property( _getRenderToSurfaceEnabled, _setRenderToSurfaceEnabled )
+    render_to_surface_enabled = render_to_surface = property( _getRenderToSurfaceEnabled, _setRenderToSurfaceEnabled )
     
 
     def _getLocalBoundingBox(self):

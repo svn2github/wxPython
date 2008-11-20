@@ -1,8 +1,11 @@
 import numpy
 import math
 
+def length(v):
+    return numpy.sqrt( numpy.dot( v, v ) )
+
 def normalize(v):
-    return v / numpy.sqrt( numpy.dot( v, v ) )
+    return v / length(v)
 
 def get_angle(a, b, degrees = True):
     an, bn = normalize(a), normalize(b)

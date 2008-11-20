@@ -9,12 +9,12 @@ class LineDrawer(object):
         self.line = None
         self.canvas = canvas
 
-        canvas.subscribe( self.onLineBegin, 'left_down' )
-        canvas.subscribe( self.onLineDrag, 'move' )
-        canvas.subscribe( self.onLineEnd, 'left_up' )
+        canvas.subscribe( self.onLineBegin, 'input.left_down' )
+        canvas.subscribe( self.onLineDrag, 'input.move' )
+        canvas.subscribe( self.onLineEnd, 'input.left_up' )
 
     def onLineBegin(self, evt):
-        startPnt = evt.coords
+        startPnt = evt.coords.world
         lineNode = self.canvas.createLine( startPnt, startPnt, look = ('red', 'blue') )
         self.line = lineNode.model
         print 'begin'
@@ -22,12 +22,12 @@ class LineDrawer(object):
     def onLineDrag(self, evt):
         if self.line is None:
             return
-        self.line.endPoint = evt.coords
-
+        self.line.endPoint = evt.coords.world
+        
     def onLineEnd(self, evt):
         if self.line is None:
             return
-        self.line.endPoint = evt.coords
+        self.line.endPoint = evt.coords.world
         self.line = None
         print 'end'
 

@@ -121,7 +121,10 @@ class DefaultConverters(object):
         # convert pixels to png
         if isinstance( pixels, wx.Bitmap ):
             bitmap = pixels
-            w, h = pixels.GetWidth(), pixels.GetHeight()
+            w, h = bitmap.GetWidth(), bitmap.GetHeight()
+        elif isinstance( pixels, wx.Image ):
+            bitmap = wx.BitmapFromImage( pixels )
+            w, h = bitmap.GetWidth(), bitmap.GetHeight()
         else:
             w, h, components = pixels.shape
     
@@ -443,7 +446,7 @@ class DefaultRenderableNodeSerializer(object):
             cls.parseLook( node.view.look, element )
         
         return element       
-        #node.render_to_surface_enabled, surface_size )
+        #node.render_to_surface, surface_size )
 
 
     serialize = classmethod( serialize )
