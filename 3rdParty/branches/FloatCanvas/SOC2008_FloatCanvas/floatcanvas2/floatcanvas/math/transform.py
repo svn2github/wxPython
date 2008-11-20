@@ -172,6 +172,40 @@ class LinearAndArbitraryCompoundTransform(CompoundTransform):
     def __mul__(self, other):
         return LinearAndArbitraryCompoundTransform( self.transform1, CompoundTransform( self.transform2, other ) )
 
+    def _getInverse(self):
+        if hasattr(self.transform2, 'inverse'):
+            #return self.__class__( self.transform1.inverse, self.transform2.inverse )
+            return CompoundTransform( self.transform2.inverse, self.transform1.inverse )
+        else:
+            return self.transform1.inverse
+    
+    inverse = property( _getInverse )
+
+
+class InverseMercatorTransform(object):
+    def __init__(self, longitudeCenter = 0, scaleFactor = 100):
+        self.longitudeCenter = longitudeCenter
+        self.scaleFactor = scaleFactor
+
+    # can probably be made faster
+    def __call__(self, coords):
+        def mercator_lat_inv(y):
+            #return -numpy.log( numpy.tan( numpy.pi / 4 + lat / 2 ) )
+            #return numpy.arcsinh( numpy.tan( lat ) )
+            return numpy.arcsin( numpy.tanh( y ) )
+
+        result = numpy.array( coords )
+        result /= self.scaleFactor
+        result[::,::2] += self.longitudeCenter
+        result[::,1::2] = mercator_lat_inv( result[::,1::2] )
+                
+        return result
+
+    def _getInverse(self):
+        return MercatorTransform( self.longitudeCenter, self.scaleFactor )
+
+    inverse = property( _getInverse )
+
 class MercatorTransform(object):
     ''' Implements a mercator projection, see 
         http://en.wikipedia.org/wiki/Mercator_projection . Input coords are
@@ -198,6 +232,10 @@ class MercatorTransform(object):
         
         return result
 
+    def _getInverse(self):
+        return InverseMercatorTransform( self.longitudeCenter, self.scaleFactor )
+
+    inverse = property( _getInverse )
 
 class ThreeDProjectionTransform(LinearTransform):
     ''' An experimental transform to show that floatcanvas can handle arbitrary

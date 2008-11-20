@@ -56,6 +56,13 @@ class TestNode(unittest.TestCase):
         t = MercatorTransform(0)
         tc = t( self.coords2d )
 
+    def testMercatorInverse(self):
+        t = MercatorTransform( 0, 100 )
+        coords = numpy.array( [ (1,1), (0,0), (0.5, 0.8) ] )
+        tc = t( coords )
+        ttc = t.inverse( tc )
+        self.assert_( (ttc == coords).all(), ( tc, ttc, coords ) )
+        
     def test3D(self):
         t = ThreeDProjectionTransform( 800, 600, 90, 1, 100 )
         tc = t( self.coords3d )

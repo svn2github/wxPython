@@ -35,7 +35,7 @@ class RemoveNonLinearTransformFromCoords(EventSender):
             # check if the non-linear part is the same. If it is, no need to
             # recreate the shape
             self.linearTransform = transform.transform1                    
-            if self.lastNonLinearTransform != transform.transform2:
+            if True: #(self.lastNonLinearTransform != transform.transform2) or (transform.transform2.dirty):
                 if type(self.coords) == list:
                     self.transformedCoords = [ transform.transform2( coord ) for coord in self.coords ]
                 else:

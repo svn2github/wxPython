@@ -29,6 +29,7 @@ class NavCanvas(floatCanvas.FloatCanvas):
                    id = wx.ID_ANY,
                    size = wx.DefaultSize,
                    enableSaveLoadButtons = True,
+                   showStatusBar = False,
                    **kwargs): # The rest just get passed into FloatCanvas
         
         self.mainPanel = wx.Panel(parent, id, size=size)
@@ -44,7 +45,8 @@ class NavCanvas(floatCanvas.FloatCanvas):
         
         self.mode_descriptions = [ GUIModeDescription(*mode_info) for mode_info in modes ]
         self.name_to_mode_description = dict( [ (mode_descr.name, mode_descr) for mode_descr in self.mode_descriptions ] )
-        
+
+
         self.canvasPanel = canvasPanel = wx.Panel( self.mainPanel, wx.ID_ANY )
         self.enableSaveLoadButtons = enableSaveLoadButtons
         self.BuildToolbar()
@@ -52,6 +54,11 @@ class NavCanvas(floatCanvas.FloatCanvas):
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add( self.ToolBar, 0, wx.ALL | wx.ALIGN_LEFT | wx.GROW, 4 )
         box.Add( canvasPanel, 1, wx.GROW )
+
+        if showStatusBar:  
+            self.statusBar = wx.StatusBar( self.mainPanel )
+            box.Add( self.statusBar, 0, wx.ALL | wx.ALIGN_LEFT | wx.GROW, 4 )
+            
         box.SetMinSize( parent.GetClientSize() )
         self.mainPanel.SetSizerAndFit(box)
 
@@ -60,6 +67,10 @@ class NavCanvas(floatCanvas.FloatCanvas):
         self.active_mode = 'Pointer'
         
         self.Bind( wx.EVT_WINDOW_DESTROY, self.OnDestroy )
+        if showStatusBar:
+            def updateStatusBar(event):
+                self.statusBar.SetStatusText("Name | %s -- Coordinates | World: %s - Screen: %s - Local: %s" % ( event.node.name, event.coords.world, event.coords.screen, event.coords.local ), 0)
+            self.subscribe( updateStatusBar, 'raw_input.move' )
 
     def _setActiveMode(self, mode):
         ''' Takes care of switching the active gui mode. '''
