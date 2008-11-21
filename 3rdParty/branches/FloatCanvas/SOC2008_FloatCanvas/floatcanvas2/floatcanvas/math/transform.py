@@ -107,9 +107,11 @@ class LinearTransform2D(LinearTransform):
         ''' Angle in degrees, NOT radians.
             Don't want to generalize this to n-dimensional rotations now
         '''
+        scale = self.scale
         angle_in_radian = radians( angle_in_degree )
         self.matrix[0][:-1] = ( numpy.cos( angle_in_radian ), -numpy.sin( angle_in_radian ) )
         self.matrix[1][:-1] = ( numpy.sin( angle_in_radian ),  numpy.cos( angle_in_radian ) )
+        self.matrix[:-1,:-1] *= scale
 
     rotation = property( _getRotation, _setRotation, )
     
