@@ -145,10 +145,15 @@ class NavCanvas(floatCanvas.FloatCanvas):
         svg_wildcard = 'Scalable Vector Graphics (SVG) (*.svg)|*.svg'
 
     
-        def getSaveFilename(wildcard):
+        def getSaveFilename(wildcard, extensions):
             dlg = wx.FileDialog( None, wildcard = wildcard, style = wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT )
             if dlg.ShowModal() == wx.ID_OK:
-                return dlg.GetPath()
+                filename = dlg.GetPath()
+                for extension in extensions:
+                    if filename.lower().endswith( extension ):
+                        return filename
+                return filename + extensions[ dlg.GetFilterIndex() ]
+                
 
         def onOpen(event):
             dlg = wx.FileDialog( None, wildcard = fc_wildcard, style = wx.OPEN | wx.FD_FILE_MUST_EXIST )
@@ -156,21 +161,15 @@ class NavCanvas(floatCanvas.FloatCanvas):
                 self.unserializeFromFile( dlg.GetPath() )
 
         def onSave(event):
-            filename = getSaveFilename( fc_wildcard )
-            if not filename.lower().endswith('fcsf'):
-                filename += '.fcsf'
+            filename = getSaveFilename( fc_wildcard, ['.fcsf'] )
             self.serializeToFile( filename )
 
         def onExportImage(event):
-            filename = getSaveFilename( img_wildcard )
-            if not (filename.lower().endswith('png') or filename.lower().endswith('png') or filename.lower().endswith('bmp')):
-                filename += '.png'
+            filename = getSaveFilename( img_wildcard, [ '.png', '.jpg', '.bmp' ] )
             self.saveScreenshot( filename )
 
         def onExportSVG(event):
-            filename = getSaveFilename( svg_wildcard )
-            if not filename.lower().endswith('svg'):
-                filename += '.svg'
+            filename = getSaveFilename( svg_wildcard, ['.svg'] )
             self.serializeToFile( filename )
 
 

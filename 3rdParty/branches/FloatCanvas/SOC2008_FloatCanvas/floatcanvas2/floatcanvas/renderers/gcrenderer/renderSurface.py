@@ -21,10 +21,10 @@ class RenderSurface(object):
             return
         
         #print "creating new RenderSurface. Size: ",
-        #print size
-        if size == (0,0):
-            #print "trying to create zero-size bitmap, changing to (10,10)" 
-            size = (10, 10)
+        if size[0] <= 0:
+            size = (1, size[1])
+        if size[1] <= 0:
+            size = (size[0], 1)
         self._size = size        
         
     def _getSize(self):
