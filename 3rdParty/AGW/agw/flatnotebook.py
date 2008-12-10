@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 15 Oct 2008, 10.00 GMT
+# Latest Revision: 10 Dec 2008, 11.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -58,8 +58,8 @@ License And Version:
 
 FlatNotebook Is Freeware And Distributed Under The wxPython License. 
 
-Latest Revision: Andrea Gavana @ 15 Oct 2008, 10.00 GMT
-Version 2.7
+Latest Revision: Andrea Gavana @ 10 Dec 2008, 11.00 GMT
+Version 2.8
 
 @undocumented: FNB_HEIGHT_SPACER, VERTICAL_BORDER_PADDING, VC8_SHAPE_LEN,
     wxEVT*, left_arrow_*, right_arrow*, x_button*, down_arrow*,
@@ -3785,6 +3785,7 @@ class PageContainer(wx.Panel):
         self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
         self.Bind(wx.EVT_MIDDLE_DOWN, self.OnMiddleDown)
         self.Bind(wx.EVT_MOTION, self.OnMouseMove)
+        self.Bind(wx.EVT_MOUSEWHEEL, self.OnMouseWheel)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnMouseLeave)
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnMouseEnterWindow)
@@ -3905,6 +3906,26 @@ class PageContainer(wx.Panel):
         if where == FNB_TAB:
             self.DeletePage(tabIdx)
         
+        event.Skip()
+
+
+    def OnMouseWheel(self, event):
+        """ Scroll tabs when the mouse wheels. """
+
+        delta = event.GetWheelRotation()
+
+        for tab in xrange(abs(delta)):
+            if delta > 0:
+                before = self._nLeftButtonStatus
+                self._nLeftButtonStatus = FNB_BTN_PRESSED
+                self.RotateLeft()
+                self._nLeftButtonStatus = before
+            else:
+                before = self._nRightButtonStatus
+                self._nRightButtonStatus = FNB_BTN_PRESSED
+                self.RotateRight()
+                self._nRightButtonStatus = before
+
         event.Skip()
 
 
