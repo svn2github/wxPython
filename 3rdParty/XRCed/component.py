@@ -672,7 +672,7 @@ class _ComponentManager:
     def getMenuData(self, menu):
         return self.menus.get(menu, None)
 
-    def setMenu(self, component, menu, label, help, index=1000):
+    def setMenu(self, component, menu, label, help, index=999999):
         '''Set pulldown menu data.'''
         if menu not in self.menuNames: self.menuNames.append(menu)
         if menu not in self.menus: self.menus[menu] = []

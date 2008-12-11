@@ -417,7 +417,7 @@ c = component.Component('wxComboBox', ['control','tool'],
               ['pos', 'size', 'content', 'selection', 'value'],
               image=images.TreeComboBox.GetImage())
 c.addStyles('wxCB_SINGLE', 'wxCB_DROPDOWN', 'wxCB_READONLY',
-            'wxCB_SORT', 'wxCB_PROCESS_ENTER')
+            'wxCB_SORT', 'wxTE_PROCESS_ENTER')
 c.setSpecial('content',  attribute.ContentAttribute)
 c.addEvents('EVT_COMBOBOX', 'EVT_TEXT', 'EVT_TEXT_ENTER')
 component.Manager.register(c)
@@ -476,7 +476,7 @@ component.Manager.setTool(c, 'Panels', pos=(2,0))
 
 c = component.Component('unknown', ['control'], ['pos', 'size'])
 component.Manager.register(c)
-component.Manager.setMenu(c, 'control', 'unknown', 'unknown control', 1000)
+component.Manager.setMenu(c, 'control', 'unknown', 'unknown control')
 
 ### wxXXX
 
