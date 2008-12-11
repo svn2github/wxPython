@@ -410,6 +410,7 @@ class _Listener:
         '''wx.ID_PASTE handler (for XMLTreeMenu).'''
         state = self.tree.GetFullState() # state just before
         item = Presenter.paste()
+        if not item: return     # error in paste()
         itemIndex = self.tree.ItemFullIndex(item)
         g.undoMan.RegisterUndo(undo.UndoPasteCreate(itemIndex, state))
 
@@ -422,6 +423,7 @@ class _Listener:
         g.Presenter.updateCreateState(forceSibling, forceInsert)
         state = self.tree.GetFullState() # state just before
         item = Presenter.paste()
+        if not item: return     # error in paste()
         itemIndex = self.tree.ItemFullIndex(item)
         g.undoMan.RegisterUndo(undo.UndoPasteCreate(itemIndex, state))
 
@@ -438,6 +440,7 @@ class _Listener:
         g.Presenter.updateCreateState(forceSibling, forceInsert)
         treeState = self.tree.GetFullState() # state just before
         item = Presenter.paste()
+        if not item: return     # error in paste()
         itemIndex = self.tree.ItemFullIndex(item)
         g.undoMan.RegisterUndo(undo.UndoPasteCreate(itemIndex, treeState)) 
 
