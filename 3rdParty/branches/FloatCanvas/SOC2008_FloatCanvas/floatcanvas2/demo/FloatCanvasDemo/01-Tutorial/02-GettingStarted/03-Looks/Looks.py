@@ -45,6 +45,13 @@ def start(frame):
         l = canvas.create( 'Lines', thingy, name = 'r%d' % i, pos = (i * 110, 800), look = look  )
         p = canvas.create( 'Polygon', thingy, name = 'r%d' % i, pos = (i * 110, 1000), look = look  )
 
+    def setRandomLookWhenClicked(event):
+        import random
+        event.node.look = random.choice( looks )
+        
+    for obj in canvas.children:
+        obj.subscribe( setRandomLookWhenClicked, 'left_down' )
+
     canvas.zoomToExtents()
         
         

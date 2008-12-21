@@ -158,7 +158,14 @@ class BasicRenderableNode(RenderableNode):
         return bb       
     
     boundingBoxRecursive = property( _getBoundingBoxRecursive )
-    
+
+    def _getLook(self):
+        return self.view.look
+
+    def _setLook(self, look):
+        self.view.look = look
+
+    look = property( _getLook, _setLook )
     
 
 class NodeToSurfaceRenderer(object):

@@ -7,7 +7,11 @@ def length(v):
 def normalize(v):
     return v / length(v)
 
+epsilon = 1e-10
 def get_angle(a, b, degrees = True):
+    if length( a - b ) < epsilon:
+        return 0
+    
     an, bn = normalize(a), normalize(b)
     v1 = numpy.dot( an, bn )
     v2 = numpy.cross( an, bn )

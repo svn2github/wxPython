@@ -162,16 +162,19 @@ class NavCanvas(floatCanvas.FloatCanvas):
 
         def onSave(event):
             filename = getSaveFilename( fc_wildcard, ['.fcsf'] )
-            self.serializeToFile( filename )
+            if filename:
+                self.serializeToFile( filename )
 
         def onExportImage(event):
             filename = getSaveFilename( img_wildcard, [ '.png', '.jpg', '.bmp' ] )
-            self.saveScreenshot( filename )
+            if filename:
+                self.saveScreenshot( filename )
 
         def onExportSVG(event):
             filename = getSaveFilename( svg_wildcard, ['.svg'] )
-            self.serializeToFile( filename )
-
+            if filename:
+                self.serializeToFile( filename )
+    
 
         self._addTool( 'fileopen', 'Open', onOpen )
         self._addTool( 'filesaveas', 'Save', onSave )
