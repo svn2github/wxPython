@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 """
 
 A very simple app for testing what colors go into and out of a wx.Bitmap
@@ -56,7 +56,7 @@ class DemoApp(wx.App):
                     pacc.MoveTo(pdata, i,j)
                     outColor = pacc.Get()[:3]
                     
-                    #print "Got", outColor
+                    print "Got", outColor
                     if inColor != outColor:
                         print "Error!!, inColor = %s, outColor = %s at pixel: %s"%(inColor, outColor, (i,j) )
 

@@ -14,6 +14,7 @@ import wx
 ## fixme: events should live in their own module, so all of FloatCanvas
 ##        wouldn't have to be imported here.
 import FloatCanvas, Resources
+from Utilities import BBox
 import numpy as N
 
 class Cursors(object):
@@ -305,11 +306,7 @@ class GUIZoomIn(GUIBase):
                     and abs(StartRBBox[1] - EndRBBox[1]) > 10 ):
                 EndRBBox = self.Canvas.PixelToWorld(EndRBBox)
                 StartRBBox = self.Canvas.PixelToWorld(StartRBBox)
-                BB = N.array(((min(EndRBBox[0],StartRBBox[0]),
-                                min(EndRBBox[1],StartRBBox[1])),
-                            (max(EndRBBox[0],StartRBBox[0]),
-                                max(EndRBBox[1],StartRBBox[1]))),N.float_)
-                self.Canvas.ZoomToBB(BB)
+                self.Canvas.ZoomToBB( BBox.fromPoints(N.r_[EndRBBox,StartRBBox]) )
             else:
                 Center = self.Canvas.PixelToWorld(StartRBBox)
                 self.Canvas.Zoom(1.5,Center)

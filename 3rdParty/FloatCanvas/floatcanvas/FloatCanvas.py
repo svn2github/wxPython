@@ -362,7 +362,7 @@ class Group(DrawObject):
             for obj in self.ObjectList[1:]:
                 BB.Merge(obj.BoundingBox)
         else:
-            BB = None
+            BB = BBox.NullBBox()
         self.BoundingBox = BB
 
     def SetColor(self, Color):
@@ -1939,9 +1939,9 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         ##fixme: should this have a y = -1 to shift to y-up?
         self.BmpScale = self.bmpWH / self.WH
 
-        print "bmpWH:", self.bmpWH
-        print "Width, Height:", self.WH
-        print "self.BmpScale", self.BmpScale
+        #print "bmpWH:", self.bmpWH
+        #print "Width, Height:", self.WH
+        #print "self.BmpScale", self.BmpScale
         self.ShiftFun = self.ShiftFunDict[Position]
         self.CalcBoundingBox()
         self.ScaledBitmap = None # cache of the last existing scaled bitmap
@@ -1976,12 +1976,12 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         if (self.ScaledBitmap is None) or (self.ScaledBitmap[0] != (0, 0, self.bmpWidth, self.bmpHeight, W, H) ):
         #if True: #fixme: (self.ScaledBitmap is None) or (H <> self.ScaledHeight) :
             self.ScaledHeight = H
-            print "Scaling to:", W, H
+            #print "Scaling to:", W, H
             Img = self.Image.Scale(W, H)
             bmp = wx.BitmapFromImage(Img)
             self.ScaledBitmap = ((0, 0, self.bmpWidth, self.bmpHeight , W, H), bmp)# this defines the cached bitmap
         else:
-            print "Using Cached bitmap"
+            #print "Using Cached bitmap"
             bmp = self.ScaledBitmap[1]
         XY = self.ShiftFun(XY[0], XY[1], W, H)
         dc.DrawBitmapPoint(bmp, XY, True)
@@ -2050,7 +2050,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
             #XY = self.ShiftFun(XY[0], XY[1], W, H)
             #fixme: get the shiftfun working!
         else:
-            print "Using cached bitmap"
+            #print "Using cached bitmap"
             ##fixme: The cached bitmap could be used if the one needed is the same scale, but
             ##       a subset of the cached one.
             bmp = self.ScaledBitmap[1]
@@ -2065,15 +2065,16 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         BBworld = BBox.asBBox(self._Canvas.ViewPortBB)
         ## first see if entire bitmap is displayed:
         if  BBworld.Inside(self.BoundingBox):
-            print "Drawing entire bitmap with old code"
+            #print "Drawing entire bitmap with old code"
             self._DrawEntireBitmap(dc , WorldToPixel, ScaleWorldToPixel, HTdc)
             return None
         elif BBworld.Overlaps(self.BoundingBox):
             #BBbitmap = BBox.fromPoints(self.WorldToBitmap(BBworld))
-            print "Drawing a sub-bitmap"
+            #print "Drawing a sub-bitmap"
             self._DrawSubBitmap(dc , WorldToPixel, ScaleWorldToPixel, HTdc)
         else:
-            print "Not Drawing -- no part of image is showing"
+            #print "Not Drawing -- no part of image is showing"
+            pass
 
 class DotGrid:
     """
@@ -2412,7 +2413,7 @@ class FloatCanvas(wx.Panel):
         self._ForeDrawList = []
         self.InitializePanel()
         self.MakeNewBuffers()
-        self.BoundingBox = None
+        self.BoundingBox = BBox.NullBBox()
         self.BoundingBoxDirty = False
         self.MinScale = None
         self.MaxScale = None
@@ -2757,7 +2758,6 @@ class FloatCanvas(wx.Panel):
                                      )
         self.ViewPortBB = N.array( ( N.minimum.reduce(ViewPortWorld),
                               N.maximum.reduce(ViewPortWorld) ) )
-        #self.ViewPortWorld = ViewPortWorld
 
         dc = wx.MemoryDC()
         dc.SelectObject(self._Buffer)
@@ -2819,22 +2819,14 @@ class FloatCanvas(wx.Panel):
         ## when zoomed in.
         DrawObject.FontList = {}
 
-    def _ShouldRedraw(DrawList, ViewPortBB): # lrk: adapted code from BBCheck
+    def _ShouldRedraw(DrawList, ViewPortBB): 
         # lrk: Returns the objects that should be redrawn
-
         ## fixme: should this check be moved into the object?
-        ##        also: a BB object would make this cleaner too
         BB2 = ViewPortBB
         redrawlist = []
         for Object in DrawList:
-            BB1 = Object.BoundingBox
-            ## note: this could use the Utilities.BBCheck function
-            ##       butthis saves a function call
-            if (BB1[1,0] > BB2[0,0] and BB1[0,0] < BB2[1,0] and
-                 BB1[1,1] > BB2[0,1] and BB1[0,1] < BB2[1,1]):
+            if Object.BoundingBox.Overlaps(BB2):
                 redrawlist.append(Object)
-        #return redrawlist
-        ##fixme: disabled this!!!!
         return redrawlist
     _ShouldRedraw = staticmethod(_ShouldRedraw)
 
@@ -2904,14 +2896,13 @@ class FloatCanvas(wx.Panel):
         box of all the objects on the canvas, if none is given.
 
         """
-        
         if NewBB is not None:
             BoundingBox = NewBB
         else:
             if self.BoundingBoxDirty:
                 self._ResetBoundingBox()
             BoundingBox = self.BoundingBox
-        if BoundingBox is not None:
+        if (BoundingBox is not None) and (not BoundingBox.IsNull()):
             self.ViewPortCenter = N.array(((BoundingBox[0,0]+BoundingBox[1,0])/2,
                                          (BoundingBox[0,1]+BoundingBox[1,1])/2 ),N.float_)
             self.MapProjectionVector = self.ProjectionFun(self.ViewPortCenter)
@@ -2988,20 +2979,22 @@ class FloatCanvas(wx.Panel):
         self.HitDict = None
 
     def _ResetBoundingBox(self):
-        SetToNone=False
+        SetToNull=False
         if self._DrawList or self._ForeDrawList:
             bblist = []
-            for (i, obj) in enumerate(self._DrawList):
-                bblist.append(obj.BoundingBox)
-            for (j, obj) in enumerate(self._ForeDrawList):
-                bblist.append(obj.BoundingBox)
-            self.BoundingBox = BBox.fromBBArray(bblist)
+            for obj in self._DrawList + self._ForeDrawList:
+                if not obj.BoundingBox.IsNull():
+                    bblist.append(obj.BoundingBox)
+            if bblist: # if there are only NullBBoxes in DrawLists
+                self.BoundingBox = BBox.fromBBArray(bblist)
+            else:
+                SetToNull = True
             if self.BoundingBox.Width == 0 or self.BoundingBox.Height == 0:
-                SetToNone=True
+                SetToNull=True
         else:
-            SetToNone=True
-        if SetToNone:
-            self.BoundingBox = None
+            SetToNull=True
+        if SetToNull:
+            self.BoundingBox = BBox.NullBBox()
             self.ViewPortCenter= N.array( (0,0), N.float)
             self.TransformVector = N.array( (1,-1), N.float)
             self.MapProjectionVector = N.array( (1,1), N.float)

@@ -360,7 +360,6 @@ class testWidthHeight(unittest.TestCase):
 class testCenter(unittest.TestCase):
     B = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
     def testCenter(self):
-        print self.B.Center 
         self.failUnless( (self.B.Center == (3.0, 6.0)).all() )
 
     def attemptSetCenter(self):
@@ -383,6 +382,93 @@ class testBBarray(unittest.TestCase):
         BB = fromBBArray(self.BBarray)
         self.failUnless(BB == self.BB, "Wrong BB was created. It was:\n%s \nit should have been:\n%s"%(BB, self.BB))
 
+class testNullBBox(unittest.TestCase):
+    B1 = NullBBox()
+    B2 = NullBBox()
+    B3 = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
+
+    def testValues(self):
+        self.failUnless( N.alltrue(N.isnan(self.B1)) )
+    
+    def testIsNull(self):
+        self.failUnless( self.B1.IsNull )
+
+    def testEquals(self):
+        self.failUnless( (self.B1 == self.B2) == True )
+    
+    def testNotEquals(self):
+        self.failUnless ( (self.B1 == self.B3) == False,
+                          "NotEquals failed for\n%s,\n %s:%s"%(self.B1, self.B3, (self.B1 == self.B3)) )    
+
+    def testNotEquals2(self):
+        self.failUnless ( (self.B3 == self.B1) == False,
+                          "NotEquals failed for\n%s,\n %s:%s"%(self.B3, self.B1, (self.B3 == self.B1))  )    
+        
+    def testMerge(self):
+        C = self.B1.copy()
+        C.Merge(self.B3)
+        self.failUnless( C == self.B3,
+                         "merge failed, got: %s"%C )
+        
+    def testOverlaps(self):
+        self.failUnless( self.B1.Overlaps(self.B3) == False)
+
+    def testOverlaps2(self):
+        self.failUnless( self.B3.Overlaps(self.B1) == False)
+
+
+class testInfBBox(unittest.TestCase):
+    B1 = InfBBox()
+    B2 = InfBBox()
+    B3 = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
+    NB = NullBBox()
+
+    def testValues(self):
+        self.failUnless( N.alltrue(N.isinf(self.B1)) )
+    
+#    def testIsNull(self):
+#        self.failUnless( self.B1.IsNull )
+
+    def testEquals(self):
+        self.failUnless( (self.B1 == self.B2) == True )
+    
+    def testNotEquals(self):
+        print (self.B1 == self.B3) == False
+        self.failUnless ( (self.B1 == self.B3) == False,
+                          "NotEquals failed for\n%s,\n %s:%s"%(self.B1, self.B3, (self.B1 == self.B3)) )    
+
+    def testNotEquals2(self):
+        self.failUnless ( (self.B3 == self.B1) == False,
+                          "NotEquals failed for\n%s,\n %s:%s"%(self.B3, self.B1, (self.B3 == self.B1))  )    
+        
+    def testMerge(self):
+        C = self.B1.copy()
+        C.Merge(self.B3)
+        self.failUnless( C == self.B2,
+                         "merge failed, got: %s"%C )
+
+    def testMerge2(self):
+        C = self.B3.copy()
+        C.Merge(self.B1)
+        self.failUnless( C == self.B1,
+                         "merge failed, got: %s"%C )
+
+    def testOverlaps(self):
+        self.failUnless( self.B1.Overlaps(self.B2) == True)
+
+    def testOverlaps2(self):
+        self.failUnless( self.B3.Overlaps(self.B1) == True)
+        
+    def testOverlaps3(self):
+        self.failUnless( self.B1.Overlaps(self.B3) == True)
+
+    def testOverlaps4(self):
+        self.failUnless( self.B1.Overlaps(self.NB) == True)
+
+    def testOverlaps5(self):
+        self.failUnless( self.NB.Overlaps(self.B1) == True)
+    
+    
 
 if __name__ == "__main__":
     unittest.main()

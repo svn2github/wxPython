@@ -13,7 +13,8 @@ import numpy as N
 from numpy import random as random
 
 NumChannels = 200
-MaxValue = 2**24
+MaxValue = 2000
+#MaxValue = 2**24
 
 
 def YScaleFun(center):
@@ -114,15 +115,15 @@ class DrawFrame(wx.Frame):
         """
         channel, value = event.Coords
         if 0 < channel < NumChannels  :
-            channel = "%i"%(channel+1)
+            channel = "%i,"%(channel+1)
         else:
             channel = ""
             
         if value >=0:
-            value = "%i"%value
+            value = "%3g"%value
         else:
             value = ""
-        self.SetStatusText("Channel: %s,  Value: %s"%(channel, value))
+        self.SetStatusText("Channel: %s  Value: %s"%(channel, value))
 
     def ResetData(self, event):
         self.Values = random.randint(0, MaxValue, (NumChannels,))
