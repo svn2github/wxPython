@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 from __future__ import division
-
+import sys
+mac = sys.platform.startswith("darwin")
+ 
 try:
     import numpy as N
 except ImportError:
@@ -91,43 +93,59 @@ class _MouseEvent(wx.PyCommandEvent):
     def __getattr__(self, name):
         return getattr(self._NativeEvent, name)
 
+## fixme: This should probably be re-factored into a class
+_testBitmap = None
+_testDC = None
 def _cycleidxs(indexcount, maxvalue, step):
 
-    """!
-    Utility function used by _colorGenerator
-
     """
-    
+    Utility function used by _colorGenerator
+    """
+    def colormatch(color):
+        """Return True if the color comes back from the bitmap identically."""
+        if len(color) < 3:
+            return True
+        global _testBitmap, _testDC
+        B = _testBitmap
+        if not mac:
+            dc = _testDC
+        if not B:
+            B = _testBitmap = wx.EmptyBitmap(1, 1)
+            if not mac:
+                dc = _testDC = wx.MemoryDC()
+        if mac:
+            dc = wx.MemoryDC()
+        dc.SelectObject(B)
+        dc.SetBackground(wx.BLACK_BRUSH)
+        dc.Clear()
+        dc.SetPen(wx.Pen(wx.Color(*color), 4))
+        dc.DrawPoint(0,0)
+        if mac:
+            del dc
+            pdata = wx.AlphaPixelData(B)
+            pacc = pdata.GetPixels()
+            pacc.MoveTo(pdata, 0, 0)
+            outcolor = pacc.Get()[:3]
+        else:
+            outcolor = dc.GetPixel(0,0)
+        return outcolor == color
+ 
     if indexcount == 0:
         yield ()
     else:
         for idx in xrange(0, maxvalue, step):
             for tail in _cycleidxs(indexcount - 1, maxvalue, step):
-                yield (idx, ) + tail
-
+                color = (idx, ) + tail
+                if not colormatch(color):
+                    continue
+                yield color
 def _colorGenerator():
 
-    """!
-
+    """
     Generates a series of unique colors used to do hit-tests with the Hit
     Test bitmap
     """
-
-    depth = wx.GetDisplayDepth()
-##    ##there have been problems with 16 bbp displays, to I'm disabling this for now.
-##    if depth == 16:
-##        print "Warning: There have been problems with hit-testing on 16bbp displays"
-##        step = 8
-    if depth >= 24:
-        step = 1
-    else:
-        msg= ["ColorGenerator does not work with depth = %s" % depth]
-        msg.append("It is required for hit testing -- binding events to mouse")
-        msg.append("actions on objects on the Canvas.")
-        msg.append("Please set your display to 24bit")
-        msg.append("Alternatively, the code could be adapted to 16 bit if that's required")
-        raise FloatCanvasError(msg)
-    return _cycleidxs(indexcount=3, maxvalue=256, step=step)
+    return _cycleidxs(indexcount=3, maxvalue=256, step=1)
 
 class DrawObject:
     """!
