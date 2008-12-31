@@ -1404,16 +1404,46 @@ class ButtonPanel(wx.PyPanel):
         
 
     def RemoveAllButtons(self):
-        """ Remove all the buttons from ButtonPanel. """
+        """ Remove all the buttons from ButtonPanel.
+        
+        This function is only for internal use only. If you are interested in
+        manipulating a ButtonPanel in real time (ie. removing things on it,
+        have a look at 'ButtonPanel.Clear(...)'.
+        
+         """
 
         self._vButtons = []
 
         
     def RemoveAllSeparators(self):
-        """ Remove all the separators from ButtonPanel. """
+        """ Remove all the separators from ButtonPanel.
+        
+        This function is only for internal use only. If you are interested in
+        manipulating a ButtonPanel in real time (ie. removing things on it,
+        have a look at 'ButtonPanel.Clear(...)'.
+        
+        """
 
         self._vSeparators = []
 
+    def Clear(self):
+        """ Clears the ButtonPanel.
+        
+        Can be used to reset the ButtonPanel if you'd like have a new set of
+        buttons on the panel.
+        
+        """
+        
+        if self.HasBarText():
+            bartext = self.GetBarText()
+        else:
+            bartext = None
+        
+        self.Freeze()
+        
+        self._currentButton = -1
+        self._mainsizer.Clear()
+        self.ReCreateSizer(bartext)
         
     def GetAlignment(self):
         """ Returns the button alignment (left, right, top, bottom). """
@@ -1480,9 +1510,8 @@ class ButtonPanel(wx.PyPanel):
         
         if self.IsFrozen():
             self.Thaw()
-        
 
-    def ReCreateSizer(self, text):
+    def ReCreateSizer(self, text=None):
         """ Recreates the ButtonPanel sizer accordingly to the alignment specified. """
         
         children = self._mainsizer.GetChildren()
@@ -1524,8 +1553,8 @@ class ButtonPanel(wx.PyPanel):
 
         self.SetSizer(self._mainsizer)
 
-        # Now add the text. It doesn't matter if there is no text        
-        self.SetBarText(text)
+        if text is not None:
+            self.SetBarText(text)
         
         self.DoLayout()
         
