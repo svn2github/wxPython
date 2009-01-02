@@ -268,7 +268,7 @@ class BalloonFrame(wx.Frame):
         size = self.GetSize()
         pos = self.GetPosition()
 
-        dc = wx.MemoryDC()
+        dc = wx.MemoryDC(wx.EmptyBitmap(1,1))
         textlabel = self._balloonmsg.GetLabel()
         textfont = self._balloonmsg.GetFont()
         textextent = dc.GetFullTextExtent(textlabel, textfont)

@@ -313,8 +313,8 @@ class Thumb(object):
         self._lastmod = lastmod
         self._parent = parent
         self._captionbreaks = []
-        self._bitmap = wx.EmptyBitmap(-1, -1)
-        self._image = wx.EmptyImage(-1, -1)
+        self._bitmap = wx.EmptyBitmap(1,1)
+        self._image = wx.EmptyImage(1,1)
         self._rotation = 0
         self._alpha = None
 
@@ -392,8 +392,10 @@ class Thumb(object):
                     img = self._threadedimage
                 
             else:
-                
-                img = self._threadedimage
+                if not hasattr(self, "_threadedimage"):
+                    img = GetMondrianImage()
+                else:
+                    img = self._threadedimage
                 
         else:
 

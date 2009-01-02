@@ -737,7 +737,7 @@ class SButton(wx.Window):
     def OnKeyUp(self, event):
         """ Handles key up events just like wx.lib.buttons do. """
 
-        if self._hasfocus and event.KeyCode() == ord(" "):
+        if self._hasfocus and event.GetKeyCode() == ord(" "):
 
             self._isup = True
             self.Notify()

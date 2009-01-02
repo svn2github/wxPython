@@ -2213,6 +2213,8 @@ class ColourPanel(wx.PyPanel):
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
+        self._colour = Colour(wx.WHITE)
+        
 
     def OnPaint(self, event):
         """ Handles the wx.EVT_PAINT event for L{ColourPanel}. """

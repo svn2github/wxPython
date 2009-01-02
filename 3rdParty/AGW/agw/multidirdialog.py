@@ -259,6 +259,9 @@ class MultiDirDialog(wx.Dialog):
         self.LayoutItems()
         self.BindEvents()
     
+        if parent and pos == wx.DefaultPosition:
+            self.CenterOnParent()
+            
 
     def SetupDirCtrl(self, defaultPath):
         """ Setup the wx.GenericDirCtrl (icons, labels, etc...). """
@@ -325,7 +328,9 @@ class MultiDirDialog(wx.Dialog):
         bottomSizer = wx.BoxSizer(wx.HORIZONTAL)
         
         staticText = wx.StaticText(self, -1, _("Choose one or more folders:"))
-        staticText.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        f = staticText.GetFont()
+        f.SetWeight(wx.BOLD)
+        staticText.SetFont(f)
 
         # Add the main wx.GenericDirCtrl        
         mainSizer.Add(staticText, 0, wx.EXPAND|wx.ALL, 10)

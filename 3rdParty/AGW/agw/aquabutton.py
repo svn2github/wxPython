@@ -144,9 +144,14 @@ class AquaButton(wx.PyControl):
         self.SetInitialSize(size)
 
         # The following defaults are better suited to draw the text outline
-        self._backColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
-        self._hoverColour = self.LightColour(self._backColour, 30)
-        self._textColour = wx.WHITE
+        if "__WXMAC__" in wx.PlatformInfo:
+            self._backColour = wx.Colour(147, 202, 255) 
+            self._hoverColour = self.LightColour(self._backColour, 30)
+            self._textColour = wx.BLACK
+        else:
+            self._backColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+            self._hoverColour = self.LightColour(self._backColour, 30)
+            self._textColour = wx.WHITE
         
 
     def LightColour(self, color, percent):
