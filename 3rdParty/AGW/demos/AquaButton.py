@@ -11,14 +11,13 @@ try:
 except:
     dirName = os.path.dirname(os.path.abspath(sys.argv[0]))
 
+bitmapDir = os.path.join(dirName, 'bitmaps')
 sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import aquabutton as AB
-    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.aquabutton as AB
-    bitmapDir = "agw/bitmaps/"
 
             
 class AquaButtonDemo(wx.Panel):
@@ -32,7 +31,9 @@ class AquaButtonDemo(wx.Panel):
         self.mainPanel.SetBackgroundColour(wx.WHITE)
         
         # Initialize AquaButton 1 (with image)
-        bitmap = wx.Bitmap(os.path.normpath(bitmapDir+"aquabutton.png"), wx.BITMAP_TYPE_PNG)
+        bitmap = wx.Bitmap(
+            os.path.normpath(os.path.join(bitmapDir, "aquabutton.png")), 
+            wx.BITMAP_TYPE_PNG)
         self.btn1 = AB.AquaButton(self.mainPanel, -1, bitmap, "AquaButton")
         # Initialize AquaButton 2 (no image)
         self.btn2 = AB.AquaButton(self.mainPanel, -1, None, "Hello World!")

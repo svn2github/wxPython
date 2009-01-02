@@ -54,14 +54,14 @@ class ControlPane(wx.Panel):
         combo.SetStringSelection("None")
 
         self.Bind(wx.EVT_COMBOBOX, self.OnExpandWindow)        
-        
+
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(luCheck, 0, wx.TOP, 5)
         sizer.Add(btn1, 0, wx.TOP, 5)
         sizer.Add(btn2, 0, wx.TOP, 5)
         sizer.Add(static, 0, wx.TOP, 10)
         sizer.Add(combo, 0, wx.EXPAND|wx.RIGHT|wx.TOP, 2)
-        
+
         border = wx.BoxSizer()
         border.Add(sizer, 1, wx.EXPAND|wx.ALL, 5)
         self.SetSizer(border)
@@ -76,7 +76,7 @@ class ControlPane(wx.Panel):
     def OnSwapButton24(self, evt):
 
         self.GetParent().Swap2and4()
-        
+
 
     def OnSwapButton13(self, evt):
 
@@ -86,10 +86,10 @@ class ControlPane(wx.Panel):
     def OnExpandWindow(self, event):
 
         self.GetParent().ExpandWindow(event.GetSelection())
-        
+
 
 class FWSPanel(wx.Panel):
-    
+
     def __init__(self, parent, log):
 
         wx.Panel.__init__(self, parent, -1)
@@ -99,7 +99,7 @@ class FWSPanel(wx.Panel):
         splitter = FWS.FourWaySplitter(self, style=wx.SP_LIVE_UPDATE)
         self.splitter = splitter
         self.log = log
-        
+
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         sizer.Add(cp)
         sizer.Add(splitter, 1, wx.EXPAND)
@@ -114,7 +114,7 @@ class FWSPanel(wx.Panel):
             "or position the mouse at\n"
             "the intersection of the\n"
             "two sashes."
-            )
+        )
         splitter.AppendWindow(p1)
 
         p2 = SamplePane(splitter, "sky blue", "Panel Two")
@@ -129,7 +129,7 @@ class FWSPanel(wx.Panel):
         splitter.AppendWindow(p4)
 
         self.log.write("Welcome to the FourWaySplitterDemo!\n")
-        
+
         self.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGED, self.OnChanged)
         self.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.OnChanging)
 
@@ -145,7 +145,7 @@ class FWSPanel(wx.Panel):
 
         return idx
 
-    
+
     def OnChanging(self, event):
 
         idx = self.GetSashIdx(event)            
@@ -157,22 +157,22 @@ class FWSPanel(wx.Panel):
 
         event.Skip()
 
-        
+
     def OnChanged(self, event):
 
         idx = self.GetSashIdx(event)        
         self.log.write("Changed sash: %s  %s\n" %(idx, event.GetSashPosition()))
 
         event.Skip()
-        
-            
+
+
     def SetLiveUpdate(self, enable):
 
         if enable:
             self.splitter.SetWindowStyle(wx.SP_LIVE_UPDATE)
         else:
             self.splitter.SetWindowStyle(0)
-            
+
 
     def Swap2and4(self):
 
@@ -191,8 +191,8 @@ class FWSPanel(wx.Panel):
     def ExpandWindow(self, selection):
 
         self.splitter.SetExpanded(selection-1)
-    
-        
+
+
 class FourWaySplitterDemo(wx.Frame):
 
     def __init__(self, parent, log, id=wx.ID_ANY, title="FourWaySplitter Demo",
@@ -216,7 +216,7 @@ class FourWaySplitterDemo(wx.Frame):
 
         for i in range(len(statusbar_fields)):
             statusbar.SetStatusText(statusbar_fields[i], i)
-            
+
         self.CreateMenu()
 
         self.SetIcon(images.Mondrian.GetIcon())  
@@ -228,11 +228,11 @@ class FourWaySplitterDemo(wx.Frame):
         menuBar = wx.MenuBar(wx.MB_DOCKABLE)
         fileMenu = wx.Menu()
         helpMenu = wx.Menu()
-        
+
         item = wx.MenuItem(fileMenu, wx.ID_ANY, "E&xit")
         self.Bind(wx.EVT_MENU, self.OnQuit, item)
         fileMenu.AppendItem(item)
-                
+
         item = wx.MenuItem(helpMenu, wx.ID_ANY, "About")
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
         helpMenu.AppendItem(item)
@@ -245,23 +245,23 @@ class FourWaySplitterDemo(wx.Frame):
 
     def OnQuit(self, event):
 
-    	self.Destroy()
+        self.Destroy()
 
 
     def OnAbout(self, event):
 
         msg = "This Is The About Dialog Of The FourWaySplitter Demo.\n\n" + \
-              "Author: Andrea Gavana @ 03 Nov 2006\n\n" + \
-              "Please Report Any Bug/Requests Of Improvements\n" + \
-              "To Me At The Following Adresses:\n\n" + \
-              "andrea.gavana@gmail.com\n" + "gavana@kpo.kz\n\n" + \
-              "Welcome To wxPython " + wx.VERSION_STRING + "!!"
-              
+            "Author: Andrea Gavana @ 03 Nov 2006\n\n" + \
+            "Please Report Any Bug/Requests Of Improvements\n" + \
+            "To Me At The Following Adresses:\n\n" + \
+            "andrea.gavana@gmail.com\n" + "gavana@kpo.kz\n\n" + \
+            "Welcome To wxPython " + wx.VERSION_STRING + "!!"
+
         dlg = wx.MessageDialog(self, msg, "FourWaySplitter wxPython Demo",
                                wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
-        
+
 
 #---------------------------------------------------------------------------
 

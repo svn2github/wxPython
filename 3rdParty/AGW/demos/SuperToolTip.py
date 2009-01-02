@@ -9,14 +9,13 @@ try:
 except:
     dirName = os.path.dirname(os.path.abspath(sys.argv[0]))
 
+bitmapDir = os.path.join(dirName, 'bitmaps')
 sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import supertooltip as STT
-    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.supertooltip as STT
-    bitmapDir = "agw/bitmaps/"
 
 import images
 
@@ -46,13 +45,13 @@ class SuperToolTipDemo(wx.Frame):
         self.headerCheck = wx.CheckBox(self.mainPanel, -1, "Show Header")
         self.headerText = wx.TextCtrl(self.mainPanel, -1, "Merge And Center")
         self.headerBitmap = wx.StaticBitmap(self.mainPanel, -1,
-                                            wx.Bitmap(os.path.normpath(bitmapDir+"sttheader.png"),
+                                            wx.Bitmap(os.path.normpath(os.path.join(bitmapDir, "sttheader.png")),
                                                                           wx.BITMAP_TYPE_PNG))
-        self.headerFilePicker = wx.FilePickerCtrl(self.mainPanel, path=os.path.normpath(bitmapDir+"sttheader.png"),
+        self.headerFilePicker = wx.FilePickerCtrl(self.mainPanel, path=os.path.normpath(os.path.join(bitmapDir, "sttheader.png")),
                                                   style=wx.FLP_USE_TEXTCTRL)
         self.headerLineCheck = wx.CheckBox(self.mainPanel, -1, "Draw Line After Header")
         self.bodyBitmap = wx.StaticBitmap(self.mainPanel, -1,
-                                          wx.Bitmap(os.path.normpath(bitmapDir+"sttfont.png"),
+                                          wx.Bitmap(os.path.normpath(os.path.join(bitmapDir, "sttfont.png")),
                                                     wx.BITMAP_TYPE_PNG))
         msg = "</b>A Bold Title\n\nJoins the selected cells into one larger cell\nand centers the contents in the new cell.\n" \
               "This is often used to create labels that span\nmultiple columns.\n\n</l>I am a link{http://xoomer.alice.it/infinity77}"
@@ -61,16 +60,16 @@ class SuperToolTipDemo(wx.Frame):
         self.footerCheck = wx.CheckBox(self.mainPanel, -1, "Show Footer")
         self.footerText = wx.TextCtrl(self.mainPanel, -1, "Press F1 for more help")
         self.footerBitmap = wx.StaticBitmap(self.mainPanel, -1,
-                                            wx.Bitmap(os.path.normpath(bitmapDir+"stthelp.png"),
+                                            wx.Bitmap(os.path.normpath(os.path.join(bitmapDir, "stthelp.png")),
                                                       wx.BITMAP_TYPE_PNG))
-        self.footerFilePicker = wx.FilePickerCtrl(self.mainPanel, path=os.path.normpath(bitmapDir+"stthelp.png"),
+        self.footerFilePicker = wx.FilePickerCtrl(self.mainPanel, path=os.path.normpath(os.path.join(bitmapDir,"stthelp.png")),
                                                   style=wx.FLP_USE_TEXTCTRL)
         self.footerLineCheck = wx.CheckBox(self.mainPanel, -1, "Draw Line Before Footer")
         self.dropShadow = wx.CheckBox(self.mainPanel, -1, "Rounded Corners And Drop Shadow (Windows XP Only)")
         self.useFade = wx.CheckBox(self.mainPanel, -1, "Fade In/Fade Out Effects (Windows XP Only)")
         self.endTimer = wx.SpinCtrl(self.mainPanel, -1, "5")
         
-        btnBmp = wx.Bitmap(os.path.normpath(bitmapDir+"sttbutton.png"), wx.BITMAP_TYPE_PNG)
+        btnBmp = wx.Bitmap(os.path.normpath(os.path.join(bitmapDir,"sttbutton.png")), wx.BITMAP_TYPE_PNG)
         self.toolTipButton = buttons.ThemedGenBitmapTextButton(self.mainPanel, -1, btnBmp, " Big Test Button ",
                                                                size=(-1, 130))
         self.generateTip = wx.Button(self.mainPanel, -1, "Generate SuperToolTip")

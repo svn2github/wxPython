@@ -10,14 +10,13 @@ try:
 except:
     dirName = os.path.dirname(os.path.abspath(sys.argv[0]))
 
+bitmapDir = os.path.join(dirName, 'bitmaps')
 sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import speedmeter as SM
-    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.speedmeter as SM
-    bitmapDir = "agw/bitmaps/"
 
 
 #----------------------------------------------------------------------
@@ -182,7 +181,7 @@ class SpeedMeterDemo(wx.Panel):
         self.SpeedWindow3.SetHandColour(wx.Colour(255, 255, 0))
 
         # Define The Icon We Want
-        icon = wx.Icon(os.path.normpath(bitmapDir + "smfuel.ico"), wx.BITMAP_TYPE_ICO)
+        icon = wx.Icon(os.path.normpath(os.path.join(bitmapDir, "smfuel.ico")), wx.BITMAP_TYPE_ICO)
         icon.SetWidth(24)
         icon.SetHeight(24)
 
@@ -244,7 +243,7 @@ class SpeedMeterDemo(wx.Panel):
         self.SpeedWindow4.SetHandStyle("Arrow")
 
         # Define The Icon We Want
-        icon = wx.Icon(os.path.normpath(bitmapDir + "smtemp.ico"), wx.BITMAP_TYPE_ICO)
+        icon = wx.Icon(os.path.normpath(os.path.join(bitmapDir, "smtemp.ico")), wx.BITMAP_TYPE_ICO)
         icon.SetWidth(16)
         icon.SetHeight(16)
 
@@ -354,7 +353,7 @@ class SpeedMeterDemo(wx.Panel):
         # Set The Second Gradient Colour, Which Is The Colour Near The Center Of The SpeedMeter
         self.SpeedWindow6.SetSecondGradientColour(wx.WHITE)
 
-        icon = wx.Icon(os.path.normpath(bitmapDir + "smpi.ico"), wx.BITMAP_TYPE_ICO)
+        icon = wx.Icon(os.path.normpath(os.path.join(bitmapDir, "smpi.ico")), wx.BITMAP_TYPE_ICO)
         icon.SetHeight(12)
         icon.SetWidth(12)
         self.SpeedWindow6.SetMiddleIcon(icon)            

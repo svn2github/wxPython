@@ -32,6 +32,9 @@ class KnobCtrlDemo(wx.Panel):
 
     def LayoutItems(self):
 
+        leftbottomsizer_staticbox = wx.StaticBox(self.panel, -1, "Play With Me!")
+        lefttopsizer_staticbox = wx.StaticBox(self.panel, -1, "Change My Properties!")
+
         self.knob1 = KC.KnobCtrl(self.panel, -1, size=(100, 100))
         self.knob2 = KC.KnobCtrl(self.panel, -1, size=(100, 100))
 
@@ -55,9 +58,6 @@ class KnobCtrlDemo(wx.Panel):
 
         knobslider.SetValue(4)
         tickslider.SetValue(16)
-
-        leftbottomsizer_staticbox = wx.StaticBox(self.panel, -1, "Play With Me!")
-        lefttopsizer_staticbox = wx.StaticBox(self.panel, -1, "Change My Properties!")
 
         mainsizer = wx.BoxSizer(wx.VERTICAL)
         panelsizer = wx.BoxSizer(wx.HORIZONTAL)

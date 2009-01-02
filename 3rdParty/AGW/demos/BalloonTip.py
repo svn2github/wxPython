@@ -101,7 +101,7 @@ class BalloonTipDemo(wx.Frame):
 
         # Add A Slider            
         slider = wx.Slider(panel, -1, 25, 1, 100, 
-            style=wx.SL_HORIZONTAL | wx.SL_AUTOTICKS | wx.SL_LABELS)
+            style=wx.SL_HORIZONTAL | wx.SL_AUTOTICKS)# | wx.SL_LABELS)
         slider.SetTickFreq(5, 1)
         # Add Another TextCtrl
         textctrl2 = wx.TextCtrl(panel, -1, "Another TextCtrl")

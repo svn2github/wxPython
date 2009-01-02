@@ -10,16 +10,15 @@ try:
 except:
     dirName = os.path.dirname(os.path.abspath(sys.argv[0]))
 
+bitmapDir = os.path.join(dirName, 'bitmaps')
 sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import labelbook as LB
     from agw.fmresources import *
-    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.labelbook as LB
     from wx.lib.agw.fmresources import *
-    bitmapDir = "agw/bitmaps/"
 
 import images
 
@@ -41,17 +40,17 @@ class SamplePane(wx.Panel):
         static = wx.StaticText(self, -1, label, pos=(10, 10))        
 
 #----------------------------------------------------------------------
-            
+
 class LabelBookDemo(wx.Frame):
 
     def __init__(self, parent, log):
-                 
+
         wx.Frame.__init__(self, parent)
 
         self.initializing = True
 
         self.log = log
-        
+
         self.splitter = wx.SplitterWindow(self, -1, style=wx.SP_3D|wx.SP_BORDER|
                                           wx.SP_LIVE_UPDATE|wx.SP_3DSASH)
         self.mainpanel = wx.Panel(self.splitter, -1)
@@ -88,14 +87,14 @@ class LabelBookDemo(wx.Frame):
                                                   wx.BLACK, size=(-1, 20))
         self.hilite = csel.ColourSelect(self.leftpanel, -1, "Choose...",
                                         wx.Colour(191, 216, 216), size=(-1, 20))
-        
+
         self.SetProperties()
         self.CreateLabelBook()
         self.DoLayout()
 
         self.Bind(wx.EVT_RADIOBOX, self.OnBookType, self.labelbook)
         self.Bind(wx.EVT_RADIOBOX, self.OnBookOrientation, self.bookdirection)
-        
+
         self.Bind(wx.EVT_CHECKBOX, self.OnStyle, self.border)
         self.Bind(wx.EVT_CHECKBOX, self.OnStyle, self.onlytext)
         self.Bind(wx.EVT_CHECKBOX, self.OnStyle, self.onlyimages)
@@ -115,8 +114,8 @@ class LabelBookDemo(wx.Frame):
         self.Bind(LB.EVT_IMAGENOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         self.Bind(LB.EVT_IMAGENOTEBOOK_PAGE_CLOSING, self.OnPageClosing)
         self.Bind(LB.EVT_IMAGENOTEBOOK_PAGE_CLOSED, self.OnPageClosed)
-        
-        
+
+
         statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
         statusbar.SetStatusWidths([-2, -1])
         # statusbar fields
@@ -125,21 +124,18 @@ class LabelBookDemo(wx.Frame):
 
         for i in range(len(statusbar_fields)):
             statusbar.SetStatusText(statusbar_fields[i], i)
-            
+
         self.CreateMenu()
 
-        xvideo = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_X)
-        yvideo = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_Y)
-
-        self.SetSize((3*xvideo/4, 6*yvideo/7))
+        self.SetSize((800,700))
 
         self.SetIcon(images.Mondrian.GetIcon())  
         self.CenterOnScreen()
 
         self.initializing = False
         self.SendSizeEvent()
-        
-        
+
+
     def SetProperties(self):
 
         self.SetTitle("LabelBook & FlatImageBook wxPython Demo ;-)")
@@ -155,7 +151,7 @@ class LabelBookDemo(wx.Frame):
         sizer_3 = wx.StaticBoxSizer(self.sizer_3_staticbox, wx.VERTICAL)
         sizer_4 = wx.StaticBoxSizer(self.sizer_4_staticbox, wx.VERTICAL)
         gridsizer = wx.FlexGridSizer(6, 2, 5, 5)
-        
+
         sizer_2 = wx.BoxSizer(wx.VERTICAL)
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
         sizer_1.Add(self.labelbook, 0, wx.ALL, 3)
@@ -207,7 +203,7 @@ class LabelBookDemo(wx.Frame):
 
         self.splitter.SplitVertically(self.leftpanel, self.mainpanel, 200)
         mainsizer.Add(self.splitter, 1, wx.EXPAND, 0)
-        
+
         self.SetSizer(mainsizer)
         mainsizer.Layout()
         self.Layout()
@@ -224,7 +220,7 @@ class LabelBookDemo(wx.Frame):
             self.imagelist = self.CreateImageList()
 
         style = self.GetBookStyles()
-        
+
         if btype == 0: # it is a labelbook:
             self.book = LB.LabelBook(self.mainpanel, -1, style=style)
             if self.bookdirection.GetSelection() > 1:
@@ -271,13 +267,13 @@ class LabelBookDemo(wx.Frame):
         self.textcolour.Enable(not btype)
         self.hilite.Enable(not btype)
         self.tabsborder.Enable(not btype)
-        
+
 
     def GetBookStyles(self):
 
         style = INB_FIT_BUTTON
         style = self.GetBookOrientation(style)
-        
+
         if self.onlytext.IsEnabled() and self.onlytext.GetValue():
             style |= INB_SHOW_ONLY_TEXT
         if self.onlyimages.IsEnabled() and self.onlyimages.GetValue():
@@ -292,9 +288,9 @@ class LabelBookDemo(wx.Frame):
             style |= INB_GRADIENT_BACKGROUND
         if self.border.GetValue():
             style |= INB_BORDER
-            
+
         return style            
-        
+
 
     def CreateImageList(self):
 
@@ -303,10 +299,10 @@ class LabelBookDemo(wx.Frame):
             newImg = os.path.join(bitmapDir, "lb%s"%img)
             bmp = wx.Bitmap(newImg, wx.BITMAP_TYPE_PNG)
             imagelist.Add(bmp)
-        
+
         return imagelist
 
-        
+
     def GetBookOrientation(self, style):
 
         selection = self.bookdirection.GetSelection()
@@ -320,8 +316,8 @@ class LabelBookDemo(wx.Frame):
             style |= INB_BOTTOM
 
         return style
-    
-        
+
+
     def OnBookType(self, event):
 
         self.CreateLabelBook(event.GetInt())
@@ -332,7 +328,7 @@ class LabelBookDemo(wx.Frame):
 
         style = self.GetBookStyles()
         self.book.SetWindowStyleFlag(style)
-        
+
         event.Skip()
 
 
@@ -340,7 +336,7 @@ class LabelBookDemo(wx.Frame):
 
         style = self.GetBookStyles()
         self.book.SetWindowStyleFlag(style)
-        
+
         event.Skip()
 
 
@@ -348,7 +344,7 @@ class LabelBookDemo(wx.Frame):
 
         obj = event.GetId()
         colour = event.GetValue()
-        
+
         if obj == self.background.GetId():
             self.book.SetColour(INB_TAB_AREA_BACKGROUND_COLOR, colour)
         elif obj == self.activetab.GetId():
@@ -363,7 +359,7 @@ class LabelBookDemo(wx.Frame):
             self.book.SetColour(INB_HILITE_TAB_COLOR, colour)
 
         self.book.Refresh()
-        
+
 
     def SetUserColours(self):
 
@@ -411,7 +407,7 @@ class LabelBookDemo(wx.Frame):
         label = "This is panel number %d"%(pageCount+1)
         self.book.AddPage(SamplePane(self.book, _pageColours[indx], label),
                           "Added Page", True, indx)
-        
+
 
     def OnDeletePage(self, event):
 
@@ -421,10 +417,10 @@ class LabelBookDemo(wx.Frame):
         if dlg.ShowModal() != wx.ID_OK:
             dlg.Destroy()
             return
-        
+
         userString = dlg.GetValue()
         dlg.Destroy()
-        
+
         try:
             page = int(userString)
         except:
@@ -432,7 +428,7 @@ class LabelBookDemo(wx.Frame):
 
         if page < 0 or page > self.book.GetPageCount() - 1:
             return
-        
+
         self.book.DeletePage(page)
 
 
@@ -440,14 +436,14 @@ class LabelBookDemo(wx.Frame):
 
         self.book.DeleteAllPages()        
 
-        
+
     def CreateMenu(self):
 
         menuBar = wx.MenuBar(wx.MB_DOCKABLE)
         fileMenu = wx.Menu()
         editMenu = wx.Menu()
         helpMenu = wx.Menu()
-        
+
         item = wx.MenuItem(fileMenu, wx.ID_ANY, "E&xit")
         self.Bind(wx.EVT_MENU, self.OnQuit, item)
         fileMenu.AppendItem(item)
@@ -457,15 +453,15 @@ class LabelBookDemo(wx.Frame):
         editMenu.AppendItem(item)
 
         editMenu.AppendSeparator()
-        
+
         item = wx.MenuItem(editMenu, wx.ID_ANY, "Delete Page")
         self.Bind(wx.EVT_MENU, self.OnDeletePage, item)
         editMenu.AppendItem(item)
-        
+
         item = wx.MenuItem(editMenu, wx.ID_ANY, "Delete All Pages")
         self.Bind(wx.EVT_MENU, self.OnDeleteAllPages, item)
         editMenu.AppendItem(item)
-                        
+
         item = wx.MenuItem(helpMenu, wx.ID_ANY, "About")
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
         helpMenu.AppendItem(item)
@@ -479,23 +475,23 @@ class LabelBookDemo(wx.Frame):
 
     def OnQuit(self, event):
 
-    	self.Destroy()
+        self.Destroy()
 
 
     def OnAbout(self, event):
 
         msg = "This Is The About Dialog Of The LabelBook & FlatImageBook Demo.\n\n" + \
-              "Author: Andrea Gavana @ 03 Nov 2006\n\n" + \
-              "Please Report Any Bug/Requests Of Improvements\n" + \
-              "To Me At The Following Adresses:\n\n" + \
-              "andrea.gavana@gmail.com\n" + "gavana@kpo.kz\n\n" + \
-              "Welcome To wxPython " + wx.VERSION_STRING + "!!"
-              
+            "Author: Andrea Gavana @ 03 Nov 2006\n\n" + \
+            "Please Report Any Bug/Requests Of Improvements\n" + \
+            "To Me At The Following Adresses:\n\n" + \
+            "andrea.gavana@gmail.com\n" + "gavana@kpo.kz\n\n" + \
+            "Welcome To wxPython " + wx.VERSION_STRING + "!!"
+
         dlg = wx.MessageDialog(self, msg, "LabelBook wxPython Demo",
                                wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
-        
+
 
 #---------------------------------------------------------------------------
 

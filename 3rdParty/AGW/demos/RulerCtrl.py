@@ -27,7 +27,7 @@ if wx.Platform == '__WXMSW__':
               'other': 'Courier New',
               'size' : 9,
               'size2': 7,
-             }
+              }
 elif wx.Platform == '__WXMAC__':
     faces = { 'times': 'Times New Roman',
               'mono' : 'Courier New',
@@ -35,7 +35,7 @@ elif wx.Platform == '__WXMAC__':
               'other': 'Comic Sans MS',
               'size' : 12,
               'size2': 10,
-             }
+              }
 else:
     faces = { 'times': 'Times',
               'mono' : 'Courier',
@@ -43,11 +43,11 @@ else:
               'other': 'new century schoolbook',
               'size' : 12,
               'size2': 10,
-             }
+              }
 
 #----------------------------------------------------------------------
 class PythonSTC(stc.StyledTextCtrl):
-    
+
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=0):
 
@@ -130,7 +130,7 @@ class RulerCtrlDemo(wx.Frame):
 
         wx.Frame.__init__(self, parent)
         self.panel = wx.Panel(self, -1)
-        
+
         statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
         statusbar.SetStatusWidths([-2, -1])
         # statusbar fields
@@ -139,14 +139,14 @@ class RulerCtrlDemo(wx.Frame):
 
         for i in range(len(statusbar_fields)):
             statusbar.SetStatusText(statusbar_fields[i], i)
-            
+
         self.CreateMenu()
         self.LayoutItems()
 
         self.SetIcon(images.Mondrian.GetIcon())
         sizex = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_X)
         sizey = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_Y)
-        
+
         self.SetSize((3*sizex/4, 3*sizey/4))
         self.SendSizeEvent()
         self.CenterOnParent()
@@ -159,14 +159,17 @@ class RulerCtrlDemo(wx.Frame):
             fid = open("RulerCtrl.py", "rt")
         except:
             fid = open("agw/RulerCtrl.py", "rt")
-            
+
         text = fid.read()
         fid.close()
         self.stc.SetValue(text)
-        
+
         self.ruler1 = RC.RulerCtrl(self.panel, -1, orient=wx.HORIZONTAL, style=wx.SUNKEN_BORDER)
         self.ruler2 = RC.RulerCtrl(self.panel, -1, orient=wx.VERTICAL, style=wx.SUNKEN_BORDER)
         self.ruler3 = RC.RulerCtrl(self.panel, -1, orient=wx.HORIZONTAL)
+
+        self.rightbottomsizer_staticbox1 = wx.StaticBox(self.panel, -1, "Options")
+        self.rightbottomsizer_staticbox2 = wx.StaticBox(self.panel, -1, "Messages")
 
         self.rulerformat = wx.ComboBox(self.panel, -1, choices=["Integer", "Real", "Time", "LinearDB"],
                                        style=wx.CB_DROPDOWN|wx.CB_READONLY)
@@ -221,16 +224,13 @@ class RulerCtrlDemo(wx.Frame):
 
         self.ruler1.SetDrawingParent(self.stc)
         self.ruler2.SetDrawingParent(self.stc)
-        
+
 
     def DoLayout(self):
 
-        rightbottomsizer_staticbox1 = wx.StaticBox(self.panel, -1, "Options")
-        rightbottomsizer_staticbox2 = wx.StaticBox(self.panel, -1, "Messages")
+        bottomsizer1 = wx.StaticBoxSizer(self.rightbottomsizer_staticbox1, wx.VERTICAL)
+        bottomsizer2 = wx.StaticBoxSizer(self.rightbottomsizer_staticbox2, wx.VERTICAL)
 
-        bottomsizer1 = wx.StaticBoxSizer(rightbottomsizer_staticbox1, wx.VERTICAL)
-        bottomsizer2 = wx.StaticBoxSizer(rightbottomsizer_staticbox2, wx.VERTICAL)
-        
         mainsizer = wx.BoxSizer(wx.HORIZONTAL)
         bottomrightsizer = wx.BoxSizer(wx.VERTICAL)
         gridsizer = wx.FlexGridSizer(8, 2, 10, 10)
@@ -283,7 +283,7 @@ class RulerCtrlDemo(wx.Frame):
         bottomsizer2.Add(self.messages, 1, wx.EXPAND | wx.ALL, 5)
         bottomrightsizer.Add(bottomsizer2, 1, wx.EXPAND|wx.LEFT|wx.RIGHT, 20)
         bottomrightsizer.Add((0, 10))
-        
+
         mainsizer.Add(bottomrightsizer, 2, wx.EXPAND, 0)
         self.panel.SetSizer(mainsizer)
         mainsizer.Fit(self.panel)
@@ -307,7 +307,7 @@ class RulerCtrlDemo(wx.Frame):
         self.Write("New Indicator Value Is: %0.2f"%event.GetValue())
         event.Skip()
 
-        
+
     def OnSize(self, event):
 
         event.Skip()
@@ -320,15 +320,15 @@ class RulerCtrlDemo(wx.Frame):
 
         self.messages.AppendText(text + "\n")
 
-        
+
     def SizeRulers(self):
-        
+
         dc = wx.MemoryDC()        
         width, height = self.stc.GetSize()
         dc.SelectObject(wx.EmptyBitmap(width, height))
         widthMM, heightMM = dc.GetSizeMM()
         dc.SelectObject(wx.NullBitmap)
-        
+
         self.ruler1.SetRange(0, widthMM/10)
         self.ruler2.SetRange(0, heightMM/10)
 
@@ -383,11 +383,11 @@ class RulerCtrlDemo(wx.Frame):
         menuBar = wx.MenuBar(wx.MB_DOCKABLE)
         fileMenu = wx.Menu()
         helpMenu = wx.Menu()
-        
+
         item = wx.MenuItem(fileMenu, wx.ID_ANY, "E&xit")
         self.Bind(wx.EVT_MENU, self.OnQuit, item)
         fileMenu.AppendItem(item)
-                
+
         item = wx.MenuItem(helpMenu, wx.ID_ANY, "About")
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
         helpMenu.AppendItem(item)
@@ -400,18 +400,18 @@ class RulerCtrlDemo(wx.Frame):
 
     def OnQuit(self, event):
 
-    	self.Destroy()
+        self.Destroy()
 
 
     def OnAbout(self, event):
 
         msg = "This Is The About Dialog Of The RulerCtrl Demo.\n\n" + \
-              "Author: Andrea Gavana @ 03 Nov 2006\n\n" + \
-              "Please Report Any Bug/Requests Of Improvements\n" + \
-              "To Me At The Following Adresses:\n\n" + \
-              "andrea.gavana@gmail.com\n" + "gavana@kpo.kz\n\n" + \
-              "Welcome To wxPython " + wx.VERSION_STRING + "!!"
-              
+            "Author: Andrea Gavana @ 03 Nov 2006\n\n" + \
+            "Please Report Any Bug/Requests Of Improvements\n" + \
+            "To Me At The Following Adresses:\n\n" + \
+            "andrea.gavana@gmail.com\n" + "gavana@kpo.kz\n\n" + \
+            "Welcome To wxPython " + wx.VERSION_STRING + "!!"
+
         dlg = wx.MessageDialog(self, msg, "RulerCtrl wxPython Demo",
                                wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()

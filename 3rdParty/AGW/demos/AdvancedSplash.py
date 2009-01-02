@@ -9,15 +9,15 @@ try:
 except:
     dirName = os.path.dirname(os.path.abspath(sys.argv[0]))
 
+bitmapDir = os.path.join(dirName, 'bitmaps')
 sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import advancedsplash as AS
-    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.advancedsplash as AS
-    bitmapDir = "agw/bitmaps/"
 
+#----------------------------------------------------------------------
 
 class TestPanel(wx.Panel):
     def __init__(self, parent, log):
@@ -29,8 +29,8 @@ class TestPanel(wx.Panel):
 
 
     def OnButton(self, evt):
-
-        bitmap = wx.Bitmap(os.path.normpath(bitmapDir+"advancedsplash.png"), wx.BITMAP_TYPE_PNG)
+        pn = os.path.normpath(os.path.join(bitmapDir, "advancedsplash.png"))
+        bitmap = wx.Bitmap(pn, wx.BITMAP_TYPE_PNG)
         shadow = wx.WHITE
         
         frame = AS.AdvancedSplash(self, bitmap=bitmap, timeout=5000,

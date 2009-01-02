@@ -16,6 +16,9 @@ except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.floatspin as FS
 
 
+#----------------------------------------------------------------------
+
+
 class FloatSpinDemo(wx.Panel):
 
     def __init__(self, parent, log):

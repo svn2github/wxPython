@@ -9,6 +9,7 @@ try:
 except:
     dirName = os.path.dirname(os.path.abspath(sys.argv[0]))
 
+bitmapDir = os.path.join(dirName, 'bitmaps')
 sys.path.append(os.path.split(dirName)[0])
 
 try:
@@ -16,13 +17,11 @@ try:
     from agw.shapedbutton import SButton, SBitmapButton
     from agw.shapedbutton import SBitmapToggleButton, SBitmapTextToggleButton
     docs = agw.shapedbutton.__doc__
-    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.shapedbutton
     from wx.lib.agw.shapedbutton import SButton, SBitmapButton
     from wx.lib.agw.shapedbutton import SBitmapToggleButton, SBitmapTextToggleButton
     docs = wx.lib.agw.shapedbutton.__doc__
-    bitmapDir = "agw/bitmaps/"
 
 import images
 

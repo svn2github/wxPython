@@ -9,14 +9,13 @@ try:
 except:
     dirName = os.path.dirname(os.path.abspath(sys.argv[0]))
 
+bitmapDir = os.path.join(dirName, 'bitmaps')
 sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import customtreectrl as CT
-    bitmapDir = "bitmaps/"
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.customtreectrl as CT
-    bitmapDir = "agw/bitmaps/"
 
 import images
 
@@ -329,8 +328,8 @@ class TreeButtonsDialog(wx.Dialog):
 
         self.listicons = wx.ListBox(self, -1, choices=["Set 1", "Set 2", "Set 3", "Set 4", "Set 5"], style=wx.LB_SINGLE)
 
-        bitmap_plus = os.path.normpath(bitmapDir+"plus" + str(oldicons+1) + ".ico")
-        bitmap_minus = os.path.normpath(bitmapDir+"minus" + str(oldicons+1) + ".ico")
+        bitmap_plus = os.path.normpath(os.path.join(bitmapDir, "plus" + str(oldicons+1) + ".ico"))
+        bitmap_minus = os.path.normpath(os.path.join(bitmapDir, "minus" + str(oldicons+1) + ".ico"))
 
         bitmap_plus = wx.Image(bitmap_plus, wx.BITMAP_TYPE_ICO)
         bitmap_plus.Rescale(24, 24)
@@ -400,8 +399,8 @@ class TreeButtonsDialog(wx.Dialog):
     def OnListBox(self, event):
 
         selection = self.listicons.GetSelection()
-        bitmap_plus = os.path.normpath(bitmapDir+"plus" + str(selection+1) + ".ico")
-        bitmap_minus = os.path.normpath(bitmapDir+"minus" + str(selection+1) + ".ico")
+        bitmap_plus = os.path.normpath(os.path.join(bitmapDir, "plus" + str(selection+1) + ".ico"))
+        bitmap_minus = os.path.normpath(os.path.join(bitmapDir, "minus" + str(selection+1) + ".ico"))
 
         bitmap_plus = wx.Image(bitmap_plus, wx.BITMAP_TYPE_ICO)
         bitmap_plus.Rescale(24, 24)
@@ -444,10 +443,10 @@ class CheckDialog(wx.Dialog):
 
         self.listicons = wx.ListBox(self, -1, choices=["Set 1", "Set 2"], style=wx.LB_SINGLE)
 
-        bitmap_check = wx.Bitmap(os.path.normpath(bitmapDir+"checked.ico"), wx.BITMAP_TYPE_ICO)
-        bitmap_uncheck = wx.Bitmap(os.path.normpath(bitmapDir+"notchecked.ico"), wx.BITMAP_TYPE_ICO)
-        bitmap_flag = wx.Bitmap(os.path.normpath(bitmapDir+"flagged.ico"), wx.BITMAP_TYPE_ICO)
-        bitmap_unflag = wx.Bitmap(os.path.normpath(bitmapDir+"notflagged.ico"), wx.BITMAP_TYPE_ICO)
+        bitmap_check = wx.Bitmap(os.path.normpath(os.path.join(bitmapDir, "checked.ico")), wx.BITMAP_TYPE_ICO)
+        bitmap_uncheck = wx.Bitmap(os.path.normpath(os.path.join(bitmapDir, "notchecked.ico")), wx.BITMAP_TYPE_ICO)
+        bitmap_flag = wx.Bitmap(os.path.normpath(os.path.join(bitmapDir, "flagged.ico")), wx.BITMAP_TYPE_ICO)
+        bitmap_unflag = wx.Bitmap(os.path.normpath(os.path.join(bitmapDir, "notflagged.ico")), wx.BITMAP_TYPE_ICO)
 
         self.bitmap_check = wx.StaticBitmap(self, -1, bitmap_check)
         self.bitmap_uncheck = wx.StaticBitmap(self, -1, bitmap_uncheck)
@@ -527,15 +526,15 @@ class CheckDialog(wx.Dialog):
         selection = self.listicons.GetSelection()
 
         if selection == 0:
-            bitmap_check = os.path.normpath(bitmapDir+"checked.ico")
-            bitmap_uncheck = os.path.normpath(bitmapDir+"notchecked.ico")
-            bitmap_flag = os.path.normpath(bitmapDir+"flagged.ico")
-            bitmap_unflag = os.path.normpath(bitmapDir+"notflagged.ico")
+            bitmap_check = os.path.normpath(os.path.join(bitmapDir, "checked.ico"))
+            bitmap_uncheck = os.path.normpath(os.path.join(bitmapDir, "notchecked.ico"))
+            bitmap_flag = os.path.normpath(os.path.join(bitmapDir, "flagged.ico"))
+            bitmap_unflag = os.path.normpath(os.path.join(bitmapDir, "notflagged.ico"))
         else:
-            bitmap_check = os.path.normpath(bitmapDir+"aquachecked.ico")
-            bitmap_uncheck = os.path.normpath(bitmapDir+"aquanotchecked.ico")
-            bitmap_flag = os.path.normpath(bitmapDir+"aquaflagged.ico")
-            bitmap_unflag = os.path.normpath(bitmapDir+"aquanotflagged.ico")
+            bitmap_check = os.path.normpath(os.path.join(bitmapDir, "aquachecked.ico"))
+            bitmap_uncheck = os.path.normpath(os.path.join(bitmapDir, "aquanotchecked.ico"))
+            bitmap_flag = os.path.normpath(os.path.join(bitmapDir, "aquaflagged.ico"))
+            bitmap_unflag = os.path.normpath(os.path.join(bitmapDir, "aquanotflagged.ico"))
 
         bitmap_check = wx.Bitmap(bitmap_check, wx.BITMAP_TYPE_ICO)
         bitmap_uncheck = wx.Bitmap(bitmap_uncheck, wx.BITMAP_TYPE_ICO)
@@ -1066,8 +1065,8 @@ class CustomTreeCtrlDemo(wx.Panel):
 
     def SetTreeButtons(self, selection):
 
-        bitmap_plus = os.path.normpath(bitmapDir+"plus" + str(selection+1) + ".ico")
-        bitmap_minus = os.path.normpath(bitmapDir+"minus" + str(selection+1) + ".ico")
+        bitmap_plus = os.path.normpath(os.path.join(bitmapDir, "plus" + str(selection+1) + ".ico"))
+        bitmap_minus = os.path.normpath(os.path.join(bitmapDir, "minus" + str(selection+1) + ".ico"))
         
         bitmap = wx.Bitmap(bitmap_plus, wx.BITMAP_TYPE_ICO)
         width = bitmap.GetWidth()
@@ -1088,10 +1087,10 @@ class CustomTreeCtrlDemo(wx.Panel):
         if selection == 0:
             self.tree.SetImageListCheck(13, 13)
         else:
-            bitmap_check = os.path.normpath(bitmapDir+"aquachecked.ico")
-            bitmap_uncheck = os.path.normpath(bitmapDir+"aquanotchecked.ico")
-            bitmap_flag = os.path.normpath(bitmapDir+"aquaflagged.ico")
-            bitmap_unflag = os.path.normpath(bitmapDir+"aquanotflagged.ico")
+            bitmap_check = os.path.normpath(os.path.join(bitmapDir, "aquachecked.ico"))
+            bitmap_uncheck = os.path.normpath(os.path.join(bitmapDir, "aquanotchecked.ico"))
+            bitmap_flag = os.path.normpath(os.path.join(bitmapDir, "aquaflagged.ico"))
+            bitmap_unflag = os.path.normpath(os.path.join(bitmapDir, "aquanotflagged.ico"))
 
             il = wx.ImageList(16, 16)
         
