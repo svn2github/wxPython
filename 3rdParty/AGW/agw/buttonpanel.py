@@ -1852,6 +1852,7 @@ class ButtonPanel(wx.PyPanel):
 
             # Fire a button click event 
             btnEvent = wx.CommandEvent(wx.wxEVT_COMMAND_BUTTON_CLICKED, hit.GetId())
+            btnEvent.SetEventObject(hit)
             self.GetEventHandler().ProcessEvent(btnEvent) 
             
 
