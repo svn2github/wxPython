@@ -725,16 +725,21 @@ class ToasterBoxWindow(wx.Frame):
 
 
    def DrawText(self):
+      
        if self._staticbitmap is not None:
            dc = wx.ClientDC(self._staticbitmap)
        else:
            dc = wx.ClientDC(self)
+           
        dc.SetFont(self._textfont)
 
        if not hasattr(self, "text_coords"):
            self._getTextCoords(dc)
 
+       fg = dc.GetTextForeground()
+       dc.SetTextForeground(self._textcolour)
        dc.DrawTextList(*self.text_coords)
+       dc.SetTextForeground(fg)
 
 
    def _getTextCoords(self, dc):
