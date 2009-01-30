@@ -1,5 +1,6 @@
 import wx
 import wx.lib.buttons as buttons
+import wx.lib.scrolledpanel as scrolled
 
 import os
 import sys
@@ -25,7 +26,7 @@ class SuperToolTipDemo(wx.Frame):
     def __init__(self, parent):
 
         wx.Frame.__init__(self, parent, style=wx.DEFAULT_FRAME_STYLE)
-        self.mainPanel = wx.Panel(self, -1)
+        self.mainPanel = scrolled.ScrolledPanel(self, -1)
 
         self.headerSizer_staticbox = wx.StaticBox(self.mainPanel, -1, "Header")
         self.bodySizer_staticbox = wx.StaticBox(self.mainPanel, -1, "Message Body")
@@ -77,6 +78,7 @@ class SuperToolTipDemo(wx.Frame):
         self.CreateMenuBar()
         self.SetProperties()
         self.DoLayout()
+        self.mainPanel.SetupScrolling()
 
         self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioColours, self.stylesRadio)
         self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioColours, self.customStyles)

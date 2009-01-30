@@ -1,6 +1,7 @@
 # Main ToasterBoxDemo
 
 import wx
+import wx.lib.scrolledpanel as scrolled
 
 import os
 import sys
@@ -32,15 +33,14 @@ from wx.lib.ticker import Ticker
 #    ToasterBox acts.
 # ------------------------------------------------------------------------------ #
 
-class ToasterBoxDemo(wx.Panel):
+class ToasterBoxDemo(scrolled.ScrolledPanel):
 
     def __init__(self, parent, log):
 
-        wx.Panel.__init__(self, parent)
+        scrolled.ScrolledPanel.__init__(self, parent)
 
         self.log = log
         
-        pn = wx.Panel(self, -1)
         mainSz = wx.BoxSizer(wx.VERTICAL)
 
         horSz0 = wx.BoxSizer(wx.HORIZONTAL)
@@ -48,7 +48,7 @@ class ToasterBoxDemo(wx.Panel):
         mainSz.Add(horSz0, 1, wx.EXPAND | wx.BOTTOM, 7)
 
         sampleList = [" ToasterBox TB_SIMPLE ", " ToasterBox TB_COMPLEX "]
-        rb = wx.RadioBox(pn, -1, "ToasterBox Style", wx.DefaultPosition,
+        rb = wx.RadioBox(self, -1, "ToasterBox Style", wx.DefaultPosition,
                          wx.DefaultSize, sampleList, 2, wx.RA_SPECIFY_COLS)
 
         horSz0.Add(rb, 1, 0, 5)        
@@ -59,11 +59,11 @@ class ToasterBoxDemo(wx.Panel):
         horSz1 = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz1, 1, wx.EXPAND | wx.ALL, 5)
         
-        statTxt1 = wx.StaticText(pn, -1, "Popup position x/y")
+        statTxt1 = wx.StaticText(self, -1, "Popup position x/y")
         horSz1.Add(statTxt1, 3)
-        txtCtrl1 = wx.TextCtrl(pn, -1, "500")
+        txtCtrl1 = wx.TextCtrl(self, -1, "500")
         horSz1.Add(txtCtrl1, 1)
-        txtCtrl1b = wx.TextCtrl(pn, -1, "500")
+        txtCtrl1b = wx.TextCtrl(self, -1, "500")
         horSz1.Add(txtCtrl1b, 1)
 
         self.posx = txtCtrl1
@@ -72,11 +72,11 @@ class ToasterBoxDemo(wx.Panel):
         horSz2 = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz2, 1, wx.EXPAND | wx.ALL, 5)
         
-        statTxt2 = wx.StaticText(pn, -1, "Popup size x/y")
+        statTxt2 = wx.StaticText(self, -1, "Popup size x/y")
         horSz2.Add(statTxt2, 3)
-        txtCtrl2 = wx.TextCtrl(pn, -1, "210")
+        txtCtrl2 = wx.TextCtrl(self, -1, "210")
         horSz2.Add(txtCtrl2, 1)
-        txtCtrl3 = wx.TextCtrl(pn, -1, "130")
+        txtCtrl3 = wx.TextCtrl(self, -1, "130")
         horSz2.Add(txtCtrl3, 1)
 
         self.sizex = txtCtrl2
@@ -85,9 +85,9 @@ class ToasterBoxDemo(wx.Panel):
         horSz3 = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz3, 1, wx.EXPAND | wx.ALL, 5)
         
-        statTxt3 = wx.StaticText(pn, -1, "Popup linger")
+        statTxt3 = wx.StaticText(self, -1, "Popup linger")
         horSz3.Add(statTxt3, 3)
-        txtCtrl4 = wx.TextCtrl(pn, -1, "4000")
+        txtCtrl4 = wx.TextCtrl(self, -1, "4000")
         helpstr = "How long the popup will stay\naround after it is launched"
         txtCtrl4.SetToolTip(wx.ToolTip(helpstr))
         horSz3.Add(txtCtrl4, 1)
@@ -96,9 +96,9 @@ class ToasterBoxDemo(wx.Panel):
 
         horSz3b = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz3b, 1, wx.EXPAND | wx.ALL, 5)
-        statTxt3b = wx.StaticText(pn, -1, "Popup scroll speed")
+        statTxt3b = wx.StaticText(self, -1, "Popup scroll speed")
         horSz3b.Add(statTxt3b, 3)
-        txtCtrl4b = wx.TextCtrl(pn, -1, "8")
+        txtCtrl4b = wx.TextCtrl(self, -1, "8")
         helpstr = "How long it takes the window to \"fade\" in and out"
         txtCtrl4b.SetToolTip(wx.ToolTip(helpstr))
         horSz3b.Add(txtCtrl4b, 2)
@@ -107,9 +107,9 @@ class ToasterBoxDemo(wx.Panel):
 
         horSz3c = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz3c, 1, wx.EXPAND | wx.ALL, 5)  
-        statTxt3c = wx.StaticText(pn, -1, "Popup background picture")
+        statTxt3c = wx.StaticText(self, -1, "Popup background picture")
         horSz3c.Add(statTxt3c, 3)
-        txtCtrl4c = wx.FilePickerCtrl(pn, -1, style=wx.FLP_USE_TEXTCTRL|wx.FLP_OPEN)
+        txtCtrl4c = wx.FilePickerCtrl(self, -1, style=wx.FLP_USE_TEXTCTRL|wx.FLP_OPEN)
         horSz3c.Add(txtCtrl4c, 2)
 
         self.backimage = txtCtrl4c
@@ -121,9 +121,9 @@ class ToasterBoxDemo(wx.Panel):
         
         horSz4 = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz4, 1, wx.EXPAND | wx.ALL, 5)
-        statTxt4 = wx.StaticText(pn, -1, "Popup text")
+        statTxt4 = wx.StaticText(self, -1, "Popup text")
         horSz4.Add(statTxt4, 1)
-        txtCtrl5 = wx.TextCtrl(pn, -1, popupText1)
+        txtCtrl5 = wx.TextCtrl(self, -1, popupText1)
         horSz4.Add(txtCtrl5, 2)
 
         self.showntext = txtCtrl5
@@ -133,41 +133,41 @@ class ToasterBoxDemo(wx.Panel):
 
         horSz5 = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz5, 1, wx.EXPAND | wx.ALL, 5)
-        self.colButton1 = wx.Button(pn, -1, "Set BG Color")
+        self.colButton1 = wx.Button(self, -1, "Set BG Color")
         self.colButton1.SetToolTip(wx.ToolTip("Set the ToasterBox background colour"))
         self.colButton1.Bind(wx.EVT_BUTTON, self.SetColors)
         horSz5.Add(self.colButton1, 1, 0, 5)
-        self.colButton2 = wx.Button(pn, -1, "Set FG Color")
+        self.colButton2 = wx.Button(self, -1, "Set FG Color")
         self.colButton2.SetToolTip(wx.ToolTip("Set the ToasterBox text colour"))
         self.colButton2.Bind(wx.EVT_BUTTON, self.SetColors2)
         horSz5.Add(self.colButton2, 1, 0, 5)
 
         horSz6 = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz6, 1, wx.EXPAND | wx.ALL, 5)
-        statTxt6 = wx.StaticText(pn, -1, "Popup text font")
+        statTxt6 = wx.StaticText(self, -1, "Popup text font")
         horSz6.Add(statTxt6, 1, 0, 5)
-        fontbutton = wx.Button(pn, -1, "Select font")
+        fontbutton = wx.Button(self, -1, "Select font")
         horSz6.Add(fontbutton, 1, 0, 5)
 
         horSz7 = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz7, 1, wx.EXPAND | wx.ALL, 5)
-        self.checkcaption = wx.CheckBox(pn, -1, "Show with caption")
+        self.checkcaption = wx.CheckBox(self, -1, "Show with caption")
         horSz7.Add(self.checkcaption, 1, 0, 5)
-        self.captiontext = wx.TextCtrl(pn, -1, "ToasterBox title!")
+        self.captiontext = wx.TextCtrl(self, -1, "ToasterBox title!")
         horSz7.Add(self.captiontext, 1, 0, 5)
         self.captiontext.Enable(False)
         self.checkcaption.Bind(wx.EVT_CHECKBOX, self.OnCheckCaption)
 
         horSz8 = wx.BoxSizer(wx.VERTICAL)
         mainSz.Add(horSz8, 1, wx.EXPAND | wx.ALL, 5)
-        self.radiotime = wx.RadioButton(pn, -1, "Hide by time", style=wx.RB_GROUP)
+        self.radiotime = wx.RadioButton(self, -1, "Hide by time", style=wx.RB_GROUP)
         horSz8.Add(self.radiotime, 1, 0, 5)
-        self.radioclick = wx.RadioButton(pn, -1, "Hide by click")
+        self.radioclick = wx.RadioButton(self, -1, "Hide by click")
         horSz8.Add(self.radioclick, 1, 0, 5)
         
         horSz9 = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz9, 1, wx.EXPAND | wx.ALL, 5)
-        goButton = wx.Button(pn, -1, "Show ToasterBox!")
+        goButton = wx.Button(self, -1, "Show ToasterBox!")
         goButton.SetToolTip(wx.ToolTip("Launch ToasterBox. You can click more than once!"))
         horSz9.Add((1,0), 1)
         horSz9.Add(goButton, 2, 0, 5)
@@ -183,9 +183,10 @@ class ToasterBoxDemo(wx.Panel):
         
         self.curFont = self.GetFont()
         
-        pn.SetAutoLayout(True)
-        pn.SetSizer(mainSz)
-        pn.Fit()
+        self.SetAutoLayout(True)
+        self.SetSizer(mainSz)
+        self.Fit()
+        self.SetupScrolling()
 
 
     def SetColors(self, event):
