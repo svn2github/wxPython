@@ -99,6 +99,7 @@ class SuperToolTipDemo(wx.Frame):
         self.enableWidgets[self.stylesRadio] = [self.stylesCombo, self.topColourPicker,
                                                 self.middleColourPicker, self.bottomColourPicker]
 
+        self.SetSize((700, 600))
         self.CenterOnScreen()
         self.Show()
 
