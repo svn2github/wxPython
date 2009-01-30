@@ -2,7 +2,7 @@
 # GRADIENTBUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 07 October 2008, 22.00 GMT
+# Latest Revision: 30 January 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -45,8 +45,8 @@ GradientButton has been tested on the following platforms:
   * Windows (Windows XP).
 
 
-Latest Revision: Andrea Gavana @ 07 October 2008, 22.00 GMT
-Version 0.1
+Latest Revision: Andrea Gavana @ 30 January 2009, 09.00 GMT
+Version 0.2
 
 """
 
@@ -122,8 +122,7 @@ class GradientButton(wx.PyControl):
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
 
-        if "__WXMSW__" in wx.PlatformInfo:
-            self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDown)
+        self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDown)
 
         self._mouseAction = None
         self._bitmap = bitmap

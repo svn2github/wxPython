@@ -2,7 +2,7 @@
 # SUPERTOOLTIP wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 07 October 2008, 22.00 GMT
+# Latest Revision: 30 January 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -55,8 +55,8 @@ SuperToolTip has been tested on the following platforms:
   * Windows (Windows XP).
 
 
-Latest Revision: Andrea Gavana @ 07 October 2008, 22.00 GMT
-Version 0.1
+Latest Revision: Andrea Gavana @ 30 January 2009, 09.00 GMT
+Version 0.2
 
 """
 
@@ -702,6 +702,9 @@ class SuperToolTip(object):
         self.SetFooterBitmap(footerBmp)
         self._dropShadow = False
         self._useFade = False
+
+        self._topLine = False
+        self._bottomLine = False
 
         self.InitFont()
         
