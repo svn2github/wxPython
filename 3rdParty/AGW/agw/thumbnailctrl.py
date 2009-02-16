@@ -354,7 +354,7 @@ class Thumb(object):
         """ Sets thumb file name. """
         
         self._filename = filename
-        self._bitmap = wx.EmptyBitmap(-1, -1)
+        self._bitmap = wx.EmptyBitmap(1, 1)
         
 
     def GetId(self):
