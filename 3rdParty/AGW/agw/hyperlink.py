@@ -260,7 +260,7 @@ class HyperLinkCtrl(StaticText):
                     menuPopUp = wx.Menu("", wx.MENU_TEAROFF)
                     menuPopUp.Append(wxHYPERLINKS_POPUP_COPY, "Copy HyperLink")
                     self.Bind(wx.EVT_MENU, self.OnPopUpCopy, id=wxHYPERLINKS_POPUP_COPY)
-                    self.PopupMenu(menuPopUp, wx.Point(event.m_x, event.m_y))
+                    self.PopupMenu(menuPopUp, wx.Point(event.X, event.Y))
                     menuPopUp.Destroy()
                     self.Unbind(wx.EVT_MENU, id=wxHYPERLINKS_POPUP_COPY)
                     

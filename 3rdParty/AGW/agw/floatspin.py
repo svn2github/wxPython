@@ -386,11 +386,11 @@ class FloatSpin(wx.PyControl):
         """ Handles the wx.EVT_LEFT_DOWN event for the underline wx.SpinButton. """
 
         modifier = FixedPoint(str(1.0), 20)
-        if event.m_shiftDown:
+        if event.ShiftDown():
             modifier = modifier*2.0
-        if event.m_controlDown:
+        if event.ControlDown():
             modifier = modifier*10.0
-        if event.m_altDown:
+        if event.AltDown():
             modifier = modifier*100.0
 
         self._spinmodifier = modifier
@@ -435,11 +435,11 @@ class FloatSpin(wx.PyControl):
         """ Handles the wx.EVT_CHAR for the underline wx.TextCtrl. """
 
         modifier = FixedPoint(str(1.0), 20)
-        if event.m_shiftDown:
+        if event.ShiftDown():
             modifier = modifier*2.0
-        if event.m_controlDown:
+        if event.ControlDown():
             modifier = modifier*10.0
-        if event.m_altDown:
+        if event.AltDown():
             modifier = modifier*100.0
 
         keycode = event.GetKeyCode()
@@ -507,11 +507,11 @@ class FloatSpin(wx.PyControl):
         """ Handles the wx.EVT_MOUSEWHEEL for FloatSpin. """
 
         modifier = FixedPoint(str(1.0), 20)
-        if event.m_shiftDown:
+        if event.ShiftDown():
             modifier = modifier*2.0
-        if event.m_controlDown:
+        if event.ControlDown():
             modifier = modifier*10.0
-        if event.m_altDown:
+        if event.AltDown():
             modifier = modifier*100.0
 
         if self._textctrl and self._textctrl.IsModified():
