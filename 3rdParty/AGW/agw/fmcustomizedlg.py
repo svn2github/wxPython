@@ -380,7 +380,7 @@ class FMCustomizeDlg(wx.Dialog):
     
         id = event.GetInt()
         checked = self._checkListMenus.IsChecked(id)
-        menuName = self._checkListMenus.GetString(id).encode()
+        menuName = self._checkListMenus.GetString(id)
         menu = None
         mb = self.GetParent()
 
