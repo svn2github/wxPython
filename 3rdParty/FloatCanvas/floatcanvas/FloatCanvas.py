@@ -285,14 +285,14 @@ class DrawObject:
         self.HitAble = False
 
 
-    def SetBrush(self,FillColor,FillStyle):
+    def SetBrush(self, FillColor, FillStyle):
         if FillColor is None or FillStyle is None:
             self.Brush = wx.TRANSPARENT_BRUSH
             ##fixme: should I really re-set the style?
             self.FillStyle = "Transparent"
         else:
             self.Brush = self.BrushList.setdefault( (FillColor,FillStyle),  wx.Brush(FillColor,self.FillStyleList[FillStyle] ) )
-
+            #print "Setting Brush, BrushList length:", len(self.BrushList)
     def SetPen(self,LineColor,LineStyle,LineWidth):
         if (LineColor is None) or (LineStyle is None):
             self.Pen = wx.TRANSPARENT_PEN

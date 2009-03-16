@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 
 """
 A simple demo that shows how to use FloatCanvas to draw rectangles on the screen

@@ -87,6 +87,27 @@ class BBox(N.ndarray):
         else:
             return False
     
+    def PointInside(self, Point):
+        """
+        Inside(BB):
+
+        Tests if the given Point is entirely inside this one.
+
+        Returns True if it is entirely inside, or touching the
+        border.
+
+        Returns False otherwise
+        
+        Point is any length-2 sequence (tuple, list, array) or two numbers
+        """
+        if Point[0] >= self[0,0] and \
+               Point[0] <= self[1,0] and \
+               Point[1] <= self[1,1] and \
+               Point[1] >= self[0,1]:
+            return True
+        else:
+            return False
+    
     def Merge(self, BB):
         """
         Joins this bounding box with the one passed in, maybe making this one bigger
