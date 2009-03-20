@@ -19,6 +19,7 @@ Version 0.1.
 """
 
 # Start the imports...
+import wx
 from wx.lib.embeddedimage import PyEmbeddedImage
 
 # ========================================
@@ -68,15 +69,18 @@ def GetRecentAdditions():
 
     # For the moment, we add all the widgets in AGW as
     # Recent Additions
-    recentAdditions = ['AdvancedSplash', 'AquaButton', 'BalloonTip',
-                       'ButtonPanel', 'CubeColourDialog', 'CustomTreeCtrl',
-                       'FlatMenu', 'FlatNotebook', 'FloatSpin',
-                       'FoldPanelBar', 'FourWaySplitter', 'GenericMessageDialog',
-                       'GradientButton', 'HyperLinkCtrl', 'HyperTreeList',
-                       'KnobCtrl', 'LabelBook', 'MultiDirDialog',
-                       'PeakMeter', 'PieCtrl', 'PyCollapsiblePane', 'PyProgress',
-                       'RulerCtrl', 'ShapedButton', 'SpeedMeter', 'SuperToolTip',
-                       'ThumbnailCtrl', 'ToasterBox']
+    if wx.VERSION < (2, 9):
+        recentAdditions = ['AdvancedSplash', 'AquaButton', 'BalloonTip',
+                           'ButtonPanel', 'CubeColourDialog', 'CustomTreeCtrl',
+                           'FlatMenu', 'FlatNotebook', 'FloatSpin',
+                           'FoldPanelBar', 'FourWaySplitter', 'GenericMessageDialog',
+                           'GradientButton', 'HyperLinkCtrl', 'HyperTreeList',
+                           'KnobCtrl', 'LabelBook', 'MultiDirDialog',
+                           'PeakMeter', 'PieCtrl', 'PyCollapsiblePane', 'PyProgress',
+                           'RulerCtrl', 'ShapedButton', 'SpeedMeter', 'SuperToolTip',
+                           'ThumbnailCtrl', 'ToasterBox']
+    else:
+        recentAdditions = []
 
     # Return the Recent Additions for AGW    
     return recentAdditions
