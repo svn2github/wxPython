@@ -13,10 +13,14 @@ this module returns the following information:
                        
 These meta data are merged into the wxPython demo tree at startup.
 
-Last updated: Andrea Gavana @ 19 Oct 2008, 22.00 GMT.
-Version 0.1.
+Last updated: Andrea Gavana @ 31 March 2009, 12.00 GMT.
+Version 0.2.0.
 
 """
+
+__version__ = "0.2.0"
+__author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
+
 
 # Start the imports...
 import wx
@@ -70,7 +74,7 @@ def GetRecentAdditions():
     # For the moment, we add all the widgets in AGW as
     # Recent Additions
     if wx.VERSION < (2, 9):
-        recentAdditions = ['AdvancedSplash', 'AquaButton', 'BalloonTip',
+        recentAdditions = ['AdvancedSplash', 'AquaButton', 'AUI', 'BalloonTip',
                            'ButtonPanel', 'CubeColourDialog', 'CustomTreeCtrl',
                            'FlatMenu', 'FlatNotebook', 'FloatSpin',
                            'FoldPanelBar', 'FourWaySplitter', 'GenericMessageDialog',
@@ -80,7 +84,7 @@ def GetRecentAdditions():
                            'RulerCtrl', 'ShapedButton', 'SpeedMeter', 'SuperToolTip',
                            'ThumbnailCtrl', 'ToasterBox']
     else:
-        recentAdditions = []
+        recentAdditions = ['AUI']
 
     # Return the Recent Additions for AGW    
     return recentAdditions
@@ -96,7 +100,7 @@ def GetDemos():
     AGWTreeItem = "Advanced Generic Widgets"
 
     # The AGW demos    
-    AGWDemos = ['AdvancedSplash', 'AquaButton', 'BalloonTip',
+    AGWDemos = ['AdvancedSplash', 'AquaButton', 'AUI', 'BalloonTip',
                 'ButtonPanel', 'CubeColourDialog', 'CustomTreeCtrl',
                 'FlatMenu', 'FlatNotebook', 'FloatSpin',
                 'FoldPanelBar', 'FourWaySplitter', 'GenericMessageDialog',
@@ -119,7 +123,7 @@ def GetOverview():
     wxPythonWidgets = ["wx.SplashScreen", "wx.ColourDialog", "wx.TreeCtrl", "wx.MenuBar",
                        "wx.Menu", "wx.ToolBar", "wx.Notebook", "wx.MessageDialog",
                        "wx.gizmos.TreeListCtrl", "wx.DirDialog", "wx.CollapsiblePane",
-                       "wx.ProgressDialog", "wx.TipWindow", "wx.lib"]
+                       "wx.ProgressDialog", "wx.TipWindow", "wx.lib", "wx.aui"]
 
     # Split the docs in many lines                       
     splitted = _agwDocs.split("\n")
