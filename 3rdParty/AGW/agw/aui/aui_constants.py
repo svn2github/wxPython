@@ -910,3 +910,4 @@ colourIconShadow = wx.Colour(198, 198, 198)
 colourIconArrow = wx.Colour(77, 79, 170)
 colourHintBackground = wx.Colour(0, 64, 255)
 guideSizeX, guideSizeY = 29, 32
+
