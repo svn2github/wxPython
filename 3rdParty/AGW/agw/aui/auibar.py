@@ -1388,6 +1388,12 @@ class AuiDefaultToolBarArt(object):
 
         cc = ToolbarCommandCapture()
         wnd.PushEventHandler(cc)
+
+        # Adjustments to get slightly better menu placement
+        if wx.Platform == "__WXMAC__":
+            pt.y += 5
+            pt.x -= 5
+
         wnd.PopupMenu(menuPopup, pt)
         command = cc.GetCommandId()
         wnd.PopEventHandler(True)

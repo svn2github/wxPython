@@ -110,6 +110,7 @@ from aui_constants import *
 _libimported = None
 
 _ctypes = False
+_winxptheme = False
 if wx.Platform == "__WXMSW__":
     try:
         import ctypes

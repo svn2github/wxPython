@@ -32,7 +32,6 @@ if wx.Platform == "__WXMSW__":
     except ImportError:
         pass
 
-
 # -- AuiDefaultDockArt class implementation --
 
 class AuiDefaultDockArt(object):
@@ -206,12 +205,17 @@ class AuiDefaultDockArt(object):
         self._sash_size = 4
 
         if isMac:
+            # This really should be implemented in wx.SystemSettings
+            # There is no way to do this that I am aware outside of using
+            # the cocoa python bindings. 8 pixels looks correct on my system
+            # so hard coding it for now.
+
             # How do I translate this?!? Not sure of the below implementation...
             # SInt32 height;
             # GetThemeMetric( kThemeMetricSmallPaneSplitterHeight , &height );
             # self._sash_size = height;
 
-            self._sash_size = Carbon.Appearance.kThemeMetricSmallPaneSplitterHeight            
+            self._sash_size = 8 # Carbon.Appearance.kThemeMetricPaneSplitterHeight            
             
         elif wx.Platform == "__WXGTK__":
             self._sash_size = wx.RendererNative.Get().GetSplitterParams(wx.GetTopLevelWindows()[0]).widthSash
