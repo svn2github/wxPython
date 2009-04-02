@@ -2416,7 +2416,9 @@ class AuiFloatingFrame(wx.MiniFrame):
         self.Bind(wx.EVT_TIMER, self.OnFlyTimer, self._fly_timer)
         self.Bind(EVT_AUI_FIND_MANAGER, self.OnFindManager)
 
-        self._fly = False        
+        self._fly = False
+        self._send_size = True
+        
         self._owner_mgr = owner_mgr
         self._mgr = AuiManager()
         self._mgr.SetManagedWindow(self)
@@ -2573,7 +2575,7 @@ class AuiFloatingFrame(wx.MiniFrame):
         :param `event`: a L{wx.SizeEvent} to be processed.
         """
 
-        if self._owner_mgr:
+        if self._owner_mgr and self._send_size:
             self._owner_mgr.OnFloatingPaneResized(self._pane_window, event.GetSize())
 
     
@@ -2649,7 +2651,7 @@ class AuiFloatingFrame(wx.MiniFrame):
             return
         
         rect = wx.Rect(*self.GetScreenRect())
-        rect.Inflate(5, 5)
+        rect.Inflate(10, 10)
 
         if rect.Contains(wx.GetMousePosition()):
             if not self._fly:
@@ -2669,9 +2671,12 @@ class AuiFloatingFrame(wx.MiniFrame):
         """
 
         current_size = self.GetSize()
-        floating_size = wx.Size(*self._mgr.GetPane(self._pane_window).floating_size)
+        floating_size = wx.Size(*self._owner_mgr.GetPane(self._pane_window).floating_size)
+
         if floating_size.y == -1:
             floating_size = self._floating_size
+
+        self._send_size = False
         
         if not self._fly:
             min_size = self._mgr.GetArtProvider().GetMetric(AUI_DOCKART_CAPTION_SIZE) + \
@@ -2694,7 +2699,9 @@ class AuiFloatingFrame(wx.MiniFrame):
 
         self.Update()
         self.Refresh()
-        
+
+        self._send_size = True        
+
     
 # -- static utility functions --
 
@@ -8940,4 +8947,5 @@ class AuiManager(wx.EvtHandler):
             pos.y = area.y + area.height - size.y
 
         return pos            
+
                 
