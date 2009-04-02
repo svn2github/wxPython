@@ -7868,7 +7868,11 @@ class AuiManager(wx.EvtHandler):
             # if we are managing a AuiFloatingFrame window, then
             # we are an embedded AuiManager inside the AuiFloatingFrame.
             # We want to initiate a toolbar drag in our owner manager
-            rootManager = GetManager(part.pane.window)
+            if isinstance(part.pane.window.GetParent(), AuiFloatingFrame):
+                rootManager = GetManager(part.pane.window)
+            else:
+                rootManager = self
+                
             offset = wx.Point(event.GetX() - part.rect.x, event.GetY() - part.rect.y)
             rootManager.OnGripperClicked(part.pane.window, event.GetPosition(), offset)
         
@@ -7886,7 +7890,11 @@ class AuiManager(wx.EvtHandler):
         part = self.HitTest(event.GetX(), event.GetY())
 
         if part and part.type == AuiDockUIPart.typeCaption:
-            rootManager = GetManager(part.pane.window)
+            if isinstance(part.pane.window.GetParent(), AuiFloatingFrame):
+                rootManager = GetManager(part.pane.window)
+            else:
+                rootManager = self
+                
             rootManager.OnCaptionDoubleClicked(part.pane.window)
 
         event.Skip()
@@ -8185,9 +8193,14 @@ class AuiManager(wx.EvtHandler):
         # pane's active state to reflect this. (this is only true if 
         # active panes are allowed by the owner)
 
-        rootManager = GetManager(event.GetWindow())
+        window = event.GetWindow()
+        if isinstance(window.GetParent(), AuiFloatingFrame):
+            rootManager = GetManager(window)
+        else:
+            rootManager = self
+                
         if rootManager:
-            rootManager.ActivatePane(event.GetWindow())
+            rootManager.ActivatePane(window)
             
         event.Skip()
 
@@ -8695,7 +8708,11 @@ class AuiManager(wx.EvtHandler):
 
         if event.button == AUI_BUTTON_CLOSE:
 
-            rootManager = GetManager(pane.window)
+            if isinstance(pane.window.GetParent(), AuiFloatingFrame):
+                rootManager = GetManager(pane.window)
+            else:
+                rootManager = self
+            
             if rootManager != self:
                 self._frame.Close()
                 return
