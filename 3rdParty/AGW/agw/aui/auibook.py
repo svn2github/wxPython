@@ -2585,10 +2585,14 @@ class AuiNotebook(wx.PyControl):
         self.RemoveEmptyTabFrames()
 
         # set new active pane
-        if new_active and not self.IsBeingDeleted():
+        if new_active:
+            if not self.IsBeingDeleted():
+                self._curpage = -1
+                self.SetSelectionToWindow(new_active)
+        else:
             self._curpage = -1
-            self.SetSelectionToWindow(new_active)
-        
+            self._tabs.SetNoneActive()
+
         return True
 
 

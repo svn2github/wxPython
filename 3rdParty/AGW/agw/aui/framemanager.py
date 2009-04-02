@@ -6300,6 +6300,8 @@ class AuiManager(wx.EvtHandler):
 
                 self.ClosePane(p)
                 self.Update()
+            else:
+                event.Skip()
             
 
     def OnTabSelected(self, event):
