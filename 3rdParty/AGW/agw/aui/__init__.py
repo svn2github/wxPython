@@ -147,7 +147,8 @@ Plus the following features:
   (g) Possibility to set a transparency for floating panes (a la Paint .NET);
   (h) Snapping the main frame to the screen in any positin specified by horizontal and vertical
       alignments;
-  (i) Snapping floating panes on left/right/top/bottom or any combination of directions, a la Winamp.
+  (i) Snapping floating panes on left/right/top/bottom or any combination of directions, a la Winamp;
+  (j) "Fly-out" floating panes, i.e. panes which show themselves only when the mouse hover them.
 
 - AuiNotebook:
   (a) Implementation of the style ``AUI_NB_HIDE_ON_SINGLE_TAB``, a la `wx.lib.agw.flatnotebook`;

@@ -2277,11 +2277,24 @@ class AuiDockingHintWindow(wx.Frame):
         :param `name`: the name of the window. This parameter is used to associate a name with the
          item, allowing the application user to set Motif resource values for individual windows.
         """
+        if wx.Platform == '__WXMAC__' and style & wx.FRAME_SHAPED:
+            # Having the shaped frame causes the frame to not be visible
+            # with the transparent style hints.
+            style -= wx.FRAME_SHAPED
 
         wx.Frame.__init__(self, parent, id, title, pos, size, style, name=name)
         
         self._blindMode = False
         self.SetBackgroundColour(colourHintBackground)
+        
+        # Can't set background color on a frame on wxMac
+        # so add a panel to set the color on.
+        if wx.Platform == '__WXMAC__':
+            sizer = wx.BoxSizer(wx.HORIZONTAL)
+            self.panel = wx.Panel(self)
+            sizer.Add(self.panel, 1, wx.EXPAND)
+            self.SetSizer(sizer)
+            self.panel.SetBackgroundColour(colourHintBackground)
 
         self.Bind(wx.EVT_SIZE, self.OnSize)
         
@@ -2322,13 +2335,40 @@ class AuiDockingHintWindow(wx.Frame):
             self.MakeVenetianBlinds()
             self.SetTransparent(255)
         
-        else:        
+        else:
             self.SetShape(wx.Region())
             if flags & AUI_MGR_HINT_FADE == 0:                
                 self.SetTransparent(80)
             else:
                 self.SetTransparent(0)
+
+
+    def SetShape(self, region):
+        """
+        Overridden for wxMac.
+
+        :param `region`: the shape of the frame.        
+        """
         
+        if wx.Platform == '__WXMAC__':
+            # HACK so we don't crash when SetShape is called
+            return
+        else:
+            super(AuiDockingHintWindow, self).SetShape(region)
+
+
+    def Show(self, show=True):
+        """
+        Show the hint window.
+
+        :param `show`: whether to show or hide the frame.
+        """
+        
+        super(AuiDockingHintWindow, self).Show(show)
+        if wx.Platform == '__WXMAC__':
+            # Need to manually do layout since its a borderless frame.
+            self.Layout()
+
 
     def OnSize(self, event):
         """
@@ -2364,9 +2404,6 @@ class AuiFloatingFrame(wx.MiniFrame):
 
         wx.MiniFrame.__init__(self, parent, id, title, pos=pane.floating_pos,
                               size=pane.floating_size, style=style, name="auiFloatingFrame")
-
-        if wx.Platform == "__WXMAC__":
-            self.MacSetMetalAppearance(True)
 
         self._fly_timer = wx.Timer(self, wx.ID_ANY)
         self._check_fly_timer = wx.Timer(self, wx.ID_ANY)
