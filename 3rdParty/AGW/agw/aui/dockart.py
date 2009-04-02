@@ -14,6 +14,7 @@ __date__ = "31 March 2009"
 
 
 import wx
+import types
 
 from aui_utilities import BitmapFromBits, StepColour, ChopText, GetBaseColour
 from aui_utilities import DrawGradientRectangle
@@ -324,6 +325,13 @@ class AuiDefaultDockArt(object):
         :param `new_val`: the new value of the setting.
         """
 
+        if isinstance(colour, basestring):
+            colour = wx.NamedColour(colour)
+        elif isinstance(colour, types.TupleType):
+            colour = wx.Colour(*colour)
+        elif isinstance(colour, types.IntType):
+            colour = wx.ColourRGB(colour)
+        
         if id == AUI_DOCKART_BACKGROUND_COLOUR:
             self._background_brush.SetColour(colour)
         elif id == AUI_DOCKART_BACKGROUND_GRADIENT_COLOUR:
@@ -935,7 +943,10 @@ class ModernDockArt(AuiDefaultDockArt):
                 else:
                     raise Exception("ERROR: Unknown State.")
 
-            winxptheme.DrawThemeBackground(hTheme, dc.GetHDC(), btntype, state, (rc.top, rc.left, rc.right, rc.bottom), None)                
+            try:
+                winxptheme.DrawThemeBackground(hTheme, dc.GetHDC(), btntype, state, (rc.top, rc.left, rc.right, rc.bottom), None)
+            except TypeError:
+                return
 
         else:
 

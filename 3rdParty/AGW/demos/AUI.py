@@ -91,32 +91,33 @@ ID_DefaultDockArt = ID_CreateTree + 29
 ID_ModernDockArt = ID_CreateTree + 30
 ID_SnapToScreen = ID_CreateTree + 31
 ID_SnapPanes = ID_CreateTree + 32
-ID_Settings = ID_CreateTree + 33
-ID_CustomizeToolbar = ID_CreateTree + 34
-ID_DropDownToolbarItem = ID_CreateTree + 35
-ID_NotebookNoCloseButton = ID_CreateTree + 36
-ID_NotebookCloseButton = ID_CreateTree + 37
-ID_NotebookCloseButtonAll = ID_CreateTree + 38
-ID_NotebookCloseButtonActive = ID_CreateTree + 39
-ID_NotebookAllowTabMove = ID_CreateTree + 40
-ID_NotebookAllowTabExternalMove = ID_CreateTree + 41
-ID_NotebookAllowTabSplit = ID_CreateTree + 42
-ID_NotebookWindowList = ID_CreateTree + 43
-ID_NotebookScrollButtons = ID_CreateTree + 44
-ID_NotebookTabFixedWidth = ID_CreateTree + 45
-ID_NotebookArtGloss = ID_CreateTree + 46
-ID_NotebookArtSimple = ID_CreateTree + 47
-ID_NotebookArtVC71 = ID_CreateTree + 48
-ID_NotebookArtFF2 = ID_CreateTree + 49
-ID_NotebookArtVC8 = ID_CreateTree + 50
-ID_NotebookArtChrome = ID_CreateTree + 51
-ID_NotebookAlignTop = ID_CreateTree + 52
-ID_NotebookAlignBottom = ID_CreateTree + 53
-ID_NotebookHideSingle = ID_CreateTree + 54
-ID_NotebookSmartTab = ID_CreateTree + 55
-ID_NotebookUseImagesDropDown = ID_CreateTree + 56
+ID_FlyOut = ID_CreateTree + 33
+ID_Settings = ID_CreateTree + 34
+ID_CustomizeToolbar = ID_CreateTree + 35
+ID_DropDownToolbarItem = ID_CreateTree + 36
+ID_NotebookNoCloseButton = ID_CreateTree + 37
+ID_NotebookCloseButton = ID_CreateTree + 38
+ID_NotebookCloseButtonAll = ID_CreateTree + 39
+ID_NotebookCloseButtonActive = ID_CreateTree + 40
+ID_NotebookAllowTabMove = ID_CreateTree + 41
+ID_NotebookAllowTabExternalMove = ID_CreateTree + 42
+ID_NotebookAllowTabSplit = ID_CreateTree + 43
+ID_NotebookWindowList = ID_CreateTree + 44
+ID_NotebookScrollButtons = ID_CreateTree + 45
+ID_NotebookTabFixedWidth = ID_CreateTree + 46
+ID_NotebookArtGloss = ID_CreateTree + 47
+ID_NotebookArtSimple = ID_CreateTree + 48
+ID_NotebookArtVC71 = ID_CreateTree + 49
+ID_NotebookArtFF2 = ID_CreateTree + 50
+ID_NotebookArtVC8 = ID_CreateTree + 51
+ID_NotebookArtChrome = ID_CreateTree + 52
+ID_NotebookAlignTop = ID_CreateTree + 53
+ID_NotebookAlignBottom = ID_CreateTree + 54
+ID_NotebookHideSingle = ID_CreateTree + 55
+ID_NotebookSmartTab = ID_CreateTree + 56
+ID_NotebookUseImagesDropDown = ID_CreateTree + 57
 
-ID_SampleItem = ID_CreateTree + 57
+ID_SampleItem = ID_CreateTree + 58
 
 ID_FirstPerspective = ID_CreatePerspective + 1000
 
@@ -559,6 +560,8 @@ class AuiFrame(wx.Frame):
         options_menu.Append(ID_SnapToScreen, "Snap To Screen")
         options_menu.AppendCheckItem(ID_SnapPanes, "Snap Panes To Managed Window")
         options_menu.AppendSeparator()
+        options_menu.AppendCheckItem(ID_FlyOut, "Use Fly-Out Floating Panes")
+        options_menu.AppendSeparator()
         options_menu.AppendRadioItem(ID_NoGradient, "No Caption Gradient")
         options_menu.AppendRadioItem(ID_VerticalGradient, "Vertical Caption Gradient")
         options_menu.AppendRadioItem(ID_HorizontalGradient, "Horizontal Caption Gradient")
@@ -856,7 +859,8 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnDockArt, id=ID_DefaultDockArt)
         self.Bind(wx.EVT_MENU, self.OnDockArt, id=ID_ModernDockArt)
         self.Bind(wx.EVT_MENU, self.OnSnapToScreen, id=ID_SnapToScreen)
-        self.Bind(wx.EVT_MENU, self.OnSnapPanes, id=ID_SnapPanes)        
+        self.Bind(wx.EVT_MENU, self.OnSnapPanes, id=ID_SnapPanes)
+        self.Bind(wx.EVT_MENU, self.OnFlyOut, id=ID_FlyOut)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_AllowActivePane)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookTabFixedWidth)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookNoCloseButton)
@@ -912,6 +916,7 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_DefaultDockArt)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_ModernDockArt)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_SnapPanes)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_FlyOut)
         
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookTabFixedWidth)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookNoCloseButton)
@@ -1088,6 +1093,25 @@ class AuiFrame(wx.Frame):
         self._snapped = toSnap
         self._mgr.Update()
         self.Refresh()
+
+
+    def OnFlyOut(self, event):
+
+        checked = event.IsChecked()
+        pane = self._mgr.GetPane("test8")
+
+        if checked:
+            dlg = wx.MessageDialog(self, 'The tree pane will have fly-out' \
+                                   ' behaviour when floating.',
+                                   'Message',
+                                   wx.OK | wx.ICON_INFORMATION)
+            dlg.ShowModal()
+            dlg.Destroy()
+            pane.FlyOut(True)
+        else:
+            pane.FlyOut(False)
+
+        self._mgr.Update()
         
 
     def OnCustomizeToolbar(self, event):
@@ -1281,6 +1305,10 @@ class AuiFrame(wx.Frame):
 
         elif evId == ID_SnapPanes:
             event.Check(self._snapped)
+
+        elif evId == ID_FlyOut:
+            pane = self._mgr.GetPane("test8")
+            event.Check(pane.IsFlyOut())
             
         elif evId == ID_NotebookNoCloseButton:
             event.Check((self._notebook_style & (aui.AUI_NB_CLOSE_BUTTON|aui.AUI_NB_CLOSE_ON_ALL_TABS|aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)) != 0)

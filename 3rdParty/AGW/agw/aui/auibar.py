@@ -2995,6 +2995,9 @@ class AuiToolBar(wx.PyControl):
         """ Updates the toolbar during idle times. """
 
         handler = self.GetEventHandler()
+        if not handler:
+            return
+        
         need_refresh = False
 
         for item in self._items:

@@ -45,7 +45,7 @@ def StepColour(c, ialpha):
     
     if ialpha == 100:
         return c
-
+        
     r, g, b = c.Red(), c.Green(), c.Blue()
 
     # ialpha is 0..200 where 0 is completely black

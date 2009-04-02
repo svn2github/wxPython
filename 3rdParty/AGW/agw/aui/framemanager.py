@@ -504,18 +504,19 @@ class AuiPaneInfo(object):
     optionRightSnapped     = 2**21
     optionTopSnapped       = 2**22
     optionBottomSnapped    = 2**23
+    optionFlyOut           = 2**24
 
-    buttonClose            = 2**24
-    buttonMaximize         = 2**25
-    buttonMinimize         = 2**26
-    buttonPin              = 2**27
+    buttonClose            = 2**25
+    buttonMaximize         = 2**26
+    buttonMinimize         = 2**27
+    buttonPin              = 2**28
     
-    buttonCustom1          = 2**28
-    buttonCustom2          = 2**29
-    buttonCustom3          = 2**30
+    buttonCustom1          = 2**29
+    buttonCustom2          = 2**30
+    buttonCustom3          = 2**31
 
-    savedHiddenState       = 2**31    # used internally
-    actionPane             = 2**32    # used internally
+    savedHiddenState       = 2**32    # used internally
+    actionPane             = 2**33    # used internally
 
 
     def __init__(self):
@@ -746,6 +747,12 @@ class AuiPaneInfo(object):
         return self.IsTopSnappable() or self.IsBottomSnappable() or self.IsLeftSnappable() or \
                self.IsRightSnappable()
 
+
+    def IsFlyOut(self):
+        """ IsFlyOut() returns True if the floating pane has a "fly-out" effect. """
+
+        return self.HasFlag(self.optionFlyOut)        
+            
 
     def HasCaption(self):
         """ HasCaption() returns True if the pane displays a caption. """
@@ -1494,6 +1501,18 @@ class AuiPaneInfo(object):
         """
     
         return self.TopSnappable(b).BottomSnappable(b).LeftSnappable(b).RightSnappable(b)
+
+
+    def FlyOut(self, b=True):
+        """
+        FlyOut() indicates whether a pane, when floating, has a "fly-out" effect
+        (i.e., floating panes which only show themselves when moused over).
+
+        :param `b`: whether the pane can be snapped on the main frame or not.
+        """
+
+        return self.SetFlag(self.optionFlyOut, b)
+    
     
     # Copy over the members that pertain to docking position
     def SetDockPos(self, source):
@@ -2124,14 +2143,35 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         region.UnionRegion(wx.RegionFromPoints(bld))
         region.UnionRegion(wx.RegionFromPoints(trd))
         region.UnionRegion(wx.RegionFromPoints(brd))
+
+        self.region = region
         
-        self.SetShape(region)
+        if wx.Platform == "__WXGTK__":
+            self.Bind(wx.EVT_WINDOW_CREATE, self.SetGuideShape)
+        else:
+            self.SetGuideShape()
+            
         self.SetSize(region.GetBox().GetSize())
 
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
 
-        
+
+    def SetGuideShape(self, event=None):
+        """
+        Sets the correct shape for the docking guide window.
+
+        :param `event`: on wxGTK, a L{wx.WindowCreateEvent} event to process.
+        """
+
+        self.SetShape(self.region)        
+                
+        if event is not None:
+            # Skip the event on wxGTK
+            event.Skip()
+            wx.CallAfter(wx.SafeYield, self, True)
+
+            
     def UpdateDockGuide(self, pos):
         """
         Updates the docking guides images depending on the mouse position, using focused
@@ -2305,7 +2345,7 @@ class AuiDockingHintWindow(wx.Frame):
 
 # -- AuiFloatingFrame class implementation --            
 
-class AuiFloatingFrame(wx.Frame):
+class AuiFloatingFrame(wx.MiniFrame):
     """ AuiFloatingFrame is the frame class that holds floating panes. """
 
     def __init__(self, parent, owner_mgr, pane=None, id=wx.ID_ANY, title="",
@@ -2322,23 +2362,29 @@ class AuiFloatingFrame(wx.Frame):
         :param `style`: the window style. See L{wx.Frame}.
         """
 
-        wx.Frame.__init__(self, parent, id, title, pos=pane.floating_pos,
-                          size=pane.floating_size, style=style, name="auiFloatingFrame")
+        wx.MiniFrame.__init__(self, parent, id, title, pos=pane.floating_pos,
+                              size=pane.floating_size, style=style, name="auiFloatingFrame")
 
         if wx.Platform == "__WXMAC__":
             self.MacSetMetalAppearance(True)
+
+        self._fly_timer = wx.Timer(self, wx.ID_ANY)
+        self._check_fly_timer = wx.Timer(self, wx.ID_ANY)
         
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_ACTIVATE, self.OnActivate)
         self.Bind(wx.EVT_MOVE, self.OnMove)
+        self.Bind(wx.EVT_TIMER, self.OnCheckFlyTimer, self._check_fly_timer)
+        self.Bind(wx.EVT_TIMER, self.OnFlyTimer, self._fly_timer)
         self.Bind(EVT_AUI_FIND_MANAGER, self.OnFindManager)
-                
+
+        self._fly = False        
         self._owner_mgr = owner_mgr
         self._mgr = AuiManager()
         self._mgr.SetManagedWindow(self)
         self._mgr.SetArtProvider(owner_mgr.GetArtProvider())
-
+        
 
     def CopyAttributes(self, pane):
         """
@@ -2415,7 +2461,23 @@ class AuiFloatingFrame(wx.Frame):
                                                  cur_max_size.y < pane_min_size.y):
             self.SetMaxSize(pane_min_size)
 
-        self.SetMinSize(pane.window.GetMinSize())
+        art_provider = self._mgr.GetArtProvider()
+        caption_size = art_provider.GetMetric(AUI_DOCKART_CAPTION_SIZE)
+        button_size = art_provider.GetMetric(AUI_DOCKART_PANE_BUTTON_SIZE) + \
+                      4*art_provider.GetMetric(AUI_DOCKART_PANE_BORDER_SIZE)
+
+        min_size = pane.window.GetMinSize()
+
+        if min_size.y < caption_size or min_size.x < button_size:
+            new_x, new_y = min_size.x, min_size.y
+            if min_size.y < caption_size:
+                new_y = (pane.IsResizeable() and [2*wx.SystemSettings.GetMetric(wx.SYS_EDGE_Y)+caption_size] or [1])[0]
+            if min_size.x < button_size:
+                new_x = (pane.IsResizeable() and [2*wx.SystemSettings.GetMetric(wx.SYS_EDGE_X)+button_size] or [1])[0]
+                
+            self.SetMinSize((new_x, new_y))
+        else:
+            self.SetMinSize(min_size)
 
         if pane.IsResizeable():
             self.SetWindowStyleFlag(self.GetWindowStyleFlag() | wx.RESIZE_BORDER)
@@ -2449,11 +2511,18 @@ class AuiFloatingFrame(wx.Frame):
 
             size.y += self._owner_mgr._art.GetMetric(AUI_DOCKART_CAPTION_SIZE)
             pane.floating_size = size
+            
             self.SetClientSize(size)
 
         self._owner_mgr._panes[indx] = pane
 
+        self._fly_step = abs(pane.floating_size.y - \
+                             (caption_size + 2*wx.SystemSettings.GetMetric(wx.SYS_EDGE_Y)))/10
 
+        self._floating_size = wx.Size(*self.GetSize())
+        self._check_fly_timer.Start(50)
+
+        
     def GetOwnerManager(self):
         """ Returns the L{AuiManager} that manages the pane. """
 
@@ -2508,6 +2577,21 @@ class AuiFloatingFrame(wx.Frame):
             self._owner_mgr.OnFloatingPaneMoved(self._pane_window, event)
                 
 
+    def OnCheckFlyTimer(self, event):
+        """
+        Handles the wx.EVT_TIMER event for L{AuiFloatingFrame}.
+        This is used solely for "fly-out" panes.
+
+        :param `event`: a L{wx.TimerEvent} to be processed.
+        """
+        
+        if self._owner_mgr:
+            pane = self._mgr.GetPane(self._pane_window)
+            if pane.IsFlyOut():
+                if self.IsShownOnScreen():
+                    self.FlyOut()
+                        
+
     def OnFindManager(self, event):
         """
         Handles the EVT_AUI_FIND_MANAGER event for L{AuiFloatingFrame}.
@@ -2516,6 +2600,63 @@ class AuiFloatingFrame(wx.Frame):
         """
         
         event.SetManager(self._owner_mgr)
+
+
+    def FlyOut(self):
+        """ Starts the flying in and out of a floating pane. """
+
+        if self._fly_timer.IsRunning():
+            return
+
+        if wx.GetMouseState().LeftDown():
+            return
+        
+        rect = wx.Rect(*self.GetScreenRect())
+        rect.Inflate(5, 5)
+
+        if rect.Contains(wx.GetMousePosition()):
+            if not self._fly:
+                return
+            self._fly_timer.Start(5)
+        else:
+            if self._fly:
+                return
+            self._fly_timer.Start(5)
+
+
+    def OnFlyTimer(self, event):            
+        """
+        Handles the wx.EVT_TIMER event for L{AuiFloatingFrame}.
+
+        :param `event`: a L{wx.TimerEvent} to be processed.
+        """
+
+        current_size = self.GetSize()
+        floating_size = wx.Size(*self._mgr.GetPane(self._pane_window).floating_size)
+        if floating_size.y == -1:
+            floating_size = self._floating_size
+        
+        if not self._fly:
+            min_size = self._mgr.GetArtProvider().GetMetric(AUI_DOCKART_CAPTION_SIZE) + \
+                       2*wx.SystemSettings.GetMetric(wx.SYS_EDGE_Y)
+
+            if current_size.y - self._fly_step <= min_size:
+                self.SetDimensions(-1, -1, -1, min_size, wx.SIZE_USE_EXISTING)
+                self._fly = True
+                self._fly_timer.Stop()
+            else:
+                self.SetDimensions(-1, -1, -1, current_size.y-self._fly_step, wx.SIZE_USE_EXISTING)
+
+        else:
+            if current_size.y + self._fly_step >= floating_size.y:
+                self.SetDimensions(-1, -1, -1, floating_size.y, wx.SIZE_USE_EXISTING)
+                self._fly = False
+                self._fly_timer.Stop()
+            else:
+                self.SetDimensions(-1, -1, -1, current_size.y+self._fly_step, wx.SIZE_USE_EXISTING)
+
+        self.Update()
+        self.Refresh()
         
     
 # -- static utility functions --
@@ -3776,7 +3917,6 @@ class AuiManager(wx.EvtHandler):
                 tb.SetGripperVisible(True)
 
         if pinfo.window:
-            pinfo.best_size = pinfo.window.GetClientSize()
             if pinfo.best_size == wx.Size(-1, -1):
                 pinfo.best_size = pinfo.window.GetClientSize()
 
@@ -7933,7 +8073,7 @@ class AuiManager(wx.EvtHandler):
 
         :param `event`: a L{wx.MouseEvent} to be processed.
         """
-        
+
         if self._hover_button:
             self.RefreshButton(self._hover_button)
             self._hover_button = None
