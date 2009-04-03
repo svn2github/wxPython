@@ -183,7 +183,6 @@ Not implemented yet.
 AUI_NB_BOTTOM              = 1 << 3
 """
 With this style, tabs are drawn along the bottom of the notebook.
-Not implemented for the Chrome tab art.
 """
 AUI_NB_TAB_SPLIT           = 1 << 4
 """ Allows the tab control to be split by dragging a tab. """

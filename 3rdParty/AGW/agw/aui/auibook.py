@@ -580,7 +580,7 @@ class AuiTabContainer(object):
         ``AUI_NB_TOP``                       With this style, tabs are drawn along the top of the notebook
         ``AUI_NB_LEFT``                      With this style, tabs are drawn along the left of the notebook. Not implemented yet.
         ``AUI_NB_RIGHT``                     With this style, tabs are drawn along the right of the notebook. Not implemented yet.
-        ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook. Not implemented for the Chrome tab art.
+        ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook.
         ``AUI_NB_TAB_SPLIT``                 Allows the tab control to be split by dragging a tab
         ``AUI_NB_TAB_MOVE``                  Allows a tab to be moved horizontally by dragging
         ``AUI_NB_TAB_EXTERNAL_MOVE``         Allows a tab to be moved to another tab control
@@ -2127,7 +2127,7 @@ class AuiNotebook(wx.PyControl):
         ``AUI_NB_TOP``                       With this style, tabs are drawn along the top of the notebook
         ``AUI_NB_LEFT``                      With this style, tabs are drawn along the left of the notebook. Not implemented yet.
         ``AUI_NB_RIGHT``                     With this style, tabs are drawn along the right of the notebook. Not implemented yet.
-        ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook. Not implemented for the Chrome tab art.
+        ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook.
         ``AUI_NB_TAB_SPLIT``                 Allows the tab control to be split by dragging a tab
         ``AUI_NB_TAB_MOVE``                  Allows a tab to be moved horizontally by dragging
         ``AUI_NB_TAB_EXTERNAL_MOVE``         Allows a tab to be moved to another tab control

@@ -161,7 +161,7 @@ Plus the following features:
       (3) Firefox 2 theme
       (4) Visual Studio 2003 theme (VC71)
       (5) Visual Studio 2005 theme (VC81)
-      (6) Google Chrome theme (only ``AUI_NB_TOP`` at the moment)
+      (6) Google Chrome theme
   (e) Enabling/disabling tabs;
   (f) Setting the colour of the tab's text.
   
@@ -200,8 +200,7 @@ TODOs
   http://archives.devshed.com/forums/attachment.php?attachmentid=4337;
 - Harmonize the `AuiNotebook` API with the `wx.Notebook` one, especially regarding setting/getting
   tab images (i.e., using `wx.ImageList`);
-- Implement ``AUI_NB_LEFT`` and ``AUI_NB_RIGHT`` tab locations in `AuiNotebook`, and support
-  ``AUI_NB_BOTTOM`` for the Google Chrome tab art;
+- Implement ``AUI_NB_LEFT`` and ``AUI_NB_RIGHT`` tab locations in `AuiNotebook`;
 - Move `AuiDefaultToolBarArt` into a separate module (as with `tabart.py` and `dockart.py`) and
   provide more arts for toolbars (maybe from `wx.lib.agw.flatmenu`?)
 - Support multiple-rows/multiple columns toolbars;
