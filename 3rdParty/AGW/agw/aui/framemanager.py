@@ -2402,6 +2402,9 @@ class AuiFloatingFrame(wx.MiniFrame):
         :param `style`: the window style. See L{wx.Frame}.
         """
 
+        if pane and pane.IsResizeable():
+            style += wx.RESIZE_BORDER
+            
         wx.MiniFrame.__init__(self, parent, id, title, pos=pane.floating_pos,
                               size=pane.floating_size, style=style, name="auiFloatingFrame")
 
@@ -2518,9 +2521,6 @@ class AuiFloatingFrame(wx.MiniFrame):
         else:
             self.SetMinSize(min_size)
 
-        if pane.IsResizeable():
-            self.SetWindowStyleFlag(self.GetWindowStyleFlag() | wx.RESIZE_BORDER)
-    
         self._mgr.AddPane(self._pane_window, contained_pane)
         self._mgr.Update()           
 
@@ -7609,6 +7609,8 @@ class AuiManager(wx.EvtHandler):
 
         if paneInfo.IsFloating():
             paneInfo.Dock()
+            if paneInfo.IsToolbar():
+                paneInfo = self.SwitchToolBarOrientation(paneInfo)
         else:
             if paneInfo.floating_pos == wx.Point(-1, -1):
                 captionSize = self._art.GetMetric(AUI_DOCKART_CAPTION_SIZE)
