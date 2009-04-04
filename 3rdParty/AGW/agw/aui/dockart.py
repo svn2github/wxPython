@@ -142,7 +142,11 @@ class AuiDefaultDockArt(object):
         self._background_colour = base_colour
         self._background_gradient_colour = StepColour(base_colour, 180)
 
-        self._active_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        if wx.Platform == '__WXMAC__':
+            self._active_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        else:
+            self._active_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        
         self._active_caption_gradient_colour = StepColour(self._active_caption_colour, 110)
         self._active_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_CAPTIONTEXT)
         self._inactive_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_INACTIVECAPTION)
@@ -465,7 +469,7 @@ class AuiDefaultDockArt(object):
                 if wx.Platform == "__WXMAC__":
                     DrawGradientRectangle(dc, rect, self._active_caption_colour,
                                           self._active_caption_gradient_colour,
-                                          self._gradient_type)                    
+                                          self._gradient_type)
                 else:
                     DrawGradientRectangle(dc, rect, self._active_caption_gradient_colour,
                                           self._active_caption_colour,
