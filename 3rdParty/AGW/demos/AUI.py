@@ -5,6 +5,8 @@ import wx.grid
 import os
 import sys
 
+from wx.lib.embeddedimage import PyEmbeddedImage
+
 try:
     dirName = os.path.dirname(os.path.abspath(__file__))
 except:
@@ -58,6 +60,108 @@ ArtIDs = [ "wx.ART_ADD_BOOKMARK",
            "wx.ART_MISSING_IMAGE",
            ]
 
+# Custom pane button bitmaps
+#----------------------------------------------------------------------
+close = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAABHNCSVQICAgIfAhkiAAAAh9J"
+    "REFUKJFl0s1LFGEAx/HvMzO7M9vmrrSuThJIhslmaSZqFgZLdSqKjr147VB/Qn9Af0GXTiIU"
+    "vVAQdRAKqkuColaiiyiKr7FKL7u6OzM78zxPh6igfvcvv8tHCMMEoHAxr/35AlpK/p0wTZz2"
+    "HLlXbwWABTBzrk83DnSRvjWE4Tj/Rcr3KU1/Zsav6GNvxoU1cSGvmwZ7SZ3Oo5MpIiuGrvl/"
+    "X+IOIgpJndmPNONM2Elt7KyuU9/djySCbBNGo4ssriA3FlHfNjAaXchkiSKf+u5+ykvLGHLP"
+    "XlQiSS0SqLoMosHF6DwJdfWIXC+iwUWls4TaQtkJQtPC8gIPo1pldvQlanGNnqs3iLktyOwB"
+    "TNMk9AMmnzzEmHjHiVOD7AQBVjUI0JUdDqaTzLwfZS6VovPSFUytQUrmXjynfO8uR9MWyrEJ"
+    "/QCrFkrU9leM5QVysoa044jSD9AAmoxjk6GKtbqNaukglAojCHyi8Q8Ec7PsO3sZt/UQ3uYG"
+    "3+cLeF82cdsOk719hyjlIis+Na0wlJRExSJe23EitwW5VWRqZJjHQ9eYGhlGbhWJmlvxOvqp"
+    "lXeRSmM57TnWSx4/ltZZsR5hOAlKz57St1tmbWSYscou0vNIfJwlyGRIHOlACMPkwUCPzsmQ"
+    "aswi8Hza/ICYgFDDgmMTd2ySkaRgxrg+NinEb3v3z+f15qdpQt/DQvwREaGJOQmau7q5+fqX"
+    "vZ+3DPNuDe9/tAAAAABJRU5ErkJggg==")
+
+#----------------------------------------------------------------------
+close_inactive = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAABHNCSVQICAgIfAhkiAAAAh5J"
+    "REFUKJFl0stLVFEAgPHv3Htn7lzNGW1GZzSNtJI0fFZjQkQPqV0U0SJmnZugP6B9/0O4cZNE"
+    "ZFAQUdBrlZBYoJmGOYSPSUvRRp25r3NOi8iN3/7b/YQwTAAuDn7VM3kXqdiTaUBbS4w3Q+0C"
+    "QAjDpD83qfuPNdDZEicWMfZMbqCYzBcZmy0wNtIprIFb4/pUa4bzfXHiVRAxFWVP7w6OLQgk"
+    "NDTFsWOKyopxbSyubpPtShB6mroaQTolWFiQzM9LCsuadEpQWw1uSZHtSpBfKmLscySVFRpM"
+    "j+R+SaZWcLrXoDoBJ7shUydIJRVW1MeJaSwzxHLLJUqu4PnLaZYKity1Hg42RjhQb2CaAs/z"
+    "efjsM+/GDM6e6cErF7Hc8g5bO5rKqmZevJ8iXjXL1csdaC2QoeDpq1nu3S8SiXZgJxWe72NJ"
+    "6bO+rZhbNvDDdqKOZHMHtBYARJ0UrkyysGRyfEuhVIDhej4fpkO+5H2uXKqm5VCawi+fbz82"
+    "+fnb4+jhNHdvp8jUh7ihRMkAQ0rF6oaku73EwfqQlbWQ4dEJbt55xPDoBCtrIc2NIX3dZbbd"
+    "AK0k4lzugS5HT7C+vkG2tYxjmzx++4eiaiJuLHLjQoKSKxmfc0gma3D8iX8istdHtG+3YVHC"
+    "dX28yBEQEdABdvAd244iRQVRb4aPT3JC/Lc3kBvSn6YKlL0AYVi7IrQKcewIvR0NvB4ZFAB/"
+    "Aa4X7YpTOtu/AAAAAElFTkSuQmCC")
+
+#----------------------------------------------------------------------
+maximize = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAABHNCSVQICAgIfAhkiAAAAJZJ"
+    "REFUKJG9kj0OwjAMRp8D6hDUExDmrr0dEkOHXgXuAMfIBl1yCwaMMAyoIJQWqUu/yZa/5x/J"
+    "Im7BVLnJBLDsg2vbPC3G8e51zapp5QeyGLHzBYbWtcfwJFlv8Nsdrqpypuu4HfY5hHPgPVKW"
+    "+STv3/XeOnrEH80HfW9SxVIaNFlKoJpDEgL30xGKIqdUkRA+qcz2Ri8+yyNzplbFQwAAAABJ"
+    "RU5ErkJggg==")
+
+#----------------------------------------------------------------------
+maximize_inactive = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAABHNCSVQICAgIfAhkiAAAAJhJ"
+    "REFUKJFjZGRiZiAVMJGsg4GBgQXGaGz7+v/CxX84FRroMzHUV3Ezomi6cPEfw/Vb/xiYsbj2"
+    "718cNsnKMDJUlnAwqKthuvjmrX8MS1b8xtTEyMTAwMXFyMDLw4ihiYuLkYERySyyAoJ+muB+"
+    "+v2bgeHeA+xBfu/BP4bfiHBAaJKWYmTYsfsPAysrpqbfvyHyMMBIt2QEAFPtI359ud6yAAAA"
+    "AElFTkSuQmCC")
+
+#----------------------------------------------------------------------
+minimize = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAABHNCSVQICAgIfAhkiAAAAMlJ"
+    "REFUKJGdkrsNwkAQRN/eWohPByYkQaIKSqAJhBAF0AdExGRUQwoioAREAth3S2BjWzLIwER7"
+    "oxntzOpEnPIrotcQ1lvjeIbbHXjkpAczkAf0OjAc4GZTQZwiTrHNzhoxX5g4xRU7U9+c654A"
+    "VEzY150qpuQLedY1qvFJCqrgX3ENQp5C7IMp9eAEQsjEIWQXVC3UpckSWK5gfwCRnKv0nIwL"
+    "vrLJQDzomytGEXRb5bOYLhfotyEeASk1xfUEcT+r9s83cs2SOp6D2FytkDyOCgAAAABJRU5E"
+    "rkJggg==")
+
+#----------------------------------------------------------------------
+minimize_inactive = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAABHNCSVQICAgIfAhkiAAAANRJ"
+    "REFUKJGdkj1OgkEQhp/ZJSCF0VBYmUBPixfwAtzRS2DvCShMvAGRUJCQkMjOjwV8CwT1C77V"
+    "zGaevO9MViRlrlWnKd7el7HaKGpgpQDg7ng4rkY3Bw/3PZ4nI6lQzpnp0+BPh5fXDwBS8+DR"
+    "HquonUNEOxWHmaOTWSvk6sDJIRqZO0kEO8nrAUmEiN8gC8iCHyBvYqdU01RIizKbr1msy4/R"
+    "xo/9uvbRKYIIJewSSgIderWv0PZrRzcrw9tAVeulwvd7fC62DO5uAJD/fKPUPnKpbzVEY0DN"
+    "U2N1AAAAAElFTkSuQmCC")
+
+#----------------------------------------------------------------------
+restore = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAABHNCSVQICAgIfAhkiAAAAUlJ"
+    "REFUKJGd0j9LW1EYBvDfvUkM1iaGkohaKJRQv0XJ5FCKg1PnoogUHCwOjnVTx67d2n6Cgq2O"
+    "7oXupdKhUIOQqMRSE733djiXNkoXPcvhvO/z530fThTFBTc9RUjfvM2020zeC5VS3i3kiBg/"
+    "ulQa4oXnUREcd9nZ5fAnvQ5nHaKEYkY14w4eNHm6+M9JfTwQHs5w2WdjHSkRBj2W5uge8Ghi"
+    "iBQl/O6RXDA9gUvWXnJ8xIdPYdQIpXiIVMJpm433tB4H0OcvLMwHxyzoSIeCUEB5QJywvUm/"
+    "T6vFk2dUavxC5Vp6RlDLya+3ODnBK4p3ebfC4D+RK2AM/TP29slSqjVerPJxJ/RG/6LzK00p"
+    "Y2UuqF7gHD2Mo5ELX3H62uZ+k85BWDbJF6/nIZUx1eR7d4hUnWR2mZn61eHztEQp344oN8Lz"
+    "Nn/vD5FAXWAC04u0AAAAAElFTkSuQmCC")
+
+#----------------------------------------------------------------------
+restore_inactive = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAABHNCSVQICAgIfAhkiAAAAYxJ"
+    "REFUKJGdkr2PTGEUh5/z3ntndmYXIyODiI8oVyGRLTUitpToNCRCJdv7B2gkOrV6Q4hWp6JV"
+    "jXILhWKHeMfcmXvfj3MUk7jbcqrTPPk9J+cn4gr+dUqAz9OFzWth0CtJCiEaWUHNiMnIahQ0"
+    "TEYF16+OpARYto6v35SZj/gaZnNj2UIblZlX6lXg8thzf/dYl7RRFfyYK2fHjskI9m6XZIWs"
+    "4Gtj72VkerAk5SEADiBEWKwEVeHEphASvPoQefq65fRJAdaqmHVQG43vP5XdawX3blZcueh4"
+    "/qjPqeMQsxEUytKoSu30YjZmXlkFeP8p0URj+0LBrZ2KrYGjpiBlR1bpoDYYhz6Ts7H/MTJv"
+    "4O4NWIhj/03AZ0hBCNl1UMjCrxr80nj2oI8qbA2FJ28j774oMQnWGqpH/qQ5s2paHr6IbPSg"
+    "KoTWCYfZcMGhvqHQjGAd5Ehsn/FMD35Ti6NXClnWOiFCkRI7lxKD/pGbzk96PL4zJoUhhvyt"
+    "S7L1bmpUpXBusgmA/E/3/gASuMtl4Uj5YAAAAABJRU5ErkJggg==")
+
+#----------------------------------------------------------------------
+
+# Custom pane bitmaps reference
+#                      bitmap  button id       active  maximize
+CUSTOM_PANE_BITMAPS = [(close, aui.AUI_BUTTON_CLOSE, True, False),
+                       (close_inactive, aui.AUI_BUTTON_CLOSE, False, False),
+                       (minimize, aui.AUI_BUTTON_MINIMIZE, True, False),
+                       (minimize_inactive, aui.AUI_BUTTON_MINIMIZE, False, False),
+                       (maximize, aui.AUI_BUTTON_MAXIMIZE_RESTORE, True, True),
+                       (maximize_inactive, aui.AUI_BUTTON_MAXIMIZE_RESTORE, False, True),
+                       (restore, aui.AUI_BUTTON_MAXIMIZE_RESTORE, True, False),
+                       (restore_inactive, aui.AUI_BUTTON_MAXIMIZE_RESTORE, False, False)]
+#----------------------------------------------------------------------
+
 ID_CreateTree = wx.ID_HIGHEST + 1
 ID_CreateGrid = ID_CreateTree + 1
 ID_CreateText = ID_CreateTree + 2
@@ -92,32 +196,33 @@ ID_ModernDockArt = ID_CreateTree + 30
 ID_SnapToScreen = ID_CreateTree + 31
 ID_SnapPanes = ID_CreateTree + 32
 ID_FlyOut = ID_CreateTree + 33
-ID_Settings = ID_CreateTree + 34
-ID_CustomizeToolbar = ID_CreateTree + 35
-ID_DropDownToolbarItem = ID_CreateTree + 36
-ID_NotebookNoCloseButton = ID_CreateTree + 37
-ID_NotebookCloseButton = ID_CreateTree + 38
-ID_NotebookCloseButtonAll = ID_CreateTree + 39
-ID_NotebookCloseButtonActive = ID_CreateTree + 40
-ID_NotebookAllowTabMove = ID_CreateTree + 41
-ID_NotebookAllowTabExternalMove = ID_CreateTree + 42
-ID_NotebookAllowTabSplit = ID_CreateTree + 43
-ID_NotebookWindowList = ID_CreateTree + 44
-ID_NotebookScrollButtons = ID_CreateTree + 45
-ID_NotebookTabFixedWidth = ID_CreateTree + 46
-ID_NotebookArtGloss = ID_CreateTree + 47
-ID_NotebookArtSimple = ID_CreateTree + 48
-ID_NotebookArtVC71 = ID_CreateTree + 49
-ID_NotebookArtFF2 = ID_CreateTree + 50
-ID_NotebookArtVC8 = ID_CreateTree + 51
-ID_NotebookArtChrome = ID_CreateTree + 52
-ID_NotebookAlignTop = ID_CreateTree + 53
-ID_NotebookAlignBottom = ID_CreateTree + 54
-ID_NotebookHideSingle = ID_CreateTree + 55
-ID_NotebookSmartTab = ID_CreateTree + 56
-ID_NotebookUseImagesDropDown = ID_CreateTree + 57
+ID_CustomPaneButtons = ID_CreateTree + 34
+ID_Settings = ID_CreateTree + 35
+ID_CustomizeToolbar = ID_CreateTree + 36
+ID_DropDownToolbarItem = ID_CreateTree + 37
+ID_NotebookNoCloseButton = ID_CreateTree + 38
+ID_NotebookCloseButton = ID_CreateTree + 39
+ID_NotebookCloseButtonAll = ID_CreateTree + 40
+ID_NotebookCloseButtonActive = ID_CreateTree + 41
+ID_NotebookAllowTabMove = ID_CreateTree + 42
+ID_NotebookAllowTabExternalMove = ID_CreateTree + 43
+ID_NotebookAllowTabSplit = ID_CreateTree + 44
+ID_NotebookWindowList = ID_CreateTree + 45
+ID_NotebookScrollButtons = ID_CreateTree + 46
+ID_NotebookTabFixedWidth = ID_CreateTree + 47
+ID_NotebookArtGloss = ID_CreateTree + 48
+ID_NotebookArtSimple = ID_CreateTree + 49
+ID_NotebookArtVC71 = ID_CreateTree + 50
+ID_NotebookArtFF2 = ID_CreateTree + 51
+ID_NotebookArtVC8 = ID_CreateTree + 52
+ID_NotebookArtChrome = ID_CreateTree + 53
+ID_NotebookAlignTop = ID_CreateTree + 54
+ID_NotebookAlignBottom = ID_CreateTree + 55
+ID_NotebookHideSingle = ID_CreateTree + 56
+ID_NotebookSmartTab = ID_CreateTree + 57
+ID_NotebookUseImagesDropDown = ID_CreateTree + 58
 
-ID_SampleItem = ID_CreateTree + 58
+ID_SampleItem = ID_CreateTree + 59
 
 ID_FirstPerspective = ID_CreatePerspective + 1000
 
@@ -503,9 +608,11 @@ class AuiFrame(wx.Frame):
         # set up default notebook style
         self._notebook_style = aui.AUI_NB_DEFAULT_STYLE | aui.AUI_NB_TAB_EXTERNAL_MOVE | wx.NO_BORDER
         self._notebook_theme = 0
+        # Attributes
         self._textCount = 1
         self._transparency = 255
         self._snapped = False
+        self._custom_buttons = False
 
         self.CreateStatusBar()
         self.GetStatusBar().SetStatusText("Ready")
@@ -559,8 +666,9 @@ class AuiFrame(wx.Frame):
         options_menu.AppendSeparator()
         options_menu.Append(ID_SnapToScreen, "Snap To Screen")
         options_menu.AppendCheckItem(ID_SnapPanes, "Snap Panes To Managed Window")
-        options_menu.AppendSeparator()
         options_menu.AppendCheckItem(ID_FlyOut, "Use Fly-Out Floating Panes")
+        options_menu.AppendSeparator()
+        options_menu.AppendCheckItem(ID_CustomPaneButtons, "Set Custom Pane Button Bitmaps")
         options_menu.AppendSeparator()
         options_menu.AppendRadioItem(ID_NoGradient, "No Caption Gradient")
         options_menu.AppendRadioItem(ID_VerticalGradient, "Vertical Caption Gradient")
@@ -861,6 +969,7 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnSnapToScreen, id=ID_SnapToScreen)
         self.Bind(wx.EVT_MENU, self.OnSnapPanes, id=ID_SnapPanes)
         self.Bind(wx.EVT_MENU, self.OnFlyOut, id=ID_FlyOut)
+        self.Bind(wx.EVT_MENU, self.OnCustomPaneButtons, id=ID_CustomPaneButtons)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_AllowActivePane)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookTabFixedWidth)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookNoCloseButton)
@@ -917,6 +1026,7 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_ModernDockArt)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_SnapPanes)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_FlyOut)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_CustomPaneButtons)
         
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookTabFixedWidth)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookNoCloseButton)
@@ -1112,7 +1222,22 @@ class AuiFrame(wx.Frame):
             pane.FlyOut(False)
 
         self._mgr.Update()
+
+
+    def OnCustomPaneButtons(self, event):
+
+        self._custom_buttons = checked = event.IsChecked()
+        art = self._mgr.GetArtProvider()
         
+        if not checked:
+            art.SetDefaultPaneBitmaps(wx.Platform == "__WXMAC__")
+        else:
+            for bmp, button, active, maximize in CUSTOM_PANE_BITMAPS:
+                art.SetCustomPaneBitmap(bmp.GetBitmap(), button, active, maximize)
+            
+        self._mgr.Update()
+        self.Refresh()
+
 
     def OnCustomizeToolbar(self, event):
 
@@ -1309,6 +1434,9 @@ class AuiFrame(wx.Frame):
         elif evId == ID_FlyOut:
             pane = self._mgr.GetPane("test8")
             event.Check(pane.IsFlyOut())
+
+        elif evId == ID_CustomPaneButtons:
+            event.Check(self._custom_buttons)
             
         elif evId == ID_NotebookNoCloseButton:
             event.Check((self._notebook_style & (aui.AUI_NB_CLOSE_BUTTON|aui.AUI_NB_CLOSE_ON_ALL_TABS|aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)) != 0)

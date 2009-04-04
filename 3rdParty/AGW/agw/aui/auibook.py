@@ -1937,6 +1937,7 @@ class TabFrame(wx.PyWindow):
         self._tabs = None
         self._rect = wx.Rect(0, 0, 200, 200)
         self._tab_ctrl_height = 20
+        self._tab_rect = wx.Rect()        
         
         self.PostCreate(pre)
         

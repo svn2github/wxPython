@@ -170,38 +170,8 @@ class AuiDefaultDockArt(object):
         else:
             self._caption_font = wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False)
 
-        if isMac:
-            self._inactive_close_bitmap = BitmapFromBits(close_bits, 16, 16, wx.WHITE)
-            self._active_close_bitmap = BitmapFromBits(close_bits, 16, 16, wx.WHITE)
-        else:
-            self._inactive_close_bitmap = BitmapFromBits(close_bits, 16, 16, self._inactive_caption_text_colour)
-            self._active_close_bitmap = BitmapFromBits(close_bits, 16, 16, self._active_caption_text_colour)
-            
-        if isMac:
-            self._inactive_maximize_bitmap = BitmapFromBits(max_bits, 16, 16, wx.WHITE)
-            self._active_maximize_bitmap = BitmapFromBits(max_bits, 16, 16, wx.WHITE)
-        else:
-            self._inactive_maximize_bitmap = BitmapFromBits(max_bits, 16, 16, self._inactive_caption_text_colour)
-            self._active_maximize_bitmap = BitmapFromBits(max_bits, 16, 16, self._active_caption_text_colour)
-
-        if isMac:
-            self._inactive_restore_bitmap = BitmapFromBits(restore_bits, 16, 16, wx.WHITE)
-            self._active_restore_bitmap = BitmapFromBits(restore_bits, 16, 16, wx.WHITE)
-        else:
-            self._inactive_restore_bitmap = BitmapFromBits(restore_bits, 16, 16, self._inactive_caption_text_colour)
-            self._active_restore_bitmap = BitmapFromBits(restore_bits, 16, 16, self._active_caption_text_colour)
-
-        if isMac:
-            self._inactive_minimize_bitmap = BitmapFromBits(minimize_bits, 16, 16, wx.WHITE)
-            self._active_minimize_bitmap = BitmapFromBits(minimize_bits, 16, 16, wx.WHITE)
-        else:
-            self._inactive_minimize_bitmap = BitmapFromBits(minimize_bits, 16, 16, self._inactive_caption_text_colour)
-            self._active_minimize_bitmap = BitmapFromBits(minimize_bits, 16, 16, self._active_caption_text_colour)
-
-        self._inactive_pin_bitmap = BitmapFromBits(pin_bits, 16, 16, self._inactive_caption_text_colour)
-        self._active_pin_bitmap = BitmapFromBits(pin_bits, 16, 16, self._active_caption_text_colour)
-        self._restore_bitmap = wx.BitmapFromXPMData(restore_xpm)
-
+        self.SetDefaultPaneBitmaps(isMac)
+        
         # default metric values
         self._sash_size = 4
 
@@ -732,7 +702,91 @@ class AuiDefaultDockArt(object):
 
                 if y >= yend:
                     break
-                
+
+
+    def SetDefaultPaneBitmaps(self, isMac):
+        """
+        Assigns the default pane bitmaps.
+
+        :param `isMac`: whether we are on wxMAC or not.
+        """
+
+        if isMac:
+            self._inactive_close_bitmap = BitmapFromBits(close_bits, 16, 16, wx.WHITE)
+            self._active_close_bitmap = BitmapFromBits(close_bits, 16, 16, wx.WHITE)
+        else:
+            self._inactive_close_bitmap = BitmapFromBits(close_bits, 16, 16, self._inactive_caption_text_colour)
+            self._active_close_bitmap = BitmapFromBits(close_bits, 16, 16, self._active_caption_text_colour)
+            
+        if isMac:
+            self._inactive_maximize_bitmap = BitmapFromBits(max_bits, 16, 16, wx.WHITE)
+            self._active_maximize_bitmap = BitmapFromBits(max_bits, 16, 16, wx.WHITE)
+        else:
+            self._inactive_maximize_bitmap = BitmapFromBits(max_bits, 16, 16, self._inactive_caption_text_colour)
+            self._active_maximize_bitmap = BitmapFromBits(max_bits, 16, 16, self._active_caption_text_colour)
+
+        if isMac:
+            self._inactive_restore_bitmap = BitmapFromBits(restore_bits, 16, 16, wx.WHITE)
+            self._active_restore_bitmap = BitmapFromBits(restore_bits, 16, 16, wx.WHITE)
+        else:
+            self._inactive_restore_bitmap = BitmapFromBits(restore_bits, 16, 16, self._inactive_caption_text_colour)
+            self._active_restore_bitmap = BitmapFromBits(restore_bits, 16, 16, self._active_caption_text_colour)
+
+        if isMac:
+            self._inactive_minimize_bitmap = BitmapFromBits(minimize_bits, 16, 16, wx.WHITE)
+            self._active_minimize_bitmap = BitmapFromBits(minimize_bits, 16, 16, wx.WHITE)
+        else:
+            self._inactive_minimize_bitmap = BitmapFromBits(minimize_bits, 16, 16, self._inactive_caption_text_colour)
+            self._active_minimize_bitmap = BitmapFromBits(minimize_bits, 16, 16, self._active_caption_text_colour)
+
+        self._inactive_pin_bitmap = BitmapFromBits(pin_bits, 16, 16, self._inactive_caption_text_colour)
+        self._active_pin_bitmap = BitmapFromBits(pin_bits, 16, 16, self._active_caption_text_colour)
+        self._restore_bitmap = wx.BitmapFromXPMData(restore_xpm)
+
+        
+    def SetCustomPaneBitmap(self, bmp, button, active, maximize=False):
+        """
+        Sets a custom button bitmap for the pane button.
+
+        :param `bmp`: the actual bitmap to set;
+        :param `button`: the button identifier;
+        :param `active`: whether it is the bitmap for the active button or not;
+        :param `maximize`: used to distinguish between the maximize and restore bitmaps.
+        """
+
+        if bmp.GetWidth() > 16 or bmp.GetHeight() > 16:
+            raise Exception("The input bitmap is too big")
+
+        if button == AUI_BUTTON_CLOSE:
+            if active:
+                self._active_close_bitmap = bmp
+            else:
+                self._inactive_close_bitmap = bmp
+
+        elif button == AUI_BUTTON_PIN:
+            if active:
+                self._active_pin_bitmap = bmp
+            else:
+                self._inactive_pin_bitmap = bmp
+
+        elif button == AUI_BUTTON_MAXIMIZE_RESTORE:
+            if maximize:
+                if active:
+                    self._active_maximize_bitmap = bmp
+                else:
+                    self._inactive_maximize_bitmap = bmp
+            else:
+                if active:
+                    self._active_restore_bitmap = bmp
+                else:
+                    self._inactive_restore_bitmap = bmp
+
+        elif button == AUI_BUTTON_MINIMIZE:
+            if active:
+                self._active_minimize_bitmap = bmp
+            else:
+                self._inactive_minimize_bitmap = bmp
+
 
 if _ctypes:
     class RECT(ctypes.Structure):
