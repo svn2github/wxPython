@@ -2713,11 +2713,17 @@ def DrawResizeHint(dc, rect):
     """
         
     if wx.Platform == "__WXMSW__" and wx.App.GetComCtl32Version() >= 600:
-        # Draw the nice XP style splitter
-        dc.SetPen(wx.TRANSPARENT_PEN)
-        dc.SetBrush(wx.BLACK_BRUSH)
+        if wx.GetOsVersion()[1] > 5:
+            # Windows Vista
+            dc.SetPen(wx.Pen("black", 2, wx.SOLID))
+            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+        else:
+            # Draw the nice XP style splitter
+            dc.SetPen(wx.TRANSPARENT_PEN)
+            dc.SetBrush(wx.BLACK_BRUSH)
         dc.SetLogicalFunction(wx.INVERT)
         dc.DrawRectangleRect(rect)
+        dc.SetLogicalFunction(wx.COPY)
     else:
         stipple = PaneCreateStippleBitmap()
         brush = wx.BrushFromBitmap(stipple)
