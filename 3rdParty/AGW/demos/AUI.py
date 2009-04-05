@@ -204,25 +204,26 @@ ID_NotebookNoCloseButton = ID_CreateTree + 38
 ID_NotebookCloseButton = ID_CreateTree + 39
 ID_NotebookCloseButtonAll = ID_CreateTree + 40
 ID_NotebookCloseButtonActive = ID_CreateTree + 41
-ID_NotebookAllowTabMove = ID_CreateTree + 42
-ID_NotebookAllowTabExternalMove = ID_CreateTree + 43
-ID_NotebookAllowTabSplit = ID_CreateTree + 44
-ID_NotebookWindowList = ID_CreateTree + 45
-ID_NotebookScrollButtons = ID_CreateTree + 46
-ID_NotebookTabFixedWidth = ID_CreateTree + 47
-ID_NotebookArtGloss = ID_CreateTree + 48
-ID_NotebookArtSimple = ID_CreateTree + 49
-ID_NotebookArtVC71 = ID_CreateTree + 50
-ID_NotebookArtFF2 = ID_CreateTree + 51
-ID_NotebookArtVC8 = ID_CreateTree + 52
-ID_NotebookArtChrome = ID_CreateTree + 53
-ID_NotebookAlignTop = ID_CreateTree + 54
-ID_NotebookAlignBottom = ID_CreateTree + 55
-ID_NotebookHideSingle = ID_CreateTree + 56
-ID_NotebookSmartTab = ID_CreateTree + 57
-ID_NotebookUseImagesDropDown = ID_CreateTree + 58
+ID_NotebookCloseOnLeft = ID_CreateTree + 42
+ID_NotebookAllowTabMove = ID_CreateTree + 43
+ID_NotebookAllowTabExternalMove = ID_CreateTree + 44
+ID_NotebookAllowTabSplit = ID_CreateTree + 45
+ID_NotebookWindowList = ID_CreateTree + 46
+ID_NotebookScrollButtons = ID_CreateTree + 47
+ID_NotebookTabFixedWidth = ID_CreateTree + 48
+ID_NotebookArtGloss = ID_CreateTree + 49
+ID_NotebookArtSimple = ID_CreateTree + 50
+ID_NotebookArtVC71 = ID_CreateTree + 51
+ID_NotebookArtFF2 = ID_CreateTree + 52
+ID_NotebookArtVC8 = ID_CreateTree + 53
+ID_NotebookArtChrome = ID_CreateTree + 54
+ID_NotebookAlignTop = ID_CreateTree + 55
+ID_NotebookAlignBottom = ID_CreateTree + 56
+ID_NotebookHideSingle = ID_CreateTree + 57
+ID_NotebookSmartTab = ID_CreateTree + 58
+ID_NotebookUseImagesDropDown = ID_CreateTree + 59
 
-ID_SampleItem = ID_CreateTree + 59
+ID_SampleItem = ID_CreateTree + 60
 
 ID_FirstPerspective = ID_CreatePerspective + 1000
 
@@ -599,7 +600,7 @@ class AuiFrame(wx.Frame):
 
         self._mgr = aui.AuiManager()
         
-        # tell AuiManager to manage self frame
+        # tell AuiManager to manage this frame
         self._mgr.SetManagedWindow(self)
 
         # set frame icon
@@ -685,9 +686,11 @@ class AuiFrame(wx.Frame):
         notebook_menu.AppendRadioItem(ID_NotebookArtChrome, "Chrome Theme")
         notebook_menu.AppendSeparator()        
         notebook_menu.AppendRadioItem(ID_NotebookNoCloseButton, "No Close Button")
-        notebook_menu.AppendRadioItem(ID_NotebookCloseButton, "Close Button at Right")
-        notebook_menu.AppendRadioItem(ID_NotebookCloseButtonAll, "Close Button on All Tabs")
-        notebook_menu.AppendRadioItem(ID_NotebookCloseButtonActive, "Close Button on Active Tab")
+        notebook_menu.AppendRadioItem(ID_NotebookCloseButton, "Close Button At Right")
+        notebook_menu.AppendRadioItem(ID_NotebookCloseButtonAll, "Close Button On All Tabs")
+        notebook_menu.AppendRadioItem(ID_NotebookCloseButtonActive, "Close Button On Active Tab")
+        notebook_menu.AppendSeparator()
+        notebook_menu.AppendCheckItem(ID_NotebookCloseOnLeft, "Close Button On The Left Of Tabs")
         notebook_menu.AppendSeparator()
         notebook_menu.AppendRadioItem(ID_NotebookAlignTop, "Tab Top Alignment")
         notebook_menu.AppendRadioItem(ID_NotebookAlignBottom, "Tab Bottom Alignment")
@@ -697,7 +700,7 @@ class AuiFrame(wx.Frame):
         notebook_menu.AppendCheckItem(ID_NotebookAllowTabSplit, "Allow Notebook Split")
         notebook_menu.AppendCheckItem(ID_NotebookScrollButtons, "Scroll Buttons Visible")
         notebook_menu.AppendCheckItem(ID_NotebookWindowList, "Window List Button Visible")
-        notebook_menu.AppendCheckItem(ID_NotebookTabFixedWidth, "Fixed-width Tabs")
+        notebook_menu.AppendCheckItem(ID_NotebookTabFixedWidth, "Fixed-Width Tabs")
         notebook_menu.AppendCheckItem(ID_NotebookHideSingle, "Hide On Single Tab")
         notebook_menu.AppendCheckItem(ID_NotebookSmartTab, "Use Smart Tabbing")
         notebook_menu.AppendCheckItem(ID_NotebookUseImagesDropDown, "Use Tab Images In Dropdown Menu")
@@ -990,6 +993,7 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookHideSingle)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookSmartTab)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookUseImagesDropDown)
+        self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookCloseOnLeft)
         self.Bind(wx.EVT_MENU, self.OnTabAlignment, id=ID_NotebookAlignTop)
         self.Bind(wx.EVT_MENU, self.OnTabAlignment, id=ID_NotebookAlignBottom)
         
@@ -1341,6 +1345,9 @@ class AuiFrame(wx.Frame):
 
         elif evId == ID_NotebookUseImagesDropDown:
             self._notebook_style ^= aui.AUI_NB_USE_IMAGES_DROPDOWN
+            
+        elif evId == ID_NotebookCloseOnLeft:
+            self._notebook_style ^= aui.AUI_NB_CLOSE_ON_TAB_LEFT
         
         all_panes = self._mgr.GetAllPanes()
         
@@ -1476,6 +1483,9 @@ class AuiFrame(wx.Frame):
 
         elif evId == ID_NotebookUseImagesDropDown:
             event.Check((self._notebook_style & aui.AUI_NB_USE_IMAGES_DROPDOWN) != 0)
+
+        elif evId == ID_NotebookCloseOnLeft:
+            event.Check((self._notebook_style & aui.AUI_NB_CLOSE_ON_TAB_LEFT) != 0)
             
         elif evId == ID_NotebookArtGloss:
             event.Check(self._notebook_theme == 0)
@@ -1921,7 +1931,9 @@ class AuiFrame(wx.Frame):
         "<li>Possibility to set a transparency for floating panes (a la Paint .NET);</li>" \
         "<li>Snapping the main frame to the screen in any positin specified by horizontal and vertical " \
         "alignments;</li>" \
-        "<li>Snapping floating panes on left/right/top/bottom or any combination of directions, a la Winamp.</li>" \
+        "<li>Snapping floating panes on left/right/top/bottom or any combination of directions, a la Winamp;</li>" \
+        "<li>'Fly-out' floating panes, i.e. panes which show themselves only when the mouse hover them;</li>" \
+        "<li>Ability to set custom bitmaps for pane buttons (close, maximize, etc...).</li>" \
         "</ul><p>" \
         "<li><b>AuiNotebook:</b></li>" \
         "<ul>" \
@@ -1936,10 +1948,12 @@ class AuiFrame(wx.Frame):
         "<li>Firefox 2 theme</li>" \
         "<li>Visual Studio 2003 theme (VC71)</li>" \
         "<li>Visual Studio 2005 theme (VC81)</li>" \
-        "<li>Google Chrome theme (only <tt>AUI_NB_TOP</tt> at the moment)</li>" \
+        "<li>Google Chrome theme</li>" \
         "</ul>" \
         "<li>Enabling/disabling tabs;</li>" \
-        "<li>Setting the colour of the tab's text. </li>" \
+        "<li>Setting the colour of the tab's text; </li>" \
+        "<li>Implementation of the style ``AUI_NB_CLOSE_ON_TAB_LEFT``, which draws the tab close button on " \
+        "the left instead of on the right (a la Camino browser). </li>" \
         "</ul><p>" \
         "<li><b>AuiToolBar:</b></li>" \
         "<ul>" \
