@@ -148,7 +148,8 @@ Plus the following features:
   (h) Snapping the main frame to the screen in any positin specified by horizontal and vertical
       alignments;
   (i) Snapping floating panes on left/right/top/bottom or any combination of directions, a la Winamp;
-  (j) "Fly-out" floating panes, i.e. panes which show themselves only when the mouse hover them.
+  (j) "Fly-out" floating panes, i.e. panes which show themselves only when the mouse hover them;
+  (k) Ability to set custom bitmaps for pane buttons (close, maximize, etc...).
 
 - AuiNotebook:
   (a) Implementation of the style ``AUI_NB_HIDE_ON_SINGLE_TAB``, a la `wx.lib.agw.flatnotebook`;
@@ -163,7 +164,9 @@ Plus the following features:
       (5) Visual Studio 2005 theme (VC81)
       (6) Google Chrome theme
   (e) Enabling/disabling tabs;
-  (f) Setting the colour of the tab's text.
+  (f) Setting the colour of the tab's text;
+  (g) Implementation of the style ``AUI_NB_CLOSE_ON_TAB_LEFT``, which draws the tab close button on
+      the left instead of on the right (a la Camino browser).
   
 - AuiToolBar:
   (a) ``AUI_TB_PLAIN_BACKGROUND`` style that allows to easy setup a plain background to the AUI toolbar,

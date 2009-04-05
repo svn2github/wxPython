@@ -67,7 +67,6 @@ def StepColour(c, ialpha):
         bg = 0
         alpha = 1.0 + alpha  # 0 = transparent fg 1 = opaque fg
     
-
     r = BlendColour(r, bg, alpha)
     g = BlendColour(g, bg, alpha)
     b = BlendColour(b, bg, alpha)
@@ -287,6 +286,60 @@ def PaneCreateStippleBitmap():
     return img.ConvertToBitmap()
 
 
+def DrawMACCloseButton(colour, backColour=None):
+    """
+    Draws the wxMAC tab close button using wx.GraphicsContext.
+
+    :param `colour`: the colour to use to draw the circle.
+    """
+
+    bmp = wx.EmptyBitmapRGBA(16, 16)
+    dc = wx.MemoryDC()
+    dc.SelectObject(bmp)
+
+    gc = wx.GraphicsContext.Create(dc)    
+    gc.SetBrush(wx.Brush(colour))
+    path = gc.CreatePath()
+    path.AddCircle(6.5, 7, 6.5)
+    path.CloseSubpath()
+    gc.FillPath(path)
+    
+    path = gc.CreatePath()
+    if backColour is not None:
+        pen = wx.Pen(backColour, 2)
+    else:
+        pen = wx.Pen("white", 2)
+        
+    pen.SetCap(wx.CAP_BUTT)
+    pen.SetJoin(wx.JOIN_BEVEL)
+    gc.SetPen(pen)
+    path.MoveToPoint(3.5, 4)
+    path.AddLineToPoint(9.5, 10)
+    path.MoveToPoint(3.5, 10)
+    path.AddLineToPoint(9.5, 4)
+    path.CloseSubpath()
+    gc.DrawPath(path)
+
+    dc.SelectObject(wx.NullBitmap)
+    return bmp
+
+
+def DarkenBitmap(bmp, caption_colour, new_colour):
+    """
+    Darkens the input bitmap on wxMAC using the input colour.
+    :param `bmp`: the bitmap to be manipulated;
+    :param `caption_colour`: the colour of the pane caption
+    :param `new_colour`: the colour used to darken the bitmap.
+    """
+
+    image = bmp.ConvertToImage()
+    red = caption_colour.Red()/float(new_colour.Red())
+    green = caption_colour.Green()/float(new_colour.Green())
+    blue = caption_colour.Blue()/float(new_colour.Blue())
+    image = image.AdjustChannels(red, green, blue)
+    return image.ConvertToBitmap()
+
+    
 def DrawGradientRectangle(dc, rect, start_colour, end_colour, direction, offset=0, length=0):
     """
     Draws a gradient-shaded rectangle.

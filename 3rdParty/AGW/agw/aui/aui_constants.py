@@ -212,6 +212,11 @@ AUI_NB_SMART_TABS          = 1 << 16
 """ Use Smart Tabbing, like Alt+Tab on Windows. """
 AUI_NB_USE_IMAGES_DROPDOWN = 1 << 17
 """ Uses images on dropdown window list menu instead of check items. """
+AUI_NB_CLOSE_ON_TAB_LEFT   = 1 << 18
+"""
+Draws the tab close button on the left instead of on the right
+(a la Camino browser).
+"""
 
 AUI_NB_DEFAULT_STYLE = AUI_NB_TOP | AUI_NB_TAB_SPLIT | AUI_NB_TAB_MOVE | \
                        AUI_NB_SCROLL_BUTTONS | AUI_NB_CLOSE_ON_ACTIVE_TAB | \

@@ -17,7 +17,8 @@ import wx
 import types
 
 from aui_utilities import BitmapFromBits, StepColour, ChopText, GetBaseColour
-from aui_utilities import DrawGradientRectangle
+from aui_utilities import DrawGradientRectangle, DrawMACCloseButton
+from aui_utilities import DarkenBitmap
 from aui_constants import *
 
 optionActive = 2**14
@@ -142,11 +143,13 @@ class AuiDefaultDockArt(object):
         self._background_colour = base_colour
         self._background_gradient_colour = StepColour(base_colour, 180)
 
-        if wx.Platform == '__WXMAC__':
+        isMac = wx.Platform == "__WXMAC__"
+
+        if isMac:
             self._active_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
         else:
             self._active_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
-        
+            
         self._active_caption_gradient_colour = StepColour(self._active_caption_colour, 110)
         self._active_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_CAPTIONTEXT)
         self._inactive_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_INACTIVECAPTION)
@@ -167,14 +170,13 @@ class AuiDefaultDockArt(object):
         self._gripper_pen2 = wx.Pen(darker3_colour)
         self._gripper_pen3 = wx.WHITE_PEN
 
-        isMac = wx.Platform == "__WXMAC__"
-
         if isMac:
             self._caption_font = wx.SMALL_FONT
         else:
             self._caption_font = wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False)
 
         self.SetDefaultPaneBitmaps(isMac)
+        self._restore_bitmap = wx.BitmapFromXPMData(restore_xpm)
         
         # default metric values
         self._sash_size = 4
@@ -229,7 +231,7 @@ class AuiDefaultDockArt(object):
         elif id == AUI_DOCKART_DRAW_SASH_GRIP:
             return self._draw_sash
         else:
-            raise Exception("Invalid Metric Ordinal. ")
+            raise Exception("Invalid Metric Ordinal.")
 
 
     def SetMetric(self, id, new_val):
@@ -255,7 +257,7 @@ class AuiDefaultDockArt(object):
         elif id == AUI_DOCKART_DRAW_SASH_GRIP:
             self._draw_sash = new_val
         else:
-            raise Exception("Invalid Metric Ordinal. ")
+            raise Exception("Invalid Metric Ordinal.")
 
 
     def GetColor(self, id):
@@ -288,7 +290,7 @@ class AuiDefaultDockArt(object):
         elif id == AUI_DOCKART_GRIPPER_COLOUR:
             return self._gripper_brush.GetColour()
         else:
-            raise Exception("Invalid Colour Ordinal. ")
+            raise Exception("Invalid Colour Ordinal.")
 
 
     def SetColor(self, id, colour):
@@ -314,12 +316,22 @@ class AuiDefaultDockArt(object):
             self._sash_brush.SetColour(colour)
         elif id == AUI_DOCKART_INACTIVE_CAPTION_COLOUR:
             self._inactive_caption_colour = colour
+            if not self._custom_pane_bitmaps and wx.Platform == "__WXMAC__":
+                # No custom bitmaps for the pane close button
+                # Change the MAC close bitmap colour
+                self._inactive_close_bitmap = DrawMACCloseButton(wx.WHITE, colour)
+
         elif id == AUI_DOCKART_INACTIVE_CAPTION_GRADIENT_COLOUR:
             self._inactive_caption_gradient_colour = colour
         elif id == AUI_DOCKART_INACTIVE_CAPTION_TEXT_COLOUR:
             self._inactive_caption_text_colour = colour
         elif id == AUI_DOCKART_ACTIVE_CAPTION_COLOUR:
             self._active_caption_colour = colour
+            if not self._custom_pane_bitmaps and wx.Platform == "__WXMAC__":
+                # No custom bitmaps for the pane close button
+                # Change the MAC close bitmap colour
+                self._active_close_bitmap = DrawMACCloseButton(wx.WHITE, colour)
+                
         elif id == AUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR:
             self._active_caption_gradient_colour = colour
         elif id == AUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR:
@@ -331,7 +343,7 @@ class AuiDefaultDockArt(object):
             self._gripper_pen1.SetColour(StepColour(colour, 40))
             self._gripper_pen2.SetColour(StepColour(colour, 60))
         else:
-            raise Exception("Invalid Colour Ordinal. ")
+            raise Exception("Invalid Colour Ordinal.")
         
 
     GetColour = GetColor
@@ -469,7 +481,7 @@ class AuiDefaultDockArt(object):
                 if wx.Platform == "__WXMAC__":
                     DrawGradientRectangle(dc, rect, self._active_caption_colour,
                                           self._active_caption_gradient_colour,
-                                          self._gradient_type)
+                                          self._gradient_type)                    
                 else:
                     DrawGradientRectangle(dc, rect, self._active_caption_gradient_colour,
                                           self._active_caption_colour,
@@ -657,8 +669,12 @@ class AuiDefaultDockArt(object):
                 dc.SetBrush(wx.Brush(StepColour(self._inactive_caption_colour, 120)))
                 dc.SetPen(wx.Pen(StepColour(self._inactive_caption_colour, 70)))
 
-            # draw the background behind the button
-            dc.DrawRectangle(rect.x, rect.y, 15, 15)
+            if wx.Platform != "__WXMAC__":
+                # draw the background behind the button
+                dc.DrawRectangle(rect.x, rect.y, 15, 15)
+            else:
+                # Darker the bitmap a bit
+                bmp = DarkenBitmap(bmp, self._active_caption_colour, StepColour(self._active_caption_colour, 110))
 
         # draw the button itself
         dc.DrawBitmap(bmp, rect.x, rect.y, True)
@@ -716,8 +732,8 @@ class AuiDefaultDockArt(object):
         """
 
         if isMac:
-            self._inactive_close_bitmap = BitmapFromBits(close_bits, 16, 16, wx.WHITE)
-            self._active_close_bitmap = BitmapFromBits(close_bits, 16, 16, wx.WHITE)
+            self._inactive_close_bitmap = DrawMACCloseButton(wx.WHITE, self._inactive_caption_colour)
+            self._active_close_bitmap = DrawMACCloseButton(wx.WHITE, self._active_caption_colour)
         else:
             self._inactive_close_bitmap = BitmapFromBits(close_bits, 16, 16, self._inactive_caption_text_colour)
             self._active_close_bitmap = BitmapFromBits(close_bits, 16, 16, self._active_caption_text_colour)
@@ -745,8 +761,9 @@ class AuiDefaultDockArt(object):
 
         self._inactive_pin_bitmap = BitmapFromBits(pin_bits, 16, 16, self._inactive_caption_text_colour)
         self._active_pin_bitmap = BitmapFromBits(pin_bits, 16, 16, self._active_caption_text_colour)
-        self._restore_bitmap = wx.BitmapFromXPMData(restore_xpm)
 
+        self._custom_pane_bitmaps = False
+        
         
     def SetCustomPaneBitmap(self, bmp, button, active, maximize=False):
         """
@@ -766,6 +783,9 @@ class AuiDefaultDockArt(object):
                 self._active_close_bitmap = bmp
             else:
                 self._inactive_close_bitmap = bmp
+
+            if wx.Platform == "__WXMAC__":
+                self._custom_pane_bitmaps = True                
 
         elif button == AUI_BUTTON_PIN:
             if active:

@@ -19,7 +19,7 @@ if wx.Platform == '__WXMAC__':
     import Carbon.Appearance
 
 from aui_utilities import BitmapFromBits, StepColour, IndentPressedBitmap, ChopText
-from aui_utilities import GetBaseColour
+from aui_utilities import GetBaseColour, DrawMACCloseButton
 
 from aui_constants import *
 
@@ -122,8 +122,13 @@ class AuiDefaultTabArt(object):
         self._base_colour_pen = wx.Pen(self._base_colour)
         self._base_colour_brush = wx.Brush(self._base_colour)
 
-        self._active_close_bmp = BitmapFromBits(nb_close_bits, 16, 16, wx.BLACK)
-        self._disabled_close_bmp = BitmapFromBits(nb_close_bits, 16, 16, wx.Colour(128, 128, 128))
+        if wx.Platform == "__WXMAC__":
+            self._active_close_bmp = DrawMACCloseButton(wx.BLACK)
+            self._disabled_close_bmp = DrawMACCloseButton(wx.Colour(128, 128, 128))
+        else:
+            self._active_close_bmp = BitmapFromBits(nb_close_bits, 16, 16, wx.BLACK)
+            self._disabled_close_bmp = BitmapFromBits(nb_close_bits, 16, 16, wx.Colour(128, 128, 128))
+
         self._hover_close_bmp = self._active_close_bmp
         self._pressed_close_bmp = self._active_close_bmp
 
@@ -191,6 +196,7 @@ class AuiDefaultTabArt(object):
         ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
         ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like Alt+Tab on Windows
         ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
+        ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
         ==================================== ==================================
         
         """
@@ -461,12 +467,17 @@ class AuiDefaultTabArt(object):
 
         if close_button_state != AUI_BUTTON_STATE_HIDDEN:
             close_button_width = self._active_close_bmp.GetWidth()
-        
+
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+                text_offset += close_button_width - 5
+                
         bitmap_offset = 0
         
         if pagebitmap.IsOk():
         
             bitmap_offset = tab_x + 8
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT and close_button_width:
+                bitmap_offset += close_button_width - 5
 
             # draw bitmap
             dc.DrawBitmap(pagebitmap,
@@ -478,8 +489,9 @@ class AuiDefaultTabArt(object):
             text_offset += 3 # bitmap padding
 
         else:
-        
-            text_offset = tab_x + 8
+
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT == 0 or not close_button_width:
+                text_offset = tab_x + 8
         
         draw_text = ChopText(dc, caption, tab_width - (text_offset-tab_x) - close_button_width)
 
@@ -502,10 +514,14 @@ class AuiDefaultTabArt(object):
                 bmp = self._pressed_close_bmp
 
             shift = (flags & AUI_NB_BOTTOM and [1] or [0])[0]
-                
-            rect = wx.Rect(tab_x + tab_width - close_button_width - 1,
-                           tab_y + (tab_height - bmp.GetHeight())/2 - shift,
-                           close_button_width, tab_height)
+
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+                rect = wx.Rect(tab_x + 4, tab_y + (tab_height - bmp.GetHeight())/2 - shift,
+                               close_button_width, tab_height)
+            else:
+                rect = wx.Rect(tab_x + tab_width - close_button_width - 1,
+                               tab_y + (tab_height - bmp.GetHeight())/2 - shift,
+                               close_button_width, tab_height)
 
             rect = IndentPressedBitmap(rect, close_button_state)
             dc.DrawBitmap(bmp, rect.x, rect.y, True)
@@ -946,6 +962,7 @@ class AuiSimpleTabArt(object):
         ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
         ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like Alt+Tab on Windows
         ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
+        ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
         ==================================== ==================================
         
         """
@@ -1030,6 +1047,8 @@ class AuiSimpleTabArt(object):
         if caption == "":
             caption = "Xj"
 
+        flags = self.GetFlags()
+        
         dc.SetFont(self._selected_font)
         selected_textx, selected_texty = dc.GetTextExtent(caption)
 
@@ -1096,7 +1115,10 @@ class AuiSimpleTabArt(object):
         if close_button_state != AUI_BUTTON_STATE_HIDDEN:
         
             close_button_width = self._active_close_bmp.GetWidth()
-            text_offset = tab_x + (tab_height/2) + ((tab_width-close_button_width)/2) - (textx/2)
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+                text_offset = tab_x + (tab_height/2) + ((tab_width+close_button_width)/2) - (textx/2) - 2
+            else:
+                text_offset = tab_x + (tab_height/2) + ((tab_width-close_button_width)/2) - (textx/2)
         
         else:
         
@@ -1107,8 +1129,11 @@ class AuiSimpleTabArt(object):
             text_offset = tab_x + tab_height
 
         # chop text if necessary
-        draw_text = ChopText(dc, caption,
-                             tab_width - (text_offset-tab_x) - close_button_width)
+        if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+            draw_text = ChopText(dc, caption, tab_width - (text_offset-tab_x))
+        else:
+            draw_text = ChopText(dc, caption,
+                                 tab_width - (text_offset-tab_x) - close_button_width)
 
         # draw tab text
         dc.DrawText(draw_text, text_offset, (tab_y + tab_height)/2 - (texty/2) + 1)
@@ -1131,9 +1156,14 @@ class AuiSimpleTabArt(object):
             else:
                 bmp = self._disabled_close_bmp
 
-            rect = wx.Rect(tab_x + tab_width - close_button_width - 1,
-                           tab_y + (tab_height/2) - (bmp.GetHeight()/2) + 1,
-                           close_button_width, tab_height - 1)
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+                rect = wx.Rect(tab_x + tab_height - 2,
+                               tab_y + (tab_height/2) - (bmp.GetHeight()/2) + 1,
+                               close_button_width, tab_height - 1)
+            else:                
+                rect = wx.Rect(tab_x + tab_width - close_button_width - 1,
+                               tab_y + (tab_height/2) - (bmp.GetHeight()/2) + 1,
+                               close_button_width, tab_height - 1)
             
             self.DrawButtons(dc, rect, bmp, wx.WHITE, close_button_state)
             out_button_rect = wx.Rect(*rect)
@@ -1541,6 +1571,8 @@ class VC71TabArt(AuiDefaultTabArt):
 
         if close_button_state != AUI_BUTTON_STATE_HIDDEN:
             close_button_width = self._active_close_bmp.GetWidth()
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+                text_offset += close_button_width - 5
 
         if not page.enabled:
             dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
@@ -1548,22 +1580,28 @@ class VC71TabArt(AuiDefaultTabArt):
         else:
             dc.SetTextForeground(page.text_colour)
             pagebitmap = page.bitmap
-        
+
+        shift = 0
+        if flags & AUI_NB_BOTTOM:
+            shift = (page.active and [1] or [2])[0]
+            
         bitmap_offset = 0
         if pagebitmap.IsOk():
             bitmap_offset = tab_x + 8
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT and close_button_width:
+                bitmap_offset += close_button_width - 5
 
             # draw bitmap
             dc.DrawBitmap(pagebitmap, bitmap_offset,
-                          drawn_tab_yoff + (drawn_tab_height/2) - (pagebitmap.GetHeight()/2),
+                          drawn_tab_yoff + (drawn_tab_height/2) - (pagebitmap.GetHeight()/2) + shift,
                           True)
 
             text_offset = bitmap_offset + pagebitmap.GetWidth()
             text_offset += 3 # bitmap padding
         
         else:
-        
-            text_offset = tab_x + 8
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT == 0 or not close_button_width:
+                text_offset = tab_x + 8
         
         # if the caption is empty, measure some temporary text
         caption = page.caption
@@ -1581,12 +1619,13 @@ class VC71TabArt(AuiDefaultTabArt):
         draw_text = ChopText(dc, caption, tab_width - (text_offset-tab_x) - close_button_width)
 
         # draw tab text
-        dc.DrawText(draw_text, text_offset, drawn_tab_yoff + (drawn_tab_height)/2 - (texty/2) - 1)
+        dc.DrawText(draw_text, text_offset, drawn_tab_yoff + (drawn_tab_height)/2 - (texty/2) - 1 + shift)
 
         out_button_rect = wx.Rect()
 
         # draw focus rectangle
-        self.DrawFocusRectangle(dc, page, wnd, draw_text, text_offset, bitmap_offset, drawn_tab_yoff, drawn_tab_height, textx, texty)
+        self.DrawFocusRectangle(dc, page, wnd, draw_text, text_offset, bitmap_offset, drawn_tab_yoff+shift,
+                                drawn_tab_height+shift, textx, texty)
                 
         # draw 'x' on tab (if enabled)
         if close_button_state != AUI_BUTTON_STATE_HIDDEN:
@@ -1599,9 +1638,14 @@ class VC71TabArt(AuiDefaultTabArt):
             elif close_button_state == AUI_BUTTON_STATE_PRESSED:
                 bmp = self._pressed_close_bmp
 
-            rect = wx.Rect(tab_x + tab_width - close_button_width - 3,
-                           drawn_tab_yoff + (drawn_tab_height / 2) - (bmp.GetHeight() / 2),
-                           close_button_width, tab_height)
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+                rect = wx.Rect(tab_x + 4,
+                               drawn_tab_yoff + (drawn_tab_height / 2) - (bmp.GetHeight() / 2) + shift,
+                               close_button_width, tab_height)
+            else:
+                rect = wx.Rect(tab_x + tab_width - close_button_width - 3,
+                               drawn_tab_yoff + (drawn_tab_height / 2) - (bmp.GetHeight() / 2) + shift,
+                               close_button_width, tab_height)
 
             # Indent the button if it is pressed down:
             rect = IndentPressedBitmap(rect, close_button_state)
@@ -1734,6 +1778,8 @@ class FF2TabArt(AuiDefaultTabArt):
         close_button_width = 0
         if close_button_state != AUI_BUTTON_STATE_HIDDEN:
             close_button_width = self._active_close_bmp.GetWidth()
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+                text_offset += close_button_width - 4
 
         if not page.enabled:
             dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
@@ -1741,14 +1787,20 @@ class FF2TabArt(AuiDefaultTabArt):
         else:
             dc.SetTextForeground(page.text_colour)
             pagebitmap = page.bitmap
+
+        shift = 0
+        if flags & AUI_NB_BOTTOM:
+            shift = (page.active and [1] or [2])[0]
         
         bitmap_offset = 0
         if pagebitmap.IsOk():
             bitmap_offset = tab_x + 8
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT and close_button_width:
+                bitmap_offset += close_button_width - 4
 
             # draw bitmap
             dc.DrawBitmap(pagebitmap, bitmap_offset,
-                          drawn_tab_yoff + (drawn_tab_height/2) - (pagebitmap.GetHeight()/2),
+                          drawn_tab_yoff + (drawn_tab_height/2) - (pagebitmap.GetHeight()/2) + shift,
                           True)
 
             text_offset = bitmap_offset + pagebitmap.GetWidth()
@@ -1756,7 +1808,8 @@ class FF2TabArt(AuiDefaultTabArt):
         
         else:
         
-            text_offset = tab_x + 8
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT == 0 or not close_button_width:
+                text_offset = tab_x + 8
         
         # if the caption is empty, measure some temporary text
         caption = page.caption
@@ -1770,13 +1823,17 @@ class FF2TabArt(AuiDefaultTabArt):
             dc.SetFont(self._normal_font)
             textx, texty = dc.GetTextExtent(caption)
 
-        draw_text = ChopText(dc, caption, tab_width - (text_offset-tab_x) - close_button_width)
+        if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+            draw_text = ChopText(dc, caption, tab_width - (text_offset-tab_x) - close_button_width + 1)
+        else:
+            draw_text = ChopText(dc, caption, tab_width - (text_offset-tab_x) - close_button_width)
         
         # draw tab text
-        dc.DrawText(draw_text, text_offset, drawn_tab_yoff + drawn_tab_height/2 - texty/2 - 1)
+        dc.DrawText(draw_text, text_offset, drawn_tab_yoff + drawn_tab_height/2 - texty/2 - 1 + shift)
 
         # draw focus rectangle
-        self.DrawFocusRectangle(dc, page, wnd, draw_text, text_offset, bitmap_offset, drawn_tab_yoff, drawn_tab_height, textx, texty)
+        self.DrawFocusRectangle(dc, page, wnd, draw_text, text_offset, bitmap_offset, drawn_tab_yoff+shift,
+                                drawn_tab_height, textx, texty)
         
         out_button_rect = wx.Rect()
         # draw 'x' on tab (if enabled)
@@ -1790,9 +1847,14 @@ class FF2TabArt(AuiDefaultTabArt):
             elif close_button_state == AUI_BUTTON_STATE_PRESSED:
                 bmp = self._pressed_close_bmp
 
-            rect = wx.Rect(tab_x + tab_width - close_button_width - 3,
-                           drawn_tab_yoff + (drawn_tab_height / 2) - (bmp.GetHeight() / 2),
-                           close_button_width, tab_height)
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+                rect = wx.Rect(tab_x + 5,
+                               drawn_tab_yoff + (drawn_tab_height / 2) - (bmp.GetHeight() / 2) + shift,
+                               close_button_width, tab_height)
+            else:
+                rect = wx.Rect(tab_x + tab_width - close_button_width - 3,
+                               drawn_tab_yoff + (drawn_tab_height / 2) - (bmp.GetHeight() / 2) + shift,
+                               close_button_width, tab_height)
 
             # Indent the button if it is pressed down:
             rect = IndentPressedBitmap(rect, close_button_state)
@@ -1954,6 +2016,8 @@ class VC8TabArt(AuiDefaultTabArt):
         close_button_width = 0
         if close_button_state != AUI_BUTTON_STATE_HIDDEN:
             close_button_width = self._active_close_bmp.GetWidth()
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+                text_offset += close_button_width
 
         if not page.enabled:
             dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
@@ -1961,22 +2025,28 @@ class VC8TabArt(AuiDefaultTabArt):
         else:
             dc.SetTextForeground(page.text_colour)
             pagebitmap = page.bitmap
+
+        shift = 0
+        if flags & AUI_NB_BOTTOM:
+            shift = (page.active and [1] or [2])[0]
         
         bitmap_offset = 0
         if pagebitmap.IsOk():
             bitmap_offset = tab_x + 20
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT and close_button_width:
+                bitmap_offset += close_button_width
 
             # draw bitmap
             dc.DrawBitmap(pagebitmap, bitmap_offset,
-                          drawn_tab_yoff + (drawn_tab_height/2) - (pagebitmap.GetHeight()/2),
+                          drawn_tab_yoff + (drawn_tab_height/2) - (pagebitmap.GetHeight()/2) + shift,
                           True)
 
             text_offset = bitmap_offset + pagebitmap.GetWidth()
             text_offset += 3 # bitmap padding
         
         else:
-        
-            text_offset = tab_x + tab_height
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT == 0 or not close_button_width:
+                text_offset = tab_x + tab_height
         
         # if the caption is empty, measure some temporary text
         caption = page.caption
@@ -1990,13 +2060,17 @@ class VC8TabArt(AuiDefaultTabArt):
             dc.SetFont(self._normal_font)
             textx, texty = dc.GetTextExtent(caption)
 
-        draw_text = ChopText(dc, caption, tab_width - (text_offset-tab_x) - close_button_width)
+        if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+            draw_text = ChopText(dc, caption, tab_width - (text_offset-tab_x))
+        else:
+            draw_text = ChopText(dc, caption, tab_width - (text_offset-tab_x) - close_button_width)
 
         # draw tab text
-        dc.DrawText(draw_text, text_offset, drawn_tab_yoff + drawn_tab_height/2 - texty/2 - 1)
+        dc.DrawText(draw_text, text_offset, drawn_tab_yoff + drawn_tab_height/2 - texty/2 - 1 + shift)
 
         # draw focus rectangle
-        self.DrawFocusRectangle(dc, page, wnd, draw_text, text_offset, bitmap_offset, drawn_tab_yoff, drawn_tab_height, textx, texty)
+        self.DrawFocusRectangle(dc, page, wnd, draw_text, text_offset, bitmap_offset, drawn_tab_yoff+shift,
+                                drawn_tab_height+shift, textx, texty)
         
         out_button_rect = wx.Rect()
         # draw 'x' on tab (if enabled)
@@ -2014,10 +2088,15 @@ class VC8TabArt(AuiDefaultTabArt):
                 xpos = tab_x + tab_width - close_button_width + 3
             else:
                 xpos = tab_x + tab_width - close_button_width - 5
-                
-            rect = wx.Rect(xpos,
-                           drawn_tab_yoff + (drawn_tab_height / 2) - (bmp.GetHeight() / 2),
-                           close_button_width, tab_height)
+
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+                rect = wx.Rect(tab_x + 20,
+                               drawn_tab_yoff + (drawn_tab_height / 2) - (bmp.GetHeight() / 2) + shift,
+                               close_button_width, tab_height)
+            else:
+                rect = wx.Rect(xpos,
+                               drawn_tab_yoff + (drawn_tab_height / 2) - (bmp.GetHeight() / 2) + shift,
+                               close_button_width, tab_height)
 
             # Indent the button if it is pressed down:
             rect = IndentPressedBitmap(rect, close_button_state)
@@ -2189,6 +2268,8 @@ class ChromeTabArt(AuiDefaultTabArt):
         tab_size, x_extent = self.GetTabSize(dc, wnd, page.caption, page.bitmap, page.active,
                                              close_button_state)
 
+        flags = self.GetFlags()
+        
         tab_height = self._tab_ctrl_height - 1
         tab_width = tab_size[0]
         tab_x = in_rect.x
@@ -2232,6 +2313,8 @@ class ChromeTabArt(AuiDefaultTabArt):
         close_button_width = 0
         if close_button_state != AUI_BUTTON_STATE_HIDDEN:
             close_button_width = self._active_close_bmp.GetWidth()
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+                text_offset += close_button_width
 
         if not page.enabled:
             dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
@@ -2243,6 +2326,8 @@ class ChromeTabArt(AuiDefaultTabArt):
         bitmap_offset = 0
         if pagebitmap.IsOk():
             bitmap_offset = tab_x + leftw
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT and close_button_width:
+                bitmap_offset += close_button_width
 
             # draw bitmap
             dc.DrawBitmap(pagebitmap, bitmap_offset,
@@ -2254,7 +2339,8 @@ class ChromeTabArt(AuiDefaultTabArt):
         
         else:
         
-            text_offset = tab_x + leftw
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT == 0 or not close_button_width:
+                text_offset = tab_x + leftw
         
         # if the caption is empty, measure some temporary text
         caption = page.caption
@@ -2268,7 +2354,10 @@ class ChromeTabArt(AuiDefaultTabArt):
             dc.SetFont(self._normal_font)
             textx, texty = dc.GetTextExtent(caption)
 
-        draw_text = ChopText(dc, caption, tab_width - (text_offset-tab_x) - close_button_width - leftw)
+        if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+            draw_text = ChopText(dc, caption, tab_width - (text_offset-tab_x) - leftw)
+        else:
+            draw_text = ChopText(dc, caption, tab_width - (text_offset-tab_x) - close_button_width - leftw)
 
         # draw tab text
         dc.DrawText(draw_text, text_offset, drawn_tab_yoff + drawn_tab_height/2 - texty/2 - 1)
@@ -2285,11 +2374,16 @@ class ChromeTabArt(AuiDefaultTabArt):
             elif close_button_state == AUI_BUTTON_STATE_PRESSED:
                 bmp = self._pressed_close_bmp
 
-            rect = wx.Rect(tab_x + tab_width - close_button_width - rightw + 2,
-                           drawn_tab_yoff + (drawn_tab_height / 2) - (bmp.GetHeight() / 2) + 1,
-                           close_button_width, tab_height)
+            if flags & AUI_NB_CLOSE_ON_TAB_LEFT:
+                rect = wx.Rect(tab_x + leftw - 2,
+                               drawn_tab_yoff + (drawn_tab_height / 2) - (bmp.GetHeight() / 2) + 1,
+                               close_button_width, tab_height)
+            else:
+                rect = wx.Rect(tab_x + tab_width - close_button_width - rightw + 2,
+                               drawn_tab_yoff + (drawn_tab_height / 2) - (bmp.GetHeight() / 2) + 1,
+                               close_button_width, tab_height)
 
-            if self._flags & AUI_NB_BOTTOM:
+            if flags & AUI_NB_BOTTOM:
                 rect.y -= 1
                 
             # Indent the button if it is pressed down:
