@@ -972,10 +972,8 @@ class AuiDefaultToolBarArt(object):
         else:
             bmp = item.GetBitmap()
 
-        if not bmp.IsOk():
-            return
-
-        dc.DrawBitmap(bmp, bmp_x, bmp_y, True)
+        if bmp.IsOk():
+            dc.DrawBitmap(bmp, bmp_x, bmp_y, True)
 
         # set the item's text color based on if it is disabled
         dc.SetTextForeground(wx.BLACK)

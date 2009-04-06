@@ -2246,6 +2246,159 @@ class AuiNotebook(wx.PyControl):
         self.UpdateTabCtrlHeight(force=True)
 
 
+    def SavePerspective(self):
+        """
+        Saves the entire user interface layout into an encoded string, which can then
+        be stored by the application (probably using wx.Config). When a perspective
+        is restored using L{LoadPerspective()}, the entire user interface will return
+        to the state it was when the perspective was saved.
+        """
+        
+        # Build list of panes/tabs
+        tabs = ""
+        all_panes = self._mgr.GetAllPanes()
+        
+        for pane in all_panes:
+
+            if pane.name == "dummy":
+                continue
+
+            tabframe = pane.window
+          
+            if tabs:
+                tabs += "|"
+              
+            tabs += pane.name + "="
+          
+            # add tab id's
+            page_count = tabframe._tabs.GetPageCount()
+          
+            for p in xrange(page_count):
+          
+                page = tabframe._tabs.GetPage(p)
+                page_idx = self._tabs.GetIdxFromWindow(page.window)
+             
+                if p:
+                    tabs += ","
+
+                if page_idx == self._curpage:
+                    tabs += "*"
+                elif p == tabframe._tabs.GetActivePage():
+                    tabs += "+"
+                 
+                tabs += "%u"%page_idx
+          
+        tabs += "@"
+
+        # Add frame perspective
+        tabs += self._mgr.SavePerspective()
+
+        return tabs
+
+
+    def LoadPerspective(self, layout):
+        """
+        LoadPerspective() loads a layout which was saved with L{SavePerspective()}.
+
+        :param `layout`: a string which contains a saved AuiNotebook layout.
+        """
+        
+        # Remove all tab ctrls (but still keep them in main index)
+        tab_count = self._tabs.GetPageCount()
+        for i in xrange(tab_count):
+            wnd = self._tabs.GetWindowFromIdx(i)
+
+            # find out which onscreen tab ctrl owns this tab
+            ctrl, ctrl_idx = self.FindTab(wnd)
+            if not ctrl:
+                return False
+
+            # remove the tab from ctrl
+            if not ctrl.RemovePage(wnd):
+                return False
+
+        self.RemoveEmptyTabFrames()
+
+        sel_page = 0
+        tabs = layout[0:layout.index("@")]
+        to_break1 = False
+        
+        while 1:
+
+            if "|" not in tabs:
+                to_break1 = True
+                tab_part = tabs
+            else:
+                tab_part = tabs[0:tabs.index('|')]
+          
+            # Get pane name
+            pane_name = tab_part[0:tab_part.index("=")]
+
+            # create a new tab frame
+            new_tabs = TabFrame()
+            self._tab_id_counter += 1
+            new_tabs._tabs = AuiTabCtrl(self, self._tab_id_counter)
+            new_tabs._tabs.SetArtProvider(self._tabs.GetArtProvider().Clone())
+            new_tabs.SetTabCtrlHeight(self._tab_ctrl_height)
+            new_tabs._tabs.SetFlags(self._flags)
+            dest_tabs = new_tabs._tabs
+
+            # create a pane info structure with the information
+            # about where the pane should be added
+            pane_info = framemanager.AuiPaneInfo().Name(pane_name).Bottom().CaptionVisible(False)
+            self._mgr.AddPane(new_tabs, pane_info)
+
+            # Get list of tab id's and move them to pane
+            tab_list = tab_part[tab_part.index("=")+1:]
+            to_break2 = False
+            
+            while 1:
+                if "," not in tab_list:
+                    to_break2 = True
+                    tab = tab_list
+                else:
+                    tab = tab_list[0:tab_list.index(",")]                
+                    tab_list = tab_list[tab_list.index(",")+1:]
+
+                # Check if this page has an 'active' marker
+                c = tab[0]
+                if c in ['+', '*']:
+                    tab = tab[1:]
+
+                tab_idx = int(tab)
+                if tab_idx >= self.GetPageCount():
+                    continue
+
+                # Move tab to pane
+                page = self._tabs.GetPage(tab_idx)
+                newpage_idx = dest_tabs.GetPageCount()
+                dest_tabs.InsertPage(page.window, page, newpage_idx)
+
+                if c == '+':
+                    dest_tabs.SetActivePage(newpage_idx)
+                elif c == '*':
+                    sel_page = tab_idx
+
+                if to_break2:
+                    break
+          
+            dest_tabs.DoShowHide()
+            if to_break1:
+                break
+            
+            tabs = tabs[tabs.index('|')+1:]
+
+        # Load the frame perspective
+        frames = layout[layout.index('@')+1:]
+        self._mgr.LoadPerspective(frames)
+
+        # Force refresh of selection
+        self._curpage = -1
+        self.SetSelection(sel_page)
+
+        return True
+
+
     def SetTabCtrlHeight(self, height):
         """
         Sets the tab height. By default, the tab control height is calculated
@@ -3581,13 +3734,14 @@ class AuiNotebook(wx.PyControl):
         # if we've just removed the last tab from the source
         # tab set, the remove the tab control completely
         all_panes = self._mgr.GetAllPanes()
-        for pane in all_panes:
+
+        for indx in xrange(len(all_panes)-1, -1, -1):
+            pane = all_panes[indx]
             if pane.name == "dummy":
                 continue
 
             tab_frame = pane.window
             if tab_frame._tabs.GetPageCount() == 0:
-                
                 self._mgr.DetachPane(tab_frame)
                 tab_frame._tabs.Destroy()
                 tab_frame._tabs = None

@@ -3905,10 +3905,6 @@ class AuiManager(wx.EvtHandler):
         if self.GetPane(pane_info.window).IsOk():
             return False
 
-## AG
-##        if isinstance(window, wx.ToolBar):
-##            window.SetInitialSize()
-
         # check if the pane name already exists, this could reveal a
         # bug in the library user's application
         already_exists = False

@@ -166,7 +166,8 @@ Plus the following features:
   (e) Enabling/disabling tabs;
   (f) Setting the colour of the tab's text;
   (g) Implementation of the style ``AUI_NB_CLOSE_ON_TAB_LEFT``, which draws the tab close button on
-      the left instead of on the right (a la Camino browser).
+      the left instead of on the right (a la Camino browser);
+  (h) Ability to save and load perspectives in `AuiNotebook` (experimental).
   
 - AuiToolBar:
   (a) ``AUI_TB_PLAIN_BACKGROUND`` style that allows to easy setup a plain background to the AUI toolbar,
@@ -220,7 +221,7 @@ License And Version:
 
 AUI library is freeware and distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 31 Mar 2009, 21.00 GMT
+Latest revision: Andrea Gavana @ 06 Apr 2009, 12.00 GMT
 Version 1.0. 
 
 """

@@ -176,56 +176,59 @@ ID_NotebookContent = ID_CreateTree + 10
 ID_SizeReportContent = ID_CreateTree + 11
 ID_CreatePerspective = ID_CreateTree + 12
 ID_CopyPerspectiveCode = ID_CreateTree + 13
-ID_AllowFloating = ID_CreateTree + 14
-ID_AllowActivePane = ID_CreateTree + 15
-ID_TransparentHint = ID_CreateTree + 16
-ID_VenetianBlindsHint = ID_CreateTree + 17
-ID_RectangleHint = ID_CreateTree + 18
-ID_NoHint = ID_CreateTree + 19
-ID_HintFade = ID_CreateTree + 20
-ID_NoVenetianFade = ID_CreateTree + 21
-ID_TransparentDrag = ID_CreateTree + 22
-ID_NoGradient = ID_CreateTree + 23
-ID_VerticalGradient = ID_CreateTree + 24
-ID_HorizontalGradient = ID_CreateTree + 25
-ID_LiveUpdate = ID_CreateTree + 26
-ID_PaneIcons = ID_CreateTree + 27
-ID_TransparentPane = ID_CreateTree + 28
-ID_DefaultDockArt = ID_CreateTree + 29
-ID_ModernDockArt = ID_CreateTree + 30
-ID_SnapToScreen = ID_CreateTree + 31
-ID_SnapPanes = ID_CreateTree + 32
-ID_FlyOut = ID_CreateTree + 33
-ID_CustomPaneButtons = ID_CreateTree + 34
-ID_Settings = ID_CreateTree + 35
-ID_CustomizeToolbar = ID_CreateTree + 36
-ID_DropDownToolbarItem = ID_CreateTree + 37
-ID_NotebookNoCloseButton = ID_CreateTree + 38
-ID_NotebookCloseButton = ID_CreateTree + 39
-ID_NotebookCloseButtonAll = ID_CreateTree + 40
-ID_NotebookCloseButtonActive = ID_CreateTree + 41
-ID_NotebookCloseOnLeft = ID_CreateTree + 42
-ID_NotebookAllowTabMove = ID_CreateTree + 43
-ID_NotebookAllowTabExternalMove = ID_CreateTree + 44
-ID_NotebookAllowTabSplit = ID_CreateTree + 45
-ID_NotebookWindowList = ID_CreateTree + 46
-ID_NotebookScrollButtons = ID_CreateTree + 47
-ID_NotebookTabFixedWidth = ID_CreateTree + 48
-ID_NotebookArtGloss = ID_CreateTree + 49
-ID_NotebookArtSimple = ID_CreateTree + 50
-ID_NotebookArtVC71 = ID_CreateTree + 51
-ID_NotebookArtFF2 = ID_CreateTree + 52
-ID_NotebookArtVC8 = ID_CreateTree + 53
-ID_NotebookArtChrome = ID_CreateTree + 54
-ID_NotebookAlignTop = ID_CreateTree + 55
-ID_NotebookAlignBottom = ID_CreateTree + 56
-ID_NotebookHideSingle = ID_CreateTree + 57
-ID_NotebookSmartTab = ID_CreateTree + 58
-ID_NotebookUseImagesDropDown = ID_CreateTree + 59
+ID_CreateNBPerspective = ID_CreateTree + 14
+ID_CopyNBPerspectiveCode = ID_CreateTree + 15
+ID_AllowFloating = ID_CreateTree + 16
+ID_AllowActivePane = ID_CreateTree + 17
+ID_TransparentHint = ID_CreateTree + 18
+ID_VenetianBlindsHint = ID_CreateTree + 19
+ID_RectangleHint = ID_CreateTree + 20
+ID_NoHint = ID_CreateTree + 21
+ID_HintFade = ID_CreateTree + 22
+ID_NoVenetianFade = ID_CreateTree + 23
+ID_TransparentDrag = ID_CreateTree + 24
+ID_NoGradient = ID_CreateTree + 25
+ID_VerticalGradient = ID_CreateTree + 26
+ID_HorizontalGradient = ID_CreateTree + 27
+ID_LiveUpdate = ID_CreateTree + 28
+ID_PaneIcons = ID_CreateTree + 29
+ID_TransparentPane = ID_CreateTree + 30
+ID_DefaultDockArt = ID_CreateTree + 31
+ID_ModernDockArt = ID_CreateTree + 32
+ID_SnapToScreen = ID_CreateTree + 33
+ID_SnapPanes = ID_CreateTree + 34
+ID_FlyOut = ID_CreateTree + 35
+ID_CustomPaneButtons = ID_CreateTree + 36
+ID_Settings = ID_CreateTree + 37
+ID_CustomizeToolbar = ID_CreateTree + 38
+ID_DropDownToolbarItem = ID_CreateTree + 39
+ID_NotebookNoCloseButton = ID_CreateTree + 40
+ID_NotebookCloseButton = ID_CreateTree + 41
+ID_NotebookCloseButtonAll = ID_CreateTree + 42
+ID_NotebookCloseButtonActive = ID_CreateTree + 43
+ID_NotebookCloseOnLeft = ID_CreateTree + 44
+ID_NotebookAllowTabMove = ID_CreateTree + 45
+ID_NotebookAllowTabExternalMove = ID_CreateTree + 46
+ID_NotebookAllowTabSplit = ID_CreateTree + 47
+ID_NotebookWindowList = ID_CreateTree + 48
+ID_NotebookScrollButtons = ID_CreateTree + 49
+ID_NotebookTabFixedWidth = ID_CreateTree + 50
+ID_NotebookArtGloss = ID_CreateTree + 51
+ID_NotebookArtSimple = ID_CreateTree + 52
+ID_NotebookArtVC71 = ID_CreateTree + 53
+ID_NotebookArtFF2 = ID_CreateTree + 54
+ID_NotebookArtVC8 = ID_CreateTree + 55
+ID_NotebookArtChrome = ID_CreateTree + 56
+ID_NotebookAlignTop = ID_CreateTree + 57
+ID_NotebookAlignBottom = ID_CreateTree + 58
+ID_NotebookHideSingle = ID_CreateTree + 59
+ID_NotebookSmartTab = ID_CreateTree + 60
+ID_NotebookUseImagesDropDown = ID_CreateTree + 61
 
-ID_SampleItem = ID_CreateTree + 60
+ID_SampleItem = ID_CreateTree + 62
 
 ID_FirstPerspective = ID_CreatePerspective + 1000
+ID_FirstNBPerspective = ID_CreateNBPerspective + 10000
 
 ID_PaneBorderSize = ID_SampleItem + 100
 ID_SashSize = ID_PaneBorderSize + 2
@@ -705,6 +708,8 @@ class AuiFrame(wx.Frame):
         notebook_menu.AppendCheckItem(ID_NotebookSmartTab, "Use Smart Tabbing")
         notebook_menu.AppendCheckItem(ID_NotebookUseImagesDropDown, "Use Tab Images In Dropdown Menu")
 
+        perspectives_menu = wx.Menu()
+        
         self._perspectives_menu = wx.Menu()
         self._perspectives_menu.Append(ID_CreatePerspective, "Create Perspective")
         self._perspectives_menu.Append(ID_CopyPerspectiveCode, "Copy Perspective Data To Clipboard")
@@ -712,12 +717,21 @@ class AuiFrame(wx.Frame):
         self._perspectives_menu.Append(ID_FirstPerspective+0, "Default Startup")
         self._perspectives_menu.Append(ID_FirstPerspective+1, "All Panes")
 
+        self._nb_perspectives_menu = wx.Menu()
+        self._nb_perspectives_menu.Append(ID_CreateNBPerspective, "Create Perspective")
+        self._nb_perspectives_menu.Append(ID_CopyNBPerspectiveCode, "Copy Perspective Data To Clipboard")
+        self._nb_perspectives_menu.AppendSeparator()
+        self._nb_perspectives_menu.Append(ID_FirstNBPerspective+0, "Default Startup")
+
+        perspectives_menu.AppendMenu(wx.ID_ANY, "Frame Perspectives", self._perspectives_menu)
+        perspectives_menu.AppendMenu(wx.ID_ANY, "AuiNotebook Perspectives", self._nb_perspectives_menu)
+        
         help_menu = wx.Menu()
         help_menu.Append(wx.ID_ABOUT, "About...")
 
         mb.Append(file_menu, "&File")
         mb.Append(view_menu, "&View")
-        mb.Append(self._perspectives_menu, "&Perspectives")
+        mb.Append(perspectives_menu, "&Perspectives")
         mb.Append(options_menu, "&Options")
         mb.Append(notebook_menu, "&Notebook")
         mb.Append(help_menu, "&Help")
@@ -938,6 +952,11 @@ class AuiFrame(wx.Frame):
         self._perspectives.append(perspective_default)
         self._perspectives.append(perspective_all)
 
+        self._nb_perspectives = []
+        auibook = self._mgr.GetPane("notebook_content").window
+        nb_perspective_default = auibook.SavePerspective()
+        self._nb_perspectives.append(nb_perspective_default)
+        
         self._mgr.LoadPerspective(perspective_default)
     
         # "commit" all changes made to AuiManager
@@ -956,6 +975,8 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnCreateNotebook, id=ID_CreateNotebook)
         self.Bind(wx.EVT_MENU, self.OnCreatePerspective, id=ID_CreatePerspective)
         self.Bind(wx.EVT_MENU, self.OnCopyPerspectiveCode, id=ID_CopyPerspectiveCode)
+        self.Bind(wx.EVT_MENU, self.OnCreateNBPerspective, id=ID_CreateNBPerspective)
+        self.Bind(wx.EVT_MENU, self.OnCopyNBPerspectiveCode, id=ID_CopyNBPerspectiveCode)        
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_AllowFloating)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_TransparentHint)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_VenetianBlindsHint)
@@ -1013,7 +1034,9 @@ class AuiFrame(wx.Frame):
 
         self.Bind(wx.EVT_MENU_RANGE, self.OnRestorePerspective, id=ID_FirstPerspective,
                   id2=ID_FirstPerspective+1000)
-
+        self.Bind(wx.EVT_MENU_RANGE, self.OnRestoreNBPerspective, id=ID_FirstNBPerspective,
+                  id2=ID_FirstNBPerspective+1000)
+        
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_AllowFloating)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_TransparentHint)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_HintFade)
@@ -1546,6 +1569,39 @@ class AuiFrame(wx.Frame):
         self._mgr.LoadPerspective(self._perspectives[event.GetId() - ID_FirstPerspective])
 
 
+    def OnCreateNBPerspective(self, event):
+
+        dlg = wx.TextEntryDialog(self, "Enter a name for the new perspective:", "AUI Test")
+
+        dlg.SetValue("Perspective %u"%(len(self._nb_perspectives) + 1))
+        if dlg.ShowModal() != wx.ID_OK:
+            return
+
+        if len(self._nb_perspectives) == 0:
+            self._nb_perspectives_menu.AppendSeparator()
+
+        auibook = self._mgr.GetPane("notebook_content").window        
+        self._nb_perspectives_menu.Append(ID_FirstNBPerspective + len(self._nb_perspectives), dlg.GetValue())
+        self._nb_perspectives.append(auibook.SavePerspective())
+
+
+    def OnCopyNBPerspectiveCode(self, event):
+
+        auibook = self._mgr.GetPane("notebook_content").window
+        s = auibook.SavePerspective()
+
+        if wx.TheClipboard.Open():
+        
+            wx.TheClipboard.SetData(wx.TextDataObject(s))
+            wx.TheClipboard.Close()
+        
+
+    def OnRestoreNBPerspective(self, event):
+
+        auibook = self._mgr.GetPane("notebook_content").window
+        auibook.LoadPerspective(self._nb_perspectives[event.GetId() - ID_FirstNBPerspective])
+
+        
     def OnNotebookPageClose(self, event):
 
         ctrl = event.GetEventObject()
@@ -1952,8 +2008,9 @@ class AuiFrame(wx.Frame):
         "</ul>" \
         "<li>Enabling/disabling tabs;</li>" \
         "<li>Setting the colour of the tab's text; </li>" \
-        "<li>Implementation of the style ``AUI_NB_CLOSE_ON_TAB_LEFT``, which draws the tab close button on " \
-        "the left instead of on the right (a la Camino browser). </li>" \
+        "<li>Implementation of the style <tt>AUI_NB_CLOSE_ON_TAB_LEFT</tt>, which draws the tab close button on " \
+        "the left instead of on the right (a la Camino browser); </li>" \
+        "<li>Ability to save and load perspectives in <i>wx.aui.AuiNotebook</i> (experimental). </li>" \
         "</ul><p>" \
         "<li><b>AuiToolBar:</b></li>" \
         "<ul>" \
@@ -1973,7 +2030,8 @@ class AuiFrame(wx.Frame):
         "<li><i>AuiToolBar</i> idle update only when visible: <a href='http://trac.wxwidgets.org/ticket/10075'>" \
         "http://trac.wxwidgets.org/ticket/10075</a>.</li>" \
         "</ul>" \
-        "</ul>" \
+        "</ul><p>" \
+        "<p>" \
         "</body></html>"
 
         return text
