@@ -123,7 +123,8 @@ class AuiDefaultTabArt(object):
         self._base_colour_brush = wx.Brush(self._base_colour)
 
         if wx.Platform == "__WXMAC__":
-            self._active_close_bmp = DrawMACCloseButton(wx.BLACK)
+            bmp_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DDKSHADOW)
+            self._active_close_bmp = DrawMACCloseButton(bmp_colour)
             self._disabled_close_bmp = DrawMACCloseButton(wx.Colour(128, 128, 128))
         else:
             self._active_close_bmp = BitmapFromBits(nb_close_bits, 16, 16, wx.BLACK)
