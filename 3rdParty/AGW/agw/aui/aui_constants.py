@@ -373,11 +373,23 @@ AUI_BUTTON_UP = 109
 AUI_BUTTON_DOWN = 110
 """ Shows a down button on the pane (not implemented). """
 AUI_BUTTON_CUSTOM1 = 201
-""" Shows a custom button on the pane (not implemented). """
+""" Shows a custom button on the pane. """
 AUI_BUTTON_CUSTOM2 = 202
-""" Shows a custom button on the pane (not implemented). """
+""" Shows a custom button on the pane. """
 AUI_BUTTON_CUSTOM3 = 203
-""" Shows a custom button on the pane (not implemented). """
+""" Shows a custom button on the pane. """
+AUI_BUTTON_CUSTOM4 = 204
+""" Shows a custom button on the pane. """
+AUI_BUTTON_CUSTOM5 = 205
+""" Shows a custom button on the pane. """
+AUI_BUTTON_CUSTOM6 = 206
+""" Shows a custom button on the pane. """
+AUI_BUTTON_CUSTOM7 = 207
+""" Shows a custom button on the pane. """
+AUI_BUTTON_CUSTOM8 = 208
+""" Shows a custom button on the pane. """
+AUI_BUTTON_CUSTOM9 = 209
+""" Shows a custom button on the pane. """
 
 # Pane Insert Level
 AUI_INSERT_PANE = 0

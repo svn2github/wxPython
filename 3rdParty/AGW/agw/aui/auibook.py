@@ -1061,7 +1061,7 @@ class AuiTabContainer(object):
             button_rect.SetY(1)
             button_rect.SetWidth(offset)
 
-            button.rect = self._art.DrawButton(dc, wnd, button_rect, button.id, button.cur_state, wx.RIGHT)
+            button.rect = self._art.DrawButton(dc, wnd, button_rect, button, wx.RIGHT)
 
             offset -= button.rect.GetWidth()
             right_buttons_width += button.rect.GetWidth()
@@ -1079,7 +1079,7 @@ class AuiTabContainer(object):
 
             button_rect = wx.Rect(offset, 1, 1000, self._rect.height)
 
-            button.rect = self._art.DrawButton(dc, wnd, button_rect, button.id, button.cur_state, wx.LEFT)
+            button.rect = self._art.DrawButton(dc, wnd, button_rect, button, wx.LEFT)
 
             offset += button.rect.GetWidth()
             left_buttons_width += button.rect.GetWidth()
@@ -3903,12 +3903,12 @@ class AuiNotebook(wx.PyControl):
         """
 
         tabs = event.GetEventObject()
-        if not tabs.GetEnabled(event.GetSelection()):
-            return
-
         button_id = event.GetInt()
 
         if button_id == AUI_BUTTON_CLOSE:
+            if not tabs.GetEnabled(event.GetSelection()):
+                return
+
             selection = event.GetSelection()
 
             if selection == -1:
@@ -4190,6 +4190,41 @@ class AuiNotebook(wx.PyControl):
             
             return False
 
+
+    def AddButton(self, id, location, normal_bitmap=wx.NullBitmap, disabled_bitmap=wx.NullBitmap):
+        """
+        Adds a button in the tab area.
+
+        :param `id`: the button identifier. This can be one of the following:
+
+        ==============================  =================================
+        Button Identifier               Description
+        ==============================  =================================
+        ``AUI_BUTTON_CLOSE``            Shows a close button on the tab area
+        ``AUI_BUTTON_WINDOWLIST``       Shows a window list button on the tab area
+        ``AUI_BUTTON_LEFT``             Shows a left button on the tab area
+        ``AUI_BUTTON_RIGHT``            Shows a right button on the tab area
+        ==============================  =================================        
+
+        :param `location`: the button location. Can be ``wx.LEFT`` or ``wx.RIGHT``;
+        :param `normal_bitmap`: the bitmap for an enabled tab;
+        :param `disabled_bitmap`: the bitmap for a disabled tab.
+        """
+
+        active_tabctrl = self.GetActiveTabCtrl()
+        active_tabctrl.AddButton(id, location, normal_bitmap, disabled_bitmap)
+
+
+    def RemoveButton(self, id):
+        """
+        Removes a button from the tab area.
+
+        :param `id`: the button identifier. See L{AddButton} for a list of button identifiers.
+        """
+
+        active_tabctrl = self.GetActiveTabCtrl()
+        active_tabctrl.RemoveButton(id)
+        
         
     def HasMultiplePages(self):
         """ Overridden from wx.PyControl. """

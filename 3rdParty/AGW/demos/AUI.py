@@ -150,6 +150,74 @@ restore_inactive = PyEmbeddedImage(
 
 #----------------------------------------------------------------------
 
+fullscreen = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAActJ"
+    "REFUOI2dk09I02EYx7/v+/7+DDRRYg4EWWYUKAjDSxBhJKuEUUJslwi8BXoaEaIdhpchddgt"
+    "CKIgCIbeYmXaTHboEigZ5GENdCCKfyZKTrf5+72Pp7nf9Lcf4gPP5fl+3i9feJ8HcKrghPD4"
+    "X9c5IdxJvHq4PFKvy3dOjKgltN4f71QU/lGo4kZD250/u5nZtB3H7IY9PRElW6f/ApgPAIiw"
+    "YZpax+rM8x2nNBeqSoLghMBkyIzFYptSSrcdzDnfCofDzd3db9X5+WdHAKAAQEt/9LKaz3zI"
+    "Ag+llG7f7UeQks4YLP787AaAnGdn2PsgupD9NvpVaeuLXmeGMkcwm8rg2tYe4tOLVY+D/i5L"
+    "EtYoQQlvIDqoEKgfoGbGmVEGHt/tQOBWe5WBrut4k05VTAQHA4b4ytTLVyAMSML/smgYBorF"
+    "YlUbxok/TEkmZ/zHfkHc5ACw/GX4E0B+q4GmaVVtNYBEPOPL39v4/iJ/Zg/O8wvWme0iIRLh"
+    "3t9osI6u7GI/lRozTqP2t7DUyVjJlWQlV46VXDl+5FpIX4Jmm8rWYDJkEmNPhSoKqqYUJKcn"
+    "64mxAzu05jHt/UtuN17rJSL6u5IYeV+LOwbQBrHjq9vsKwAAAABJRU5ErkJggg==")
+
+#----------------------------------------------------------------------
+reload = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAApFJ"
+    "REFUOI11k72LXFUUwH/n3vvmvbzZnZnNl7sWI0mIISaIIKYJ2AmbznQWKezSiOm0NaXpAjZu"
+    "kQTMHyBC0JBOCwmyWBrXHaMmuopLdt7Ox3vz3r33WMyyCJscOBwOnPPjfAovEFWEr2kBcIla"
+    "BH1enBxI/Golb7ZGb/kZb6vXkyCI4VeX8G3iFn+Qq1vTFwL0886pcqofNSXvgh41qEGEqBJR"
+    "tl3Gl2ZBbhy6ujs4ACjXuidiET7zDauuhRFnidky0gwxfkz0gq+JJuEbl9kPDn1YPAYwAHqT"
+    "VEfhmq9ZdS4aJBIWThNeuUQ4fpEgbbAGk3dMbMxqqMI1vUkK4AAa8vN+ppdj96ypj59DJv+g"
+    "+TJiFtDuq2iIUO1A1sM8/c7Epr48Nd0voFifAxpzAQ0rdPuEi5/M+6rHaLkDf3yPWzqLOAfT"
+    "f8G20KZeCT5cANaNKoJKX4RExluIr5B8CXp9aCrsbHvuJ2201SGaNiKaaJS+KmJE0KjRIwZm"
+    "BZTP5gvXiHRWiJ3+vFObQdqD7AiIQIxeBHUAorqh1lWiIWP3TyiHkPXgpdfg5Dv4jXvY0S9g"
+    "LGoyRGyFbzb2hxiCfWgdA2M5J5v3sVRodpQg78GRU5B2MX89BT9Bmm1i1MFM7cP9NXZmo83Q"
+    "hNvEokzKAdZaEuNxjx8gj+6RDB9h8iWME/DDMlbh9jFGm/sAuU7UkbsVxuM1KX+fGgokzUlS"
+    "S1o9wbUMRgvYHUxDsbsmtbsl14kHTvnZx0td0vqKW2y/b7vLZ6R9LAfQyfY0DLd+nhWTO9a3"
+    "7h7+dKd43i8I0Hp5kYUrr7vTbyzzZq8tJwB2xvrbj09Yv/uT3/x7zBiYwcEKBEiBfM/aPQUI"
+    "ewk1MPk/4D/OAyg6YvZkywAAAABJRU5ErkJggg==")
+
+#----------------------------------------------------------------------
+remove = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAApVJ"
+    "REFUOI2lkUtIVHEUxr//vf9778x4J8d8DDaODjo+mBzLKFJJJbVWFdmiVaEtehBYi2hVENXK"
+    "XS0iC6JNFkbkInwVQeoiiLAHtlAhW6TjTPnA9DreO/d/WjjOIkiDDnxwFuc7fOd3gP8s+bmD"
+    "118+UPGmiagsNL88UJqb62gLhTrP1tVdmY5G334zjOiGG574XF00/IjmHt6lO+mujvvb/J1L"
+    "3d1k9vRQk9fbsWkCX9ya/DIxUdVQ2+gt9Obt3lG1N6ykp+NGe/vnl5OT15aEiGx6x03g4GBl"
+    "IEGX2ojaLlBXeflKXWbm/n9i8BTILivgV4vkuXC0/x0W3n9C3tYMnsjOXpmyrMEfhmFutIC7"
+    "s3C9Jpw4vjAO3Ha6zS2Ki11cNZXz+fnnXkUiMbuy8l6OrreYpikxxgVRQmKMyaqa9mJo6PUH"
+    "PhTc6Q9gDvM1u1BxuFVxKRK+9/UhOjaOiCzL24uLHzcfOlLvcGoAGDRNgSxz9PcPnIrHf9Xy"
+    "r6FqHm85gXBFCNUeDwMAo7EB77uewdHxIBLI85c3HzsKp9MJxhgYYwCAmZmZwOjoWBp3EbJz"
+    "SoPQPR5YpglbCLhcaQgEg/Do6XsWF1elkZGPUFUVkiRB0zTouo7p6Rh03bOPBwKBUIbbDQAg"
+    "AIwxmKYJb1YWTp9pPckkSYrFfoKIUgKAkpIgDMO6xX0+n+R0OSGESJG1LAv5BX4UBQulRCIB"
+    "y7Jg2zaEsGHbAkQCmqZifn7JwYlk+vM1jDEIIWAYBoQQSbNIiYggxCqEYDZXFDVlWge03v9N"
+    "azMEzjm4qqp83STLUvJGAmMEYM1AxFLpkgggSYCiaDKPRhenenuHddNM0BokgMhODq+DQyo6"
+    "QLBtgiwzNju7svwbnlAlxKIQCyQAAAAASUVORK5CYII=")
+
+#----------------------------------------------------------------------
+sort = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAMdJ"
+    "REFUOI2VklEOgyAMhv+iR1jmdfQWHt1dQXA+dI9K97BpaIFE/4SQAv36UwC5BukAROxaOl7T"
+    "pPYdbmpZVxUrgMRNyLUkcZMqIIQ64IpCWMqAo6qdrbyfVdymAbmWLDAH+LKDq6oC0uql+FDw"
+    "uonnFWLcM8vONRkkLBWATSgBAeBt/gH9fp9WjLvY6t3zIZIiCZjnQFkTS8kA0PcDmBn8YTAz"
+    "hn7IHdSSD0lyLfqfOx3Y5FIPxnFUs3Jw9RUk7kLJerGJd/QF7eJxBTVIT38AAAAASUVORK5C"
+    "YII=")
+
+#----------------------------------------------------------------------
+superscript = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAYFJ"
+    "REFUOI3VkTtPAlEQhUfW4INCxMpigcTEVhMbCxO2NDZgg6UUJpSIzZZS+AO201gYaa1MbEy2"
+    "EAosbCQxxFdUsKLjIffOndl1sTBYiEFjYzzVmWTmy8wZgH+voZ82ru0+RfWpkeOJUV/04lpY"
+    "J+ZMDgDA91NAwD9s3T9Q4vyqZS3Mjm//Ytl3pfZr5Y2D52qvHu4Z0zQLrusCEQEzAxGllFKH"
+    "iAiICLZtGzGzkhPoQvUWE725jxMcx7GYeV4pFSOicj6fr0opC1LKKjOnlrYqCZ8G0bvHtsHk"
+    "BOfWL6MAn0JMp9OGUuqMmaHT6WSVUgnbtg0AgJWdm4I+PRZzX7vwIl9bR5szwT4AAEAymbQc"
+    "x8kIIYCIJovFYnNQJn1fIKKcEAI8z4N2u537LtQ+gJTyWAiRRUTodruZSCRiDAJoPROPx4O6"
+    "ru8hYqFUKlmBQGDS7/cvNpvNVU3TTomoPhAQDodPETEopVShUKgupUw1Go0aM9eZeRkAyp7n"
+    "fQn5W70BAIHMJSEYEtgAAAAASUVORK5CYII=")
+#----------------------------------------------------------------------
+
 # Custom pane bitmaps reference
 #                      bitmap  button id       active  maximize
 CUSTOM_PANE_BITMAPS = [(close, aui.AUI_BUTTON_CLOSE, True, False),
@@ -160,6 +228,17 @@ CUSTOM_PANE_BITMAPS = [(close, aui.AUI_BUTTON_CLOSE, True, False),
                        (maximize_inactive, aui.AUI_BUTTON_MAXIMIZE_RESTORE, False, True),
                        (restore, aui.AUI_BUTTON_MAXIMIZE_RESTORE, True, False),
                        (restore_inactive, aui.AUI_BUTTON_MAXIMIZE_RESTORE, False, False)]
+
+#----------------------------------------------------------------------
+# Custom buttons in tab area
+#
+CUSTOM_TAB_BUTTONS = {"Left": [(sort, aui.AUI_BUTTON_CUSTOM1),
+                               (superscript, aui.AUI_BUTTON_CUSTOM2)],
+                      "Right": [(fullscreen, aui.AUI_BUTTON_CUSTOM3),
+                                (remove, aui.AUI_BUTTON_CUSTOM4),
+                                (reload, aui.AUI_BUTTON_CUSTOM5)]
+                      }
+
 #----------------------------------------------------------------------
 
 ID_CreateTree = wx.ID_HIGHEST + 1
@@ -224,8 +303,9 @@ ID_NotebookAlignBottom = ID_CreateTree + 58
 ID_NotebookHideSingle = ID_CreateTree + 59
 ID_NotebookSmartTab = ID_CreateTree + 60
 ID_NotebookUseImagesDropDown = ID_CreateTree + 61
+ID_NotebookCustomButtons = ID_CreateTree + 62
 
-ID_SampleItem = ID_CreateTree + 62
+ID_SampleItem = ID_CreateTree + 63
 
 ID_FirstPerspective = ID_CreatePerspective + 1000
 ID_FirstNBPerspective = ID_CreateNBPerspective + 10000
@@ -616,7 +696,8 @@ class AuiFrame(wx.Frame):
         self._textCount = 1
         self._transparency = 255
         self._snapped = False
-        self._custom_buttons = False
+        self._custom_pane_buttons = False
+        self._custom_tab_buttons = False
 
         self.CreateStatusBar()
         self.GetStatusBar().SetStatusText("Ready")
@@ -704,9 +785,11 @@ class AuiFrame(wx.Frame):
         notebook_menu.AppendCheckItem(ID_NotebookScrollButtons, "Scroll Buttons Visible")
         notebook_menu.AppendCheckItem(ID_NotebookWindowList, "Window List Button Visible")
         notebook_menu.AppendCheckItem(ID_NotebookTabFixedWidth, "Fixed-Width Tabs")
+        notebook_menu.AppendSeparator()
         notebook_menu.AppendCheckItem(ID_NotebookHideSingle, "Hide On Single Tab")
         notebook_menu.AppendCheckItem(ID_NotebookSmartTab, "Use Smart Tabbing")
         notebook_menu.AppendCheckItem(ID_NotebookUseImagesDropDown, "Use Tab Images In Dropdown Menu")
+        notebook_menu.AppendCheckItem(ID_NotebookCustomButtons, "Show Custom Buttons In Tab Area")
 
         perspectives_menu = wx.Menu()
         
@@ -1017,6 +1100,7 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookCloseOnLeft)
         self.Bind(wx.EVT_MENU, self.OnTabAlignment, id=ID_NotebookAlignTop)
         self.Bind(wx.EVT_MENU, self.OnTabAlignment, id=ID_NotebookAlignBottom)
+        self.Bind(wx.EVT_MENU, self.OnCustomTabButtons, id=ID_NotebookCustomButtons)
         
         self.Bind(wx.EVT_MENU, self.OnGradient, id=ID_NoGradient)
         self.Bind(wx.EVT_MENU, self.OnGradient, id=ID_VerticalGradient)
@@ -1068,6 +1152,7 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookHideSingle)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookSmartTab)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookUseImagesDropDown)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookCustomButtons)
 
         self.Bind(aui.EVT_AUITOOLBAR_TOOL_DROPDOWN, self.OnDropDownToolbarItem, id=ID_DropDownToolbarItem)
         self.Bind(aui.EVT_AUI_PANE_CLOSE, self.OnPaneClose)
@@ -1253,7 +1338,7 @@ class AuiFrame(wx.Frame):
 
     def OnCustomPaneButtons(self, event):
 
-        self._custom_buttons = checked = event.IsChecked()
+        self._custom_pane_buttons = checked = event.IsChecked()
         art = self._mgr.GetArtProvider()
         
         if not checked:
@@ -1466,7 +1551,7 @@ class AuiFrame(wx.Frame):
             event.Check(pane.IsFlyOut())
 
         elif evId == ID_CustomPaneButtons:
-            event.Check(self._custom_buttons)
+            event.Check(self._custom_pane_buttons)
             
         elif evId == ID_NotebookNoCloseButton:
             event.Check((self._notebook_style & (aui.AUI_NB_CLOSE_BUTTON|aui.AUI_NB_CLOSE_ON_ALL_TABS|aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)) != 0)
@@ -1509,6 +1594,9 @@ class AuiFrame(wx.Frame):
 
         elif evId == ID_NotebookCloseOnLeft:
             event.Check((self._notebook_style & aui.AUI_NB_CLOSE_ON_TAB_LEFT) != 0)
+
+        elif evId == ID_NotebookCustomButtons:
+            event.Check(self._custom_tab_buttons)
             
         elif evId == ID_NotebookArtGloss:
             event.Check(self._notebook_theme == 0)
@@ -1752,6 +1840,30 @@ class AuiFrame(wx.Frame):
                 nb.Update()
                 nb.Refresh()
             
+
+    def OnCustomTabButtons(self, event):
+
+        checked = event.IsChecked()
+        self._custom_tab_buttons = checked
+        auibook = self._mgr.GetPane("notebook_content").window
+        
+        left = CUSTOM_TAB_BUTTONS["Left"]
+        for btn, ids in left:
+            if checked:
+                auibook.AddButton(ids, wx.LEFT, btn.GetBitmap())
+            else:
+                auibook.RemoveButton(ids)
+                
+        right = CUSTOM_TAB_BUTTONS["Right"]
+        for btn, ids in right:
+            if checked:
+                auibook.AddButton(ids, wx.RIGHT, btn.GetBitmap())
+            else:
+                auibook.RemoveButton(ids)
+
+        auibook.Refresh()
+        auibook.Update()
+        
 
     def OnExit(self, event):
 
@@ -2010,7 +2122,8 @@ class AuiFrame(wx.Frame):
         "<li>Setting the colour of the tab's text; </li>" \
         "<li>Implementation of the style <tt>AUI_NB_CLOSE_ON_TAB_LEFT</tt>, which draws the tab close button on " \
         "the left instead of on the right (a la Camino browser); </li>" \
-        "<li>Ability to save and load perspectives in <i>wx.aui.AuiNotebook</i> (experimental). </li>" \
+        "<li>Ability to save and load perspectives in <i>wx.aui.AuiNotebook</i> (experimental); </li>" \
+        "<li>Possibility to add custom buttons in the <i>wx.aui.AuiNotebook</i> tab area. </li>" \
         "</ul><p>" \
         "<li><b>AuiToolBar:</b></li>" \
         "<ul>" \

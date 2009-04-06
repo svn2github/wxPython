@@ -167,7 +167,8 @@ Plus the following features:
   (f) Setting the colour of the tab's text;
   (g) Implementation of the style ``AUI_NB_CLOSE_ON_TAB_LEFT``, which draws the tab close button on
       the left instead of on the right (a la Camino browser);
-  (h) Ability to save and load perspectives in `AuiNotebook` (experimental).
+  (h) Ability to save and load perspectives in `AuiNotebook` (experimental);
+  (i) Possibility to add custom buttons in the `AuiNotebook` tab area.
   
 - AuiToolBar:
   (a) ``AUI_TB_PLAIN_BACKGROUND`` style that allows to easy setup a plain background to the AUI toolbar,
@@ -198,10 +199,6 @@ TODOs
   ``EVT_AUI_PANE_FLOATING/ED`` and ``EVT_AUI_PANE_DOCKING/ED``);
 - Implement the 4-ways splitter behaviour for horizontal and vertical sashes if they intersect;
 - Extend `tabart.py` with more aui tab arts;
-- Allow controls in tabs (a la Eclipse) as described here:
-  http://lists.wxwidgets.org/pipermail/wxpython-users/2007-January/060451.html
-  and especially here:
-  http://archives.devshed.com/forums/attachment.php?attachmentid=4337;
 - Harmonize the `AuiNotebook` API with the `wx.Notebook` one, especially regarding setting/getting
   tab images (i.e., using `wx.ImageList`);
 - Implement ``AUI_NB_LEFT`` and ``AUI_NB_RIGHT`` tab locations in `AuiNotebook`;

@@ -629,18 +629,19 @@ class AuiDefaultTabArt(object):
         return (tab_width, tab_height), x_extent
 
 
-    def DrawButton(self, dc, wnd, in_rect, bitmap_id, button_state, orientation):
+    def DrawButton(self, dc, wnd, in_rect, button, orientation):
         """
         Draws a button on the tab or on the tab area, depending on the button identifier. 
 
         :param `dc`: a wx.DC device context;
         :param `wnd`: a wx.Window instance object;
         :param `in_rect`: rectangle the tab should be confined to;
-        :param `bitmap_id`: the button identifier;
-        :param `button_state`: the state of the button;
+        :param `button`: an instance of the button class;
         :param `orientation`: the tab orientation.
         """
 
+        bitmap_id, button_state = button.id, button.cur_state
+        
         if bitmap_id == AUI_BUTTON_CLOSE:
             if button_state & AUI_BUTTON_STATE_DISABLED:
                 bmp = self._disabled_close_bmp
@@ -669,6 +670,12 @@ class AuiDefaultTabArt(object):
             else:
                 bmp = self._active_windowlist_bmp
 
+        else:
+            if button_state & AUI_BUTTON_STATE_DISABLED:
+                bmp = button.dis_bitmap
+            else:
+                bmp = button.bitmap
+                
         if not bmp.IsOk():
             return
 
@@ -1238,17 +1245,18 @@ class AuiSimpleTabArt(object):
         return (tab_width, tab_height), x_extent
 
 
-    def DrawButton(self, dc, wnd, in_rect, bitmap_id, button_state, orientation):
+    def DrawButton(self, dc, wnd, in_rect, button, orientation):
         """
         Draws a button on the tab or on the tab area, depending on the button identifier. 
 
         :param `dc`: a wx.DC device context;
         :param `wnd`: a wx.Window instance object;
         :param `in_rect`: rectangle the tab should be confined to;
-        :param `bitmap_id`: the button identifier;
-        :param `button_state`: the state of the button;
+        :param `button`: an instance of the button class;
         :param `orientation`: the tab orientation.
         """
+
+        bitmap_id, button_state = button.id, button.cur_state
         
         if bitmap_id == AUI_BUTTON_CLOSE:
             if button_state & AUI_BUTTON_STATE_DISABLED:
@@ -1274,7 +1282,12 @@ class AuiSimpleTabArt(object):
             else:
                 bmp = self._active_windowlist_bmp
 
-
+        else:
+            if button_state & AUI_BUTTON_STATE_DISABLED:
+                bmp = button.dis_bitmap
+            else:
+                bmp = button.bitmap
+            
         if not bmp.IsOk():
             return
 
