@@ -8906,17 +8906,20 @@ class AuiManager(wx.EvtHandler):
         xstart, ystart = win_rect.x, win_rect.y
         xend, yend = toolbar_rect.x, toolbar_rect.y
 
-        xstep = int(abs(win_rect.width - toolbar_rect.width)/30.0)
-        ystep = int(abs(win_rect.height - toolbar_rect.height)/30.0)
-
+        wstep = int(abs(win_rect.width - toolbar_rect.width)/30.0)
+        hstep = int(abs(win_rect.height - toolbar_rect.height)/30.0)
+        xstep = int(win_rect.x - toolbar_rect.x)/30.0
+        ystep = int(win_rect.y - toolbar_rect.y)/30.0
+        
         dc = wx.ScreenDC()
         dc.SetLogicalFunction(wx.INVERT)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.SetPen(wx.LIGHT_GREY_PEN)
         
         for i in xrange(30):
-            width, height = win_rect.width - i*xstep, win_rect.height - i*ystep
-            new_rect = wx.Rect(xend, yend, width, height)
+            width, height = win_rect.width - i*wstep, win_rect.height - i*hstep
+            x, y = xstart - i*xstep, ystart - i*ystep
+            new_rect = wx.Rect(x, y, width, height)
             dc.DrawRoundedRectangleRect(new_rect, 3)
             wx.SafeYield()
             wx.MilliSleep(10)
