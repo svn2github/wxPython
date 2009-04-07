@@ -4991,7 +4991,6 @@ class AuiManager(wx.EvtHandler):
                         pane_size = pane.min_size
                     if pane_size == wx.Size(-1, -1):
                         pane_size = pane.window.GetSize()
-                    
                     if dock.IsHorizontal():
                         size = max(pane_size.y, size)
                     else:
@@ -5102,9 +5101,9 @@ class AuiManager(wx.EvtHandler):
             if oncheck:
                 self._docks[ii] = dock                    
 
-        # shrink docks if needed        
-        docks = self.SmartShrink(docks, AUI_DOCK_TOP)
-        docks = self.SmartShrink(docks, AUI_DOCK_LEFT)
+        # shrink docks if needed 
+##        docks = self.SmartShrink(docks, AUI_DOCK_TOP)
+##        docks = self.SmartShrink(docks, AUI_DOCK_LEFT)
 
         if oncheck:
             self._docks = docks

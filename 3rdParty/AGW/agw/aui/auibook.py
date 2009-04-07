@@ -1716,29 +1716,31 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         if not event.LeftIsDown() or self._click_pt == wx.Point(-1, -1):
             return
 
-        if self._is_dragging:
-        
-            evt = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_DRAG_MOTION, self.GetId())
-            evt.SetSelection(self.GetIdxFromWindow(self._click_tab))
-            evt.SetOldSelection(evt.GetSelection())
-            evt.SetEventObject(self)
-            self.GetEventHandler().ProcessEvent(evt)
-        
-        drag_x_threshold = wx.SystemSettings.GetMetric(wx.SYS_DRAG_X)
-        drag_y_threshold = wx.SystemSettings.GetMetric(wx.SYS_DRAG_Y)
+        if not self._is_dragging:
 
-        if abs(pos.x - self._click_pt.x) > drag_x_threshold or \
-           abs(pos.y - self._click_pt.y) > drag_y_threshold:
+            drag_x_threshold = wx.SystemSettings.GetMetric(wx.SYS_DRAG_X)
+            drag_y_threshold = wx.SystemSettings.GetMetric(wx.SYS_DRAG_Y)
 
-            evt = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_BEGIN_DRAG, self.GetId())
-            evt.SetSelection(self.GetIdxFromWindow(self._click_tab))
-            evt.SetOldSelection(evt.GetSelection())
-            evt.SetEventObject(self)
-
-            self.GetEventHandler().ProcessEvent(evt)
-            if not evt.GetDispatched():
+            if abs(pos.x - self._click_pt.x) > drag_x_threshold or \
+               abs(pos.y - self._click_pt.y) > drag_y_threshold:
                 self._is_dragging = True
-    
+
+        wnd = self.TabHitTest(pos.x, pos.y)
+        if not wnd:
+            evt2 = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_BEGIN_DRAG, self.GetId())
+            evt2.SetSelection(self.GetIdxFromWindow(self._click_tab))
+            evt2.SetOldSelection(evt2.GetSelection())
+            evt2.SetEventObject(self)
+            self.GetEventHandler().ProcessEvent(evt2)
+            if evt2.GetDispatched():
+                return
+            
+        evt3 = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_DRAG_MOTION, self.GetId())
+        evt3.SetSelection(self.GetIdxFromWindow(self._click_tab))
+        evt3.SetOldSelection(evt3.GetSelection())
+        evt3.SetEventObject(self)
+        self.GetEventHandler().ProcessEvent(evt3)
+        
 
     def OnLeaveWindow(self, event):
         """
@@ -2283,11 +2285,11 @@ class AuiNotebook(wx.PyControl):
                 if p:
                     tabs += ","
 
-                if page_idx == self._curpage:
-                    tabs += "*"
-                elif p == tabframe._tabs.GetActivePage():
+                if p == tabframe._tabs.GetActivePage():
                     tabs += "+"
-                 
+                elif page_idx == self._curpage:
+                    tabs += "*"
+                    
                 tabs += "%u"%page_idx
           
         tabs += "@"
@@ -2352,7 +2354,7 @@ class AuiNotebook(wx.PyControl):
 
             # Get list of tab id's and move them to pane
             tab_list = tab_part[tab_part.index("=")+1:]
-            to_break2 = False
+            to_break2, active_found = False, False
             
             while 1:
                 if "," not in tab_list:
@@ -2378,13 +2380,20 @@ class AuiNotebook(wx.PyControl):
 
                 if c == '+':
                     dest_tabs.SetActivePage(newpage_idx)
+                    active_found = True
                 elif c == '*':
                     sel_page = tab_idx
 
                 if to_break2:
                     break
-          
+
+            if not active_found:
+                dest_tabs.SetActivePage(0)
+
+            new_tabs.DoSizing()
             dest_tabs.DoShowHide()
+            dest_tabs.Refresh()
+        
             if to_break1:
                 break
             
