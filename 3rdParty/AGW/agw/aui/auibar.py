@@ -1476,6 +1476,8 @@ class AuiToolBar(wx.PyControl):
         if style & AUI_TB_HORZ_LAYOUT:
             self.SetToolTextOrientation(AUI_TBTOOL_TEXT_RIGHT)
 
+        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+        
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_IDLE, self.OnIdle)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
@@ -3145,7 +3147,7 @@ class AuiToolBar(wx.PyControl):
         :param `event`: a L{wx.PaintEvent} event to be processed.        
         """
 
-        dc = wx.BufferedPaintDC(self)
+        dc = wx.AutoBufferedPaintDC(self)
         cli_rect = wx.RectPS(wx.Point(0, 0), self.GetClientSize())
 
         horizontal = True
