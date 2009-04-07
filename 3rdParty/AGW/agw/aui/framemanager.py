@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 31 Mar 2009, 21.00 GMT
+# Latest Revision: 07 Apr 2009, 12.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -86,7 +86,7 @@ Thus, if a pane is in layer 0, it will be closest to the center window (also som
 known as the "content window"). Increasing layers "swallow up" all layers of a lower
 value. This can look very similar to multiple rows, but is different because all panes
 in a lower level yield to panes in higher levels. The best way to understand layers
-is by running the AUI sample (AUIDemo.py).
+is by running the AUI sample (AUI.py).
 """
 
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
@@ -8813,6 +8813,8 @@ class AuiManager(wx.EvtHandler):
             # Create a new toolbar
             # give it the same name as the minimized pane with _min appended
 
+            win_rect = paneInfo.window.GetScreenRect()
+            
             minimize_toolbar = auibar.AuiToolBar(self.GetManagedWindow(), style=AUI_TB_DEFAULT_STYLE)
             minimize_toolbar.SetToolBitmapSize(wx.Size(16, 16))
 
@@ -8856,6 +8858,7 @@ class AuiManager(wx.EvtHandler):
                 paneInfo.window.Show(False)
 
             self.Update()
+            self.AnimateMinimization(win_rect, minimize_toolbar.GetScreenRect())
 
 
     def OnRestoreMinimizedPane(self, event):
@@ -8888,6 +8891,38 @@ class AuiManager(wx.EvtHandler):
             paneInfo.Hide()
             self.Update()
 
+
+    def AnimateMinimization(self, win_rect, toolbar_rect):
+        """
+        Animates the minimization of a pane a la Eclipse.
+
+        :param `win_rect`: the original pane screen rectangle;
+        :pane `toolbar_rect`: the newly created toolbar screen rectangle.
+        """
+
+        if wx.Platform == "__WXMAC__":
+            # No wx.ScreenDC on the Mac...
+            return
+
+        xstart, ystart = win_rect.x, win_rect.y
+        xend, yend = toolbar_rect.x, toolbar_rect.y
+
+        xstep = int(abs(win_rect.width - toolbar_rect.width)/30.0)
+        ystep = int(abs(win_rect.height - toolbar_rect.height)/30.0)
+
+        dc = wx.ScreenDC()
+        dc.SetLogicalFunction(wx.INVERT)
+        dc.SetBrush(wx.TRANSPARENT_BRUSH)
+        dc.SetPen(wx.LIGHT_GREY_PEN)
+        
+        for i in xrange(30):
+            width, height = win_rect.width - i*xstep, win_rect.height - i*ystep
+            new_rect = wx.Rect(xend, yend, width, height)
+            dc.DrawRoundedRectangleRect(new_rect, 3)
+            wx.SafeYield()
+            wx.MilliSleep(10)
+            dc.DrawRoundedRectangleRect(new_rect, 3)
+            
 
     def SetSnapLimits(self, x, y):
         """

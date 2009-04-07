@@ -289,23 +289,24 @@ ID_NotebookCloseOnLeft = ID_CreateTree + 44
 ID_NotebookAllowTabMove = ID_CreateTree + 45
 ID_NotebookAllowTabExternalMove = ID_CreateTree + 46
 ID_NotebookAllowTabSplit = ID_CreateTree + 47
-ID_NotebookWindowList = ID_CreateTree + 48
-ID_NotebookScrollButtons = ID_CreateTree + 49
-ID_NotebookTabFixedWidth = ID_CreateTree + 50
-ID_NotebookArtGloss = ID_CreateTree + 51
-ID_NotebookArtSimple = ID_CreateTree + 52
-ID_NotebookArtVC71 = ID_CreateTree + 53
-ID_NotebookArtFF2 = ID_CreateTree + 54
-ID_NotebookArtVC8 = ID_CreateTree + 55
-ID_NotebookArtChrome = ID_CreateTree + 56
-ID_NotebookAlignTop = ID_CreateTree + 57
-ID_NotebookAlignBottom = ID_CreateTree + 58
-ID_NotebookHideSingle = ID_CreateTree + 59
-ID_NotebookSmartTab = ID_CreateTree + 60
-ID_NotebookUseImagesDropDown = ID_CreateTree + 61
-ID_NotebookCustomButtons = ID_CreateTree + 62
+ID_NotebookTabFloat = ID_CreateTree + 48
+ID_NotebookWindowList = ID_CreateTree + 49
+ID_NotebookScrollButtons = ID_CreateTree + 50
+ID_NotebookTabFixedWidth = ID_CreateTree + 51
+ID_NotebookArtGloss = ID_CreateTree + 52
+ID_NotebookArtSimple = ID_CreateTree + 53
+ID_NotebookArtVC71 = ID_CreateTree + 54
+ID_NotebookArtFF2 = ID_CreateTree + 55
+ID_NotebookArtVC8 = ID_CreateTree + 56
+ID_NotebookArtChrome = ID_CreateTree + 57
+ID_NotebookAlignTop = ID_CreateTree + 58
+ID_NotebookAlignBottom = ID_CreateTree + 59
+ID_NotebookHideSingle = ID_CreateTree + 60
+ID_NotebookSmartTab = ID_CreateTree + 61
+ID_NotebookUseImagesDropDown = ID_CreateTree + 62
+ID_NotebookCustomButtons = ID_CreateTree + 63
 
-ID_SampleItem = ID_CreateTree + 63
+ID_SampleItem = ID_CreateTree + 64
 
 ID_FirstPerspective = ID_CreatePerspective + 1000
 ID_FirstNBPerspective = ID_CreateNBPerspective + 10000
@@ -782,6 +783,8 @@ class AuiFrame(wx.Frame):
         notebook_menu.AppendCheckItem(ID_NotebookAllowTabMove, "Allow Tab Move")
         notebook_menu.AppendCheckItem(ID_NotebookAllowTabExternalMove, "Allow External Tab Move")
         notebook_menu.AppendCheckItem(ID_NotebookAllowTabSplit, "Allow Notebook Split")
+        notebook_menu.AppendCheckItem(ID_NotebookTabFloat, "Allow Single Tab Floating")
+        notebook_menu.AppendSeparator()
         notebook_menu.AppendCheckItem(ID_NotebookScrollButtons, "Scroll Buttons Visible")
         notebook_menu.AppendCheckItem(ID_NotebookWindowList, "Window List Button Visible")
         notebook_menu.AppendCheckItem(ID_NotebookTabFixedWidth, "Fixed-Width Tabs")
@@ -1086,6 +1089,7 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookAllowTabMove)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookAllowTabExternalMove)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookAllowTabSplit)
+        self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookTabFloat)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookScrollButtons)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookWindowList)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookArtGloss)                  
@@ -1147,6 +1151,7 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookAllowTabMove)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookAllowTabExternalMove)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookAllowTabSplit)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookTabFloat)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookScrollButtons)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookWindowList)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookHideSingle)
@@ -1435,7 +1440,10 @@ class AuiFrame(wx.Frame):
         
         elif evId == ID_NotebookAllowTabSplit:
             self._notebook_style ^= aui.AUI_NB_TAB_SPLIT
-        
+
+        elif evId == ID_NotebookTabFloat:
+            self._notebook_style ^= aui.AUI_NB_TAB_FLOAT
+            
         elif evId == ID_NotebookWindowList:
             self._notebook_style ^= aui.AUI_NB_WINDOWLIST_BUTTON
         
@@ -1567,7 +1575,10 @@ class AuiFrame(wx.Frame):
                 
         elif evId == ID_NotebookAllowTabSplit:
             event.Check((self._notebook_style & aui.AUI_NB_TAB_SPLIT) != 0)
-                
+
+        elif evId == ID_NotebookTabFloat:
+            event.Check((self._notebook_style & aui.AUI_NB_TAB_FLOAT) != 0)
+            
         elif evId == ID_NotebookAllowTabMove:
             event.Check((self._notebook_style & aui.AUI_NB_TAB_MOVE) != 0)
                 
@@ -1850,16 +1861,16 @@ class AuiFrame(wx.Frame):
         left = CUSTOM_TAB_BUTTONS["Left"]
         for btn, ids in left:
             if checked:
-                auibook.AddButton(ids, wx.LEFT, btn.GetBitmap())
+                auibook.AddTabAreaButton(ids, wx.LEFT, btn.GetBitmap())
             else:
-                auibook.RemoveButton(ids)
+                auibook.RemoveTabAreaButton(ids)
                 
         right = CUSTOM_TAB_BUTTONS["Right"]
         for btn, ids in right:
             if checked:
-                auibook.AddButton(ids, wx.RIGHT, btn.GetBitmap())
+                auibook.AddTabAreaButton(ids, wx.RIGHT, btn.GetBitmap())
             else:
-                auibook.RemoveButton(ids)
+                auibook.RemoveTabAreaButton(ids)
 
         auibook.Refresh()
         auibook.Update()
@@ -1939,7 +1950,7 @@ class AuiFrame(wx.Frame):
             parent = self
 
         ctrl = wx.html.HtmlWindow(parent, -1, wx.DefaultPosition, wx.Size(400, 300))
-        ctrl.SetPage(self.GetIntroText())
+        ctrl.SetPage(GetIntroText())
         return ctrl
 
 
@@ -2007,147 +2018,150 @@ class AuiFrame(wx.Frame):
         return ctrl
 
 
-    def GetIntroText(self):
+def GetIntroText():
 
-        text = \
-        "<html><body>" \
-        "<h3>Welcome to AUI</h3>" \
-        "<br/><b>Overview</b><br/>" \
-        "<p>AUI is an Advanced User Interface library for the wxPython toolkit " \
-        "that allows developers to create high-quality, cross-platform user " \
-        "interfaces quickly and easily.</p>" \
-        "<p><b>Features</b></p>" \
-        "<p>With AUI, developers can create application frameworks with:</p>" \
-        "<ul>" \
-        "<li>Native, dockable floating frames</li>" \
-        "<li>Perspective saving and loading</li>" \
-        "<li>Native toolbars incorporating real-time, &quotspring-loaded&quot dragging</li>" \
-        "<li>Customizable floating/docking behavior</li>" \
-        "<li>Completely customizable look-and-feel</li>" \
-        "<li>Optional transparent window effects (while dragging or docking)</li>" \
-        "<li>Splittable notebook control</li>" \
-        "</ul>" \
-        "<p><b>What's new in AUI?</b></p>" \
-        "<p>Current wxAUI Version Tracked: wxWidgets 2.9.0 (SVN HEAD)" \
-        "<p>The wxPython AUI version fixes the following bugs or implement the following" \
-        " missing features (the list is not exhaustive): " \
-        "<p><ul>" \
-        "<li>Visual Studio 2005 style docking: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=596'>" \
-        "http://www.kirix.com/forums/viewtopic.php?f=16&t=596</a></li>" \
-        "<li>Dock and Pane Resizing: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=582'>" \
-        "http://www.kirix.com/forums/viewtopic.php?f=16&t=582</a></li> " \
-        "<li>Patch concerning dock resizing: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=610'>" \
-        "http://www.kirix.com/forums/viewtopic.php?f=16&t=610</a></li> " \
-        "<li>Patch to effect wxAuiToolBar orientation switch: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=641'>" \
-        "http://www.kirix.com/forums/viewtopic.php?f=16&t=641</a></li> " \
-        "<li>AUI: Core dump when loading a perspective in wxGTK (MSW OK): <a href='http://www.kirix.com/forums/viewtopic.php?f=15&t=627</li>'>" \
-        "http://www.kirix.com/forums/viewtopic.php?f=15&t=627</li></a>" \
-        "<li>wxAuiNotebook reordered AdvanceSelection(): <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=617'>"\
-        "http://www.kirix.com/forums/viewtopic.php?f=16&t=617</a></li> " \
-        "<li>Vertical Toolbar Docking Issue: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=181'>" \
-        "http://www.kirix.com/forums/viewtopic.php?f=16&t=181</a></li> " \
-        "<li>Patch to show the resize hint on mouse-down in aui: <a href='http://trac.wxwidgets.org/ticket/9612'>" \
-        "http://trac.wxwidgets.org/ticket/9612</a></li> " \
-        "<li>The Left/Right and Top/Bottom Docks over draw each other: <a href='http://trac.wxwidgets.org/ticket/3516'>" \
-        "<http://trac.wxwidgets.org/ticket/3516</a>/li>" \
-        "<li>MinSize() not honoured: <a href='http://trac.wxwidgets.org/ticket/3562'>" \
-        "http://trac.wxwidgets.org/ticket/3562</a></li> " \
-        "<li>Layout problem with wxAUI: <a href='http://trac.wxwidgets.org/ticket/3597'>" \
-        "http://trac.wxwidgets.org/ticket/3597</a></li>" \
-        "<li>Resizing children ignores current window size: <a href='http://trac.wxwidgets.org/ticket/3908'>" \
-        "http://trac.wxwidgets.org/ticket/3908</a></li> " \
-        "<li>Resizing panes under Vista does not repaint background: <a href='http://trac.wxwidgets.org/ticket/4325'>" \
-        "http://trac.wxwidgets.org/ticket/4325</a></li> " \
-        "<li>Resize sash resizes in response to click: <a href='http://trac.wxwidgets.org/ticket/4547'>" \
-        "http://trac.wxwidgets.org/ticket/4547</a></li> " \
-        "<li>'Illegal' resizing of the AuiPane? (wxPython): <a href='http://trac.wxwidgets.org/ticket/4599'>" \
-        "http://trac.wxwidgets.org/ticket/4599</a></li> " \
-        "<li>Floating wxAUIPane Resize Event doesn't update its position: <a href='http://trac.wxwidgets.org/ticket/9773'>" \
-        "http://trac.wxwidgets.org/ticket/9773</a></li>" \
-        "<li>Don't hide floating panels when we maximize some other panel: <a href='http://trac.wxwidgets.org/ticket/4066'>"\
-        "http://trac.wxwidgets.org/ticket/4066</a></li>" \
-        "<li>wxAUINotebook incorrect ALLOW_ACTIVE_PANE handling: <a href='http://trac.wxwidgets.org/ticket/4361'>" \
-        "http://trac.wxwidgets.org/ticket/4361</a></li> " \
-        "<li>Page changing veto doesn't work, (patch supplied): <a href='http://trac.wxwidgets.org/ticket/4518'>" \
-        "http://trac.wxwidgets.org/ticket/4518</a></li> " \
-        "<li>Show and DoShow are mixed around in wxAuiMDIChildFrame: <a href='http://trac.wxwidgets.org/ticket/4567'>"\
-        "http://trac.wxwidgets.org/ticket/4567</a></li> " \
-        "<li>wxAuiManager & wxToolBar - ToolBar Of Size Zero: <a href='http://trac.wxwidgets.org/ticket/9724'>" \
-        "http://trac.wxwidgets.org/ticket/9724</a></li> " \
-        "<li>wxAuiNotebook doesn't behave properly like a container as far as...: <a href='http://trac.wxwidgets.org/ticket/9911'>" \
-        "http://trac.wxwidgets.org/ticket/9911</a></li>" \
-        "<li>Serious layout bugs in wxAUI: <a href='http://trac.wxwidgets.org/ticket/10620'>" \
-        "http://trac.wxwidgets.org/ticket/10620</a></li>" \
-        "</ul>" \
-        "<p>Plus the following features:" \
-        "<p><ul>" \
-        "<li><b>AuiManager:</b></li>" \
-        "<ul>" \
-        "<li>Implementation of a simple minimize pane system: Clicking on this minimize button causes a new " \
-        "<i>AuiToolBar</i> to be created and added to the frame manager, (currently the implementation is such " \
-        "that panes at West will have a toolbar at the right, panes at South will have toolbars at the " \
-        "bottom etc...) and the pane is hidden in the manager. " \
-        "Clicking on the restore button on the newly created toolbar will result in the toolbar being " \
-        "removed and the original pane being restored;</li>" \
-        "<li>Panes can be docked on top of each other to form <i>AuiNotebooks</i>; <i>AuiNotebooks</i> tabs can be torn " \
-        "off to create floating panes;</li>" \
-        "<li>On Windows XP, use the nice sash drawing provided by XP while dragging the sash;</li>" \
-        "<li>Possibility to set an icon on docked panes;</li>" \
-        "<li>Possibility to draw a sash visual grip, for enhanced visualization of sashes;</li>" \
-        "<li>Implementation of a native docking art (<i>ModernDockArt</i>). Windows XP only, <b>requires</b> Mark Hammond's " \
-        "pywin32 package (winxptheme);</li>" \
-        "<li>Possibility to set a transparency for floating panes (a la Paint .NET);</li>" \
-        "<li>Snapping the main frame to the screen in any positin specified by horizontal and vertical " \
-        "alignments;</li>" \
-        "<li>Snapping floating panes on left/right/top/bottom or any combination of directions, a la Winamp;</li>" \
-        "<li>'Fly-out' floating panes, i.e. panes which show themselves only when the mouse hover them;</li>" \
-        "<li>Ability to set custom bitmaps for pane buttons (close, maximize, etc...).</li>" \
-        "</ul><p>" \
-        "<li><b>AuiNotebook:</b></li>" \
-        "<ul>" \
-        "<li>Implementation of the style <tt>AUI_NB_HIDE_ON_SINGLE_TAB</tt>, a la <i>wx.lib.agw.flatnotebook</i>;</li>" \
-        "<li>Implementation of the style <tt>AUI_NB_SMART_TABS</tt>, a la <i>wx.lib.agw.flatnotebook</i>;</li>" \
-        "<li>Implementation of the style <tt>AUI_NB_USE_IMAGES_DROPDOWN</tt>, which allows to show tab images " \
-        "on the tab dropdown menu instead of bare check menu items (a la <i>wx.lib.agw.flatnotebook</i>);</li>" \
-        "<li>6 different tab arts are available, namely:</li>" \
-        "<ul>" \
-        "<li>Default 'glossy' theme (as in <i>wx.aui.AuiNotebook</i>)</li>" \
-        "<li>Simple theme (as in <i>wx.aui.AuiNotebook</i>)</li>" \
-        "<li>Firefox 2 theme</li>" \
-        "<li>Visual Studio 2003 theme (VC71)</li>" \
-        "<li>Visual Studio 2005 theme (VC81)</li>" \
-        "<li>Google Chrome theme</li>" \
-        "</ul>" \
-        "<li>Enabling/disabling tabs;</li>" \
-        "<li>Setting the colour of the tab's text; </li>" \
-        "<li>Implementation of the style <tt>AUI_NB_CLOSE_ON_TAB_LEFT</tt>, which draws the tab close button on " \
-        "the left instead of on the right (a la Camino browser); </li>" \
-        "<li>Ability to save and load perspectives in <i>wx.aui.AuiNotebook</i> (experimental); </li>" \
-        "<li>Possibility to add custom buttons in the <i>wx.aui.AuiNotebook</i> tab area. </li>" \
-        "</ul><p>" \
-        "<li><b>AuiToolBar:</b></li>" \
-        "<ul>" \
-        "<li><tt>AUI_TB_PLAIN_BACKGROUND</tt> style that allows to easy setup a plain background to the AUI toolbar, " \
-        "without the need to override drawing methods. This style contrasts with the default behaviour " \
-        "of the <i>wx.aui.AuiToolBar</i> that draws a background gradient and this break the window design when " \
-        "putting it within a control that has margin between the borders and the toolbar (example: put " \
-        "<i>wx.aui.AuiToolBar</i> within a <i>wx.StaticBoxSizer</i> that has a plain background);</li>" \
-        "<li><i>AuiToolBar</i> allow item alignment: <a href='http://trac.wxwidgets.org/ticket/10174'> " \
-        "http://trac.wxwidgets.org/ticket/10174</a>;</li>" \
-        "<li><i>AUIToolBar</i> <i>DrawButton()</i> improvement: <a href='http://trac.wxwidgets.org/ticket/10303'>" \
-        "http://trac.wxwidgets.org/ticket/10303</a>;</li>" \
-        "<li><i>AuiToolBar</i> automatically assign new id for tools: <a href='http://trac.wxwidgets.org/ticket/10173'>" \
-        "http://trac.wxwidgets.org/ticket/10173</a>;</li>" \
-        "<li><i>AuiToolBar</i> Allow right-click on any kind of button: <a href='http://trac.wxwidgets.org/ticket/10079'>" \
-        "http://trac.wxwidgets.org/ticket/10079</a>;</li>" \
-        "<li><i>AuiToolBar</i> idle update only when visible: <a href='http://trac.wxwidgets.org/ticket/10075'>" \
-        "http://trac.wxwidgets.org/ticket/10075</a>.</li>" \
-        "</ul>" \
-        "</ul><p>" \
-        "<p>" \
-        "</body></html>"
+    text = \
+    "<html><body>" \
+    "<h3>Welcome to AUI</h3>" \
+    "<br/><b>Overview</b><br/>" \
+    "<p>AUI is an Advanced User Interface library for the wxPython toolkit " \
+    "that allows developers to create high-quality, cross-platform user " \
+    "interfaces quickly and easily.</p>" \
+    "<p><b>Features</b></p>" \
+    "<p>With AUI, developers can create application frameworks with:</p>" \
+    "<ul>" \
+    "<li>Native, dockable floating frames</li>" \
+    "<li>Perspective saving and loading</li>" \
+    "<li>Native toolbars incorporating real-time, &quotspring-loaded&quot dragging</li>" \
+    "<li>Customizable floating/docking behavior</li>" \
+    "<li>Completely customizable look-and-feel</li>" \
+    "<li>Optional transparent window effects (while dragging or docking)</li>" \
+    "<li>Splittable notebook control</li>" \
+    "</ul>" \
+    "<p><b>What's new in AUI?</b></p>" \
+    "<p>Current wxAUI Version Tracked: wxWidgets 2.9.0 (SVN HEAD)" \
+    "<p>The wxPython AUI version fixes the following bugs or implement the following" \
+    " missing features (the list is not exhaustive): " \
+    "<p><ul>" \
+    "<li>Visual Studio 2005 style docking: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=596'>" \
+    "http://www.kirix.com/forums/viewtopic.php?f=16&t=596</a></li>" \
+    "<li>Dock and Pane Resizing: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=582'>" \
+    "http://www.kirix.com/forums/viewtopic.php?f=16&t=582</a></li> " \
+    "<li>Patch concerning dock resizing: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=610'>" \
+    "http://www.kirix.com/forums/viewtopic.php?f=16&t=610</a></li> " \
+    "<li>Patch to effect wxAuiToolBar orientation switch: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=641'>" \
+    "http://www.kirix.com/forums/viewtopic.php?f=16&t=641</a></li> " \
+    "<li>AUI: Core dump when loading a perspective in wxGTK (MSW OK): <a href='http://www.kirix.com/forums/viewtopic.php?f=15&t=627</li>'>" \
+    "http://www.kirix.com/forums/viewtopic.php?f=15&t=627</li></a>" \
+    "<li>wxAuiNotebook reordered AdvanceSelection(): <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=617'>"\
+    "http://www.kirix.com/forums/viewtopic.php?f=16&t=617</a></li> " \
+    "<li>Vertical Toolbar Docking Issue: <a href='http://www.kirix.com/forums/viewtopic.php?f=16&t=181'>" \
+    "http://www.kirix.com/forums/viewtopic.php?f=16&t=181</a></li> " \
+    "<li>Patch to show the resize hint on mouse-down in aui: <a href='http://trac.wxwidgets.org/ticket/9612'>" \
+    "http://trac.wxwidgets.org/ticket/9612</a></li> " \
+    "<li>The Left/Right and Top/Bottom Docks over draw each other: <a href='http://trac.wxwidgets.org/ticket/3516'>" \
+    "<http://trac.wxwidgets.org/ticket/3516</a>/li>" \
+    "<li>MinSize() not honoured: <a href='http://trac.wxwidgets.org/ticket/3562'>" \
+    "http://trac.wxwidgets.org/ticket/3562</a></li> " \
+    "<li>Layout problem with wxAUI: <a href='http://trac.wxwidgets.org/ticket/3597'>" \
+    "http://trac.wxwidgets.org/ticket/3597</a></li>" \
+    "<li>Resizing children ignores current window size: <a href='http://trac.wxwidgets.org/ticket/3908'>" \
+    "http://trac.wxwidgets.org/ticket/3908</a></li> " \
+    "<li>Resizing panes under Vista does not repaint background: <a href='http://trac.wxwidgets.org/ticket/4325'>" \
+    "http://trac.wxwidgets.org/ticket/4325</a></li> " \
+    "<li>Resize sash resizes in response to click: <a href='http://trac.wxwidgets.org/ticket/4547'>" \
+    "http://trac.wxwidgets.org/ticket/4547</a></li> " \
+    "<li>'Illegal' resizing of the AuiPane? (wxPython): <a href='http://trac.wxwidgets.org/ticket/4599'>" \
+    "http://trac.wxwidgets.org/ticket/4599</a></li> " \
+    "<li>Floating wxAUIPane Resize Event doesn't update its position: <a href='http://trac.wxwidgets.org/ticket/9773'>" \
+    "http://trac.wxwidgets.org/ticket/9773</a></li>" \
+    "<li>Don't hide floating panels when we maximize some other panel: <a href='http://trac.wxwidgets.org/ticket/4066'>"\
+    "http://trac.wxwidgets.org/ticket/4066</a></li>" \
+    "<li>wxAUINotebook incorrect ALLOW_ACTIVE_PANE handling: <a href='http://trac.wxwidgets.org/ticket/4361'>" \
+    "http://trac.wxwidgets.org/ticket/4361</a></li> " \
+    "<li>Page changing veto doesn't work, (patch supplied): <a href='http://trac.wxwidgets.org/ticket/4518'>" \
+    "http://trac.wxwidgets.org/ticket/4518</a></li> " \
+    "<li>Show and DoShow are mixed around in wxAuiMDIChildFrame: <a href='http://trac.wxwidgets.org/ticket/4567'>"\
+    "http://trac.wxwidgets.org/ticket/4567</a></li> " \
+    "<li>wxAuiManager & wxToolBar - ToolBar Of Size Zero: <a href='http://trac.wxwidgets.org/ticket/9724'>" \
+    "http://trac.wxwidgets.org/ticket/9724</a></li> " \
+    "<li>wxAuiNotebook doesn't behave properly like a container as far as...: <a href='http://trac.wxwidgets.org/ticket/9911'>" \
+    "http://trac.wxwidgets.org/ticket/9911</a></li>" \
+    "<li>Serious layout bugs in wxAUI: <a href='http://trac.wxwidgets.org/ticket/10620'>" \
+    "http://trac.wxwidgets.org/ticket/10620</a></li>" \
+    "</ul>" \
+    "<p>Plus the following features:" \
+    "<p><ul>" \
+    "<li><b>AuiManager:</b></li>" \
+    "<ul>" \
+    "<li>Implementation of a simple minimize pane system: Clicking on this minimize button causes a new " \
+    "<i>AuiToolBar</i> to be created and added to the frame manager, (currently the implementation is such " \
+    "that panes at West will have a toolbar at the right, panes at South will have toolbars at the " \
+    "bottom etc...) and the pane is hidden in the manager. " \
+    "Clicking on the restore button on the newly created toolbar will result in the toolbar being " \
+    "removed and the original pane being restored;</li>" \
+    "<li>Panes can be docked on top of each other to form <i>AuiNotebooks</i>; <i>AuiNotebooks</i> tabs can be torn " \
+    "off to create floating panes;</li>" \
+    "<li>On Windows XP, use the nice sash drawing provided by XP while dragging the sash;</li>" \
+    "<li>Possibility to set an icon on docked panes;</li>" \
+    "<li>Possibility to draw a sash visual grip, for enhanced visualization of sashes;</li>" \
+    "<li>Implementation of a native docking art (<i>ModernDockArt</i>). Windows XP only, <b>requires</b> Mark Hammond's " \
+    "pywin32 package (winxptheme);</li>" \
+    "<li>Possibility to set a transparency for floating panes (a la Paint .NET);</li>" \
+    "<li>Snapping the main frame to the screen in any positin specified by horizontal and vertical " \
+    "alignments;</li>" \
+    "<li>Snapping floating panes on left/right/top/bottom or any combination of directions, a la Winamp;</li>" \
+    "<li>'Fly-out' floating panes, i.e. panes which show themselves only when the mouse hover them;</li>" \
+    "<li>Ability to set custom bitmaps for pane buttons (close, maximize, etc...).</li>" \
+    "</ul><p>" \
+    "<li><b>AuiNotebook:</b></li>" \
+    "<ul>" \
+    "<li>Implementation of the style <tt>AUI_NB_HIDE_ON_SINGLE_TAB</tt>, a la <i>wx.lib.agw.flatnotebook</i>;</li>" \
+    "<li>Implementation of the style <tt>AUI_NB_SMART_TABS</tt>, a la <i>wx.lib.agw.flatnotebook</i>;</li>" \
+    "<li>Implementation of the style <tt>AUI_NB_USE_IMAGES_DROPDOWN</tt>, which allows to show tab images " \
+    "on the tab dropdown menu instead of bare check menu items (a la <i>wx.lib.agw.flatnotebook</i>);</li>" \
+    "<li>6 different tab arts are available, namely:</li>" \
+    "<ul>" \
+    "<li>Default 'glossy' theme (as in <i>wx.aui.AuiNotebook</i>)</li>" \
+    "<li>Simple theme (as in <i>wx.aui.AuiNotebook</i>)</li>" \
+    "<li>Firefox 2 theme</li>" \
+    "<li>Visual Studio 2003 theme (VC71)</li>" \
+    "<li>Visual Studio 2005 theme (VC81)</li>" \
+    "<li>Google Chrome theme</li>" \
+    "</ul>" \
+    "<li>Enabling/disabling tabs;</li>" \
+    "<li>Setting the colour of the tab's text; </li>" \
+    "<li>Implementation of the style <tt>AUI_NB_CLOSE_ON_TAB_LEFT</tt>, which draws the tab close button on " \
+    "the left instead of on the right (a la Camino browser); </li>" \
+    "<li>Ability to save and load perspectives in <i>wx.aui.AuiNotebook</i> (experimental); </li>" \
+    "<li>Possibility to add custom buttons in the <i>wx.aui.AuiNotebook</i> tab area; </li>" \
+    "<li>Implementation of the style <tt>AUI_NB_TAB_FLOAT</tt>, which allows the floating of single tabs. " \
+    "<b>Known limitation:</b> when the notebook is more or less full screen, tabs cannot be dragged far " \
+    "enough outside of the notebook to become floating pages. </li>" \
+    "</ul><p>" \
+    "<li><b>AuiToolBar:</b></li>" \
+    "<ul>" \
+    "<li><tt>AUI_TB_PLAIN_BACKGROUND</tt> style that allows to easy setup a plain background to the AUI toolbar, " \
+    "without the need to override drawing methods. This style contrasts with the default behaviour " \
+    "of the <i>wx.aui.AuiToolBar</i> that draws a background gradient and this break the window design when " \
+    "putting it within a control that has margin between the borders and the toolbar (example: put " \
+    "<i>wx.aui.AuiToolBar</i> within a <i>wx.StaticBoxSizer</i> that has a plain background);</li>" \
+    "<li><i>AuiToolBar</i> allow item alignment: <a href='http://trac.wxwidgets.org/ticket/10174'> " \
+    "http://trac.wxwidgets.org/ticket/10174</a>;</li>" \
+    "<li><i>AUIToolBar</i> <i>DrawButton()</i> improvement: <a href='http://trac.wxwidgets.org/ticket/10303'>" \
+    "http://trac.wxwidgets.org/ticket/10303</a>;</li>" \
+    "<li><i>AuiToolBar</i> automatically assign new id for tools: <a href='http://trac.wxwidgets.org/ticket/10173'>" \
+    "http://trac.wxwidgets.org/ticket/10173</a>;</li>" \
+    "<li><i>AuiToolBar</i> Allow right-click on any kind of button: <a href='http://trac.wxwidgets.org/ticket/10079'>" \
+    "http://trac.wxwidgets.org/ticket/10079</a>;</li>" \
+    "<li><i>AuiToolBar</i> idle update only when visible: <a href='http://trac.wxwidgets.org/ticket/10075'>" \
+    "http://trac.wxwidgets.org/ticket/10075</a>.</li>" \
+    "</ul>" \
+    "</ul><p>" \
+    "<p>" \
+    "</body></html>"
 
-        return text
+    return text
 
 
 def MainAUI(parent):
@@ -2182,7 +2196,7 @@ def runTest(frame, nb, log):
 #----------------------------------------------------------------------
 
 
-overview = aui.__doc__
+overview = GetIntroText()
 
 
 if __name__ == '__main__':        

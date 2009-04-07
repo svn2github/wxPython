@@ -596,6 +596,7 @@ class AuiTabContainer(object):
         ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like Alt+Tab on Windows
         ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
         ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
+        ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
         ==================================== ==================================
         
         """
@@ -2145,6 +2146,7 @@ class AuiNotebook(wx.PyControl):
         ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like Alt+Tab on Windows
         ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
         ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
+        ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
         ==================================== ==================================
 
         Default value for `style` is:
@@ -3419,6 +3421,12 @@ class AuiNotebook(wx.PyControl):
 
             # if we aren't over any window, stop here
             if not tab_ctrl:
+                if self._flags & AUI_NB_TAB_FLOAT:
+                    if self.IsMouseWellOutsideWindow():
+                        hintRect = wx.RectPS(screen_pt, (400, 300))
+                        # Use CallAfter so we overwrite the hint that might be 
+                        # shown by our superclass: 
+                        wx.CallAfter(self._mgr.ShowHint, hintRect) 
                 return
 
             # make sure we are not over the hint window
@@ -3441,11 +3449,19 @@ class AuiNotebook(wx.PyControl):
                     
             else:
             
-                if not dest_tabs:                
+                if not dest_tabs:
                     # we are either over a hint window, or not over a tab
                     # window, and there is no where to drag to, so exit
                     return
-                
+
+        if self._flags & AUI_NB_TAB_FLOAT:
+            if self.IsMouseWellOutsideWindow():
+                hintRect = wx.RectPS(screen_pt, (400, 300))
+                # Use CallAfter so we overwrite the hint that might be 
+                # shown by our superclass: 
+                wx.CallAfter(self._mgr.ShowHint, hintRect)
+                return
+                        
         # if there are less than two panes, split can't happen, so leave
         if self._tabs.GetPageCount() < 2:
             return
@@ -3581,7 +3597,15 @@ class AuiNotebook(wx.PyControl):
                     self.GetEventHandler().ProcessEvent(e2)
 
                     return
-                
+
+        if self._flags & AUI_NB_TAB_FLOAT:
+            self._mgr.HideHint() 
+            if self.IsMouseWellOutsideWindow(): 
+                # Use CallAfter so we our superclass can deal with the event first
+                wx.CallAfter(self.FloatPage, self.GetSelection())
+                event.Skip()
+                return
+        
         # only perform a tab split if it's allowed
         dest_tabs = None
 
@@ -3685,7 +3709,80 @@ class AuiNotebook(wx.PyControl):
 
         src_tabs.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
 
-    
+
+    def IsMouseWellOutsideWindow(self):
+        """ Returns whether the mouse is well outside the AuiNotebook screen rectangle. """
+        
+        screen_rect = self.GetScreenRect() 
+        screen_rect.Inflate(50, 50)
+        
+        return not screen_rect.Contains(wx.GetMousePosition())
+
+
+    def FloatPage(self, page_index):
+        """
+        Float the page in `page_index` by reparenting it to a floating frame.
+
+        :param `page_index`: the index of the page to be floated.
+        """
+
+        root_manager = framemanager.GetManager(self)
+        page_title = self.GetPageText(page_index) 
+        page_contents = self.GetPage(page_index)
+        page_bitmap = self.GetPageBitmap(page_index)
+        self.RemovePage(page_index)
+        
+        if root_manager and root_manager != self._mgr:
+            root_manager = framemanager.GetManager(self)
+            floating_size = page_contents.GetBestSize()
+            if floating_size == wx.DefaultSize:
+                floating_size = wx.Size(300, 200)
+            pane_info = framemanager.AuiPaneInfo().Float().FloatingPosition(wx.GetMousePosition()). \
+                        FloatingSize(floating_size).Name("__floating__%s"%page_title). \
+                        Caption(page_title).Icon(page_bitmap)
+            root_manager.AddPane(page_contents, pane_info)
+            root_manager.Bind(framemanager.EVT_AUI_PANE_CLOSE, self.OnCloseFloatingPage)
+            self.GetActiveTabCtrl().DoShowHide()
+            self.DoSizing()
+            root_manager.Update()
+            
+        else:
+            frame = wx.Frame(self, title=page_title,
+                             style=wx.DEFAULT_FRAME_STYLE|wx.FRAME_TOOL_WINDOW|
+                                   wx.FRAME_FLOAT_ON_PARENT | wx.FRAME_NO_TASKBAR) 
+
+            frame.bitmap = page_bitmap            
+            frame.page_index = page_index
+            page_contents.Reparent(frame) 
+            frame.Bind(wx.EVT_CLOSE, self.OnCloseFloatingPage) 
+            frame.Move(wx.GetMousePosition()) 
+            frame.Show()
+
+
+    def OnCloseFloatingPage(self, event):
+        """
+        Handles the wx.EVT_CLOSE event for a floating page in L{AuiNotebook}.
+
+        :param `event`: a L{wx.CloseEvent} event to be processed.        
+        """
+
+        root_manager = framemanager.GetManager(self)
+        if root_manager and root_manager != self._mgr:
+            pane = event.pane
+            if pane.name.startswith("__floating__"):
+                root_manager.DetachPane(pane.window)
+                self.AddPage(pane.window, pane.caption, True, pane.icon)
+                
+            event.Skip()
+        else:
+            event.Skip()
+            frame = event.GetEventObject() 
+            page_title = frame.GetTitle() 
+            page_contents = frame.GetChildren()[0] 
+            page_contents.Reparent(self) 
+            self.InsertPage(frame.page_index, page_contents, page_title, select=True, bitmap=frame.bitmap) 
+
+        
     def GetTabCtrlFromPoint(self, pt):
         """
         Returns the tab control at the specified point.
@@ -4191,7 +4288,7 @@ class AuiNotebook(wx.PyControl):
             return False
 
 
-    def AddButton(self, id, location, normal_bitmap=wx.NullBitmap, disabled_bitmap=wx.NullBitmap):
+    def AddTabAreaButton(self, id, location, normal_bitmap=wx.NullBitmap, disabled_bitmap=wx.NullBitmap):
         """
         Adds a button in the tab area.
 
@@ -4215,7 +4312,7 @@ class AuiNotebook(wx.PyControl):
         active_tabctrl.AddButton(id, location, normal_bitmap, disabled_bitmap)
 
 
-    def RemoveButton(self, id):
+    def RemoveTabAreaButton(self, id):
         """
         Removes a button from the tab area.
 

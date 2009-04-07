@@ -217,6 +217,13 @@ AUI_NB_CLOSE_ON_TAB_LEFT   = 1 << 18
 Draws the tab close button on the left instead of on the right
 (a la Camino browser).
 """
+AUI_NB_TAB_FLOAT           = 1 << 19
+"""
+Allows the floating of single tabs.
+Known limitation: when the notebook is more or less full screen, tabs 
+cannot be dragged far enough outside of the notebook to become 
+floating pages. 
+"""
 
 AUI_NB_DEFAULT_STYLE = AUI_NB_TOP | AUI_NB_TAB_SPLIT | AUI_NB_TAB_MOVE | \
                        AUI_NB_SCROLL_BUTTONS | AUI_NB_CLOSE_ON_ACTIVE_TAB | \

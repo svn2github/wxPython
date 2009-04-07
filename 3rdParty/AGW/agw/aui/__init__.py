@@ -168,7 +168,10 @@ Plus the following features:
   (g) Implementation of the style ``AUI_NB_CLOSE_ON_TAB_LEFT``, which draws the tab close button on
       the left instead of on the right (a la Camino browser);
   (h) Ability to save and load perspectives in `AuiNotebook` (experimental);
-  (i) Possibility to add custom buttons in the `AuiNotebook` tab area.
+  (i) Possibility to add custom buttons in the `AuiNotebook` tab area;
+  (j) Implementation of the style ``AUI_NB_TAB_FLOAT``, which allows the floating of single tabs.
+      Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far
+      enough outside of the notebook to become floating pages.
   
 - AuiToolBar:
   (a) ``AUI_TB_PLAIN_BACKGROUND`` style that allows to easy setup a plain background to the AUI toolbar,
@@ -192,7 +195,7 @@ TODOs
   on the left instead of on the top (with caption text rotated by 90 degrees then). This is
   similar to what `wxDockIt` did;
 - Make developer-created `AuiNotebooks` and automatic (framemanager-created) `AuiNotebooks` behave
-  the same way (undocking of tabs);
+  the same way (undocking of tabs) - DONE to some extent;
 - Find a way to dock panes in already floating panes (`AuiFloatingFrames`), as they already have
   their own `AuiManager`;
 - Add events for panes when they are about to float or to be docked (something like
@@ -218,7 +221,7 @@ License And Version:
 
 AUI library is freeware and distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 06 Apr 2009, 12.00 GMT
+Latest revision: Andrea Gavana @ 07 Apr 2009, 12.00 GMT
 Version 1.0. 
 
 """
