@@ -8902,6 +8902,9 @@ class AuiManager(wx.EvtHandler):
         if wx.Platform == "__WXMAC__":
             # No wx.ScreenDC on the Mac...
             return
+        if wx.Platform == "__WXMSW__" and wx.GetOsVersion()[1] > 5:
+            # No easy way to handle this on Vista...
+            return
 
         xstart, ystart = win_rect.x, win_rect.y
         xend, yend = toolbar_rect.x, toolbar_rect.y
