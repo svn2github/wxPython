@@ -3387,6 +3387,7 @@ class AuiToolBar(wx.PyControl):
                     
                     e = wx.CommandEvent(wx.wxEVT_COMMAND_MENU_SELECTED, self._action_item.id)
                     e.SetEventObject(self)
+                    e.SetInt(toggle)
                     self._action_pos = wx.Point(-1, -1)
                     self._action_item = None
                     
