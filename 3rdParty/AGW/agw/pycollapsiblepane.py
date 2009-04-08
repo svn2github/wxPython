@@ -164,7 +164,7 @@ class PyCollapsiblePane(wx.PyControl):
         wx.PyControl.__init__(self, parent, id, pos, size, style, val, name)
         
         self._pButton = self._pStaticLine = self._pPane = self._sz = None            
-        self._strLabel = label
+        wx.PyControl.SetLabel(self, label)
         self._bCollapsed = True
 
         if style & CP_GTK_EXPANDER == 0:
@@ -224,9 +224,9 @@ class PyCollapsiblePane(wx.PyControl):
         """ Returns the button label. """
 
         if self.GetWindowStyleFlag() & CP_GTK_EXPANDER:
-            return self._strLabel
+            return self.GetLabel()
         
-        return self._strLabel + (self.IsCollapsed() and [" >>"] or [" <<"])[0]
+        return self.GetLabel() + (self.IsCollapsed() and [" >>"] or [" <<"])[0]
 
 
     def OnStateChange(self, sz):
@@ -340,7 +340,7 @@ class PyCollapsiblePane(wx.PyControl):
     def SetLabel(self, label):
         """ Sets the button label. """
 
-        self._strLabel = label
+        wx.PyControl.SetLabel(self, label)
         self._pButton.SetLabel(self.GetBtnLabel())
         self._pButton.SetInitialSize()
         self._pButton.Refresh()
