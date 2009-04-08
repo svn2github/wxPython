@@ -7915,9 +7915,25 @@ class AuiManager(wx.EvtHandler):
 
         clientPt = event.GetPosition()
         screenPt = self._frame.ClientToScreen(clientPt)
-        
+
+        return self.RestrictResize(clientPt, screenPt, createDC=False)
+
+
+    def RestrictResize(self, clientPt, screenPt, createDC):
+        """ Common method between L{DoEndResizeAction} and L{OnLeftUp_Resize}. """
+
         dock = self._action_part.dock
         pane = self._action_part.pane
+
+        if createDC:
+            if wx.Platform == "__WXMAC__":
+                dc = wx.ClientDC(self._frame)
+            else:
+                dc = wx.ScreenDC()
+
+            DrawResizeHint(dc, self._action_rect)
+            self._action_rect = wx.Rect()
+        
         newPos = clientPt - self._action_offset
 
         if self._action_part.type == AuiDockUIPart.typeDockSizer:
@@ -7969,18 +7985,11 @@ class AuiManager(wx.EvtHandler):
             if dock.IsHorizontal():
                 oldPixsize = pane.rect.width
                 newPixsize = oldPixsize + newPos.x - self._action_part.rect.x
-##                if pane.min_size.IsFullySpecified():
-##                    newPixsize -= pane.min_size.x
-##                    oldPixsize -= pane.min_size.x
                     
             else:            
                 oldPixsize = pane.rect.height
                 newPixsize = oldPixsize + newPos.y - self._action_part.rect.y
-                
-##                if pane.min_size.IsFullySpecified():
-##                    newPixsize -= pane.min_size.y
-##                    oldPixsize -= pane.min_size.y
-                
+                                
             totalPixsize, totalProportion = self.GetTotalPixsizeAndProportion(dock)
             partnerPane = self.GetPartnerPane(dock, pane)
 
@@ -8012,8 +8021,8 @@ class AuiManager(wx.EvtHandler):
             self.Update()
         
         return True
-
     
+
     def OnLeftUp(self, event):
         """
         Handles the wx.EVT_LEFT_UP event for L{AuiManager}.
@@ -8179,21 +8188,17 @@ class AuiManager(wx.EvtHandler):
         elif self._action_pane.IsFloatable() and self._flags & AUI_MGR_ALLOW_FLOATING:
             self._action = actionDragFloatingPane
 
-            isGTK = wx.Platform == "__WXGTK__"
-            
             # set initial float position
             self._action_pane.floating_pos = screenPt - self._action_offset
 
             # float the window
             if self._action_pane.IsMaximized():
                 self.RestorePane(self._action_pane)
-
-            if isGTK:
-                self._action_pane.Float()
+                
+            self._action_pane.Hide()
+            self._action_pane.Float()
+            if wx.Platform == "__WXGTK__":
                 self._action_pane.Show()
-            else:
-                self._action_pane.Hide()
-                self._action_pane.Float()
 
             self.Update()
 
@@ -8215,13 +8220,10 @@ class AuiManager(wx.EvtHandler):
             if self._action_offset.y > frame_size.y * 2 / 3:
                 self._action_offset.y = frame_size.y / 2
 
-            if isGTK:
-                self._action_pane.frame.Refresh()
-                
             self.OnMotion_DragFloatingPane(event)
-            if not isGTK:
+            if wx.Platform != "__WXGTK__":
                 self._action_pane.Show()
-            
+                
             self.Update()
 
 
@@ -8300,110 +8302,8 @@ class AuiManager(wx.EvtHandler):
 
         clientPt = event.GetPosition()
         screenPt = self._frame.ClientToScreen(clientPt)
-        
-        dock = self._action_part.dock
-        pane = self._action_part.pane
 
-        if wx.Platform == "__WXMAC__":
-            dc = wx.ClientDC(self._frame)
-        else:
-            dc = wx.ScreenDC()
-
-        DrawResizeHint(dc, self._action_rect)
-        self._action_rect = wx.Rect()
-
-        newPos = clientPt - self._action_offset
-
-        if self._action_part.type == AuiDockUIPart.typeDockSizer:
-            minPix, maxPix = self.CalculateDockSizerLimits(dock)
-        else:
-            if not self._action_part.pane:
-                return
-            minPix, maxPix = self.CalculatePaneSizerLimits(dock, pane)
-
-        if self._action_part.orientation == wx.HORIZONTAL:
-            newPos.y = Clip(newPos.y, minPix, maxPix)
-        else:
-            newPos.x = Clip(newPos.x, minPix, maxPix)
-
-        if self._action_part.type == AuiDockUIPart.typeDockSizer:
-        
-            partnerDock = self.GetPartnerDock(dock)
-            sash_size = self._art.GetMetric(AUI_DOCKART_SASH_SIZE)
-            new_dock_size = 0
-            direction = dock.dock_direction
-
-            if direction == AUI_DOCK_LEFT:
-                new_dock_size = newPos.x - dock.rect.x
-
-            elif direction == AUI_DOCK_TOP:
-                new_dock_size = newPos.y - dock.rect.y
-
-            elif direction == AUI_DOCK_RIGHT:
-                new_dock_size = dock.rect.x + dock.rect.width - newPos.x - sash_size
-
-            elif direction == AUI_DOCK_BOTTOM:
-                new_dock_size = dock.rect.y + dock.rect.height - newPos.y - sash_size
-
-            deltaDockSize = new_dock_size - dock.size
-
-            if partnerDock:
-                if deltaDockSize > partnerDock.size - sash_size:
-                    deltaDockSize = partnerDock.size - sash_size
-
-                partnerDock.size -= deltaDockSize
-            
-            dock.size += deltaDockSize
-            self.Update()
-        
-        else:
-        
-            # determine the new pixel size that the user wants
-            # this will help us recalculate the pane's proportion
-            if dock.IsHorizontal():
-                oldPixsize = pane.rect.width
-                newPixsize = oldPixsize + newPos.x - self._action_part.rect.x
-##                if pane.min_size.IsFullySpecified():
-##                    newPixsize -= pane.min_size.x
-##                    oldPixsize -= pane.min_size.x
-                    
-            else:            
-                oldPixsize = pane.rect.height
-                newPixsize = oldPixsize + newPos.y - self._action_part.rect.y
-                
-##                if pane.min_size.IsFullySpecified():
-##                    newPixsize -= pane.min_size.y
-##                    oldPixsize -= pane.min_size.y
-                
-            totalPixsize, totalProportion = self.GetTotalPixsizeAndProportion(dock)
-            partnerPane = self.GetPartnerPane(dock, pane)
-
-            # prevent division by zero
-            if totalPixsize <= 0 or totalProportion <= 0 or not partnerPane:
-                return
-
-            # adjust for the surplus
-            while (oldPixsize > 0 and totalPixsize > 10 and \
-                  oldPixsize*totalProportion/totalPixsize < pane.dock_proportion):
-            
-                totalPixsize -= 1
-
-            # calculate the new proportion of the pane
-            
-            newProportion = newPixsize*totalProportion/totalPixsize
-            newProportion = Clip(newProportion, 1, totalProportion)
-            deltaProp = newProportion - pane.dock_proportion
-
-            if partnerPane.dock_proportion - deltaProp < 1:
-                deltaProp = partnerPane.dock_proportion - 1
-                newProportion = pane.dock_proportion + deltaProp
-            
-            # borrow the space from our neighbor pane to the
-            # right or bottom (depending on orientation)
-            partnerPane.dock_proportion -= deltaProp
-            pane.dock_proportion = newProportion
-
-            self.Update()
+        return self.RestrictResize(clientPt, screenPt, createDC=True)
         
 
     def OnLeftUp_ClickButton(self, event):
