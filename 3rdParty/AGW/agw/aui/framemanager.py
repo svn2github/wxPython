@@ -8179,15 +8179,21 @@ class AuiManager(wx.EvtHandler):
         elif self._action_pane.IsFloatable() and self._flags & AUI_MGR_ALLOW_FLOATING:
             self._action = actionDragFloatingPane
 
+            isGTK = wx.Platform == "__WXGTK__"
+            
             # set initial float position
             self._action_pane.floating_pos = screenPt - self._action_offset
 
             # float the window
             if self._action_pane.IsMaximized():
                 self.RestorePane(self._action_pane)
-                
-            self._action_pane.Hide()
-            self._action_pane.Float()
+
+            if isGTK:
+                self._action_pane.Float()
+                self._action_pane.Show()
+            else:
+                self._action_pane.Hide()
+                self._action_pane.Float()
 
             self.Update()
 
@@ -8209,8 +8215,13 @@ class AuiManager(wx.EvtHandler):
             if self._action_offset.y > frame_size.y * 2 / 3:
                 self._action_offset.y = frame_size.y / 2
 
+            if isGTK:
+                self._action_pane.frame.Refresh()
+                
             self.OnMotion_DragFloatingPane(event)
-            self._action_pane.Show()
+            if not isGTK:
+                self._action_pane.Show()
+            
             self.Update()
 
 
