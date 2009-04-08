@@ -2,7 +2,7 @@
 # RULERCTRL wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 15 Oct 2008, 22.30 GMT
+# Latest Revision: 08 Apr 2009, 10.00 GMT
 #
 #
 # TODO List
@@ -71,8 +71,8 @@ License And Version:
 RulerCtrl is freeware and distributed under the wxPython license. 
 
 
-Latest Revision: Andrea Gavana @ 15 Oct 2008, 22.30 GMT
-Version 0.1
+Latest Revision: Andrea Gavana @ 08 Apr 2009, 10.00 GMT
+Version 0.2
 
 """
 
@@ -222,7 +222,7 @@ class RulerCtrlEvent(wx.PyCommandEvent):
 # Class Label
 # ---------------------------------------------------------------------------- #
 
-class Label:
+class Label(object):
     """
     Auxilary class. Just holds information about a label in RulerCtrl.
     """
@@ -240,7 +240,7 @@ class Label:
 # Class Indicator
 # ---------------------------------------------------------------------------- #
 
-class Indicator:
+class Indicator(object):
     """
     This class holds all the information about a single indicator inside RulerCtrl.
     You should not call this class directly. Use ruler.AddIndicator(id, value) to
@@ -478,6 +478,7 @@ class RulerCtrl(wx.PyPanel):
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouseEvents)
+        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, lambda evt: True)
 
 
     def OnMouseEvents(self, event):
@@ -490,6 +491,7 @@ class RulerCtrl(wx.PyPanel):
         mousePos = event.GetPosition()
 
         if event.LeftDown():
+            self.CaptureMouse()
             self.GetIndicator(mousePos)
             self._mousePosition = mousePos
             self.SetIndicatorValue(sendEvent=False)
@@ -497,12 +499,14 @@ class RulerCtrl(wx.PyPanel):
             self._mousePosition = mousePos
             self.SetIndicatorValue()
         elif event.LeftUp():
+            if self.HasCapture():
+                self.ReleaseMouse()
             self.SetIndicatorValue(sendEvent=False)
             if self._drawingparent:
                 self._drawingparent.Refresh()
             self._currentIndicator = None
-        else:
-            self._currentIndicator = None
+        #else:
+        #    self._currentIndicator = None
 
         event.Skip()
         
@@ -1496,21 +1500,21 @@ class RulerCtrl(wx.PyPanel):
         if self._orientation == wx.HORIZONTAL:
 
             x1 = xpos+ imgx/2
-            y1 = parentrect.y + ypos + imgy
+            y1 = parentrect.y
             x2 = x1
-            y2 = y1 + parentrect.height
-            x1, y1 = self.ClientToScreenXY(x1, y1)
-            x2, y2 = self.ClientToScreenXY(x2, y2)
+            y2 = parentrect.height
+            x1, y1 = self._drawingparent.ClientToScreenXY(x1, y1)
+            x2, y2 = self._drawingparent.ClientToScreenXY(x2, y2)
                                          
         elif self._orientation == wx.VERTICAL:
 
-            x1 = parentrect.x + xpos + imgx
+            x1 = parentrect.x
             y1 = ypos + imgy/2
-            x2 = parentrect.width + x1
+            x2 = parentrect.width
             y2 = y1
 
-            x1, y1 = self.ClientToScreenXY(x1, y1)
-            x2, y2 = self.ClientToScreenXY(x2, y2)
+            x1, y1 = self._drawingparent.ClientToScreenXY(x1, y1)
+            x2, y2 = self._drawingparent.ClientToScreenXY(x2, y2)
 
         dc.DrawLine(x1, y1, x2, y2)
         dc.SetLogicalFunction(wx.COPY)

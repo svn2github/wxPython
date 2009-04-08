@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 15 Oct 2008, 10.00 GMT
+# Latest Revision: 08 Apr 2009, 10.00 GMT
 #
 #
 # TODO List
@@ -144,8 +144,8 @@ CustomTreeCtrl has been tested on the following platforms:
   * Mac OS (Thanks to John Jackson).
 
 
-Latest Revision: Andrea Gavana @ 15 Oct 2008, 10.00 GMT
-Version 1.8
+Latest Revision: Andrea Gavana @ 08 Apr 2009, 10.00 GMT
+Version 1.9
 
 """
 
@@ -1641,23 +1641,23 @@ class GenericTreeItem(object):
         
             if self.IsSelected():
             
-                image = self.GetImage(TreeItemIcon_SelectedExpanded)
+                image = self._images[TreeItemIcon_SelectedExpanded]
 
             if image == _NO_IMAGE:
             
                 # we usually fall back to the normal item, but try just the
                 # expanded one (and not selected) first in this case
-                image = self.GetImage(TreeItemIcon_Expanded)
+                image = self._images[TreeItemIcon_Expanded]
         
         else: # not expanded
         
             if self.IsSelected():
-                image = self.GetImage(TreeItemIcon_Selected)
+                image = self._images[TreeItemIcon_Selected]
         
         # maybe it doesn't have the specific image we want,
         # try the default one instead
         if image == _NO_IMAGE:
-            image = self.GetImage()
+            image = self._images[TreeItemIcon_Normal]
 
         return image
 
