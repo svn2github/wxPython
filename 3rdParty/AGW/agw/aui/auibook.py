@@ -2183,11 +2183,7 @@ class AuiNotebook(wx.PyControl):
         """
 
         self.SetName("AuiNotebook")
-        self._curpage = -1
-        self._tab_id_counter = AuiBaseTabCtrlId
-        self._dummy_wnd = None
         self._flags = style
-        self._tab_ctrl_height = 20
 
         self._popupWin = None
         self._naviIcon = None
@@ -3483,13 +3479,29 @@ class AuiNotebook(wx.PyControl):
             src_tabs.SetCursor(wx.StockCursor(wx.CURSOR_SIZING))
         
         if dest_tabs:
-        
+            
             hint_rect = dest_tabs.GetRect()
             hint_rect.x, hint_rect.y = self.ClientToScreenXY(hint_rect.x, hint_rect.y)
             self._mgr.ShowHint(hint_rect)
         
         else:
-            self._mgr.DrawHintRect(self._dummy_wnd, client_pt, zero)
+            rect = self._mgr.CalculateHintRect(self._dummy_wnd, client_pt, zero)
+            if rect.IsEmpty():
+                self._mgr.HideHint()
+                return
+            
+            hit_wnd = wx.FindWindowAtPoint(screen_pt)
+            if hit_wnd and not isinstance(hit_wnd, AuiNotebook):
+                tab_frame = self.GetTabFrameFromWindow(hit_wnd)
+                if tab_frame:
+                    hint_rect = wx.Rect(*tab_frame._rect)
+                    hint_rect.x, hint_rect.y = self.ClientToScreenXY(hint_rect.x, hint_rect.y)
+                    rect.Intersect(hint_rect)
+                    self._mgr.ShowHint(rect)
+                else:
+                    self._mgr.DrawHintRect(self._dummy_wnd, client_pt, zero)
+            else:
+                self._mgr.DrawHintRect(self._dummy_wnd, client_pt, zero)
         
 
     def OnTabEndDrag(self, event):
@@ -3834,6 +3846,26 @@ class AuiNotebook(wx.PyControl):
         return None
 
 
+    def GetTabFrameFromWindow(self, wnd):
+        """
+        Returns the tab frame associated with a window.
+
+        :param `wnd`: an instance of L{wx.Window}.
+        """
+
+        all_panes = self._mgr.GetAllPanes()
+        for pane in all_panes:
+            if pane.name == "dummy":
+                continue
+
+            tabframe = pane.window
+            for page in tabframe._tabs.GetPages():
+                if wnd == page.window:
+                    return tabframe
+            
+        return None
+    
+        
     def RemoveEmptyTabFrames(self):
         """ Removes all the empty tab frames. """
 

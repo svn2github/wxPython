@@ -1769,6 +1769,7 @@ class AuiDockingGuideWindow(wx.Window):
             self._bmp_focus = eval("tab_focus%s"%imgName).GetBitmap()
 
         self._currentImage = self._bmp_unfocus
+        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
         
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -1978,7 +1979,7 @@ class AuiDockingGuideWindow(wx.Window):
         :param `event`: a L{wx.PaintEvent} to be processed.
         """
 
-        dc = wx.BufferedPaintDC(self)
+        dc = wx.AutoBufferedPaintDC(self)
         if self._currentImage.IsOk() and self._valid:
             dc.DrawBitmap(self._currentImage, 0, 0, True)
         else:
@@ -2145,6 +2146,7 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         region.UnionRegion(wx.RegionFromPoints(brd))
 
         self.region = region
+        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
         
         if wx.Platform == "__WXGTK__":
             self.Bind(wx.EVT_WINDOW_CREATE, self.SetGuideShape)
@@ -2239,7 +2241,7 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         :param `event`: a L{wx.PaintEvent} to be processed.
         """
 
-        dc = wx.BufferedPaintDC(self)
+        dc = wx.AutoBufferedPaintDC(self)
 
         dc.SetBrush(wx.Brush(colourTargetBackground))
         dc.SetPen(wx.Pen(colourTargetBorder))
@@ -2656,10 +2658,12 @@ class AuiFloatingFrame(wx.MiniFrame):
         if rect.Contains(wx.GetMousePosition()):
             if not self._fly:
                 return
+            self._send_size = False
             self._fly_timer.Start(5)
         else:
             if self._fly:
                 return
+            self._send_size = False
             self._fly_timer.Start(5)
 
 
@@ -2675,8 +2679,6 @@ class AuiFloatingFrame(wx.MiniFrame):
 
         if floating_size.y == -1:
             floating_size = self._floating_size
-
-        self._send_size = False
         
         if not self._fly:
             min_size = self._mgr.GetArtProvider().GetMetric(AUI_DOCKART_CAPTION_SIZE) + \
@@ -2686,6 +2688,7 @@ class AuiFloatingFrame(wx.MiniFrame):
                 self.SetDimensions(-1, -1, -1, min_size, wx.SIZE_USE_EXISTING)
                 self._fly = True
                 self._fly_timer.Stop()
+                self._send_size = True
             else:
                 self.SetDimensions(-1, -1, -1, current_size.y-self._fly_step, wx.SIZE_USE_EXISTING)
 
@@ -2694,13 +2697,12 @@ class AuiFloatingFrame(wx.MiniFrame):
                 self.SetDimensions(-1, -1, -1, floating_size.y, wx.SIZE_USE_EXISTING)
                 self._fly = False
                 self._fly_timer.Stop()
+                self._send_size = True
             else:
                 self.SetDimensions(-1, -1, -1, current_size.y+self._fly_step, wx.SIZE_USE_EXISTING)
 
         self.Update()
         self.Refresh()
-
-        self._send_size = True        
 
     
 # -- static utility functions --
@@ -3419,6 +3421,7 @@ class AuiManager(wx.EvtHandler):
         self._last_hint = wx.Rect()
 
         self._from_move = False
+        self._last_rect = wx.Rect()
         
         if flags is None:
             flags = AUI_MGR_DEFAULT
@@ -7910,164 +7913,102 @@ class AuiManager(wx.EvtHandler):
         :param `event`: a L{wx.MouseEvent} to be processed.
         """
 
-        # resize the dock or the pane
-        if self._action_part and self._action_part.type == AuiDockUIPart.typeDockSizer:
+        clientPt = event.GetPosition()
+        screenPt = self._frame.ClientToScreen(clientPt)
         
-            rect = wx.Rect(*self._action_part.dock.rect)
+        dock = self._action_part.dock
+        pane = self._action_part.pane
+        newPos = clientPt - self._action_offset
 
-            new_pos = wx.Point(event.GetX() - self._action_offset.x,
-                               event.GetY() - self._action_offset.y)
+        if self._action_part.type == AuiDockUIPart.typeDockSizer:
+            minPix, maxPix = self.CalculateDockSizerLimits(dock)
+        else:
+            if not self._action_part.pane:
+                return
+            minPix, maxPix = self.CalculatePaneSizerLimits(dock, pane)
 
-            direction = self._action_part.dock.dock_direction
-            
+        if self._action_part.orientation == wx.HORIZONTAL:
+            newPos.y = Clip(newPos.y, minPix, maxPix)
+        else:
+            newPos.x = Clip(newPos.x, minPix, maxPix)
+
+        if self._action_part.type == AuiDockUIPart.typeDockSizer:
+        
+            partnerDock = self.GetPartnerDock(dock)
+            sash_size = self._art.GetMetric(AUI_DOCKART_SASH_SIZE)
+            new_dock_size = 0
+            direction = dock.dock_direction
+
             if direction == AUI_DOCK_LEFT:
-                self._action_part.dock.size = new_pos.x - rect.x
+                new_dock_size = newPos.x - dock.rect.x
 
             elif direction == AUI_DOCK_TOP:
-                self._action_part.dock.size = new_pos.y - rect.y
+                new_dock_size = newPos.y - dock.rect.y
 
             elif direction == AUI_DOCK_RIGHT:
-                self._action_part.dock.size = rect.x + rect.width - new_pos.x - \
-                                              self._action_part.rect.GetWidth()
+                new_dock_size = dock.rect.x + dock.rect.width - newPos.x - sash_size
 
             elif direction == AUI_DOCK_BOTTOM:
-                self._action_part.dock.size = rect.y + rect.height - new_pos.y - \
-                                              self._action_part.rect.GetHeight()
+                new_dock_size = dock.rect.y + dock.rect.height - newPos.y - sash_size
 
+            deltaDockSize = new_dock_size - dock.size
+
+            if partnerDock:
+                if deltaDockSize > partnerDock.size - sash_size:
+                    deltaDockSize = partnerDock.size - sash_size
+
+                partnerDock.size -= deltaDockSize
+            
+            dock.size += deltaDockSize
             self.Update()
         
-        elif self._action_part and self._action_part.type == AuiDockUIPart.typePaneSizer:
+        else:
         
-            dock = self._action_part.dock
-            pane = self._action_part.pane
-
-            total_proportion = 0
-            dock_pixels = 0
-            new_pixsize = 0
-
-            caption_size = self._art.GetMetric(AUI_DOCKART_CAPTION_SIZE)
-            pane_border_size = self._art.GetMetric(AUI_DOCKART_PANE_BORDER_SIZE)
-            sash_size = self._art.GetMetric(AUI_DOCKART_SASH_SIZE)
-
-            new_pos = wx.Point(event.GetX() - self._action_offset.x,
-                               event.GetY() - self._action_offset.y)
-
-            # determine the pane rectangle by getting the pane part
-            pane_part = self.GetPanePart(pane.window)
-            if not pane_part:
-                raise Exception("Pane border part not found -- shouldn't happen")
-
             # determine the new pixel size that the user wants
             # this will help us recalculate the pane's proportion
             if dock.IsHorizontal():
-                new_pixsize = new_pos.x - pane_part.rect.x
-            else:
-                new_pixsize = new_pos.y - pane_part.rect.y
-
-            # determine the size of the dock, based on orientation
-            if dock.IsHorizontal():
-                dock_pixels = dock.rect.GetWidth()
-            else:
-                dock_pixels = dock.rect.GetHeight()
-
-            # determine the total proportion of all resizable panes,
-            # and the total size of the dock minus the size of all
-            # the fixed panes
-            dock_pane_count = len(dock.panes)
-            pane_position = -1
-            
-            for i, p in enumerate(dock.panes):
-            
-                if p.window == pane.window:
-                    pane_position = i
-
-                # while we're at it, subtract the pane sash
-                # width from the dock width, because this would
-                # skew our proportion calculations
-                if i > 0:
-                    dock_pixels -= sash_size
-
-                # also, the whole size (including decorations) of
-                # all fixed panes must also be subtracted, because they
-                # are not part of the proportion calculation
-                if p.IsFixed():
+                oldPixsize = pane.rect.width
+                newPixsize = oldPixsize + newPos.x - self._action_part.rect.x
+##                if pane.min_size.IsFullySpecified():
+##                    newPixsize -= pane.min_size.x
+##                    oldPixsize -= pane.min_size.x
+                    
+            else:            
+                oldPixsize = pane.rect.height
+                newPixsize = oldPixsize + newPos.y - self._action_part.rect.y
                 
-                    if dock.IsHorizontal():
-                        dock_pixels -= p.best_size.x
-                    else:
-                        dock_pixels -= p.best_size.y
+##                if pane.min_size.IsFullySpecified():
+##                    newPixsize -= pane.min_size.y
+##                    oldPixsize -= pane.min_size.y
                 
-                else:
-                
-                    total_proportion += p.dock_proportion
-                
-            # find a pane in our dock to 'steal' space from or to 'give'
-            # space to -- this is essentially what is done when a pane is
-            # resized the pane should usually be the first non-fixed pane
-            # to the right of the action pane
-            borrow_pane = -1
-            for i in xrange(pane_position+1, len(dock.panes)):
-                p = dock.panes[i]
-                if not p.IsFixed():
-                    borrow_pane = i
-                    break
-                
-            # demand that the pane being resized is found in this dock
-            # (this assert really never should be raised)
-            if pane_position == -1:
-                raise Exception("Pane not found in dock")
+            totalPixsize, totalProportion = self.GetTotalPixsizeAndProportion(dock)
+            partnerPane = self.GetPartnerPane(dock, pane)
 
             # prevent division by zero
-            if dock_pixels == 0 or total_proportion == 0 or borrow_pane == -1:
-                self._action = actionNone
-                return False
+            if totalPixsize <= 0 or totalProportion <= 0 or not partnerPane:
+                return
+
+            # adjust for the surplus
+            while (oldPixsize > 0 and totalPixsize > 10 and \
+                  oldPixsize*totalProportion/totalPixsize < pane.dock_proportion):
             
+                totalPixsize -= 1
+
             # calculate the new proportion of the pane
-            new_proportion = (new_pixsize*total_proportion)/dock_pixels
+            
+            newProportion = newPixsize*totalProportion/totalPixsize
+            newProportion = Clip(newProportion, 1, totalProportion)
+            deltaProp = newProportion - pane.dock_proportion
 
-            # default minimum size
-            min_size = 0
-
-            # check against the pane's minimum size, if specified. please note
-            # that this is not enough to ensure that the minimum size will
-            # not be violated, because the whole frame might later be shrunk,
-            # causing the size of the pane to violate it's minimum size
-            if pane.min_size.IsFullySpecified():
-                min_size = 0
-
-                if pane.HasBorder():
-                    min_size += pane_border_size*2
-
-                # calculate minimum size with decorations (border,caption)
-                if pane_part.orientation == wx.VERTICAL:
-                
-                    min_size += pane.min_size.y
-                    if pane.HasCaption():
-                        min_size += caption_size
-                
-                else:
-                
-                    min_size += pane.min_size.x
-                
-            # for some reason, an arithmatic error somewhere is causing
-            # the proportion calculations to always be off by 1 pixel
-            # for now we will add the 1 pixel on, but we really should
-            # determine what's causing this.
-            min_size += 1
-
-            min_proportion = (min_size*total_proportion)/dock_pixels
-
-            if new_proportion < min_proportion:
-                new_proportion = min_proportion
-
-            prop_diff = new_proportion - pane.dock_proportion
-
+            if partnerPane.dock_proportion - deltaProp < 1:
+                deltaProp = partnerPane.dock_proportion - 1
+                newProportion = pane.dock_proportion + deltaProp
+            
             # borrow the space from our neighbor pane to the
             # right or bottom (depending on orientation)
-            dock.panes[borrow_pane].dock_proportion -= prop_diff
-            pane.dock_proportion = new_proportion
+            partnerPane.dock_proportion -= deltaProp
+            pane.dock_proportion = newProportion
 
-            # repaint
             self.Update()
         
         return True
@@ -8477,6 +8418,29 @@ class AuiManager(wx.EvtHandler):
                 self.ProcessMgrEvent(e)
         
 
+    def CheckPaneMove(self, pane):
+
+        win_rect = pane.frame.GetRect()
+        win_rect.x, win_rect.y = pane.floating_pos
+        
+        if win_rect == self._last_rect:
+            return False
+
+        # skip the first move event
+        if self._last_rect.IsEmpty():
+            self._last_rect = wx.Rect(*win_rect)
+            return False
+
+        # skip if moving too fast to avoid massive redraws and
+        # jumping hint windows
+        if abs(win_rect.x - self._last_rect.x) > 10 or \
+           abs(win_rect.y - self._last_rect.y) > 10:
+            self._last_rect = wx.Rect(*win_rect)
+            return False
+
+        return True        
+        
+
     def OnMotion_DragFloatingPane(self, event):
         """
         Sub-handler for the L{OnMotion} event.
@@ -8499,6 +8463,12 @@ class AuiManager(wx.EvtHandler):
 
         # Move the pane window
         if pane.frame:
+
+            if wx.Platform == "__WXMSW__" and (self._flags & AUI_MGR_TRANSPARENT_DRAG) == 0: # and not self.CheckPaneMove(pane):
+                # return
+                # HACK: Terrible hack on wxMSW (!)
+                pane.frame.SetTransparent(254)
+                        
             if not self._hint_window or not self._hint_window.IsShown():
                 pane.frame.Move(pane.floating_pos)
 
@@ -8621,6 +8591,11 @@ class AuiManager(wx.EvtHandler):
 
         # move the pane window
         if pane.frame:
+            if wx.Platform == "__WXMSW__" and (self._flags & AUI_MGR_TRANSPARENT_DRAG) == 0: # and not self.CheckPaneMove(pane):
+                # return
+                # HACK: Terrible hack on wxMSW (!)
+                pane.frame.SetTransparent(254)
+                
             pane.frame.Move(pane.floating_pos)
 
             if self._flags & AUI_MGR_TRANSPARENT_DRAG:

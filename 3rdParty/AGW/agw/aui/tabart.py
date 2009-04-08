@@ -19,7 +19,7 @@ if wx.Platform == '__WXMAC__':
     import Carbon.Appearance
 
 from aui_utilities import BitmapFromBits, StepColour, IndentPressedBitmap, ChopText
-from aui_utilities import GetBaseColour, DrawMACCloseButton
+from aui_utilities import GetBaseColour, DrawMACCloseButton, LightColour
 
 from aui_constants import *
 
@@ -1777,13 +1777,15 @@ class FF2TabArt(AuiDefaultTabArt):
         tabPoints[6].x = tabPoints[0].x
         tabPoints[6].y = tabPoints[0].y
 
-        dc.SetBrush((page.active and [wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))] or \
-                     [wx.TRANSPARENT_BRUSH])[0])
+        rr = wx.RectPP(tabPoints[2], tabPoints[5])
+        self.DrawTabBackground(dc, rr, page.active, (flags & AUI_NB_BOTTOM) == 0)
 
-        dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW)))
+        dc.SetBrush(wx.TRANSPARENT_BRUSH)
+        dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)))
+
+        # Draw the tab as rounded rectangle
         dc.DrawPolygon(tabPoints)
 
-        dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)))
         if page.active:
             dc.DrawLine(tabPoints[0].x + 1, tabPoints[0].y, tabPoints[5].x , tabPoints[0].y)
         
@@ -1804,9 +1806,9 @@ class FF2TabArt(AuiDefaultTabArt):
             dc.SetTextForeground(page.text_colour)
             pagebitmap = page.bitmap
 
-        shift = 0
+        shift = -1
         if flags & AUI_NB_BOTTOM:
-            shift = (page.active and [1] or [2])[0]
+            shift = 2
         
         bitmap_offset = 0
         if pagebitmap.IsOk():
@@ -1881,6 +1883,65 @@ class FF2TabArt(AuiDefaultTabArt):
         dc.DestroyClippingRegion()
     
         return out_tab_rect, out_button_rect, x_extent
+
+
+    def DrawTabBackground(self, dc, rect, focus, upperTabs):
+        """
+        Draws the tab background for the Firefox 2 style.
+        This is more consistent with L{wx.lib.agw.flatnotebook} than before.
+
+        :param `dc`: a wx.DC device context;
+        :param `rect`: rectangle the tab should be confined to;
+        :param `focus`: whether the tab has focus or not;
+        :param `upperTabs`: whether the style is ``AUI_NB_TOP`` or ``AUI_NB_BOTTOM``.
+        """
+
+        # Define the rounded rectangle base on the given rect
+        # we need an array of 9 points for it
+        regPts = [wx.Point() for indx in xrange(9)]
+
+        if focus:
+            if upperTabs:
+                leftPt = wx.Point(rect.x, rect.y + (rect.height / 10)*8)
+                rightPt = wx.Point(rect.x + rect.width - 2, rect.y + (rect.height / 10)*8)
+            else:
+                leftPt = wx.Point(rect.x, rect.y + (rect.height / 10)*5)
+                rightPt = wx.Point(rect.x + rect.width - 2, rect.y + (rect.height / 10)*5)
+        else:
+            leftPt = wx.Point(rect.x, rect.y + (rect.height / 2))
+            rightPt = wx.Point(rect.x + rect.width - 2, rect.y + (rect.height / 2))
+
+        # Define the top region
+        top = wx.RectPP(rect.GetTopLeft(), rightPt)
+        bottom = wx.RectPP(leftPt, rect.GetBottomRight())
+
+        topStartColor = wx.WHITE
+
+        if not focus:
+            topStartColor = LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE), 50)
+
+        topEndColor = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
+        bottomStartColor = topEndColor
+        bottomEndColor = topEndColor
+
+        # Incase we use bottom tabs, switch the colors
+        if upperTabs:
+            if focus:
+                dc.GradientFillLinear(top, topStartColor, topEndColor, wx.SOUTH)
+                dc.GradientFillLinear(bottom, bottomStartColor, bottomEndColor, wx.SOUTH)
+            else:
+                dc.GradientFillLinear(top, topEndColor , topStartColor, wx.SOUTH)
+                dc.GradientFillLinear(bottom, bottomStartColor, bottomEndColor, wx.SOUTH)
+
+        else:
+            if focus:
+                dc.GradientFillLinear(bottom, topEndColor, bottomEndColor, wx.SOUTH)
+                dc.GradientFillLinear(top, topStartColor, topStartColor, wx.SOUTH)
+            else:
+                dc.GradientFillLinear(bottom, bottomStartColor, bottomEndColor, wx.SOUTH)
+                dc.GradientFillLinear(top, topEndColor, topStartColor, wx.SOUTH)
+        
+        dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
 
 class VC8TabArt(AuiDefaultTabArt):

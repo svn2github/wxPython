@@ -18,7 +18,7 @@ import types
 
 from aui_utilities import BitmapFromBits, StepColour, ChopText, GetBaseColour
 from aui_utilities import DrawGradientRectangle, DrawMACCloseButton
-from aui_utilities import DarkenBitmap
+from aui_utilities import DarkenBitmap, LightContrastColour
 from aui_constants import *
 
 optionActive = 2**14
@@ -149,19 +149,20 @@ class AuiDefaultDockArt(object):
             self._active_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
         else:
             self._active_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
-            
-        self._active_caption_gradient_colour = StepColour(self._active_caption_colour, 110)
-        self._active_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_CAPTIONTEXT)
-        self._inactive_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_INACTIVECAPTION)
-        self._inactive_caption_gradient_colour = StepColour(self._inactive_caption_colour, 110)
-        self._inactive_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_INACTIVECAPTIONTEXT)
-    
-        sash_colour = base_colour
-        caption_colour = darker1_colour
-        paneborder_colour = darker2_colour
-        selectbutton_colour = base_colour
-        selectbuttonpen_colour = darker3_colour
 
+        self._active_caption_gradient_colour = LightContrastColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
+        self._active_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
+        self._inactive_caption_colour = darker1_colour
+        self._inactive_caption_gradient_colour = StepColour(base_colour, 97)
+        self._inactive_caption_text_colour = wx.BLACK
+    
+## AG: This is the old setting, not appreciated :-D            
+##        self._active_caption_gradient_colour = StepColour(self._active_caption_colour, 110)
+##        self._active_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_CAPTIONTEXT)
+##        self._inactive_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_INACTIVECAPTION)
+##        self._inactive_caption_gradient_colour = StepColour(self._inactive_caption_colour, 110)
+##        self._inactive_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_INACTIVECAPTIONTEXT)
+    
         self._sash_brush = wx.Brush(base_colour)
         self._background_brush = wx.Brush(base_colour)
         self._border_pen = wx.Pen(darker2_colour)
