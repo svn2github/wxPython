@@ -16,8 +16,10 @@ sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import aui
+    from agw.aui import aui_switcherdialog as ASD
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.aui as aui
+    from wx.lib.agw.aui import aui_switcherdialog as ASD
 
 import random
 import images
@@ -241,6 +243,10 @@ CUSTOM_TAB_BUTTONS = {"Left": [(sort, aui.AUI_BUTTON_CUSTOM1),
 
 #----------------------------------------------------------------------
 
+# Define a translation function
+_ = wx.GetTranslation
+
+
 ID_CreateTree = wx.ID_HIGHEST + 1
 ID_CreateGrid = ID_CreateTree + 1
 ID_CreateText = ID_CreateTree + 2
@@ -253,60 +259,62 @@ ID_TreeContent = ID_CreateTree + 8
 ID_HTMLContent = ID_CreateTree + 9
 ID_NotebookContent = ID_CreateTree + 10
 ID_SizeReportContent = ID_CreateTree + 11
-ID_CreatePerspective = ID_CreateTree + 12
-ID_CopyPerspectiveCode = ID_CreateTree + 13
-ID_CreateNBPerspective = ID_CreateTree + 14
-ID_CopyNBPerspectiveCode = ID_CreateTree + 15
-ID_AllowFloating = ID_CreateTree + 16
-ID_AllowActivePane = ID_CreateTree + 17
-ID_TransparentHint = ID_CreateTree + 18
-ID_VenetianBlindsHint = ID_CreateTree + 19
-ID_RectangleHint = ID_CreateTree + 20
-ID_NoHint = ID_CreateTree + 21
-ID_HintFade = ID_CreateTree + 22
-ID_NoVenetianFade = ID_CreateTree + 23
-ID_TransparentDrag = ID_CreateTree + 24
-ID_NoGradient = ID_CreateTree + 25
-ID_VerticalGradient = ID_CreateTree + 26
-ID_HorizontalGradient = ID_CreateTree + 27
-ID_LiveUpdate = ID_CreateTree + 28
-ID_PaneIcons = ID_CreateTree + 29
-ID_TransparentPane = ID_CreateTree + 30
-ID_DefaultDockArt = ID_CreateTree + 31
-ID_ModernDockArt = ID_CreateTree + 32
-ID_SnapToScreen = ID_CreateTree + 33
-ID_SnapPanes = ID_CreateTree + 34
-ID_FlyOut = ID_CreateTree + 35
-ID_CustomPaneButtons = ID_CreateTree + 36
-ID_Settings = ID_CreateTree + 37
-ID_CustomizeToolbar = ID_CreateTree + 38
-ID_DropDownToolbarItem = ID_CreateTree + 39
-ID_NotebookNoCloseButton = ID_CreateTree + 40
-ID_NotebookCloseButton = ID_CreateTree + 41
-ID_NotebookCloseButtonAll = ID_CreateTree + 42
-ID_NotebookCloseButtonActive = ID_CreateTree + 43
-ID_NotebookCloseOnLeft = ID_CreateTree + 44
-ID_NotebookAllowTabMove = ID_CreateTree + 45
-ID_NotebookAllowTabExternalMove = ID_CreateTree + 46
-ID_NotebookAllowTabSplit = ID_CreateTree + 47
-ID_NotebookTabFloat = ID_CreateTree + 48
-ID_NotebookWindowList = ID_CreateTree + 49
-ID_NotebookScrollButtons = ID_CreateTree + 50
-ID_NotebookTabFixedWidth = ID_CreateTree + 51
-ID_NotebookArtGloss = ID_CreateTree + 52
-ID_NotebookArtSimple = ID_CreateTree + 53
-ID_NotebookArtVC71 = ID_CreateTree + 54
-ID_NotebookArtFF2 = ID_CreateTree + 55
-ID_NotebookArtVC8 = ID_CreateTree + 56
-ID_NotebookArtChrome = ID_CreateTree + 57
-ID_NotebookAlignTop = ID_CreateTree + 58
-ID_NotebookAlignBottom = ID_CreateTree + 59
-ID_NotebookHideSingle = ID_CreateTree + 60
-ID_NotebookSmartTab = ID_CreateTree + 61
-ID_NotebookUseImagesDropDown = ID_CreateTree + 62
-ID_NotebookCustomButtons = ID_CreateTree + 63
+ID_SwitchPane = ID_CreateTree + 12
+ID_CreatePerspective = ID_CreateTree + 13
+ID_CopyPerspectiveCode = ID_CreateTree + 14
+ID_CreateNBPerspective = ID_CreateTree + 15
+ID_CopyNBPerspectiveCode = ID_CreateTree + 16
+ID_AllowFloating = ID_CreateTree + 17
+ID_AllowActivePane = ID_CreateTree + 18
+ID_TransparentHint = ID_CreateTree + 19
+ID_VenetianBlindsHint = ID_CreateTree + 20
+ID_RectangleHint = ID_CreateTree + 21
+ID_NoHint = ID_CreateTree + 22
+ID_HintFade = ID_CreateTree + 23
+ID_NoVenetianFade = ID_CreateTree + 24
+ID_TransparentDrag = ID_CreateTree + 25
+ID_NoGradient = ID_CreateTree + 26
+ID_VerticalGradient = ID_CreateTree + 27
+ID_HorizontalGradient = ID_CreateTree + 28
+ID_LiveUpdate = ID_CreateTree + 29
+ID_AnimateFrames = ID_CreateTree + 30
+ID_PaneIcons = ID_CreateTree + 31
+ID_TransparentPane = ID_CreateTree + 32
+ID_DefaultDockArt = ID_CreateTree + 33
+ID_ModernDockArt = ID_CreateTree + 34
+ID_SnapToScreen = ID_CreateTree + 35
+ID_SnapPanes = ID_CreateTree + 36
+ID_FlyOut = ID_CreateTree + 37
+ID_CustomPaneButtons = ID_CreateTree + 38
+ID_Settings = ID_CreateTree + 39
+ID_CustomizeToolbar = ID_CreateTree + 40
+ID_DropDownToolbarItem = ID_CreateTree + 41
+ID_NotebookNoCloseButton = ID_CreateTree + 42
+ID_NotebookCloseButton = ID_CreateTree + 43
+ID_NotebookCloseButtonAll = ID_CreateTree + 44
+ID_NotebookCloseButtonActive = ID_CreateTree + 45
+ID_NotebookCloseOnLeft = ID_CreateTree + 46
+ID_NotebookAllowTabMove = ID_CreateTree + 47
+ID_NotebookAllowTabExternalMove = ID_CreateTree + 48
+ID_NotebookAllowTabSplit = ID_CreateTree + 49
+ID_NotebookTabFloat = ID_CreateTree + 50
+ID_NotebookWindowList = ID_CreateTree + 51
+ID_NotebookScrollButtons = ID_CreateTree + 52
+ID_NotebookTabFixedWidth = ID_CreateTree + 53
+ID_NotebookArtGloss = ID_CreateTree + 54
+ID_NotebookArtSimple = ID_CreateTree + 55
+ID_NotebookArtVC71 = ID_CreateTree + 56
+ID_NotebookArtFF2 = ID_CreateTree + 57
+ID_NotebookArtVC8 = ID_CreateTree + 58
+ID_NotebookArtChrome = ID_CreateTree + 59
+ID_NotebookAlignTop = ID_CreateTree + 60
+ID_NotebookAlignBottom = ID_CreateTree + 61
+ID_NotebookHideSingle = ID_CreateTree + 62
+ID_NotebookSmartTab = ID_CreateTree + 63
+ID_NotebookUseImagesDropDown = ID_CreateTree + 64
+ID_NotebookCustomButtons = ID_CreateTree + 65
 
-ID_SampleItem = ID_CreateTree + 64
+ID_SampleItem = ID_CreateTree + 66
 
 ID_FirstPerspective = ID_CreatePerspective + 1000
 ID_FirstNBPerspective = ID_CreateNBPerspective + 10000
@@ -699,6 +707,7 @@ class AuiFrame(wx.Frame):
         self._snapped = False
         self._custom_pane_buttons = False
         self._custom_tab_buttons = False
+        self._pane_icons = False
 
         self.CreateStatusBar()
         self.GetStatusBar().SetStatusText("Ready")
@@ -730,6 +739,16 @@ class AuiFrame(wx.Frame):
         view_menu.Append(ID_TreeContent, "Use a Tree Control for the Content Pane")
         view_menu.Append(ID_NotebookContent, "Use a AuiNotebook control for the Content Pane")
         view_menu.Append(ID_SizeReportContent, "Use a Size Reporter for the Content Pane")
+        view_menu.AppendSeparator()
+
+        if wx.Platform == "__WXMAC__":
+            switcherAccel = "Alt+Tab"
+        elif wx.Platform == "__WXGTK__":
+            switcherAccel = "Ctrl+/"
+        else:
+            switcherAccel = "Ctrl+Tab"
+
+        view_menu.Append(ID_SwitchPane, _("S&witch Window...") + "\t" + switcherAccel)
 
         options_menu = wx.Menu()
         options_menu.AppendRadioItem(ID_TransparentHint, "Transparent Hint")
@@ -744,6 +763,7 @@ class AuiFrame(wx.Frame):
         options_menu.AppendCheckItem(ID_AllowActivePane, "Allow Active Pane")
         options_menu.AppendCheckItem(ID_LiveUpdate, "Live Resize Update")
         options_menu.AppendCheckItem(ID_PaneIcons, "Set Icons On Panes")
+        options_menu.AppendCheckItem(ID_AnimateFrames, "Animate Docking/Closing Of Floating Panes")
         options_menu.AppendSeparator()
         options_menu.Append(ID_TransparentPane, "Set Floating Panes Transparency")
         options_menu.AppendSeparator()
@@ -1059,6 +1079,7 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnCreateHTML, id=ID_CreateHTML)
         self.Bind(wx.EVT_MENU, self.OnCreateSizeReport, id=ID_CreateSizeReport)
         self.Bind(wx.EVT_MENU, self.OnCreateNotebook, id=ID_CreateNotebook)
+        self.Bind(wx.EVT_MENU, self.OnSwitchPane, id=ID_SwitchPane)
         self.Bind(wx.EVT_MENU, self.OnCreatePerspective, id=ID_CreatePerspective)
         self.Bind(wx.EVT_MENU, self.OnCopyPerspectiveCode, id=ID_CopyPerspectiveCode)
         self.Bind(wx.EVT_MENU, self.OnCreateNBPerspective, id=ID_CreateNBPerspective)
@@ -1072,6 +1093,7 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_NoVenetianFade)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_TransparentDrag)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_LiveUpdate)
+        self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_AnimateFrames)
         self.Bind(wx.EVT_MENU, self.OnSetIconsOnPanes, id=ID_PaneIcons)
         self.Bind(wx.EVT_MENU, self.OnTransparentPane, id=ID_TransparentPane)
         self.Bind(wx.EVT_MENU, self.OnDockArt, id=ID_DefaultDockArt)
@@ -1137,6 +1159,8 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NoHint)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NoVenetianFade)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_LiveUpdate)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_PaneIcons)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_AnimateFrames)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_DefaultDockArt)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_ModernDockArt)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_SnapPanes)
@@ -1201,6 +1225,7 @@ class AuiFrame(wx.Frame):
 
         panes = self._mgr.GetAllPanes()
         checked = event.IsChecked()
+        self._pane_icons = checked
         
         for pane in panes:
             if checked:
@@ -1212,7 +1237,7 @@ class AuiFrame(wx.Frame):
             pane.Icon(bmp)
 
         self.SendSizeEvent()
-        self._mgr.Update()     
+        self._mgr.Update()
 
 
     def OnTransparentPane(self, event):
@@ -1407,7 +1432,8 @@ class AuiFrame(wx.Frame):
             flag = aui.AUI_MGR_RECTANGLE_HINT 
         elif evId == ID_LiveUpdate:
             flag = aui.AUI_MGR_LIVE_RESIZE 
-        
+        elif evId == ID_AnimateFrames:
+            flag = aui.AUI_MGR_ANIMATE_FRAMES
         if flag:
             self._mgr.SetFlags(self._mgr.GetFlags() ^ flag)
         
@@ -1544,7 +1570,13 @@ class AuiFrame(wx.Frame):
                 
         elif evId == ID_NoVenetianFade:
             event.Check((flags & aui.AUI_MGR_NO_VENETIAN_BLINDS_FADE) != 0)
-                
+
+        elif evId == ID_PaneIcons:
+            event.Check(self._pane_icons)
+
+        elif evId == ID_AnimateFrames:
+            event.Check((flags & aui.AUI_MGR_ANIMATE_FRAMES) != 0)
+            
         elif evId == ID_DefaultDockArt:
             event.Check(isinstance(self._mgr.GetArtProvider(), aui.AuiDefaultDockArt))
 
@@ -2017,6 +2049,87 @@ class AuiFrame(wx.Frame):
         ctrl.SetPageTextColour(3, wx.BLUE)
         return ctrl
 
+
+    def OnSwitchPane(self, event):
+
+        items = ASD.SwitcherItems()
+        items.SetRowCount(12)
+
+        # Add the main windows and toolbars, in two separate columns
+        # We'll use the item 'id' to store the notebook selection, or -1 if not a page
+
+        for k in xrange(2):
+            if k == 0:
+                items.AddGroup(_("Main Windows"), "mainwindows")
+            else:
+                items.AddGroup(_("Toolbars"), "toolbars").BreakColumn()
+
+            for pane in self._mgr.GetAllPanes():
+                name = pane.name
+                caption = pane.caption
+                if not caption:
+                    caption = "*" + pane.name
+
+                toolBar = isinstance(pane.window, wx.ToolBar) or isinstance(pane.window, aui.AuiToolBar)
+                bitmap = (pane.icon.IsOk() and [pane.icon] or [wx.NullBitmap])[0]
+                
+                if caption and (toolBar and k == 1) or (not toolBar and k == 0):
+                    items.AddItem(caption, name, -1, bitmap).SetWindow(pane.window)
+
+        # Now add the wxAuiNotebook pages
+        items.AddGroup(_("Notebook Pages"), "pages").BreakColumn()
+
+        for pane in self._mgr.GetAllPanes():
+            nb = pane.window
+            if isinstance(nb, aui.AuiNotebook):
+                for j in xrange(nb.GetPageCount()):
+
+                    name = nb.GetPageText(j)
+                    win = nb.GetPage(j)
+
+                    items.AddItem(name, name, j, nb.GetPageBitmap(j)).SetWindow(win)
+
+        # Select the focused window
+
+        idx = items.GetIndexForFocus()
+        if idx != wx.NOT_FOUND:
+            items.SetSelection(idx)
+
+        if wx.Platform == "__WXMAC__":
+            items.SetBackgroundColour(wx.WHITE)
+        
+        # Show the switcher dialog
+
+        dlg = ASD.SwitcherDialog(items, wx.GetApp().GetTopWindow())
+
+        # In GTK+ we can't use Ctrl+Tab; we use Ctrl+/ instead and tell the switcher
+        # to treat / in the same was as tab (i.e. cycle through the names)
+
+        if wx.Platform == "__WXGTK__":
+            dlg.SetExtraNavigationKey(wxT('/'))
+
+        if wx.Platform == "__WXMAC__":
+            dlg.SetBackgroundColour(wx.WHITE)
+            dlg.SetModifierKey(wx.WXK_ALT)
+
+        ans = dlg.ShowModal()
+
+        if ans == wx.ID_OK and dlg.GetSelection() != -1:
+            item = items.GetItem(dlg.GetSelection())
+
+            if item.GetId() == -1:
+                info = self._mgr.GetPane(item.GetName())
+                info.Show()
+                self._mgr.Update()
+                info.window.SetFocus()
+
+            else:
+                nb = item.GetWindow().GetParent()
+                win = item.GetWindow();
+                if isinstance(nb, aui.AuiNotebook):
+                    nb.SetSelection(item.GetId())
+                    win.SetFocus()
+                
 
 def GetIntroText():
 

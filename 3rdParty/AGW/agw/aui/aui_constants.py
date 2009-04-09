@@ -291,6 +291,12 @@ AUI_MGR_NO_VENETIAN_BLINDS_FADE  = 1 << 7
 """ Disables the "venetian blind" fade in and out. """
 AUI_MGR_LIVE_RESIZE              = 1 << 8
 """ Live resize when the user drag a sash. """
+AUI_MGR_ANIMATE_FRAMES           = 1 << 9
+"""
+Fade-out floating panes when they are closed (all platforms which support
+frames transparency) and show a moving rectangle when they are docked
+(Windows < Vista and GTK only).
+"""
 
 AUI_MGR_DEFAULT = AUI_MGR_ALLOW_FLOATING | AUI_MGR_TRANSPARENT_HINT | \
                   AUI_MGR_HINT_FADE | AUI_MGR_NO_VENETIAN_BLINDS_FADE
@@ -934,3 +940,9 @@ colourIconArrow = wx.Colour(77, 79, 170)
 colourHintBackground = wx.Colour(0, 64, 255)
 guideSizeX, guideSizeY = 29, 32
 
+# ------------------------------- #
+# - AuiSwitcherDialog Constants - #
+# ------------------------------- #
+
+SWITCHER_TEXT_MARGIN_X = 4
+SWITCHER_TEXT_MARGIN_Y = 2

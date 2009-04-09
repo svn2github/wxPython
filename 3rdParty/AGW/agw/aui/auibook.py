@@ -3751,13 +3751,25 @@ class AuiNotebook(wx.PyControl):
         page_title = self.GetPageText(page_index) 
         page_contents = self.GetPage(page_index)
         page_bitmap = self.GetPageBitmap(page_index)
+        text_colour = self.GetPageTextColour(page_index)
+        
         self.RemovePage(page_index)
+        self.RemoveEmptyTabFrames()
         
         if root_manager and root_manager != self._mgr:
             root_manager = framemanager.GetManager(self)
-            floating_size = page_contents.GetBestSize()
-            if floating_size == wx.DefaultSize:
-                floating_size = wx.Size(300, 200)
+
+            if hasattr(page_contents, "__floating_size__"):
+                floating_size = page_contents.__floating_size__
+            else:
+                floating_size = page_contents.GetBestSize()
+                if floating_size == wx.DefaultSize:
+                    floating_size = wx.Size(300, 200)
+
+            page_contents.__page_index__ = page_index
+            page_contents.__aui_notebook__ = self
+            page_contents.__text_colour__ = text_colour
+            
             pane_info = framemanager.AuiPaneInfo().Float().FloatingPosition(wx.GetMousePosition()). \
                         FloatingSize(floating_size).Name("__floating__%s"%page_title). \
                         Caption(page_title).Icon(page_bitmap)
@@ -3774,6 +3786,7 @@ class AuiNotebook(wx.PyControl):
 
             frame.bitmap = page_bitmap            
             frame.page_index = page_index
+            frame.text_colour = text_colour
             page_contents.Reparent(frame) 
             frame.Bind(wx.EVT_CLOSE, self.OnCloseFloatingPage) 
             frame.Move(wx.GetMousePosition()) 
@@ -3791,8 +3804,8 @@ class AuiNotebook(wx.PyControl):
         if root_manager and root_manager != self._mgr:
             pane = event.pane
             if pane.name.startswith("__floating__"):
-                root_manager.DetachPane(pane.window)
-                self.AddPage(pane.window, pane.caption, True, pane.icon)
+                self.ReDockPage(pane)
+                return
                 
             event.Skip()
         else:
@@ -3801,8 +3814,33 @@ class AuiNotebook(wx.PyControl):
             page_title = frame.GetTitle() 
             page_contents = frame.GetChildren()[0] 
             page_contents.Reparent(self) 
-            self.InsertPage(frame.page_index, page_contents, page_title, select=True, bitmap=frame.bitmap) 
+            self.InsertPage(frame.page_index, page_contents, page_title, select=True, bitmap=frame.bitmap)
+            self.SetPageTextColour(frame.page_index, frame.text_colour)
 
+
+    def ReDockPage(self, pane):
+        """
+        Re-docks a floating L{AuiNotebook} tab in the original position, when possible.
+
+        :param `pane`: an instance of L{framemanager.AuiPaneInfo}.
+        """
+
+        root_manager = framemanager.GetManager(self)        
+
+        pane.window.__floating_size__ = pane.floating_size
+        page_index = pane.window.__page_index__
+        text_colour = pane.window.__text_colour__
+        
+        root_manager.DetachPane(pane.window)
+
+        self.InsertPage(page_index, pane.window, pane.caption, True, pane.icon)
+        self.SetPageTextColour(page_index, text_colour)
+        
+        self.GetActiveTabCtrl().DoShowHide()
+        self.DoSizing()
+        self._mgr.Update()
+        root_manager.Update()
+        
         
     def GetTabCtrlFromPoint(self, pt):
         """

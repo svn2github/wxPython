@@ -356,43 +356,29 @@ def DrawGradientRectangle(dc, rect, start_colour, end_colour, direction, offset=
     else:
         dc.GradientFillLinear(rect, start_colour, end_colour, wx.EAST)
         
-##    rd = end_colour.Red() - start_colour.Red()
-##    gd = end_colour.Green() - start_colour.Green()
-##    bd = end_colour.Blue() - start_colour.Blue()
-##    
-##    if direction == AUI_GRADIENT_VERTICAL:
-##        if length <= 0:
-##            length = rect.height
-##
-##        i_start = rect.y
-##        i_end = rect.y + rect.height
-##    
-##    else:
-##        if length <= 0:
-##            length = rect.width
-##
-##        i_start = rect.x
-##        i_end = rect.x + rect.width
-##    
-##    for i in xrange(i_start, i_end):
-##    
-##        n = i - i_start + offset
-##        if n <= 0:
-##            colour = start_colour
-##        
-##        elif n >= length:
-##            colour = end_colour
-##        
-##        else:            
-##            r = start_colour.Red() + ((n*rd*100)/length)/100
-##            g = start_colour.Green() + ((n*gd*100)/length)/100
-##            b = start_colour.Blue() + ((n*bd*100)/length)/100
-##            colour = wx.Colour(r, g, b)
-##        
-##        p = wx.Pen(colour)
-##        dc.SetPen(p)
-##
-##        if direction == AUI_GRADIENT_VERTICAL:
-##            dc.DrawLine(rect.x, i, rect.x+rect.width, i)
-##        else:
-##            dc.DrawLine(i, rect.y, i, rect.y+rect.height)
+
+def FindFocusDescendant(ancestor):
+    """
+    Find a window with the focus, that is also a descendant of the given window.
+    This is used to determine the window to initially send commands to.
+
+    :param `ancestor`: the window to check for ancestry.    
+    """
+
+    # Process events starting with the window with the focus, if any.
+    focusWin = wx.Window.FindFocus()
+    win = focusWin
+
+    # Check if this is a descendant of this frame.
+    # If not, win will be set to NULL.
+    while win:
+        if win == ancestor:
+            break
+        else:
+            win = win.GetParent()
+
+    if win is None:
+        focusWin = None
+
+    return focusWin
+

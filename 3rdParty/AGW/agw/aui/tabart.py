@@ -1329,7 +1329,7 @@ class AuiSimpleTabArt(object):
         for i, page in enumerate(pages):
 
             if useImages:
-                menuItem = wx.MenuItem(menuPopup, 1000+i, caption)
+                menuItem = wx.MenuItem(menuPopup, 1000+i, page.caption)
                 if page.bitmap:
                     menuItem.SetBitmap(page.bitmap)
 
@@ -1337,7 +1337,7 @@ class AuiSimpleTabArt(object):
                 
             else:
                 
-                menuPopup.AppendCheckItem(1000+i, caption)
+                menuPopup.AppendCheckItem(1000+i, page.caption)
                 
             menuPopup.Enable(1000+i, page.enabled)
         

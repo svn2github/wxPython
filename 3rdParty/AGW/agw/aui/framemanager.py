@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 07 Apr 2009, 12.00 GMT
+# Latest Revision: 09 Apr 2009, 15.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -102,38 +102,17 @@ import auibook
 import tabmdi
 import dockart
 
-from aui_utilities import StepColour, ChopText, GetBaseColour, BitmapFromBits
-from aui_utilities import LightContrastColour, Clip, PaneCreateStippleBitmap
+from aui_utilities import Clip, PaneCreateStippleBitmap
 
 from aui_constants import *
 
-_libimported = None
-
-_ctypes = False
 _winxptheme = False
 if wx.Platform == "__WXMSW__":
     try:
-        import ctypes
         import winxptheme
-        _ctypes = True
         _winxptheme = True
     except ImportError:
         pass
-
-if wx.Platform == "__WXMSW__":
-    try:
-        import win32gui
-        _libimported = "MH"
-    except:
-        try:
-            import ctypes
-            _libimported = "ctypes"
-        except:
-            pass
-
-# Mac appearance
-if wx.Platform == "__WXMAC__":
-    import Carbon.Appearance
 
 # AUI Events
 wxEVT_AUI_PANE_BUTTON = wx.NewEventType()
@@ -2423,6 +2402,7 @@ class AuiFloatingFrame(wx.MiniFrame):
 
         self._fly = False
         self._send_size = True
+        self._alpha_amount = 255
         
         self._owner_mgr = owner_mgr
         self._mgr = AuiManager()
@@ -2703,6 +2683,20 @@ class AuiFloatingFrame(wx.MiniFrame):
 
         self.Update()
         self.Refresh()
+
+
+    def FadeOut(self):
+        """ Actually starts the fading out of the floating pane. """
+
+        while 1:
+            self._alpha_amount -= 10
+            if self._alpha_amount <= 0:
+                self._alpha_amount = 255
+                return
+
+            self.SetTransparent(self._alpha_amount)
+            wx.SafeYield()
+            wx.MilliSleep(15)
 
     
 # -- static utility functions --
@@ -4152,6 +4146,10 @@ class AuiManager(wx.EvtHandler):
         # if we were maximized, restore
         if pane_info.IsMaximized():
             self.RestorePane(pane_info)
+
+        if pane_info.frame:
+            if self._flags & AUI_MGR_ANIMATE_FRAMES:
+                pane_info.frame.FadeOut()
 
         # first, hide the window
         if pane_info.window and pane_info.window.IsShown():
@@ -7610,11 +7608,20 @@ class AuiManager(wx.EvtHandler):
             return
 
         indx = self._panes.index(paneInfo)
-
+        win_rect = None
+        
         if paneInfo.IsFloating():
-            paneInfo.Dock()
-            if paneInfo.IsToolbar():
-                paneInfo = self.SwitchToolBarOrientation(paneInfo)
+            if paneInfo.name.startswith("__floating__"):
+                # It's a floating tab from a AuiNotebook
+                notebook = paneInfo.window.__aui_notebook__
+                notebook.ReDockPage(paneInfo)
+                self.Update()
+                return
+            else:
+                win_rect = paneInfo.frame.GetRect()
+                paneInfo.Dock()
+                if paneInfo.IsToolbar():
+                    paneInfo = self.SwitchToolBarOrientation(paneInfo)
         else:
             if paneInfo.floating_pos == wx.Point(-1, -1):
                 captionSize = self._art.GetMetric(AUI_DOCKART_CAPTION_SIZE)
@@ -7625,6 +7632,11 @@ class AuiManager(wx.EvtHandler):
 
         self._panes[indx] = paneInfo
         self.Update()
+
+        if win_rect and self._flags & AUI_MGR_ANIMATE_FRAMES:
+            paneInfo = self.GetPane(pane_window)
+            pane_rect = paneInfo.window.GetScreenRect()
+            self.AnimateDocking(win_rect, pane_rect)
 
 
     def OnPaint(self, event):
@@ -8703,7 +8715,12 @@ class AuiManager(wx.EvtHandler):
             minimize_toolbar = auibar.AuiToolBar(self.GetManagedWindow(), style=AUI_TB_DEFAULT_STYLE)
             minimize_toolbar.SetToolBitmapSize(wx.Size(16, 16))
 
-            minimize_toolbar.AddSimpleTool(ID_RESTORE_FRAME, paneInfo.name, self._art._restore_bitmap, "Restore " + paneInfo.caption)
+            if paneInfo.icon and paneInfo.icon.IsOk():
+                restore_bitmap = paneInfo.icon
+            else:
+                restore_bitmap = self._art._restore_bitmap
+                
+            minimize_toolbar.AddSimpleTool(ID_RESTORE_FRAME, paneInfo.name, restore_bitmap, "Restore " + paneInfo.caption)
             minimize_toolbar.Realize()
             toolpanelname = paneInfo.name + "_min"
 
@@ -8743,7 +8760,7 @@ class AuiManager(wx.EvtHandler):
                 paneInfo.window.Show(False)
 
             self.Update()
-            self.AnimateMinimization(win_rect, minimize_toolbar.GetScreenRect())
+            self.AnimateDocking(win_rect, minimize_toolbar.GetScreenRect())
 
 
     def OnRestoreMinimizedPane(self, event):
@@ -8777,12 +8794,12 @@ class AuiManager(wx.EvtHandler):
             self.Update()
 
 
-    def AnimateMinimization(self, win_rect, toolbar_rect):
+    def AnimateDocking(self, win_rect, pane_rect):
         """
-        Animates the minimization of a pane a la Eclipse.
+        Animates the minimization/docking of a pane a la Eclipse.
 
         :param `win_rect`: the original pane screen rectangle;
-        :pane `toolbar_rect`: the newly created toolbar screen rectangle.
+        :pane `pane_rect`: the newly created toolbar/pane screen rectangle.
         """
 
         if wx.Platform == "__WXMAC__":
@@ -8793,12 +8810,12 @@ class AuiManager(wx.EvtHandler):
             return
 
         xstart, ystart = win_rect.x, win_rect.y
-        xend, yend = toolbar_rect.x, toolbar_rect.y
+        xend, yend = pane_rect.x, pane_rect.y
 
-        wstep = int(abs(win_rect.width - toolbar_rect.width)/30.0)
-        hstep = int(abs(win_rect.height - toolbar_rect.height)/30.0)
-        xstep = int(win_rect.x - toolbar_rect.x)/30.0
-        ystep = int(win_rect.y - toolbar_rect.y)/30.0
+        wstep = int(abs(win_rect.width - pane_rect.width)/30.0)
+        hstep = int(abs(win_rect.height - pane_rect.height)/30.0)
+        xstep = int(win_rect.x - pane_rect.x)/30.0
+        ystep = int(win_rect.y - pane_rect.y)/30.0
         
         dc = wx.ScreenDC()
         dc.SetLogicalFunction(wx.INVERT)
