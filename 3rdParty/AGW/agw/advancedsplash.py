@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 10 Oct 2005
-# Latest Revision: 15 Oct 2008, 10.00 GMT
+# Latest Revision: 09 Apr 2009, 10.00 GMT
 #
 #
 # TODO List/Caveats
@@ -77,8 +77,8 @@ method for AdvancedSplash or to the specific functions.
 
 AdvancedSplash control is freeware and distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 15 Oct 2008, 10.00 GMT
-Version 0.1
+Latest revision: Andrea Gavana @ 09 Apr 2009, 10.00 GMT
+Version 0.2
 
 """
 
@@ -216,10 +216,13 @@ class AdvancedSplash(wx.Frame):
         self.Show()
 
 
-    def SetSplashShape(self):
+    def SetSplashShape(self, event=None):
         """ Sets AdvancedSplash shape using the region created from the bitmap."""
 
         self.SetShape(self.reg)
+
+        if event is not None:
+            event.Skip()
 
 
     def ShadowBitmap(self, bmp, shadowcolour):
