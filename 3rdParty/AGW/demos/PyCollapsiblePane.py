@@ -21,8 +21,22 @@ import images
 btnlbl1 = "call Expand(True)"
 btnlbl2 = "call Expand(False)"
 
-choices = ["wx.Button", "GenButton", "GenBitmapButton", "GenBitmapTextButton", "GTK Expander"]
-gtkChoices = ["3, 6", "4, 8", "5, 10"]
+choices = ["wx.Button", 
+           "GenButton", 
+           "GenBitmapButton", 
+           "GenBitmapTextButton", 
+           "ThemedGenButton",
+           "ThemedGenBitmapTextButton"] 
+
+gtkChoices = ["3, 6", 
+              "4, 8", 
+              "5, 10"]
+
+styles = [ "CP_DEFAULT_STYLE", 
+           "CP_NO_TLW_RESIZE", 
+           "CP_LINE_ABOVE", 
+           "CP_USE_STATICBOX", 
+           "CP_GTK_EXPANDER" ]
 
 
 class PyCollapsiblePaneDemo(wx.Panel):
@@ -40,12 +54,14 @@ class PyCollapsiblePaneDemo(wx.Panel):
         title.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
         title.SetForegroundColour("blue")
 
+        self.cpStyle = wx.CP_DEFAULT_STYLE|wx.CP_NO_TLW_RESIZE
         self.cp = cp = PCP.PyCollapsiblePane(self, label=self.label1,
-                                             style=wx.CP_DEFAULT_STYLE|wx.CP_NO_TLW_RESIZE)
+                                             style=self.cpStyle)
         self.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self.OnPaneChanged, cp)
         self.MakePaneContent(cp.GetPane())
 
-        radioBox = wx.RadioBox(self, -1, "Button Types", choices=choices, style=wx.RA_SPECIFY_ROWS)
+        self.btnRB = radioBox = wx.RadioBox(self, -1, "Button Types", 
+                                            choices=choices, style=wx.RA_SPECIFY_ROWS)
         self.static1 = wx.StaticText(self, -1, "Collapsed Button Text:")
         self.static2 = wx.StaticText(self, -1, "Expanded Button Text:")
 
@@ -53,6 +69,18 @@ class PyCollapsiblePaneDemo(wx.Panel):
         self.buttonText2 = wx.TextCtrl(self, -1, self.label2)
         self.updateButton = wx.Button(self, -1, "Update!")
 
+        sbox = wx.StaticBox(self, -1, 'Styles')
+        sboxsizer = wx.StaticBoxSizer(sbox, wx.VERTICAL)
+        self.styleCBs = list()
+        for styleName in styles:
+            cb = wx.CheckBox(self, -1, styleName)
+            if styleName in ["CP_DEFAULT_STYLE",  "CP_NO_TLW_RESIZE",]:
+                cb.SetValue(True)
+                cb.Disable()
+            cb.Bind(wx.EVT_CHECKBOX, self.OnStyleChoice)
+            self.styleCBs.append(cb)
+            sboxsizer.Add(cb, 0, wx.ALL, 4)
+        
         self.gtkText = wx.StaticText(self, -1, "Expander Size")
         self.gtkChoice = wx.ComboBox(self, -1, choices=gtkChoices)
         self.gtkChoice.SetSelection(0)
@@ -68,6 +96,7 @@ class PyCollapsiblePaneDemo(wx.Panel):
         dummySizer.Add(self.gtkChoice, 0, wx.EXPAND)
 
         radioSizer.Add(radioBox, 0, wx.EXPAND)
+        radioSizer.Add(sboxsizer, 0, wx.EXPAND|wx.LEFT, 10)
         radioSizer.Add(dummySizer, 0, wx.ALIGN_BOTTOM|wx.LEFT, 10)
 
         self.SetSizer(sizer)
@@ -112,56 +141,77 @@ class PyCollapsiblePaneDemo(wx.Panel):
         self.label2 = self.buttonText2.GetValue()
 
         self.OnPaneChanged(None)
+
+        
+    def OnStyleChoice(self, evt):
+        style = 0
+        for cb in self.styleCBs:
+            if cb.IsChecked():
+                style |= getattr(wx, cb.GetLabel(), 0)
+                
+        self.cpStyle = style
+        self.Rebuild()
         
 
     def OnButtonChoice(self, event):
 
-        selection = event.GetSelection()
+        #self.gtkText.Enable(selection == 4)
+        #self.gtkChoice.Enable(selection == 4)
         
-        if self.cp.IsExpanded():
-            label = self.label1
-        else:
-            label = self.label2
-
-        style = self.cp.GetWindowStyleFlag()
-        if selection < 4:
-            style &= ~PCP.CP_GTK_EXPANDER
-        else:
-            style |= PCP.CP_GTK_EXPANDER
-            
-        self.gtkText.Enable(selection == 4)
-        self.gtkChoice.Enable(selection == 4)
+        self.Rebuild()
         
-        self.Freeze()
-        cp = PCP.PyCollapsiblePane(self, label=self.label1, style=style)
-        self.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self.OnPaneChanged, cp)
-        self.MakePaneContent(cp.GetPane())
-        self.GetSizer().Replace(self.cp, cp)
         
-        self.cp.Destroy()
-        self.cp = cp
-        self.Thaw()
+    def MakeButton(self):
+        if self.cpStyle & wx.CP_GTK_EXPANDER:
+            return None
+        
+        selection = self.btnRB.GetSelection()
         
         if selection == 0:     # standard wx.Button
-            btn = wx.Button(self.cp, -1, label)
+            btn = wx.Button(self.cp, -1, self.label1)
         elif selection == 1:   # buttons.GenButton
-            btn = buttons.GenButton(self.cp, -1, label)
+            btn = buttons.GenButton(self.cp, -1, self.label1)
         elif selection == 2:   # buttons.GenBitmapButton
             bmp = images.Smiles.GetBitmap()
             btn = buttons.GenBitmapButton(self.cp, -1, bmp)
         elif selection == 3:   # buttons.GenBitmapTextButton
             bmp = images.Mondrian.GetBitmap()
-            btn = buttons.GenBitmapTextButton(self.cp, -1, bmp, label)
+            btn = buttons.GenBitmapTextButton(self.cp, -1, bmp, self.label1)
+        elif selection == 4:   # buttons.ThemedGenButton
+            btn = buttons.ThemedGenButton(self.cp, -1, self.label1)
+        elif selection == 5:   # buttons.ThemedGenBitmapTextButton
+            bmp = images.Mondrian.GetBitmap()
+            btn = buttons.ThemedGenBitmapTextButton(self.cp, -1, bmp, self.label1)
+            
+        return btn
+    
+        
+    def Rebuild(self):
+        isExpanded = self.cp.IsExpanded()
+        self.Freeze()
+        cp = PCP.PyCollapsiblePane(self, label=self.label1, style=self.cpStyle)
+        cp.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self.OnPaneChanged)
+        self.MakePaneContent(cp.GetPane())
+        cp.SetExpanderDimensions(*self.GetUserSize())
+        self.GetSizer().Replace(self.cp, cp)
+        self.cp.Destroy()
+        self.cp = cp
 
-        if selection < 4:
+        btn = self.MakeButton()
+        if btn:
             self.cp.SetButton(btn)
-            btn.Bind(wx.EVT_BUTTON, self.OnToggle)
-        else:
-            self.cp.SetExpanderDimensions(*self.GetUserSize())
-
+        self.gtkText.Enable(btn is None)
+        self.gtkChoice.Enable(btn is None)
+        self.btnRB.Enable(btn is not None)
+        
+        if isExpanded:
+            self.cp.Expand()
+        self.Thaw()
+        
         self.OnPaneChanged(None)
         self.Layout()
-        
+
+
 
     def OnPaneChanged(self, event=None):
 
