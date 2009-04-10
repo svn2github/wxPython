@@ -155,8 +155,8 @@ class GTKExpander(wx.PyControl):
 class PyCollapsiblePane(wx.PyPanel):
 
     def __init__(self, parent, id=wx.ID_ANY, label="", pos=wx.DefaultPosition,
-                 size=wx.DefaultSize, style=wx.CP_DEFAULT_STYLE, val=wx.DefaultValidator,
-                 name="CollapsiblePane"):
+                 size=wx.DefaultSize, style=wx.CP_DEFAULT_STYLE, 
+                 validator=wx.DefaultValidator, name="CollapsiblePane"):
         """
         Default class constructor.
 
@@ -167,7 +167,7 @@ class PyCollapsiblePane(wx.PyPanel):
         @param pos: Initial position.
         @param size: Initial size.
         @param style: The window style, see wx.CP_* flags.
-        @param validator: Validator which can be used for additional data checks.
+        @param validator: (not used).
         @param name: Control name.
         """
         
