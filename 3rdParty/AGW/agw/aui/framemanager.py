@@ -3440,6 +3440,7 @@ class AuiManager(wx.EvtHandler):
         self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.OnCaptureLost)
         self.Bind(wx.EVT_TIMER, self.OnHintFadeTimer, self._hint_fadetimer)
         self.Bind(wx.EVT_MOVE, self.OnMove)
+        self.Bind(wx.EVT_SYS_COLOUR_CHANGED, self.OnSysColourChanged)
         
         self.Bind(EVT_AUI_PANE_BUTTON, self.OnPaneButton)
         self.Bind(EVT_AUI_RENDER, self.OnRender)
@@ -8146,6 +8147,23 @@ class AuiManager(wx.EvtHandler):
                 if pane.IsFloating() and pane.IsShown():
                     self.SnapPane(pane, pane.floating_pos, pane.floating_size, True)
         
+
+    def OnSysColourChanged(self, event):
+        """
+        Handles the wx.EVT_SYS_COLOUR_CHANGED event for L{AuiManager}.
+
+        :param `event`: a L{wx.SysColourChangedEvent} to be processed.
+        """
+        
+        # This event is probably triggered by a theme change 
+        # so we have to re-init the art provider.
+        if self._art:
+            self._art.Init()
+
+        if self._frame:
+            self.Update()
+            self._frame.Refresh()
+            
 
     def OnChildFocus(self, event):
         """

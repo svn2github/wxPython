@@ -395,7 +395,7 @@ class SwitcherItems(object):
     def AddItem(self, titleOrItem, name=None, id=0, bitmap=wx.NullBitmap):
 
         if isinstance(titleOrItem, SwitcherItem):
-            self._items.append(item)
+            self._items.append(titleOrItem)
             return self._items[-1]
         
         item = SwitcherItem()

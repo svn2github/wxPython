@@ -134,43 +134,10 @@ class AuiDefaultDockArt(object):
     def __init__(self):
         """ Default class constructor. """
 
-        base_colour = GetBaseColour()
-        darker1_colour = StepColour(base_colour, 85)
-        darker2_colour = StepColour(base_colour, 75)
-        darker3_colour = StepColour(base_colour, 60)
-        darker4_colour = StepColour(base_colour, 40)
-
-        self._background_colour = base_colour
-        self._background_gradient_colour = StepColour(base_colour, 180)
+        self.Init()
 
         isMac = wx.Platform == "__WXMAC__"
-
-        if isMac:
-            self._active_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        else:
-            self._active_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
-
-        self._active_caption_gradient_colour = LightContrastColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
-        self._active_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
-        self._inactive_caption_colour = darker1_colour
-        self._inactive_caption_gradient_colour = StepColour(base_colour, 97)
-        self._inactive_caption_text_colour = wx.BLACK
-    
-## AG: This is the old setting, not appreciated :-D            
-##        self._active_caption_gradient_colour = StepColour(self._active_caption_colour, 110)
-##        self._active_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_CAPTIONTEXT)
-##        self._inactive_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_INACTIVECAPTION)
-##        self._inactive_caption_gradient_colour = StepColour(self._inactive_caption_colour, 110)
-##        self._inactive_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_INACTIVECAPTIONTEXT)
-    
-        self._sash_brush = wx.Brush(base_colour)
-        self._background_brush = wx.Brush(base_colour)
-        self._border_pen = wx.Pen(darker2_colour)
-        self._gripper_brush = wx.Brush(base_colour)
-        self._gripper_pen1 = wx.Pen(darker4_colour)
-        self._gripper_pen2 = wx.Pen(darker3_colour)
-        self._gripper_pen3 = wx.WHITE_PEN
-
+        
         if isMac:
             self._caption_font = wx.SMALL_FONT
         else:
@@ -209,6 +176,40 @@ class AuiDefaultDockArt(object):
         self._draw_sash = False
         
 
+    def Init(self):
+        """ Initializes the dock art. """
+
+        base_colour = GetBaseColour()
+        darker1_colour = StepColour(base_colour, 85)
+        darker2_colour = StepColour(base_colour, 75)
+        darker3_colour = StepColour(base_colour, 60)
+        darker4_colour = StepColour(base_colour, 40)
+
+        self._background_colour = base_colour
+        self._background_gradient_colour = StepColour(base_colour, 180)
+
+        isMac = wx.Platform == "__WXMAC__"
+
+        if isMac:
+            self._active_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        else:
+            self._active_caption_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+
+        self._active_caption_gradient_colour = LightContrastColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
+        self._active_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
+        self._inactive_caption_colour = darker1_colour
+        self._inactive_caption_gradient_colour = StepColour(base_colour, 97)
+        self._inactive_caption_text_colour = wx.BLACK
+    
+        self._sash_brush = wx.Brush(base_colour)
+        self._background_brush = wx.Brush(base_colour)
+        self._border_pen = wx.Pen(darker2_colour)
+        self._gripper_brush = wx.Brush(base_colour)
+        self._gripper_pen1 = wx.Pen(darker4_colour)
+        self._gripper_pen2 = wx.Pen(darker3_colour)
+        self._gripper_pen3 = wx.WHITE_PEN
+
+        
     def GetMetric(self, id):
         """
         Gets the value of a certain setting.
@@ -861,13 +862,22 @@ class ModernDockArt(AuiDefaultDockArt):
         self._button_size = 13
 
         self._button_border_size = 3
-        self._caption_text_indent = 6 
+        self._caption_text_indent = 6
         self._caption_size = 22
         
         # We only highlight the active pane with the caption text being in bold.
-        # So we do not want a special colour for active elements.
-        self._active_caption_colour = self._inactive_caption_colour
+        # So we do not want a special colour for active elements.        
         self._active_close_bitmap = self._inactive_close_bitmap
+
+        self.Init()
+        
+
+    def Init(self):
+        """ Initializes the dock art. """
+
+        AuiDefaultDockArt.Init(self)
+        
+        self._active_caption_colour = self._inactive_caption_colour
         self._active_caption_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_CAPTIONTEXT)
         self._inactive_caption_text_colour = self._active_caption_text_colour
 

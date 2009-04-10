@@ -1383,7 +1383,7 @@ class AuiFrame(wx.Frame):
 
     def OnCustomizeToolbar(self, event):
 
-        wx.MessageBox("Customize Toolbar clicked")
+        wx.MessageBox("Customize Toolbar clicked", "AUI Test")
 
 
     def OnGradient(self, event):
@@ -2068,12 +2068,12 @@ class AuiFrame(wx.Frame):
                 name = pane.name
                 caption = pane.caption
                 if not caption:
-                    caption = "*" + pane.name
+                    continue
 
                 toolBar = isinstance(pane.window, wx.ToolBar) or isinstance(pane.window, aui.AuiToolBar)
                 bitmap = (pane.icon.IsOk() and [pane.icon] or [wx.NullBitmap])[0]
                 
-                if caption and (toolBar and k == 1) or (not toolBar and k == 0):
+                if (toolBar and k == 1) or (not toolBar and k == 0):
                     items.AddItem(caption, name, -1, bitmap).SetWindow(pane.window)
 
         # Now add the wxAuiNotebook pages
@@ -2100,7 +2100,7 @@ class AuiFrame(wx.Frame):
         
         # Show the switcher dialog
 
-        dlg = ASD.SwitcherDialog(items, wx.GetApp().GetTopWindow())
+        dlg = ASD.SwitcherDialog(items, self)
 
         # In GTK+ we can't use Ctrl+Tab; we use Ctrl+/ instead and tell the switcher
         # to treat / in the same was as tab (i.e. cycle through the names)
