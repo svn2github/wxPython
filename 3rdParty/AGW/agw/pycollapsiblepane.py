@@ -152,7 +152,7 @@ class GTKExpander(wx.PyControl):
 # PyCollapsiblePane
 #-----------------------------------------------------------------------------
 
-class PyCollapsiblePane(wx.PyControl):
+class PyCollapsiblePane(wx.PyPanel):
 
     def __init__(self, parent, id=wx.ID_ANY, label="", pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.CP_DEFAULT_STYLE, val=wx.DefaultValidator,
@@ -171,10 +171,10 @@ class PyCollapsiblePane(wx.PyControl):
         @param name: Control name.
         """
         
-        wx.PyControl.__init__(self, parent, id, pos, size, style, val, name)
+        wx.PyPanel.__init__(self, parent, id, pos, size, style, name)
         
         self._pButton = self._pStaticLine = self._pPane = self._sz = None            
-        wx.PyControl.SetLabel(self, label)
+        wx.PyPanel.SetLabel(self, label)
         self._bCollapsed = True
 
         self._pPane = wx.Panel(self, style=wx.TAB_TRAVERSAL|wx.NO_BORDER)
@@ -359,7 +359,7 @@ class PyCollapsiblePane(wx.PyControl):
     def SetLabel(self, label):
         """ Sets the button label. """
 
-        wx.PyControl.SetLabel(self, label)
+        wx.PyPanel.SetLabel(self, label)
         self._pButton.SetLabel(self.GetBtnLabel())
         self._pButton.SetInitialSize()
         self._pButton.Refresh()
