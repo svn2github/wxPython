@@ -2654,32 +2654,34 @@ class AuiFloatingFrame(wx.MiniFrame):
         :param `event`: a L{wx.TimerEvent} to be processed.
         """
 
-        current_size = self.GetSize()
+        current_size = self.GetClientSize()
         floating_size = wx.Size(*self._owner_mgr.GetPane(self._pane_window).floating_size)
 
         if floating_size.y == -1:
             floating_size = self._floating_size
         
         if not self._fly:
-            min_size = self._mgr.GetArtProvider().GetMetric(AUI_DOCKART_CAPTION_SIZE) + \
-                       2*wx.SystemSettings.GetMetric(wx.SYS_EDGE_Y)
+            min_size = self._mgr.GetArtProvider().GetMetric(AUI_DOCKART_CAPTION_SIZE)
+
+            if wx.Platform != "__WXMSW__":
+                min_size += 2*wx.SystemSettings.GetMetric(wx.SYS_EDGE_Y)
 
             if current_size.y - self._fly_step <= min_size:
-                self.SetDimensions(-1, -1, -1, min_size, wx.SIZE_USE_EXISTING)
+                self.SetClientSize((current_size.x, min_size))
                 self._fly = True
                 self._fly_timer.Stop()
                 self._send_size = True
             else:
-                self.SetDimensions(-1, -1, -1, current_size.y-self._fly_step, wx.SIZE_USE_EXISTING)
+                self.SetClientSize((current_size.x, current_size.y-self._fly_step))
 
         else:
             if current_size.y + self._fly_step >= floating_size.y:
-                self.SetDimensions(-1, -1, -1, floating_size.y, wx.SIZE_USE_EXISTING)
+                self.SetClientSize((current_size.x, floating_size.y))
                 self._fly = False
                 self._fly_timer.Stop()
                 self._send_size = True
             else:
-                self.SetDimensions(-1, -1, -1, current_size.y+self._fly_step, wx.SIZE_USE_EXISTING)
+                self.SetClientSize((current_size.x, current_size.y+self._fly_step))
 
         self.Update()
         self.Refresh()
