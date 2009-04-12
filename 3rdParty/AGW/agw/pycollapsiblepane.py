@@ -174,7 +174,7 @@ class PyCollapsiblePane(wx.PyPanel):
         wx.PyPanel.__init__(self, parent, id, pos, size, style, name)
         
         self._pButton = self._pStaticLine = self._pPane = self._sz = None            
-        wx.PyPanel.SetLabel(self, label)
+        self._strLabel = label
         self._bCollapsed = True
 
         self._pPane = wx.Panel(self, style=wx.TAB_TRAVERSAL|wx.NO_BORDER)
@@ -359,13 +359,16 @@ class PyCollapsiblePane(wx.PyPanel):
     def SetLabel(self, label):
         """ Sets the button label. """
 
-        wx.PyPanel.SetLabel(self, label)
+        self._strLabel =  label
         self._pButton.SetLabel(self.GetBtnLabel())
         self._pButton.SetInitialSize()
         self._pButton.Refresh()
 
         self.Layout()
 
+    def GetLabel(self):
+        return self._strLabel
+    
 
     def GetBorder(self):
         """ Returns the PyCollapsiblePane border (platform dependent). """
