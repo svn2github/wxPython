@@ -869,7 +869,7 @@ class AuiDefaultToolBarArt(object):
         rect = wx.Rect(*_rect)
         rect.height += 1
 
-        dc.SetBrush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
+        dc.SetBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)))
         dc.DrawRectangle(rect.x - 1, rect.y - 1, rect.width + 2, rect.height + 1)
 
 
