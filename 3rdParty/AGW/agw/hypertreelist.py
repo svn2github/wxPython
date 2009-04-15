@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 15 Oct 2008, 17.00 GMT
+# Latest Revision: 15 Apr 2009, 10.00 GMT
 #
 #
 # TODO List
@@ -136,8 +136,8 @@ HyperTreeList has been tested on the following platforms:
   * Windows (Windows XP);
 
 
-Latest Revision: Andrea Gavana @ 15 Oct 2008, 22.00 GMT
-Version 0.4
+Latest Revision: Andrea Gavana @ 15 Apr 2009, 10.00 GMT
+Version 0.5
 
 """
 
@@ -150,7 +150,7 @@ from customtreectrl import DragImage, TreeEvent, GenericTreeItem
 from customtreectrl import TreeRenameTimer as TreeListRenameTimer
 
 # Version Info
-__version__ = "0.4"
+__version__ = "0.5"
 
 # --------------------------------------------------------------------------
 # Constants
@@ -874,7 +874,6 @@ class TreeListItem(GenericTreeItem):
                 if theCtrl._checkWidth > 0:
                     chkX = self._text_x - theCtrl._imgWidth - 3*_MARGIN - theCtrl._btnWidth
                     chkY = y_mid - theCtrl._checkHeight2
-                    wcheck = theCtrl._imageListNormal.GetSize(self.GetImage())[0]
                     if ((point.x >= chkX) and (point.x <= (chkX + theCtrl._checkWidth)) and
                         (point.y >= chkY) and (point.y <= (chkY + theCtrl._checkHeight))):                    
                         flags |= TREE_HITTEST_ONITEMCHECKICON
