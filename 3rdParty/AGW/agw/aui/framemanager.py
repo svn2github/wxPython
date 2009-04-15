@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 09 Apr 2009, 15.00 GMT
+# Latest Revision: 15 Apr 2009, 10.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -7371,17 +7371,6 @@ class AuiManager(wx.EvtHandler):
         if not pane.IsOk():
             raise Exception("Pane window not found")
 
-        if pane.IsNotebookControl():
-        
-           notebook = self._notebooks[pane.notebook_id]
-           sel = notebook.GetSelection()
-           page = notebook.GetPage(sel)
-           
-           if sel >= 0:           
-              pane = self.GetPane(page)
-              if not pane.IsOk():
-                  raise Exception("Notebook tab not managed child")
-           
         if self.GetFlags() & AUI_MGR_ALLOW_ACTIVE_PANE:
             ret, self._panes = SetActivePane(self._panes, wnd)
             self.RefreshCaptions()
