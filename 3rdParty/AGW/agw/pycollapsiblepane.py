@@ -78,6 +78,16 @@ wx.CP_GTK_EXPANDER = CP_GTK_EXPANDER
 wx.CP_USE_STATICBOX = CP_USE_STATICBOX
 wx.CP_LINE_ABOVE = CP_LINE_ABOVE
 
+#-----------------------------------------------------------------------------
+# 2.9 deprecates SetSpacer, so we'll use AssignSpacer and monkey-patch 2.8 so
+# it works there too
+
+if wx.VERSION < (2, 9):
+    wx.SizerItem.AssignSpacer = wx.SizerItem.SetSpacer
+
+#-----------------------------------------------------------------------------
+# GTKExpander widget
+#-----------------------------------------------------------------------------
 
 class GTKExpander(wx.PyControl):
 
@@ -413,8 +423,8 @@ class PyCollapsiblePane(wx.PyPanel):
                 adjustment = 0
                 if 'wxMac' not in wx.PlatformInfo:
                     adjustment = -3
-                self._sz.Children[0].SetSpacer((1, sz.height/2 + adjustment))
-                self._contentSizer.Children[0].SetSpacer((1, sz.height/2))
+                self._sz.Children[0].AssignSpacer((1, sz.height/2 + adjustment))
+                self._contentSizer.Children[0].AssignSpacer((1, sz.height/2))
 
                 ssz = self._sz.GetMinSize()
                 sz.width = max(sz.width, ssz.width)
