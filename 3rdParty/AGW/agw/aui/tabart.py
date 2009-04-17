@@ -199,6 +199,8 @@ class AuiDefaultTabArt(object):
         ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
         ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
         ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
+        ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
+        ``AUI_NB_SASH_DCLICK_UNSPLIT``       Unsplit a splitted AuiNotebook when double-clicking on a sash.
         ==================================== ==================================
         
         """
@@ -973,6 +975,8 @@ class AuiSimpleTabArt(object):
         ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
         ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
         ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
+        ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
+        ``AUI_NB_SASH_DCLICK_UNSPLIT``       Unsplit a splitted AuiNotebook when double-clicking on a sash.
         ==================================== ==================================
         
         """

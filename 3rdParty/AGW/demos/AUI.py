@@ -298,23 +298,25 @@ ID_NotebookAllowTabMove = ID_CreateTree + 47
 ID_NotebookAllowTabExternalMove = ID_CreateTree + 48
 ID_NotebookAllowTabSplit = ID_CreateTree + 49
 ID_NotebookTabFloat = ID_CreateTree + 50
-ID_NotebookWindowList = ID_CreateTree + 51
-ID_NotebookScrollButtons = ID_CreateTree + 52
-ID_NotebookTabFixedWidth = ID_CreateTree + 53
-ID_NotebookArtGloss = ID_CreateTree + 54
-ID_NotebookArtSimple = ID_CreateTree + 55
-ID_NotebookArtVC71 = ID_CreateTree + 56
-ID_NotebookArtFF2 = ID_CreateTree + 57
-ID_NotebookArtVC8 = ID_CreateTree + 58
-ID_NotebookArtChrome = ID_CreateTree + 59
-ID_NotebookAlignTop = ID_CreateTree + 60
-ID_NotebookAlignBottom = ID_CreateTree + 61
-ID_NotebookHideSingle = ID_CreateTree + 62
-ID_NotebookSmartTab = ID_CreateTree + 63
-ID_NotebookUseImagesDropDown = ID_CreateTree + 64
-ID_NotebookCustomButtons = ID_CreateTree + 65
+ID_NotebookTabDrawDnd = ID_CreateTree + 51
+ID_NotebookDclickUnsplit = ID_CreateTree + 52
+ID_NotebookWindowList = ID_CreateTree + 53
+ID_NotebookScrollButtons = ID_CreateTree + 54
+ID_NotebookTabFixedWidth = ID_CreateTree + 55
+ID_NotebookArtGloss = ID_CreateTree + 56
+ID_NotebookArtSimple = ID_CreateTree + 57
+ID_NotebookArtVC71 = ID_CreateTree + 58
+ID_NotebookArtFF2 = ID_CreateTree + 59
+ID_NotebookArtVC8 = ID_CreateTree + 60
+ID_NotebookArtChrome = ID_CreateTree + 61
+ID_NotebookAlignTop = ID_CreateTree + 62
+ID_NotebookAlignBottom = ID_CreateTree + 63
+ID_NotebookHideSingle = ID_CreateTree + 64
+ID_NotebookSmartTab = ID_CreateTree + 65
+ID_NotebookUseImagesDropDown = ID_CreateTree + 66
+ID_NotebookCustomButtons = ID_CreateTree + 67
 
-ID_SampleItem = ID_CreateTree + 66
+ID_SampleItem = ID_CreateTree + 68
 
 ID_FirstPerspective = ID_CreatePerspective + 1000
 ID_FirstNBPerspective = ID_CreateNBPerspective + 10000
@@ -763,7 +765,7 @@ class AuiFrame(wx.Frame):
         options_menu.AppendCheckItem(ID_AllowActivePane, "Allow Active Pane")
         options_menu.AppendCheckItem(ID_LiveUpdate, "Live Resize Update")
         options_menu.AppendCheckItem(ID_PaneIcons, "Set Icons On Panes")
-        options_menu.AppendCheckItem(ID_AnimateFrames, "Animate Docking/Closing Of Floating Panes")
+        options_menu.AppendCheckItem(ID_AnimateFrames, "Animate Dock/Close/Minimize Of Floating Panes")
         options_menu.AppendSeparator()
         options_menu.Append(ID_TransparentPane, "Set Floating Panes Transparency")
         options_menu.AppendSeparator()
@@ -804,6 +806,9 @@ class AuiFrame(wx.Frame):
         notebook_menu.AppendCheckItem(ID_NotebookAllowTabExternalMove, "Allow External Tab Move")
         notebook_menu.AppendCheckItem(ID_NotebookAllowTabSplit, "Allow Notebook Split")
         notebook_menu.AppendCheckItem(ID_NotebookTabFloat, "Allow Single Tab Floating")
+        notebook_menu.AppendSeparator()
+        notebook_menu.AppendCheckItem(ID_NotebookDclickUnsplit, "Unsplit On Sash Double-Click")
+        notebook_menu.AppendCheckItem(ID_NotebookTabDrawDnd, "Draw Tab Image On Drag 'n' Drop")        
         notebook_menu.AppendSeparator()
         notebook_menu.AppendCheckItem(ID_NotebookScrollButtons, "Scroll Buttons Visible")
         notebook_menu.AppendCheckItem(ID_NotebookWindowList, "Window List Button Visible")
@@ -1112,6 +1117,8 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookAllowTabExternalMove)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookAllowTabSplit)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookTabFloat)
+        self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookDclickUnsplit)
+        self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookTabDrawDnd)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookScrollButtons)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookWindowList)
         self.Bind(wx.EVT_MENU, self.OnNotebookFlag, id=ID_NotebookArtGloss)                  
@@ -1176,6 +1183,8 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookAllowTabExternalMove)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookAllowTabSplit)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookTabFloat)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookDclickUnsplit)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookTabDrawDnd)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookScrollButtons)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookWindowList)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookHideSingle)
@@ -1469,6 +1478,12 @@ class AuiFrame(wx.Frame):
 
         elif evId == ID_NotebookTabFloat:
             self._notebook_style ^= aui.AUI_NB_TAB_FLOAT
+
+        elif evId == ID_NotebookDclickUnsplit:
+            self._notebook_style ^= aui.AUI_NB_SASH_DCLICK_UNSPLIT
+
+        elif evId == ID_NotebookTabDrawDnd:
+            self._notebook_style ^= aui.AUI_NB_DRAW_DND_TAB
             
         elif evId == ID_NotebookWindowList:
             self._notebook_style ^= aui.AUI_NB_WINDOWLIST_BUTTON
@@ -1610,6 +1625,12 @@ class AuiFrame(wx.Frame):
 
         elif evId == ID_NotebookTabFloat:
             event.Check((self._notebook_style & aui.AUI_NB_TAB_FLOAT) != 0)
+
+        elif evId == ID_NotebookDclickUnsplit:
+            event.Check((self._notebook_style & aui.AUI_NB_SASH_DCLICK_UNSPLIT) != 0)
+
+        elif evId == ID_NotebookTabDrawDnd:
+            event.Check((self._notebook_style & aui.AUI_NB_DRAW_DND_TAB) != 0)
             
         elif evId == ID_NotebookAllowTabMove:
             event.Check((self._notebook_style & aui.AUI_NB_TAB_MOVE) != 0)
@@ -2100,7 +2121,7 @@ class AuiFrame(wx.Frame):
         
         # Show the switcher dialog
 
-        dlg = ASD.SwitcherDialog(items, self)
+        dlg = ASD.SwitcherDialog(items, self, self._mgr)
 
         # In GTK+ we can't use Ctrl+Tab; we use Ctrl+/ instead and tell the switcher
         # to treat / in the same was as tab (i.e. cycle through the names)
@@ -2225,7 +2246,11 @@ def GetIntroText():
     "alignments;</li>" \
     "<li>Snapping floating panes on left/right/top/bottom or any combination of directions, a la Winamp;</li>" \
     "<li>'Fly-out' floating panes, i.e. panes which show themselves only when the mouse hover them;</li>" \
-    "<li>Ability to set custom bitmaps for pane buttons (close, maximize, etc...).</li>" \
+    "<li>Ability to set custom bitmaps for pane buttons (close, maximize, etc...);</li>" \
+    "<li>Implementation of the style <tt>AUI_MGR_ANIMATE_FRAMES</tt>, which fade-out floating panes when " \
+    "they are closed (all platforms which support frames transparency) and show a moving rectangle " \
+    "when they are docked and minimized (Windows excluding Vista and GTK only);</li>" \
+    "<li>A pane switcher dialog is available to cycle through existing AUI panes. </li>" \
     "</ul><p>" \
     "<li><b>AuiNotebook:</b></li>" \
     "<ul>" \
@@ -2251,6 +2276,10 @@ def GetIntroText():
     "<li>Implementation of the style <tt>AUI_NB_TAB_FLOAT</tt>, which allows the floating of single tabs. " \
     "<b>Known limitation:</b> when the notebook is more or less full screen, tabs cannot be dragged far " \
     "enough outside of the notebook to become floating pages. </li>" \
+    "<li>Implementation of the style <tt>AUI_NB_DRAW_DND_TAB</tt> (on by default), which draws an image " \
+    "representation of a tab while dragging;</li>" \
+    "<li>Implementation of the style <tt>AUI_NB_SASH_DCLICK_UNSPLIT</tt>, which unsplit a splitted AuiNotebook " \
+    "when double-clicking on a sash." \
     "</ul><p>" \
     "<li><b>AuiToolBar:</b></li>" \
     "<ul>" \

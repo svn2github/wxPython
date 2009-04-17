@@ -224,10 +224,14 @@ Known limitation: when the notebook is more or less full screen, tabs
 cannot be dragged far enough outside of the notebook to become 
 floating pages. 
 """
+AUI_NB_DRAW_DND_TAB        = 1 << 20
+""" Draws an image representation of a tab while dragging. """
+AUI_NB_SASH_DCLICK_UNSPLIT = 1 << 22
+""" Unsplit a splitted AuiNotebook when double-clicking on a sash. """
 
 AUI_NB_DEFAULT_STYLE = AUI_NB_TOP | AUI_NB_TAB_SPLIT | AUI_NB_TAB_MOVE | \
                        AUI_NB_SCROLL_BUTTONS | AUI_NB_CLOSE_ON_ACTIVE_TAB | \
-                       AUI_NB_MIDDLE_CLICK_CLOSE
+                       AUI_NB_MIDDLE_CLICK_CLOSE | AUI_NB_DRAW_DND_TAB
 """ Default AuiNotebook style. """
 
 #----------------------------------------------------------------------
@@ -945,4 +949,4 @@ guideSizeX, guideSizeY = 29, 32
 # ------------------------------- #
 
 SWITCHER_TEXT_MARGIN_X = 4
-SWITCHER_TEXT_MARGIN_Y = 2
+SWITCHER_TEXT_MARGIN_Y = 1

@@ -1,6 +1,7 @@
 """
 This module contains some common functions used by wxPython-AUI to
-manipulate colours, bitmaps, text and gradient shadings.
+manipulate colours, bitmaps, text, gradient shadings and custom
+dragging images for AuiNotebook tabs.
 """
 
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
@@ -10,6 +11,8 @@ __date__ = "31 March 2009"
 import wx
 
 from aui_constants import AUI_BUTTON_STATE_PRESSED, AUI_GRADIENT_VERTICAL
+from aui_constants import AUI_BUTTON_STATE_HIDDEN
+
 
 if wx.Platform == "__WXMAC__":
     import Carbon.Appearance
@@ -382,3 +385,84 @@ def FindFocusDescendant(ancestor):
 
     return focusWin
 
+
+#---------------------------------------------------------------------------
+# TabDragImage implementation
+# This class handles the creation of a custom image when dragging
+# AuiNotebook tabs
+#---------------------------------------------------------------------------
+
+class TabDragImage(wx.DragImage):
+    """
+    This class handles the creation of a custom image in case of drag and
+    drop of a notebook tab.
+    """
+
+    def __init__(self, notebook, page, button_state, tabArt):
+        """
+        Default class constructor.
+        For internal use: do not call it in your code!
+
+        :param `notebook`: an instance of L{auibook.AuiNotebook};
+        :param `page`: the dragged AuiNotebook page;
+        :param `button_state`: the state of the close button on the tab;
+        :param `tabArt`: an instance of L{tabart}.
+        """
+
+        self._backgroundColour = wx.NamedColour("pink")        
+        self._bitmap = self.CreateBitmap(notebook, page, button_state, tabArt)
+        wx.DragImage.__init__(self, self._bitmap)
+
+
+    def CreateBitmap(self, notebook, page, button_state, tabArt):
+        """
+        Actually creates the dnd bitmap.
+
+        :param `notebook`: an instance of L{auibook.AuiNotebook};
+        :param `page`: the dragged AuiNotebook page;
+        :param `button_state`: the state of the close button on the tab;
+        :param `tabArt`: an instance of L{tabart}.
+        """
+
+        memory = wx.MemoryDC()
+
+        tab_size, x_extent = tabArt.GetTabSize(memory, notebook, page.caption, page.bitmap, page.active,
+                                               button_state)
+
+        tab_width, tab_height = tab_size
+        rect = wx.Rect(0, 0, tab_width, tab_height)
+
+        bitmap = wx.EmptyBitmap(tab_width+1, tab_height+1)
+        memory.SelectObject(bitmap)
+
+        if wx.Platform == "__WXMAC__":
+            memory.SetBackground(wx.TRANSPARENT_BRUSH)
+        else:
+            memory.SetBackground(wx.Brush(self._backgroundColour))
+            
+        memory.SetBackgroundMode(wx.TRANSPARENT)
+        memory.Clear()
+
+        tabArt.DrawTab(memory, notebook, page, rect, button_state)
+        memory.SetBrush(wx.TRANSPARENT_BRUSH)
+        memory.SetPen(wx.BLACK_PEN)
+        memory.DrawRoundedRectangle(0, 0, tab_width+1, tab_height+1, 2)
+
+        memory.SelectObject(wx.NullBitmap)
+        
+        # Gtk and Windows unfortunatly don't do so well with transparent
+        # drawing so this hack corrects the image to have a transparent
+        # background.
+        if wx.Platform != '__WXMAC__':
+            timg = bitmap.ConvertToImage()
+            if not timg.HasAlpha():
+                timg.InitAlpha()
+            for y in xrange(timg.GetHeight()):
+                for x in xrange(timg.GetWidth()):
+                    pix = wx.Colour(timg.GetRed(x, y),
+                                    timg.GetGreen(x, y),
+                                    timg.GetBlue(x, y))
+                    if pix == self._backgroundColour:
+                        timg.SetAlpha(x, y, 0)
+            bitmap = timg.ConvertToBitmap()
+        return bitmap        

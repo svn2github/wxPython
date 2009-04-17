@@ -148,6 +148,7 @@ def OnSwitchPane(self, event):
 
 import wx
 
+import auibook
 from aui_utilities import FindFocusDescendant
 from aui_constants import SWITCHER_TEXT_MARGIN_X, SWITCHER_TEXT_MARGIN_Y
 
@@ -209,6 +210,7 @@ class SwitcherItem(object):
     def GetTitle(self):
         
         return self._title
+
 
     def SetName(self, name):
 
@@ -604,12 +606,13 @@ class SwitcherItems(object):
 
             if not item.GetIsGroup():
                 if item.GetBitmap().IsOk() and item.GetBitmap().GetWidth() <= 16 \
-                   and item.GetBitmap().GetHeight() <= 16:                
+                   and item.GetBitmap().GetHeight() <= 16:
+                    x -= textMarginX
                     dc.DrawBitmap(item.GetBitmap(), x, item.GetRect().y + \
                                   (item.GetRect().height - item.GetBitmap().GetHeight())/2,
                                   True)
-                x += 16
-                x += textMarginX
+                    x += 16 + textMarginX
+                #x += textMarginX
             
             y = item.GetRect().y + (item.GetRect().height - h)/2
             dc.DrawText(item.GetTitle(), x, y)
@@ -672,7 +675,7 @@ class SwitcherItems(object):
 class MultiColumnListCtrl(wx.PyControl):
     """ A control for displaying several columns (not scrollable). """
 
-    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
+    def __init__(self, parent, aui_manager, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=0, validator=wx.DefaultValidator, name="MultiColumnListCtrl"):
 
         wx.PyControl.__init__(self, parent, id, pos, size, style, validator, name)
@@ -680,6 +683,7 @@ class MultiColumnListCtrl(wx.PyControl):
         self._overallSize = wx.Size(200, 100)
         self._modifierKey = wx.WXK_CONTROL
         self._extraNavigationKey = 0
+        self._aui_manager = aui_manager
         
         self.SetInitialSize(size)
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
@@ -692,6 +696,11 @@ class MultiColumnListCtrl(wx.PyControl):
         self.Bind(wx.EVT_KEY_UP, self.OnKey)
 
 
+    def __del__(self):
+
+        self._aui_manager.HideHint()
+
+        
     def DoGetBestSize(self):
 
         return self._overallSize
@@ -872,7 +881,47 @@ class MultiColumnListCtrl(wx.PyControl):
             
             else:
                 break
+
+        self.SetTransparency()
+        selection = self._items.GetItem(self._items.GetSelection()).GetWindow()
+        pane = self._aui_manager.GetPane(selection)
+
+        if not pane.IsOk():
+            if isinstance(selection.GetParent(), auibook.AuiNotebook):
+                self.SetTransparency(selection)
+                self._aui_manager.ShowHint(selection.GetScreenRect())
+                wx.CallAfter(self.SetFocus)
+                self.SetFocus()
+                return
+            else:
+                self._aui_manager.HideHint()
+                return
+        if not pane.IsShown():
+            self._aui_manager.HideHint()
+            return
+
+        self.SetTransparency(selection)
+        self._aui_manager.ShowHint(selection.GetScreenRect())
+        # NOTE: this is odd but it is the only way for the focus to
+        #       work correctly on wxMac...
+        wx.CallAfter(self.SetFocus)
+        self.SetFocus()        
     
+
+    def SetTransparency(self, selection=None):
+
+        if not self.GetParent().CanSetTransparent():
+            return
+        
+        if selection is not None:
+            intersects = False
+            if selection.GetScreenRect().Intersects(self.GetParent().GetScreenRect()):
+                intersects = True
+                self.GetParent().SetTransparent(150)
+                wx.CallLater(1000, self.SetTransparency)
+        else:
+            self.GetParent().SetTransparent(255)
+
 
     def GenerateSelectionEvent(self):
 
@@ -1002,7 +1051,7 @@ class SwitcherDialog(wx.Dialog):
     and tabs for the user to choose. Ctrl+Tab cycles through them.
     """
 
-    def __init__(self, items, parent, id=wx.ID_ANY, title=_("Pane Switcher"), pos=wx.DefaultPosition,
+    def __init__(self, items, parent, aui_manager, id=wx.ID_ANY, title=_("Pane Switcher"), pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.STAY_ON_TOP|wx.DIALOG_NO_PARENT|wx.BORDER_SIMPLE):
 
         self._switcherBorderStyle = (style & wx.BORDER_MASK)
@@ -1014,7 +1063,8 @@ class SwitcherDialog(wx.Dialog):
 
         wx.Dialog.__init__(self, parent, id, title, pos, size, style)
 
-        self._listCtrl = MultiColumnListCtrl(self, style=wx.WANTS_CHARS|wx.NO_BORDER)
+        self._listCtrl = MultiColumnListCtrl(self, aui_manager,
+                                             style=wx.WANTS_CHARS|wx.NO_BORDER)
         self._listCtrl.SetItems(items)
         self._listCtrl.CalculateLayout()
 
@@ -1054,6 +1104,8 @@ class SwitcherDialog(wx.Dialog):
         else:
             self._borderColour = wx.BLACK
 
+        self._aui_manager = aui_manager
+        
 
     def OnCloseWindow(self, event):
 
@@ -1068,6 +1120,8 @@ class SwitcherDialog(wx.Dialog):
             else:
                 self.EndModal(wx.ID_OK)
     
+        self._aui_manager.HideHint()
+
 
     def GetSelection(self):
 

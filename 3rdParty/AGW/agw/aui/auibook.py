@@ -21,7 +21,7 @@ import types
 import framemanager
 import tabart as TA
 
-from aui_utilities import LightColour, MakeDisabledBitmap
+from aui_utilities import LightColour, MakeDisabledBitmap, TabDragImage
 from aui_constants import *
 
 # AuiNotebook events
@@ -597,6 +597,8 @@ class AuiTabContainer(object):
         ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
         ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
         ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
+        ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
+        ``AUI_NB_SASH_DCLICK_UNSPLIT``       Unsplit a splitted AuiNotebook when double-clicking on a sash.
         ==================================== ==================================
         
         """
@@ -1289,12 +1291,12 @@ class AuiTabContainer(object):
         dc = wx.ClientDC(win)
         
         if not self.IsTabVisible(tabPage, self.GetTabOffset(), dc, win):
-            for i in xrange(len(self._pages)):            
+            for i in xrange(len(self._pages)):
                 if self.IsTabVisible(tabPage, i, dc, win):
                     self.SetTabOffset(i)
                     win.Refresh()
                     return
-            
+
 
     def TabHitTest(self, x, y):
         """
@@ -1395,6 +1397,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         self._is_dragging = False
         self._hover_button = None
         self._pressed_button = None
+        self._drag_image = None
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
@@ -1518,6 +1521,12 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         
         if self._is_dragging:
             self._is_dragging = False
+
+            if self._drag_image:
+                self._drag_image.EndDrag()
+                del self._drag_image
+                self._drag_image = None
+                
             event = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_CANCEL_DRAG, self.GetId())
             event.SetSelection(self.GetIdxFromWindow(self._click_tab))
             event.SetOldSelection(event.GetSelection())
@@ -1538,6 +1547,11 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         if self._is_dragging:
             
             self._is_dragging = False
+            if self._drag_image:
+                self._drag_image.EndDrag()
+                del self._drag_image
+                self._drag_image = None
+                self.GetParent().Refresh()
 
             evt = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_END_DRAG, self.GetId())
             evt.SetSelection(self.GetIdxFromWindow(self._click_tab))
@@ -1725,6 +1739,27 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
                abs(pos.y - self._click_pt.y) > drag_y_threshold:
                 self._is_dragging = True
 
+                if self._drag_image:
+                    self._drag_image.EndDrag()
+                    del self._drag_image
+                    self._drag_image = None
+
+                if self._flags & AUI_NB_DRAW_DND_TAB:
+                    # Create the custom draw image from the icons and the text of the item
+                    wnd = self.TabHitTest(pos.x, pos.y)
+                    mouse_tab = self.GetIdxFromWindow(wnd)
+                    page = self._pages[mouse_tab]
+                    tab_button = self._tab_close_buttons[mouse_tab]
+                    self._drag_image = TabDragImage(self, page, tab_button.cur_state, self._art)
+
+                    if self._flags & AUI_NB_TAB_FLOAT:
+                        self._drag_image.BeginDrag(wx.Point(0,0), self, fullScreen=True)
+                    else:
+                        self._drag_image.BeginDragBounded(wx.Point(0,0), self, self.GetParent())
+                        
+                    self._drag_image.Show()
+                    self._drag_image.Move(pos)
+
         wnd = self.TabHitTest(pos.x, pos.y)
         if not wnd:
             evt2 = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_BEGIN_DRAG, self.GetId())
@@ -1740,7 +1775,10 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         evt3.SetOldSelection(evt3.GetSelection())
         evt3.SetEventObject(self)
         self.GetEventHandler().ProcessEvent(evt3)
-        
+
+        if self._drag_image:
+            self._drag_image.Move(pos)
+            
 
     def OnLeaveWindow(self, event):
         """
@@ -2124,7 +2162,7 @@ class AuiNotebook(wx.PyControl):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the window style. This can be a combination of the bollowing bits:
+        :param `style`: the window style. This can be a combination of the following bits:
         
         ==================================== ==================================
         Flag name                            Description
@@ -2149,6 +2187,8 @@ class AuiNotebook(wx.PyControl):
         ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
         ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
         ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
+        ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
+        ``AUI_NB_SASH_DCLICK_UNSPLIT``       Unsplit a splitted AuiNotebook when double-clicking on a sash.
         ==================================== ==================================
 
         Default value for `style` is:
@@ -2157,7 +2197,8 @@ class AuiNotebook(wx.PyControl):
                                    ``AUI_NB_TAB_MOVE`` |
                                    ``AUI_NB_SCROLL_BUTTONS`` |
                                    ``AUI_NB_CLOSE_ON_ACTIVE_TAB`` |
-                                   ``AUI_NB_MIDDLE_CLICK_CLOSE``
+                                   ``AUI_NB_MIDDLE_CLICK_CLOSE`` |
+                                   ``AUI_NB_DRAW_DND_TAB``
         """
 
         self._curpage = -1
@@ -3294,7 +3335,80 @@ class AuiNotebook(wx.PyControl):
 
         self.Thaw()
 
+
+    def UnsplitDClick(self, part, sash_size, pos):
+        """
+        Unsplit the L{AuiNotebook} on sash double-click.
+
+        :param `part`: an UI part representing the sash;
+        :param `sash_size`: the sash size;
+        :param `pos`: the double-click mouse position.
+        """
+
+        if not self._flags & AUI_NB_SASH_DCLICK_UNSPLIT:
+            # Unsplit not allowed
+            return
+
+        pos1 = wx.Point(*pos)
+        pos2 = wx.Point(*pos)
+        if part.orientation == wx.HORIZONTAL:
+            pos1.y -= 2*sash_size
+            pos2.y += 2*sash_size + self.GetTabCtrlHeight()
+        elif part.orientation == wx.VERTICAL:
+            pos1.x -= 2*sash_size
+            pos2.x += 2*sash_size
+        else:
+            raise Exception("Invalid UI part orientation")
+
+        pos1, pos2 = self.ClientToScreen(pos1), self.ClientToScreen(pos2)
+        win1, win2 = wx.FindWindowAtPoint(pos1), wx.FindWindowAtPoint(pos2)
+
+        if not win1 or not win2:
+            # How did we get here?
+            return
+
+        if isinstance(win1, AuiNotebook) or isinstance(win2, AuiNotebook):
+            # This is a bug on MSW, for diabled pages wx.FindWindowAtPoint
+            # returns the wrong window.
+            # See http://trac.wxwidgets.org/ticket/2942
+            return
+
+        tab_frame1, tab_frame2 = self.GetTabFrameFromWindow(win1), self.GetTabFrameFromWindow(win2)
+
+        if not tab_frame1 or not tab_frame2:
+            return
+
+        tab_ctrl_1, tab_ctrl_2 = tab_frame1._tabs, tab_frame2._tabs
+
+        if tab_ctrl_1.GetPageCount() > tab_ctrl_2.GetPageCount():
+            src_tabs = tab_ctrl_2
+            dest_tabs = tab_ctrl_1
+        else:
+            src_tabs = tab_ctrl_1
+            dest_tabs = tab_ctrl_2
+
+        selection = -1
+        page_count = dest_tabs.GetPageCount()
         
+        for page in xrange(src_tabs.GetPageCount()):
+            # remove the page from the source tabs
+            page_info = src_tabs.GetPage(page)
+            if page_info.active:
+                selection = page_count + page
+            src_tabs.RemovePage(page_info.window)
+
+            # add the page to the destination tabs
+            dest_tabs.AddPage(page_info.window, page_info)
+        
+        self.RemoveEmptyTabFrames()
+
+        dest_tabs.DoShowHide()
+        self.DoSizing()
+        dest_tabs.Refresh()
+        if selection > 0:
+            wx.CallAfter(dest_tabs.MakeTabVisible, selection, self)
+        
+    
     def OnSize(self, event):
         """
         Handles the wx.EVT_SIZE event for L{AuiNotebook}.

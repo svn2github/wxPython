@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 15 Apr 2009, 10.00 GMT
+# Latest Revision: 16 Apr 2009, 18.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -132,6 +132,7 @@ EVT_AUI_RENDER = wx.PyEventBinder(wxEVT_AUI_RENDER, 0)
 EVT_AUI_FIND_MANAGER = wx.PyEventBinder(wxEVT_AUI_FIND_MANAGER, 0)
 EVT_AUI_PANE_MINIMIZE = wx.PyEventBinder(wxEVT_AUI_PANE_MINIMIZE, 0)
 EVT_AUI_PANE_MIN_RESTORE = wx.PyEventBinder(wxEVT_AUI_PANE_MIN_RESTORE, 0)
+
 
 # ---------------------------------------------------------------------------- #
 
@@ -3426,6 +3427,11 @@ class AuiManager(wx.EvtHandler):
         self._is_docked = (False, wx.RIGHT, wx.TOP, 0)
         self._snap_limits = (15, 15)
 
+        if wx.Platform == "__WXMSW__":
+            self._animation_step = 30.0
+        else:
+            self._animation_step = 5.0
+        
         if managed_window:
             self.SetManagedWindow(managed_window)
 
@@ -7906,7 +7912,17 @@ class AuiManager(wx.EvtHandler):
                 rootManager = self
                 
             rootManager.OnCaptionDoubleClicked(part.pane.window)
-
+            
+        elif part and part.type in [AuiDockUIPart.typeDockSizer, AuiDockUIPart.typePaneSizer]:
+            # Handles double click on AuiNotebook sashes to unsplit
+            sash_size = self._art.GetMetric(AUI_DOCKART_SASH_SIZE)
+            for child in part.cont_sizer.GetChildren():
+                if child.IsSizer():
+                    win = child.GetSizer().GetContainingWindow()
+                    if isinstance(win, auibook.AuiNotebook):
+                        win.UnsplitDClick(part, sash_size, event.GetPosition())
+                        break
+                
         event.Skip()
 
 
@@ -8769,7 +8785,8 @@ class AuiManager(wx.EvtHandler):
                 paneInfo.window.Show(False)
 
             self.Update()
-            self.AnimateDocking(win_rect, minimize_toolbar.GetScreenRect())
+            if self._flags & AUI_MGR_ANIMATE_FRAMES:
+                self.AnimateDocking(win_rect, minimize_toolbar.GetScreenRect())
 
 
     def OnRestoreMinimizedPane(self, event):
@@ -8821,17 +8838,19 @@ class AuiManager(wx.EvtHandler):
         xstart, ystart = win_rect.x, win_rect.y
         xend, yend = pane_rect.x, pane_rect.y
 
-        wstep = int(abs(win_rect.width - pane_rect.width)/30.0)
-        hstep = int(abs(win_rect.height - pane_rect.height)/30.0)
-        xstep = int(win_rect.x - pane_rect.x)/30.0
-        ystep = int(win_rect.y - pane_rect.y)/30.0
+        step = self.GetAnimationStep()
+        
+        wstep = int(abs(win_rect.width - pane_rect.width)/step)
+        hstep = int(abs(win_rect.height - pane_rect.height)/step)
+        xstep = int(win_rect.x - pane_rect.x)/step
+        ystep = int(win_rect.y - pane_rect.y)/step
         
         dc = wx.ScreenDC()
         dc.SetLogicalFunction(wx.INVERT)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.SetPen(wx.LIGHT_GREY_PEN)
         
-        for i in xrange(30):
+        for i in xrange(int(step)):
             width, height = win_rect.width - i*wstep, win_rect.height - i*hstep
             x, y = xstart - i*xstep, ystart - i*ystep
             new_rect = wx.Rect(x, y, width, height)
@@ -8923,4 +8942,20 @@ class AuiManager(wx.EvtHandler):
 
         return pos            
 
-                
+
+    def GetAnimationStep(self):
+        """ Returns the animation step speed (a float) to use in L{AnimateDocking}. """
+
+        return self._animation_step
+
+
+    def SetAnimationStep(self, step):
+        """
+        Sets the animation step speed (a float) to use in L{AnimateDocking}.
+
+        :param `step`: a floating point value for the animation speed.
+        """
+
+        self._animation_step = float(step)        
+
+        
