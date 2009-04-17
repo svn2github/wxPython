@@ -20,7 +20,8 @@ class BasicRenderableNode(RenderableNode):
         if self.model:
             # we can set this here to False, because the view of it has already been built
             self.model.dirty = False
-        #self.model.subscribe( self.onModelChanged, 'attribChanged' )
+        if self.model:
+            self.model.subscribe( self.onSelfDirty, 'attribChanged' )
         self.subscribe( self.onSelfDirty, 'attribChanged' )        
            
     def onSelfDirty(self, evt):

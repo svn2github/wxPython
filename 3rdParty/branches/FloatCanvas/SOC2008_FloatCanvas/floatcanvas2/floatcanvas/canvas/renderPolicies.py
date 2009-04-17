@@ -58,7 +58,7 @@ class CullingRenderPolicy(object):
             parent = node.parent
             doRender = True
             while parent:
-                if parent.render_to_surface:
+                if hasattr( parent, 'render_to_surface' ) and parent.render_to_surface:
                     doRender = False
                     break
                 parent = parent.parent

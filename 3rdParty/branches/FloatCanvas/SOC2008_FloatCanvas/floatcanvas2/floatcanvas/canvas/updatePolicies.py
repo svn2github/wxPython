@@ -14,9 +14,9 @@ class DefaultUpdatePolicy(object):
     def __init__(self, canvas, interval):
         ''' interval in seconds '''
         self.canvas = canvas
-        self.interval = interval * 1000
+        self.interval = interval
         self.dirty = False
-        self.timer = wx.CallLater( self.interval , self.onIntervalOver )
+        self.timer = wx.CallLater( self.interval * 1000, self.onIntervalOver )
         
     def stop(self):
         self.timer.Stop()
@@ -26,7 +26,7 @@ class DefaultUpdatePolicy(object):
             
     def onIntervalOver(self):
         self.Render()
-        self.timer.Restart( self.interval )
+        self.timer.Restart( self.interval * 1000 )
         
     def Render(self):
         if self.dirty:

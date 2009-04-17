@@ -13,6 +13,8 @@ class LineDrawer(object):
         canvas.subscribe( self.onLineDrag, 'input.move' )
         canvas.subscribe( self.onLineEnd, 'input.left_up' )
 
+        canvas.updatePolicy.interval = 0.01
+
     def onLineBegin(self, evt):
         startPnt = evt.coords.world
         lineNode = self.canvas.createLine( startPnt, startPnt, look = ('red', 'blue') )

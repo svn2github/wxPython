@@ -39,7 +39,7 @@ def start(frame):
 
     # a generic event handler, printing some info
     def onEvent(event):
-        print '%s event on nodes %s @ %s' % ( event.__class__.__name__, [node.name for node in event.nodes], event.coords.world )    
+        print '%s event on nodes %s @ %s' % ( event.type, [node.name for node in event.nodes], event.coords.world )    
 
     # nodes which we want to watch
     nodes = [ circle, rect, poly ]
