@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 16 Apr 2009, 18.00 GMT
+# Latest Revision: 20 Apr 2009, 10.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -95,6 +95,7 @@ __date__ = "31 March 2009"
 
 import wx
 import time
+import types
 import warnings
 
 import auibar
@@ -960,12 +961,14 @@ class AuiPaneInfo(object):
         This method is splitted in 2 versions depending on the input type. If `arg1` is
         a wx.Size object, then L{MinSize1) is called. Otherwise, L{MinSize2} is called.
 
-        :param `arg1`: a wx.Size object or a `x` coordinate.
+        :param `arg1`: a wx.Size object, a (x, y) tuple or or a `x` coordinate.
         :param `arg2`: a `y` coordinate (only if `arg1` is a `x` coordinate, otherwise unused).
         """
         
         if isinstance(arg1, wx.Size):
             ret = self.MinSize1(arg1)
+        elif isinstance(arg1, types.TupleType):
+            ret = self.MinSize1(wx.Size(*arg1))
         else:
             ret = self.MinSize2(arg1, arg2)
 
@@ -991,12 +994,14 @@ class AuiPaneInfo(object):
         This method is splitted in 2 versions depending on the input type. If `arg1` is
         a wx.Size object, then L{MaxSize1) is called. Otherwise, L{MaxSize2} is called.
 
-        :param `arg1`: a wx.Size object or a `x` coordinate.
+        :param `arg1`: a wx.Size object, a (x, y) tuple or a `x` coordinate.
         :param `arg2`: a `y` coordinate (only if `arg1` is a `x` coordinate, otherwise unused).
         """
         
         if isinstance(arg1, wx.Size):
             ret = self.MaxSize1(arg1)
+        elif isinstance(arg1, types.TupleType):
+            ret = self.MaxSize1(wx.Size(*arg1))
         else:
             ret = self.MaxSize2(arg1, arg2)
 
@@ -1023,12 +1028,14 @@ class AuiPaneInfo(object):
         This method is splitted in 2 versions depending on the input type. If `arg1` is
         a wx.Size object, then L{BestSize1) is called. Otherwise, L{BestSize2} is called.
 
-        :param `arg1`: a wx.Size object or a `x` coordinate.
+        :param `arg1`: a wx.Size object, a (x, y) tuple or a `x` coordinate.
         :param `arg2`: a `y` coordinate (only if `arg1` is a `x` coordinate, otherwise unused).
         """
         
         if isinstance(arg1, wx.Size):
             ret = self.BestSize1(arg1)
+        elif isinstance(arg1, types.TupleType):
+            ret = self.BestSize1(wx.Size(*arg1))
         else:
             ret = self.BestSize2(arg1, arg2)
 
