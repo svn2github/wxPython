@@ -917,10 +917,10 @@ class MultiColumnListCtrl(wx.PyControl):
             intersects = False
             if selection.GetScreenRect().Intersects(self.GetParent().GetScreenRect()):
                 intersects = True
-                self.GetParent().SetTransparent(150)
-                wx.CallLater(1000, self.SetTransparency)
-        else:
-            self.GetParent().SetTransparent(255)
+                self.GetParent().SetTransparent(200)
+                return
+
+        self.GetParent().SetTransparent(255)
 
 
     def GenerateSelectionEvent(self):
