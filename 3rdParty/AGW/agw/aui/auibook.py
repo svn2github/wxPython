@@ -2956,7 +2956,7 @@ class AuiNotebook(wx.PyControl):
             return
         
         bitmap = self._imageList.GetBitmap(image)
-        self.SetPageImage(page, bitmap)
+        self.SetPageBitmap(page, bitmap)
 
 
     def GetPageImage(self, page):
