@@ -2228,7 +2228,8 @@ class AuiNotebook(wx.PyControl):
 
         self._popupWin = None
         self._naviIcon = None
-
+        self._imageList = None
+        
         self._normal_font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._selected_font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._selected_font.SetWeight(wx.BOLD)
@@ -2899,6 +2900,82 @@ class AuiNotebook(wx.PyControl):
         # update our own tab catalog
         page_info = self._tabs.GetPage(page_idx)
         return page_info.bitmap
+
+
+    def SetImageList(self, imageList):
+        """
+        Sets the image list for the AuiNotebook control.
+
+        :param `imageList`: an instance of L{wx.ImageList}.
+        """
+
+        self._imageList = imageList        
+                
+
+    def AssignImageList(self, imageList):
+        """
+        Sets the image list for the AuiNotebook control.
+
+        :param `imageList`: an instance of L{wx.ImageList}.
+        """
+
+        self.SetImageList(imageList)
+
+
+    def GetImageList(self):
+        """ Returns the associated image list (if any). """
+
+        return self._imageList        
+
+
+    def SetPageImage(self, page, image):
+        """
+        Sets the image index for the given page.
+
+        :param `page`: the page index;
+        :param `image`: an index into the image list which was set with L{SetImageList}.
+        """
+        
+        if page >= self._tabs.GetPageCount():
+            return False
+
+        if not isinstance(image, types.IntType):
+            raise Exception("The image parameter must be an integer, you passed " \
+                            "%s"%repr(image))
+        
+        if not self._imageList:
+            raise Exception("To use SetPageImage you need to associate an image list " \
+                            "Using SetImageList or AssignImageList")
+
+        if image >= len(self._imageList.GetImageCount()):
+            raise Exception("Invalid image index (%d), the image list contains only" \
+                            " (%d) bitmaps"%(image, self._imageList.GetImageCount()))
+
+        if image == -1:
+            self.SetPageBitmap(page, wx.NullBitmap)
+            return
+        
+        bitmap = self._imageList.GetBitmap(image)
+        self.SetPageImage(page, bitmap)
+
+
+    def GetPageImage(self, page):
+        """
+        Returns the image index for the given page.
+
+        :param `page`: the given page for which to retrieve the image index.
+        """
+
+        if page >= self._tabs.GetPageCount():
+            return False
+
+        bitmap = self.GetPageBitmap(page)
+        for indx in xrange(self._imageList.GetImageCount()):
+            imgListBmp = self._imageList.GetBitmap(indx)
+            if imgListBmp == bitmap:
+                return indx
+
+        return wx.NOT_FOUND
 
 
     def SetPageTextColour(self, page_idx, colour):

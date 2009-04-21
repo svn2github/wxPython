@@ -210,8 +210,6 @@ TODOs
   ``EVT_AUI_PANE_FLOATING/ED`` and ``EVT_AUI_PANE_DOCKING/ED``);
 - Implement the 4-ways splitter behaviour for horizontal and vertical sashes if they intersect;
 - Extend `tabart.py` with more aui tab arts;
-- Harmonize the `AuiNotebook` API with the `wx.Notebook` one, especially regarding setting/getting
-  tab images (i.e., using `wx.ImageList`);
 - Implement ``AUI_NB_LEFT`` and ``AUI_NB_RIGHT`` tab locations in `AuiNotebook`;
 - Move `AuiDefaultToolBarArt` into a separate module (as with `tabart.py` and `dockart.py`) and
   provide more arts for toolbars (maybe from `wx.lib.agw.flatmenu`?)
