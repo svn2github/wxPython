@@ -2947,7 +2947,7 @@ class AuiNotebook(wx.PyControl):
             raise Exception("To use SetPageImage you need to associate an image list " \
                             "Using SetImageList or AssignImageList")
 
-        if image >= len(self._imageList.GetImageCount()):
+        if image >= self._imageList.GetImageCount():
             raise Exception("Invalid image index (%d), the image list contains only" \
                             " (%d) bitmaps"%(image, self._imageList.GetImageCount()))
 
