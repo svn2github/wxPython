@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 20 Apr 2009, 10.00 GMT
+# Latest Revision: 21 Apr 2009, 14.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -4295,9 +4295,10 @@ class AuiManager(wx.EvtHandler):
         top of another pane.
         """
 
-        notebook = auibook.AuiNotebook(self._frame, -1, wx.Point(0, 0), wx.Size(0, 0),
-                                       style=AUI_NB_DEFAULT_STYLE | AUI_NB_BOTTOM |
-                                       AUI_NB_SUB_NOTEBOOK | AUI_NB_TAB_EXTERNAL_MOVE)
+        style = AUI_NB_DEFAULT_STYLE | AUI_NB_BOTTOM | \
+                AUI_NB_SUB_NOTEBOOK | AUI_NB_TAB_EXTERNAL_MOVE
+        style -= AUI_NB_DRAW_DND_TAB
+        notebook = auibook.AuiNotebook(self._frame, -1, wx.Point(0, 0), wx.Size(0, 0), style=style)
 
         # This is so we can get the tab-drag event.
         notebook.GetAuiManager().SetMasterManager(self)
