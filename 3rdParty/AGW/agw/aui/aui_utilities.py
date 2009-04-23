@@ -424,7 +424,7 @@ class TabDragImage(wx.DragImage):
         :param `tabArt`: an instance of L{tabart}.
         """
 
-        memory = wx.MemoryDC()
+        memory = wx.MemoryDC(wx.EmptyBitmap(1, 1))
 
         tab_size, x_extent = tabArt.GetTabSize(memory, notebook, page.caption, page.bitmap, page.active,
                                                button_state)
