@@ -1,5 +1,6 @@
 import wx
 from constantTable import ConstantTable
+import array
 
 class RenderSurface(object):
     ''' A render surface is a surface where things can be rendered to and from.
@@ -13,6 +14,7 @@ class RenderSurface(object):
         self.active = False
         self._size = None
         self.size = size
+        self._allocateBitmap()
            
     def _setSize(self, size):
         ''' Sets the size. If it changes, recreate the associated bitmap and GC.
@@ -36,13 +38,19 @@ class RenderSurface(object):
         return self._bitmap
     
     bitmap = property( _getBitmap )
+
+    def _allocateBitmap(self):
+        if not hasattr(self, '_bitmap') or (self._bitmap.GetSize() != self.size):
+            depth = 24
+            if self.hasAlpha:
+                depth = 32
+            self._bitmap = wx.EmptyBitmap(self.size[0], self.size[1], depth)
+            if self.hasAlpha:
+                self._bitmap.UseAlpha()
         
     def BeginRendering(self):
         # recreate the bitmap if our size changed or there wasn't one created yet
-        if not hasattr(self, '_bitmap') or (self._bitmap.GetSize() != self.size):
-            self._bitmap = wx.EmptyBitmap(self.size[0], self.size[1], 32)
-            if self.hasAlpha:
-                self._bitmap.UseAlpha()
+        self._allocateBitmap()
 
         self.dc = wx.MemoryDC( self._bitmap )
         self.gc = self.renderer.wx_renderer.CreateContext( self.dc )
@@ -109,22 +117,40 @@ class RenderSurface(object):
             other kind of supported image format.
         '''
         if file_format == 'raw':
-            if self.bitmap.HasAlpha():
-                return wx.AlphaPixelData(self.bitmap).GetPixels().Get()
+            # bit faster than the raw2 method because we use array.array.
+            #  Should probably use a numpy array instead.
+            noPixels = self.bitmap.Size[0] * self.bitmap.Size[1]
+            if self.hasAlpha:
+                result = array.array( 'c', '\0' * 4 * noPixels )
+                self.bitmap.CopyToBuffer( result, wx.BitmapBufferFormat_RGBA )
+                #self.bitmap.CopyToBuffer( result, wx.BitmapBufferFormat_ARGB32 )
+                return result.tostring()
             else:
-                return wx.NativePixelData(self.bitmap).GetPixels().Get()
-        
-        img = self.bitmap.ConvertToImage()        
-        
-        import cStringIO
-        outputStream = cStringIO.StringIO()
-        if file_format == 'jpg':
-            file_format = 'jpeg'
-        img.SaveStream( wx.OutputStream(outputStream), ConstantTable.getEnum( 'bitmap_type', file_format ) )
-        data = outputStream.getvalue()
-        outputStream.close()
-              
-        return data
+                result = array.array( 'c', '\0' * 3 * noPixels )
+                self.bitmap.CopyToBuffer( result, wx.BitmapBufferFormat_RGB )
+                return result.tostring()
+        elif file_format == 'raw2':
+            # very slow, because we iterate over each pixel
+            result = ''
+            for it in wx.AlphaPixelData(self.bitmap):
+                pixel = it.Get()
+                result += chr(pixel[0]) + chr(pixel[1]) + chr(pixel[2])
+                if self.bitmap.HasAlpha():
+                    result += chr(pixel[3])
+            return result
+
+        else:        
+            img = self.bitmap.ConvertToImage()        
+            
+            import cStringIO
+            outputStream = cStringIO.StringIO()
+            if file_format == 'jpg':
+                file_format = 'jpeg'
+            img.SaveStream( wx.OutputStream(outputStream), ConstantTable.getEnum( 'bitmap_type', file_format ) )
+            data = outputStream.getvalue()
+            outputStream.close()
+                  
+            return data
     
     def _getBitmapPixels(self):
         from ...math import numpy

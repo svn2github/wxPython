@@ -365,18 +365,22 @@ class SimpleCanvas(Canvas):
         return pickedNodes
 
 
-    def getScreenshot(self, file_format):
+    def getScreenshot(self, file_format, renderFirst = True):
         ''' Returns the rendered picture as a string with file_format, where
             file format can be something like 'png', 'jpg' or 'raw' or any other
             kind of supported image format.
+            If renderFirst is true, the canvas will be rendered before a screenshot
+            is saved. This is to make sure the user gets the most up-to-date picture.
         '''
+        if renderFirst:
+            self.Render()
         return self.renderer.getScreenshot( file_format )
     
-    def saveScreenshot(self, filename):
+    def saveScreenshot(self, filename, renderFirst = True):
         ''' Saves the rendered picture as a file to disk '''
         import os.path        
         extension = os.path.splitext(filename)[1][1:]
-        data = self.getScreenshot( extension )
+        data = self.getScreenshot( extension, renderFirst )
         f = file( filename, 'wb' )
         f.write( data )
         f.close()
