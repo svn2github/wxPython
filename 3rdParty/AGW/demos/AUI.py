@@ -1245,7 +1245,6 @@ class AuiFrame(wx.Frame):
                 
             pane.Icon(bmp)
 
-        self.SendSizeEvent()
         self._mgr.Update()
 
 
@@ -1406,7 +1405,6 @@ class AuiFrame(wx.Frame):
             gradient = aui.AUI_GRADIENT_HORIZONTAL 
 
         self._mgr.GetArtProvider().SetMetric(aui.AUI_DOCKART_GRADIENT_TYPE, gradient)
-        self.SendSizeEvent()
         self._mgr.Update()
 
 

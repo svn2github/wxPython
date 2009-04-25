@@ -5325,12 +5325,6 @@ class AuiManager(wx.EvtHandler):
         # delete old sizer first
         self._frame.SetSizer(None)
 
-        # keep track of the old UI part rectangles so we can
-        # refresh those parts whose rect has changed
-        old_part_rects = []
-        for part in self._uiparts:
-            old_part_rects.append(part.rect)
-    
         # create a layout for all of the panes
         sizer = self.LayoutAll(self._panes, self._docks, self._uiparts, False)
 
@@ -5437,17 +5431,9 @@ class AuiManager(wx.EvtHandler):
             if p.window and p.IsShown() and p.IsDocked():
                 if p.rect != old_pane_rects[ii]:
                     p.window.Refresh()
+                    p.window.Update()
 
-        for i in xrange(len(self._uiparts)):
-            part = self._uiparts[i]
-            rect = wx.Rect()
-
-            if i < len(old_part_rects):
-                rect = old_part_rects[i]
-            if part.rect != rect:
-                self._frame.Refresh(True, part.rect)
-
-        self._frame.Update()
+        self._frame.Refresh()
     
 
     def UpdateNotebook(self):
