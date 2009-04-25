@@ -2450,7 +2450,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                         self._isonhyperlink = False
                         
         # we only process dragging here
-        if event.Dragging():
+        if event.Dragging() and self._current is not None:
             
             if self._isDragging:
                 if not self._dragImage:
@@ -2479,7 +2479,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 
                     self.Update()
 
-                if self._countDrag >= 3:
+                if self._countDrag >= 3 and self._oldItem is not None:
                     # Here I am trying to avoid ugly repainting problems... hope it works
                     self.RefreshLine(self._oldItem)
                     self._countDrag = 0
