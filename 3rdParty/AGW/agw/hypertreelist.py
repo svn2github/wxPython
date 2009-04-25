@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 15 Apr 2009, 10.00 GMT
+# Latest Revision: 25 Apr 2009, 10.00 GMT
 #
 #
 # TODO List
@@ -136,8 +136,8 @@ HyperTreeList has been tested on the following platforms:
   * Windows (Windows XP);
 
 
-Latest Revision: Andrea Gavana @ 15 Apr 2009, 10.00 GMT
-Version 0.5
+Latest Revision: Andrea Gavana @ 25 Apr 2009, 10.00 GMT
+Version 0.6
 
 """
 
@@ -150,7 +150,7 @@ from customtreectrl import DragImage, TreeEvent, GenericTreeItem
 from customtreectrl import TreeRenameTimer as TreeListRenameTimer
 
 # Version Info
-__version__ = "0.5"
+__version__ = "0.6"
 
 # --------------------------------------------------------------------------
 # Constants
@@ -729,7 +729,7 @@ class TreeListHeaderWindow(wx.Window):
         self._owner._dirty = True
 
 
-    def InsertColumn(self, before, colInfo):
+    def InsertColumnInfo(self, before, colInfo):
 
         if before < 0 or before >= self.GetColumnCount():
             raise Exception("Invalid column")
@@ -738,6 +738,15 @@ class TreeListHeaderWindow(wx.Window):
         self._total_col_width += colInfo.GetWidth()
         self._owner.AdjustMyScrollbars()
         self._owner._dirty = True
+
+
+    def InsertColumn(self, before, text, width=_DEFAULT_COL_WIDTH,
+                     flag=wx.ALIGN_LEFT, image=-1, shown=True, colour=None, 
+                     edit=False):
+
+        colInfo = TreeListColumnInfo(text, width, flag, image, shown, colour, 
+                                     edit)
+        self.InsertColumnInfo(before, colInfo)
 
 
     def RemoveColumn(self, column):
@@ -2969,9 +2978,6 @@ class HyperTreeList(wx.PyControl):
         self.CalculateAndSetHeaderHeight()
         self.Bind(wx.EVT_SIZE, self.OnSize)
         
-        for method in _methods:
-            setattr(self, method, getattr(self._main_win, method))
-            
 
     def CalculateAndSetHeaderHeight(self):
 
@@ -3240,4 +3246,14 @@ class HyperTreeList(wx.PyControl):
 
     GetClassDefaultAttributes = classmethod(GetClassDefaultAttributes)
 
-    
+
+def create_delegator_for(method):
+    """Create a method that forwards calls to self._main_win."""
+    def delegate(self, *args, **kwargs):
+        return getattr(self._main_win, method)(*args, **kwargs)
+    return delegate
+
+# Create methods that delegate to self._main_win. This approach allows for
+# overriding these methods in possible subclasses of HyperTreeList
+for method in _methods:
+    setattr(HyperTreeList, method, create_delegator_for(method))    
