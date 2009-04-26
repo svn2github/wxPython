@@ -1489,16 +1489,16 @@ class TreeListMainWindow(CustomTreeCtrl):
         return self.GetPrev(item, False)
 
 
-    def GetFirstVisibleItem(self, fullRow):
+    def GetFirstVisibleItem(self):
 
-        return self.GetNextVisible(self.GetRootItem(), fullRow)
+        return self.GetNextVisible(self.GetRootItem())
 
 
-    def GetPrevVisible(self, item, fullRow=True):
+    def GetPrevVisible(self, item):
 
         i = self.GetNext(item, False)
         while i:
-            if self.IsItemVisible(i, fullRow):
+            if self.IsItemVisible(i):
                 return i
             i = self.GetPrev(i, False)
         
@@ -2450,12 +2450,12 @@ class TreeListMainWindow(CustomTreeCtrl):
                         self._isonhyperlink = False
                         
         # we only process dragging here
-        if event.Dragging() and self._current is not None:
+        if event.Dragging():
             
             if self._isDragging:
                 if not self._dragImage:
                     # Create the custom draw image from the icons and the text of the item                    
-                    self._dragImage = DragImage(self, self._current)
+                    self._dragImage = DragImage(self, self._current or item)
                     self._dragImage.BeginDrag(wx.Point(0,0), self)
                     self._dragImage.Show()
 
@@ -3112,9 +3112,18 @@ class HyperTreeList(wx.PyControl):
         self.DoHeaderLayout()
 
 
-    def InsertColumn(self, before, colInfo):
+    def InsertColumnInfo(self, before, colInfo):
 
-        self._header_win.InsertColumn(before, colInfo)
+        self._header_win.InsertColumnInfo(before, colInfo)
+        self._header_win.Refresh()
+
+
+    def InsertColumn(self, before, text, width=_DEFAULT_COL_WIDTH,
+                     flag=wx.ALIGN_LEFT, image=-1, shown=True, colour=None, 
+                     edit=False):
+  
+        self._header_win.InsertColumn(before, text, width, flag, image,
+                                      shown, colour, edit)
         self._header_win.Refresh()
 
 
