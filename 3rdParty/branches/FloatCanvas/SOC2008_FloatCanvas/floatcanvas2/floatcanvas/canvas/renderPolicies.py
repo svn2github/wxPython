@@ -23,7 +23,7 @@ class DefaultRenderPolicy(object):
 
         self.renderedNodes = []
         for node in reversed(nodes_to_render):
-            node.Render( canvas.renderer, camera )
+            node.Render( canvas.renderer, camera, renderChildren = False )
         canvas.renderer.EndRendering()
         canvas.renderer.Present()
 

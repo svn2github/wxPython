@@ -107,7 +107,9 @@ class Node(object):
 
             #child._parent = self
             
-        
+    def remove( self ):
+        ''' removes self from its parent node '''
+        self.parent = None
         
     def removeChild( self, child ):
         ''' Remove a child from this node '''

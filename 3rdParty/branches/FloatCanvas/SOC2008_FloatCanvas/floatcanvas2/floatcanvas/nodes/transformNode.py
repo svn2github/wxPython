@@ -126,7 +126,12 @@ class NodeWithBounds(NodeWithTransform):
         '''
         oldparent = self._parent        
         if not oldparent is None:
-            self.root._unregisterBoundedNode(self)
+            root = self.root
+            def unregisterNode(node):
+                root._unregisterBoundedNode(node)
+                for child in node.children:
+                    unregisterNode(child)
+            unregisterNode(self)
 
         result = NodeWithTransform._setParentInternal(self, value)
         
