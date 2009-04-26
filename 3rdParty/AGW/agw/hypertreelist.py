@@ -2459,7 +2459,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                     self._dragImage.BeginDrag(wx.Point(0,0), self)
                     self._dragImage.Show()
 
-                self._dragImage.Move(self.CalcScrolledPosition(p))
+                self._dragImage.Move(p)
 
                 if self._countDrag == 0 and item:
                     self._oldItem = self._current
