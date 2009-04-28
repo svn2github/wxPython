@@ -1203,8 +1203,7 @@ class FoldPanelBar(wx.Panel):
         else:
             self.Expand(event.GetTag())
 
-        event.Skip()
-        
+       
 
     def RefreshPanelsFrom(self, item):
         """ Refreshes all the panels from given index down to last one. """
