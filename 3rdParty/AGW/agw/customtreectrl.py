@@ -1930,7 +1930,10 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         """
         bmp = wx.EmptyBitmap(x, y)
         mdc = wx.MemoryDC(bmp)
-        dc = wx.GCDC(mdc)
+        mask = wx.Colour(0xfe, 0xfe, 0xfe)
+        mdc.SetBackground(wx.Brush(mask))
+        mdc.Clear()
+        
         render = wx.RendererNative.Get()
 
         if checked:
@@ -1947,6 +1950,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             render.DrawRadioButton(self, mdc, (0, 0, x, y), flag)
 
         mdc.SelectObject(wx.NullBitmap)
+        bmp.SetMaskColour(mask)
         return bmp
 
     def GetCount(self):
