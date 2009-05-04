@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 25 Apr 2009, 10.00 GMT
+# Latest Revision: 04 May 2009, 10.00 GMT
 #
 #
 # TODO List
@@ -136,8 +136,8 @@ HyperTreeList has been tested on the following platforms:
   * Windows (Windows XP);
 
 
-Latest Revision: Andrea Gavana @ 25 Apr 2009, 10.00 GMT
-Version 0.6
+Latest Revision: Andrea Gavana @ 04 May 2009, 10.00 GMT
+Version 0.7
 
 """
 
@@ -148,6 +148,7 @@ import wx.gizmos
 from customtreectrl import CustomTreeCtrl
 from customtreectrl import DragImage, TreeEvent, GenericTreeItem
 from customtreectrl import TreeRenameTimer as TreeListRenameTimer
+from customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHECKED
 
 # Version Info
 __version__ = "0.6"
@@ -2952,7 +2953,7 @@ _methods = ["GetIndent", "SetIndent", "GetSpacing", "SetSpacing", "GetImageList"
             "CheckChilds", "CheckSameLevel", "GetItemWindowEnabled", "SetItemWindowEnabled", "GetItemType",
             "IsDescendantOf", "SetItemHyperText", "IsItemHyperText", "SetItemBold", "SetItemDropHighlight", "SetItemItalic",
             "GetEditControl", "ShouldInheritColours", "GetItemWindow", "SetItemWindow", "SetItemTextColour", "HideItem",
-            "DeleteAllItems", "ItemHasChildren"]
+            "DeleteAllItems", "ItemHasChildren", "ToggleItemSelection"]
 
 
 class HyperTreeList(wx.PyControl):
