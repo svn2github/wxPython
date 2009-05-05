@@ -8803,6 +8803,14 @@ class AuiManager(wx.EvtHandler):
         panename = paneInfo.name
         panename = panename[0:-4]
         pane = self.GetPane(panename)
+
+        if not pane.IsOk():
+            panename = paneInfo.name
+            pane = self.GetPane(panename)
+            paneInfo = self.GetPane(panename + "_min")
+            if not paneInfo.IsOk():
+                # Already minimized
+                return
         
         if pane.IsOk():
             self.ShowPane(pane.window, True)
