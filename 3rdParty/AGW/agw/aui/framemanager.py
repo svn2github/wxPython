@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 21 Apr 2009, 14.00 GMT
+# Latest Revision: 06 May 2009, 17.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -7714,7 +7714,6 @@ class AuiManager(wx.EvtHandler):
         if self._frame:
                 
             self.Update()
-            self._frame.Refresh()
             
             if not isinstance(self._frame, wx.MDIParentFrame):
                 # for MDI parent frames, this event must not
