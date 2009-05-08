@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 04 May 2009, 10.00 GMT
+# Latest Revision: 08 May 2009, 11.00 GMT
 #
 #
 # TODO List
@@ -136,7 +136,7 @@ HyperTreeList has been tested on the following platforms:
   * Windows (Windows XP);
 
 
-Latest Revision: Andrea Gavana @ 04 May 2009, 10.00 GMT
+Latest Revision: Andrea Gavana @ 08 May 2009, 11.00 GMT
 Version 0.7
 
 """
@@ -151,7 +151,7 @@ from customtreectrl import TreeRenameTimer as TreeListRenameTimer
 from customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHECKED
 
 # Version Info
-__version__ = "0.6"
+__version__ = "0.7"
 
 # --------------------------------------------------------------------------
 # Constants
@@ -880,9 +880,13 @@ class TreeListItem(GenericTreeItem):
                         return self, flags, column
 
                 # check for hit on the check icons
-                wcheck = 0
-                if theCtrl._checkWidth > 0:
-                    chkX = self._text_x - theCtrl._imgWidth - 3*_MARGIN - theCtrl._btnWidth
+                if self.GetType() != 0:
+                    imageWidth = 0
+                    numberOfMargins = 1
+                    if self.GetCurrentImage() != _NO_IMAGE:
+                        imageWidth = theCtrl._imgWidth
+                        numberOfMargins += 1
+                    chkX = self._text_x - imageWidth - numberOfMargins*_MARGIN - theCtrl._checkWidth
                     chkY = y_mid - theCtrl._checkHeight2
                     if ((point.x >= chkX) and (point.x <= (chkX + theCtrl._checkWidth)) and
                         (point.y >= chkY) and (point.y <= (chkY + theCtrl._checkHeight))):                    
@@ -890,7 +894,7 @@ class TreeListItem(GenericTreeItem):
                         return self, flags, maincol
                     
                 # check for image hit
-                if theCtrl._imgWidth > 0:
+                if self.GetCurrentImage() != _NO_IMAGE:
                     imgX = self._text_x - theCtrl._imgWidth - _MARGIN                        
                     imgY = y_mid - theCtrl._imgHeight2
                     if ((point.x >= imgX) and (point.x <= (imgX + theCtrl._imgWidth)) and
