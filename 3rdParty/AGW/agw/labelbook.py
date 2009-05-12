@@ -1752,6 +1752,7 @@ class FlatBookBase(wx.Panel):
                 maxW = max(maxW, w)
 
             maxW += self._pages._nImgSize * 2
+            maxW = max(maxW, 100)
             self._pages.SetSizeHints(maxW, -1)
             self._pages._nTabAreaWidth = maxW
 
