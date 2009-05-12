@@ -2,7 +2,7 @@
 # PYPROGRESS wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 15 Oct 2008, 22.30 GMT
+# Latest Revision: 12 May 2009, 15.00 GMT
 #
 #
 # TODO List
@@ -59,8 +59,8 @@ License And Version:
 PyProgress is freeware and distributed under the wxPython license. 
 
 
-Latest Revision: Andrea Gavana @ 15 Oct 2008, 22.30 GMT
-Version 0.1
+Latest Revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
+Version 0.2
 
 """
 
@@ -150,8 +150,7 @@ class ProgressGauge(wx.PyWindow):
         """
 
         if steps <= 0:
-            raise "ERROR:\n Gauge steps must be greater than zero. "
-            return
+            raise Exception("ERROR:\n Gauge steps must be greater than zero. ")
 
         if steps != self._steps:
             self._steps = steps
@@ -182,8 +181,7 @@ class ProgressGauge(wx.PyWindow):
         """
 
         if proportion <= 0 or proportion >= 1:
-            raise "ERROR:\n Gauge proportion must be between 0 and 1. "
-            return
+            raise Exception("ERROR:\n Gauge proportion must be between 0 and 1. ")
 
         if proportion != self._gaugeproportion:
             self._gaugeproportion = proportion

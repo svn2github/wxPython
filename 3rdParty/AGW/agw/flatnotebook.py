@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 10 Dec 2008, 11.00 GMT
+# Latest Revision: 12 May 2009, 15.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -58,7 +58,7 @@ License And Version:
 
 FlatNotebook Is Freeware And Distributed Under The wxPython License. 
 
-Latest Revision: Andrea Gavana @ 10 Dec 2008, 11.00 GMT
+Latest Revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
 Version 2.8
 
 @undocumented: FNB_HEIGHT_SPACER, VERTICAL_BORDER_PADDING, VC8_SHAPE_LEN,
@@ -3422,7 +3422,7 @@ class FlatNotebook(wx.PyPanel):
                 bmp = wx.BitmapFromImage(img)
             self._naviIcon = bmp
         else:
-            raise TypeError, "SetNavigatorIcon requires a valid bitmap"
+            raise TypeError("SetNavigatorIcon requires a valid bitmap")
 
     def OnNavigationKey(self, event):
         """ Handles the wx.EVT_NAVIGATION_KEY event for L{FlatNotebook}. """

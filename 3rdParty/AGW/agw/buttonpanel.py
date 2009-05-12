@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 15 Oct 2008, 10.00 GMT
+# Latest Revision: 12 May 2009, 15.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -130,8 +130,8 @@ License And Version:
 
 ButtonPanel Is Freeware And Distributed Under The wxPython License. 
 
-Latest Revision: Andrea Gavana @ 15 Oct 2008, 10.00 GMT
-Version 0.4.
+Latest Revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
+Version 0.5.
 
 """
 
@@ -348,7 +348,7 @@ class BPArt:
         elif id == BP_PADDING_SIZE:
             return self._padding_size
         else:
-            raise "\nERROR: Invalid Metric Ordinal. "
+            raise Exception("\nERROR: Invalid Metric Ordinal. ")
 
 
     def SetMetric(self, id, new_val):
@@ -364,7 +364,7 @@ class BPArt:
         elif id == BP_PADDING_SIZE:
             self._padding_size = new_val
         else:
-            raise "\nERROR: Invalid Metric Ordinal. "
+            raise Exception("\nERROR: Invalid Metric Ordinal. ")
 
 
     def GetColor(self, id):
@@ -391,7 +391,7 @@ class BPArt:
         elif id == BP_SEPARATOR_COLOR:
             return self._separator_pen.GetColour()
         else:
-            raise "\nERROR: Invalid Colour Ordinal. "
+            raise Exception("\nERROR: Invalid Colour Ordinal. ")
 
 
     def SetColor(self, id, colour):
@@ -418,7 +418,7 @@ class BPArt:
         elif id == BP_SEPARATOR_COLOR:
             self._separator_pen.SetColour(colour)
         else:
-            raise "\nERROR: Invalid Colour Ordinal. "
+            raise Exception("\nERROR: Invalid Colour Ordinal. ")
         
 
     GetColour = GetColor
@@ -2010,7 +2010,7 @@ class ButtonPanel(wx.PyPanel):
             """Thaw ButtonPanel."""
 
             if self._freezeCount == 0:
-                raise "\nERROR: Thawing Unfrozen ButtonPanel?"
+                raise Exception("\nERROR: Thawing Unfrozen ButtonPanel?")
 
             self._freezeCount = self._freezeCount - 1
             wx.PyPanel.Thaw(self)        

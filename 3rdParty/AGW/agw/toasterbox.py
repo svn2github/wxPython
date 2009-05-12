@@ -3,7 +3,7 @@
 # Ported And Enhanced From wxWidgets Contribution (Aj Bommarito) By:
 #
 # Andrea Gavana, @ 16 September 2005
-# Latest Revision: 15 Oct 2008, 20.00 GMT
+# Latest Revision: 12 May 2009, 15.00 GMT
 #
 #
 # TODO/Caveats List
@@ -14,7 +14,7 @@
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
 #
-# andrea.gavana@gmail.it
+# andrea.gavana@gmail.com
 # gavana@kpo.kz
 #
 # Or, Obviously, To The wxPython Mailing List!!!
@@ -49,8 +49,8 @@ ToasterBox has been tested on the following platforms:
 Windows (verified on Windows XP, 2000)
 
 
-Latest revision: Andrea Gavana @ 15 oct 2008, 20.00 GMT.
-Version 0.1
+Latest revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
+Version 0.2
 
 """
 
@@ -258,7 +258,6 @@ class ToasterBox(wx.Timer):
 
        if not self._tbstyle & TB_COMPLEX:
            raise Exception("\nERROR: Panel Can Not Be Added When Using TB_SIMPLE ToasterBox Style")
-           return
 
        self._panel = panel
 
@@ -534,8 +533,7 @@ class ToasterBoxWindow(wx.Frame):
        """
 
        if not self._tbstyle & TB_COMPLEX:
-           raise "\nERROR: Panel Can Not Be Added When Using TB_SIMPLE ToasterBox Style"
-           return
+           raise Exception("\nERROR: Panel Can Not Be Added When Using TB_SIMPLE ToasterBox Style")
 
        self.sizer.Add(panel, 1, wx.EXPAND)
        self.sizer.Layout()

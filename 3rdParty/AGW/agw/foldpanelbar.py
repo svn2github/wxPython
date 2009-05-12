@@ -3,7 +3,7 @@
 # Ported From Jorgen Bodde & Julian Smart (Extended Demo) C++ Code By:
 #
 # Andrea Gavana, @ 23 Mar 2005
-# Latest Revision: 15 Oct 2008, 23.30 GMT
+# Latest Revision: 12 May 2009, 15.00 GMT
 #
 #
 # TODO List
@@ -48,8 +48,8 @@
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
 #
-# andrea.gavana@agip.it
-# andrea_gavan@tin.it
+# andrea.gavana@gmail.com
+# gavana@kpo.kz
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
@@ -113,8 +113,8 @@ FoldPanelBar is supported on the following platforms:
 
 FoldPanelBar is based upon Jorgen Bodde's C++ implementation.
 
-Latest Revision: Andrea Gavana @ 15 Oct 2008, 23.30 GMT
-Version 0.3
+Latest Revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
+Version 0.4
 
 """
 
@@ -638,7 +638,7 @@ class CaptionBar(wx.Window):
         if isinstance(fld, FoldPanelBar):
             return self.GetParent().GetGrandParent().IsVertical()
         else:
-            raise "ERROR: Wrong Parent " + repr(fld)
+            raise Exception("ERROR: Wrong Parent " + repr(fld))
 
         
     def OnPaint(self, event):
@@ -710,7 +710,7 @@ class CaptionBar(wx.Window):
         elif style == CAPTIONBAR_RECTANGLE or style == CAPTIONBAR_FILLED_RECTANGLE:
             self.DrawSingleRectangle(dc, self.GetRect())
         else:
-            raise "STYLE Error: Undefined Style Selected: " + repr(style)
+            raise Exception("STYLE Error: Undefined Style Selected: " + repr(style))
 
 
     def OnMouseEvent(self, event):
@@ -1127,7 +1127,7 @@ class FoldPanelBar(wx.Panel):
         try:
             item = self._panels.index(panel)
         except:
-            raise "ERROR: Invalid Panel Passed To AddFoldPanelWindow: " + repr(panel)
+            raise Exception("ERROR: Invalid Panel Passed To AddFoldPanelWindow: " + repr(panel))
         
         panel.AddWindow(window, flags, Spacing, leftSpacing, rightSpacing)
 
@@ -1155,7 +1155,7 @@ class FoldPanelBar(wx.Panel):
         try:
             item = self._panels.index(panel)
         except:
-            raise "ERROR: Invalid Panel Passed To AddFoldPanelSeparator: " + repr(panel)
+            raise Exception("ERROR: Invalid Panel Passed To AddFoldPanelSeparator: " + repr(panel))
         
         panel.AddSeparator(colour, Spacing, leftSpacing, rightSpacing)
         return 0
@@ -1211,7 +1211,7 @@ class FoldPanelBar(wx.Panel):
         try:
             i = self._panels.index(item)
         except:
-            raise "ERROR: Invalid Panel Passed To RefreshPanelsFrom: " + repr(item)
+            raise Exception("ERROR: Invalid Panel Passed To RefreshPanelsFrom: " + repr(item))
         
         self.Freeze()
 
@@ -1345,7 +1345,7 @@ class FoldPanelBar(wx.Panel):
         try:
             item = self._panels.index(foldpanel)
         except:
-            raise "ERROR: Invalid Panel Passed To Collapse: " + repr(foldpanel)
+            raise Exception("ERROR: Invalid Panel Passed To Collapse: " + repr(foldpanel))
         
         foldpanel.Collapse()
         self.RefreshPanelsFrom(foldpanel)
@@ -1432,9 +1432,9 @@ class FoldPanelBar(wx.Panel):
             ind = self._panels[item]
             return self._panels[item]
         except:
-            raise "ERROR: List Index Out Of Range Or Bad Item Passed: " + repr(item) + \
-                  ". Item Should Be An Integer Between " + repr(0) + " And " + \
-                  repr(len(self._panels))
+            raise Exception("ERROR: List Index Out Of Range Or Bad Item Passed: " + repr(item) + \
+                            ". Item Should Be An Integer Between " + repr(0) + " And " + \
+                            repr(len(self._panels)))
 
 
     def GetCount(self):
@@ -1443,7 +1443,7 @@ class FoldPanelBar(wx.Panel):
         try:
             return len(self._panels)
         except:
-            raise "ERROR: No Panels Have Been Added To FoldPanelBar"
+            raise Exception("ERROR: No Panels Have Been Added To FoldPanelBar")
 
         
 
@@ -1682,7 +1682,7 @@ class FoldPanelItem(wx.Panel):
         if isinstance(self.GetGrandParent(), FoldPanelBar):
             return self.GetGrandParent().IsVertical()
         else:
-            raise "ERROR: Wrong Parent " + repr(self.GetGrandParent())
+            raise Exception("ERROR: Wrong Parent " + repr(self.GetGrandParent()))
 
 
     def IsExpanded(self):
@@ -1790,7 +1790,7 @@ class FoldWindowItem:
 
 
         if not kw.has_key("Type"):
-            raise 'ERROR: Missing Window Type Information. This Should Be "WINDOW" Or "SEPARATOR"'
+            raise Exception('ERROR: Missing Window Type Information. This Should Be "WINDOW" Or "SEPARATOR"')
 
         if kw.get("Type") == "WINDOW":
             # Window constructor. This initialises the class as a wx.Window Type
@@ -1823,7 +1823,7 @@ class FoldWindowItem:
             if kw.has_key("y"):
                 self._lineY = kw.get("y")
             else:
-                raise "ERROR: Undefined Y Position For The Separator"
+                raise Exception("ERROR: Undefined Y Position For The Separator")
             if kw.has_key("lineColour"):
                 self._sepLineColour = kw.get("lineColour")
             else:
@@ -1848,7 +1848,7 @@ class FoldWindowItem:
             self._wnd = window
 
         else:
-            raise "ERROR: Undefined Window Type Selected: " + repr(kw.get("Type"))
+            raise Exception("ERROR: Undefined Window Type Selected: " + repr(kw.get("Type")))
 
         self._type = kw.get("Type")
         self._lineLength = 0

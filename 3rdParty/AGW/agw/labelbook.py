@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 15 Oct 2008, 22.30 GMT
+# Latest Revision: 12 May 2009, 15.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -79,8 +79,8 @@ License And Version:
 
 LabelBook and FlatImageBook are freeware and distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 15 Oct 2008, 22.30 GMT
-Version 0.1.
+Latest Revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
+Version 0.2.
 
 """
 
@@ -377,10 +377,24 @@ class ImageContainerBase(wx.Panel):
 
 
     def SetPageText(self, page, text):
-        """ Sets the page image. """
+        """ Sets the page text. """
 
         imgInfo = self._pagesInfoVec[page]
         imgInfo.SetCaption(text)
+
+
+    def GetPageImage(self, page):
+        """ Returns the page image. """
+
+        imgInfo = self._pagesInfoVec[page]
+        return imgInfo.GetImageIndex()
+
+
+    def GetPageText(self, page):
+        """ Returns the page text. """
+
+        imgInfo = self._pagesInfoVec[page]
+        return imgInfo.GetCaption()
 
         
     def ClearAll(self):
@@ -1639,6 +1653,9 @@ class FlatBookBase(wx.Panel):
         if self.GetSelection() >= 0:
             self.DoSetSelection(self._windows[self.GetSelection()])
 
+        if style & INB_FIT_LABELTEXT:
+            self.ResizeTabArea()
+            
         self._mainSizer.Layout()
         dummy = wx.SizeEvent()
         wx.PostEvent(self, dummy)
@@ -1663,7 +1680,8 @@ class FlatBookBase(wx.Panel):
         else:
             page.Hide()
 
-        self._pages.AddPage(text, select, imageId)            
+        self._pages.AddPage(text, select, imageId)
+        self.ResizeTabArea()
         self.Refresh()
 
 
@@ -1703,16 +1721,39 @@ class FlatBookBase(wx.Panel):
         pageRemoved.Destroy()
         self._mainSizer.Layout()
         
-        self.Thaw()
-
         self._pages.DoDeletePage(page)
-        self.Refresh()
+        self.ResizeTabArea()
+        self.Thaw()
 
         # Fire a closed event
         closedEvent = ImageNotebookEvent(wxEVT_IMAGENOTEBOOK_PAGE_CLOSED, self.GetId())
         closedEvent.SetSelection(page)
         closedEvent.SetEventObject(self)
         self.GetEventHandler().ProcessEvent(closedEvent)
+
+
+    def ResizeTabArea(self):
+        """ Resizes the tab area if the control has the ``INB_FIT_LABELTEXT`` style set. """
+
+        style = self.GetWindowStyleFlag()
+        
+        if style & INB_FIT_LABELTEXT == 0:
+            return
+
+        if style & INB_LEFT or style & INB_RIGHT:
+            dc = wx.MemoryDC()
+            dc.SelectObject(wx.EmptyBitmap(1, 1))
+            dc.SetFont(self.GetFont())
+            maxW = 0
+            
+            for page in xrange(self.GetPageCount()):
+                caption = self._pages.GetPageText(page)
+                w, h = dc.GetTextExtent(caption)
+                maxW = max(maxW, w)
+
+            maxW += self._pages._nImgSize * 2
+            self._pages.SetSizeHints(maxW, -1)
+            self._pages._nTabAreaWidth = maxW
 
         
     def DeleteAllPages(self):

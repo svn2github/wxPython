@@ -2,7 +2,7 @@
 # FOURWAYSPLITTER wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 15 Oct 2008, 22.30 GMT
+# Latest Revision: 12 May 2009, 15.00 GMT
 #
 #
 # TODO List
@@ -64,8 +64,8 @@ License And Version:
 FourWaySplitter is freeware and distributed under the wxPython license. 
 
 
-Latest Revision: Andrea Gavana @ 15 Oct 2008, 22.30 GMT
-Version 0.1
+Latest Revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
+Version 0.2
 
 """
 
@@ -804,7 +804,7 @@ class FourWaySplitter(wx.PyPanel):
         """
         
         if expanded >= 4:
-            raise "ERROR: SetExpanded: index out of range: %d"%expanded
+            raise Exception("ERROR: SetExpanded: index out of range: %d"%expanded)
 
         if self._expanded != expanded:
             self._expanded = expanded

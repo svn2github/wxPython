@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 29 May 2005
-# Latest Revision: 15 Oct 2008, 10.00 GMT
+# Latest Revision: 12 May 2009, 15.00 GMT
 #
 #
 # TODO List/Caveats
@@ -30,8 +30,8 @@
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
 #
-# andrea.gavana@agip.it
-# andrea_gavan@tin.it
+# andrea.gavana@gmail.com
+# gavana@kpo.kz
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
@@ -104,8 +104,8 @@ tipballoon.SetEndDelay(3000)
 
 BalloonTip is freeware and distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 15 Oct 2008, 10.00 GMT
-Version 0.1
+Latest revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
+Version 0.2
 
 """
 
@@ -494,7 +494,7 @@ class BalloonTip(object):
         """ Returns the target window for the BalloonTip."""
 
         if not hasattr(self, "_widget"):
-            raise "\nERROR: BalloonTip Target Has Not Been Set"
+            raise Exception("\nERROR: BalloonTip Target Has Not Been Set")
 
         return self._widget
 
@@ -673,7 +673,7 @@ class BalloonTip(object):
         """
 
         if shape not in [BT_ROUNDED, BT_RECTANGLE]:
-            raise '\nERROR: BalloonTip Shape Should Be One Of "BT_ROUNDED", "BT_RECTANGLE"'
+            raise Exception('\nERROR: BalloonTip Shape Should Be One Of "BT_ROUNDED", "BT_RECTANGLE"')
 
         self._shape = shape
 

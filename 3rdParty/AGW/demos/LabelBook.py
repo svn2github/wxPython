@@ -75,6 +75,7 @@ class LabelBookDemo(wx.Frame):
         self.pin = wx.CheckBox(self.leftpanel, -1, "Use Pin Button")
         self.gradient = wx.CheckBox(self.leftpanel, -1, "Draw Gradient Shading")
         self.web = wx.CheckBox(self.leftpanel, -1, "Web Highlight")
+        self.fittext = wx.CheckBox(self.leftpanel, -1, "Fit Label Text")
         self.background = csel.ColourSelect(self.leftpanel, -1, "Choose...",
                                             wx.Colour(127, 169, 241), size=(-1, 20))
         self.activetab = csel.ColourSelect(self.leftpanel, -1, "Choose...",
@@ -102,6 +103,7 @@ class LabelBookDemo(wx.Frame):
         self.Bind(wx.EVT_CHECKBOX, self.OnStyle, self.pin)
         self.Bind(wx.EVT_CHECKBOX, self.OnStyle, self.gradient)
         self.Bind(wx.EVT_CHECKBOX, self.OnStyle, self.web)
+        self.Bind(wx.EVT_CHECKBOX, self.OnStyle, self.fittext)
 
         self.Bind(csel.EVT_COLOURSELECT, self.OnBookColours, self.background)
         self.Bind(csel.EVT_COLOURSELECT, self.OnBookColours, self.activetab)
@@ -166,6 +168,7 @@ class LabelBookDemo(wx.Frame):
         sizer_3.Add(self.pin, 0, wx.LEFT|wx.BOTTOM, 3)
         sizer_3.Add(self.gradient, 0, wx.LEFT|wx.BOTTOM, 3)
         sizer_3.Add(self.web, 0, wx.LEFT|wx.BOTTOM, 3)
+        sizer_3.Add(self.fittext, 0, wx.LEFT|wx.BOTTOM, 3)
         leftsizer.Add(sizer_3, 0, wx.ALL|wx.EXPAND, 5)
 
         label1 = wx.StaticText(self.leftpanel, -1, "Tab Area Background Colour: ")
@@ -267,6 +270,7 @@ class LabelBookDemo(wx.Frame):
         self.textcolour.Enable(not btype)
         self.hilite.Enable(not btype)
         self.tabsborder.Enable(not btype)
+        self.fittext.Enable(not btype)
 
 
     def GetBookStyles(self):
@@ -288,8 +292,10 @@ class LabelBookDemo(wx.Frame):
             style |= INB_GRADIENT_BACKGROUND
         if self.border.GetValue():
             style |= INB_BORDER
+        if self.fittext.GetValue():
+            style |= INB_FIT_LABELTEXT
 
-        return style            
+        return style
 
 
     def CreateImageList(self):
