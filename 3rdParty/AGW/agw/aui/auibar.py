@@ -15,7 +15,7 @@ __date__ = "31 March 2009"
 import wx
 import types
 
-from aui_utilities import BitmapFromBits, StepColour
+from aui_utilities import BitmapFromBits, StepColour, GetLabelSize
 from aui_utilities import GetBaseColour, MakeDisabledBitmap
 
 import framemanager
@@ -303,6 +303,10 @@ class AuiToolBarItem(object):
             return
         
         self.window = None
+        self.clockwisebmp = wx.NullBitmap
+        self.counterclockwisebmp = wx.NullBitmap
+        self.clockwisedisbmp = wx.NullBitmap
+        self.counterclockwisedisbmp = wx.NullBitmap
         self.sizer_item = None
         self.spacer_pixels = 0
         self.id = 0
@@ -322,6 +326,7 @@ class AuiToolBarItem(object):
         self.long_help = ""
         self.min_size = wx.Size(-1, -1)
         self.alignment = wx.ALIGN_CENTER
+        self.orientation = AUI_TBTOOL_HORIZONTAL
         
 
     def Assign(self, c):
@@ -350,6 +355,7 @@ class AuiToolBarItem(object):
         self.sticky = c.sticky
         self.user_data = c.user_data
         self.alignment = c.alignment
+        self.orientation = c.orientation
 
 
     def SetWindow(self, w):
@@ -485,7 +491,7 @@ class AuiToolBarItem(object):
     def GetBitmap(self):
         """ Returns the toolbar item bitmap. """
 
-        return self.bitmap 
+        return self.GetRotatedBitmap(False)
 
 
     def SetDisabledBitmap(self, bmp):
@@ -501,7 +507,7 @@ class AuiToolBarItem(object):
     def GetDisabledBitmap(self):
         """ Returns the toolbar item disabled bitmap. """
         
-        return self.disabled_bitmap 
+        return self.GetRotatedBitmap(True)
 
 
     def SetHoverBitmap(self, bmp):
@@ -513,11 +519,54 @@ class AuiToolBarItem(object):
         
         self.hover_bitmap = bmp
 
+
+    def SetOrientation(self, a):
+        """
+        Sets the toolbar tool orientation.
+
+        :param `a`: one of ``AUI_TBTOOL_HORIZONTAL``, ``AUI_TBTOOL_VERT_CLOCKWISE`` or
+         ``AUI_TBTOOL_VERT_COUNTERCLOCKWISE``.
+        """
+
+        self.orientation = a
+
+
+    def GetOrientation(self):
+        """ Returns the toolbar tool orientation. """
+
+        return self.orientation
+    
         
     def GetHoverBitmap(self):
         """ Returns the toolbar item hover bitmap. """
         
         return self.hover_bitmap 
+
+
+    def GetRotatedBitmap(self, disabled):
+        """
+        Returns the correct bitmap depending on the tool orientation.
+
+        :param `disabled`: whether to return the disabled bitmap or not.
+        """
+        
+        bitmap_to_rotate = (disabled and [self.disabled_bitmap] or [self.bitmap])[0]
+        if not bitmap_to_rotate.IsOk() or self.orientation == AUI_TBTOOL_HORIZONTAL:
+            return bitmap_to_rotate
+
+        rotated_bitmap = wx.NullBitmap
+        clockwise = True
+        if self.orientation == AUI_TBTOOL_VERT_CLOCKWISE:
+            rotated_bitmap = (disabled and [self.clockwisedisbmp] or [self.clockwisebmp])[0]
+
+        elif self.orientation == AUI_TBTOOL_VERT_COUNTERCLOCKWISE:
+            rotated_bitmap = (disabled and [self.counterclockwisedisbmp] or [self.counterclockwisebmp])[0]
+            clockwise = False
+
+        if not rotated_bitmap.IsOk():
+            rotated_bitmap = wx.BitmapFromImage(bitmap_to_rotate.ConvertToImage().Rotate90(clockwise))
+
+        return rotated_bitmap
 
 
     def SetShortHelp(self, s):
@@ -710,6 +759,7 @@ class AuiDefaultToolBarArt(object):
         self._highlight_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
 
         self._separator_size = 7
+        self._orientation = AUI_TBTOOL_HORIZONTAL
         self._gripper_size = 7
         self._overflow_size = 16
 
@@ -820,6 +870,23 @@ class AuiDefaultToolBarArt(object):
         return self._text_orientation
 
 
+    def SetOrientation(self, orientation):
+        """
+        Sets the toolbar tool orientation.
+
+        :param `orientation`: one of ``AUI_TBTOOL_HORIZONTAL``, ``AUI_TBTOOL_VERT_CLOCKWISE`` or
+         ``AUI_TBTOOL_VERT_COUNTERCLOCKWISE``.
+        """
+
+        self._orientation = orientation
+
+
+    def GetOrientation(self):
+        """ Returns the toolbar orientation. """
+
+        return self._orientation        
+
+
     def DrawBackground(self, dc, wnd, _rect, horizontal=True):
         """
         Draws a toolbar background with a gradient shading.
@@ -885,21 +952,29 @@ class AuiDefaultToolBarArt(object):
         
         dc.SetFont(self._font)
         dc.SetTextForeground(wx.BLACK)
+        orient = item.GetOrientation()
 
+        horizontal = orient == AUI_TBTOOL_HORIZONTAL
         # we only care about the text height here since the text
         # will get cropped based on the width of the item
-        text_width = text_height = 0
-        text_width, text_height = dc.GetTextExtent("ABCDHgj")
+        label_size = GetLabelSize(dc, item.GetLabel(), not horizontal)
+        text_width = label_size.GetWidth()
+        text_height = label_size.GetHeight()
 
-        # set the clipping region
-        clip_rect = wx.Rect(*rect)
-        clip_rect.width -= 1
-        dc.SetClippingRect(clip_rect)
+        if orient == AUI_TBTOOL_HORIZONTAL:
+            text_x = rect.x
+            text_y = rect.y + (rect.height-text_height)/2
+            dc.DrawText(item.GetLabel(), text_x, text_y)
 
-        text_x = rect.x + 1
-        text_y = rect.y + (rect.height-text_height)/2
-        dc.DrawText(item.GetLabel(), text_x, text_y)
-        dc.DestroyClippingRegion()
+        elif orient == AUI_TBTOOL_VERT_CLOCKWISE:
+            text_x = rect.x + (rect.width+text_width)/2
+            text_y = rect.y
+            dc.DrawRotatedText(item.GetLabel(), text_x, text_y, 270)
+
+        elif AUI_TBTOOL_VERT_COUNTERCLOCKWISE:
+            text_x = rect.x + (rect.width-text_width)/2
+            text_y = rect.y + text_height
+            dc.DrawRotatedText(item.GetLabel(), text_x, text_y, 90)
 
 
     def DrawButton(self, dc, wnd, item, rect):
@@ -911,33 +986,8 @@ class AuiDefaultToolBarArt(object):
         :param `item`: an instance of L{AuiToolBarItem};
         :param `rect`: the L{AuiToolBarItem} rectangle.
         """
-        
-        text_width = text_height = 0
 
-        if self._flags & AUI_TB_TEXT:
-            dc.SetFont(self._font)
-
-            tx, text_height = dc.GetTextExtent("ABCDHgj")
-            text_width, ty = dc.GetTextExtent(item.GetLabel())
-        
-        bmp_x = bmp_y = 0
-        text_x = text_y = 0
-
-        if self._text_orientation == AUI_TBTOOL_TEXT_BOTTOM:
-        
-            bmp_x = rect.x + (rect.width/2) - (item.GetBitmap().GetWidth()/2)
-            bmp_y = rect.y + ((rect.height-text_height)/2) - (item.GetBitmap().GetHeight()/2)
-
-            text_x = rect.x + (rect.width/2) - (text_width/2) + 1
-            text_y = rect.y + rect.height - text_height - 1
-        
-        elif self._text_orientation == AUI_TBTOOL_TEXT_RIGHT:
-        
-            bmp_x = rect.x + 3
-            bmp_y = rect.y + (rect.height/2) - (item.GetBitmap().GetHeight()/2)
-
-            text_x = bmp_x + 3 + item.GetBitmap().GetWidth()
-            text_y = rect.y + (rect.height/2) - (text_height/2)
+        bmp_rect, text_rect = self.GetToolsPosition(dc, item, rect)
         
         if not item.GetState() & AUI_BUTTON_STATE_DISABLED:
         
@@ -973,7 +1023,7 @@ class AuiDefaultToolBarArt(object):
             bmp = item.GetBitmap()
 
         if bmp.IsOk():
-            dc.DrawBitmap(bmp, bmp_x, bmp_y, True)
+            dc.DrawBitmap(bmp, bmp_rect.x, bmp_rect.y, True)
 
         # set the item's text color based on if it is disabled
         dc.SetTextForeground(wx.BLACK)
@@ -981,7 +1031,7 @@ class AuiDefaultToolBarArt(object):
             dc.SetTextForeground(DISABLED_TEXT_COLOR)
 
         if self._flags & AUI_TB_TEXT and item.GetLabel() != "":
-            dc.DrawText(item.GetLabel(), text_x, text_y)
+            self.DrawLabel(dc, wnd, item, text_rect)
         
 
     def DrawDropDownButton(self, dc, wnd, item, rect):
@@ -994,40 +1044,31 @@ class AuiDefaultToolBarArt(object):
         :param `rect`: the L{AuiToolBarItem} rectangle.
         """
         
-        text_width = text_height = text_x = text_y = 0
-        bmp_x = bmp_y = dropbmp_x = dropbmp_y = 0
+        dropbmp_x = dropbmp_y = 0
 
         button_rect = wx.Rect(rect.x, rect.y, rect.width-BUTTON_DROPDOWN_WIDTH, rect.height)
         dropdown_rect = wx.Rect(rect.x+rect.width-BUTTON_DROPDOWN_WIDTH-1, rect.y, BUTTON_DROPDOWN_WIDTH+1, rect.height)
 
-        if self._flags & AUI_TB_TEXT:
+        horizontal = item.GetOrientation() == AUI_TBTOOL_HORIZONTAL
         
-            dc.SetFont(self._font)
+        if horizontal:
+            button_rect = wx.Rect(rect.x, rect.y, rect.width-BUTTON_DROPDOWN_WIDTH, rect.height)
+            dropdown_rect = wx.Rect(rect.x+rect.width-BUTTON_DROPDOWN_WIDTH-1, rect.y, BUTTON_DROPDOWN_WIDTH+1, rect.height)
+        else:
+            button_rect = wx.Rect(rect.x, rect.y, rect.width, rect.height-BUTTON_DROPDOWN_WIDTH)
+            dropdown_rect = wx.Rect(rect.x, rect.y+rect.height-BUTTON_DROPDOWN_WIDTH-1, rect.width, BUTTON_DROPDOWN_WIDTH+1)
 
-            if self._flags & AUI_TB_TEXT:
-            
-                tx, text_height = dc.GetTextExtent("ABCDHgj")
-            
-            text_width, ty = dc.GetTextExtent(item.GetLabel())
-        
-        dropbmp_x = dropdown_rect.x + (dropdown_rect.width/2) - (self._button_dropdown_bmp.GetWidth()/2)
-        dropbmp_y = dropdown_rect.y + (dropdown_rect.height/2) - (self._button_dropdown_bmp.GetHeight()/2)
+        dropbmp_width = self._button_dropdown_bmp.GetWidth()
+        dropbmp_height = self._button_dropdown_bmp.GetHeight()
+        if not horizontal:
+            tmp = dropbmp_width
+            dropbmp_width = dropbmp_height
+            dropbmp_height = tmp
 
-        if self._text_orientation == AUI_TBTOOL_TEXT_BOTTOM:
-        
-            bmp_x = button_rect.x + (button_rect.width/2) - (item.GetBitmap().GetWidth()/2)
-            bmp_y = button_rect.y + ((button_rect.height-text_height)/2) - (item.GetBitmap().GetHeight()/2)
+        dropbmp_x = dropdown_rect.x + (dropdown_rect.width/2) - dropbmp_width/2
+        dropbmp_y = dropdown_rect.y + (dropdown_rect.height/2) - dropbmp_height/2
 
-            text_x = rect.x + (rect.width/2) - (text_width/2) + 1
-            text_y = rect.y + rect.height - text_height - 1
-        
-        elif self._text_orientation == AUI_TBTOOL_TEXT_RIGHT:
-        
-            bmp_x = rect.x + 3
-            bmp_y = rect.y + (rect.height/2) - (item.GetBitmap().GetHeight()/2)
-
-            text_x = bmp_x + 3 + item.GetBitmap().GetWidth()
-            text_y = rect.y + (rect.height/2) - (text_height/2)
+        bmp_rect, text_rect = self.GetToolsPosition(dc, item, button_rect)
         
         if item.GetState() & AUI_BUTTON_STATE_PRESSED:
         
@@ -1056,16 +1097,20 @@ class AuiDefaultToolBarArt(object):
         if not bmp.IsOk():
             return
 
-        dc.DrawBitmap(bmp, bmp_x, bmp_y, True)
-        dc.DrawBitmap(dropbmp, dropbmp_x, dropbmp_y, True)
-
+        dc.DrawBitmap(bmp, bmp_rect.x, bmp_rect.y, True)
+        if horizontal:
+            dc.DrawBitmap(dropbmp, dropbmp_x, dropbmp_y, True)
+        else:
+            dc.DrawBitmap(wx.BitmapFromImage(dropbmp.ConvertToImage().Rotate90(item.GetOrientation() == AUI_TBTOOL_VERT_CLOCKWISE)),
+                          dropbmp_x, dropbmp_y, True)
+            
         # set the item's text color based on if it is disabled
         dc.SetTextForeground(wx.BLACK)
         if item.GetState() & AUI_BUTTON_STATE_DISABLED:
             dc.SetTextForeground(DISABLED_TEXT_COLOR)
 
         if self._flags & AUI_TB_TEXT and item.GetLabel() != "":  
-            dc.DrawText(item.GetLabel(), text_x, text_y)
+            self.DrawLabel(dc, wnd, item, text_rect)
         
 
     def DrawControlLabel(self, dc, wnd, item, rect):
@@ -1078,14 +1123,9 @@ class AuiDefaultToolBarArt(object):
         :param `rect`: the L{AuiToolBarItem} rectangle.
         """
 
-        if not self._flags & AUI_TB_TEXT:
-            return
-
-        if self._text_orientation != AUI_TBTOOL_TEXT_BOTTOM:
-            return
-
-        text_x = text_y = 0
-        text_width = text_height = 0
+        label_size = GetLabelSize(dc, item.GetLabel(), item.GetOrientation() != AUI_TBTOOL_HORIZONTAL)
+        text_height = label_size.GetHeight()
+        text_width = label_size.GetWidth()
 
         dc.SetFont(self._font)
 
@@ -1119,17 +1159,9 @@ class AuiDefaultToolBarArt(object):
         """
 
         dc.SetFont(self._font)
+        label_size = GetLabelSize(dc, item.GetLabel(), self._orientation != AUI_TBTOOL_HORIZONTAL)
 
-        # get label's height
-        width, height = dc.GetTextExtent("ABCDHgj")
-        # get item's width
-        width = item.GetMinSize().GetWidth()
-
-        if item.GetLabel() != "" and width == -1:
-            tx, ty = dc.GetTextExtent(item.GetLabel())
-            width = max(width, tx)
-
-        return wx.Size(width, height)
+        return wx.Size(item.GetMinSize().GetWidth(), label_size.GetHeight())
 
 
     def GetToolSize(self, dc, wnd, item):
@@ -1150,29 +1182,38 @@ class AuiDefaultToolBarArt(object):
         if self._flags & AUI_TB_TEXT:
         
             dc.SetFont(self._font)
-
+            label_size = GetLabelSize(dc, item.GetLabel(), self.GetOrientation() != AUI_TBTOOL_HORIZONTAL)
+            padding = 6
+            
             if self._text_orientation == AUI_TBTOOL_TEXT_BOTTOM:
             
-                tx, ty = dc.GetTextExtent("ABCDHgj")
-                height += ty
+                if self.GetOrientation() != AUI_TBTOOL_HORIZONTAL:
+                    height += 3   # space between top border and bitmap
+                    height += 3   # space between bitmap and text
+                    padding = 0
 
+                height += label_size.GetHeight()
+            
                 if item.GetLabel() != "":
-                
-                    tx, ty = dc.GetTextExtent(item.GetLabel())
-                    width = max(width, tx+6)
+                    width = max(width, label_size.GetWidth()+padding)
                 
             elif self._text_orientation == AUI_TBTOOL_TEXT_RIGHT and item.GetLabel() != "":
             
-                width += 3 # space between left border and bitmap
-                width += 3 # space between bitmap and text
+                if self.GetOrientation() == AUI_TBTOOL_HORIZONTAL:
+                    
+                    width += 3  # space between left border and bitmap
+                    width += 3  # space between bitmap and text
+                    padding = 0
 
-                tx, ty = dc.GetTextExtent(item.GetLabel())
-                width += tx
-                height = max(height, ty)
+                width += label_size.GetWidth()
+                height = max(height, label_size.GetHeight()+padding)
                 
         # if the tool has a dropdown button, add it to the width
         if item.HasDropDown():
-            width += BUTTON_DROPDOWN_WIDTH+4
+            if item.GetOrientation() == AUI_TBTOOL_HORIZONTAL:
+                width += BUTTON_DROPDOWN_WIDTH+4
+            else:
+                height += BUTTON_DROPDOWN_WIDTH+4
 
         return wx.Size(width, height)
 
@@ -1361,8 +1402,13 @@ class AuiDefaultToolBarArt(object):
 
                 kind = item.GetKind()
                 m = wx.MenuItem(menuPopup, item.GetId(), text, item.GetShortHelp(), kind)
+                orientation = item.GetOrientation()
+                item.SetOrientation(AUI_TBTOOL_HORIZONTAL)
+                
                 if kind not in [ITEM_CHECK, ITEM_RADIO]:
                     m.SetBitmap(item.GetBitmap())
+
+                item.SetOrientation(orientation)                    
                     
                 menuPopup.AppendItem(m)
                 if kind in [ITEM_CHECK, ITEM_RADIO]:            
@@ -1399,6 +1445,54 @@ class AuiDefaultToolBarArt(object):
         return command
 
 
+    def GetToolsPosition(self, dc, item, rect):
+        """
+        Returns the bitmap and text rectangles for a toolbar item.
+        
+        :param `dc`: a L{wx.DC} device context;
+        :param `item`: an instance of L{AuiToolBarItem};
+        :param `rect`: the tool rect.
+        """
+        
+        text_width = text_height = 0
+        horizontal = self._orientation == AUI_TBTOOL_HORIZONTAL
+        text_bottom = self._text_orientation == AUI_TBTOOL_TEXT_BOTTOM
+        text_right = self._text_orientation == AUI_TBTOOL_TEXT_RIGHT
+        bmp_width = item.GetBitmap().GetWidth()
+        bmp_height = item.GetBitmap().GetHeight()
+     
+        if self._flags & AUI_TB_TEXT:        
+            dc.SetFont(self._font)
+            label_size = GetLabelSize(dc, item.GetLabel(), not horizontal)
+            text_height = label_size.GetHeight()
+            text_width = label_size.GetWidth()
+        
+        bmp_x = bmp_y = text_x = text_y = 0
+
+        if horizontal and text_bottom:
+            bmp_x = rect.x + (rect.width/2) - (bmp_width/2)
+            bmp_y = rect.y + 3
+            text_x = rect.x + (rect.width/2) - (text_width/2)
+            text_y = rect.y + ((bmp_y - rect.y) * 2) + bmp_height
+        
+        elif horizontal and text_right:
+            bmp_x = rect.x + 3
+            bmp_y = rect.y + (rect.height/2) - (bmp_height / 2)
+            text_x = rect.x + ((bmp_x - rect.x) * 2) + bmp_width
+            text_y = rect.y + (rect.height/2) - (text_height/2)
+        
+        elif not horizontal and text_bottom:
+            bmp_x = rect.x + (rect.width / 2) - (bmp_width / 2)
+            bmp_y = rect.y + 3
+            text_x = rect.x + (rect.width / 2) - (text_width / 2)
+            text_y = rect.y + ((bmp_y - rect.y) * 2) + bmp_height
+        
+        bmp_rect = wx.Rect(bmp_x, bmp_y, bmp_width, bmp_height)
+        text_rect = wx.Rect(text_x, text_y, text_width, text_height)
+
+        return bmp_rect, text_rect
+
+    
 class AuiToolBar(wx.PyControl):
     """
     AuiToolBar is a completely owner-drawn toolbar perfectly integrated with the
@@ -1455,6 +1549,7 @@ class AuiToolBar(wx.PyControl):
         self._tool_packing = 2
         self._tool_border_padding = 3
         self._tool_text_orientation = AUI_TBTOOL_TEXT_BOTTOM
+        self._tool_orientation = AUI_TBTOOL_HORIZONTAL
         self._gripper_sizer_item = None
         self._overflow_sizer_item = None
         self._dragging = False
@@ -1475,7 +1570,12 @@ class AuiToolBar(wx.PyControl):
         
         if style & AUI_TB_HORZ_LAYOUT:
             self.SetToolTextOrientation(AUI_TBTOOL_TEXT_RIGHT)
-
+        elif style & AUI_TB_VERTICAL:
+            if style & AUI_TB_CLOCKWISE:
+                self.SetToolOrientation(AUI_TBTOOL_VERT_CLOCKWISE)
+            elif style & AUI_TB_COUNTERCLOCKWISE:
+                self.SetToolOrientation(AUI_TBTOOL_VERT_COUNTERCLOCKWISE)
+ 
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
         
         self.Bind(wx.EVT_SIZE, self.OnSize)
@@ -1530,7 +1630,13 @@ class AuiToolBar(wx.PyControl):
         else:
             self.SetToolTextOrientation(AUI_TBTOOL_TEXT_BOTTOM)
 
+        if style & AUI_TB_VERTICAL:
+            if style & AUI_TB_CLOCKWISE:
+                self.SetToolOrientation(AUI_TBTOOL_VERT_CLOCKWISE)
+            elif style & AUI_TB_COUNTERCLOCKWISE:
+                self.SetToolOrientation(AUI_TBTOOL_VERT_COUNTERCLOCKWISE)
 
+                
     def GetWindowStyleFlag(self):
         """
         Overridden from wx.PyControl.
@@ -1555,6 +1661,7 @@ class AuiToolBar(wx.PyControl):
         if self._art:
             self._art.SetFlags(self._style)
             self._art.SetTextOrientation(self._tool_text_orientation)
+            self._art.SetOrientation(self._tool_orientation)
         
 
     def GetArtProvider(self):
@@ -1659,6 +1766,7 @@ class AuiToolBar(wx.PyControl):
         item.min_size = wx.Size(-1, -1)
         item.user_data = 0
         item.sticky = False
+        item.orientation = self._tool_orientation
 
         if not item.disabled_bitmap.IsOk():
             # no disabled bitmap specified, we need to make one
@@ -1720,6 +1828,7 @@ class AuiToolBar(wx.PyControl):
         item.min_size = control.GetEffectiveMinSize()
         item.user_data = 0
         item.sticky = False
+        item.orientation = self._tool_orientation
 
         self._items.append(item)
         return self._items[-1]
@@ -1759,6 +1868,7 @@ class AuiToolBar(wx.PyControl):
         item.min_size = min_size
         item.user_data = 0
         item.sticky = False
+        item.orientation = self._tool_orientation
 
         self._items.append(item)
         return self._items[-1]
@@ -1782,6 +1892,7 @@ class AuiToolBar(wx.PyControl):
         item.min_size = wx.Size(-1, -1)
         item.user_data = 0
         item.sticky = False
+        item.orientation = self._tool_orientation
 
         self._items.append(item)
         return self._items[-1]
@@ -1810,6 +1921,7 @@ class AuiToolBar(wx.PyControl):
         item.min_size = wx.Size(-1, -1)
         item.user_data = 0
         item.sticky = False
+        item.orientation = self._tool_orientation
 
         self._items.append(item)
         return self._items[-1]
@@ -1838,6 +1950,7 @@ class AuiToolBar(wx.PyControl):
         item.min_size = wx.Size(-1, -1)
         item.user_data = 0
         item.sticky = False
+        item.orientation = self._tool_orientation
 
         self._items.append(item)
         return self._items[-1]
@@ -2179,6 +2292,18 @@ class AuiToolBar(wx.PyControl):
         """ Returns the label orientation for the toolbar items. """
 
         return self._tool_text_orientation
+
+
+    def SetToolOrientation(self, orientation):
+
+        self._tool_orientation = orientation
+        if self._art:
+            self._art.SetOrientation(orientation)
+
+
+    def GetToolOrientation(self):
+
+        return self._tool_orientation        
 
 
     def SetToolPacking(self, packing):
@@ -2976,13 +3101,7 @@ class AuiToolBar(wx.PyControl):
         dc = wx.ClientDC(self)
         dc.SetFont(self._font)
 
-        # get the text height
-        tx, text_height = dc.GetTextExtent("ABCDHgj")
-
-        # get the text width
-        text_width, ty = dc.GetTextExtent(label)
-
-        return wx.Size(text_width, text_height)
+        return GetLabelSize(dc, label, self._tool_orientation != AUI_TBTOOL_HORIZONTAL)
 
 
     def GetAuiManager(self):
@@ -3339,14 +3458,18 @@ class AuiToolBar(wx.PyControl):
             e.SetToolId(self._action_item.id)
             e.SetDropDownClicked(False)
 
-            mouse_x = event.GetX()
+            mouse_x, mouse_y = event.GetX(), event.GetY()
             rect = wx.Rect(*self._action_item.sizer_item.GetRect())
 
-            if self._action_item.dropdown and \
-               mouse_x >= (rect.x+rect.width-BUTTON_DROPDOWN_WIDTH-1) and \
-               mouse_x < rect.x+rect.width:
-            
-                e.SetDropDownClicked(True)
+            if self._action_item.dropdown:
+                if (self._action_item.orientation == AUI_TBTOOL_HORIZONTAL and \
+                    mouse_x >= (rect.x+rect.width-BUTTON_DROPDOWN_WIDTH-1) and \
+                    mouse_x < (rect.x+rect.width)) or \
+                    (self._action_item.orientation != AUI_TBTOOL_HORIZONTAL and \
+                     mouse_y >= (rect.y+rect.height-BUTTON_DROPDOWN_WIDTH-1) and \
+                     mouse_y < (rect.y+rect.height)):
+                    
+                    e.SetDropDownClicked(True)            
             
             e.SetClickPoint(event.GetPosition())
             e.SetItemRect(rect)
@@ -3411,7 +3534,7 @@ class AuiToolBar(wx.PyControl):
                         e.SetManager(manager)
                         e.SetPane(pane)
 
-                        manager.ProcessMgrEvent(e)
+                        manager.ProcessEvent(e)
                         self.DoIdleUpdate()
 
                     else:

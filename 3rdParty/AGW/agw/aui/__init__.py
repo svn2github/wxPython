@@ -153,7 +153,9 @@ Plus the following features:
   (l) Implementation of the style ``AUI_MGR_ANIMATE_FRAMES``, which fade-out floating panes when
       they are closed (all platforms which support frames transparency) and show a moving rectangle
       when they are docked and minimized (Windows < Vista and GTK only);
-  (m) A pane switcher dialog is available to cycle through existing AUI panes. 
+  (m) A pane switcher dialog is available to cycle through existing AUI panes;
+  (n) Some flags which allow to choose the orientation and the position of the minimized panes;
+- (o) The functions [Get]MinimizeMode() in `AuiPaneInfo` which allow to set/get the flags described above.
 
 - AuiNotebook:
   (a) Implementation of the style ``AUI_NB_HIDE_ON_SINGLE_TAB``, a la `wx.lib.agw.flatnotebook`;
@@ -191,7 +193,10 @@ Plus the following features:
   (c) `AUIToolBar` `DrawButton()` improvement: http://trac.wxwidgets.org/ticket/10303;
   (d) `AuiToolBar` automatically assign new id for tools: http://trac.wxwidgets.org/ticket/10173;
   (e) `AuiToolBar` Allow right-click on any kind of button: http://trac.wxwidgets.org/ticket/10079;
-  (f) `AuiToolBar` idle update only when visible: http://trac.wxwidgets.org/ticket/10075.
+  (f) `AuiToolBar` idle update only when visible: http://trac.wxwidgets.org/ticket/10075;
+  (g) Ability of creating `AuiToolBar` tools with [counter]clockwise rotation. This allows to propose a
+      variant of the minimizing functionality with a rotated button which keeps the caption of the pane
+      as label.
 
 
 TODOs
@@ -227,7 +232,7 @@ License And Version:
 
 AUI library is freeware and distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 06 May 2009, 17.00 GMT
+Latest revision: Andrea Gavana @ 13 May 2009, 17.00 GMT
 Version 1.0. 
 
 """

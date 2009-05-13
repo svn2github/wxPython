@@ -368,6 +368,28 @@ AUI_BUTTON_STATE_HIDDEN   = 1 << 4
 AUI_BUTTON_STATE_CHECKED  = 1 << 5
 """ Checked button state. """
 
+# Pane minimize mode
+AUI_MINIMIZE_POS_SMART    = 0x01
+""" Minimizes the pane on the closest tool bar. """
+AUI_MINIMIZE_POS_TOP      = 0x02
+""" Minimizes the pane on the top tool bar. """
+AUI_MINIMIZE_POS_LEFT     = 0x03
+""" Minimizes the pane on its left tool bar. """
+AUI_MINIMIZE_POS_RIGHT    = 0x04
+""" Minimizes the pane on its right tool bar. """
+AUI_MINIMIZE_POS_BOTTOM   = 0x05
+""" Minimizes the pane on its bottom tool bar. """
+AUI_MINIMIZE_POS_MASK     = 0x07
+""" Mask to filter the position flags. """
+AUI_MINIMIZE_CAPT_HIDE    = 0
+""" Hides the caption of the minimized pane. """
+AUI_MINIMIZE_CAPT_SMART   = 0x08
+""" Displays the caption in the best rotation (horz or clockwise). """
+AUI_MINIMIZE_CAPT_HORZ    = 0x10
+""" Displays the caption horizontally. """
+AUI_MINIMIZE_CAPT_MASK    = 0x18
+""" Mask to filter the caption flags. """
+
 # Button kind
 AUI_BUTTON_CLOSE = 101
 """ Shows a close button on the pane. """
@@ -892,8 +914,13 @@ This style must be used with AUI_TB_TEXT.
 """
 AUI_TB_PLAIN_BACKGROUND = 1 << 7
 """ Don't draw a gradient background on the toolbar. """
+AUI_TB_CLOCKWISE        = 1 << 8
+AUI_TB_COUNTERCLOCKWISE = 1 << 9
+
 AUI_TB_HORZ_TEXT        = AUI_TB_HORZ_LAYOUT | AUI_TB_TEXT
 """ Combination of AUI_TB_HORZ_LAYOUT and AUI_TB_TEXT. """
+AUI_TB_VERT_TEXT        = AUI_TB_VERTICAL | AUI_TB_CLOCKWISE | AUI_TB_TEXT
+
 AUI_TB_DEFAULT_STYLE    = 0
 """ AuiToolBar default style. """
 
@@ -914,6 +941,12 @@ AUI_TBTOOL_TEXT_TOP = 2      # unused/unimplemented
 """ Text in AuiToolBar items is aligned top. """
 AUI_TBTOOL_TEXT_BOTTOM = 3
 """ Text in AuiToolBar items is aligned bottom. """
+
+# AuiToolBar tool orientation
+AUI_TBTOOL_HORIZONTAL = 0             # standard
+AUI_TBTOOL_VERT_CLOCKWISE = 1         # rotation of 90 on the right
+AUI_TBTOOL_VERT_COUNTERCLOCKWISE = 2  # rotation of 90 on the left
+
 
 # --------------------- #
 # - AuiMDI* Constants - #

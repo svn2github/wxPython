@@ -289,34 +289,42 @@ ID_CustomPaneButtons = ID_CreateTree + 38
 ID_Settings = ID_CreateTree + 39
 ID_CustomizeToolbar = ID_CreateTree + 40
 ID_DropDownToolbarItem = ID_CreateTree + 41
-ID_NotebookNoCloseButton = ID_CreateTree + 42
-ID_NotebookCloseButton = ID_CreateTree + 43
-ID_NotebookCloseButtonAll = ID_CreateTree + 44
-ID_NotebookCloseButtonActive = ID_CreateTree + 45
-ID_NotebookCloseOnLeft = ID_CreateTree + 46
-ID_NotebookAllowTabMove = ID_CreateTree + 47
-ID_NotebookAllowTabExternalMove = ID_CreateTree + 48
-ID_NotebookAllowTabSplit = ID_CreateTree + 49
-ID_NotebookTabFloat = ID_CreateTree + 50
-ID_NotebookTabDrawDnd = ID_CreateTree + 51
-ID_NotebookDclickUnsplit = ID_CreateTree + 52
-ID_NotebookWindowList = ID_CreateTree + 53
-ID_NotebookScrollButtons = ID_CreateTree + 54
-ID_NotebookTabFixedWidth = ID_CreateTree + 55
-ID_NotebookArtGloss = ID_CreateTree + 56
-ID_NotebookArtSimple = ID_CreateTree + 57
-ID_NotebookArtVC71 = ID_CreateTree + 58
-ID_NotebookArtFF2 = ID_CreateTree + 59
-ID_NotebookArtVC8 = ID_CreateTree + 60
-ID_NotebookArtChrome = ID_CreateTree + 61
-ID_NotebookAlignTop = ID_CreateTree + 62
-ID_NotebookAlignBottom = ID_CreateTree + 63
-ID_NotebookHideSingle = ID_CreateTree + 64
-ID_NotebookSmartTab = ID_CreateTree + 65
-ID_NotebookUseImagesDropDown = ID_CreateTree + 66
-ID_NotebookCustomButtons = ID_CreateTree + 67
+ID_MinimizePosSmart = ID_CreateTree + 42
+ID_MinimizePosTop = ID_CreateTree + 43
+ID_MinimizePosLeft = ID_CreateTree + 44
+ID_MinimizePosRight = ID_CreateTree + 45
+ID_MinimizePosBottom = ID_CreateTree + 46
+ID_MinimizeCaptSmart = ID_CreateTree + 47
+ID_MinimizeCaptHorz = ID_CreateTree + 48
+ID_MinimizeCaptHide = ID_CreateTree + 49
+ID_NotebookNoCloseButton = ID_CreateTree + 50
+ID_NotebookCloseButton = ID_CreateTree + 51
+ID_NotebookCloseButtonAll = ID_CreateTree + 52
+ID_NotebookCloseButtonActive = ID_CreateTree + 53
+ID_NotebookCloseOnLeft = ID_CreateTree + 54
+ID_NotebookAllowTabMove = ID_CreateTree + 55
+ID_NotebookAllowTabExternalMove = ID_CreateTree + 56
+ID_NotebookAllowTabSplit = ID_CreateTree + 57
+ID_NotebookTabFloat = ID_CreateTree + 58
+ID_NotebookTabDrawDnd = ID_CreateTree + 59
+ID_NotebookDclickUnsplit = ID_CreateTree + 60
+ID_NotebookWindowList = ID_CreateTree + 61
+ID_NotebookScrollButtons = ID_CreateTree + 62
+ID_NotebookTabFixedWidth = ID_CreateTree + 63
+ID_NotebookArtGloss = ID_CreateTree + 64
+ID_NotebookArtSimple = ID_CreateTree + 65
+ID_NotebookArtVC71 = ID_CreateTree + 66
+ID_NotebookArtFF2 = ID_CreateTree + 67
+ID_NotebookArtVC8 = ID_CreateTree + 68
+ID_NotebookArtChrome = ID_CreateTree + 69
+ID_NotebookAlignTop = ID_CreateTree + 70
+ID_NotebookAlignBottom = ID_CreateTree + 71
+ID_NotebookHideSingle = ID_CreateTree + 72
+ID_NotebookSmartTab = ID_CreateTree + 73
+ID_NotebookUseImagesDropDown = ID_CreateTree + 74
+ID_NotebookCustomButtons = ID_CreateTree + 75
 
-ID_SampleItem = ID_CreateTree + 68
+ID_SampleItem = ID_CreateTree + 76
 
 ID_FirstPerspective = ID_CreatePerspective + 1000
 ID_FirstNBPerspective = ID_CreateNBPerspective + 10000
@@ -764,6 +772,16 @@ class AuiFrame(wx.Frame):
         options_menu.AppendCheckItem(ID_TransparentDrag, "Transparent Drag")
         options_menu.AppendCheckItem(ID_AllowActivePane, "Allow Active Pane")
         options_menu.AppendCheckItem(ID_LiveUpdate, "Live Resize Update")
+        options_menu.AppendRadioItem(ID_MinimizePosSmart, "Minimize in Smart mode").Check()
+        options_menu.AppendRadioItem(ID_MinimizePosTop, "Minimize on Top")
+        options_menu.AppendRadioItem(ID_MinimizePosLeft, "Minimize on the Left")
+        options_menu.AppendRadioItem(ID_MinimizePosRight, "Minimize on the Right")
+        options_menu.AppendRadioItem(ID_MinimizePosBottom, "Minimize at the Bottom")
+        options_menu.AppendSeparator()
+        options_menu.AppendRadioItem(ID_MinimizeCaptSmart, "Smart Minimized Caption")
+        options_menu.AppendRadioItem(ID_MinimizeCaptHorz, "Horizontal Minimized Caption")
+        options_menu.AppendRadioItem(ID_MinimizeCaptHide, "Hiden Minimized Caption").Check()
+        options_menu.AppendSeparator()
         options_menu.AppendCheckItem(ID_PaneIcons, "Set Icons On Panes")
         options_menu.AppendCheckItem(ID_AnimateFrames, "Animate Dock/Close/Minimize Of Floating Panes")
         options_menu.AppendSeparator()
@@ -920,7 +938,7 @@ class AuiFrame(wx.Frame):
         tb3.AddSeparator()
         tb3.AddSimpleTool(ID_SampleItem+23, "Radio 1 (Group 2)", tb3_bmp1, "Radio 1 (Group 2)", aui.ITEM_RADIO)
         tb3.AddSimpleTool(ID_SampleItem+24, "Radio 2 (Group 2)", tb3_bmp1, "Radio 2 (Group 2)", aui.ITEM_RADIO)
-        tb3.AddSimpleTool(ID_SampleItem+25, "Radio 3 (Group 2)", tb3_bmp1, "Radio 3 (Group 2)", aui.ITEM_RADIO);
+        tb3.AddSimpleTool(ID_SampleItem+25, "Radio 3 (Group 2)", tb3_bmp1, "Radio 3 (Group 2)", aui.ITEM_RADIO)
 
         tb3.SetCustomOverflowItems(prepend_items, append_items)
         tb3.Realize()
@@ -955,9 +973,20 @@ class AuiFrame(wx.Frame):
         tb5.SetCustomOverflowItems(prepend_items, append_items)
         tb5.Realize()
 
+        tb6 = aui.AuiToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
+                             aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW | aui.AUI_TB_VERT_TEXT)
+        tb6.SetToolBitmapSize(wx.Size(48, 48))
+        tb6.AddSimpleTool(ID_SampleItem+35, "Clockwise 1", wx.ArtProvider.GetBitmap(wx.ART_ERROR, wx.ART_OTHER, wx.Size(16, 16)))
+        tb6.AddSeparator()
+        tb6.AddSimpleTool(ID_SampleItem+36, "Clockwise 2", wx.ArtProvider.GetBitmap(wx.ART_QUESTION, wx.ART_OTHER, wx.Size(16, 16)))
+        tb6.AddSimpleTool(ID_DropDownToolbarItem, "Clockwise 3", wx.ArtProvider.GetBitmap(wx.ART_WARNING, wx.ART_OTHER, wx.Size(16, 16)))
+        tb6.SetCustomOverflowItems(prepend_items, append_items)
+        tb6.SetToolDropDown(ID_DropDownToolbarItem, True)
+        tb6.Realize()
+
         # add a bunch of panes
         self._mgr.AddPane(self.CreateSizeReportCtrl(), aui.AuiPaneInfo().
-                          Name("test1").Caption("Pane Caption").Top())
+                          Name("test1").Caption("Pane Caption").Top().MinimizeButton(True))
 
         self._mgr.AddPane(self.CreateSizeReportCtrl(), aui.AuiPaneInfo().
                           Name("test2").Caption("Client Size Reporter").
@@ -1040,8 +1069,12 @@ class AuiFrame(wx.Frame):
         self._mgr.AddPane(tb5, aui.AuiPaneInfo().Name("tb5").Caption("Sample Vertical Toolbar").
                           ToolbarPane().Left().GripperTop())
 
+        self._mgr.AddPane(tb6, aui.AuiPaneInfo().
+                          Name("tb6").Caption("Sample Vertical Clockwise Rotated Toolbar").
+                          ToolbarPane().Right().GripperTop().TopDockable(False).BottomDockable(False));
+
         self._mgr.AddPane(wx.Button(self, -1, "Test Button"),
-                          aui.AuiPaneInfo().Name("tb6").ToolbarPane().Top().Row(2).Position(1))
+                          aui.AuiPaneInfo().Name("tb7").ToolbarPane().Top().Row(2).Position(1))
 
         # make some default perspectives
 
@@ -1053,7 +1086,7 @@ class AuiFrame(wx.Frame):
                 pane.Hide()
                 
         self._mgr.GetPane("tb1").Hide()
-        self._mgr.GetPane("tb6").Hide()
+        self._mgr.GetPane("tb7").Hide()
         self._mgr.GetPane("test8").Show().Left().Layer(0).Row(0).Position(0)
         self._mgr.GetPane("test10").Show().Bottom().Layer(0).Row(0).Position(0)
         self._mgr.GetPane("notebook_content").Show()
@@ -1098,6 +1131,14 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_NoVenetianFade)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_TransparentDrag)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_LiveUpdate)
+        self.Bind(wx.EVT_MENU, self.OnMinimizePosition, id=ID_MinimizePosSmart)
+        self.Bind(wx.EVT_MENU, self.OnMinimizePosition, id=ID_MinimizePosTop)
+        self.Bind(wx.EVT_MENU, self.OnMinimizePosition, id=ID_MinimizePosLeft)
+        self.Bind(wx.EVT_MENU, self.OnMinimizePosition, id=ID_MinimizePosRight)
+        self.Bind(wx.EVT_MENU, self.OnMinimizePosition, id=ID_MinimizePosBottom)
+        self.Bind(wx.EVT_MENU, self.OnMinimizeCaption, id=ID_MinimizeCaptSmart)
+        self.Bind(wx.EVT_MENU, self.OnMinimizeCaption, id=ID_MinimizeCaptHorz)
+        self.Bind(wx.EVT_MENU, self.OnMinimizeCaption, id=ID_MinimizeCaptHide)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_AnimateFrames)
         self.Bind(wx.EVT_MENU, self.OnSetIconsOnPanes, id=ID_PaneIcons)
         self.Bind(wx.EVT_MENU, self.OnTransparentPane, id=ID_TransparentPane)
@@ -1447,6 +1488,44 @@ class AuiFrame(wx.Frame):
         self._mgr.Update()
 
 
+    def OnMinimizePosition(self, event):
+
+        minize_mode = 0
+        evId = event.GetId()
+
+        if evId == ID_MinimizePosSmart:
+            minize_mode |= aui.AUI_MINIMIZE_POS_SMART
+        elif evId == ID_MinimizePosTop:
+            minize_mode |= aui.AUI_MINIMIZE_POS_TOP
+        elif evId == ID_MinimizePosLeft:
+            minize_mode |= aui.AUI_MINIMIZE_POS_LEFT
+        elif evId == ID_MinimizePosRight:
+            minize_mode |= aui.AUI_MINIMIZE_POS_RIGHT
+        elif evId == ID_MinimizePosBottom:
+            minize_mode |= aui.AUI_MINIMIZE_POS_BOTTOM
+            
+        all_panes = self._mgr.GetAllPanes()
+        for pane in all_panes:
+            pane.MinimizeMode(minize_mode | (pane.GetMinimizeMode() & aui.AUI_MINIMIZE_CAPT_MASK))
+
+
+    def OnMinimizeCaption(self, event):
+
+        minize_mode = 0
+        evId = event.GetId()
+
+        if evId == ID_MinimizeCaptSmart:
+            minize_mode |= aui.AUI_MINIMIZE_CAPT_SMART
+        elif evId == ID_MinimizeCaptHorz:
+            minize_mode |= aui.AUI_MINIMIZE_CAPT_HORZ
+        elif evId == ID_MinimizeCaptHide:
+            minize_mode |= aui.AUI_MINIMIZE_CAPT_HIDE
+
+        all_panes = self._mgr.GetAllPanes()
+        for pane in all_panes:
+            pane.MinimizeMode(minize_mode | (pane.GetMinimizeMode() & aui.AUI_MINIMIZE_POS_MASK))
+
+
     def OnNotebookFlag(self, event):
 
         evId = event.GetId()
@@ -1682,9 +1761,14 @@ class AuiFrame(wx.Frame):
     def OnPaneClose(self, event):
 
         if event.pane.name == "test10":
-        
-            res = wx.MessageBox("Are you sure you want to close/hide self pane?",
-                                "AUI", wx.YES_NO, self)
+
+            msg = "Are you sure you want to "
+            if evt.GetEventType() == aui.wxEVT_AUI_PANE_MINIMIZE:
+                msg += "minimize "
+            else:
+                msg += "close/hide "
+
+            res = wx.MessageBox(msg + "this pane?", "AUI", wx.YES_NO, self)
             if res != wx.YES:
                 event.Veto()
         
@@ -2144,7 +2228,7 @@ class AuiFrame(wx.Frame):
 
             else:
                 nb = item.GetWindow().GetParent()
-                win = item.GetWindow();
+                win = item.GetWindow()
                 if isinstance(nb, aui.AuiNotebook):
                     nb.SetSelection(item.GetId())
                     win.SetFocus()
@@ -2248,7 +2332,9 @@ def GetIntroText():
     "<li>Implementation of the style <tt>AUI_MGR_ANIMATE_FRAMES</tt>, which fade-out floating panes when " \
     "they are closed (all platforms which support frames transparency) and show a moving rectangle " \
     "when they are docked and minimized (Windows excluding Vista and GTK only);</li>" \
-    "<li>A pane switcher dialog is available to cycle through existing AUI panes. </li>" \
+    "<li>A pane switcher dialog is available to cycle through existing AUI panes; </li>" \
+    "<li>Some flags which allow to choose the orientation and the position of the minimized panes;</li>" \
+    "<li>The functions [Get]MinimizeMode() in <i>AuiPaneInfo</i> which allow to set/get the flags described above.</li>" \
     "</ul><p>" \
     "<li><b>AuiNotebook:</b></li>" \
     "<ul>" \
@@ -2295,7 +2381,9 @@ def GetIntroText():
     "<li><i>AuiToolBar</i> Allow right-click on any kind of button: <a href='http://trac.wxwidgets.org/ticket/10079'>" \
     "http://trac.wxwidgets.org/ticket/10079</a>;</li>" \
     "<li><i>AuiToolBar</i> idle update only when visible: <a href='http://trac.wxwidgets.org/ticket/10075'>" \
-    "http://trac.wxwidgets.org/ticket/10075</a>.</li>" \
+    "http://trac.wxwidgets.org/ticket/10075</a>;</li>" \
+    "<li>Ability of creating <i>AuiToolBar</i> tools with [counter]clockwise rotation. This allows to propose a " \
+    "variant of the minimizing functionality with a rotated button which keeps the caption of the pane as label.</li>" \
     "</ul>" \
     "</ul><p>" \
     "<p>" \

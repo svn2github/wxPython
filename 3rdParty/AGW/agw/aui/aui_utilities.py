@@ -386,6 +386,30 @@ def FindFocusDescendant(ancestor):
     return focusWin
 
 
+def GetLabelSize(dc, label, vertical):
+    """
+    Returns the AuiToolBar item label size.
+
+    :param `label`: the toolbar tool label;
+    :param `vertical`: whether the toolbar tool orientation is vertical or not.
+    """
+
+    text_width = text_height = 0
+
+    # get the text height
+    dummy, text_height = dc.GetTextExtent("ABCDHgj")
+    # get the text width
+    if label.strip():
+        text_width, dummy = dc.GetTextExtent(label)
+
+    if vertical:
+        tmp = text_height
+        text_height = text_width
+        text_width = tmp
+
+    return wx.Size(text_width, text_height)
+
+
 #---------------------------------------------------------------------------
 # TabDragImage implementation
 # This class handles the creation of a custom image when dragging
