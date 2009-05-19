@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 10 Oct 2005
-# Latest Revision: 09 Apr 2009, 10.00 GMT
+# Latest Revision: 19 May 2009, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -77,8 +77,8 @@ method for AdvancedSplash or to the specific functions.
 
 AdvancedSplash control is freeware and distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 09 Apr 2009, 10.00 GMT
-Version 0.2
+Latest revision: Andrea Gavana @ 19 May 2009, 21.00 GMT
+Version 0.3
 
 """
 
@@ -160,10 +160,10 @@ class AdvancedSplash(wx.Frame):
             raise Exception('\nERROR: Style "AS_TIMEOUT" Used With Invalid "timeout" Parameter Value (' \
                             + str(timeout) + ')')
 
-        if extrastyle & AS_SHADOW_BITMAP and not shadowcolour.Ok():
+        if extrastyle & AS_SHADOW_BITMAP and not shadowcolour.IsOk():
             raise Exception('\nERROR: Style "AS_SHADOW_BITMAP" Used With Invalid "shadowcolour" Parameter')
 
-        if not bitmap.Ok():
+        if not bitmap.IsOk():
             raise Exception("\nERROR: Bitmap Passed To AdvancedSplash Is Invalid.")
 
         if extrastyle & AS_SHADOW_BITMAP:
