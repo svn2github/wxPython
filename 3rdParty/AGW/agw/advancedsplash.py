@@ -115,7 +115,7 @@ class AdvancedSplash(wx.Frame):
                  style=wx.FRAME_NO_TASKBAR | wx.FRAME_SHAPED | wx.STAY_ON_TOP,
                  bitmap=None, timeout=5000,
                  extrastyle=AS_TIMEOUT | AS_CENTER_ON_SCREEN,
-                 shadowcolour=None):
+                 shadowcolour=wx.NullColour):
 
         """
         Default class constructor.
@@ -163,7 +163,7 @@ class AdvancedSplash(wx.Frame):
         if extrastyle & AS_SHADOW_BITMAP and not shadowcolour.IsOk():
             raise Exception('\nERROR: Style "AS_SHADOW_BITMAP" Used With Invalid "shadowcolour" Parameter')
 
-        if not bitmap.IsOk():
+        if not bitmap or not bitmap.IsOk():
             raise Exception("\nERROR: Bitmap Passed To AdvancedSplash Is Invalid.")
 
         if extrastyle & AS_SHADOW_BITMAP:
