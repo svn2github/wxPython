@@ -2,7 +2,7 @@
 # GENERICMESSAGEDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 07 October 2008, 22.00 GMT
+# Latest Revision: 20 May 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -34,6 +34,7 @@ for the standard wx.MessageDialog, with these extra functionalities:
 * Custom themed generic bitmap & text buttons;
 * Possibility to set an icon to the dialog;
 * More visibility to the button getting the focus;
+* Support for Aqua buttons or Gradient buttons instead of themed ones;
 * Good old Python code :-D .
 
 And a lot more. Check the demo for an almost complete review of the functionalities.
@@ -42,12 +43,12 @@ And a lot more. Check the demo for an almost complete review of the functionalit
 Supported Platforms
 ===================
 
-SuperToolTip has been tested on the following platforms:
+GenericMessageDialog has been tested on the following platforms:
   * Windows (Windows XP).
 
 
-Latest Revision: Andrea Gavana @ 07 October 2008, 22.00 GMT
-Version 0.1
+Latest Revision: Andrea Gavana @ 20 May 2009, 09.00 GMT
+Version 0.2
 
 """
 
@@ -55,6 +56,13 @@ import wx
 import wx.lib.buttons as buttons
 
 from wx.lib.embeddedimage import PyEmbeddedImage
+
+# To use AquaButtons or GradientButtons instead of wx.lib.buttons
+import aquabutton as AB
+import gradientbutton as GB
+
+GMD_USE_AQUABUTTONS = 32
+GMD_USE_GRADIENTBUTTONS = 64
 
 _ = wx.GetTranslation
 
@@ -568,10 +576,12 @@ class GenericMessageDialog(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self.OnCancel, id=wx.ID_CANCEL)
 
         for child in self.GetChildren():
-            if isinstance(child, wx.lib.buttons.ThemedGenBitmapTextButton):
+            if isinstance(child, wx.lib.buttons.ThemedGenBitmapTextButton) or \
+               isinstance(child, AB.AquaButton) or isinstance(child, GB.GradientButton):
                 # Handles the key down for the buttons...
                 child.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
-                child.SetUseFocusIndicator(False)
+                if isinstance(child, wx.lib.buttons.ThemedGenBitmapTextButton):
+                    child.SetUseFocusIndicator(False)
 
         self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigation)
         self.SwitchFocus()
@@ -614,7 +624,8 @@ class GenericMessageDialog(wx.Dialog):
 
         ids = []
         for child in self.GetChildren():
-            if isinstance(child, wx.lib.buttons.ThemedGenBitmapTextButton):
+            if isinstance(child, wx.lib.buttons.ThemedGenBitmapTextButton) or \
+               isinstance(child, AB.AquaButton) or isinstance(child, GB.GradientButton):
                 ids.append(child.GetId())
 
         if key in [ord("y"), ord("Y")] and wx.ID_YES in ids:
@@ -656,7 +667,8 @@ class GenericMessageDialog(wx.Dialog):
                            font.GetUnderlined(), font.GetFaceName())
         
         for child in self.GetChildren():
-            if isinstance(child, wx.lib.buttons.ThemedGenBitmapTextButton):
+            if isinstance(child, wx.lib.buttons.ThemedGenBitmapTextButton) or \
+               isinstance(child, AB.AquaButton) or isinstance(child, GB.GradientButton):
                 if child == current:
                     # Set a bold font for the current focused button
                     child.SetFont(boldFont)
@@ -715,25 +727,34 @@ class GenericMessageDialog(wx.Dialog):
         if flags & wx.OK:
             # Remove unwanted flags...
             flags &= ~(wx.YES | wx.NO | wx.NO_DEFAULT)
-        
+
+        size=(-1, 28)
+        if self._dialogStyle & GMD_USE_AQUABUTTONS:
+            klass = AB.AquaButton
+            size=(-1, -1)
+        elif self._dialogStyle & GMD_USE_GRADIENTBUTTONS:
+            klass = GB.GradientButton
+        else:
+            klass = buttons.ThemedGenBitmapTextButton
+            
         if flags & wx.OK:
-            ok = buttons.ThemedGenBitmapTextButton(self, wx.ID_OK, _ok.GetBitmap(), _("OK"), size=(-1, 28))
+            ok = klass(self, wx.ID_OK, _ok.GetBitmap(), _("OK"), size=size)
             sizer.AddButton(ok)
 
         if flags & wx.CANCEL:
-            cancel = buttons.ThemedGenBitmapTextButton(self, wx.ID_CANCEL, _cancel.GetBitmap(), _("Cancel"), size=(-1, 28))
+            cancel = klass(self, wx.ID_CANCEL, _cancel.GetBitmap(), _("Cancel"), size=size)
             sizer.AddButton(cancel)
         
         if flags & wx.YES:
-            yes = buttons.ThemedGenBitmapTextButton(self, wx.ID_YES, _yes.GetBitmap(), _("Yes"), size=(-1, 28))
+            yes = klass(self, wx.ID_YES, _yes.GetBitmap(), _("Yes"), size=size)
             sizer.AddButton(yes)
         
         if flags & wx.NO:
-            no = buttons.ThemedGenBitmapTextButton(self, wx.ID_NO, _no.GetBitmap(), _("No"), size=(-1, 28))
+            no = klass(self, wx.ID_NO, _no.GetBitmap(), _("No"), size=size)
             sizer.AddButton(no)
                 
         if flags & wx.HELP:
-            help = buttons.ThemedGenBitmapTextButton(self, wx.ID_HELP, _help.GetBitmap(), _("Help"), size=(-1, 28))
+            help = klass(self, wx.ID_HELP, _help.GetBitmap(), _("Help"), size=size)
             sizer.AddButton(help)
         
         if flags & wx.NO_DEFAULT:
