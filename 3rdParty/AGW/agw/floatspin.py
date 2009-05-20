@@ -318,7 +318,8 @@ class FloatSpin(wx.PyControl):
         # set the value here without generating an event
 
         decimal = locale.localeconv()["decimal_point"]
-        strs = ("%100" + decimal + str(self._digits) + self._textformat[1])%self._value
+        strs = ("%100." + str(self._digits) + self._textformat[1])%self._value
+        strs = strs.replace(".", decimal)
 
         strs = strs.strip()
         strs = self.ReplaceDoubleZero(strs)
@@ -565,7 +566,8 @@ class FloatSpin(wx.PyControl):
                     value = self._defaultvalue + ceil(snap_value)*self._increment
 
         decimal = locale.localeconv()["decimal_point"]
-        strs = ("%100" + decimal + str(self._digits) + self._textformat[1])%value
+        strs = ("%100." + str(self._digits) + self._textformat[1])%value
+        strs = strs.replace(".", decimal)
         strs = strs.strip()
         strs = self.ReplaceDoubleZero(strs)
 
