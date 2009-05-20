@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2005
-# Latest Revision: 15 Oct 2008, 10.00 GMT
+# Latest Revision: 20 May 2009, 09.00 GMT
 #
 #
 # TODO List/Caveats
@@ -96,8 +96,8 @@ wxPython) parameters.
 
 FloatSpin control is freeware and distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 15 Oct 2008, 10.00 GMT
-Version 0.5
+Latest revision: Andrea Gavana @ 20 May 2009, 09.00 GMT
+Version 0.6
 
 Modifications to allow min_val or max_val to be None done by:
 
@@ -129,6 +129,7 @@ or no range:
 #----------------------------------------------------------------------
 
 import wx
+import locale
 from math import ceil, floor
 
 # Set The Styles For The Underline wx.TextCtrl
@@ -316,7 +317,8 @@ class FloatSpin(wx.PyControl):
 
         # set the value here without generating an event
 
-        strs = ("%100." + str(self._digits) + self._textformat[1])%self._value
+        decimal = locale.localeconv()["decimal_point"]
+        strs = ("%100" + decimal + str(self._digits) + self._textformat[1])%self._value
 
         strs = strs.strip()
         strs = self.ReplaceDoubleZero(strs)
@@ -562,7 +564,8 @@ class FloatSpin(wx.PyControl):
                 else:
                     value = self._defaultvalue + ceil(snap_value)*self._increment
 
-        strs = ("%100." + str(self._digits) + self._textformat[1])%value
+        decimal = locale.localeconv()["decimal_point"]
+        strs = ("%100" + decimal + str(self._digits) + self._textformat[1])%value
         strs = strs.strip()
         strs = self.ReplaceDoubleZero(strs)
 
