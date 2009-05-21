@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 08 May 2009, 11.00 GMT
+# Latest Revision: 21 May 2009, 10.00 GMT
 #
 #
 # TODO List
@@ -30,8 +30,8 @@
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
 #
-# gavana@kpo.kz
 # andrea.gavana@gmail.com
+# gavana@kpo.kz
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
@@ -104,6 +104,9 @@ Plus it has 3 more styles to handle checkbox-type items:
   - TR_AUTO_CHECK_PARENT : automatically checks/unchecks the item parent;
   - TR_AUTO_TOGGLE_CHILD: automatically toggles the item children.
 
+And a style useful to hide the TreeListCtrl header:
+  - TR_NO_HEADER: hides the HyperTreeList header.
+
 All the methods available in wx.gizmos.TreeListCtrl are also available in HyperTreeList.
 
 
@@ -136,8 +139,8 @@ HyperTreeList has been tested on the following platforms:
   * Windows (Windows XP);
 
 
-Latest Revision: Andrea Gavana @ 08 May 2009, 11.00 GMT
-Version 0.7
+Latest Revision: Andrea Gavana @ 21 May 2009, 10.00 GMT
+Version 0.8
 
 """
 
@@ -151,7 +154,7 @@ from customtreectrl import TreeRenameTimer as TreeListRenameTimer
 from customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHECKED
 
 # Version Info
-__version__ = "0.7"
+__version__ = "0.8"
 
 # --------------------------------------------------------------------------
 # Constants
@@ -179,6 +182,12 @@ _RENAME_TIMER_TICKS = 250 # minimum rename wait time in ms
 # Additional HitTest style
 # --------------------------------------------------------------------------
 TREE_HITTEST_ONITEMCHECKICON  = 0x4000
+
+# --------------------------------------------------------------------------
+# Additional HyperTreeList style to hide the header
+# --------------------------------------------------------------------------
+TR_NO_HEADER = 0x40000
+# --------------------------------------------------------------------------
 
 
 class TreeListColumnInfo(object):
@@ -2998,12 +3007,18 @@ class HyperTreeList(wx.PyControl):
     def DoHeaderLayout(self):
 
         w, h = self.GetClientSize()
-        if self._header_win:
+        has_header = self._windowStyle & TR_NO_HEADER == 0
+        
+        if self._header_win and has_header:
             self._header_win.SetDimensions(0, 0, w, self._headerHeight)
             self._header_win.Refresh()
+        else:
+            self._header_win.SetDimensions(0, 0, 0, 0)
         
-        if self._main_win:
+        if self._main_win and has_header:
             self._main_win.SetDimensions(0, self._headerHeight + 1, w, h - self._headerHeight - 1)
+        else:
+            self._main_win.SetDimensions(0, 0, w, h)
     
 
     def OnSize(self, event):
@@ -3033,10 +3048,12 @@ class HyperTreeList(wx.PyControl):
 
         if self._main_win:
             self._main_win.SetTreeStyle(style)
-            
-        self._windowStyle = style
-        # TODO: provide something like wxTL_NO_HEADERS to hide self._header_win
 
+        tmp = self._windowStyle
+        self._windowStyle = style
+        if abs(style - tmp) & TR_NO_HEADER:
+            self.DoHeaderLayout()
+            
 
     def GetWindowStyle(self):
 

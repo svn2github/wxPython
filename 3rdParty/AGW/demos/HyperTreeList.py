@@ -1552,6 +1552,7 @@ class HyperTreeList(HTL.HyperTreeList):
             events.remove(evt)
             
         treestyles = treestyles + [i for i in dir(wx) if i.startswith("TR_")]
+        treestyles.sort()
 
         self.events = events
         self.styles = treestyles
