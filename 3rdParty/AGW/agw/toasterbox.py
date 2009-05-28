@@ -3,7 +3,7 @@
 # Ported And Enhanced From wxWidgets Contribution (Aj Bommarito) By:
 #
 # Andrea Gavana, @ 16 September 2005
-# Latest Revision: 12 May 2009, 15.00 GMT
+# Latest Revision: 28 May 2009, 11.00 GMT
 #
 #
 # TODO/Caveats List
@@ -49,7 +49,7 @@ ToasterBox has been tested on the following platforms:
 Windows (verified on Windows XP, 2000)
 
 
-Latest revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
+Latest revision: Andrea Gavana @ 28 May 2009, 11.00 GMT
 Version 0.2
 
 """
@@ -134,7 +134,8 @@ class ToasterBox(wx.Timer):
        self._bottomright = wx.Point(wx.GetDisplaySize().GetWidth(),
                                     wx.GetDisplaySize().GetHeight())
 
-       parent.Bind(wx.EVT_ICONIZE, lambda evt: [w.Hide() for w in winlist])
+       if parent is not None:
+           parent.Bind(wx.EVT_ICONIZE, lambda evt: [w.Hide() for w in winlist])
 
        self._tb = ToasterBoxWindow(self._parent, self, self._tbstyle, self._windowstyle,
                                    self._closingstyle, scrollType=scrollType)
