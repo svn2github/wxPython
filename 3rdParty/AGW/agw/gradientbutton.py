@@ -2,7 +2,7 @@
 # GRADIENTBUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 30 January 2009, 09.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -23,6 +23,10 @@
 # --------------------------------------------------------------------------------- #
 
 """
+GradientButton is another custom-drawn button class which mimics Windows CE mobile
+gradient buttons.
+
+
 Description
 ===========
 
@@ -45,7 +49,12 @@ GradientButton has been tested on the following platforms:
   * Windows (Windows XP).
 
 
-Latest Revision: Andrea Gavana @ 30 January 2009, 09.00 GMT
+License And Version
+===================
+
+GradientButton is freeware and distributed under the wxPython license.
+
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.2
 
 """

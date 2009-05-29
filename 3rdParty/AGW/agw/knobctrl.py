@@ -2,7 +2,7 @@
 # KNOBCTRL wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 15 Oct 2008, 22.30 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -22,6 +22,9 @@
 # --------------------------------------------------------------------------------- #
 
 """
+KnobCtrl lets the user select a numerical value by rotating it.
+
+
 Description
 ===========
 
@@ -52,13 +55,12 @@ KnobCtrl has been tested on the following platforms:
   * Linux Ubuntu (Dapper 6.06)
 
 
-License And Version:
+License And Version
 ===================
 
 KnobCtrl is freeware and distributed under the wxPython license. 
 
-
-Latest Revision: Andrea Gavana @ 15 Oct 2008, 22.30 GMT
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.1
 
 """

@@ -3,7 +3,7 @@
 # Generic Implementation Based On wx.CollapsiblePane.
 #
 # Andrea Gavana, @ 09 Aug 2007
-# Latest Revision: 15 Oct 2008, 22.30 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -19,6 +19,10 @@
 # --------------------------------------------------------------------------------- #
 
 """
+PyCollapsiblePane is a container with an embedded button-like control which
+can be used by the user to collapse or expand the pane's contents.
+
+
 Description
 ===========
 
@@ -37,8 +41,8 @@ automatically get resized each time the user expands or collapse the pane window
 resulting usually in a weird, flickering effect.
 
 
-Usage Sample
-============
+Usage
+=====
 
 collpane = PyCollapsiblePane(self, -1, "Details:")
 
@@ -53,16 +57,12 @@ win.SetSizer(paneSz)
 paneSz.SetSizeHints(win)
 
 
-License And Version:
+License And Version
 ===================
 
 PyCollapsiblePane is freeware and distributed under the wxPython license. 
 
-
-Latest Revision: Andrea Gavana @ 15 Oct 2008, 22.30 GMT
-Version 0.1
-
-Latest Revision: Robin Dunn @ 10-Apr-2009
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.2
 
 """
@@ -557,9 +557,3 @@ class PyCollapsiblePane(wx.PyPanel):
         """ Overridable method to draw the PyCollapsiblePane text in the expander. """
 
         self._pButton.OnDrawGTKText(dc)
-
-
-        
-        
-        
-        

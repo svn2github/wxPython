@@ -2,7 +2,7 @@
 # SUPERTOOLTIP wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 30 January 2009, 09.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -26,6 +26,10 @@
 # --------------------------------------------------------------------------------- #
 
 """
+SuperToolTip is a class that mimics the behaviour of wx.TipWindow and generic tooltip
+windows, although it is a custom-drawn widget. 
+
+
 Description
 ===========
 
@@ -55,7 +59,12 @@ SuperToolTip has been tested on the following platforms:
   * Windows (Windows XP).
 
 
-Latest Revision: Andrea Gavana @ 30 January 2009, 09.00 GMT
+License And Version
+===================
+
+SuperToolTip is freeware and distributed under the wxPython license.
+
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.2
 
 """

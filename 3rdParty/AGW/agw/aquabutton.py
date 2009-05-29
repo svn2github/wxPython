@@ -2,7 +2,7 @@
 # AQUABUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 07 October 2008, 22.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -23,6 +23,10 @@
 # --------------------------------------------------------------------------------- #
 
 """
+AquaButton is another custom-drawn button class which *approximatively* mimics
+the behaviour of Aqua buttons on the Mac.
+
+
 Description
 ===========
 
@@ -45,7 +49,12 @@ AquaButton has been tested on the following platforms:
   * Windows (Windows XP).
 
 
-Latest Revision: Andrea Gavana @ 07 October 2008, 22.00 GMT
+License And Version
+===================
+
+AquaButton control is freeware and distributed under the wxPython license.
+
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.1
 
 """

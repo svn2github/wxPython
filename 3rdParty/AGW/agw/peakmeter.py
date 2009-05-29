@@ -2,7 +2,7 @@
 # PEAKMETERCTRL wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 07 October 2008, 22.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -25,6 +25,10 @@
 # --------------------------------------------------------------------------------- #
 
 """
+PeakMeterCtrl mimics the behaviour of equalizers that are usually found in stereos
+and MP3 players.
+
+
 Description
 ===========
 
@@ -47,7 +51,12 @@ PeakMeterCtrl has been tested on the following platforms:
   * Windows (Windows XP).
 
 
-Latest Revision: Andrea Gavana @ 07 October 2008, 22.00 GMT
+License And Version
+===================
+
+PeakMeterCtrl is freeware and distributed under the wxPython license.
+
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.1
 
 """

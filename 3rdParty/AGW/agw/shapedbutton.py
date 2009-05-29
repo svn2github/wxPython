@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 18 Oct 2005
-# Latest Revision: 15 Oct 2008, 10.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List/Caveats
@@ -40,7 +40,12 @@
 
 
 """
-Description:
+ShapedButton tries to fill the lack of "custom shaped" controls in wxPython
+and it can be used to build round or elliptic-shaped buttons.
+
+
+Description
+===========
 
 ShapedButton tries to fill the lack of "custom shaped" controls in wxPython
 (that depends on the same lack in wxWidgets). It can be used to build round
@@ -64,7 +69,8 @@ the circle/ellipse, even if ShapedButton is built on a rectangular window.
 This behavior is a lot different with respect to Audacity round buttons.
 
 
-Usage:
+Usage
+=====
 
 The ShapedButton constructions, excluding wxPython parameter are, for the
 6 Classes:
@@ -95,7 +101,8 @@ For the full listing of the input parameters, see the ShapedButton __init__()
 method.
 
 
-Methods and Settings:
+Methods and Settings
+====================
 
 With ShapedButton you can:
 
@@ -115,9 +122,12 @@ method for ShapedButton or to the specific functions.
 |=========================================================================== |
 
 
-ShapedButton control is freeware and distributed under the wxPython license.
+License And Version
+===================
 
-Latest revision: Andrea Gavana @ 15 Oct 2008, 10.00 GMT
+ShapedButton is freeware and distributed under the wxPython license.
+
+Latest revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.3
 
 """

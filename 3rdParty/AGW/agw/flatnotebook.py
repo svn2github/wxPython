@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 12 May 2009, 15.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -27,6 +27,12 @@
 # --------------------------------------------------------------------------- #
 
 """
+FlatNotebook is a full, generic and owner-drawn implementation of wx.Notebook.
+
+
+Description
+===========
+
 The FlatNotebook is a full implementation of the wx.Notebook, and designed to be
 a drop-in replacement for wx.Notebook. The API functions are similar so one can
 expect the function to behave in the same way. 
@@ -54,12 +60,14 @@ Some features:
 And much more.
 
 
-License And Version:
+License And Version
+===================
 
-FlatNotebook Is Freeware And Distributed Under The wxPython License. 
+FlatNotebook is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 2.8
+
 
 @undocumented: FNB_HEIGHT_SPACER, VERTICAL_BORDER_PADDING, VC8_SHAPE_LEN,
     wxEVT*, left_arrow_*, right_arrow*, x_button*, down_arrow*,

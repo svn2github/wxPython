@@ -2,7 +2,7 @@
 # FOURWAYSPLITTER wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 12 May 2009, 15.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -22,6 +22,10 @@
 # --------------------------------------------------------------------------------- #
 
 """
+FourWaySplitter is a layout manager which manages 4 children like 4 panes in a
+window.
+
+
 Description
 ===========
 
@@ -41,6 +45,7 @@ The main characteristics of FourWaySplitter are:
 
 And a lot more. See the demo for a complete review of the functionalities.
 
+
 Events
 ======
 
@@ -58,13 +63,12 @@ FourWaySplitter has been tested on the following platforms:
   * Linux Ubuntu (Dapper 6.06)
 
 
-License And Version:
+License And Version
 ===================
 
 FourWaySplitter is freeware and distributed under the wxPython license. 
 
-
-Latest Revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.2
 
 """

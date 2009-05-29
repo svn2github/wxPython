@@ -3,7 +3,7 @@
 # Ported From Jorgen Bodde & Julian Smart (Extended Demo) C++ Code By:
 #
 # Andrea Gavana, @ 23 Mar 2005
-# Latest Revision: 12 May 2009, 15.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -59,6 +59,13 @@
 
 
 """
+FoldPanelBar is a control that contains multiple panels, which can be expanded
+or collapsed.
+
+
+Description
+===========
+
 The `FoldPanelBar` is a control that contains multiple panels (of type
 `FoldPanelItem`) that can be expanded or collapsed. The captionbar of
 the FoldPanel can be customized by setting it to a horizontal gradient
@@ -70,7 +77,7 @@ freeware and distributed under the wxPython license.
  
    
 How does it work
-----------------
+================
 
 The internals of the FoldPanelBar is a list of FoldPanelItem objects. Through
 the reference of FoldPanel these panels can be controlled by adding new controls
@@ -86,7 +93,7 @@ involved in the panels, everything is purely x-y positioning.
 
 
 What can it do and what not?
-----------------------------
+============================
 
     a) What it can do:
         * Run-time addition of panels (no deletion just yet) 
@@ -103,7 +110,7 @@ What can it do and what not?
 
  
 Supported platforms
--------------------
+===================
 
 FoldPanelBar is supported on the following platforms: 
   * Windows (Verified on Windows XP, 2000)
@@ -111,9 +118,13 @@ FoldPanelBar is supported on the following platforms:
   * Mac OSX (Thanks To Robin Dunn For The CaptionBar Size Patch)
 
 
-FoldPanelBar is based upon Jorgen Bodde's C++ implementation.
+License And Version
+===================
 
-Latest Revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
+FoldPanelBar is based upon Jorgen Bodde's C++ implementation.
+FoldPanelBar is freeware and distributed under the wxPython license.
+
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.4
 
 """

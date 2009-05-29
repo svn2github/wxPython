@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana And Peter Damoc, @ 12 Dec 2005
-# Latest Revision: 15 Oct 2008, 22.30 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List/Caveats
@@ -32,7 +32,12 @@
 
 
 """
-Description:
+Thumbnailctrl is a widget that can be used to display a series of images in
+a "thumbnail" format.
+
+
+Description
+===========
 
 Thumbnailctrl is a widget that can be used to display a series of images in
 a "thumbnail" format; it mimics, for example, the windows explorer behavior
@@ -47,7 +52,8 @@ without the suggestions and hints from Peter Damoc. So, if he accepts the
 mention, this control is his as much as mine.
 
 
-Usage:
+Usage
+=====
 
 ThumbnailCtrl.__init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
 size = wx.DefaultSize, thumboutline=THUMB_OUTLINE_RECT,
@@ -57,7 +63,8 @@ For the full listing of the input parameters, see the ThumbnailCtrl __init__()
 method.
 
 
-Methods and Settings:
+Methods and Settings
+====================
 
 With ThumbnailCtrl you can:
 
@@ -92,9 +99,13 @@ method for ThumbnailCtrl or to the specific functions.
 Side-note: using highlight thumbnails on mouse hovering may be slow on slower
 computers.
 
-ThumbnailCtrl control is freeware and distributed under the wxPython license.
 
-Latest revision: andrea gavana @ 15 Oct 2008, 22.30 GMT
+License And Version
+===================
+
+ThumbnailCtrl is freeware and distributed under the wxPython license.
+
+Latest revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.7
 
 """

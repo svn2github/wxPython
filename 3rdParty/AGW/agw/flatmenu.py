@@ -2,7 +2,7 @@
 # FLATMENU wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 13 Oct 2008, 19.00 CET
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -24,6 +24,9 @@
 # --------------------------------------------------------------------------------- #
 
 """
+FlatMenu is a generic menu implementation.
+
+
 Description
 ===========
 
@@ -80,6 +83,7 @@ FlatMenu implements this event for menus and toolbar tools:
   - EVT_FLAT_MENU_ITEM_MOUSE_OUT
   - EVT_FLAT_MENU_ITEM_MOUSE_OVER
 
+
 Supported Platforms
 ===================
 
@@ -89,10 +93,13 @@ FlatMenu v0.8 has been tested on the following platforms:
 v0.9.* has been tested on
   * Windows (Windows XP, Vista);
 
-License And Version:
+
+License And Version
 ===================
 
 FlatMenu is freeware and distributed under the wxPython license.
+
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.9.2
 
 """

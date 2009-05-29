@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 25 Sep 2005
-# Latest Revision: 15 Oct 2008, 10.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List/Caveats
@@ -35,7 +35,12 @@
 
 
 """
-Description:
+SpeedMeter tries to reproduce the behavior of some car controls (but not only),
+by creating an "angular" control (actually, circular).
+
+
+Description
+===========
 
 SpeedMeter tries to reproduce the behavior of some car controls (but not only),
 by creating an "angular" control (actually, circular). I remember to have seen
@@ -52,7 +57,8 @@ buffered implementation has been adapted from the wxPython wiki example:
 http://wiki.wxpython.org/index.cgi/doublebuffereddrawing
 
 
-Usage:
+Usage
+=====
 
 speedwindow1 = SM.SpeedMeter(parent,
                              bufferedstyle,
@@ -65,7 +71,8 @@ use the defaults you get a very simple SpeedMeter. For the full listing of
 the input parameters, see the SpeedMeter __init__() method.
 
 
-Methods and Settings:
+Methods and Settings
+====================
 
 SpeedMeter is highly customizable, and in particular you can set:
 
@@ -91,9 +98,12 @@ For more info on methods and initial styles, please refer to the __init__()
 method for SpeedMeter or to the specific functions.
 
 
-SpeedMeter control is freeware and distributed under the wxPython license.
+License And Version
+===================
 
-Latest revision: Andrea Gavana @ 15 oct 2008, 10.00 GMT
+SpeedMeter is freeware and distributed under the wxPython license.
+
+Latest revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.1
 
 """

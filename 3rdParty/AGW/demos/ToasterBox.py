@@ -231,7 +231,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
 
     def OnRadioBox(self, event):
 
-        mainsizer = self.GetChildren()[0].GetSizer()
+        mainsizer = self.GetSizer()
         
         if event.GetInt() == 0:
             self.linger.SetValue("4000")

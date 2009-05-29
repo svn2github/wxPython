@@ -5,7 +5,7 @@ beautiful and usable application interfaces.
 
 
 Vision and Design Principles
-----------------------------
+============================
 
 AUI attempts to encapsulate the following aspects of the user interface:
 
@@ -34,8 +34,8 @@ AUI adheres to the following principles:
 - Use standard wxPython coding conventions.
 
 
-Usage:
-------
+Usage
+=====
 
 The following example shows a simple implementation that uses `AuiManager` to manage
 three text controls in a frame window::
@@ -97,7 +97,7 @@ app.MainLoop()
 
 
 What's New
-----------
+==========
 
 Current wxAUI Version Tracked: wxWidgets 2.9.0 (SVN HEAD)
 
@@ -200,7 +200,7 @@ Plus the following features:
 
 
 TODOs
------
+=====
 
 - Documentation, documentation and documentation;
 - Fix `tabmdi.AuiMDIParentFrame` and friends, they do not work correctly at present;
@@ -227,12 +227,12 @@ TODOs
 - Possibly integrate `wxPyRibbon` (still on development), at least on Windows.
 
 
-License And Version:
---------------------
+License And Version
+===================
 
 AUI library is freeware and distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 13 May 2009, 17.00 GMT
+Latest revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 1.0. 
 
 """

@@ -3,7 +3,7 @@
 # Ported From Angelo Mandato C++ Code By:
 #
 # Andrea Gavana, @ 27 Mar 2005
-# Latest Revision: 15 Oct 2008, 22.30 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # Original Web Site (For The C++ Code):
@@ -26,6 +26,13 @@
 # --------------------------------------------------------------------------- #
 
 """
+HyperLinkCtrl is a control for wxPython that acts like a hyper link
+in a typical browser.
+
+
+Description
+===========
+
 `HyperLinkCtrl` is a control for wxPython that acts like a hyper link
 in a typical browser. Latest features include the ability to capture
 your own Left, Middle, and Right click events to perform your own
@@ -35,7 +42,12 @@ browser window.
 Special thanks to Robin Dunn for the event binder for the 3 mouse buttons.
 
 
-Latest Revision: Andrea Gavana @ 15 Oct 2008, 22.30 GMT
+License And Version
+===================
+
+HyperLinkCtrl is freeware and distributed under the wxPython license.
+
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.5
 
 """

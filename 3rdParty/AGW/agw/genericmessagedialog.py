@@ -2,7 +2,7 @@
 # GENERICMESSAGEDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 20 May 2009, 09.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -23,6 +23,9 @@
 # --------------------------------------------------------------------------------- #
 
 """
+This class is a possible, fancy replacement for wx.MessageDialog.
+
+
 Description
 ===========
 
@@ -47,7 +50,12 @@ GenericMessageDialog has been tested on the following platforms:
   * Windows (Windows XP).
 
 
-Latest Revision: Andrea Gavana @ 20 May 2009, 09.00 GMT
+License And Version
+===================
+
+GenericMessageDialog is freeware and distributed under the wxPython license.
+
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.2
 
 """

@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 08 Apr 2009, 10.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -43,6 +43,10 @@
 
 
 """
+CustomTreeCtrl is a class that mimics the behaviour of wx.TreeCtrl, plus some more
+enhancements.
+
+
 Description
 ===========
 
@@ -144,7 +148,12 @@ CustomTreeCtrl has been tested on the following platforms:
   * Mac OS (Thanks to John Jackson).
 
 
-Latest Revision: Andrea Gavana @ 08 Apr 2009, 10.00 GMT
+License And Version
+===================
+
+CustomTreeCtrl is freeware and distributed under the wxPython license. 
+
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 1.9
 
 """

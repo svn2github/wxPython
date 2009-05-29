@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 10 Oct 2005
-# Latest Revision: 19 May 2009, 21.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List/Caveats
@@ -35,7 +35,12 @@
 
 
 """
-Description:
+AdvancedSplash tries to reproduce the behavior of wx.SplashScreen, with
+some enhancements.
+
+
+Description
+===========
 
 AdvancedSplash tries to reproduce the behavior of wx.SplashScreen, but with
 some enhancements (in my opinion).
@@ -46,7 +51,9 @@ the image passed as input. AdvancedSplash behaves somewhat like wx.SplashScreen,
 and almost all the methods available in wx.SplashScreen are available also In
 AdvancedSplash.
 
-Usage:
+
+Usage
+=====
 
 SplashScreen = AS.AdvancedSplash(parent,
                                  bitmap,
@@ -60,7 +67,9 @@ If you use the defaults you get a very simple AdvancedSplash.
 For the full listing of the input parameters, see the AdvancedSplash __init__()
 method.
 
-Methods and Settings:
+
+Methods and Settings
+====================
 
 AdvancedSplash is customizable, and in particular you can set:
 
@@ -75,9 +84,12 @@ For more info on methods and initial styles, please refer to the __init__()
 method for AdvancedSplash or to the specific functions.
 
 
+License And Version
+===================
+
 AdvancedSplash control is freeware and distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 19 May 2009, 21.00 GMT
+Latest revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.3
 
 """

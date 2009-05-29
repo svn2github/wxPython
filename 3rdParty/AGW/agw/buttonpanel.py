@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 12 May 2009, 15.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -27,6 +27,13 @@
 # --------------------------------------------------------------------------- #
 
 """
+A custom panel class with gradient background shading with the possibility to
+add buttons and controls still respecting the gradient background.
+
+  
+Description
+===========
+
 With `ButtonPanel` class you have a panel with gradient coloring
 on it and with the possibility to place some buttons on it. Using a
 standard panel with normal wx.Buttons leads to an ugly result: the
@@ -43,7 +50,7 @@ classic look).
 
 
 Usage
------
+=====
 
 ButtonPanel supports 4 alignments: left, right, top, bottom, which have a
 different meaning and behavior wrt wx.Toolbar. The easiest thing is to try
@@ -126,11 +133,12 @@ inside a very simple frame::
   app.MainLoop()
 
 
-License And Version:
+License And Version
+===================
 
-ButtonPanel Is Freeware And Distributed Under The wxPython License. 
+ButtonPanel is freeware and distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.5.
 
 """

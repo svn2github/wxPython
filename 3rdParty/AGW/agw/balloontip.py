@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 29 May 2005
-# Latest Revision: 12 May 2009, 15.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List/Caveats
@@ -40,10 +40,15 @@
 # --------------------------------------------------------------------------- #
 
 """
-Description:
+BalloonTip is a class that allows you to display tooltips in a balloon style
+window.
+
+
+Description
+===========
 
 BalloonTip is a class that allows you to display tooltips in a balloon style
-window (actually a frame), similarly to the windows xp balloon help. There is
+window (actually a frame), similarly to the windows XP balloon help. There is
 also an arrow that points to the center of the control designed as a "target"
 for the BalloonTip.
 
@@ -70,6 +75,9 @@ What it can do:
 - Possibility to enable/disable globally the BalloonTip on you application.
 - Set the BalloonTip also for the taskbaricon (revised 7 september 2005)
 
+
+Usage
+=====
 
 Usage example:
 
@@ -102,9 +110,12 @@ tipballoon.SetStartDelay(1000)
 tipballoon.SetEndDelay(3000)
 
 
+License And Version
+===================
+
 BalloonTip is freeware and distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
+Latest revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.2
 
 """

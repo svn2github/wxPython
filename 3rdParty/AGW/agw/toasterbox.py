@@ -3,7 +3,7 @@
 # Ported And Enhanced From wxWidgets Contribution (Aj Bommarito) By:
 #
 # Andrea Gavana, @ 16 September 2005
-# Latest Revision: 28 May 2009, 11.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO/Caveats List
@@ -25,7 +25,12 @@
 
 
 """
-Description:
+ToasterBox is a cross-platform widget to make the creation of MSN style "toaster"
+popups easier.
+
+
+Description
+===========
 
 ToasterBox is a cross-platform widget to make the creation of MSN style "toaster"
 popups easier. The syntax is really easy especially if you are familiar with the
@@ -44,12 +49,23 @@ Both styles support the setting of ToasterBox position (on screen coordinates),
 size, the time after which the ToasterBox is destroyed (linger), and the scroll
 speed of ToasterBox.
 
+
+Supported Platforms
+===================
+
 ToasterBox has been tested on the following platforms:
 
-Windows (verified on Windows XP, 2000)
+- Windows (verified on Windows XP, 2000)
+- Linux
+- Mac
 
 
-Latest revision: Andrea Gavana @ 28 May 2009, 11.00 GMT
+License And Version
+===================
+
+ToasterBox is freeware and distributed under the wxPython license.
+
+Latest revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.2
 
 """
@@ -150,20 +166,18 @@ class ToasterBox(wx.Timer):
    def SetPopupPositionByInt(self, pos):
        """ Sets the ToasterBox position on screen, at one of the screen corners. """
 
-       self._bottomright = wx.Point(wx.GetDisplaySize().GetWidth(),
-                                    wx.GetDisplaySize().GetHeight())
+       w, h = wx.GetDisplaySize()
+       self._bottomright = wx.Point(w, h)
 
        # top left
        if pos == 0:
            popupposition = wx.Point(0,0)
        # top right
        elif pos == 1:
-           popupposition = wx.Point(wx.GetDisplaySize().GetWidth() -
-                                    self._popupsize[0], 0)
+           popupposition = wx.Point(w - self._popupsize[0], 0)
        # bottom left
        elif pos == 2:
-           popupposition = wx.Point(0, wx.GetDisplaySize().GetHeight() -
-                                   self._popupsize[1])
+           popupposition = wx.Point(0, h - self._popupsize[1])
        # bottom right
        elif pos == 3:
            popupposition = wx.Point(self._bottomright.x - self._popupsize[0],
@@ -171,6 +185,8 @@ class ToasterBox(wx.Timer):
 
        self._bottomright = wx.Point(popupposition.x + self._popupsize[0],
                                     popupposition.y + self._popupsize[1])
+
+       self._popupposition = popupposition
 
 
    def SetPopupBackgroundColor(self, colour=None):
@@ -487,20 +503,18 @@ class ToasterBoxWindow(wx.Frame):
    def SetPopupPositionByInt(self, pos):
        """ Sets the ToasterBox position on screen, at one of the screen corners. """
 
-       self._bottomright = wx.Point(wx.GetDisplaySize().GetWidth(),
-                                    wx.GetDisplaySize().GetHeight())
+       w, h = wx.GetDisplaySize()
+       self._bottomright = wx.Point(w, h)
 
        # top left
        if pos == 0:
-           popupposition = wx.Point(0,0)
+           popupposition = wx.Point(0, 0)
        # top right
        elif pos == 1:
-           popupposition = wx.Point(wx.GetDisplaySize().GetWidth() -
-                                    self._popupsize[0], 0)
+           popupposition = wx.Point(w - self._popupsize[0], 0)
        # bottom left
        elif pos == 2:
-           popupposition = wx.Point(0, wx.GetDisplaySize().GetHeight() -
-                                   self._popupsize[1])
+           popupposition = wx.Point(0, h - self._popupsize[1])
        # bottom right
        elif pos == 3:
            popupposition = wx.Point(self._bottomright.x - self._popupsize[0],
@@ -702,6 +716,9 @@ class ToasterBoxWindow(wx.Frame):
 
            windowsize = windowsize - self._step
 
+           if windowsize <= 0:
+              break
+            
            # checking the type of the scroll (from up to down or from down to up)
            if self._scrollType == TB_SCR_TYPE_UD:
                dimY = self._dialogtop[1]

@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 21 May 2009, 10.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -41,6 +41,10 @@
 
 
 """
+HyperTreeList is a class that mimics the behaviour of wx.gizmos.TreeListCtrl, with
+some more functionalities.
+
+
 Description
 ===========
 
@@ -139,7 +143,12 @@ HyperTreeList has been tested on the following platforms:
   * Windows (Windows XP);
 
 
-Latest Revision: Andrea Gavana @ 21 May 2009, 10.00 GMT
+License And Version
+===================
+
+HyperTreeList is freeware and distributed under the wxPython license.
+
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.8
 
 """

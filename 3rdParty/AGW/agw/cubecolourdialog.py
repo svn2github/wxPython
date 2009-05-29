@@ -4,7 +4,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Aug 2007
-# Latest Revision: 15 Oct 2008, 10.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -28,6 +28,12 @@
 # --------------------------------------------------------------------------- #
 
 """
+CubeColourDialog is an alternative implementation of wx.ColourDialog.
+
+
+Description
+===========
+
 The CubeColourDialog is an alternative implementation of wx.ColourDialog, and it
 offers different functionalities with respect to the default wxPython one. It
 can be used as a replacement of wx.ColourDialog with exactly the same syntax and
@@ -59,12 +65,12 @@ Some features:
 And much more.
 
 
-License And Version:
+License And Version
+===================
 
 CubeColourDialog is freeware and distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 15 Oct 2008, 10.00 GMT
-
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.2.
 
 

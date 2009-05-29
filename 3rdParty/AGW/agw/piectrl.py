@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 31 Oct 2005
-# Latest Revision: 15 Oct 2008, 10.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List/Caveats
@@ -28,7 +28,12 @@
 
 
 """
-Description:
+PieCtrl/ProgressPie are simple classes that reproduce the behavior of a pie
+chart.
+
+
+Description
+===========
 
 PieCtrl/ProgressPie are simple classes that reproduce the behavior of a pie
 chart. They use only pure wxPython classes/methods, without external dependencies.
@@ -37,7 +42,8 @@ a simple pie chart on a wx.Panel or similar. ProgressPie tries to emulate the
 behavior of wx.ProgressDialog, but using a pie chart instead of a gauge.
 
 
-Usage:
+Usage
+=====
 
 An example of use of PieCtrl is as follows:
 
@@ -80,7 +86,8 @@ For the full listing of the input parameters, see the PieCtrl __init__()
 method.
 
 
-Methods and Settings:
+Methods and Settings
+====================
 
 With PieCtrl you can:
 
@@ -95,10 +102,14 @@ For more info on methods and initial styles, please refer to the __init__()
 method for PieCtrl or to the specific functions.
 
 
-PieCtrl control is freeware and distributed under the wxPython license.
+License And Version
+===================
 
-Latest revision: Andrea Gavana @ 15 Oct 2008, 10.00 GMT
+PieCtrl is freeware and distributed under the wxPython license.
+
+Latest revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.1
+
 """
 
 

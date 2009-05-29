@@ -2,7 +2,7 @@
 # RULERCTRL wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 08 Apr 2009, 10.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -22,6 +22,10 @@
 # --------------------------------------------------------------------------------- #
 
 """
+RulerCtrl implements a ruler window that can be placed on top, bottom, left or right
+to any wxPython widget.
+
+
 Description
 ===========
 
@@ -48,6 +52,7 @@ RulerCtrl has the following characteristics:
 And a lot more. See the demo for a review of the functionalities (even if also the
 demo does not include all the options supported by RulerCtrl).
 
+
 Events
 ======
 
@@ -65,13 +70,12 @@ RulerCtrl has been tested on the following platforms:
   * Linux Ubuntu (Dapper 6.06)
 
 
-License And Version:
+License And Version
 ===================
 
 RulerCtrl is freeware and distributed under the wxPython license. 
 
-
-Latest Revision: Andrea Gavana @ 08 Apr 2009, 10.00 GMT
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.2
 
 """

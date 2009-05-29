@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 12 May 2009, 15.00 GMT
+# Latest Revision: 29 May 2009, 09.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -26,6 +26,10 @@
 # --------------------------------------------------------------------------- #
 
 """
+LabelBook and FlatImageBook are a quasi-full generic and owner-drawn
+implementations of wx.Notebook.
+
+
 Description
 ===========
 
@@ -74,12 +78,12 @@ LabelBook and FlatImageBook have been tested on the following platforms:
   * Linux Ubuntu (Dapper 6.06)
 
 
-License And Version:
+License And Version
 ===================
 
 LabelBook and FlatImageBook are freeware and distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 12 May 2009, 15.00 GMT
+Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
 Version 0.2.
 
 """
