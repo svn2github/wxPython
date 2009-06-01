@@ -986,7 +986,7 @@ class TreeListItem(GenericTreeItem):
         return ""
     
 
-    def GetImage(self, column=None, which=wx.TreeItemIcon_Normal):
+    def GetImage(self, which=wx.TreeItemIcon_Normal, column=None):
 
         column = (column is not None and [column] or [self._owner.GetMainColumn()])[0]
 
@@ -1005,7 +1005,7 @@ class TreeListItem(GenericTreeItem):
         column = (column is not None and [column] or [self._owner.GetMainColumn()])[0]
 
         if column != self._owner.GetMainColumn():
-            return self.GetImage(column)
+            return self.GetImage(column=column)
         
         image = GenericTreeItem.GetCurrentImage(self)
         return image
@@ -1395,7 +1395,7 @@ class TreeListMainWindow(CustomTreeCtrl):
     def GetItemImage(self, item, column=None, which=wx.TreeItemIcon_Normal):
 
         column = (column is not None and [column] or [self._main_column])[0]
-        return item.GetImage(column, which)
+        return item.GetImage(which, column)
 
 
     def SetItemImage(self, item, image, column=None, which=wx.TreeItemIcon_Normal):
@@ -1588,7 +1588,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             self.CalculatePositions()
         
         if not self.HasFlag(wx.TR_MULTIPLE):
-            self._current = self._selectItem = self._anchor
+            self._current = self._key_current = self._selectItem = self._anchor
             self._current.SetHilight(True)
         
         return self._anchor
@@ -1816,7 +1816,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             else:
                 dc.SetTextForeground(self.GetHyperTextNewColour())
 
-        colText = dc.GetTextForeground()
+        colText = wx.Colour(*dc.GetTextForeground())
         
         if item.IsSelected():
             if (wx.Platform == "__WXMAC__" and self._hasFocus):
@@ -1938,7 +1938,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             
             else:
                 x = x_colstart + _MARGIN
-                image = item.GetImage(i)
+                image = item.GetImage(column=i)
                 
             if image != _NO_IMAGE:
                 image_w = self._imgWidth + _MARGIN
@@ -1990,6 +1990,8 @@ class TreeListMainWindow(CustomTreeCtrl):
                                 wx.RendererNative.Get().DrawItemSelectionRect(self._owner, dc, itemrect, flags) 
                             else:
                                 dc.DrawRectangleRect(itemrect)
+
+                        dc.SetTextForeground(colTextHilight)
 
                     elif item == self._current:
                         dc.SetPen((self._hasFocus and [wx.BLACK_PEN] or [wx.TRANSPARENT_PEN])[0])
@@ -2645,7 +2647,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                 unselect_others = not ((event.ShiftDown() or event.ControlDown()) and self.HasFlag(wx.TR_MULTIPLE))
                 self.DoSelectItem(item, unselect_others, event.ShiftDown())
                 self.EnsureVisible (item)
-                self._current = item # make the new item the current item
+                self._current = self._key_current = item # make the new item the current item
             else:
                 self._left_down_selection = False
             
@@ -2679,7 +2681,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                 unselect_others = not ((event.ShiftDown() or event.ControlDown()) and self.HasFlag(wx.TR_MULTIPLE))
                 self.DoSelectItem(item, unselect_others, event.ShiftDown())
                 self.EnsureVisible(item)
-                self._current = item # make the new item the current item
+                self._current = self._key_current = item # make the new item the current item
                 self._left_down_selection = True
             
             # For some reason, Windows isn't recognizing a left double-click,
