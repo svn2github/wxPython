@@ -2096,7 +2096,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
 
 class DotGrid:
     """
-    An example of a Grid Object -- it is set on teh FloatCAnvas with one of: 
+    An example of a Grid Object -- it is set on the FloatCanvas with one of: 
     
     FloatCanvas.GridUnder = Grid
     FloatCanvas.GridOver = Grid
@@ -2152,7 +2152,7 @@ class DotGrid:
             dc.DrawLineList(LinePoints)
             pass
         else: # use dots
-            ## Note: this code borrowed from Pointset -- itreally shouldn't be repeated here!.
+            ## Note: this code borrowed from Pointset -- it really shouldn't be repeated here!.
             if self.Size <= 1:
                 dc.DrawPointList(Points)
             elif self.Size <= 2:
