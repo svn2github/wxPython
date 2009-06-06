@@ -39,6 +39,27 @@ class ScrolledPage(wx.ScrolledWindow):
         self.topSizer.Layout()
         self.SendSizeEvent()
 
+# No highlighting please
+class ToggleButton(buttons.GenBitmapToggleButton):
+    def GetBackgroundBrush(self, dc):
+        colBg = self.GetBackgroundColour()
+        brush = wx.Brush(colBg, wx.SOLID)
+        if self.style & wx.BORDER_NONE:
+            myAttr = self.GetDefaultAttributes()
+            parAttr = self.GetParent().GetDefaultAttributes()
+            myDef = colBg == myAttr.colBg
+            parDef = self.GetParent().GetBackgroundColour() == parAttr.colBg
+            if myDef and parDef:
+                if wx.Platform == "__WXMAC__":
+                    brush.MacSetTheme(1) # 1 == kThemeBrushDialogBackgroundActive
+                elif wx.Platform == "__WXMSW__":
+                    if self.DoEraseBackground(dc):
+                        brush = None
+            elif myDef and not parDef:
+                colBg = self.GetParent().GetBackgroundColour()
+                brush = wx.Brush(colBg, wx.SOLID)
+        return brush
+
 class Panel(wx.Panel):
     '''Attribute panel main class.'''
     def __init__(self, *args, **kw):
@@ -64,14 +85,11 @@ class Panel(wx.Panel):
                         (self.textName, 0, wx.LEFT, 5) ])
         pinSizer.Add(sizer, 0, wx.ALL, 5)
         pinSizer.Add((0, 0), 1)
-        self.pinButton = buttons.GenBitmapToggleButton(
-            self, bitmap=images.ToolPin.GetBitmap(),
-            style=wx.BORDER_NONE)
+        self.pinButton = ToggleButton(self, bitmap=images.ToolPin.GetBitmap(),
+                                      style=wx.BORDER_NONE)
         self.pinButton.SetBitmapSelected(images.ToolPinDown.GetBitmap())
         self.pinButton.SetToggle(g.conf.panelPinState)
         self.pinButton.SetToolTipString('Sticky page selection')
-        # No highlighting please
-        self.pinButton.GetBackgroundBrush = lambda dc: None
         pinSizer.Add(self.pinButton)
         topSizer.Add(pinSizer, 0, wx.EXPAND)
         self.sizer = sizer
