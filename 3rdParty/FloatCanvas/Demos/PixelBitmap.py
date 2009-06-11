@@ -64,7 +64,7 @@ class PixelBitmap:
             XY = (XY[0], XY[1] + (h - self.Height)/2)
             
         if self.Position[1] == 'r':
-            XY = (w - XY[0] - self.Height, XY[1])
+            XY = (w - XY[0] - self.Width, XY[1])
         elif self.Position[1] == 'c':
             XY = (XY[0] + (w - self.Width)/2, XY[1])
 
