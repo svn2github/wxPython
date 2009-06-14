@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 29 May 2009, 09.00 GMT
+# Latest Revision: 15 June 2009, 10.00 GMT
 #
 #
 # TODO List
@@ -148,8 +148,8 @@ License And Version
 
 HyperTreeList is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
-Version 0.8
+Latest Revision: Andrea Gavana @ 15 Jun 2009, 10.00 GMT
+Version 0.9
 
 """
 
@@ -163,7 +163,7 @@ from customtreectrl import TreeRenameTimer as TreeListRenameTimer
 from customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHECKED
 
 # Version Info
-__version__ = "0.8"
+__version__ = "0.9"
 
 # --------------------------------------------------------------------------
 # Constants
@@ -180,8 +180,8 @@ _BTNWIDTH = 9
 _BTNHEIGHT = 9
 _EXTRA_WIDTH = 4
 _EXTRA_HEIGHT = 4
-_HEADER_OFFSET_X = 1
-_HEADER_OFFSET_Y = 1
+
+_MAX_WIDTH = 30000  # pixels; used by OnPaint to redraw only exposed items
 
 _DRAG_TIMER_TICKS = 250   # minimum drag wait time in ms
 _FIND_TIMER_TICKS = 500   # minimum find wait time in ms
@@ -340,6 +340,7 @@ class TreeListHeaderWindow(wx.Window):
 
         wx.Window.__init__(self, parent, id, pos, size, style, name=name)
         
+        self._buffered = True
         self._owner = owner
         self._currentCursor = wx.StockCursor(wx.CURSOR_DEFAULT)
         self._resizeCursor = wx.StockCursor(wx.CURSOR_SIZEWE)
@@ -353,7 +354,12 @@ class TreeListHeaderWindow(wx.Window):
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
         self.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
 
-        self.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNFACE))
+        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+
+
+    def SetBuffered(self, buffered):
+
+        self._buffered = buffered
 
 
     # total width of all columns
@@ -470,15 +476,15 @@ class TreeListHeaderWindow(wx.Window):
 
     def OnPaint(self, event):
 
-        if wx.Platform == "__WXGTK__":
-            dc = wx.ClientDC(self)
+        if self._buffered:
+            dc = wx.BufferedPaintDC(self)
         else:
             dc = wx.PaintDC(self)
             
         self.PrepareDC(dc)
         self.AdjustDC(dc)
 
-        x = _HEADER_OFFSET_X
+        x = 0
 
         # width and height of the entire header window
         w, h = self.GetClientSize()
@@ -1192,7 +1198,7 @@ class EditTextCtrl(wx.TextCtrl):
         x = item.GetX()
 
         if column > 0:
-            x = _HEADER_OFFSET_X
+            x = 0
             
         for i in xrange(column):
             if not self._owner.GetParent()._header_win.IsColumnShown(i):
@@ -1350,6 +1356,8 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         CustomTreeCtrl.__init__(self, parent, id, pos, size, style, 0, validator, name)
         
+        self._buffered = True
+
         self._shiftItem = None
         self._editItem = None
         self._selectItem = None
@@ -1376,11 +1384,29 @@ class TreeListMainWindow(CustomTreeCtrl):
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
-        self.Bind(wx.EVT_SCROLLWIN, self.OnScroll)
+
+        # Listen for EVT_SCROLLWIN in a separate event handler so that the
+        # default handler can be called without entering an infinite loop.
+        # See OnScroll for why calling the default handler manually is needed.
+        # Store the default handler in _default_evt_handler.
+        scroll_evt_handler = wx.EvtHandler()
+        self.PushEventHandler(scroll_evt_handler)
+        scroll_evt_handler.Bind(wx.EVT_SCROLLWIN, self.OnScroll)
+        self._default_evt_handler = scroll_evt_handler.GetNextHandler()
 
         # Sets the focus to ourselves: this is useful if you have items
         # with associated widgets.
         self.SetFocus()
+        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+
+
+    def SetBuffered(self, buffered):
+
+        self._buffered = buffered
+        if buffered:
+            self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+        else:
+            self.SetBackgroundStyle(wx.BG_STYLE_SYSTEM)
 
 
     def IsVirtual(self):
@@ -2123,9 +2149,11 @@ class TreeListMainWindow(CustomTreeCtrl):
         exposed_x = dc.LogicalToDeviceX(0)
         exposed_y = dc.LogicalToDeviceY(y_top)
 
-        if self.IsExposed(exposed_x, exposed_y, 10000, h):  # 10000 = very much
+        # horizontal lines between rows?
+        draw_row_lines = self.HasFlag(wx.TR_ROW_LINES)
 
-            if self.HasFlag(wx.TR_ROW_LINES):  # horizontal lines between rows
+        if self.IsExposed(exposed_x, exposed_y, _MAX_WIDTH, h + draw_row_lines):
+            if draw_row_lines:
                 total_width = self._owner.GetHeaderWindow().GetWidth()
                 # if the background colour is white, choose a
                 # contrasting color for the lines
@@ -2241,9 +2269,30 @@ class TreeListMainWindow(CustomTreeCtrl):
 # wxWindows callbacks
 # ----------------------------------------------------------------------------
 
+    def OnEraseBackground(self, event):
+
+        # do not paint the background separately in buffered mode.
+        if not self._buffered:
+            CustomTreeCtrl.OnEraseBackground(self, event)
+
+
     def OnPaint(self, event):
 
-        dc = wx.PaintDC(self)
+        if self._buffered:
+
+            # paint the background
+            dc = wx.BufferedPaintDC(self)
+            rect = self.GetUpdateRegion().GetBox()
+            dc.SetClippingRect(rect)
+            dc.SetBackground(wx.Brush(self.GetBackgroundColour()))
+            if self._backgroundImage:
+                self.TileBackground(dc)
+            else:
+                dc.Clear()
+
+        else:
+        	dc = wx.PaintDC(self)
+
         self.PrepareDC(dc)
 
         if not self._anchor or self.GetColumnCount() <= 0:
@@ -2713,7 +2762,16 @@ class TreeListMainWindow(CustomTreeCtrl):
         
     def OnScroll(self, event):
 
-        event.Skip()
+        # Let wxScrolledWindow compute the new scroll position so that
+        # TreeListHeaderWindow is repainted with the same scroll position as
+        # TreeListMainWindow.
+        #
+        # event.Skip() would not work, Update() would call
+        # TreeListHeaderWindow.OnPaint() synchronously, before
+        # wxScrolledWindow.OnScroll() is called by the event handler. OnPaint()
+        # would not use the latest scroll position so the header and the tree
+        # scrolling positions would be unsynchronized.
+        self._default_evt_handler.ProcessEvent(event)
         
         if event.GetOrientation() == wx.HORIZONTAL:
             self._owner.GetHeaderWindow().Refresh()
@@ -3004,6 +3062,12 @@ class HyperTreeList(wx.PyControl):
         self.CalculateAndSetHeaderHeight()
         self.Bind(wx.EVT_SIZE, self.OnSize)
         
+
+    def SetBuffered(self, buffered):
+
+        self._main_win.SetBuffered(buffered)
+        self._header_win.SetBuffered(buffered)
+
 
     def CalculateAndSetHeaderHeight(self):
 
