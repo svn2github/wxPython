@@ -49,6 +49,7 @@ MENU_DCLICK_CLOSES_TAB = wx.NewId()
 MENU_USE_VC8_STYLE = wx.NewId()
 MENU_USE_FF2_STYLE = wx.NewId()
 MENU_HIDE_ON_SINGLE_TAB = wx.NewId()
+MENU_NO_TABS_FOCUS = wx.NewId()
 
 MENU_SET_ACTIVE_TEXT_COLOR = wx.NewId()
 MENU_DRAW_TAB_X = wx.NewId()
@@ -194,6 +195,11 @@ class FlatNotebookDemo(wx.Frame):
 
         item = wx.MenuItem(self._editMenu, MENU_HIDE_ON_SINGLE_TAB, "Hide Page Container when only one Tab",
                            "Hide Page Container when only one Tab", wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnStyle, item)
+        self._editMenu.AppendItem(item)
+
+        item = wx.MenuItem(self._editMenu, MENU_NO_TABS_FOCUS, "No focus on notebook tabs",
+                           "No focus on notebook tabs, only pages", wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnStyle, item)
         self._editMenu.AppendItem(item)
 
@@ -420,6 +426,15 @@ class FlatNotebookDemo(wx.Frame):
 
             self.book.SetWindowStyleFlag(style)
             self.book.Refresh()
+
+        elif eventid == MENU_NO_TABS_FOCUS:
+            if event.IsChecked():
+                # Hide the navigation buttons
+                style |= fnb.FNB_NO_TAB_FOCUS
+            else:
+                style &= ~(fnb.FNB_NO_TAB_FOCUS)
+
+            self.book.SetWindowStyleFlag(style)
 
 
     def OnQuit(self, event):

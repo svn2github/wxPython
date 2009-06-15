@@ -87,6 +87,7 @@ import math
 import weakref
 import cPickle
 
+# Used on OSX to get access to carbon api constants
 if wx.Platform == '__WXMAC__':
     import Carbon.Appearance
 
@@ -162,6 +163,9 @@ FNB_ALLOW_FOREIGN_DND = 32768
 
 FNB_HIDE_ON_SINGLE_TAB = 65536
 """Hides the Page Container when there is one or fewer tabs"""
+
+FNB_NO_TAB_FOCUS = 131072
+""" Does not allow tabs to have focus"""
 
 VERTICAL_BORDER_PADDING = 4
 
@@ -3376,7 +3380,7 @@ class FlatNotebook(wx.PyPanel):
         """ Returns the currently selected notebook page or None. """
         
         sel = self._pages.GetSelection()
-        if sel < 0:
+        if sel < 0 or sel >= len(self._windows):
             return None
 
         return self._windows[sel]
@@ -3994,7 +3998,8 @@ class PageContainer(wx.Panel):
             if self._iActivePage != tabIdx:
                 
                 # In case the tab is disabled, we dont allow to choose it
-                if self._pagesInfoVec[tabIdx].GetEnabled():
+                if len(self._pagesInfoVec) > tabIdx and \
+                   self._pagesInfoVec[tabIdx].GetEnabled():
                     self.FireEvent(tabIdx)
 
 
@@ -4046,9 +4051,10 @@ class PageContainer(wx.Panel):
         self._nLeftClickZone = FNB_NOWHERE
 
         where, tabIdx = self.HitTest(event.GetPosition())
-        
-        # Make sure selected tab has focus
-        self.SetFocus()
+
+        if not self.HasFlag(FNB_NO_TAB_FOCUS):
+            # Make sure selected tab has focus
+            self.SetFocus()
 
         if where == FNB_LEFT_ARROW:
             self.RotateLeft()
@@ -4561,7 +4567,8 @@ class PageContainer(wx.Panel):
         """ Handles the drop action from a DND operation. """
 
         # Disable drag'n'drop for disabled tab
-        if not wnd_oldContainer._pagesInfoVec[nTabPage].GetEnabled():
+        if len(wnd_oldContainer._pagesInfoVec) > nTabPage and \
+           not wnd_oldContainer._pagesInfoVec[nTabPage].GetEnabled():
             return wx.DragCancel
 
         self._isdragging = True
@@ -4795,8 +4802,10 @@ class PageContainer(wx.Panel):
         key = event.GetKeyCode()
         if key == wx.WXK_LEFT:
             self.GetParent().AdvanceSelection(False)
+            self.SetFocus()
         elif key == wx.WXK_RIGHT:
             self.GetParent().AdvanceSelection(True)
+            self.SetFocus()
         elif key == wx.WXK_TAB and not event.ControlDown():
             flags = 0
             if not event.ShiftDown(): flags |= wx.NavigationKeyEvent.IsForward
@@ -4875,7 +4884,8 @@ class PageContainer(wx.Panel):
             event.SetEventType(wxEVT_FLATNOTEBOOK_PAGE_CHANGED)
             event.SetOldSelection(oldSelection)
             self.GetParent().GetEventHandler().ProcessEvent(event)
-            self.SetFocus()
+            if not self.HasFlag(FNB_NO_TAB_FOCUS):
+                self.SetFocus()
             
 
     def SetImageList(self, imglist):
@@ -4910,15 +4920,19 @@ class PageContainer(wx.Panel):
 
     def GetPageText(self, page):
         """ Returns the tab caption of the page. """
-
-        return self._pagesInfoVec[page].GetCaption() 
+        if page < len(self._pagesInfoVec):
+        	return self._pagesInfoVec[page].GetCaption() 
+        else:
+            return u''
 
 
     def SetPageText(self, page, text):
         """ Sets the tab caption of the page. """
-
-        self._pagesInfoVec[page].SetCaption(text)
-        return True 
+        if page < len(self._pagesInfoVec):
+        	self._pagesInfoVec[page].SetCaption(text)
+        	return True 
+        else:
+            return False
 
 
     def DrawDragHint(self):
