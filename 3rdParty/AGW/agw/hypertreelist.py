@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 15 June 2009, 10.00 GMT
+# Latest Revision: 16 June 2009, 10.00 GMT
 #
 #
 # TODO List
@@ -148,11 +148,10 @@ License And Version
 
 HyperTreeList is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 15 Jun 2009, 10.00 GMT
+Latest Revision: Andrea Gavana @ 16 Jun 2009, 10.00 GMT
 Version 0.9
 
 """
-
 
 import wx
 import wx.gizmos
@@ -198,6 +197,25 @@ TREE_HITTEST_ONITEMCHECKICON  = 0x4000
 TR_NO_HEADER = 0x40000
 # --------------------------------------------------------------------------
 
+def IsPlatformGood():
+    """
+    Utility function which checks if a platform handles correctly double
+    buffering for the header. Currently returns False for all platforms
+    except Windows XP.
+    """
+
+    if wx.Platform != "__WXMSW__":
+        return False
+
+    if wx.App.GetComCtl32Version() >= 600:
+        if wx.GetOsVersion()[1] > 5:
+            # Windows Vista
+            return False
+
+        return True
+
+    return False    
+    
 
 class TreeListColumnInfo(object):
 
@@ -340,7 +358,7 @@ class TreeListHeaderWindow(wx.Window):
 
         wx.Window.__init__(self, parent, id, pos, size, style, name=name)
         
-        self._buffered = True
+        self._buffered = IsPlatformGood()
         self._owner = owner
         self._currentCursor = wx.StockCursor(wx.CURSOR_DEFAULT)
         self._resizeCursor = wx.StockCursor(wx.CURSOR_SIZEWE)
@@ -1356,7 +1374,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         CustomTreeCtrl.__init__(self, parent, id, pos, size, style, 0, validator, name)
         
-        self._buffered = True
+        self._buffered = IsPlatformGood()
 
         self._shiftItem = None
         self._editItem = None
