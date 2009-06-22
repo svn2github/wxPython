@@ -57,6 +57,27 @@ PyProgress has been tested on the following platforms:
   * Linux Ubuntu (Dapper 6.06)
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+=================== =========== ==================================================
+Window Styles       Hex Value   Description
+=================== =========== ==================================================
+``PD_CAN_ABORT``            0x1 This flag tells the dialog that it should have a "Cancel" button which the user may press. If this happens, the next call to `Update()` will return ``False``.
+``PD_APP_MODAL``            0x2 Make the progress dialog modal. If this flag is not given, it is only 'locally' modal - that is the input to the parent window is disabled, but not to the other ones.
+``PD_AUTO_HIDE``            0x4 Causes the progress dialog to disappear from screen as soon as the maximum value of the progress meter has been reached.
+``PD_ELAPSED_TIME``         0x8 This flag tells the dialog that it should show elapsed time (since creating the dialog).
+=================== =========== ==================================================
+
+
+Events Processing
+=================
+
+`No custom events are available for this class.`
+
+
 License And Version
 ===================
 
@@ -81,6 +102,18 @@ Finished = 2
 # Margins between gauge and text/button
 LAYOUT_MARGIN = 8
 
+# PyProgress styles
+PD_CAN_ABORT = wx.PD_CAN_ABORT
+""" This flag tells the dialog that it should have a "Cancel" button which the user""" \
+""" may press. If this happens, the next call to `Update()` will return ``False``. """
+PD_APP_MODAL = wx.PD_APP_MODAL
+""" Make the progress dialog modal. If this flag is not given, it is only 'locally'"""\
+""" modal - that is the input to the parent window is disabled, but not to the other ones. """
+PD_AUTO_HIDE = wx.PD_AUTO_HIDE
+""" Causes the progress dialog to disappear from screen as soon as the maximum""" \
+""" value of the progress meter has been reached. """
+PD_ELAPSED_TIME = wx.PD_ELAPSED_TIME
+""" This flag tells the dialog that it should show elapsed time (since creating the dialog). """
 
 # ---------------------------------------------------------------------------- #
 # Class ProgressGauge

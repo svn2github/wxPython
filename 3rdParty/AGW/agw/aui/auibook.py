@@ -46,23 +46,39 @@ wxEVT_COMMAND_AUINOTEBOOK_TAB_DCLICK = wx.NewEventType()
 wxEVT_COMMAND_AUINOTEBOOK_CANCEL_DRAG = wx.NewEventType()
 
 EVT_AUINOTEBOOK_PAGE_CLOSE = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_PAGE_CLOSE, 1)
+""" A tab in `AuiNotebook` is being closed. Can be vetoed by calling `Veto()`. """
 EVT_AUINOTEBOOK_PAGE_CLOSED = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_PAGE_CLOSED, 1)
+""" A tab in `AuiNotebook` has been closed. """
 EVT_AUINOTEBOOK_PAGE_CHANGED = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, 1)
+""" The page selection was changed. """
 EVT_AUINOTEBOOK_PAGE_CHANGING = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGING, 1)
+""" The page selection is being changed. """
 EVT_AUINOTEBOOK_BUTTON = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_BUTTON, 1)
+""" The user clicked on a button in the `AuiNotebook` tab area. """
 EVT_AUINOTEBOOK_BEGIN_DRAG = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_BEGIN_DRAG, 1)
+""" A drag-and-drop operation on a notebook tab has started. """
 EVT_AUINOTEBOOK_END_DRAG = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_END_DRAG, 1)
+""" A drag-and-drop operation on a notebook tab has finished. """
 EVT_AUINOTEBOOK_DRAG_MOTION = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_DRAG_MOTION, 1)
+""" A drag-and-drop operation on a notebook tab is ongoing. """
 EVT_AUINOTEBOOK_ALLOW_DND = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_ALLOW_DND, 1)
+""" Fires an event asking if it is OK to drag and drop a tab. """
 EVT_AUINOTEBOOK_DRAG_DONE = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_DRAG_DONE, 1)
+""" A drag-and-drop operation on a notebook tab has finished. """
 EVT_AUINOTEBOOK_TAB_MIDDLE_DOWN = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_DOWN, 1)
+""" The user clicked with the middle mouse button on a tab. """
 EVT_AUINOTEBOOK_TAB_MIDDLE_UP = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, 1)
+""" The user clicked with the middle mouse button on a tab. """
 EVT_AUINOTEBOOK_TAB_RIGHT_DOWN = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_TAB_RIGHT_DOWN, 1)
+""" The user clicked with the right mouse button on a tab. """
 EVT_AUINOTEBOOK_TAB_RIGHT_UP = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_TAB_RIGHT_UP, 1)
+""" The user clicked with the right mouse button on a tab. """
 EVT_AUINOTEBOOK_BG_DCLICK = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_BG_DCLICK, 1)
+""" The user left-clicked on the tab area not occupied by `AuiNotebook` tabs. """
 EVT_AUINOTEBOOK_CANCEL_DRAG = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_CANCEL_DRAG, 1)
+""" A drag and drop operation has been cancelled. """
 EVT_AUINOTEBOOK_TAB_DCLICK = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_TAB_DCLICK, 1)
-
+""" The user double-clicked with the left mouse button on a tab. """
 
 # ----------------------------------------------------------------------
 

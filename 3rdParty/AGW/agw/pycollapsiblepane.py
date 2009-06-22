@@ -57,6 +57,34 @@ win.SetSizer(paneSz)
 paneSz.SetSizeHints(win)
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+==================== =========== ==================================================
+Window Styles        Hex Value   Description
+==================== =========== ==================================================
+``CP_NO_TLW_RESIZE``         0x2 By default `PyCollapsiblePane` resizes the top level window containing it when its own size changes. This allows to easily implement dialogs containing an optionally shown part, for example, and so is the default behaviour but can be inconvenient in some specific cases -- use this flag to disable this automatic parent resizing then.
+``CP_GTK_EXPANDER``          0x4 Uses a GTK expander instead of a button.
+``CP_USE_STATICBOX``         0x8 Uses a `wx.StaticBox` around `PyCollapsiblePane`.
+``CP_LINE_ABOVE``           0x10 Draws a line above `PyCollapsiblePane`.
+``CP_DEFAULT_STYLE``    0x280000 The default style. It includes ``wx.TAB_TRAVERSAL`` and ``wx.BORDER_NONE``.
+==================== =========== ==================================================
+
+
+Events Processing
+=================
+
+This class processes the following events:
+
+=============================== ==================================================
+Event Name                      Description
+=============================== ==================================================
+``EVT_COLLAPSIBLEPANE_CHANGED`` The user showed or hid the collapsible pane.
+=============================== ==================================================
+
+
 License And Version
 ===================
 
@@ -70,13 +98,27 @@ Version 0.2
 import wx
 
 CP_GTK_EXPANDER = 4
+""" Uses a GTK expander instead of a button. """
 CP_USE_STATICBOX = 8
+""" Uses a `wx.StaticBox` around `PyCollapsiblePane`. """
 CP_LINE_ABOVE = 16
+""" Draws a line above `PyCollapsiblePane`. """
+CP_DEFAULT_STYLE = wx.CP_DEFAULT_STYLE
+""" The default style. It includes ``wx.TAB_TRAVERSAL`` and ``wx.BORDER_NONE``. """
+CP_NO_TLW_RESIZE = wx.CP_NO_TLW_RESIZE
+""" By default `PyCollapsiblePane` resizes the top level window containing it when its""" \
+""" own size changes. This allows to easily implement dialogs containing an optionally""" \
+""" shown part, for example, and so is the default behaviour but can be inconvenient""" \
+""" in some specific cases -- use this flag to disable this automatic parent resizing then. """
 
 # inject into the wx namespace with the other CP_* constants
 wx.CP_GTK_EXPANDER = CP_GTK_EXPANDER
 wx.CP_USE_STATICBOX = CP_USE_STATICBOX
 wx.CP_LINE_ABOVE = CP_LINE_ABOVE
+
+# PyCollapsiblePane events
+EVT_COLLAPSIBLEPANE_CHANGED = wx.EVT_COLLAPSIBLEPANE_CHANGED
+""" The user showed or hid the collapsible pane. """
 
 #-----------------------------------------------------------------------------
 # 2.9 deprecates SetSpacer, so we'll use AssignSpacer and monkey-patch 2.8 so
@@ -236,12 +278,12 @@ class PyCollapsiblePane(wx.PyPanel):
             self._pStaticLine = wx.StaticLine(self, wx.ID_ANY)
 
             if self.HasFlag(CP_LINE_ABOVE): 
-                # put the static libe above the button
+                # put the static line above the button
                 self._sz = wx.BoxSizer(wx.VERTICAL)
                 self._sz.Add(self._pStaticLine, 0, wx.ALL|wx.GROW, self.GetBorder())
                 self._sz.Add(self._pButton, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, self.GetBorder())
             else:
-                # arrainge the static line and the button horizontally
+                # arrange the static line and the button horizontally
                 self._sz = wx.BoxSizer(wx.HORIZONTAL)
                 self._sz.Add(self._pButton, 0, wx.LEFT|wx.TOP|wx.BOTTOM, self.GetBorder())
                 self._sz.Add(self._pStaticLine, 1, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, self.GetBorder())

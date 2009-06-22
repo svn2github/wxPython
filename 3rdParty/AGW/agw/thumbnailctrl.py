@@ -91,13 +91,35 @@ With ThumbnailCtrl you can:
 For more info on methods and initial styles, please refer to the __init__()
 method for ThumbnailCtrl or to the specific functions.
 
-|=========================================================================== |
-| NOTE: ThumbnailCtrl *requires* PIL (Python Imaging Library) library to     |
-| be installed.                                                              |
+|===========================================================================|
+| NOTE: ThumbnailCtrl *requires* PIL (Python Imaging Library) library to    |
+| be installed.                                                             |
 |=========================================================================== |
 
 Side-note: using highlight thumbnails on mouse hovering may be slow on slower
 computers.
+
+
+Window Styles
+=============
+
+`No particular window styles are available for this class.`
+
+
+Events Processing
+=================
+
+This class processes the following events:
+
+================================== ==================================================
+Event Name                         Description
+================================== ==================================================
+``EVT_THUMBNAILS_CAPTION_CHANGED`` The thumbnail caption has been changed. Not used at present.
+``EVT_THUMBNAILS_DCLICK``          The user has double-clicked on a thumbnail.
+``EVT_THUMBNAILS_POINTED``         The mouse cursor is hovering over a thumbnail.
+``EVT_THUMBNAILS_SEL_CHANGED``     The user has changed the selected thumbnail.
+``EVT_THUMBNAILS_THUMB_CHANGED``   The thumbnail of an image has changed. Used internally.
+================================== ==================================================
 
 
 License And Version
@@ -261,10 +283,15 @@ wxEVT_THUMBNAILS_THUMB_CHANGED = wx.NewEventType()
 #-----------------------------------#
 
 EVT_THUMBNAILS_SEL_CHANGED = wx.PyEventBinder(wxEVT_THUMBNAILS_SEL_CHANGED, 1)
+""" The user has changed the selected thumbnail. """
 EVT_THUMBNAILS_POINTED = wx.PyEventBinder(wxEVT_THUMBNAILS_POINTED, 1)
+""" The mouse cursor is hovering over a thumbnail. """
 EVT_THUMBNAILS_DCLICK = wx.PyEventBinder(wxEVT_THUMBNAILS_DCLICK, 1)
+""" The user has double-clicked on a thumbnail. """
 EVT_THUMBNAILS_CAPTION_CHANGED = wx.PyEventBinder(wxEVT_THUMBNAILS_CAPTION_CHANGED, 1)
+""" The thumbnail caption has been changed. Not used at present. """
 EVT_THUMBNAILS_THUMB_CHANGED = wx.PyEventBinder(wxEVT_THUMBNAILS_THUMB_CHANGED, 1)
+""" The thumbnail of an image has changed. Used internally"""
 
 TN_USE_PIL = 0
 

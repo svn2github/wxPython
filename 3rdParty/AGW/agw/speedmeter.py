@@ -98,6 +98,34 @@ For more info on methods and initial styles, please refer to the __init__()
 method for SpeedMeter or to the specific functions.
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+=========================== =========== ==================================================
+Window Styles               Hex Value   Description
+=========================== =========== ==================================================
+``SM_ROTATE_TEXT``                  0x1 Draws the ticks rotated: the ticks are rotated accordingly to the tick marks positions.
+``SM_DRAW_SECTORS``                 0x2 Different intervals are painted in differend colours (every sector of the circle has its own colour).
+``SM_DRAW_PARTIAL_SECTORS``         0x4 Every interval has its own colour, but only a circle corona is painted near the ticks.
+``SM_DRAW_HAND``                    0x8 The hand (arrow indicator) is drawn.
+``SM_DRAW_SHADOW``                 0x10 A shadow for the hand is drawn.
+``SM_DRAW_PARTIAL_FILLER``         0x20 A circle corona that follows the hand position is drawn near the ticks.
+``SM_DRAW_SECONDARY_TICKS``        0x40 Intermediate (smaller) ticks are drawn between principal ticks.
+``SM_DRAW_MIDDLE_TEXT``            0x80 Some text is printed in the middle of the control near the center.
+``SM_DRAW_MIDDLE_ICON``           0x100 An icon is drawn in the middle of the control near the center.
+``SM_DRAW_GRADIENT``              0x200 A gradient of colours will fill the control.
+``SM_DRAW_FANCY_TICKS``           0x400 With this style you can use xml tags to create some custom text and draw it at the ticks position. See `wx.lib.fancytext` for the tags.
+=========================== =========== ==================================================
+
+
+Events Processing
+=================
+
+`No custom events are available for this class.`
+
+
 License And Version
 ===================
 
@@ -150,18 +178,31 @@ SM_BUFFERED_DC = 1
 # SM_DRAW_FANCY_TICKS: With This Style You Can Use XML Tags To Create
 #                      Some Custom Text And Draw It At The Ticks Position.
 #                      See wx.lib.fancytext For The Tags.
-
+                                  
 SM_ROTATE_TEXT = 1
+""" Draws the ticks rotated: the ticks are rotated accordingly to the tick marks positions. """
 SM_DRAW_SECTORS = 2
+""" Different intervals are painted in differend colours (every sector of the""" \
+""" circle has its own colour). """
 SM_DRAW_PARTIAL_SECTORS = 4
+""" Every interval has its own colour, but only a circle corona is painted near the ticks. """
 SM_DRAW_HAND = 8
+""" The hand (arrow indicator) is drawn. """
 SM_DRAW_SHADOW = 16
+""" A shadow for the hand is drawn. """
 SM_DRAW_PARTIAL_FILLER = 32
+""" A circle corona that follows the hand position is drawn near the ticks. """
 SM_DRAW_SECONDARY_TICKS = 64
+""" Intermediate (smaller) ticks are drawn between principal ticks. """
 SM_DRAW_MIDDLE_TEXT = 128
+""" Some text is printed in the middle of the control near the center. """
 SM_DRAW_MIDDLE_ICON = 256
+""" An icon is drawn in the middle of the control near the center. """
 SM_DRAW_GRADIENT = 512
+""" A gradient of colours will fill the control. """
 SM_DRAW_FANCY_TICKS = 1024
+""" With this style you can use xml tags to create some custom text and""" \
+""" draw it at the ticks position. See `wx.lib.fancytext` for the tags. """
 
 #----------------------------------------------------------------------
 # Event Binding

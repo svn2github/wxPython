@@ -118,6 +118,35 @@ FoldPanelBar is supported on the following platforms:
   * Mac OSX (Thanks To Robin Dunn For The CaptionBar Size Patch)
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+========================== =========== ==================================================
+Window Styles              Hex Value   Description
+========================== =========== ==================================================
+``FPB_SINGLE_FOLD``                0x1 Single fold forces other panels to close when they are open, and only opens the current panel. This will allow the open panel to gain the full size left in the client area. This is an extra style.
+``FPB_COLLAPSE_TO_BOTTOM``         0x2 All panels are stacked to the bottom. When they are expanded again they show up at the top. This is an extra style.
+``FPB_EXCLUSIVE_FOLD``             0x4 ``FPB_SINGLE_FOLD`` style plus the panels will be stacked at the bottom.  This is an extra style.
+``FPB_HORIZONTAL``                 0x4 `FoldPanelBar` will be horizontal.
+``FPB_VERTICAL``                   0x8 `FoldPanelBar` will be vertical.
+``FPB_DEFAULT_STYLE``         0x280000 Default style for `FoldPanelBar`: ``FPB_DEFAULT_STYLE`` = ``wx.TAB_TRAVERSAL`` | ``wx.NO_BORDER``.
+========================== =========== ==================================================
+
+
+Events Processing
+=================
+
+This class processes the following events:
+
+================== ==================================================
+Event Name         Description
+================== ==================================================
+``EVT_CAPTIONBAR`` The user has pressed the caption bar: `FoldPanelBar` will either expand or collapse the underlying panel.
+================== ==================================================
+
+
 License And Version
 ===================
 
@@ -176,23 +205,33 @@ FPB_BMP_RIGHTSPACE = 2
 # other panels to close when they are open, and only opens the current panel.
 # This will allow the open panel to gain the full size left in the client area
 FPB_SINGLE_FOLD = 0x0001
+""" Single fold forces other panels to close when they are open, and only opens""" \
+""" the current panel. This will allow the open panel to gain the full size left""" \
+""" in the client area. This is an extra style. """
 
 # All panels are stacked to the bottom. When they are expanded again they
 # show up at the top
 FPB_COLLAPSE_TO_BOTTOM = 0x0002
+""" All panels are stacked to the bottom. When they are expanded again they show""" \
+""" up at the top. This is an extra style. """
 
 # Now supported! Single fold plus panels
 # will be stacked at the bottom
 FPB_EXCLUSIVE_FOLD = 0x0004
+""" ``FPB_SINGLE_FOLD`` style plus the panels will be stacked at the bottom. """ \
+""" This is an extra style. """
 
 # Orientation Flag 
 FPB_HORIZONTAL = wx.HORIZONTAL
+""" `FoldPanelBar` will be horizontal. """
 FPB_VERTICAL = wx.VERTICAL  
+""" `FoldPanelBar` will be vertical. """
 
 # Default Extrastyle of the FoldPanelBar 
 FPB_DEFAULT_EXTRASTYLE = 0
 # Default style of the FoldPanelBar 
 FPB_DEFAULT_STYLE = wx.TAB_TRAVERSAL | wx.NO_BORDER
+""" Default style for `FoldPanelBar`: ``FPB_DEFAULT_STYLE`` = ``wx.TAB_TRAVERSAL`` | ``wx.NO_BORDER``. """
 
 # FoldPanelItem default settings
 FPB_ALIGN_LEFT = 0 
@@ -210,7 +249,7 @@ FPB_DEFAULT_RIGHTLINESPACING = 2
 # class CaptionBarStyle
 # ------------------------------------------------------------------------------ #
 
-class CaptionBarStyle:
+class CaptionBarStyle(object):
     """
     This class encapsulates the styles you wish to set for the
     `CaptionBar` (this is the part of the FoldPanel where the caption
@@ -415,6 +454,8 @@ class CaptionBarStyle:
 #-----------------------------------#
 wxEVT_CAPTIONBAR = wx.NewEventType()
 EVT_CAPTIONBAR = wx.PyEventBinder(wxEVT_CAPTIONBAR, 0)
+""" The user has pressed the caption bar: `FoldPanelBar` will either expand or""" \
+""" collapse the underlying panel. """
 
 
 # ---------------------------------------------------------------------------- #
@@ -1771,7 +1812,7 @@ class FoldPanelItem(wx.Panel):
 # class FoldWindowItem
 # ----------------------------------------------------------------------------------- #
 
-class FoldWindowItem:
+class FoldWindowItem(object):
     """
     This class is a child sibling of the `FoldPanelItem` class. It
     will contain wx.Window that can be either a separator (a colored

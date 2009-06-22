@@ -276,7 +276,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
             txts = self.captiontext.GetValue().strip()
             windowstyle = TB.TB_CAPTION
         else:
-            windowstyle = TB.DEFAULT_TB_STYLE
+            windowstyle = TB.TB_DEFAULT_STYLE
         
         if demochoice == 1:
             tbstyle = TB.TB_COMPLEX

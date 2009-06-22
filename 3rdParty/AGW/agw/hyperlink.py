@@ -42,6 +42,26 @@ browser window.
 Special thanks to Robin Dunn for the event binder for the 3 mouse buttons.
 
 
+Window Styles
+=============
+
+`No particular window styles are available for this class.`
+
+
+Events Processing
+=================
+
+This class processes the following events:
+
+======================== ==================================================
+Event Name               Description
+======================== ==================================================
+``EVT_HYPERLINK_LEFT``   Responds to a left mouse button event. Sent when the left mouse button is clicked, but only if `AutoBrowse` is set to ``False``.
+``EVT_HYPERLINK_MIDDLE`` Responds to a middle mouse button event. Sent when the middle mouse button is clicked.
+``EVT_HYPERLINK_RIGHT``  Handles a right mouse button event. Sent when the right mouse button is clicked, but only if `DoPopup` is set to ``False``.
+======================== ==================================================
+
+
 License And Version
 ===================
 
@@ -78,9 +98,13 @@ wxEVT_HYPERLINK_MIDDLE = wx.NewEventType()
 wxEVT_HYPERLINK_RIGHT = wx.NewEventType()
 
 EVT_HYPERLINK_LEFT = wx.PyEventBinder(wxEVT_HYPERLINK_LEFT, 1)
+""" Responds to a left mouse button event. Sent when the left mouse button is""" \
+""" clicked, but only if `AutoBrowse` is set to ``False``. """
 EVT_HYPERLINK_MIDDLE = wx.PyEventBinder(wxEVT_HYPERLINK_MIDDLE, 1)
+""" Responds to a middle mouse button event. Sent when the middle mouse button is clicked. """
 EVT_HYPERLINK_RIGHT = wx.PyEventBinder(wxEVT_HYPERLINK_RIGHT, 1)
-
+""" Handles a right mouse button event. Sent when the right mouse button is""" \
+""" clicked, but only if `DoPopup` is set to ``False``. """
 
 # ------------------------------------------------------------
 # This class implements the event listener for the hyperlinks

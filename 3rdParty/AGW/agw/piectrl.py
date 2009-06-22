@@ -102,6 +102,18 @@ For more info on methods and initial styles, please refer to the __init__()
 method for PieCtrl or to the specific functions.
 
 
+Window Styles
+=============
+
+`No particular window styles are available for this class.`
+
+
+Events Processing
+=================
+
+`No custom events are available for this class.`
+
+
 License And Version
 ===================
 

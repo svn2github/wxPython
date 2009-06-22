@@ -94,6 +94,36 @@ v0.9.* has been tested on
   * Windows (Windows XP, Vista);
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+========================= =========== ==================================================
+Window Styles             Hex Value   Description
+========================= =========== ==================================================
+``FM_OPT_IS_LCD``                 0x1 Use this style if your computer uses a LCD screen.
+``FM_OPT_MINIBAR``                0x2 Use this if you plan to use the toolbar only.
+``FM_OPT_SHOW_CUSTOMIZE``         0x4 Show "customize link" in the `More` menu, you will need to write your own handler. See demo.
+``FM_OPT_SHOW_TOOLBAR``           0x8 Set this option is you are planning to use the toolbar.
+========================= =========== ==================================================
+
+
+Events Processing
+=================
+
+This class processes the following events:
+
+================================= ==================================================
+Event Name                        Description
+================================= ==================================================
+``EVT_FLAT_MENU_DISMISSED``       Used internally.
+``EVT_FLAT_MENU_ITEM_MOUSE_OUT``  Fires an event when the mouse leaves a `FlatMenuItem`.
+``EVT_FLAT_MENU_ITEM_MOUSE_OVER`` Fires an event when the mouse enters a `FlatMenuItem`.
+``EVT_FLAT_MENU_SELECTED``        Fires the wx.EVT_MENU event for `FlatMenu`.
+================================= ==================================================
+
+
 License And Version
 ===================
 
@@ -113,7 +143,16 @@ import math
 from fmcustomizedlg import FMCustomizeDlg
 from artmanager import ArtManager, DCSaver
 from fmresources import *
-
+            
+# FlatMenu styles
+FM_OPT_IS_LCD = 1
+""" Use this style if your computer uses a LCD screen. """
+FM_OPT_MINIBAR = 2
+""" Use this if you plan to use the toolbar only. """
+FM_OPT_SHOW_CUSTOMIZE = 4
+""" Show "customize link" in the `More` menu, you will need to write your own handler. See demo. """
+FM_OPT_SHOW_TOOLBAR = 8
+""" Set this option is you are planning to use the toolbar. """
 
 # Some checking to see if we can draw shadows behind the popup menus
 # at least on Windows. *REQUIRES* Mark Hammond's win32all extensions
@@ -183,11 +222,11 @@ wxEVT_FLAT_MENU_ITEM_MOUSE_OUT = wx.NewEventType()
 EVT_FLAT_MENU_DISMISSED = wx.PyEventBinder(wxEVT_FLAT_MENU_DISMISSED, 1)
 """ Used internally. """
 EVT_FLAT_MENU_SELECTED = wx.PyEventBinder(wxEVT_FLAT_MENU_SELECTED, 2)
-""" Fires the wx.EVT_MENU event for FlatMenu. """
+""" Fires the wx.EVT_MENU event for `FlatMenu`. """
 EVT_FLAT_MENU_ITEM_MOUSE_OUT = wx.PyEventBinder(wxEVT_FLAT_MENU_ITEM_MOUSE_OUT, 1)
-""" Fires an event when the mouse leaves a FlatMenuItem. """
+""" Fires an event when the mouse leaves a `FlatMenuItem`. """
 EVT_FLAT_MENU_ITEM_MOUSE_OVER = wx.PyEventBinder(wxEVT_FLAT_MENU_ITEM_MOUSE_OVER, 1)
-""" Fires an event when the mouse enters a FlatMenuItem. """
+""" Fires an event when the mouse enters a `FlatMenuItem`. """
 
 
 def MSWGetCreateWindowCoords(pos, size):
@@ -407,7 +446,7 @@ class FlatMenuBar(wx.Panel):
         @param id: window id
         @param iconSize: size of the icons in the toolbar (see Resources.py)
         @param options:
-            - FM_OPT_IS_LCD - not sure what it is :) gotta ask Andrea.
+            - FM_OPT_IS_LCD - use this style if your computer uses a LCD screen.
             - FM_OPT_MINIBAR - use this if you plan to use toolbar only.
             - FM_OPT_SHOW_CUSTOMIZE  - show "customize link" in MoreMenu, you will need to write your own handler. See demo.
             - FM_OPT_SHOW_TOOLBAR - set this option is you are planing to use the toolbar.

@@ -60,6 +60,29 @@ ToasterBox has been tested on the following platforms:
 - Mac
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+==================== =========== ==================================================
+Window Styles        Hex Value   Description
+==================== =========== ==================================================
+``TB_SIMPLE``                0x1 A simple ToasterBox, with background image and text customization can be created.
+``TB_ONTIME``                0x1 `ToasterBox` will close after a specified amount of time.
+``TB_COMPLEX``               0x2 ToasterBoxes with different degree of complexity can be created. You can add as  many controls as you want, provided that you call the AddPanel() method and pass  to it a dummy frame and a wx.Panel. See the demo for details.
+``TB_ONCLICK``               0x2 `ToasterBox` can be closed by clicking anywhere on the `ToasterBox` frame.
+``TB_DEFAULT_STYLE``   0x2008002 Default window style for `ToasterBox`, with no caption nor close box.
+``TB_CAPTION``        0x22009806 `ToasterBox` will have a caption, with the possibility to set a title  for the `ToasterBox` frame, and a close box.
+==================== =========== ==================================================
+
+
+Events Processing
+=================
+
+`No custom events are available for this class.`
+
+
 License And Version
 ===================
 
@@ -79,13 +102,20 @@ from wx.lib.statbmp import GenStaticBitmap as StaticBitmap
 winlist = []
 
 TB_SIMPLE = 1
+""" A simple ToasterBox, with background image and text customization can be created. """
 TB_COMPLEX = 2
-
-DEFAULT_TB_STYLE = wx.SIMPLE_BORDER | wx.STAY_ON_TOP | wx.FRAME_NO_TASKBAR
-TB_CAPTION = DEFAULT_TB_STYLE | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.FRAME_TOOL_WINDOW
-
+""" ToasterBoxes with different degree of complexity can be created. You can add as """ \
+""" many controls as you want, provided that you call the AddPanel() method and pass """ \
+""" to it a dummy frame and a wx.Panel. See the demo for details. """
+TB_DEFAULT_STYLE = wx.SIMPLE_BORDER | wx.STAY_ON_TOP | wx.FRAME_NO_TASKBAR
+""" Default window style for `ToasterBox`, with no caption nor close box. """
+TB_CAPTION = TB_DEFAULT_STYLE | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.FRAME_TOOL_WINDOW
+""" `ToasterBox` will have a caption, with the possibility to set a title """ \
+""" for the `ToasterBox` frame, and a close box. """
 TB_ONTIME = 1
+""" `ToasterBox` will close after a specified amount of time. """
 TB_ONCLICK = 2
+""" `ToasterBox` can be closed by clicking anywhere on the `ToasterBox` frame. """
 
 # scroll from up to down
 TB_SCR_TYPE_UD = 1
@@ -100,12 +130,12 @@ TB_SCR_TYPE_DU = 2
 
 class ToasterBox(wx.Timer):
 
-   def __init__(self, parent, tbstyle=TB_SIMPLE, windowstyle=DEFAULT_TB_STYLE,
+   def __init__(self, parent, tbstyle=TB_SIMPLE, windowstyle=TB_DEFAULT_STYLE,
                 closingstyle=TB_ONTIME, scrollType=TB_SCR_TYPE_DU):
        """
        Default class constructor.
 
-       ToasterBox.__init__(self, tbstyle=TB_SIMPLE, windowstyle=DEFAULT_TB_STYLE)
+       ToasterBox.__init__(self, tbstyle=TB_SIMPLE, windowstyle=TB_DEFAULT_STYLE)
 
        Parameters:
 
@@ -118,7 +148,7 @@ class ToasterBox(wx.Timer):
              and a wx.Panel. see the demo for details.
 
        - windowstyle: this parameter influences the visual appearance of ToasterBox:
-         (a) DEFAULT_TB_STYLE: default style, no caption nor close box;
+         (a) TB_DEFAULT_STYLE: default style, no caption nor close box;
          (b) TB_CAPTION: ToasterBox will have a caption, with the possibility to
              set a title for ToasterBox frame, and a close box;
 

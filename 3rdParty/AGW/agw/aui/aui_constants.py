@@ -171,19 +171,13 @@ AuiBaseTabCtrlId = 5380
 AUI_NB_TOP                 = 1 << 0
 """ With this style, tabs are drawn along the top of the notebook. """
 AUI_NB_LEFT                = 1 << 1  # not implemented yet
-"""
-With this style, tabs are drawn along the left of the notebook.
-Not implemented yet.
-"""
+""" With this style, tabs are drawn along the left of the notebook.
+Not implemented yet. """
 AUI_NB_RIGHT               = 1 << 2  # not implemented yet
-"""
-With this style, tabs are drawn along the right of the notebook.
-Not implemented yet.
-"""
+""" With this style, tabs are drawn along the right of the notebook.
+Not implemented yet. """
 AUI_NB_BOTTOM              = 1 << 3
-"""
-With this style, tabs are drawn along the bottom of the notebook.
-"""
+""" With this style, tabs are drawn along the bottom of the notebook. """
 AUI_NB_TAB_SPLIT           = 1 << 4
 """ Allows the tab control to be split by dragging a tab. """
 AUI_NB_TAB_MOVE            = 1 << 5
@@ -203,36 +197,32 @@ AUI_NB_CLOSE_ON_ACTIVE_TAB = 1 << 11
 AUI_NB_CLOSE_ON_ALL_TABS   = 1 << 12
 """ With this style, a close button is available on all tabs. """
 AUI_NB_MIDDLE_CLICK_CLOSE  = 1 << 13
-""" Allows to close AuiNotebook tabs by mouse middle button click. """
+""" Allows to close `AuiNotebook` tabs by mouse middle button click. """
 AUI_NB_SUB_NOTEBOOK        = 1 << 14
-""" This style is used by AuiManager to create automatic AuiNotebooks. """
+""" This style is used by `AuiManager` to create automatic `AuiNotebooks`. """
 AUI_NB_HIDE_ON_SINGLE_TAB  = 1 << 15
 """ Hides the tab window if only one tab is present. """
 AUI_NB_SMART_TABS          = 1 << 16
-""" Use Smart Tabbing, like Alt+Tab on Windows. """
+""" Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows. """
 AUI_NB_USE_IMAGES_DROPDOWN = 1 << 17
 """ Uses images on dropdown window list menu instead of check items. """
 AUI_NB_CLOSE_ON_TAB_LEFT   = 1 << 18
-"""
-Draws the tab close button on the left instead of on the right
-(a la Camino browser).
-"""
+""" Draws the tab close button on the left instead of on the right
+(a la Camino browser). """
 AUI_NB_TAB_FLOAT           = 1 << 19
-"""
-Allows the floating of single tabs.
+""" Allows the floating of single tabs.
 Known limitation: when the notebook is more or less full screen, tabs 
 cannot be dragged far enough outside of the notebook to become 
-floating pages. 
-"""
+floating pages. """
 AUI_NB_DRAW_DND_TAB        = 1 << 20
 """ Draws an image representation of a tab while dragging. """
 AUI_NB_SASH_DCLICK_UNSPLIT = 1 << 22
-""" Unsplit a splitted AuiNotebook when double-clicking on a sash. """
+""" Unsplit a splitted `AuiNotebook` when double-clicking on a sash. """
 
 AUI_NB_DEFAULT_STYLE = AUI_NB_TOP | AUI_NB_TAB_SPLIT | AUI_NB_TAB_MOVE | \
                        AUI_NB_SCROLL_BUTTONS | AUI_NB_CLOSE_ON_ACTIVE_TAB | \
                        AUI_NB_MIDDLE_CLICK_CLOSE | AUI_NB_DRAW_DND_TAB
-""" Default AuiNotebook style. """
+""" Default `AuiNotebook` style. """
 
 #----------------------------------------------------------------------
 Mondrian = PyEmbeddedImage(
@@ -270,25 +260,17 @@ AUI_MGR_ALLOW_FLOATING           = 1 << 0
 AUI_MGR_ALLOW_ACTIVE_PANE        = 1 << 1
 """ If a pane becomes active, "highlight" it in the interface. """
 AUI_MGR_TRANSPARENT_DRAG         = 1 << 2
-"""
-If the platform supports it, set transparency on a floating pane
-while it is dragged by the user.
-"""
+""" If the platform supports it, set transparency on a floating pane
+while it is dragged by the user. """
 AUI_MGR_TRANSPARENT_HINT         = 1 << 3
-"""
-If the platform supports it, show a transparent hint window when
-the user is about to dock a floating pane.
-"""
+""" If the platform supports it, show a transparent hint window when
+the user is about to dock a floating pane. """
 AUI_MGR_VENETIAN_BLINDS_HINT     = 1 << 4
-"""
-Show a "venetian blind" effect when the user is about to dock a
-floating pane.
-"""
+""" Show a "venetian blind" effect when the user is about to dock a
+floating pane. """
 AUI_MGR_RECTANGLE_HINT           = 1 << 5
-"""
-Show a rectangle hint effect when the user is about to dock a
-floating pane.
-"""
+""" Show a rectangle hint effect when the user is about to dock a
+floating pane. """
 AUI_MGR_HINT_FADE                = 1 << 6
 """ If the platform supports it, the hint window will fade in and out. """
 AUI_MGR_NO_VENETIAN_BLINDS_FADE  = 1 << 7
@@ -296,15 +278,13 @@ AUI_MGR_NO_VENETIAN_BLINDS_FADE  = 1 << 7
 AUI_MGR_LIVE_RESIZE              = 1 << 8
 """ Live resize when the user drag a sash. """
 AUI_MGR_ANIMATE_FRAMES           = 1 << 9
-"""
-Fade-out floating panes when they are closed (all platforms which support
+""" Fade-out floating panes when they are closed (all platforms which support
 frames transparency) and show a moving rectangle when they are docked
-(Windows < Vista and GTK only).
-"""
+(Windows < Vista and GTK only). """
 
 AUI_MGR_DEFAULT = AUI_MGR_ALLOW_FLOATING | AUI_MGR_TRANSPARENT_HINT | \
                   AUI_MGR_HINT_FADE | AUI_MGR_NO_VENETIAN_BLINDS_FADE
-""" Default AuiManager style. """
+""" Default `AuiManager` style. """
 
 # Panes Customization
 AUI_DOCKART_SASH_SIZE = 0
@@ -898,31 +878,29 @@ DISABLED_TEXT_COLOR = wx.Colour(DISABLED_TEXT_GREY_HUE,
 AUI_TB_TEXT             = 1 << 0
 """ Shows the text in the toolbar buttons; by default only icons are shown. """
 AUI_TB_NO_TOOLTIPS      = 1 << 1
-""" Don't show tooltips on AuiToolBar items. """
+""" Don't show tooltips on `AuiToolBar` items. """
 AUI_TB_NO_AUTORESIZE    = 1 << 2
-""" Do not auto-resize the AuiToolBar. """
+""" Do not auto-resize the `AuiToolBar`. """
 AUI_TB_GRIPPER          = 1 << 3
-""" Shows a gripper on the AuiToolBar. """
+""" Shows a gripper on the `AuiToolBar`. """
 AUI_TB_OVERFLOW         = 1 << 4
-""" The AuiToolBar can contain overflow items. """
+""" The `AuiToolBar` can contain overflow items. """
 AUI_TB_VERTICAL         = 1 << 5
-""" The AuiToolBar is vertical. """
+""" The `AuiToolBar` is vertical. """
 AUI_TB_HORZ_LAYOUT      = 1 << 6
-"""
-Shows the text and the icons alongside, not vertically stacked.
-This style must be used with AUI_TB_TEXT.
-"""
+""" Shows the text and the icons alongside, not vertically stacked.
+This style must be used with ``AUI_TB_TEXT``. """
 AUI_TB_PLAIN_BACKGROUND = 1 << 7
 """ Don't draw a gradient background on the toolbar. """
 AUI_TB_CLOCKWISE        = 1 << 8
 AUI_TB_COUNTERCLOCKWISE = 1 << 9
 
 AUI_TB_HORZ_TEXT        = AUI_TB_HORZ_LAYOUT | AUI_TB_TEXT
-""" Combination of AUI_TB_HORZ_LAYOUT and AUI_TB_TEXT. """
+""" Combination of ``AUI_TB_HORZ_LAYOUT`` and ``AUI_TB_TEXT``. """
 AUI_TB_VERT_TEXT        = AUI_TB_VERTICAL | AUI_TB_CLOCKWISE | AUI_TB_TEXT
 
 AUI_TB_DEFAULT_STYLE    = 0
-""" AuiToolBar default style. """
+""" `AuiToolBar` default style. """
 
 # AuiToolBar settings
 AUI_TBART_SEPARATOR_SIZE = 0

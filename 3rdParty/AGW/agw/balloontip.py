@@ -110,6 +110,28 @@ tipballoon.SetStartDelay(1000)
 tipballoon.SetEndDelay(3000)
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+================ =========== ==================================================
+Window Styles    Hex Value   Description
+================ =========== ==================================================
+``BT_ROUNDED``           0x1 `BalloonTip` will have a rounded rectangular shape.
+``BT_RECTANGLE``         0x2 `BalloonTip` will have a rectangular shape.
+``BT_LEAVE``             0x3 `BalloonTip` will be destroyed when the user moves the mouse outside the target window.
+``BT_CLICK``             0x4 `BalloonTip` will be destroyed when the user click on `BalloonTip`.
+``BT_BUTTON``            0x5 `BalloonTip` will be destroyed when the user click on the close button.
+================ =========== ==================================================
+
+
+Events Processing
+=================
+
+`No custom events are available for this class.`
+
+
 License And Version
 ===================
 
@@ -127,12 +149,17 @@ from wx.lib.buttons import GenButton
 
 # Define The Values For The BalloonTip Frame Shape
 BT_ROUNDED = 1
+""" `BalloonTip` will have a rounded rectangular shape. """
 BT_RECTANGLE = 2
+""" `BalloonTip` will have a rectangular shape. """
 
 # Define The Value For The BalloonTip Destruction Behavior
 BT_LEAVE = 3
+""" `BalloonTip` will be destroyed when the user moves the mouse outside the target window. """
 BT_CLICK = 4
+""" `BalloonTip` will be destroyed when the user click on `BalloonTip`. """
 BT_BUTTON = 5
+""" `BalloonTip` will be destroyed when the user click on the close button. """
 
 
 # ---------------------------------------------------------------

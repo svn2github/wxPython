@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 16 June 2009, 10.00 GMT
+# Latest Revision: 18 June 2009, 10.00 GMT
 #
 #
 # TODO List
@@ -143,12 +143,84 @@ HyperTreeList has been tested on the following platforms:
   * Windows (Windows XP);
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+============================== =========== ==================================================
+Window Styles                  Hex Value   Description
+============================== =========== ==================================================
+``TR_NO_BUTTONS``                      0x0 For convenience to document that no buttons are to be drawn.
+``TR_SINGLE``                          0x0 For convenience to document that only one item may be selected at a time. Selecting another item causes the current selection, if any, to be deselected. This is the default.
+``TR_HAS_BUTTONS``                     0x1 Use this style to show + and - buttons to the left of parent items.
+``TR_NO_LINES``                        0x4 Use this style to hide vertical level connectors.
+``TR_LINES_AT_ROOT``                   0x8 Use this style to show lines between root nodes. Only applicable if ``TR_HIDE_ROOT`` is set and ``TR_NO_LINES`` is not set.
+``TR_DEFAULT_STYLE``                   0x9 No Docs
+``TR_TWIST_BUTTONS``                  0x10 Use old Mac-twist style buttons.
+``TR_MULTIPLE``                       0x20 Use this style to allow a range of items to be selected. If a second range is selected, the current range, if any, is deselected.
+``TR_EXTENDED``                       0x40 Use this style to allow disjoint items to be selected. (Only partially implemented; may not work in all cases).
+``TR_HAS_VARIABLE_ROW_HEIGHT``        0x80 Use this style to cause row heights to be just big enough to fit the content. If not set, all rows use the largest row height. The default is that this flag is unset.
+``TR_EDIT_LABELS``                   0x200 Use this style if you wish the user to be able to edit labels in the tree control.
+``TR_ROW_LINES``                     0x400 Use this style to draw a contrasting border between displayed rows.
+``TR_HIDE_ROOT``                     0x800 Use this style to suppress the display of the root node, effectively causing the first-level nodes to appear as a series of root nodes.
+``TR_COLUMN_LINES``                 0x1000 No Docs
+``TR_FULL_ROW_HIGHLIGHT``           0x2000 Use this style to have the background colour and the selection highlight extend  over the entire horizontal row of the tree control window.
+``TR_AUTO_CHECK_CHILD``             0x4000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are checked/unchecked as well.
+``TR_AUTO_TOGGLE_CHILD``            0x8000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly.
+``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
+``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
+``TR_NO_HEADER``                   0x40000 Use this style to hide the columns header.
+``TR_VIRTUAL``                     0x80000 `HyperTreeList` will have virtual behaviour.
+============================== =========== ==================================================
+
+
+Events Processing
+=================
+
+This class processes the following events:
+
+============================== ==================================================
+Event Name                     Description
+============================== ==================================================
+``EVT_LIST_COL_BEGIN_DRAG``    The user started resizing a column - can be vetoed.
+``EVT_LIST_COL_CLICK``         A column has been left-clicked.
+``EVT_LIST_COL_DRAGGING``      The divider between columns is being dragged.
+``EVT_LIST_COL_END_DRAG``      A column has been resized by the user.
+``EVT_LIST_COL_RIGHT_CLICK``   A column has been right-clicked.
+``EVT_TREE_BEGIN_DRAG``        Begin dragging with the left mouse button.
+``EVT_TREE_BEGIN_LABEL_EDIT``  Begin editing a label. This can be prevented by calling `Veto()`.
+``EVT_TREE_BEGIN_RDRAG``       Begin dragging with the right mouse button.
+``EVT_TREE_DELETE_ITEM``       Delete an item.
+``EVT_TREE_END_DRAG``          End dragging with the left or right mouse button.
+``EVT_TREE_END_LABEL_EDIT``    End editing a label. This can be prevented by calling `Veto()`.
+``EVT_TREE_GET_INFO``          Request information from the application (not implemented in `CustomTreeCtrl`).
+``EVT_TREE_ITEM_ACTIVATED``    The item has been activated, i.e. chosen by double clicking it with mouse or from keyboard.
+``EVT_TREE_ITEM_CHECKED``      A checkbox or radiobox type item has been checked.
+``EVT_TREE_ITEM_CHECKING``     A checkbox or radiobox type item is being checked.
+``EVT_TREE_ITEM_COLLAPSED``    The item has been collapsed.
+``EVT_TREE_ITEM_COLLAPSING``   The item is being collapsed. This can be prevented by calling `Veto()`.
+``EVT_TREE_ITEM_EXPANDED``     The item has been expanded.
+``EVT_TREE_ITEM_EXPANDING``    The item is being expanded. This can be prevented by calling `Veto()`.
+``EVT_TREE_ITEM_GETTOOLTIP``   The opportunity to set the item tooltip is being given to the application (call `TreeEvent.SetToolTip`).
+``EVT_TREE_ITEM_HYPERLINK``    An hyperlink type item has been clicked.
+``EVT_TREE_ITEM_MENU``         The context menu for the selected item has been requested, either by a right click or by using the menu key.
+``EVT_TREE_ITEM_MIDDLE_CLICK`` The user has clicked the item with the middle mouse button (not implemented in `CustomTreeCtrl`).
+``EVT_TREE_ITEM_RIGHT_CLICK``  The user has clicked the item with the right mouse button.
+``EVT_TREE_KEY_DOWN``          A key has been pressed.
+``EVT_TREE_SEL_CHANGED``       Selection has changed.
+``EVT_TREE_SEL_CHANGING``      Selection is changing. This can be prevented by calling `Veto()`.
+``EVT_TREE_SET_INFO``          Information is being supplied to the application (not implemented in `CustomTreeCtrl`).
+``EVT_TREE_STATE_IMAGE_CLICK`` The state image has been clicked (not implemented in `CustomTreeCtrl`).
+============================== ==================================================
+
+
 License And Version
 ===================
 
 HyperTreeList is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 16 Jun 2009, 10.00 GMT
+Latest Revision: Andrea Gavana @ 18 Jun 2009, 10.00 GMT
 Version 0.9
 
 """
@@ -191,13 +263,64 @@ _RENAME_TIMER_TICKS = 250 # minimum rename wait time in ms
 # --------------------------------------------------------------------------
 TREE_HITTEST_ONITEMCHECKICON  = 0x4000
 
+# HyperTreeList styles
+TR_NO_BUTTONS = wx.TR_NO_BUTTONS                               # for convenience
+""" For convenience to document that no buttons are to be drawn. """
+TR_HAS_BUTTONS = wx.TR_HAS_BUTTONS                             # draw collapsed/expanded btns
+""" Use this style to show + and - buttons to the left of parent items. """
+TR_NO_LINES = wx.TR_NO_LINES                                   # don't draw lines at all
+""" Use this style to hide vertical level connectors. """
+TR_LINES_AT_ROOT = wx.TR_LINES_AT_ROOT                         # connect top-level nodes
+""" Use this style to show lines between root nodes. Only applicable if ``TR_HIDE_ROOT`` is""" \
+""" set and ``TR_NO_LINES`` is not set. """
+TR_TWIST_BUTTONS = wx.TR_TWIST_BUTTONS                         # still used by wxTreeListCtrl
+""" Use old Mac-twist style buttons. """
+TR_SINGLE = wx.TR_SINGLE                                       # for convenience
+""" For convenience to document that only one item may be selected at a time. Selecting another""" \
+""" item causes the current selection, if any, to be deselected. This is the default. """
+TR_MULTIPLE = wx.TR_MULTIPLE                                   # can select multiple items
+""" Use this style to allow a range of items to be selected. If a second range is selected,""" \
+""" the current range, if any, is deselected. """
+TR_EXTENDED = wx.TR_EXTENDED                                   # TODO: allow extended selection
+""" Use this style to allow disjoint items to be selected. (Only partially implemented;""" \
+""" may not work in all cases). """
+TR_HAS_VARIABLE_ROW_HEIGHT = wx.TR_HAS_VARIABLE_ROW_HEIGHT     # what it says
+""" Use this style to cause row heights to be just big enough to fit the content.""" \
+""" If not set, all rows use the largest row height. The default is that this flag is unset. """
+TR_EDIT_LABELS = wx.TR_EDIT_LABELS                             # can edit item labels
+""" Use this style if you wish the user to be able to edit labels in the tree control. """
+TR_ROW_LINES = wx.TR_ROW_LINES                                 # put border around items
+""" Use this style to draw a contrasting border between displayed rows. """
+TR_HIDE_ROOT = wx.TR_HIDE_ROOT                                 # don't display root node
+""" Use this style to suppress the display of the root node, effectively causing the""" \
+""" first-level nodes to appear as a series of root nodes. """
+TR_FULL_ROW_HIGHLIGHT = wx.TR_FULL_ROW_HIGHLIGHT               # highlight full horz space
+""" Use this style to have the background colour and the selection highlight extend """ \
+""" over the entire horizontal row of the tree control window. """
+
+TR_AUTO_CHECK_CHILD = 0x04000                                  # only meaningful for checkboxes
+""" Only meaningful foe checkbox-type items: when a parent item is checked/unchecked""" \
+""" its children are checked/unchecked as well. """
+TR_AUTO_TOGGLE_CHILD = 0x08000                                 # only meaningful for checkboxes
+""" Only meaningful foe checkbox-type items: when a parent item is checked/unchecked""" \
+""" its children are toggled accordingly. """
+TR_AUTO_CHECK_PARENT = 0x10000                                 # only meaningful for checkboxes
+""" Only meaningful foe checkbox-type items: when a child item is checked/unchecked""" \
+""" its parent item is checked/unchecked as well. """
+TR_ALIGN_WINDOWS = 0x20000                                     # to align windows horizontally for items at the same level
+""" Flag used to align windows (in items with windows) at the same horizontal position. """
+TR_VIRTUAL = 0x80000
+""" `HyperTreeList` will have virtual behaviour. """
+
 # --------------------------------------------------------------------------
 # Additional HyperTreeList style to hide the header
 # --------------------------------------------------------------------------
 TR_NO_HEADER = 0x40000
+""" Use this style to hide the columns header. """
 # --------------------------------------------------------------------------
 
-def IsPlatformGood():
+
+def IsBufferingSupported():
     """
     Utility function which checks if a platform handles correctly double
     buffering for the header. Currently returns False for all platforms
@@ -358,7 +481,6 @@ class TreeListHeaderWindow(wx.Window):
 
         wx.Window.__init__(self, parent, id, pos, size, style, name=name)
         
-        self._buffered = IsPlatformGood()
         self._owner = owner
         self._currentCursor = wx.StockCursor(wx.CURSOR_DEFAULT)
         self._resizeCursor = wx.StockCursor(wx.CURSOR_SIZEWE)
@@ -1001,7 +1123,6 @@ class TreeListItem(GenericTreeItem):
         column = (column is not None and [column] or [self._owner.GetMainColumn()])[0]
         
         if len(self._text) > 0:
-        
             if self._owner.IsVirtual():
                 return self._owner.GetItemText(self._data, column)
             else:
@@ -1374,8 +1495,6 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         CustomTreeCtrl.__init__(self, parent, id, pos, size, style, 0, validator, name)
         
-        self._buffered = IsPlatformGood()
-
         self._shiftItem = None
         self._editItem = None
         self._selectItem = None
@@ -1429,7 +1548,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 
     def IsVirtual(self):
 
-        return self.HasFlag(wx.gizmos.TR_VIRTUAL)
+        return self.HasFlag(TR_VIRTUAL)
 
 
 #-----------------------------------------------------------------------------
@@ -3079,6 +3198,8 @@ class HyperTreeList(wx.PyControl):
                                                 wx.DefaultSize, wx.TAB_TRAVERSAL)
         self.CalculateAndSetHeaderHeight()
         self.Bind(wx.EVT_SIZE, self.OnSize)
+
+        self.SetBuffered(IsBufferingSupported())        
         
 
     def SetBuffered(self, buffered):

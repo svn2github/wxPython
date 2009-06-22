@@ -63,6 +63,33 @@ FourWaySplitter has been tested on the following platforms:
   * Linux Ubuntu (Dapper 6.06)
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+================== =========== ==================================================
+Window Styles      Hex Value   Description
+================== =========== ==================================================
+``SP_NOSASH``             0x10 No sash will be drawn on `FourWaySplitter`.
+``SP_LIVE_UPDATE``        0x80 Don't draw XOR line but resize the child windows immediately.
+``SP_3DBORDER``          0x200 Draws a 3D effect border.
+================== =========== ==================================================
+
+
+Events Processing
+=================
+
+This class processes the following events:
+
+================================== ==================================================
+Event Name                         Description
+================================== ==================================================
+``EVT_SPLITTER_SASH_POS_CHANGED``  The sash position was changed. This event is generated after the user releases the mouse after dragging the splitter. Processes a `wx.wxEVT_COMMAND_SPLITTER_SASH_POS_CHANGED` event.
+``EVT_SPLITTER_SASH_POS_CHANGING`` The sash position is in the process of being changed. You may prevent this change from happening by calling `Veto` or you may also modify the position of the tracking bar to properly reflect the position that would be set if the drag were to be completed at this point. Processes a `wx.wxEVT_COMMAND_SPLITTER_SASH_POS_CHANGING` event.
+================================== ==================================================
+
+
 License And Version
 ===================
 
@@ -87,6 +114,24 @@ _TOLERANCE = 5
 NOWHERE = 0
 FLAG_CHANGED = 1
 FLAG_PRESSED = 2
+
+# FourWaySplitter styles
+SP_NOSASH = wx.SP_NOSASH
+""" No sash will be drawn on `FourWaySplitter`. """
+SP_LIVE_UPDATE = wx.SP_LIVE_UPDATE
+""" Don't draw XOR line but resize the child windows immediately. """
+SP_3DBORDER = wx.SP_3DBORDER
+""" Draws a 3D effect border. """
+
+# FourWaySplitter events
+EVT_SPLITTER_SASH_POS_CHANGING = wx.EVT_SPLITTER_SASH_POS_CHANGING
+""" The sash position is in the process of being changed. You may prevent this change""" \
+""" from happening by calling `Veto` or you may also modify the position of the tracking""" \
+""" bar to properly reflect the position that would be set if the drag were to be""" \
+""" completed at this point. Processes a `wx.wxEVT_COMMAND_SPLITTER_SASH_POS_CHANGING` event."""
+EVT_SPLITTER_SASH_POS_CHANGED = wx.EVT_SPLITTER_SASH_POS_CHANGED
+""" The sash position was changed. This event is generated after the user releases the""" \
+""" mouse after dragging the splitter. Processes a `wx.wxEVT_COMMAND_SPLITTER_SASH_POS_CHANGED` event. """
 
 # ---------------------------------------------------------------------------- #
 # Class FourWaySplitterEvent

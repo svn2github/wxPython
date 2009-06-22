@@ -49,6 +49,24 @@ AquaButton has been tested on the following platforms:
   * Windows (Windows XP).
 
 
+Window Styles
+=============
+
+`No particular window styles are available for this class.`
+
+
+Events Processing
+=================
+
+This class processes the following events:
+
+================= ==================================================
+Event Name        Description
+================= ==================================================
+``wx.EVT_BUTTON`` Process a `wx.wxEVT_COMMAND_BUTTON_CLICKED` event, when the button is clicked. 
+================= ==================================================
+
+
 License And Version
 ===================
 

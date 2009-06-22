@@ -15,14 +15,6 @@ BU_EXT_CENTER_ALIGN_STYLE = 8
 BU_EXT_RIGHT_ALIGN_STYLE = 16
 BU_EXT_RIGHT_TO_LEFT_STYLE = 32
 
-# FlatMenu Options:
-
-FM_OPT_IS_LCD = 1
-FM_OPT_MINIBAR = 2
-FM_OPT_SHOW_CUSTOMIZE = 4
-FM_OPT_SHOW_TOOLBAR = 8
-
-
 # Control state
 ControlPressed = 0
 ControlFocus = 1

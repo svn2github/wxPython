@@ -59,6 +59,18 @@ SuperToolTip has been tested on the following platforms:
   * Windows (Windows XP).
 
 
+Window Styles
+=============
+
+`No particular window styles are available for this class.`
+
+
+Events Processing
+=================
+
+`No custom events are available for this class.`
+
+
 License And Version
 ===================
 

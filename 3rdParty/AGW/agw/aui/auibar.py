@@ -29,11 +29,15 @@ wxEVT_COMMAND_AUITOOLBAR_MIDDLE_CLICK = wx.NewEventType()
 wxEVT_COMMAND_AUITOOLBAR_BEGIN_DRAG = wx.NewEventType()
 
 EVT_AUITOOLBAR_TOOL_DROPDOWN = wx.PyEventBinder(wxEVT_COMMAND_AUITOOLBAR_TOOL_DROPDOWN, 1)
+""" A dropdown `AuiToolBarItem` is being shown. """
 EVT_AUITOOLBAR_OVERFLOW_CLICK = wx.PyEventBinder(wxEVT_COMMAND_AUITOOLBAR_OVERFLOW_CLICK, 1)
+""" The user left-clicked on the overflow button in `AuiToolBar`. """
 EVT_AUITOOLBAR_RIGHT_CLICK = wx.PyEventBinder(wxEVT_COMMAND_AUITOOLBAR_RIGHT_CLICK, 1)
+""" Fires an event when the user right-clicks on a `AuiToolBarItem`. """
 EVT_AUITOOLBAR_MIDDLE_CLICK = wx.PyEventBinder(wxEVT_COMMAND_AUITOOLBAR_MIDDLE_CLICK, 1)
+""" Fires an event when the user middle-clicks on a `AuiToolBarItem`. """
 EVT_AUITOOLBAR_BEGIN_DRAG = wx.PyEventBinder(wxEVT_COMMAND_AUITOOLBAR_BEGIN_DRAG, 1)
-
+""" A drag operation involving a toolbar item has started. """
 
 # ----------------------------------------------------------------------
 

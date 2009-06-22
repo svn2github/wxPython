@@ -30,7 +30,7 @@ Description
 
 KnobCtrl lets the user select a numerical value by rotating it. It works like a
 scrollbar: just set the ticks range property and read the value property in the
-associated KC_EVENT_ANGLE_CHANGING/KC_EVENT_ANGLE_CHANGED events. Simple but
+associated EVT_KC_ANGLE_CHANGING/EVT_KC_ANGLE_CHANGED events. Simple but
 effective. It can be easily used if you want to simulate the volume knob of a
 music player or similar functionalities.
 
@@ -40,8 +40,8 @@ Events
 
 KnobCtrl implements two events that can be intercepted by the user:
 
-  - KC_EVENT_ANGLE_CHANGING
-  - KC_EVENT_ANGLE_CHANGED
+  - EVT_KC_ANGLE_CHANGING
+  - EVT_KC_ANGLE_CHANGED
 
 The first one can be "vetoed" by eliminating the event.Skip() at the end of the
 event handler.
@@ -53,6 +53,31 @@ Supported Platforms
 KnobCtrl has been tested on the following platforms:
   * Windows (Windows XP);
   * Linux Ubuntu (Dapper 6.06)
+
+
+Window Styles
+=============
+
+This class supports the following window styles:
+
+================== =========== ==================================================
+Window Styles      Hex Value   Description
+================== =========== ==================================================
+``KC_BUFFERED_DC``         0x1 Flag to use double buffering (recommendeded = 1).
+================== =========== ==================================================
+
+
+Events Processing
+=================
+
+This class processes the following events:
+
+========================= ==================================================
+Event Name                Description
+========================= ==================================================
+``EVT_KC_ANGLE_CHANGED``  Notify the client that the knob has changed its value.
+``EVT_KC_ANGLE_CHANGING`` Notify the client that the knob is changing its value.
+========================= ==================================================
 
 
 License And Version
@@ -76,12 +101,12 @@ KC_BUFFERED_DC = 1
 """Flag to use double buffering (recommendeded = 1)"""
 
 # Events
-wxKC_EVENT_ANGLE_CHANGING = wx.NewEventType()
-wxKC_EVENT_ANGLE_CHANGED = wx.NewEventType()
+wxEVT_KC_ANGLE_CHANGING = wx.NewEventType()
+wxEVT_KC_ANGLE_CHANGED = wx.NewEventType()
 
-KC_EVENT_ANGLE_CHANGING = wx.PyEventBinder(wxKC_EVENT_ANGLE_CHANGING, 1)
+EVT_KC_ANGLE_CHANGING = wx.PyEventBinder(wxEVT_KC_ANGLE_CHANGING, 1)
 """ Notify the client that the knob is changing its value."""
-KC_EVENT_ANGLE_CHANGED = wx.PyEventBinder(wxKC_EVENT_ANGLE_CHANGED, 1)
+EVT_KC_ANGLE_CHANGED = wx.PyEventBinder(wxEVT_KC_ANGLE_CHANGED, 1)
 """ Notify the client that the knob has changed its value."""
 
 # ---------------------------------------------------------------------------- #
@@ -642,7 +667,7 @@ class KnobCtrl(BufferedWindow):
         if scaledval > self._maxvalue or scaledval < self._minvalue:
             ang = self._old_ang 
         else:
-            event = KnobCtrlEvent(wxKC_EVENT_ANGLE_CHANGING, self.GetId())
+            event = KnobCtrlEvent(wxEVT_KC_ANGLE_CHANGING, self.GetId())
             event.SetEventObject(self)
             event.SetOldValue(self.GetValue())
             event.SetValue(int(round(scaledval)))
@@ -652,7 +677,7 @@ class KnobCtrl(BufferedWindow):
                 return
 
             self.SetValue(scaledval)
-            event.SetEventType(wxKC_EVENT_ANGLE_CHANGED)
+            event.SetEventType(wxEVT_KC_ANGLE_CHANGED)
             event.SetOldValue(scaledval)
             self.GetEventHandler().ProcessEvent(event)
             

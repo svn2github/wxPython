@@ -133,6 +133,31 @@ inside a very simple frame::
   app.MainLoop()
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+==================== =========== ==================================================
+Window Styles        Hex Value   Description
+==================== =========== ==================================================
+``BP_DEFAULT_STYLE``         0x1 `ButtonPanel` has a plain solid background.
+``BP_USE_GRADIENT``          0x2 `ButtonPanel` has a gradient shading background.
+==================== =========== ==================================================
+
+
+Events Processing
+=================
+
+This class processes the following events:
+
+================= ==================================================
+Event Name        Description
+================= ==================================================
+``wx.EVT_BUTTON`` Process a `wx.wxEVT_COMMAND_BUTTON_CLICKED` event, when a button is clicked. 
+================= ==================================================
+
+
 License And Version
 ===================
 
@@ -212,7 +237,9 @@ BP_ALIGN_BOTTOM = 8
 
 # ButtonPanel styles
 BP_DEFAULT_STYLE = 1
+""" `ButtonPanel` has a plain solid background. """
 BP_USE_GRADIENT = 2
+""" `ButtonPanel` has a gradient shading background. """
 
 # Delay used to cancel the longHelp in the statusbar field
 _DELAY = 3000
@@ -299,7 +326,7 @@ def MakeGray((r,g,b), factor, maskColor):
 # programmer to set colours, sizes and gradient shadings for ButtonPanel
 # ---------------------------------------------------------------------------- #
 
-class BPArt:
+class BPArt(object):
     """
     BPArt is an art provider class which does all of the drawing for ButtonPanel.
     This allows the library caller to customize the BPArt or to completely replace
@@ -1452,6 +1479,7 @@ class ButtonPanel(wx.PyPanel):
         self._currentButton = -1
         self._mainsizer.Clear()
         self.ReCreateSizer(bartext)
+
         
     def GetAlignment(self):
         """ Returns the button alignment (left, right, top, bottom). """

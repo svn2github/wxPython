@@ -50,6 +50,25 @@ GenericMessageDialog has been tested on the following platforms:
   * Windows (Windows XP).
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+=========================== =========== ==================================================
+Window Styles               Hex Value   Description
+=========================== =========== ==================================================
+``GMD_USE_AQUABUTTONS``            0x20 Uses `wx.lib.agw.aquabutton` buttons instead of generic buttons.
+``GMD_USE_GRADIENTBUTTONS``        0x40 Uses `wx.lib.agw.gradientbutton` buttons instead of generic buttons.
+=========================== =========== ==================================================
+
+
+Events Processing
+=================
+
+`No custom events are available for this class.`
+
+
 License And Version
 ===================
 
@@ -69,8 +88,11 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 import aquabutton as AB
 import gradientbutton as GB
 
+# GenericMessageDialog styles
 GMD_USE_AQUABUTTONS = 32
+""" Uses `wx.lib.agw.aquabutton` buttons instead of generic buttons. """
 GMD_USE_GRADIENTBUTTONS = 64
+""" Uses `wx.lib.agw.gradientbutton` buttons instead of generic buttons. """
 
 _ = wx.GetTranslation
 

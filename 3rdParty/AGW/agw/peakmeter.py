@@ -51,6 +51,25 @@ PeakMeterCtrl has been tested on the following platforms:
   * Windows (Windows XP).
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+================= =========== ==================================================
+Window Styles     Hex Value   Description
+================= =========== ==================================================
+``PM_HORIZONTAL``         0x0 Shows horizontal bands in `PeakMeterCtrl`.
+``PM_VERTICAL``           0x1 Shows vertical bands in `PeakMeterCtrl`.
+================= =========== ==================================================
+
+
+Events Processing
+=================
+
+`No custom events are available for this class.`
+
+
 License And Version
 ===================
 
@@ -65,7 +84,9 @@ import wx
 
 # Horizontal or vertical PeakMeterCtrl
 PM_HORIZONTAL = 0
+""" Shows horizontal bands in `PeakMeterCtrl`. """
 PM_VERTICAL = 1
+""" Shows vertical bands in `PeakMeterCtrl`. """
 
 # Some useful constants...
 BAND_DEFAULT = 8

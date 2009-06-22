@@ -1552,6 +1552,9 @@ class HyperTreeList(HTL.HyperTreeList):
             events.remove(evt)
             
         treestyles = treestyles + [i for i in dir(wx) if i.startswith("TR_")]
+        treeset = {}
+        treestyles = [treeset.setdefault(e,e) for e in treestyles if e not in treeset]
+
         treestyles.sort()
 
         self.events = events
@@ -1775,10 +1778,13 @@ class HyperTreeList(HTL.HyperTreeList):
         style = 0
         for combo in combos:
             if combo.GetValue() == 1:
-                try:
-                    style = style | eval("wx." + combo.GetLabel())
-                except:
-                    style = style | eval("HTL." + combo.GetLabel())
+                if combo.GetLabel() == "TR_VIRTUAL":
+                    style = style | HTL.TR_VIRTUAL
+                else:
+                    try:
+                        style = style | eval("wx." + combo.GetLabel())
+                    except:
+                        style = style | eval("HTL." + combo.GetLabel())
 
         if self.GetWindowStyle() != style:
             self.SetWindowStyle(style)

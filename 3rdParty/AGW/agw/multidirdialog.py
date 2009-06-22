@@ -52,6 +52,26 @@ MultiDirDialog has been tested on the following platforms:
   * Windows (Windows XP).
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+===================== =========== ==================================================
+Window Styles         Hex Value   Description
+===================== =========== ==================================================
+``DD_DIR_MUST_EXIST``       0x200 The dialog will allow the user to choose only an existing folder. When this style is not given, a "Create new directory" button is added to the dialog (on Windows) or some other way is provided to the user to type the name of a new folder.
+``DD_MULTIPLE``             0x400 Allows the selection of multiple folders.
+``DD_DEFAULT_STYLE``   0x20001840 Equivalent to a combination of ``wx.DEFAULT_DIALOG_STYLE`` and ``wx.RESIZE_BORDER``.
+===================== =========== ==================================================
+
+
+Events Processing
+=================
+
+`No custom events are available for this class.`
+
+
 License And Version
 ===================
 
@@ -68,7 +88,15 @@ import wx.lib.buttons as buttons
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 
+# MultiDirDialog styles
 DD_MULTIPLE = 1024
+""" Allows the selection of multiple folders. """
+DD_DEFAULT_STYLE = wx.DD_DEFAULT_STYLE
+""" Equivalent to a combination of ``wx.DEFAULT_DIALOG_STYLE`` and ``wx.RESIZE_BORDER``. """
+DD_DIR_MUST_EXIST = wx.DD_DIR_MUST_EXIST
+""" The dialog will allow the user to choose only an existing folder. When this style""" \
+""" is not given, a "Create new directory" button is added to the dialog (on Windows)""" \
+""" or some other way is provided to the user to type the name of a new folder. """
 
 _ = wx.GetTranslation
 

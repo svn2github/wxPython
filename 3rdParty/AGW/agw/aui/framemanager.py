@@ -126,13 +126,21 @@ wxEVT_AUI_PANE_MINIMIZE = wx.NewEventType()
 wxEVT_AUI_PANE_MIN_RESTORE = wx.NewEventType()
 
 EVT_AUI_PANE_BUTTON = wx.PyEventBinder(wxEVT_AUI_PANE_BUTTON, 0)
+""" Fires an event when the user left-clicks on a pane button. """
 EVT_AUI_PANE_CLOSE = wx.PyEventBinder(wxEVT_AUI_PANE_CLOSE, 0)
+""" A pane in `AuiManager` has been closed. """
 EVT_AUI_PANE_MAXIMIZE = wx.PyEventBinder(wxEVT_AUI_PANE_MAXIMIZE, 0)
+""" A pane in `AuiManager` has been maximized. """
 EVT_AUI_PANE_RESTORE = wx.PyEventBinder(wxEVT_AUI_PANE_RESTORE, 0)
+""" A pane in `AuiManager` has been restored from a maximized state. """
 EVT_AUI_RENDER = wx.PyEventBinder(wxEVT_AUI_RENDER, 0)
+""" Fires an event every time the AUI frame is being repainted. """
 EVT_AUI_FIND_MANAGER = wx.PyEventBinder(wxEVT_AUI_FIND_MANAGER, 0)
+""" Used to find which AUI manager is controlling a certain pane. """
 EVT_AUI_PANE_MINIMIZE = wx.PyEventBinder(wxEVT_AUI_PANE_MINIMIZE, 0)
+""" A pane in `AuiManager` has been minimized. """
 EVT_AUI_PANE_MIN_RESTORE = wx.PyEventBinder(wxEVT_AUI_PANE_MIN_RESTORE, 0)
+""" A pane in `AuiManager` has been restored from a minimized state. """
 
 
 # ---------------------------------------------------------------------------- #

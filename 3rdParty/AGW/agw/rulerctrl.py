@@ -70,6 +70,25 @@ RulerCtrl has been tested on the following platforms:
   * Linux Ubuntu (Dapper 6.06)
 
 
+Window Styles
+=============
+
+`No particular window styles are available for this class.`
+
+
+Events Processing
+=================
+
+This class processes the following events:
+
+========================== ==================================================
+Event Name                 Description
+========================== ==================================================
+``EVT_INDICATOR_CHANGED``  The user has changed the indicator value.
+``EVT_INDICATOR_CHANGING`` The user is about to change the indicator value.
+========================== ==================================================
+
+
 License And Version
 ===================
 

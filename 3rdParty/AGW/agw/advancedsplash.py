@@ -84,6 +84,29 @@ For more info on methods and initial styles, please refer to the __init__()
 method for AdvancedSplash or to the specific functions.
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+======================= =========== ==================================================
+Window Styles           Hex Value   Description
+======================= =========== ==================================================
+``AS_TIMEOUT``                  0x1 `AdvancedSplash` will be destroyed after `timeout` milliseconds.
+``AS_NOTIMEOUT``                0x2 `AdvancedSplash` can be destroyed by clicking on it, pressing a key or by explicitly call the Close() method.
+``AS_CENTER_ON_SCREEN``         0x4 `AdvancedSplash` will be centered on screen.
+``AS_CENTER_ON_PARENT``         0x8 `AdvancedSplash` will be centered on parent.
+``AS_NO_CENTER``               0x10 `AdvancedSplash` will not be centered.
+``AS_SHADOW_BITMAP``           0x20 If the bitmap you pass as input has no transparency, you can choose one colour that will be masked in your bitmap. the final shape of `AdvancedSplash` will be defined only by non-transparent (non-masked) pixels.
+======================= =========== ==================================================
+
+
+Events Processing
+=================
+
+`No custom events are available for this class.`
+
+
 License And Version
 ===================
 
@@ -103,17 +126,26 @@ import wx
 
 # These Are Used To Declare If The AdvancedSplash Should Be Destroyed After The
 # Timeout Or Not
+                        
 AS_TIMEOUT = 1
+""" `AdvancedSplash` will be destroyed after `timeout` milliseconds. """
 AS_NOTIMEOUT = 2
+""" `AdvancedSplash` can be destroyed by clicking on it, pressing a key or by""" \
+""" explicitly call the Close() method. """
 
 # These Flags Are Used To Position AdvancedSplash Correctly On Screen
 AS_CENTER_ON_SCREEN = 4
+""" `AdvancedSplash` will be centered on screen. """
 AS_CENTER_ON_PARENT = 8
+""" `AdvancedSplash` will be centered on parent. """
 AS_NO_CENTER = 16
+""" `AdvancedSplash` will not be centered. """
 
 # This Option Allow To Mask A Colour In The Input Bitmap
 AS_SHADOW_BITMAP = 32
-
+""" If the bitmap you pass as input has no transparency, you can choose one colour""" \
+""" that will be masked in your bitmap. the final shape of `AdvancedSplash` will be""" \
+""" defined only by non-transparent (non-masked) pixels. """
 
 #----------------------------------------------------------------------
 # ADVANCEDSPLASH Class
@@ -147,9 +179,9 @@ class AdvancedSplash(wx.Frame):
            AdvancedSplash will be destroyed after "timeout" milliseconds;
 
         c) extrastyle: this value specifies The AdvancedSplash styles:
-           - as_timeout: AdvancedSplash will be destroyed after "timeout"
+           - AS_TIMEOUT: AdvancedSplash will be destroyed after "timeout"
              milliseconds;
-           - as_notimeout: AdvancedSplash can be destroyed by clicking on it,
+           - AS_NO_CENTER: AdvancedSplash can be destroyed by clicking on it,
              pressing a key or by explicitly call the close() method;
            - AS_CENTER_ON_SCREEN: AdvancedSplash will be centered on screen;
            - AS_CENTER_ON_PARENT: AdvancedSplash will be centered on parent;

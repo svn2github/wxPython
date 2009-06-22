@@ -101,6 +101,33 @@ See FloatSpin __init__() method for the definition of non standard (non
 wxPython) parameters.
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+=============== =========== ==================================================
+Window Styles   Hex Value   Description
+=============== =========== ==================================================
+``FS_READONLY``         0x1 Sets `FloatSpin` as read-only control.
+``FS_LEFT``             0x2 Horizontally align the underlying `wx.TextCtrl` on the left.
+``FS_CENTRE``           0x4 Horizontally align the underlying `wx.TextCtrl` on center.
+``FS_RIGHT``            0x8 Horizontally align the underlying `wx.TextCtrl` on the right.
+=============== =========== ==================================================
+
+
+Events Processing
+=================
+
+This class processes the following events:
+
+================= ==================================================
+Event Name        Description
+================= ==================================================
+``EVT_FLOATSPIN`` Emitted when the user changes the value of `FloatSpin`, either with the mouse or with the keyboard.
+================= ==================================================
+
+
 License And Version
 ===================
 
@@ -145,9 +172,13 @@ from math import ceil, floor
 
 # Set The Styles For The Underline wx.TextCtrl
 FS_READONLY = 1
+""" Sets `FloatSpin` as read-only control. """
 FS_LEFT = 2
+""" Horizontally align the underlying `wx.TextCtrl` on the left. """
 FS_CENTRE = 4
+""" Horizontally align the underlying `wx.TextCtrl` on center. """
 FS_RIGHT = 8
+""" Horizontally align the underlying `wx.TextCtrl` on the right. """
 
 # Define The FloatSpin Event
 wxEVT_FLOATSPIN = wx.NewEventType()
@@ -157,6 +188,8 @@ wxEVT_FLOATSPIN = wx.NewEventType()
 #-----------------------------------#
 
 EVT_FLOATSPIN = wx.PyEventBinder(wxEVT_FLOATSPIN, 1)
+""" Emitted when the user changes the value of `FloatSpin`, either with the mouse or""" \
+""" with the keyboard. """
 
 # ---------------------------------------------------------------------------- #
 # Class FloatSpinEvent

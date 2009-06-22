@@ -65,6 +65,24 @@ Some features:
 And much more.
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+================== =========== ==================================================
+Window Styles      Hex Value   Description
+================== =========== ==================================================
+``CCD_SHOW_ALPHA``         0x1 Show the widget used to control colour alpha channels in `CubeColourDialog`.
+================== =========== ==================================================
+
+
+Events Processing
+=================
+
+`No custom events are available for this class.`
+
+
 License And Version
 ===================
 
@@ -96,7 +114,7 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 
 # Show the alpha control in the dialog
 CCD_SHOW_ALPHA = 1
-""" Show the alpha control in the dialog. """
+""" Show the widget used to control colour alpha channels in `CubeColourDialog`. """
 
 # Radius of the HSB colour wheel
 RADIUS = 100
@@ -1366,11 +1384,11 @@ class Colour(wx.Colour):
         """
 
         wx.Colour.__init__(self)
-        
+
         self.r = colour.Red()
         self.g = colour.Green()
         self.b = colour.Blue()
-        self.alpha = colour.Alpha()
+        self._alpha = colour.Alpha()
         
         self.ToHSV()
 
@@ -1479,7 +1497,7 @@ class Colour(wx.Colour):
     def GetPyColour(self):
         """ Returns the wxPython wx.Colour associated with this instance. """
 
-        return wx.Colour(self.r, self.g, self.b, self.alpha)
+        return wx.Colour(self.r, self.g, self.b, self._alpha)
 
     
         
@@ -2173,7 +2191,7 @@ class AlphaCtrl(BaseLineCtrl):
         if d > 255:
             d = 255
 
-        self._mainDialog._colour.alpha = int(d)
+        self._mainDialog._colour._alpha = int(d)
         self.Refresh()
         self._mainDialog.SetSpinVals()
 
@@ -2187,7 +2205,7 @@ class AlphaCtrl(BaseLineCtrl):
         colour = self._mainDialog._colour
         alphaRect = self.BuildRect()
         
-        y = int(colour.alpha/255.0*alphaRect.height)
+        y = int(colour._alpha/255.0*alphaRect.height)
         y = alphaRect.GetBottom() - y
         alphaMark = wx.Rect(alphaRect.x-2, y-4, alphaRect.width+4, 8)
 
@@ -2243,7 +2261,7 @@ class ColourPanel(wx.PyPanel):
         DrawCheckerBoard(mem_dc, rect, checkColour, box=10)
 
         gcdc = wx.GCDC(mem_dc)
-        colour_gcdc = wx.Colour(self._colour.r, self._colour.g, self._colour.b, self._colour.alpha)
+        colour_gcdc = wx.Colour(self._colour.r, self._colour.g, self._colour.b, self._colour._alpha)
         gcdc.SetBrush(wx.Brush(colour_gcdc))
         gcdc.SetPen(wx.Pen(colour_gcdc))
         gcdc.DrawRectangleRect(rect)
@@ -2832,7 +2850,7 @@ class CubeColourDialog(wx.Dialog):
         self.saturationSpin.SetValue(self._colour.s)
         self.brightnessSpin.SetValue(self._colour.v)
 
-        self.alphaSpin.SetValue(self._colour.alpha)        
+        self.alphaSpin.SetValue(self._colour._alpha)        
 
         self.SetPanelColours()
         self.SetCodes()
@@ -2950,14 +2968,14 @@ class CubeColourDialog(wx.Dialog):
         """ Handles the wx.EVT_SPINCTRL event for the alpha channel. """
 
         colourVal = event.GetInt()
-        originalVal = self._colour.alpha
+        originalVal = self._colour._alpha
         if colourVal != originalVal and self._initOver:
             if colourVal < 0:
                 colourVal = 0
             if colourVal > 255:
                 colourVal = 255
 
-            self._colour.alpha = colourVal
+            self._colour._alpha = colourVal
             self.DrawAlpha()
             
 
@@ -3022,12 +3040,12 @@ class CubeColourDialog(wx.Dialog):
     def GetRGBAColour(self):
         """ Returns a 4-elements tuple of red, green, blue, alpha components. """
 
-        return (self._colour.r, self._colour.g, self._colour.b, self._colour.alpha)
+        return (self._colour.r, self._colour.g, self._colour.b, self._colour._alpha)
 
     
     def GetHSVAColour(self):
         """ Returns a 4-elements tuple of hue, saturation, brightness, alpha components. """
 
-        return (self._colour.h, self._colour.s, self._colour.v, self._colour.alpha)
+        return (self._colour.h, self._colour.s, self._colour.v, self._colour._alpha)
 
 

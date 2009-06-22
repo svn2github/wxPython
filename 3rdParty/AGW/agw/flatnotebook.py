@@ -60,6 +60,53 @@ Some features:
 And much more.
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+================================ =========== ==================================================
+Window Styles                    Hex Value   Description
+================================ =========== ==================================================
+``FNB_VC71``                             0x1 Use Visual Studio 2003 (VC7.1) style for tabs.
+``FNB_FANCY_TABS``                       0x2 Use fancy style - square tabs filled with gradient coloring.
+``FNB_TABS_BORDER_SIMPLE``               0x4 Draw thin border around the page.
+``FNB_NO_X_BUTTON``                      0x8 Do not display the 'X' button.
+``FNB_NO_NAV_BUTTONS``                  0x10 Do not display the right/left arrows.
+``FNB_MOUSE_MIDDLE_CLOSES_TABS``        0x20 Use the mouse middle button for cloing tabs.
+``FNB_BOTTOM``                          0x40 Place tabs at bottom - the default is to place them at top.
+``FNB_NODRAG``                          0x80 Disable dragging of tabs.
+``FNB_VC8``                            0x100 Use Visual Studio 2005 (VC8) style for tabs.
+``FNB_X_ON_TAB``                       0x200 Place 'X' close button on the active tab.
+``FNB_BACKGROUND_GRADIENT``            0x400 Use gradients to paint the tabs background.
+``FNB_COLORFUL_TABS``                  0x800 Use colourful tabs (VC8 style only).
+``FNB_DCLICK_CLOSES_TABS``            0x1000 Style to close tab using double click.
+``FNB_SMART_TABS``                    0x2000 Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows.
+``FNB_DROPDOWN_TABS_LIST``            0x4000 Use a dropdown menu on the left in place of the arrows.
+``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different FlatNotebooks.
+``FNB_HIDE_ON_SINGLE_TAB``           0x10000 Hides the Page Container when there is one or fewer tabs.
+``FNB_DEFAULT_STYLE``                0x10020 FlatNotebook default style.
+``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
+``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
+================================ =========== ==================================================
+
+
+Events Processing
+=================
+
+This class processes the following events:
+
+====================================== ==================================================
+Event Name                             Description
+====================================== ==================================================
+``EVT_FLATNOTEBOOK_PAGE_CHANGED``      Notify client objects when the active page in `FlatNotebook` has changed.
+``EVT_FLATNOTEBOOK_PAGE_CHANGING``     Notify client objects when the active page in `FlatNotebook` is about to change.
+``EVT_FLATNOTEBOOK_PAGE_CLOSED``       Notify client objects when a page in `FlatNotebook` has been closed.
+``EVT_FLATNOTEBOOK_PAGE_CLOSING``      Notify client objects when a page in `FlatNotebook` is closing.
+``EVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU`` Notify client objects when a pop-up menu should appear next to a tab.
+====================================== ==================================================
+
+
 License And Version
 ===================
 
@@ -153,7 +200,7 @@ FNB_DCLICK_CLOSES_TABS = 4096
 """Style to close tab using double click"""
 
 FNB_SMART_TABS = 8192
-"""Use Smart Tabbing, like Alt+Tab on Windows"""
+"""Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows"""
 
 FNB_DROPDOWN_TABS_LIST = 16384
 """Use a dropdown menu on the left in place of the arrows"""
@@ -164,7 +211,7 @@ FNB_ALLOW_FOREIGN_DND = 32768
 FNB_HIDE_ON_SINGLE_TAB = 65536
 """Hides the Page Container when there is one or fewer tabs"""
 
-FNB_NO_TAB_FOCUS = 131072
+FNB_NO_TAB_FOCUS = 262144
 """ Does not allow tabs to have focus"""
 
 VERTICAL_BORDER_PADDING = 4
@@ -227,17 +274,15 @@ wxEVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU = wx.NewEventType()
 #-----------------------------------#
 
 EVT_FLATNOTEBOOK_PAGE_CHANGED = wx.EVT_NOTEBOOK_PAGE_CHANGED
-"""Notify client objects when the active page in L{FlatNotebook} 
-has changed."""
+""" Notify client objects when the active page in `FlatNotebook` has changed."""
 EVT_FLATNOTEBOOK_PAGE_CHANGING = wx.EVT_NOTEBOOK_PAGE_CHANGING
-"""Notify client objects when the active page in L{FlatNotebook} 
-is about to change."""
+""" Notify client objects when the active page in `FlatNotebook` is about to change."""
 EVT_FLATNOTEBOOK_PAGE_CLOSING = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_CLOSING, 1)
-"""Notify client objects when a page in L{FlatNotebook} is closing."""
+""" Notify client objects when a page in `FlatNotebook` is closing."""
 EVT_FLATNOTEBOOK_PAGE_CLOSED = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_CLOSED, 1)
-"""Notify client objects when a page in L{FlatNotebook} has been closed."""
+""" Notify client objects when a page in `FlatNotebook` has been closed."""
 EVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU, 1)
-"""Notify client objects when a pop-up menu should appear next to a tab."""
+""" Notify client objects when a pop-up menu should appear next to a tab."""
 
 
 # Some icons in XPM format

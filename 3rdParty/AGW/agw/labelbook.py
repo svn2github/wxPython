@@ -78,6 +78,46 @@ LabelBook and FlatImageBook have been tested on the following platforms:
   * Linux Ubuntu (Dapper 6.06)
 
 
+Window Styles
+=============
+
+This class supports the following window styles:
+
+=========================== =========== ==================================================
+Window Styles               Hex Value   Description
+=========================== =========== ==================================================
+``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for `FlatImageBook`.
+``INB_LEFT``                        0x2 Place labels on the left side. Available only for `FlatImageBook`.
+``INB_RIGHT``                       0x4 Place labels on the right side.
+``INB_TOP``                         0x8 Place labels above the page area.
+``INB_BORDER``                     0x10 Draws a border around `LabelBook` or `FlatImageBook`.
+``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for `LabelBook`.
+``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for `LabelBook`.
+``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
+``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for `LabelBook`.
+``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
+``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for `LabelBook`.
+``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for `LabelBook`.
+``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
+``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
+=========================== =========== ==================================================
+
+
+Events Processing
+=================
+
+This class processes the following events:
+
+=================================== ==================================================
+Event Name                          Description
+=================================== ==================================================
+``EVT_IMAGENOTEBOOK_PAGE_CHANGED``  Notify client objects when the active page in `ImageNotebook` has changed.
+``EVT_IMAGENOTEBOOK_PAGE_CHANGING`` Notify client objects when the active page in `ImageNotebook` is about to change.
+``EVT_IMAGENOTEBOOK_PAGE_CLOSED``   Notify client objects when a page in `ImageNotebook` has been closed.
+``EVT_IMAGENOTEBOOK_PAGE_CLOSING``  Notify client objects when a page in `ImageNotebook` is closing.
+=================================== ==================================================
+
+
 License And Version
 ===================
 
@@ -104,8 +144,38 @@ from fmresources import *
 if wx.VERSION_STRING < "2.7":
     wx.Rect.Contains = lambda self, point: wx.Rect.Inside(self, point)
 
-wxEVT_IMAGENOTEBOOK_PAGE_CHANGED = wx.NewEventType()
-wxEVT_IMAGENOTEBOOK_PAGE_CHANGING = wx.NewEventType()
+# FlatImageBook and LabelBook styles
+INB_BOTTOM = 1
+""" Place labels below the page area. Available only for `FlatImageBook`."""
+INB_LEFT = 2
+""" Place labels on the left side. Available only for `FlatImageBook`."""
+INB_RIGHT = 4
+""" Place labels on the right side. """
+INB_TOP = 8
+""" Place labels above the page area. """
+INB_BORDER = 16
+""" Draws a border around `LabelBook` or `FlatImageBook`. """
+INB_SHOW_ONLY_TEXT = 32
+""" Shows only text labels and no images. Available only for `LabelBook`."""
+INB_SHOW_ONLY_IMAGES = 64
+""" Shows only tab images and no label texts. Available only for `LabelBook`."""
+INB_FIT_BUTTON = 128
+""" Displays a pin button to show/hide the book control. """
+INB_DRAW_SHADOW = 256
+""" Draw shadows below the book tabs. Available only for `LabelBook`."""
+INB_USE_PIN_BUTTON = 512
+""" Displays a pin button to show/hide the book control. """
+INB_GRADIENT_BACKGROUND = 1024
+""" Draws a gradient shading on the tabs background. Available only for `LabelBook`."""
+INB_WEB_HILITE = 2048
+""" On mouse hovering, tabs behave like html hyperlinks. Available only for `LabelBook`."""
+INB_NO_RESIZE = 4096
+""" Don't allow resizing of the tab area. """
+INB_FIT_LABELTEXT = 8192
+""" Will fit the tab area to the longest text (or text+image if you have images) in all the tabs. """
+
+wxEVT_IMAGENOTEBOOK_PAGE_CHANGED = wx.wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED
+wxEVT_IMAGENOTEBOOK_PAGE_CHANGING = wx.wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGING
 wxEVT_IMAGENOTEBOOK_PAGE_CLOSING = wx.NewEventType()
 wxEVT_IMAGENOTEBOOK_PAGE_CLOSED = wx.NewEventType()
 
@@ -113,16 +183,14 @@ wxEVT_IMAGENOTEBOOK_PAGE_CLOSED = wx.NewEventType()
 #        ImageNotebookEvent
 #-----------------------------------#
 
-EVT_IMAGENOTEBOOK_PAGE_CHANGED = wx.PyEventBinder(wxEVT_IMAGENOTEBOOK_PAGE_CHANGED, 1)
-"""Notify client objects when the active page in L{ImageNotebook} 
-has changed."""
-EVT_IMAGENOTEBOOK_PAGE_CHANGING = wx.PyEventBinder(wxEVT_IMAGENOTEBOOK_PAGE_CHANGING, 1)
-"""Notify client objects when the active page in L{ImageNotebook} 
-is about to change."""
+EVT_IMAGENOTEBOOK_PAGE_CHANGED = wx.EVT_NOTEBOOK_PAGE_CHANGED
+""" Notify client objects when the active page in `ImageNotebook` has changed. """
+EVT_IMAGENOTEBOOK_PAGE_CHANGING = wx.EVT_NOTEBOOK_PAGE_CHANGING
+""" Notify client objects when the active page in `ImageNotebook` is about to change. """
 EVT_IMAGENOTEBOOK_PAGE_CLOSING = wx.PyEventBinder(wxEVT_IMAGENOTEBOOK_PAGE_CLOSING, 1)
-"""Notify client objects when a page in L{ImageNotebook} is closing."""
+""" Notify client objects when a page in `ImageNotebook` is closing. """
 EVT_IMAGENOTEBOOK_PAGE_CLOSED = wx.PyEventBinder(wxEVT_IMAGENOTEBOOK_PAGE_CLOSED, 1)
-"""Notify client objects when a page in L{ImageNotebook} has been closed."""
+""" Notify client objects when a page in `ImageNotebook` has been closed. """
 
 
 # ---------------------------------------------------------------------------- #
@@ -1706,7 +1774,7 @@ class FlatBookBase(wx.Panel):
 
         # The event handler allows it?
         if not event.IsAllowed():
-            return
+            return False
 
         self.Freeze()
 
@@ -1736,6 +1804,52 @@ class FlatBookBase(wx.Panel):
         self.GetEventHandler().ProcessEvent(closedEvent)
 
 
+    def RemovePage(self, page):
+        """
+        Deletes the specified page, without deleting the associated window.
+        The call to this function generates the page changing events.
+        """
+
+        if page >= len(self._windows):
+            return False
+
+        # Fire a closing event
+        event = ImageNotebookEvent(wxEVT_IMAGENOTEBOOK_PAGE_CLOSING, self.GetId())
+        event.SetSelection(page)
+        event.SetEventObject(self)
+        self.GetEventHandler().ProcessEvent(event)
+
+        # The event handler allows it?
+        if not event.IsAllowed():
+            return False
+
+        self.Freeze()
+
+        # Remove the requested page
+        pageRemoved = self._windows[page]
+
+        # If the page is the current window, remove it from the sizer
+        # as well
+        if page == self.GetSelection():
+            self._mainSizer.Detach(pageRemoved)
+        
+        # Remove it from the array as well
+        self._windows.pop(page)
+        self._mainSizer.Layout()
+        self.ResizeTabArea()
+        self.Thaw()
+
+        self._pages.DoDeletePage(page)
+
+        # Fire a closed event
+        closedEvent = ImageNotebookEvent(wxEVT_IMAGENOTEBOOK_PAGE_CLOSED, self.GetId())
+        closedEvent.SetSelection(page)
+        closedEvent.SetEventObject(self)
+        self.GetEventHandler().ProcessEvent(closedEvent)
+        
+        return True
+
+    
     def ResizeTabArea(self):
         """ Resizes the tab area if the control has the ``INB_FIT_LABELTEXT`` style set. """
 
