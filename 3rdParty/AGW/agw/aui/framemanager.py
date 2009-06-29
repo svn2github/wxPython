@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 13 May 2009, 17.00 GMT
+# Latest Revision: 29 Jun 2009, 10.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -4257,17 +4257,19 @@ class AuiManager(wx.EvtHandler):
 
         if pane_info.IsNotebookControl():
 
-           notebook = self._notebooks[pane_info.notebook_id]
-           while notebook.GetPageCount():
-              window = notebook.GetPage(0)
-              notebook.RemovePage(0)
-              info = self.GetPane(window)
-              if info.IsOk():
-                 # Note: this could change our paneInfo reference ...
-                 self.ClosePane(info)
+            notebook = self._notebooks[pane_info.notebook_id]
+            while notebook.GetPageCount():
+                window = notebook.GetPage(0)
+                notebook.RemovePage(0)
+                info = self.GetPane(window)
+                if info.IsOk():
+                    info.notebook_id = -1
+                    info.dock_direction = AUI_DOCK_NONE
+                    # Note: this could change our paneInfo reference ...
+                    self.ClosePane(info)
 
         if to_destroy:
-           to_destroy.Destroy()
+            to_destroy.Destroy()
 
 
     def MaximizePane(self, pane_info):

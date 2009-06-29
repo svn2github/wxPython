@@ -1159,7 +1159,10 @@ class AuiSimpleTabArt(object):
                                 selected_textx, selected_texty)
 
             focusRect.Inflate(2, 2)
-            wx.RendererNative.Get().DrawFocusRect(wnd, dc, focusRect, 0)
+            # TODO:
+            # This should be uncommented when DrawFocusRect will become
+            # available in wxPython
+            # wx.RendererNative.Get().DrawFocusRect(wnd, dc, focusRect, 0)
 
         out_button_rect = wx.Rect()        
         # draw close button if necessary
