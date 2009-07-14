@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 18 June 2009, 10.00 GMT
+# Latest Revision: 13 July 2009, 11.00 GMT
 #
 #
 # TODO List
@@ -220,8 +220,8 @@ License And Version
 
 HyperTreeList is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 18 Jun 2009, 10.00 GMT
-Version 0.9
+Latest Revision: Andrea Gavana @ 13 July 2009, 11.00 GMT
+Version 1.0
 
 """
 
@@ -3158,8 +3158,8 @@ _methods = ["GetIndent", "SetIndent", "GetSpacing", "SetSpacing", "GetImageList"
             "GetPrevSibling", "GetNext", "GetFirstExpandedItem", "GetNextExpanded", "GetPrevExpanded",
             "GetFirstVisibleItem", "GetNextVisible", "GetPrevVisible", "AddRoot", "PrependItem", "InsertItem",
             "AppendItem", "Delete", "DeleteChildren", "DeleteRoot", "Expand", "ExpandAll", "ExpandAllChildren",
-            "Collapse", "CollapseAndReset", "Toggle", "Unselect", "UnselectAll", "SelectItem",
-            "EnsureVisible", "ScrollTo", "HitTest", "GetBoundingRect", "EditLabel", "FindItem",
+            "Collapse", "CollapseAndReset", "Toggle", "Unselect", "UnselectAll", "SelectItem", "SelectAll",
+            "EnsureVisible", "ScrollTo", "HitTest", "GetBoundingRect", "EditLabel", "FindItem", "SelectAllChildren",
             "SetDragItem", "GetColumnCount", "SetMainColumn", "GetHyperTextFont", "SetHyperTextFont",
             "SetHyperTextVisitedColour", "GetHyperTextVisitedColour", "SetHyperTextNewColour", "GetHyperTextNewColour",
             "SetItemVisited", "GetItemVisited", "SetHilightFocusColour", "GetHilightFocusColour", "SetHilightNonFocusColour",

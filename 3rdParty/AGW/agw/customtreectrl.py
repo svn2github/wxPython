@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 29 May 2009, 09.00 GMT
+# Latest Revision: 14 Jul 2009, 11.00 GMT
 #
 #
 # TODO List
@@ -217,8 +217,8 @@ License And Version
 
 CustomTreeCtrl is freeware and distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
-Version 1.9
+Latest Revision: Andrea Gavana @ 14 Jul 2009, 11.00 GMT
+Version 2.0
 
 """
 
@@ -1946,7 +1946,10 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         self._gradientstyle = 0   # Horizontal Gradient
 
         # Vista Selection Styles
-        self._vistaselection = False        
+        self._vistaselection = False
+
+        # To speed up ExpandAll and SelectAll
+        self._sendEvent = True
 
         # Connection lines style
         grey = (160,160,160)
@@ -3625,17 +3628,22 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         if item.IsExpanded():
             return
 
-        event = TreeEvent(wxEVT_TREE_ITEM_EXPANDING, self.GetId())
-        event._item = item
-        event.SetEventObject(self)
+        if self._sendEvent:
+            event = TreeEvent(wxEVT_TREE_ITEM_EXPANDING, self.GetId())
+            event._item = item
+            event.SetEventObject(self)
 
-        if self.GetEventHandler().ProcessEvent(event) and not event.IsAllowed():
-            # cancelled by program
-            return
+            if self.GetEventHandler().ProcessEvent(event) and not event.IsAllowed():
+                # cancelled by program
+                return
     
         item.Expand()
-        self.CalculatePositions()
+        
+        if not self._sendEvent:
+            # We are in ExpandAll/ExpandAllChildren
+            return
 
+        self.CalculatePositions()
         self.RefreshSubtree(item)
 
         if self._hasWindows:
@@ -3651,10 +3659,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         if not item:
             raise Exception("\nERROR: Invalid Tree Item. ")
-        
+
+        self._sendEvent = False        
         if not self.HasFlag(TR_HIDE_ROOT) or item != self.GetRootItem():
             self.Expand(item)
             if not self.IsExpanded(item):
+                self._sendEvent = True
                 return
         
         child, cookie = self.GetFirstChild(item)
@@ -3662,6 +3672,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         while child:
             self.ExpandAllChildren(child)
             child, cookie = self.GetNextChild(item, cookie)
+
+        self._sendEvent = True
         
 
     def ExpandAll(self):
@@ -3669,7 +3681,10 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         if self._anchor:
             self.ExpandAllChildren(self._anchor)
-            
+
+        self._sendEvent = True
+        self._dirty = True
+        
 
     def Collapse(self, item):
         """
@@ -3736,26 +3751,39 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         """Unselects the current selection."""
 
         if self._current:
-        
             self._current.SetHilight(False)
             self.RefreshLine(self._current)
 
         self._current = None
         self._select_me = None
-    
+
 
     def UnselectAllChildren(self, item):
         """Unselects all the children of the given item."""
 
         if item.IsSelected():
-        
             item.SetHilight(False)
             self.RefreshLine(item)
         
         if item.HasChildren():
             for child in item.GetChildren():
                 self.UnselectAllChildren(child)
-            
+
+
+    def SelectAllChildren(self, item):
+        """Selects all the children of the given item."""
+
+        if not self.HasFlag(TR_MULTIPLE) and not self.HasFlag(TR_EXTENDED):
+            raise Exception("SelectAllChildren can be used only with multiple selection enabled.")
+        
+        if not item.IsSelected():
+            item.SetHilight(True)
+            self.RefreshLine(item)
+        
+        if item.HasChildren():
+            for child in item.GetChildren():
+                self.SelectAllChildren(child)            
+
 
     def UnselectAll(self):
         """Unselect all the items."""
@@ -3768,6 +3796,20 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         self.Unselect()        
 
+
+    def SelectAll(self):
+        """ Selects all the item in the tree. """
+
+        if not self.HasFlag(TR_MULTIPLE) and not self.HasFlag(TR_EXTENDED):
+            raise Exception("SelectAll can be used only with multiple selection enabled.")
+        
+        rootItem = self.GetRootItem()
+
+        # the tree might not have the root item at all
+        if rootItem:
+            self.SelectAllChildren(rootItem)
+
+                
     # Recursive function !
     # To stop we must have crt_item<last_item
     # Algorithm :
