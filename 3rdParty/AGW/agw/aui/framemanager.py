@@ -8780,7 +8780,11 @@ class AuiManager(wx.EvtHandler):
         """
         
         if not paneInfo.IsToolbar():
-        
+
+            if paneInfo.IsMinimized():
+                # We are already minimized
+                return
+            
             # Basically the idea is this.
             #
             # 1) create a toolbar, with a restore button 
@@ -8908,6 +8912,9 @@ class AuiManager(wx.EvtHandler):
                 return
         
         if pane.IsOk():
+            if not pane.IsMinimized():
+                return
+            
             self.ShowPane(pane.window, True)
             pane.Show(True)
             self._has_minimized = False
