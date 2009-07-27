@@ -7778,7 +7778,7 @@ class AuiManager(wx.EvtHandler):
 
         if self._frame:
                 
-            wx.CallAfter(self.Update)
+            self.Update()
             
             if isinstance(self._frame, wx.MDIParentFrame):
                 # for MDI parent frames, this event must not
