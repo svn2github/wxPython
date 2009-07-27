@@ -7778,9 +7778,9 @@ class AuiManager(wx.EvtHandler):
 
         if self._frame:
                 
-            self.Update()
+            wx.CallAfter(self.Update)
             
-            if not isinstance(self._frame, wx.MDIParentFrame):
+            if isinstance(self._frame, wx.MDIParentFrame):
                 # for MDI parent frames, this event must not
                 # be "skipped".  In other words, the parent frame
                 # must not be allowed to resize the client window
@@ -8911,6 +8911,7 @@ class AuiManager(wx.EvtHandler):
             self.ShowPane(pane.window, True)
             pane.Show(True)
             self._has_minimized = False
+            pane.SetFlag(pane.optionMinimized, False)
             paneInfo.window.Show(False)
             self.DetachPane(paneInfo.window)
             paneInfo.Show(False)
