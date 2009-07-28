@@ -271,7 +271,7 @@ class DrawObject:
         # put the object in the hit dict, indexed by it's color
         if not self._Canvas.HitDict:
             self._Canvas.MakeHitDict()
-        self._Canvas.HitDict[Event][self.HitColor] = (self) # put the object in the hit dict, indexed by it's color
+        self._Canvas.HitDict[Event][self.HitColor] = (self) # put the object in the hit dict, indexed by its color
 
     def UnBindAll(self):
         ## fixme: this only removes one from each list, there could be more.
@@ -2355,9 +2355,10 @@ class FloatCanvas(wx.Panel):
                  size = wx.DefaultSize,
                  ProjectionFun = None,
                  BackgroundColor = "WHITE",
-                 Debug = False):
+                 Debug = False,
+                 **kwargs):
 
-        wx.Panel.__init__( self, parent, id, wx.DefaultPosition, size)
+        wx.Panel.__init__( self, parent, id, wx.DefaultPosition, size, **kwargs)
 
         self.ComputeFontScale()
         self.InitAll()
@@ -2549,6 +2550,7 @@ class FloatCanvas(wx.Panel):
                     return True
             return False
 
+
     def MouseOverTest(self, event):
         ##fixme: Can this be cleaned up?
         if (self.HitDict and
@@ -2602,6 +2604,7 @@ class FloatCanvas(wx.Panel):
 
     ## fixme: There is a lot of repeated code here
     ##        Is there a better way?
+    ##    probably -- shouldn't there always be a GUIMode?
     def LeftDoubleClickEvent(self, event):
         if self.GUIMode:
             self.GUIMode.OnLeftDouble(event)
