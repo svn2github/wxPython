@@ -2542,7 +2542,7 @@ class AuiToolBar(wx.PyControl):
                             break
                         tool.state &= ~AUI_BUTTON_STATE_CHECKED
 
-                    for i in xrange(idx, 0, -1):
+                    for i in xrange(idx, -1, -1):
                         tool = self.FindToolByIndex(i)
                         if tool.kind != ITEM_RADIO:
                             break
