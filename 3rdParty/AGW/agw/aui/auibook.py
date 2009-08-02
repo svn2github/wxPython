@@ -100,6 +100,8 @@ class AuiNotebookPage(object):
         self.rect = wx.Rect()           # tab's hit rectangle
         self.active = False             # True if the page is currently active
         self.enabled = True             # True if the page is currently enabled
+        self.hasCloseButton = True      # True if the page has a close button using the style
+                                        # AUI_NB_CLOSE_ON_ALL_TABS
         self.text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT)
 
 
@@ -1006,7 +1008,7 @@ class AuiTabContainer(object):
 
             # determine if a close button is on this tab
             close_button = False
-            if self._flags & AUI_NB_CLOSE_ON_ALL_TABS or \
+            if (self._flags & AUI_NB_CLOSE_ON_ALL_TABS and page.hasCloseButton) or \
                (self._flags & AUI_NB_CLOSE_ON_ACTIVE_TAB and page.active):
             
                 close_button = True
@@ -1139,7 +1141,7 @@ class AuiTabContainer(object):
             tab_button = self._tab_close_buttons[i]
 
             # determine if a close button is on this tab
-            if self._flags & AUI_NB_CLOSE_ON_ALL_TABS or \
+            if (self._flags & AUI_NB_CLOSE_ON_ALL_TABS and page.hasCloseButton) or \
                (self._flags & AUI_NB_CLOSE_ON_ACTIVE_TAB and page.active):
             
                 if tab_button.cur_state == AUI_BUTTON_STATE_HIDDEN:
@@ -3035,7 +3037,56 @@ class AuiNotebook(wx.PyControl):
         # update our own tab catalog
         page_info = self._tabs.GetPage(page_idx)
         return page_info.text_colour
-                
+
+
+    def SetCloseButton(self, page_idx, hasCloseButton):
+        """
+        Sets whether a tab should display a close button or not.
+
+        This can only be called if ``AUI_NB_CLOSE_ON_ALL_TABS`` is specified.
+        
+        :param `page_idx`: the page index;
+        :param `hasCloseButton`: ``True`` if the page displays a close button.
+        """
+
+        if page_idx >= self._tabs.GetPageCount():
+            return False
+
+        if self._flags & AUI_NB_CLOSE_ON_ALL_TABS == 0:
+            raise Exception("SetCloseButton can only be used with AUI_NB_CLOSE_ON_ALL_TABS style.")
+        
+        # update our own tab catalog
+        page_info = self._tabs.GetPage(page_idx)
+        page_info.hasCloseButton = hasCloseButton
+
+        # update what's on screen
+        ctrl, ctrl_idx = self.FindTab(page_info.window)
+        if not ctrl:
+            return False
+        
+        info = ctrl.GetPage(ctrl_idx)
+        info.hasCloseButton = page_info.hasCloseButton
+        ctrl.Refresh()
+        ctrl.Update()
+        
+        return True
+        
+
+    def HasCloseButton(self, page_idx):
+        """
+        Returns whether a tab displays a close button or not.
+
+        This can only be called if ``AUI_NB_CLOSE_ON_ALL_TABS`` is specified.
+        
+        :param `page_idx`: the page index
+        """
+
+        if page_idx >= self._tabs.GetPageCount():
+            return False
+
+        page_info = self._tabs.GetPage(page_idx)
+        return page_info.hasCloseButton
+
         
     def GetSelection(self):
         """ Returns the index of the currently active page. """

@@ -1540,7 +1540,7 @@ class AuiFrame(wx.Frame):
             if evId == ID_NotebookCloseButton:
                 self._notebook_style ^= aui.AUI_NB_CLOSE_BUTTON 
             elif evId == ID_NotebookCloseButtonAll:
-                self._notebook_style ^= aui.AUI_NB_CLOSE_ON_ALL_TABS 
+                self._notebook_style ^= aui.AUI_NB_CLOSE_ON_ALL_TABS
             elif evId == ID_NotebookCloseButtonActive:
                 self._notebook_style ^= aui.AUI_NB_CLOSE_ON_ACTIVE_TAB 
 
@@ -1616,6 +1616,11 @@ class AuiFrame(wx.Frame):
                     self._notebook_theme = 5
 
                 nb.SetWindowStyleFlag(self._notebook_style)
+
+                if evId == ID_NotebookCloseButtonAll:
+                    # Demonstrate how to remove a close button from a tab
+                    nb.SetCloseButton(2, False)
+                
                 nb.Refresh()
                 nb.Update()
             
@@ -2147,7 +2152,9 @@ class AuiFrame(wx.Frame):
         ctrl.AddPage(wx.TextCtrl(ctrl, -1, "Some more text", wx.DefaultPosition, wx.DefaultSize,
                                  wx.TE_MULTILINE|wx.NO_BORDER), "wxTextCtrl 8")
 
+        # Demonstrate how to disable a tab
         ctrl.EnableTab(1, False)
+
         ctrl.SetPageTextColour(2, wx.RED)
         ctrl.SetPageTextColour(3, wx.BLUE)
         return ctrl
