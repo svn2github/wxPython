@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 30 July 2009, 12.00 GMT
+# Latest Revision: 02 Aug 2009, 12.00 GMT
 #
 #
 # TODO List
@@ -220,7 +220,7 @@ License And Version
 
 HyperTreeList is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 30 July 2009, 12.00 GMT
+Latest Revision: Andrea Gavana @ 02 Aug 2009, 12.00 GMT
 Version 1.0
 
 """
@@ -1482,7 +1482,13 @@ class EditTextCtrl(wx.TextCtrl):
 
         return self._itemEdited
 
-    
+
+    def column(self): 
+        """Returns the column currently edited.""" 
+
+        return self._column
+
+
 # ---------------------------------------------------------------------------
 # wxTreeListMainWindow implementation
 # ---------------------------------------------------------------------------
@@ -2542,7 +2548,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         elif alignment == wx.ALIGN_CENTER:
             style = wx.TE_CENTER
             
-        if self._textCtrl != None and item != self._textCtrl.item():
+        if self._textCtrl != None and (item != self._textCtrl.item() or column != self._textCtrl.column()):
             self._textCtrl.StopEditing()
             
         self._textCtrl = EditTextCtrl(self, -1, self._editItem, column,
