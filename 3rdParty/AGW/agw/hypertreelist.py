@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 04 Aug 2009, 22.00 GMT
+# Latest Revision: 05 Aug 2009, 23.00 GMT
 #
 #
 # TODO List
@@ -220,7 +220,7 @@ License And Version
 
 HyperTreeList is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 04 Aug 2009, 22.00 GMT
+Latest Revision: Andrea Gavana @ 05 Aug 2009, 23.00 GMT
 Version 1.0
 
 """
@@ -3401,11 +3401,10 @@ class HyperTreeList(wx.PyControl):
 
     def SetColumnShown(self, column, shown):
 
-        if column == self.GetMainColumn():
-            raise Exception("The main column may not be hidden")
-        
-        self._header_win.SetColumn(column, self.GetColumn(column).SetShown((self.GetMainColumn()==column and [True] or [shown])[0]))
-        self._header_win.Refresh()
+        if self._main_win.GetMainColumn() == column:
+            shown = True # Main column cannot be hidden
+            
+        self.SetColumn(column, self.GetColumn(column).SetShown(shown))
 
 
     def IsColumnEditable(self, column):
