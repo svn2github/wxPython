@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2005
-# Latest Revision: 29 May 2009, 09.00 GMT
+# Latest Revision: 31 Aug 2009, 12.00 GMT
 #
 #
 # TODO List/Caveats
@@ -133,8 +133,8 @@ License And Version
 
 FloatSpin control is freeware and distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
-Version 0.6
+Latest revision: Andrea Gavana @ 31 Aug 2009, 12.00 GMT
+Version 0.7
 
 
 Modifications to allow min_val or max_val to be None done by:
@@ -370,13 +370,15 @@ class FloatSpin(wx.PyControl):
 
         self._textctrl.SetValue(strs)
 
-        self.Bind(wx.EVT_SPIN_UP, self.OnSpinUp)
-        self.Bind(wx.EVT_SPIN_DOWN, self.OnSpinDown)
+        if not (extrastyle & FS_READONLY):
+            self.Bind(wx.EVT_SPIN_UP, self.OnSpinUp)
+            self.Bind(wx.EVT_SPIN_DOWN, self.OnSpinDown)
+            self._spinbutton.Bind(wx.EVT_LEFT_DOWN, self.OnSpinMouseDown)
+            
         self.Bind(wx.EVT_TEXT_ENTER, self.OnTextEnter)
         self.Bind(wx.EVT_SET_FOCUS, self.OnFocus)
         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
         self.Bind(wx.EVT_MOUSEWHEEL, self.OnMouseWheel)
-        self._spinbutton.Bind(wx.EVT_LEFT_DOWN, self.OnSpinMouseDown)
 
 
     def OnDestroy(self, event):
