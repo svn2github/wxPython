@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 27 Jul 2009, 17.00 GMT
+# Latest Revision: 06 Sep 2009, 22.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -6702,7 +6702,7 @@ class AuiManager(wx.EvtHandler):
             if dir == -1:  # point was outside of the dock guide
                 continue
 
-            if dir == wx.ALL:	# target is a single dock guide
+            if dir == wx.ALL:   # target is a single dock guide
                 return self.DoDropLayer(docks, target, guide.dock_direction)
             
             elif dir == wx.CENTER:
@@ -8200,7 +8200,8 @@ class AuiManager(wx.EvtHandler):
         """
 
         if isinstance(self._frame, AuiFloatingFrame) and self._frame.IsShownOnScreen():
-            event.Skip()
+            if event is not None:
+                event.Skip()
             return
 
         docked, hAlign, vAlign, monitor = self._is_docked
