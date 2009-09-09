@@ -1020,10 +1020,14 @@ class AuiFrame(wx.Frame):
                           BestSize(wx.Size(200,100)).MinSize(wx.Size(200,100)).Bottom().Layer(1).
                           CloseButton(True).MaximizeButton(True).MinimizeButton(True))
 
+        self._mgr.AddPane(self.CreateTreeCtrl(), aui.AuiPaneInfo().
+                          Name("autonotebook").Caption("Auto NB").
+                          Bottom().Layer(1).Position(1).MinimizeButton(True))
+
         wnd10 = self.CreateTextCtrl("This pane will prompt the user before hiding.")
         self._mgr.AddPane(wnd10, aui.AuiPaneInfo().
                           Name("test10").Caption("Text Pane with Hide Prompt").
-                          Bottom().Layer(1).Position(1).MinimizeButton(True))
+                          Bottom().MinimizeButton(True), target=self._mgr.GetPane("autonotebook"))
 
         self._mgr.AddPane(self.CreateSizeReportCtrl(), aui.AuiPaneInfo().
                           Name("test11").Caption("Fixed Pane").
@@ -1088,7 +1092,7 @@ class AuiFrame(wx.Frame):
         self._mgr.GetPane("tb1").Hide()
         self._mgr.GetPane("tb7").Hide()
         self._mgr.GetPane("test8").Show().Left().Layer(0).Row(0).Position(0)
-        self._mgr.GetPane("test10").Show().Bottom().Layer(0).Row(0).Position(0)
+        self._mgr.GetPane("__notebook_%d"%self._mgr.GetPane("test10").notebook_id).Show().Bottom().Layer(0).Row(0).Position(0)
         self._mgr.GetPane("notebook_content").Show()
         perspective_default = self._mgr.SavePerspective()
 

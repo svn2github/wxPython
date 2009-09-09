@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 06 Sep 2009, 22.00 GMT
+# Latest Revision: 09 Sep 2009, 10.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -3938,7 +3938,7 @@ class AuiManager(wx.EvtHandler):
                 pane.frame._mgr.Update()
 
 
-    def AddPane(self, window, arg1=None, arg2=None):
+    def AddPane(self, window, arg1=None, arg2=None, target=None):
         """
         Tells the frame manager to start managing a child window. There
         are three versions of this function. The first verison allows the full spectrum
@@ -3952,7 +3952,13 @@ class AuiManager(wx.EvtHandler):
         :param `window`: the child window to manage;
         :param `arg1`: a L{AuiPaneInfo} or an integer value (direction);
         :param `arg2`: a L{AuiPaneInfo} or a L{wx.Point} (drop position).
-        """
+        9/8/2009:
+        :param `target`: a L{AuiPaneInfo} to be turned into a notebook
+                         and new pane added to it as a page
+         """
+ 
+        if target in self._panes:
+            return self.AddPane4(window, arg1, target)
 
         if type(arg1) == type(1):
             # This Is Addpane2
@@ -4094,6 +4100,45 @@ class AuiManager(wx.EvtHandler):
         ret, pane = self.DoDrop(self._docks, self._panes, pane, drop_pos, wx.Point(0, 0))
         self._panes[indx] = pane
 
+        return True
+
+
+    def AddPane4(self, window, pane_info, target):
+        """
+        See comments on L{AddPane}.
+        Added 09/08/2009 for adding pane into automatic notebook.
+        """
+        
+        if not self.AddPane(window, pane_info):
+            return False
+               
+        paneInfo = self.GetPane(window)
+        
+        if not target.IsNotebookDockable():
+            return self.AddPane1(window, arg1)
+        if not paneInfo.IsNotebookDockable() and not paneInfo.IsNotebookControl():
+            return self.AddPane1(window, arg1)
+
+        if not paneInfo.HasNotebook():
+            # Add a new notebook pane ...
+            id = len(self._notebooks)
+            
+            bookBasePaneInfo = AuiPaneInfo()
+            bookBasePaneInfo.SetDockPos(target).NotebookControl(id). \
+                CloseButton(False).SetNameFromNotebookId(). \
+                NotebookDockable(False)
+            bookBasePaneInfo.best_size = paneInfo.best_size
+            self._panes.append(bookBasePaneInfo)
+
+            # add original pane as tab ...
+            paneInfo.NotebookPage(id)
+        
+        # Add new item to notebook
+        target.NotebookPage(paneInfo.notebook_id)
+
+        #Update for position and _notebooks in case we have another target
+        self.Update()
+        
         return True
 
 
