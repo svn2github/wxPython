@@ -2963,8 +2963,8 @@ class AuiToolBar(wx.PyControl):
                     min_size.x = 1
                 
                 if min_size.IsFullySpecified():
-                    sizer_item.SetMinSize(min_size)
-                    ctrl_sizer_item.SetMinSize(min_size)
+                    sizer.SetItemMinSize(vert_sizer, min_size)
+                    vert_sizer.SetItemMinSize(item.window, min_size)
                 
                 # add tool packing
                 if i+1 < count:
