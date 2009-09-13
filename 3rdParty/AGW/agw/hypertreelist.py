@@ -1349,7 +1349,7 @@ class EditTextCtrl(wx.TextCtrl):
         
         x, y = self._owner.CalcScrolledPosition(x+2, item.GetY())
 
-        image_w = image_h = wcheck = 0
+        image_w = image_h = wcheck = hcheck = 0
         image = item.GetCurrentImage(column)
 
         if image != _NO_IMAGE:
@@ -2434,7 +2434,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                 dc.Clear()
 
         else:
-        	dc = wx.PaintDC(self)
+            dc = wx.PaintDC(self)
 
         self.PrepareDC(dc)
 
