@@ -1009,7 +1009,7 @@ class AuiTabContainer(object):
             # determine if a close button is on this tab
             close_button = False
             if (self._flags & AUI_NB_CLOSE_ON_ALL_TABS and page.hasCloseButton) or \
-               (self._flags & AUI_NB_CLOSE_ON_ACTIVE_TAB and page.active):
+               (self._flags & AUI_NB_CLOSE_ON_ACTIVE_TAB and page.active and page.hasCloseButton):
             
                 close_button = True
             
@@ -1142,7 +1142,7 @@ class AuiTabContainer(object):
 
             # determine if a close button is on this tab
             if (self._flags & AUI_NB_CLOSE_ON_ALL_TABS and page.hasCloseButton) or \
-               (self._flags & AUI_NB_CLOSE_ON_ACTIVE_TAB and page.active):
+               (self._flags & AUI_NB_CLOSE_ON_ACTIVE_TAB and page.active and page.hasCloseButton):
             
                 if tab_button.cur_state == AUI_BUTTON_STATE_HIDDEN:
                 
@@ -2663,6 +2663,10 @@ class AuiNotebook(wx.PyControl):
         if not page:
             return False
 
+        originalPaneMgr = framemanager.GetManager(page)
+        if originalPaneMgr:
+            originalPane = originalPaneMgr.GetPane(page)
+
         page.Reparent(self)
         info = AuiNotebookPage()
         info.window = page
@@ -2670,6 +2674,9 @@ class AuiNotebook(wx.PyControl):
         info.bitmap = bitmap
         info.active = False
 
+        if originalPane:
+            info.hasCloseButton = originalPane.HasCloseButton()
+        
         if bitmap.IsOk() and not disabled_bitmap.IsOk():
             disabled_bitmap = MakeDisabledBitmap(bitmap)
             info.dis_bitmap = disabled_bitmap
