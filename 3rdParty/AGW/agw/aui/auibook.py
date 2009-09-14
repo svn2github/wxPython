@@ -2247,6 +2247,7 @@ class AuiNotebook(wx.PyControl):
         self._popupWin = None
         self._naviIcon = None
         self._imageList = None
+        self._last_drag_x = 0
         
         self._normal_font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._selected_font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
