@@ -2664,9 +2664,6 @@ class AuiNotebook(wx.PyControl):
         if not page:
             return False
 
-        originalPaneMgr = framemanager.GetManager(page)
-        if originalPaneMgr:
-            originalPane = originalPaneMgr.GetPane(page)
 
         page.Reparent(self)
         info = AuiNotebookPage()
@@ -2675,8 +2672,12 @@ class AuiNotebook(wx.PyControl):
         info.bitmap = bitmap
         info.active = False
 
-        if originalPane:
-            info.hasCloseButton = originalPane.HasCloseButton()
+        originalPaneMgr = framemanager.GetManager(page)
+        if originalPaneMgr:
+            originalPane = originalPaneMgr.GetPane(page)
+            
+            if originalPane:
+                info.hasCloseButton = originalPane.HasCloseButton()
         
         if bitmap.IsOk() and not disabled_bitmap.IsOk():
             disabled_bitmap = MakeDisabledBitmap(bitmap)
