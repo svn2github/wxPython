@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 05 Aug 2009, 23.00 GMT
+# Latest Revision: 17 Sep 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -220,7 +220,7 @@ License And Version
 
 HyperTreeList is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 05 Aug 2009, 23.00 GMT
+Latest Revision: Andrea Gavana @ 17 Sep 2009, 09.00 GMT
 Version 1.0
 
 """
@@ -1517,6 +1517,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         self._checkWidth = self._checkWidth2 = 0
         self._checkHeight = self._checkHeight2 = 0
         self._windowStyle = style
+        self._current = None
 
         # TextCtrl initial settings for editable items
         self._renameTimer = TreeListRenameTimer(self)
@@ -1889,6 +1890,11 @@ class TreeListMainWindow(CustomTreeCtrl):
         return item.IsEnabled()
     
 
+    def GetCurrentItem(self):
+
+        return self._current
+
+    
     def GetColumnCount(self):
 
         return self._owner.GetHeaderWindow().GetColumnCount()
@@ -3178,7 +3184,7 @@ _methods = ["GetIndent", "SetIndent", "GetSpacing", "SetSpacing", "GetImageList"
             "CheckChilds", "CheckSameLevel", "GetItemWindowEnabled", "SetItemWindowEnabled", "GetItemType",
             "IsDescendantOf", "SetItemHyperText", "IsItemHyperText", "SetItemBold", "SetItemDropHighlight", "SetItemItalic",
             "GetEditControl", "ShouldInheritColours", "GetItemWindow", "SetItemWindow", "SetItemTextColour", "HideItem",
-            "DeleteAllItems", "ItemHasChildren", "ToggleItemSelection"]
+            "DeleteAllItems", "ItemHasChildren", "ToggleItemSelection", "SetItemType", "GetCurrentItem"]
 
 
 class HyperTreeList(wx.PyControl):
