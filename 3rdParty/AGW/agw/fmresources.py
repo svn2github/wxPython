@@ -21,6 +21,16 @@ ControlFocus = 1
 ControlDisabled = 2
 ControlNormal = 3
 
+# FlatMenu styles
+FM_OPT_IS_LCD = 1
+""" Use this style if your computer uses a LCD screen. """
+FM_OPT_MINIBAR = 2
+""" Use this if you plan to use the toolbar only. """
+FM_OPT_SHOW_CUSTOMIZE = 4
+""" Show "customize link" in the `More` menu, you will need to write your own handler. See demo. """
+FM_OPT_SHOW_TOOLBAR = 8
+""" Set this option is you are planning to use the toolbar. """
+
 # Control status
 ControlStatusNoFocus = 0
 ControlStatusFocus = 1

@@ -199,15 +199,14 @@ if wx.Platform == "__WXMSW__":
 # to have shadows behind them, even the user defined wx.PopupWindow
 # that do not derive from FlatMenu.
 
-if wx.VERSION >= (2,7,0,0):
-    import wx.aui as AUI
-    AuiPaneInfo = AUI.AuiPaneInfo
-else:
-    try:
-        import PyAUI as AUI
-        AuiPaneInfo = AUI.PaneInfo
-    except ImportError:
-        pass
+import wx.aui as AUI
+AuiPaneInfo = AUI.AuiPaneInfo
+
+try:
+    import wx.lib.agw.aui as PyAUI
+    PyAuiPaneInfo = PyAUI.AuiPaneInfo
+except ImportError:
+    pass
 
 # Check for the new method in 2.7 (not present in 2.6.3.3)
 if wx.VERSION_STRING < "2.7":
@@ -1652,7 +1651,11 @@ class FlatMenuBar(wx.Panel):
     def PositionAUI(self, mgr, fixToolbar=True):
         """ Positions the control inside wxAUI frame manager. """
 
-        pn = AuiPaneInfo()
+        if isinstance(mgr, wx.aui.AuiManager):
+            pn = AuiPaneInfo()
+        else:
+            pn = PyAuiPaneInfo()
+            
         xx = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_X)
 
         # We add our menu bar as a toolbar, with the following settings
@@ -3188,20 +3191,20 @@ class FlatMenu(FlatMenuBase):
 
     def SetSubMenuBar(self, mb):
 
-    	self._mb_submenu = mb
+        self._mb_submenu = mb
 
 
     def GetMenuBar(self):
 
-    	if self._mb_submenu:
-    		return self._mb_submenu
+        if self._mb_submenu:
+            return self._mb_submenu
 
-    	return self._mb
+        return self._mb
 
 
     def GetMenuBarForSubMenu(self):
 
-    	return self._mb
+        return self._mb
 
 
     def Popup(self, pt, owner=None, parent=None):
