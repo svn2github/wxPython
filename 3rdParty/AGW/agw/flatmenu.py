@@ -2,7 +2,7 @@
 # FLATMENU wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 29 May 2009, 09.00 GMT
+# Latest Revision: 23 Sep 2009, 08.00 GMT
 #
 #
 # TODO List
@@ -129,13 +129,13 @@ License And Version
 
 FlatMenu is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
-Version 0.9.2
+Latest Revision: Andrea Gavana @ 23 Sep 2009, 08.00 GMT
+Version 0.9.3
 
 """
 
 __docformat__ = "epytext"
-__version__ = "0.9.2"
+__version__ = "0.9.3"
 
 import wx
 import math
