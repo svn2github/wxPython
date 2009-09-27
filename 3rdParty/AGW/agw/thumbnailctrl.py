@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana And Peter Damoc, @ 12 Dec 2005
-# Latest Revision: 29 May 2009, 09.00 GMT
+# Latest Revision: 27 Sep 2009, 10.00 GMT
 #
 #
 # TODO List/Caveats
@@ -91,11 +91,6 @@ With ThumbnailCtrl you can:
 For more info on methods and initial styles, please refer to the __init__()
 method for ThumbnailCtrl or to the specific functions.
 
-|===========================================================================|
-| NOTE: ThumbnailCtrl *requires* PIL (Python Imaging Library) library to    |
-| be installed.                                                             |
-|=========================================================================== |
-
 Side-note: using highlight thumbnails on mouse hovering may be slow on slower
 computers.
 
@@ -127,8 +122,8 @@ License And Version
 
 ThumbnailCtrl is freeware and distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
-Version 0.7
+Latest revision: Andrea Gavana @ 27 Sep 2009, 10.00 GMT
+Version 0.8
 
 """
 
@@ -144,21 +139,6 @@ import cStringIO
 import zlib
 
 import thread
-
-try:
-
-    import PIL.Image as Image
-    import PIL.ImageEnhance as ImageEnhance
-
-except ImportError:
-    
-    errstr = ("\nThumbnailCtrl *requires* PIL (Python Imaging Library).\n"
-             "You can get it at:\n\n"
-             "http://www.pythonware.com/products/pil/\n\n"
-             "ThumbnailCtrl can not continue. Exiting...\n")
-    
-    raise Exception(errstr)
-
 from math import pi
 
 
@@ -303,7 +283,7 @@ def CmpThumb(first, second):
     
     if first.GetFileName() < second.GetFileName():
         return -1
-    elif first.GetFileName() == second.GetFileName():
+    elif first.GetFullFileName() == second.GetFullFileName():
         return first.GetId() - second.GetId()
     
     return 1
@@ -317,6 +297,92 @@ def SortFiles(items, sorteditems, filenames):
         newfiles.append(filenames[items.index(item)])
         
     return newfiles
+
+# ---------------------------------------------------------------------------- #
+# Class PILImageHandler, handles loading and highlighting images with PIL
+# ---------------------------------------------------------------------------- #
+
+class PILImageHandler(object):
+    '''
+    This image handler loads and manipulates the thumbnails with the help
+    of PIL (the Python Imaging Library).
+    '''
+    
+    def __init__(self):
+        ''' Check if the PIL is installed, if not throw an exception. '''
+
+        try:
+
+            import PIL.Image as Image
+            import PIL.ImageEnhance as ImageEnhance
+
+        except ImportError:
+            
+            errstr = ("\nThumbnailCtrl *requires* PIL (Python Imaging Library).\n"
+                     "You can get it at:\n\n"
+                     "http://www.pythonware.com/products/pil/\n\n"
+                     "ThumbnailCtrl can not continue. Exiting...\n")
+            
+            raise Exception(errstr)
+
+    def LoadThumbnail(self, filename, thumbnailsize):
+        ''' Load the file and rescale it '''
+
+        import PIL.Image as Image
+
+        pil = Image.open(filename)
+        originalsize = pil.size
+        
+        pil.thumbnail(thumbnailsize)
+        img = wx.EmptyImage(pil.size[0], pil.size[1])
+
+        img.SetData(pil.convert("RGB").tostring())
+
+        alpha = False
+        if "A" in pil.getbands():
+            img.SetAlphaData(pil.convert("RGBA").tostring()[3::4])
+            alpha = True
+
+        return img, originalsize, alpha
+
+
+    def HighlightImage(self, img, factor):
+        ''' Adjust overall image brightness to highlight '''
+
+        import PIL.Image as Image
+        import PIL.ImageEnhance as ImageEnhance
+
+        pil = Image.new('RGB', (img.GetWidth(), img.GetHeight()))
+        pil.fromstring(img.GetData())
+        enh = ImageEnhance.Brightness(pil)
+        enh = enh.enhance(1.5)
+        img.SetData(enh.convert('RGB').tostring())
+        return img
+
+
+# ---------------------------------------------------------------------------- #
+# Class NativeImageHandler, handles loading and highlighting images with wx
+# ---------------------------------------------------------------------------- #
+
+class NativeImageHandler(object):
+    '''
+    This image handler loads and manipulates the thumbnails with the help of
+    wxPython's own image related functions.
+    '''
+    
+    def LoadThumbnail(self, filename, thumbnailsize):
+        ''' Load the file and rescale it '''
+        img = wx.Image(filename)
+        originalsize = (img.GetWidth(), img.GetHeight())
+        img.Rescale(min(thumbnailsize[0], originalsize[0]), min(thumbnailsize[1], originalsize[1]), wx.IMAGE_QUALITY_NORMAL)
+        alpha = img.HasAlpha()
+        
+        return img, originalsize, alpha
+
+    def HighlightImage(self, img, factor):
+        ''' Adjust overall image brightness to highlight '''
+        return img.AdjustChannels(factor, factor, factor, factor)
+
 
 
 # ---------------------------------------------------------------------------- #
@@ -466,6 +532,11 @@ class Thumb(object):
 
         return original
 
+    def GetFullFileName(self):
+        """ Returns the full filename of the thumb. """
+
+        return self._dir + "/" + self._filename
+
                 
     def GetCaption(self, line):
         """ Gets the caption associated to a thumb. """
@@ -570,7 +641,7 @@ class ThumbnailCtrl(wx.Panel):
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, thumboutline=THUMB_OUTLINE_IMAGE,
-                 thumbfilter=THUMB_FILTER_IMAGES):
+                 thumbfilter=THUMB_FILTER_IMAGES, imagehandler=PILImageHandler):
         """
         Default class constructor. Non-default parameters are:
         - thumboutline: outline style for ThumbnailCtrl, which may be:
@@ -591,7 +662,7 @@ class ThumbnailCtrl(wx.Panel):
 
         self._combo = wx.ComboBox(self, -1, style=wx.CB_DROPDOWN | wx.CB_READONLY)
         self._scrolled = ScrolledThumbnail(self, -1, thumboutline=thumboutline,
-                                           thumbfilter=thumbfilter)
+                                           thumbfilter=thumbfilter, imagehandler = imagehandler)
 
         subsizer = wx.BoxSizer(wx.HORIZONTAL)
         subsizer.Add((3, 0), 0)
@@ -610,7 +681,7 @@ class ThumbnailCtrl(wx.Panel):
                    "GetItemCount", "GetThumbWidth", "GetThumbHeight", "GetThumbBorder",
                    "ShowFileNames", "SetPopupMenu", "GetPopupMenu", "SetGlobalPopupMenu",
                    "GetGlobalPopupMenu", "SetSelectionColour", "GetSelectionColour",
-                   "EnableDragging", "SetThumbSize", "GetThumbSize", "ShowDir",
+                   "EnableDragging", "SetThumbSize", "GetThumbSize", "ShowThumbs", "ShowDir",
                    "GetShowDir", "SetSelection", "GetSelection", "SetZoomFactor",
                    "GetZoomFactor", "SetCaptionFont", "GetCaptionFont", "GetItemIndex",
                    "InsertItem", "RemoveItemAt", "IsSelected", "Rotate", "ZoomIn", "ZoomOut",
@@ -708,7 +779,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size = wx.DefaultSize, thumboutline=THUMB_OUTLINE_IMAGE,
-                 thumbfilter=THUMB_FILTER_IMAGES):
+                 thumbfilter=THUMB_FILTER_IMAGES, imagehandler=PILImageHandler):
         """
         Default class constructor. Non-default parameters are:
         - thumboutline: outline style for ThumbnailCtrl, which may be:
@@ -728,6 +799,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         self.SetThumbSize(96, 80)
         self._tOutline = thumboutline
         self._filter = thumbfilter
+        self._imageHandler = imagehandler()
         self._selected = -1
         self._pointed = -1
         self._labelcontrol = None
@@ -1032,19 +1104,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             thread.exit()
             return
         
-        pil = Image.open(newfile)
-        originalsize = pil.size
-        
-        pil.thumbnail((300, 240))
-        img = wx.EmptyImage(pil.size[0], pil.size[1])
-
-        img.SetData(pil.convert("RGB").tostring())
-
-        alpha = False
-        if "A" in pil.getbands():
-            img.SetAlphaData(pil.convert("RGBA").tostring()[3::4])
-            alpha = True
-
+        img, originalsize, alpha = self._imageHandler.LoadThumbnail(newfile, (300, 240))
         try:
             self._items[imagecount]._threadedimage = img
             self._items[imagecount]._originalsize = originalsize
@@ -1052,6 +1112,34 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             self._items[imagecount]._alpha = alpha
         except:
             return
+        
+    def ShowThumbs(self, thumbs, caption):
+        """ Shows all thumbs.
+        
+            Thumbs should be a sequence with instances of Thumb .
+            For caption see SetCaption.
+        """
+
+        self.SetCaption(caption)
+
+        self._isrunning = False
+       
+        # update items
+        self._items = thumbs
+        myfiles = [thumb.GetFullFileName() for thumb in thumbs]
+        
+        items = self._items[:]
+        self._items.sort(CmpThumb)
+
+        newfiles = SortFiles(items, self._items, myfiles)
+        self._isrunning = True
+        
+        thread.start_new_thread(self.ThreadImage, (newfiles,))
+        wx.MilliSleep(20)
+
+        self._selectedarray = []
+        self.UpdateProp()
+        self.Refresh()
         
 
     def ShowDir(self, dir, filter=THUMB_FILTER_IMAGES):
@@ -1061,17 +1149,12 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         if filter >= 0:
             self._filter = filter
             
-        self.SetCaption(self._dir)
-        
-        self._isrunning = False
-
         self._parent.RecreateComboBox(dir)
         
         # update items
-        self._items = []
+        thumbs = []
 
         filenames = self.ListDirectory(self._dir, extensions)
-        myfiles = []
 
         for files in filenames:
 
@@ -1080,7 +1163,6 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             if not os.path.isfile(fullfile):
                 continue
 
-            myfiles.append(fullfile)
             stats = os.stat(fullfile)
             size = stats[6]
             
@@ -1094,20 +1176,9 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             lastmod = time.strftime(TIME_FMT, time.localtime(stats[8]))
             
             if self._filter & THUMB_FILTER_IMAGES:
-                self._items.append(Thumb(self, dir, files, caption, size, lastmod))
-
-        items = self._items[:]
-        self._items.sort(CmpThumb)
-
-        newfiles = SortFiles(items, self._items, myfiles)
-        self._isrunning = True
+                thumbs.append(Thumb(self, dir, files, caption, size, lastmod))
         
-        thread.start_new_thread(self.ThreadImage, (newfiles,))
-        wx.MilliSleep(20)
-
-        self._selectedarray = []
-        self.UpdateProp()
-        self.Refresh()
+        return self.ShowThumbs(thumbs, caption = self._dir)
 
 
     def GetShowDir(self):
@@ -1229,7 +1300,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
     def UpdateShow(self):
         """ Updates thumb items. """
         
-        self.ShowDir(self._dir)
+        self.ShowThumbs(self._items)
 
 
     def GetCaptionHeight(self, begRow, count=1):
@@ -1427,14 +1498,8 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         hh = img.GetHeight()
 
         if index == self.GetPointed() and self.GetHighlightPointed():
-            
-            img = img.ConvertToImage()
-            pil = Image.new('RGB', (img.GetWidth(), img.GetHeight()))
-            pil.fromstring(img.GetData())
-            enh = ImageEnhance.Brightness(pil)
-            enh = enh.enhance(1.5)
-            img.SetData(enh.convert('RGB').tostring())
-            img = img.ConvertToBitmap()
+            factor = 1.5
+            img = self._imageHandler.HighlightImage(img.ConvertToImage(), factor).ConvertToBitmap()
         
         imgRect = wx.Rect(x + (self._tWidth - img.GetWidth())/2,
                           y + (self._tHeight - img.GetHeight())/2,
@@ -1713,7 +1778,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
             files = wx.FileDataObject()
             for ii in xrange(len(self._selectedarray)):
-                files.AddFile(opj(self._dir + "/" + self.GetSelectedItem(ii).GetFileName()))
+                files.AddFile(opj(self.GetSelectedItem(ii).GetFullFileName()))
                 
             source = wx.DropSource(self)
             source.SetData(files)
@@ -1840,7 +1905,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             count = count + 1
             if TN_USE_PIL:
                 newangle = thumb.GetRotation()*180/pi + angle
-                fil = opj(self._dir + "/" + thumb.GetFileName())
+                fil = opj(thumb.GetFullFileName())
                 pil = Image.open(fil).rotate(newangle)
                 img = wx.EmptyImage(pil.size[0], pil.size[1])
                 img.SetData(pil.convert('RGB').tostring())
@@ -1879,8 +1944,8 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             for ii in xrange(len(self._items)):
                 if self.IsSelected(ii):
                     thumb = self._items[ii]
-                    files = self._items[ii].GetFileName()
-                    filename = opj(self._dir + "/" + files)
+                    files = self._items[ii].GetFullFileName()
+                    filename = opj(files)
                     try:
                         os.remove(filename)
                         count = count + 1
