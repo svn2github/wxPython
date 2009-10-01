@@ -1772,7 +1772,7 @@ class AuiFrame(wx.Frame):
         if event.pane.name == "test10":
 
             msg = "Are you sure you want to "
-            if evt.GetEventType() == aui.wxEVT_AUI_PANE_MINIMIZE:
+            if event.GetEventType() == aui.wxEVT_AUI_PANE_MINIMIZE:
                 msg += "minimize "
             else:
                 msg += "close/hide "
@@ -2422,7 +2422,7 @@ class TestPanel(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.OnButton, b)
 
 
-    def OnButton(self, evt):
+    def OnButton(self, event):
         self.win = MainAUI(self)
 
 #----------------------------------------------------------------------

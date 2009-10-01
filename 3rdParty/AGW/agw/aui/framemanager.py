@@ -5068,33 +5068,45 @@ class AuiManager(wx.EvtHandler):
         # pane does not exist in the dock, add it
         for p in panes:
 
-            # find any docks with the same dock direction, dock layer, and
-            # dock row as the pane we are working on
-            arr = FindDocks(docks, p.dock_direction, p.dock_layer, p.dock_row)
+            # don't layout hidden panes.
+            if p.IsShown():
+                
+                # find any docks with the same dock direction, dock layer, and
+                # dock row as the pane we are working on
+                arr = FindDocks(docks, p.dock_direction, p.dock_layer, p.dock_row)
 
-            if len(arr) > 0:
-                dock = arr[0]
-            else:
-                # dock was not found, so we need to create a new one
-                d = AuiDockInfo()
-                d.dock_direction = p.dock_direction
-                d.dock_layer = p.dock_layer
-                d.dock_row = p.dock_row
-                docks.append(d)
-                dock = docks[-1]
+                if len(arr) > 0:
+                    dock = arr[0]
+                    # pane exists, don't need old dock size, get rid of ref
+                    if hasattr(p, '_prevdock'):
+                        del p._prevdock
+                        
+                else:
+                    # dock was not found, so we need to create a new one
+                    d = AuiDockInfo()
+                    d.dock_direction = p.dock_direction
+                    d.dock_layer = p.dock_layer
+                    d.dock_row = p.dock_row
+                    docks.append(d)
+                    dock = docks[-1]
 
-            if p.IsDocked() and p.IsShown():
-                # remove the pane from any existing docks except this one
-                docks = RemovePaneFromDocks(docks, p, dock)
+                    # if pane is being restored use old dock size
+                    if hasattr(p, '_prevdock'):
+                        dock.size = p._prevdock.size
+                        del p._prevdock
+                    
+                if p.IsDocked():
+                    # remove the pane from any existing docks except this one
+                    docks = RemovePaneFromDocks(docks, p, dock)
 
-                # pane needs to be added to the dock,
-                # if it doesn't already exist 
-                if not FindPaneInDock(dock, p.window):
-                    dock.panes.append(p)
-            else:
-                # remove the pane from any existing docks
-                docks = RemovePaneFromDocks(docks, p)
-            
+                    # pane needs to be added to the dock,
+                    # if it doesn't already exist 
+                    if not FindPaneInDock(dock, p.window):
+                        dock.panes.append(p)
+                else:
+                    # remove the pane from any existing docks
+                    docks = RemovePaneFromDocks(docks, p)
+                
         # remove any empty docks
         for ii in xrange(len(docks)-1, -1, -1):
             if len(docks[ii].panes) == 0:
@@ -8840,6 +8852,7 @@ class AuiManager(wx.EvtHandler):
             #
             # 3) Hide the minimizing pane 
 
+
             # personalize the toolbar style
             tbStyle = AUI_TB_DEFAULT_STYLE
             posMask = paneInfo.minimize_mode & AUI_MINIMIZE_POS_MASK
@@ -8914,6 +8927,12 @@ class AuiManager(wx.EvtHandler):
                     Name(toolpanelname).Caption(paneInfo.caption). \
                     ToolbarPane().Right().TopDockable(False). \
                     LeftDockable(False).BottomDockable(False).DestroyOnClose())
+
+            # find the dock this pane belongs to
+            for dock in self._docks:
+                if FindPaneInDock(dock, paneInfo.window):
+                    #store a reference to the old dock so we restore the size
+                    paneInfo._prevdock = dock
 
             # mark ourselves minimized
             paneInfo.Minimize()
