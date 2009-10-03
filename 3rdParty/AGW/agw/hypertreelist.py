@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 17 Sep 2009, 09.00 GMT
+# Latest Revision: 03 Oct 2009, 21.00 GMT
 #
 #
 # TODO List
@@ -220,7 +220,7 @@ License And Version
 
 HyperTreeList is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Sep 2009, 09.00 GMT
+Latest Revision: Andrea Gavana @ 03 Oct 2009, 21.00 GMT
 Version 1.0
 
 """
@@ -2495,7 +2495,10 @@ class TreeListMainWindow(CustomTreeCtrl):
         w, h = self.GetSize()
         column = -1
 
-        if point.x <0:
+        if not isinstance(point, wx.Point):
+            point = wx.Point(*point)
+
+        if point.x < 0:
             flags |= wx.TREE_HITTEST_TOLEFT
         if point.x > w:
             flags |= wx.TREE_HITTEST_TORIGHT
