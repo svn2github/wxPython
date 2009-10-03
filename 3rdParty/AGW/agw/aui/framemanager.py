@@ -506,6 +506,8 @@ class AuiPaneInfo(object):
 
     savedHiddenState       = 2**32    # used internally
     actionPane             = 2**33    # used internally
+    wasMaximized           = 2**34    # used internally
+    needsRestore           = 2**35    # used internally
 
 
     def __init__(self):
@@ -3480,6 +3482,7 @@ class AuiManager(wx.EvtHandler):
 
         self._masterManager = None
         self._currentDragItem = -1
+        self._lastknowndocks = {}
 
         self._hint_fadetimer = wx.Timer(self, wx.ID_ANY)
         self._hint_fademax = 50
@@ -4336,6 +4339,8 @@ class AuiManager(wx.EvtHandler):
                 # maximized pane should show
                 p.Hide()
 
+        pane_info.SetFlag(pane_info.needsRestore, True)
+
         # mark ourselves maximized
         pane_info.Maximize()
         pane_info.Show()
@@ -4358,6 +4363,8 @@ class AuiManager(wx.EvtHandler):
         for p in self._panes:
             if not p.IsToolbar():
                 p.SetFlag(p.optionHidden, p.HasFlag(p.savedHiddenState))
+
+        pane_info.SetFlag(pane_info.needsRestore, True)
 
         # mark ourselves non-maximized
         pane_info.Restore()
@@ -4618,6 +4625,8 @@ class AuiManager(wx.EvtHandler):
                 dock.dock_row = row
                 dock.size = size
                 self._docks.append(dock)
+                self.UpdateLastKnownDock(dock)
+                
                 continue
 
             # Undo our escaping as LoadPaneInfo needs to take an unescaped
@@ -5077,10 +5086,7 @@ class AuiManager(wx.EvtHandler):
 
                 if len(arr) > 0:
                     dock = arr[0]
-                    # pane exists, don't need old dock size, get rid of ref
-                    if hasattr(p, '_prevdock'):
-                        del p._prevdock
-                        
+
                 else:
                     # dock was not found, so we need to create a new one
                     d = AuiDockInfo()
@@ -5089,11 +5095,42 @@ class AuiManager(wx.EvtHandler):
                     d.dock_row = p.dock_row
                     docks.append(d)
                     dock = docks[-1]
+                    
+                    # check if dock needs to be restored to previous size
+                    lastdock = self.GetLastKnownDock(dock)
+                    
+                    if p.HasFlag(p.needsRestore) and \
+                       not p.IsFloating() and lastdock:
 
-                    # if pane is being restored use old dock size
-                    if hasattr(p, '_prevdock'):
-                        dock.size = p._prevdock.size
-                        del p._prevdock
+                        isHor = dock.IsHorizontal()
+                        sashSize = self._art.GetMetric(AUI_DOCKART_SASH_SIZE)
+
+                        # get the sizes of any docks that might 
+                        # overlap with our restored dock
+
+                        #make list of widths or heights from the size in the rects
+                        sizes = [d.rect[2:][isHor] for \
+                                 d in docks if d.IsOk() and \
+                                 (d.IsHorizontal() == isHor) and \
+                                 not d.toolbar and \
+                                 d.dock_direction != AUI_DOCK_CENTER]
+                        
+                        frameRect = GetInternalFrameRect(self._frame, self._docks)
+
+                        #set max size allowing for sashes and absolute minimum
+                        maxsize = frameRect[2:][isHor] - sum(sizes) - 10 - (sashSize*len(sizes))
+
+                        dock.size = min(lastdock.size,maxsize)
+                        p.SetFlag(p.needsRestore, False)
+
+                if p.HasFlag(p.wasMaximized):
+
+                    self.MaximizePane(p)
+                    p.SetFlag(p.wasMaximized, False)
+
+                if not p.IsMaximized():
+                    
+                    self.UpdateLastKnownDock(dock)
                     
                 if p.IsDocked():
                     # remove the pane from any existing docks except this one
@@ -5989,6 +6026,37 @@ class AuiManager(wx.EvtHandler):
                     return dock.rect.x
             
         return 0
+
+    def GetLastKnownDock(self, dock):
+        """
+        Returns the instance of the dock that was previously in the position
+        of the input dock. This is necessary for restoring pane's previous
+        size after minimize or maximize.
+        
+        :param `dock`: a L{AuiDockInfo} instance.
+        """
+
+        
+        if dock.IsOk():
+            dockstr = "dock_%d%d%d"%(dock.dock_direction,dock.dock_layer,dock.dock_row)
+            
+            if dockstr in self._lastknowndocks:
+                
+                return self._lastknowndocks[dockstr]
+
+        return None
+        
+    def UpdateLastKnownDock(self, dock):
+        """
+        Updates the dictionary of previous dock instances with the input dock
+        
+        :param `dock`: a L{AuiDockInfo} instance.
+        """
+
+
+        self._lastknowndocks["dock_%d%d%d"%(dock.dock_direction,
+                                                   dock.dock_layer,
+                                                   dock.dock_row)] = dock
 
 
     def GetPartnerDock(self, dock):
@@ -8904,6 +8972,9 @@ class AuiManager(wx.EvtHandler):
             minimize_toolbar.Realize()
             toolpanelname = paneInfo.name + "_min"
 
+            if paneInfo.IsMaximized():
+                paneInfo.SetFlag(paneInfo.wasMaximized, True)
+
             if dockDirection == AUI_DOCK_TOP:
                 self.AddPane(minimize_toolbar, AuiPaneInfo(). \
                     Name(toolpanelname).Caption(paneInfo.caption). \
@@ -8927,13 +8998,9 @@ class AuiManager(wx.EvtHandler):
                     Name(toolpanelname).Caption(paneInfo.caption). \
                     ToolbarPane().Right().TopDockable(False). \
                     LeftDockable(False).BottomDockable(False).DestroyOnClose())
-
-            # find the dock this pane belongs to
-            for dock in self._docks:
-                if FindPaneInDock(dock, paneInfo.window):
-                    #store a reference to the old dock so we restore the size
-                    paneInfo._prevdock = dock
-
+                
+            paneInfo.SetFlag(paneInfo.needsRestore, True)
+            
             # mark ourselves minimized
             paneInfo.Minimize()
             paneInfo.Show(False)

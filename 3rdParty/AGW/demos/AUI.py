@@ -1093,6 +1093,8 @@ class AuiFrame(wx.Frame):
         self._mgr.GetPane("tb7").Hide()
         self._mgr.GetPane("test8").Show().Left().Layer(0).Row(0).Position(0)
         self._mgr.GetPane("__notebook_%d"%self._mgr.GetPane("test10").notebook_id).Show().Bottom().Layer(0).Row(0).Position(0)
+        self._mgr.GetPane("autonotebook").Show()
+        self._mgr.GetPane("test10").Show()
         self._mgr.GetPane("notebook_content").Show()
         perspective_default = self._mgr.SavePerspective()
 
