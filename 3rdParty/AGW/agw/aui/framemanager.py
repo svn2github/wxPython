@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 09 Sep 2009, 10.00 GMT
+# Latest Revision: 04 Oct 2009, 10.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -124,6 +124,10 @@ wxEVT_AUI_RENDER = wx.NewEventType()
 wxEVT_AUI_FIND_MANAGER = wx.NewEventType()
 wxEVT_AUI_PANE_MINIMIZE = wx.NewEventType()
 wxEVT_AUI_PANE_MIN_RESTORE = wx.NewEventType()
+wxEVT_AUI_PANE_FLOATING = wx.NewEventType()
+wxEVT_AUI_PANE_FLOATED = wx.NewEventType()
+wxEVT_AUI_PANE_DOCKING = wx.NewEventType()
+wxEVT_AUI_PANE_DOCKED = wx.NewEventType()
 
 EVT_AUI_PANE_BUTTON = wx.PyEventBinder(wxEVT_AUI_PANE_BUTTON, 0)
 """ Fires an event when the user left-clicks on a pane button. """
@@ -141,6 +145,14 @@ EVT_AUI_PANE_MINIMIZE = wx.PyEventBinder(wxEVT_AUI_PANE_MINIMIZE, 0)
 """ A pane in `AuiManager` has been minimized. """
 EVT_AUI_PANE_MIN_RESTORE = wx.PyEventBinder(wxEVT_AUI_PANE_MIN_RESTORE, 0)
 """ A pane in `AuiManager` has been restored from a minimized state. """
+EVT_AUI_PANE_FLOATING = wx.PyEventBinder(wxEVT_AUI_PANE_FLOATING, 0)
+""" A pane in `AuiManager` is about to be floated. """
+EVT_AUI_PANE_FLOATED = wx.PyEventBinder(wxEVT_AUI_PANE_FLOATED, 0)
+""" A pane in `AuiManager` has been floated. """
+EVT_AUI_PANE_DOCKING = wx.PyEventBinder(wxEVT_AUI_PANE_DOCKING, 0)
+""" A pane in `AuiManager` is about to be docked. """
+EVT_AUI_PANE_DOCKED = wx.PyEventBinder(wxEVT_AUI_PANE_DOCKED, 0)
+""" A pane in `AuiManager` has been docked. """
 
 
 # ---------------------------------------------------------------------------- #
@@ -3552,7 +3564,7 @@ class AuiManager(wx.EvtHandler):
         # is the pane dockable?
         if not p.IsDockable():
             return False
-    
+
         # if a key modifier is pressed while dragging the frame,
         # don't dock the window
         return not (wx.GetKeyState(wx.WXK_CONTROL) or wx.GetKeyState(wx.WXK_ALT))
@@ -3897,6 +3909,23 @@ class AuiManager(wx.EvtHandler):
                 return
         
         self.ProcessEvent(event)
+
+
+    def FireEvent(self, evtType, pane, canVeto=False):
+        """
+        Fires one of the wxEVT_AUI_PANE_FLOATED/FLOATING/DOCKING/DOCKED event. 
+
+        :param `evtType`: one of the aforementioned events;
+        :param `pane`: the `AuiPaneInfo` instance;
+        :param `canVeto`: whether the event can be vetoed or not.
+        """        
+
+        event = AuiManagerEvent(evtType)
+        event.SetPane(pane)
+        event.SetCanVeto(canVeto)
+        self.ProcessMgrEvent(event)
+
+        return event
 
     
     def CanUseModernDockArt(self):
@@ -7800,17 +7829,33 @@ class AuiManager(wx.EvtHandler):
                 self.Update()
                 return
             else:
+
+                e = self.FireEvent(wxEVT_AUI_PANE_DOCKING, paneInfo, canVeto=True)
+                if e.GetVeto():
+                    self.HideHint()
+                    ShowDockingGuides(self._guides, False)
+                    return
+                
                 win_rect = paneInfo.frame.GetRect()
                 paneInfo.Dock()
                 if paneInfo.IsToolbar():
                     paneInfo = self.SwitchToolBarOrientation(paneInfo)
+
+                e = self.FireEvent(wxEVT_AUI_PANE_DOCKED, paneInfo, canVeto=False)
+                    
         else:
+
+            e = self.FireEvent(wxEVT_AUI_PANE_FLOATING, paneInfo, canVeto=True)
+            if e.GetVeto():
+                return
+            
             if paneInfo.floating_pos == wx.Point(-1, -1):
                 captionSize = self._art.GetMetric(AUI_DOCKART_CAPTION_SIZE)
                 paneInfo.floating_pos = pane_window.GetScreenPosition()
                 paneInfo.floating_pos.y -= captionSize
 
             paneInfo.Float()
+            e = self.FireEvent(wxEVT_AUI_PANE_FLOATED, paneInfo, canVeto=False)
 
         self._panes[indx] = paneInfo
         self.Update()
@@ -8407,6 +8452,11 @@ class AuiManager(wx.EvtHandler):
             self._action_window = self._action_pane.window
         
         elif self._action_pane.IsFloatable() and self._flags & AUI_MGR_ALLOW_FLOATING:
+
+            e = self.FireEvent(wxEVT_AUI_PANE_FLOATING, self._action_pane, canVeto=True)
+            if e.GetVeto():
+                return
+            
             self._action = actionDragFloatingPane
 
             # set initial float position
@@ -8420,6 +8470,8 @@ class AuiManager(wx.EvtHandler):
             self._action_pane.Float()
             if wx.Platform == "__WXGTK__":
                 self._action_pane.Show()
+
+            e = self.FireEvent(wxEVT_AUI_PANE_FLOATED, self._action_pane, canVeto=False)
 
             self.Update()
 
@@ -8671,6 +8723,16 @@ class AuiManager(wx.EvtHandler):
                 # do the drop calculation
                 indx = self._panes.index(paneInfo)
                 ret, paneInfo = self.DoDrop(self._docks, self._panes, paneInfo, clientPt, action_offset)
+
+                if ret:
+                    e = self.FireEvent(wxEVT_AUI_PANE_DOCKING, paneInfo, canVeto=True)
+                    if e.GetVeto():
+                        self.HideHint()
+                        ShowDockingGuides(self._guides, False)
+                        return
+
+                    e = self.FireEvent(wxEVT_AUI_PANE_DOCKED, paneInfo, canVeto=False)
+                
                 self._panes[indx] = paneInfo
             
         # if the pane is still floating, update it's floating
@@ -8885,7 +8947,12 @@ class AuiManager(wx.EvtHandler):
         elif event.button == AUI_BUTTON_PIN:
         
             if self._flags & AUI_MGR_ALLOW_FLOATING and pane.IsFloatable():
+                e = self.FireEvent(wxEVT_AUI_PANE_FLOATING, pane, canVeto=True)
+                if e.GetVeto():
+                    return
+
                 pane.Float()
+                e = self.FireEvent(wxEVT_AUI_PANE_FLOATED, pane, canVeto=False)
 
             self.Update()
 
@@ -9195,5 +9262,33 @@ class AuiManager(wx.EvtHandler):
         """
 
         self._animation_step = float(step)        
+
+        
+    def RequestUserAttention(self, pane_window):
+        """
+        Requests the user attention by intermittently highlighting the pane caption.
+
+        :param `pane_window`: a L{wx.Window} derived window, managed by the pane.
+        """
+                
+        # try to find the pane
+        paneInfo = self.GetPane(pane_window)
+        if not paneInfo.IsOk():
+            raise Exception("Pane window not found")
+
+        dc = wx.ClientDC(self._frame)
+
+        # if the frame is about to be deleted, don't bother
+        if not self._frame or self._frame.IsBeingDeleted():
+            return
+        
+        if not self._frame.GetSizer():
+            return
+
+        for part in self._uiparts:
+            if part.pane == paneInfo:
+                self._art.RequestUserAttention(dc, self._frame, part.pane.caption, part.rect, part.pane)
+                self._frame.RefreshRect(part.rect, True)
+                break
 
         

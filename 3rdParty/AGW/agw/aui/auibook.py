@@ -2038,7 +2038,7 @@ class TabFrame(wx.PyWindow):
         ===================================  ======================================
         """
 
-        self._rect = wx.Rect(x, y, width, height)
+        self._rect = wx.Rect(x, y, max(1, width), max(1, height))
         self.DoSizing()
 
 

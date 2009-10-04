@@ -155,7 +155,10 @@ Plus the following features:
       when they are docked and minimized (Windows < Vista and GTK only);
   (m) A pane switcher dialog is available to cycle through existing AUI panes;
   (n) Some flags which allow to choose the orientation and the position of the minimized panes;
-- (o) The functions [Get]MinimizeMode() in `AuiPaneInfo` which allow to set/get the flags described above.
+  (o) The functions [Get]MinimizeMode() in `AuiPaneInfo` which allow to set/get the flags described above;
+  (p) Events like ``EVT_AUI_PANE_DOCKING``, ``EVT_AUI_PANE_DOCKED``, ``EVT_AUI_PANE_FLOATING`` and ``EVT_AUI_PANE_FLOATED`` are
+      available for all panes *except* toolbar panes;
+  (q) Implementation of the RequestUserAttention method for panes.
 
 - AuiNotebook:
   (a) Implementation of the style ``AUI_NB_HIDE_ON_SINGLE_TAB``, a la `wx.lib.agw.flatnotebook`;
@@ -212,7 +215,7 @@ TODOs
 - Find a way to dock panes in already floating panes (`AuiFloatingFrames`), as they already have
   their own `AuiManager`;
 - Add events for panes when they are about to float or to be docked (something like
-  ``EVT_AUI_PANE_FLOATING/ED`` and ``EVT_AUI_PANE_DOCKING/ED``);
+  ``EVT_AUI_PANE_FLOATING/ED`` and ``EVT_AUI_PANE_DOCKING/ED``) - DONE, to some extent;
 - Implement the 4-ways splitter behaviour for horizontal and vertical sashes if they intersect;
 - Extend `tabart.py` with more aui tab arts;
 - Implement ``AUI_NB_LEFT`` and ``AUI_NB_RIGHT`` tab locations in `AuiNotebook`;
@@ -232,7 +235,7 @@ License And Version
 
 AUI library is freeware and distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 30 July 2009, 12.00 GMT
+Latest revision: Andrea Gavana @ 04 Oct 2009, 10.00 GMT
 Version 1.0. 
 
 """

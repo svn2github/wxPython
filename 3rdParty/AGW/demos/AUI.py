@@ -344,6 +344,9 @@ ID_BorderColor = ID_PaneBorderSize + 12
 ID_GripperColor = ID_PaneBorderSize + 13
 ID_SashGrip = ID_PaneBorderSize + 14
 
+ID_VetoTree = ID_PaneBorderSize + 15
+ID_VetoText = ID_PaneBorderSize + 16
+
 
 # -- SizeReportCtrl --
 # (a utility control that always reports it's client size)
@@ -696,7 +699,7 @@ class SettingsPanel(wx.Panel):
 class AuiFrame(wx.Frame):
 
     def __init__(self, parent, id=wx.ID_ANY, title="", pos= wx.DefaultPosition,
-                 size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE|wx.SUNKEN_BORDER):
+                 size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE|wx.SUNKEN_BORDER, log=None):
 
         wx.Frame.__init__(self, parent, id, title, pos, size, style)
 
@@ -718,12 +721,15 @@ class AuiFrame(wx.Frame):
         self._custom_pane_buttons = False
         self._custom_tab_buttons = False
         self._pane_icons = False
+        self._veto_tree = self._veto_text = False
 
+        self.log = log
+        
         self.CreateStatusBar()
         self.GetStatusBar().SetStatusText("Ready")
 
-        self.CreateMenuBar()
         self.BuildPanes()
+        self.CreateMenuBar()
         self.BindEvents()
 
 
@@ -780,7 +786,7 @@ class AuiFrame(wx.Frame):
         options_menu.AppendSeparator()
         options_menu.AppendRadioItem(ID_MinimizeCaptSmart, "Smart Minimized Caption")
         options_menu.AppendRadioItem(ID_MinimizeCaptHorz, "Horizontal Minimized Caption")
-        options_menu.AppendRadioItem(ID_MinimizeCaptHide, "Hiden Minimized Caption").Check()
+        options_menu.AppendRadioItem(ID_MinimizeCaptHide, "Hidden Minimized Caption").Check()
         options_menu.AppendSeparator()
         options_menu.AppendCheckItem(ID_PaneIcons, "Set Icons On Panes")
         options_menu.AppendCheckItem(ID_AnimateFrames, "Animate Dock/Close/Minimize Of Floating Panes")
@@ -854,6 +860,25 @@ class AuiFrame(wx.Frame):
 
         perspectives_menu.AppendMenu(wx.ID_ANY, "Frame Perspectives", self._perspectives_menu)
         perspectives_menu.AppendMenu(wx.ID_ANY, "AuiNotebook Perspectives", self._nb_perspectives_menu)
+
+        action_menu = wx.Menu()
+        action_menu.AppendCheckItem(ID_VetoTree, "Veto Floating Of Tree Pane")
+        action_menu.AppendCheckItem(ID_VetoText, "Veto Docking Of Fixed Pane")
+        action_menu.AppendSeparator()
+
+        attention_menu = wx.Menu()
+        
+        self._requestPanes = {}
+        for indx, pane in enumerate(self._mgr.GetAllPanes()):
+            if pane.IsToolbar():
+                continue
+            if not pane.caption or not pane.name:
+                continue
+            ids = wx.ID_HIGHEST + 12345 + indx
+            self._requestPanes[ids] = pane.name
+            attention_menu.Append(ids, pane.caption)
+
+        action_menu.AppendMenu(wx.ID_ANY, "Request User Attention For", attention_menu)
         
         help_menu = wx.Menu()
         help_menu.Append(wx.ID_ABOUT, "About...")
@@ -863,6 +888,7 @@ class AuiFrame(wx.Frame):
         mb.Append(perspectives_menu, "&Perspectives")
         mb.Append(options_menu, "&Options")
         mb.Append(notebook_menu, "&Notebook")
+        mb.Append(action_menu, "&Actions")
         mb.Append(help_menu, "&Help")
 
         self.SetMenuBar(mb)
@@ -1193,6 +1219,12 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnChangeContentPane, id=ID_SizeReportContent)
         self.Bind(wx.EVT_MENU, self.OnChangeContentPane, id=ID_HTMLContent)
         self.Bind(wx.EVT_MENU, self.OnChangeContentPane, id=ID_NotebookContent)
+        self.Bind(wx.EVT_MENU, self.OnVetoTree, id=ID_VetoTree)
+        self.Bind(wx.EVT_MENU, self.OnVetoText, id=ID_VetoText)
+
+        for ids in self._requestPanes:
+            self.Bind(wx.EVT_MENU, self.OnRequestUserAttention, id=ids)
+        
         self.Bind(wx.EVT_MENU, self.OnExit, id=wx.ID_EXIT)
         self.Bind(wx.EVT_MENU, self.OnAbout, id=wx.ID_ABOUT)
 
@@ -1238,13 +1270,23 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookSmartTab)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookUseImagesDropDown)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookCustomButtons)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_VetoTree)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_VetoText)
+
+        for ids in self._requestPanes:
+            self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ids)
 
         self.Bind(aui.EVT_AUITOOLBAR_TOOL_DROPDOWN, self.OnDropDownToolbarItem, id=ID_DropDownToolbarItem)
         self.Bind(aui.EVT_AUI_PANE_CLOSE, self.OnPaneClose)
         self.Bind(aui.EVT_AUINOTEBOOK_ALLOW_DND, self.OnAllowNotebookDnD)
         self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnNotebookPageClose)
         
+        self.Bind(aui.EVT_AUI_PANE_FLOATING, self.OnFloatDock)
+        self.Bind(aui.EVT_AUI_PANE_FLOATED, self.OnFloatDock)
+        self.Bind(aui.EVT_AUI_PANE_DOCKING, self.OnFloatDock)
+        self.Bind(aui.EVT_AUI_PANE_DOCKED, self.OnFloatDock)
 
+        
     def GetDockArt(self):
 
         return self._mgr.GetArtProvider()
@@ -1768,6 +1810,19 @@ class AuiFrame(wx.Frame):
         elif evId == ID_NotebookArtChrome:
             event.Check(self._notebook_theme == 5)
 
+        elif evId == ID_VetoTree:
+            event.Check(self._veto_tree)
+
+        elif evId == ID_VetoText:
+            event.Check(self._veto_text)
+
+        else:
+            for ids in self._requestPanes:
+                if evId == ids:
+                    paneName = self._requestPanes[ids]
+                    pane = self._mgr.GetPane(paneName)
+                    event.Enable(pane.IsShown())
+                
 
     def OnPaneClose(self, event):
 
@@ -1937,6 +1992,27 @@ class AuiFrame(wx.Frame):
         self._mgr.Update()
 
 
+    def OnVetoTree(self, event):
+
+        self._veto_tree = event.IsChecked()
+
+
+    def OnVetoText(self, event):
+
+        self._veto_text = event.IsChecked()
+
+
+    def OnRequestUserAttention(self, event):
+
+        ids = event.GetId()
+        if ids not in self._requestPanes:
+            return
+        
+        paneName = self._requestPanes[ids]
+        pane = self._mgr.GetPane(paneName)
+        self._mgr.RequestUserAttention(pane.window)
+
+
     def OnDropDownToolbarItem(self, event):
 
         if event.IsDropDownClicked():
@@ -2022,6 +2098,38 @@ class AuiFrame(wx.Frame):
         auibook.Update()
         
 
+    def OnFloatDock(self, event):
+
+        paneLabel = event.pane.caption
+        etype = event.GetEventType()
+
+        strs = "Pane %s "%paneLabel
+        if etype == aui.wxEVT_AUI_PANE_FLOATING:
+            strs += "is about to be floated"
+
+            if event.pane.name == "test8" and self._veto_tree:
+                event.Veto()
+                strs += "... Event vetoed by user selection!"
+                self.log.write(strs + "\n")
+                return
+            
+        elif etype == aui.wxEVT_AUI_PANE_FLOATED:
+            strs += "has been floated"
+        elif etype == aui.wxEVT_AUI_PANE_DOCKING:
+            strs += "is about to be docked"
+
+            if event.pane.name == "test11" and self._veto_text:
+                event.Veto()
+                strs += "... Event vetoed by user selection!"
+                self.log.write(strs + "\n")
+                return
+
+        elif etype == aui.wxEVT_AUI_PANE_DOCKED:
+            strs += "has been docked"
+        
+        self.log.write(strs + "\n")
+        
+    
     def OnExit(self, event):
 
         self.Close(True)
@@ -2029,8 +2137,21 @@ class AuiFrame(wx.Frame):
 
     def OnAbout(self, event):
 
-        wx.MessageBox("AUI Demo\nAn advanced window management library for wxPython",
-                      "About AUI Demo", wx.OK, self)
+        msg = "This Is The About Dialog Of The Pure Python Version Of AUI.\n\n" + \
+              "Author: Andrea Gavana @ 23 Dec 2005\n\n" + \
+              "Please Report Any Bug/Requests Of Improvements\n" + \
+              "To Me At The Following Adresses:\n\n" + \
+              "gavana@kpo.kz\n" + "andrea.gavana@gmail.com\n\n" + \
+              "Welcome To wxPython " + wx.VERSION_STRING + "!!"
+              
+        dlg = wx.MessageDialog(self, msg, "AUI Demo",
+                               wx.OK | wx.ICON_INFORMATION)
+
+        if wx.Platform != '__WXMAC__':
+            dlg.SetFont(wx.Font(8, wx.NORMAL, wx.NORMAL, wx.NORMAL, False))
+            
+        dlg.ShowModal()
+        dlg.Destroy()
 
 
     def CreateTextCtrl(self, ctrl_text=""):
@@ -2261,7 +2382,7 @@ def GetIntroText():
     "<ul>" \
     "<li>Native, dockable floating frames</li>" \
     "<li>Perspective saving and loading</li>" \
-    "<li>Native toolbars incorporating real-time, &quotspring-loaded&quot dragging</li>" \
+    "<li>Native toolbars incorporating real-time, 'spring-loaded' dragging</li>" \
     "<li>Customizable floating/docking behavior</li>" \
     "<li>Completely customizable look-and-feel</li>" \
     "<li>Optional transparent window effects (while dragging or docking)</li>" \
@@ -2347,7 +2468,11 @@ def GetIntroText():
     "when they are docked and minimized (Windows excluding Vista and GTK only);</li>" \
     "<li>A pane switcher dialog is available to cycle through existing AUI panes; </li>" \
     "<li>Some flags which allow to choose the orientation and the position of the minimized panes;</li>" \
-    "<li>The functions [Get]MinimizeMode() in <i>AuiPaneInfo</i> which allow to set/get the flags described above.</li>" \
+    "<li>The functions [Get]MinimizeMode() in <i>AuiPaneInfo</i> which allow to set/get the flags described above;</li>" \
+    "<li>Events like <tt>EVT_AUI_PANE_DOCKING</tt>, <tt>EVT_AUI_PANE_DOCKED</tt>, <tt>EVT_AUI_PANE_FLOATING</tt> "\
+    "and <tt>EVT_AUI_PANE_FLOATED</tt> are "\
+    "available for all panes <b>except</b> toolbar panes;</li>" \
+    "<li>Implementation of the <i>RequestUserAttention</i> method for panes.</li>" \
     "</ul><p>" \
     "<li><b>AuiNotebook:</b></li>" \
     "<ul>" \
@@ -2405,9 +2530,9 @@ def GetIntroText():
     return text
 
 
-def MainAUI(parent):
+def MainAUI(parent, log):
 
-    frame = AuiFrame(parent, -1, "AUI Test Frame", size=(800, 600))
+    frame = AuiFrame(parent, -1, "AUI Test Frame", size=(800, 600), log=log)
     frame.CenterOnScreen()
     frame.Show()
 
@@ -2425,7 +2550,7 @@ class TestPanel(wx.Panel):
 
 
     def OnButton(self, event):
-        self.win = MainAUI(self)
+        self.win = MainAUI(self, self.log)
 
 #----------------------------------------------------------------------
 

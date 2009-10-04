@@ -555,7 +555,36 @@ class AuiDefaultDockArt(object):
         dc.SetClippingRect(clip_rect)
         dc.DrawText(draw_text, rect.x+3+caption_offset, rect.y+(rect.height/2)-(h/2)-1)
         dc.DestroyClippingRegion()
-    
+
+
+    def RequestUserAttention(self, dc, window, text, rect, pane):
+        """
+        Requests the user attention by intermittently highlighting the pane caption.
+
+        :param `dc`: a wx.DC device context;
+        :param `window`: an instance of wx.Window;
+        :param `text`: the text to be displayed;
+        :param `rect`: the pane caption rectangle;
+        :param `pane`: the pane for which the text is drawn.
+        """        
+
+        state = pane.state
+        pane.state &= ~optionActive
+        
+        for indx in xrange(8):
+            active = (indx%2 == 0 and [True] or [False])[0]
+            if active:
+                pane.state |= optionActive
+            else:
+                pane.state &= ~optionActive
+                
+            self.DrawCaptionBackground(dc, rect, active)
+            self.DrawCaption(dc, window, text, rect, pane)
+            wx.SafeYield()
+            wx.MilliSleep(350)
+
+        pane.state = state
+        
 
     def DrawGripper(self, dc, window, rect, pane):
         """
@@ -960,6 +989,35 @@ class ModernDockArt(AuiDefaultDockArt):
         else:
 
             AuiDefaultDockArt.DrawCaptionBackground(self, dc, rect, active)
+
+
+    def RequestUserAttention(self, dc, window, text, rect, pane):
+        """
+        Requests the user attention by intermittently highlighting the pane caption.
+
+        :param `dc`: a wx.DC device context;
+        :param `window`: an instance of wx.Window;
+        :param `text`: the text to be displayed;
+        :param `rect`: the pane caption rectangle;
+        :param `pane`: the pane for which the text is drawn.
+        """        
+
+        state = pane.state
+        pane.state &= ~optionActive
+        
+        for indx in xrange(8):
+            active = (indx%2 == 0 and [True] or [False])[0]
+            if active:
+                pane.state |= optionActive
+            else:
+                pane.state &= ~optionActive
+                
+            self.DrawCaptionBackground(dc, rect, active)
+            self.DrawCaption(dc, window, text, rect, pane)
+            wx.SafeYield()
+            wx.MilliSleep(350)
+
+        pane.state = state
 
 
     def DrawPaneButton(self, dc, window, button, button_state, rect, pane):
