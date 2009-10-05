@@ -3004,7 +3004,7 @@ def DoInsertPane(panes, dock_direction, dock_layer, dock_row, dock_pos):
     return panes
 
 
-def FindDocks(docks, dock_direction, dock_layer=-1, dock_row=-1, arr=[]):
+def FindDocks(docks, dock_direction, dock_layer=-1, dock_row=-1, reverse=False):
     """
     FindDocks() is an internal function that returns a list of docks which meet
     the specified conditions in the parameters and returns a sorted array
@@ -3014,63 +3014,34 @@ def FindDocks(docks, dock_direction, dock_layer=-1, dock_row=-1, arr=[]):
     :param `dock_direction`: the L{AuiDockInfo} docking direction to analyze;
     :param `dock_layer`: the L{AuiDockInfo} layer to analyze;
     :param `dock_row`: the L{AuiDockInfo} row to analyze;
-    :param `arr`: a list of (already found) docks (if any).
     """
     
-    begin_layer = dock_layer
-    end_layer = dock_layer
-    begin_row = dock_row
-    end_row = dock_row
-    dock_count = len(docks)
-    max_row = 0
-    max_layer = 0
+    matchDocks = [(d.dock_layer, d.dock_row, d.dock_direction, d) for d in docks if \
+                  (dock_direction == -1 or dock_direction == d.dock_direction) and \
+                  ((dock_layer == -1 or dock_layer == d.dock_layer) and \
+                  (dock_row == -1 or dock_row == d.dock_row))]
     
-    # discover the maximum dock layer and the max row
-    for ii in xrange(dock_count):
-        max_row = max(max_row, docks[ii].dock_row)
-        max_layer = max(max_layer, docks[ii].dock_layer)
+    arr = [x[-1] for x in sorted(matchDocks, reverse=reverse)]
     
-    # if no dock layer was specified, search all dock layers
-    if dock_layer == -1:
-        begin_layer = 0
-        end_layer = max_layer
-    
-    # if no dock row was specified, search all dock row
-    if dock_row == -1:
-        begin_row = 0
-        end_row = max_row
-
-    arr = []
-
-    for layer in xrange(begin_layer, end_layer+1):
-        for row in xrange(begin_row, end_row+1):
-            for ii in xrange(dock_count):
-                d = docks[ii]
-                if dock_direction == -1 or dock_direction == d.dock_direction:
-                    if d.dock_layer == layer and d.dock_row == row:
-                        arr.append(d)
-
     return arr
 
-
-def FindOppositeDocks(docks, dock_direction, arr=[]):
+def FindOppositeDocks(docks, dock_direction):
     """
     FindOppositeDocks() is an internal function that returns a list of docks
     which is related to the opposite direction.
 
     :param `docks`: a list of L{AuiDockInfo};
     :param `dock_direction`: the L{AuiDockInfo} docking direction to analyze;
-    :param `arr`: a list of (already found) docks (if any).
     """
 
     if dock_direction == AUI_DOCK_LEFT:
-        arr = FindDocks(docks, AUI_DOCK_RIGHT, -1, -1, arr)
+        arr = FindDocks(docks, AUI_DOCK_RIGHT, -1, -1)
     elif dock_direction == AUI_DOCK_TOP:
-        arr = FindDocks(docks, AUI_DOCK_BOTTOM, -1, -1, arr)
+        arr = FindDocks(docks, AUI_DOCK_BOTTOM, -1, -1)
     elif dock_direction == AUI_DOCK_RIGHT:
-        arr = FindDocks(docks, AUI_DOCK_LEFT, -1, -1, arr)
+        arr = FindDocks(docks, AUI_DOCK_LEFT, -1, -1)
     elif dock_direction == AUI_DOCK_BOTTOM:
-        arr = FindDocks(docks, AUI_DOCK_TOP, -1, -1, arr)
+        arr = FindDocks(docks, AUI_DOCK_TOP, -1, -1)
 
     return arr    
 
@@ -5113,7 +5084,7 @@ class AuiManager(wx.EvtHandler):
                 # dock row as the pane we are working on
                 arr = FindDocks(docks, p.dock_direction, p.dock_layer, p.dock_row)
 
-                if len(arr) > 0:
+                if arr:
                     dock = arr[0]
 
                 else:
@@ -5174,9 +5145,7 @@ class AuiManager(wx.EvtHandler):
                     docks = RemovePaneFromDocks(docks, p)
                 
         # remove any empty docks
-        for ii in xrange(len(docks)-1, -1, -1):
-            if len(docks[ii].panes) == 0:
-                docks.pop(ii)
+        docks = [dock for dock in docks if dock.panes]
 
         dock_count = len(docks)
         # configure the docks further
@@ -5334,7 +5303,7 @@ class AuiManager(wx.EvtHandler):
             # find any docks in this layer
             arr = FindDocks(docks, -1, layer, -1)
             # if there aren't any, skip to the next layer
-            if len(arr) == 0:
+            if not arr:
                 continue
 
             old_cont = cont
@@ -5344,7 +5313,7 @@ class AuiManager(wx.EvtHandler):
             cont = wx.BoxSizer(wx.VERTICAL)
 
             # find any top docks in this layer
-            arr = FindDocks(docks, AUI_DOCK_TOP, layer, -1, arr)
+            arr = FindDocks(docks, AUI_DOCK_TOP, layer, -1)
             for row in arr:
                 uiparts = self.LayoutAddDock(cont, row, uiparts, spacer_only)
             
@@ -5354,7 +5323,7 @@ class AuiManager(wx.EvtHandler):
             middle = wx.BoxSizer(wx.HORIZONTAL)
 
             # find any left docks in this layer
-            arr = FindDocks(docks, AUI_DOCK_LEFT, layer, -1, arr)
+            arr = FindDocks(docks, AUI_DOCK_LEFT, layer, -1)
             for row in arr:
                 uiparts = self.LayoutAddDock(middle, row, uiparts, spacer_only)
             
@@ -5362,10 +5331,10 @@ class AuiManager(wx.EvtHandler):
             # to the middle
             if not old_cont:
                 # find any center docks
-                arr = FindDocks(docks, AUI_DOCK_CENTER, -1, -1, arr)
-                if len(arr) > 0:
-                    for row in xrange(len(arr)):
-                       uiparts = self.LayoutAddDock(middle, arr[row], uiparts, spacer_only)
+                arr = FindDocks(docks, AUI_DOCK_CENTER, -1, -1)
+                if arr:
+                    for row in arr:
+                       uiparts = self.LayoutAddDock(middle, row, uiparts, spacer_only)
                        
                 elif not self._has_maximized:
                     # there are no center docks, add a background area
@@ -5382,19 +5351,17 @@ class AuiManager(wx.EvtHandler):
                 middle.Add(old_cont, 1, wx.EXPAND)
             
             # find any right docks in this layer
-            arr = FindDocks(docks, AUI_DOCK_RIGHT, layer, -1, arr)
-            if len(arr) > 0:
-                for row in xrange(len(arr)-1, -1, -1):
-                    uiparts = self.LayoutAddDock(middle, arr[row], uiparts, spacer_only)
+            arr = FindDocks(docks, AUI_DOCK_RIGHT, layer, -1, reverse=True)
+            for row in arr:
+                uiparts = self.LayoutAddDock(middle, row, uiparts, spacer_only)
                     
             if len(middle.GetChildren()) > 0:
                 cont.Add(middle, 1, wx.EXPAND)
 
             # find any bottom docks in this layer
-            arr = FindDocks(docks, AUI_DOCK_BOTTOM, layer, -1, arr)
-            if len(arr) > 0:
-                for row in xrange(len(arr)-1, -1, -1):
-                    uiparts = self.LayoutAddDock(cont, arr[row], uiparts, spacer_only)
+            arr = FindDocks(docks, AUI_DOCK_BOTTOM, layer, -1, reverse=True)
+            for row in arr:
+                    uiparts = self.LayoutAddDock(cont, row, uiparts, spacer_only)
 
         if not cont:
             # no sizer available, because there are no docks,
@@ -5838,8 +5805,8 @@ class AuiManager(wx.EvtHandler):
         sashSize = self._art.GetMetric(AUI_DOCKART_SASH_SIZE)
         caption_size = self._art.GetMetric(AUI_DOCKART_CAPTION_SIZE)
         clientSize = self._frame.GetClientSize()
-        ourDocks = FindDocks(docks, direction, -1, -1, [])
-        oppositeDocks = FindOppositeDocks(docks, direction, [])
+        ourDocks = FindDocks(docks, direction, -1, -1)
+        oppositeDocks = FindOppositeDocks(docks, direction)
         oppositeSize = self.GetOppositeDockTotalSize(docks, direction)
         ourSize = 0
 
@@ -6220,7 +6187,7 @@ class AuiManager(wx.EvtHandler):
         result += minSizeMax
 
         # Get opposite docks
-        oppositeDocks = FindOppositeDocks(docks, direction, [])
+        oppositeDocks = FindOppositeDocks(docks, direction)
 
         # Sum size of the opposite docks and their sashes
         for dock in oppositeDocks:
@@ -8854,7 +8821,7 @@ class AuiManager(wx.EvtHandler):
             pane.frame.SetTransparent(pane.transparent)
         
         # save the new positions
-        docks = FindDocks(self._docks, pane.dock_direction, pane.dock_layer, pane.dock_row, [])
+        docks = FindDocks(self._docks, pane.dock_direction, pane.dock_layer, pane.dock_row)
         if len(docks) == 1:
             dock = docks[0]
             pane_positions, pane_sizes = self.GetPanePositionsAndSizes(dock)
