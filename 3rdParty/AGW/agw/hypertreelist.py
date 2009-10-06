@@ -1564,12 +1564,18 @@ class TreeListMainWindow(CustomTreeCtrl):
 
     def GetItemImage(self, item, column=None, which=wx.TreeItemIcon_Normal):
 
+        if column < 0:
+            return _NO_IMAGE
+        
         column = (column is not None and [column] or [self._main_column])[0]
         return item.GetImage(which, column)
 
 
     def SetItemImage(self, item, image, column=None, which=wx.TreeItemIcon_Normal):
 
+        if column < 0:
+            return
+        
         column = (column is not None and [column] or [self._main_column])[0]
         
         item.SetImage(column, image, which)
