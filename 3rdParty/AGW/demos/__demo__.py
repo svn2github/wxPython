@@ -13,12 +13,12 @@ this module returns the following information:
                        
 These meta data are merged into the wxPython demo tree at startup.
 
-Last updated: Andrea Gavana @ 31 March 2009, 12.00 GMT.
-Version 0.2.0.
+Last updated: Andrea Gavana @ 07 October 2009, 10.00 GMT.
+Version 0.5.0.
 
 """
 
-__version__ = "0.2.0"
+__version__ = "0.5.0"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 
 
@@ -82,9 +82,9 @@ def GetRecentAdditions():
                            'KnobCtrl', 'LabelBook', 'MultiDirDialog',
                            'PeakMeter', 'PieCtrl', 'PyCollapsiblePane', 'PyProgress',
                            'RulerCtrl', 'ShapedButton', 'SpeedMeter', 'SuperToolTip',
-                           'ThumbnailCtrl', 'ToasterBox']
+                           'ThumbnailCtrl', 'ToasterBox', 'UltimateListCtrl']
     else:
-        recentAdditions = ['AUI']
+        recentAdditions = ['AUI', 'UltimateListCtrl']
 
     # Return the Recent Additions for AGW    
     return recentAdditions
@@ -108,7 +108,7 @@ def GetDemos():
                 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
                 'PeakMeter', 'PieCtrl', 'PyCollapsiblePane', 'PyProgress',
                 'RulerCtrl', 'ShapedButton', 'SpeedMeter', 'SuperToolTip',
-                'ThumbnailCtrl', 'ToasterBox']
+                'ThumbnailCtrl', 'ToasterBox', 'UltimateListCtrl']
 
     return AGWTreeItem, AGWDemos
 
@@ -123,7 +123,7 @@ def GetOverview():
     wxPythonWidgets = ["wx.SplashScreen", "wx.ColourDialog", "wx.TreeCtrl", "wx.MenuBar",
                        "wx.Menu", "wx.ToolBar", "wx.Notebook", "wx.MessageDialog",
                        "wx.gizmos.TreeListCtrl", "wx.DirDialog", "wx.CollapsiblePane",
-                       "wx.ProgressDialog", "wx.TipWindow", "wx.lib", "wx.aui"]
+                       "wx.ProgressDialog", "wx.TipWindow", "wx.lib", "wx.aui", 'wx.ListCtrl']
 
     # Split the docs in many lines                       
     splitted = _agwDocs.split("\n")

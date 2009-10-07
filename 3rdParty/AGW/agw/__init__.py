@@ -71,7 +71,10 @@ an asterisk were already present in wx.lib before:
   in a "thumbnail" format; it mimics, for example, the Windows Explorer
   behavior when you select the "view thumbnails" option;
 - ToasterBox: a cross-platform widget to make the creation of MSN-style
-  "toaster" popups easier.
+  "toaster" popups easier;
+- UltimateListCtrl: mimics the behaviour of wx.ListCtrl, with almost the same
+  base functionalities plus some more enhancements.
+
 
 Bugs and Limitations: many, patches and fixes welcome :-D
 See the demos for an example of what AGW can do, and on how to use it.
@@ -94,10 +97,10 @@ You can contact me at:
 andrea.gavana@gmail.com
 gavana@kpo.kz
 
-AGW version: 0.4.0
-Last updated: 22 June 2009, 15.00 GMT
+AGW version: 0.5.0
+Last updated: 07 October 2009, 10.00 GMT
 
 """
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
