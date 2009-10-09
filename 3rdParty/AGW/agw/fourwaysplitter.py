@@ -2,7 +2,7 @@
 # FOURWAYSPLITTER wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 29 May 2009, 09.00 GMT
+# Latest Revision: 09 Oct 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -95,7 +95,7 @@ License And Version
 
 FourWaySplitter is freeware and distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
+Latest Revision: Andrea Gavana @ 09 Oct 2009, 09.00 GMT
 Version 0.2
 
 """
@@ -823,7 +823,7 @@ class FourWaySplitter(wx.PyPanel):
         if s > 10000: s  =10000
         if s != self._fhor:
             self._fhor = s
-            self.AdjustLayout()
+            self._SizeWindows()
 
     
     # Change vertical split [fraction*10000]
@@ -841,7 +841,7 @@ class FourWaySplitter(wx.PyPanel):
         if s > 10000: s  =10000
         if s != self._fver:
             self._fver = s
-            self.AdjustLayout()
+            self._SizeWindows()
 
 
     # Expand one or all of the four panes
