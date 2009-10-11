@@ -6439,6 +6439,9 @@ class AuiManager(wx.EvtHandler):
 
                 tab = event.GetEventObject()
 
+                if wx.Window.GetCapture() == tab:
+                    tab.ReleaseMouse()
+
                 # float the window
                 if paneInfo.IsMaximized():
                     self.RestorePane(paneInfo)
@@ -6446,9 +6449,6 @@ class AuiManager(wx.EvtHandler):
                 self.Update()
 
                 self._action_window = paneInfo.window
-
-                if wx.Window.GetCapture() == tab:
-                    tab.ReleaseMouse()
                     
                 self._frame.CaptureMouse()
                 event.SetDispatched(True)
