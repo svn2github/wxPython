@@ -6439,7 +6439,7 @@ class AuiManager(wx.EvtHandler):
 
                 tab = event.GetEventObject()
 
-                if wx.Window.GetCapture() == tab:
+                if tab.HasCapture():
                     tab.ReleaseMouse()
 
                 # float the window
