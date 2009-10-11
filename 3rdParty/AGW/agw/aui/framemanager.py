@@ -4866,8 +4866,8 @@ class AuiManager(wx.EvtHandler):
         if min_size != wx.Size(-1, -1):
             vert_pane_sizer.SetItemMinSize(len(vert_pane_sizer.GetChildren())-1, (min_size.x, min_size.y))
         
-        # add the verticle sizer (caption, pane window) to the
-        # horizontal sizer (gripper, verticle sizer)
+        # add the vertical sizer (caption, pane window) to the
+        # horizontal sizer (gripper, vertical sizer)
         horz_pane_sizer.Add(vert_pane_sizer, 1, wx.EXPAND)
 
         # finally, add the pane sizer to the dock sizer
@@ -8883,7 +8883,6 @@ class AuiManager(wx.EvtHandler):
 
             if not e.GetVeto():
                 self.MinimizePane(pane)
-                self.Update()
     
         elif event.button == AUI_BUTTON_MAXIMIZE_RESTORE and not pane.IsMaximized():
         
@@ -8995,6 +8994,7 @@ class AuiManager(wx.EvtHandler):
             win_rect = paneInfo.window.GetScreenRect()
             
             minimize_toolbar = auibar.AuiToolBar(self.GetManagedWindow(), style=tbStyle)
+            minimize_toolbar.Hide()
             minimize_toolbar.SetToolBitmapSize(wx.Size(16, 16))
 
             if paneInfo.icon and paneInfo.icon.IsOk():
@@ -9043,6 +9043,7 @@ class AuiManager(wx.EvtHandler):
             if paneInfo.window and paneInfo.window.IsShown():
                 paneInfo.window.Show(False)
 
+            minimize_toolbar.Show()
             self.Update()
             if self._flags & AUI_MGR_ANIMATE_FRAMES:
                 self.AnimateDocking(win_rect, minimize_toolbar.GetScreenRect())
