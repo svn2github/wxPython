@@ -1017,11 +1017,12 @@ class AuiFrame(wx.Frame):
         self._mgr.AddPane(self.CreateSizeReportCtrl(), aui.AuiPaneInfo().
                           Name("test2").Caption("Client Size Reporter").
                           Bottom().Position(1).CloseButton(True).MaximizeButton(True).
-                          MinimizeButton(True))
+                          MinimizeButton(True).CaptionVisible(True, left=True))
 
         self._mgr.AddPane(self.CreateSizeReportCtrl(), aui.AuiPaneInfo().
                           Name("test3").Caption("Client Size Reporter").
-                          Bottom().CloseButton(True).MaximizeButton(True).MinimizeButton(True))
+                          Bottom().CloseButton(True).MaximizeButton(True).MinimizeButton(True).
+                          CaptionVisible(True, left=True))
 
         self._mgr.AddPane(self.CreateSizeReportCtrl(), aui.AuiPaneInfo().
                           Name("test4").Caption("Pane Caption").Left())
@@ -2468,11 +2469,14 @@ def GetIntroText():
     "when they are docked and minimized (Windows excluding Vista and GTK only);</li>" \
     "<li>A pane switcher dialog is available to cycle through existing AUI panes; </li>" \
     "<li>Some flags which allow to choose the orientation and the position of the minimized panes;</li>" \
-    "<li>The functions [Get]MinimizeMode() in <i>AuiPaneInfo</i> which allow to set/get the flags described above;</li>" \
+    "<li>The functions <i>[Get]MinimizeMode()</i> in <i>AuiPaneInfo</i> which allow to set/get the flags described above;</li>" \
     "<li>Events like <tt>EVT_AUI_PANE_DOCKING</tt>, <tt>EVT_AUI_PANE_DOCKED</tt>, <tt>EVT_AUI_PANE_FLOATING</tt> "\
     "and <tt>EVT_AUI_PANE_FLOATED</tt> are "\
     "available for all panes <b>except</b> toolbar panes;</li>" \
-    "<li>Implementation of the <i>RequestUserAttention</i> method for panes.</li>" \
+    "<li>Implementation of the <i>RequestUserAttention</i> method for panes;</li>" \
+    "<li>Ability to show the caption bar of docked panes on the left instead of on the top (with caption " \
+    "text rotated by 90 degrees then). This is similar to what <i>wxDockIt</i> did. To enable this feature on any " \
+    "given pane, simply call <i>CaptionVisible(True, left=True)</i>.</li>" \
     "</ul><p>" \
     "<li><b>AuiNotebook:</b></li>" \
     "<ul>" \

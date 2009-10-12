@@ -158,7 +158,10 @@ Plus the following features:
   (o) The functions [Get]MinimizeMode() in `AuiPaneInfo` which allow to set/get the flags described above;
   (p) Events like ``EVT_AUI_PANE_DOCKING``, ``EVT_AUI_PANE_DOCKED``, ``EVT_AUI_PANE_FLOATING`` and ``EVT_AUI_PANE_FLOATED`` are
       available for all panes *except* toolbar panes;
-  (q) Implementation of the RequestUserAttention method for panes.
+  (q) Implementation of the RequestUserAttention method for panes;
+  (r) Ability to show the caption bar of docked panes on the left instead of on the top (with caption
+      text rotated by 90 degrees then). This is similar to what `wxDockIt` did. To enable this feature on any
+      given pane, simply call `CaptionVisible(True, left=True)`.
 
 - AuiNotebook:
   (a) Implementation of the style ``AUI_NB_HIDE_ON_SINGLE_TAB``, a la `wx.lib.agw.flatnotebook`;
@@ -209,7 +212,7 @@ TODOs
 - Fix `tabmdi.AuiMDIParentFrame` and friends, they do not work correctly at present;
 - Allow specification of `CaptionLeft()` to `AuiPaneInfo` to show the caption bar of docked panes
   on the left instead of on the top (with caption text rotated by 90 degrees then). This is
-  similar to what `wxDockIt` did;
+  similar to what `wxDockIt` did - DONE;
 - Make developer-created `AuiNotebooks` and automatic (framemanager-created) `AuiNotebooks` behave
   the same way (undocking of tabs) - DONE, to some extent;
 - Find a way to dock panes in already floating panes (`AuiFloatingFrames`), as they already have
@@ -235,7 +238,7 @@ License And Version
 
 AUI library is freeware and distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 04 Oct 2009, 10.00 GMT
+Latest revision: Andrea Gavana @ 12 Oct 2009, 10.00 GMT
 Version 1.0. 
 
 """

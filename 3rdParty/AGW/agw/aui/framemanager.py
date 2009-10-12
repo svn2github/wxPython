@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 04 Oct 2009, 10.00 GMT
+# Latest Revision: 12 Oct 2009, 10.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -506,20 +506,21 @@ class AuiPaneInfo(object):
     optionTopSnapped       = 2**22
     optionBottomSnapped    = 2**23
     optionFlyOut           = 2**24
+    optionCaptionLeft      = 2**25
 
-    buttonClose            = 2**25
-    buttonMaximize         = 2**26
-    buttonMinimize         = 2**27
-    buttonPin              = 2**28
+    buttonClose            = 2**26
+    buttonMaximize         = 2**27
+    buttonMinimize         = 2**28
+    buttonPin              = 2**29
     
-    buttonCustom1          = 2**29
-    buttonCustom2          = 2**30
-    buttonCustom3          = 2**31
+    buttonCustom1          = 2**30
+    buttonCustom2          = 2**31
+    buttonCustom3          = 2**32
 
-    savedHiddenState       = 2**32    # used internally
-    actionPane             = 2**33    # used internally
-    wasMaximized           = 2**34    # used internally
-    needsRestore           = 2**35    # used internally
+    savedHiddenState       = 2**33    # used internally
+    actionPane             = 2**34    # used internally
+    wasMaximized           = 2**35    # used internally
+    needsRestore           = 2**36    # used internally
 
 
     def __init__(self):
@@ -762,7 +763,13 @@ class AuiPaneInfo(object):
         """ HasCaption() returns True if the pane displays a caption. """
         
         return self.HasFlag(self.optionCaption)
+
     
+    def HasCaptionLeft(self):
+        """ HasCaptionLeft() returns True if the pane displays a caption on the left (rotated by 90 degrees). """
+        
+        return self.HasFlag(self.optionCaptionLeft)
+
 
     def HasGripper(self):
         """ HasGripper() returns True if the pane displays a gripper. """
@@ -1322,15 +1329,21 @@ class AuiPaneInfo(object):
         return self
 
 
-    def CaptionVisible(self, visible=True):
+    def CaptionVisible(self, visible=True, left=False):
         """
         CaptionVisible() indicates that a pane caption should be visible. If False, no pane
         caption is drawn.
 
-        :param `visible`: whether the caption should be visible or not.
+        :param `visible`: whether the caption should be visible or not;
+        :param `left`: whether the caption should be drawn on the left (rotated by 90 degrees) or not.
         """
-        
-        return self.SetFlag(self.optionCaption, visible)
+
+        if left:
+            self.SetFlag(self.optionCaption, False)
+            return self.SetFlag(self.optionCaptionLeft, visible)
+
+        self.SetFlag(self.optionCaptionLeft, False)
+        return self.SetFlag(self.optionCaption, visible)                
 
     
     def PaneBorder(self, visible=True):
@@ -1639,7 +1652,7 @@ class AuiPaneInfo(object):
         state = self.state
         
         state |= (self.optionToolbar | self.optionGripper)
-        state &= ~(self.optionResizable | self.optionCaption)
+        state &= ~(self.optionResizable | self.optionCaption | self.optionCaptionLeft)
         
         if self.dock_layer == 0:
             self.dock_layer = 10
@@ -1701,7 +1714,7 @@ class AuiPaneInfo(object):
 
         n = 0
         
-        if self.HasCaption():
+        if self.HasCaption() or self.HasCaptionLeft():
             if isinstance(wx.GetTopLevelParent(self.window), AuiFloatingFrame):
                 return 1
             
@@ -4699,6 +4712,9 @@ class AuiManager(wx.EvtHandler):
             if dock.IsHorizontal():
                 if pane.HasGripper() and not pane.HasGripperTop():
                     size += gripper_size
+
+                if pane.HasCaptionLeft():
+                    size += caption_size
                     
                 size += pane.best_size.x
                  
@@ -4706,7 +4722,7 @@ class AuiManager(wx.EvtHandler):
                 if pane.HasGripper() and pane.HasGripperTop():
                     size += gripper_size
 
-                if pane.HasCaption():
+                if pane.HasCaption() and not pane.HasCaptionLeft():
                     size += caption_size
                     
                 size += pane.best_size.y
@@ -4796,13 +4812,52 @@ class AuiManager(wx.EvtHandler):
         button_width_total = button_count*pane_button_size
         if button_count >= 1:
             button_width_total += 3
-        
-        if pane.HasCaption():
-        
+
+        caption, captionLeft = pane.HasCaption(), pane.HasCaptionLeft()
+        button_count = len(pane.buttons)
+
+        if captionLeft:
+            caption_sizer = wx.BoxSizer(wx.VERTICAL)
+
+            # add pane buttons to the caption
+            dummy_parts = []
+            for btn_id in xrange(len(pane.buttons)-1, -1, -1):
+                sizer_item = caption_sizer.Add((caption_size, pane_button_size), 0, wx.EXPAND)
+                part = AuiDockUIPart()
+                part.type = AuiDockUIPart.typePaneButton
+                part.dock = dock
+                part.pane = pane
+                part.button = pane.buttons[btn_id]
+                part.orientation = orientation
+                part.cont_sizer = caption_sizer
+                part.sizer_item = sizer_item
+                dummy_parts.append(part)
+            
+            sizer_item = caption_sizer.Add((caption_size, 1), 1, wx.EXPAND)
+            vert_pane_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
             # create the caption sizer
             part = AuiDockUIPart()
+
+            part.type = AuiDockUIPart.typeCaption
+            part.dock = dock
+            part.pane = pane
+            part.button = None
+            part.orientation = orientation
+            part.cont_sizer = vert_pane_sizer
+            part.sizer_item = sizer_item
+            caption_part_idx = len(uiparts)
+            uiparts.append(part)
+            uiparts.extend(dummy_parts)
+
+        elif caption:
+
             caption_sizer = wx.BoxSizer(wx.HORIZONTAL)
             sizer_item = caption_sizer.Add((1, caption_size), 1, wx.EXPAND)
+
+            # create the caption sizer
+            part = AuiDockUIPart()
+
             part.type = AuiDockUIPart.typeCaption
             part.dock = dock
             part.pane = pane
@@ -4813,10 +4868,9 @@ class AuiManager(wx.EvtHandler):
             caption_part_idx = len(uiparts)
             uiparts.append(part)
 
-            button_count = len(pane.buttons)
             # add pane buttons to the caption
             for button in pane.buttons:
-                sizer_item = caption_sizer.Add((pane_button_size, caption_size), 0, wx.EXPAND)
+                sizer_item = caption_sizer.Add((pane_button_size, caption_size), 0, wx.EXPAND)                        
                 part = AuiDockUIPart()
                 part.type = AuiDockUIPart.typePaneButton
                 part.dock = dock
@@ -4827,15 +4881,19 @@ class AuiManager(wx.EvtHandler):
                 part.sizer_item = sizer_item
                 uiparts.append(part)
 
+        if caption or captionLeft:
             # if we have buttons, add a little space to the right
             # of them to ease visual crowding
             if button_count >= 1:
-                caption_sizer.Add((3, caption_size), 0, wx.EXPAND)
-        
+                if captionLeft:
+                    caption_sizer.Add((caption_size, 3), 0, wx.EXPAND)
+                else:
+                    caption_sizer.Add((3, caption_size), 0, wx.EXPAND)
+
             # add the caption sizer
             sizer_item = vert_pane_sizer.Add(caption_sizer, 0, wx.EXPAND)
             uiparts[caption_part_idx].sizer_item = sizer_item
-                
+                    
         # add the pane window itself
         if spacer_only or not pane.window:
             sizer_item = vert_pane_sizer.Add((1, 1), 1, wx.EXPAND)
@@ -4866,7 +4924,7 @@ class AuiManager(wx.EvtHandler):
         if min_size != wx.Size(-1, -1):
             vert_pane_sizer.SetItemMinSize(len(vert_pane_sizer.GetChildren())-1, (min_size.x, min_size.y))
         
-        # add the vertical sizer (caption, pane window) to the
+        # add the vertical/horizontal sizer (caption, pane window) to the
         # horizontal sizer (gripper, vertical sizer)
         horz_pane_sizer.Add(vert_pane_sizer, 1, wx.EXPAND)
 
@@ -5180,10 +5238,15 @@ class AuiManager(wx.EvtHandler):
                 # but only if at least one pane inside the dock has a caption
                 if dock.IsHorizontal():
                     for pane in dock.panes:
-                        if pane.HasCaption():
+                        if pane.HasCaption() and not pane.HasCaptionLeft():
                             size = size + caption_size
                             break
-
+                else:
+                    for pane in dock.panes:
+                        if pane.HasCaptionLeft() and not pane.HasCaption():
+                            size = size + caption_size
+                            break
+                    
                 # new dock's size may not be more than the dock constraint
                 # parameter specifies.  See SetDockSizeConstraint()
                 max_dock_x_size = int(self._dock_constraint_x*float(cli_size.x))
@@ -5203,6 +5266,7 @@ class AuiManager(wx.EvtHandler):
             # determine the dock's minimum size
             plus_border = False
             plus_caption = False
+            plus_caption_left = False
             dock_min_size = 0
             for pane in dock.panes:
                 if pane.min_size != wx.Size(-1, -1):
@@ -5210,6 +5274,8 @@ class AuiManager(wx.EvtHandler):
                         plus_border = True
                     if pane.HasCaption():
                         plus_caption = True
+                    if pane.HasCaptionLeft():
+                        plus_caption_left = True
                     if dock.IsHorizontal():
                         if pane.min_size.y > dock_min_size:
                             dock_min_size = pane.min_size.y
@@ -5220,6 +5286,8 @@ class AuiManager(wx.EvtHandler):
             if plus_border:
                 dock_min_size += pane_border_size*2
             if plus_caption and dock.IsHorizontal():
+                dock_min_size += caption_size
+            if plus_caption_left and dock.IsVertical():
                 dock_min_size += caption_size
                
             dock.min_size = dock_min_size
@@ -5901,6 +5969,8 @@ class AuiManager(wx.EvtHandler):
                 pt.y = rc.y + rc.height / 2
                 if paneInfo.HasCaption():
                     pt.y -= captionSize / 2
+                elif paneInfo.HasCaptionLeft():
+                    pt.x -= captionSize / 2
 
             # guide will be centered around point 'pt'
             targetPosition = wx.Point(pt.x - guide_size.x / 2, pt.y - guide_size.y / 2)
