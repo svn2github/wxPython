@@ -4,6 +4,7 @@ import wx.grid
 
 import os
 import sys
+import time
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 
@@ -325,6 +326,10 @@ ID_NotebookUseImagesDropDown = ID_CreateTree + 74
 ID_NotebookCustomButtons = ID_CreateTree + 75
 
 ID_SampleItem = ID_CreateTree + 76
+ID_StandardGuides = ID_CreateTree + 77
+ID_AeroGuides = ID_CreateTree + 78
+ID_NotebookPreview = ID_CreateTree + 79
+ID_PreviewMinimized = ID_CreateTree + 80
 
 ID_FirstPerspective = ID_CreatePerspective + 1000
 ID_FirstNBPerspective = ID_CreateNBPerspective + 10000
@@ -696,6 +701,157 @@ class SettingsPanel(wx.Panel):
         self.UpdateColors()
     
 
+# ---------------------------------------------------------------------------- #
+# Class ProgressGauge
+# ---------------------------------------------------------------------------- #
+
+class ProgressGauge(wx.PyWindow):
+    """ This class provides a visual alternative for wx.Gauge."""
+    
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=(-1,30)):
+        """ Default class constructor. """
+
+        wx.PyWindow.__init__(self, parent, id, pos, size, style=wx.BORDER_NONE)
+
+        self._value = 0
+        self._steps = 16
+        self._pos = 0
+        self._current = 0
+        self._gaugeproportion = 0.4
+        self._startTime = time.time()
+
+        self._bottomStartColour = wx.GREEN
+        rgba = self._bottomStartColour.Red(), self._bottomStartColour.Green(), \
+               self._bottomStartColour.Blue(), self._bottomStartColour.Alpha()
+        self._bottomEndColour = self.LightColour(self._bottomStartColour, 30)
+        self._topStartColour = self.LightColour(self._bottomStartColour, 80)
+        self._topEndColour = self.LightColour(self._bottomStartColour, 40)
+        
+        self._background = wx.Brush(wx.WHITE, wx.SOLID)
+        
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
+
+        
+    def OnEraseBackground(self, event):
+        """ Handles the wx.EVT_ERASE_BACKGROUND event for ProgressGauge. """
+
+        pass
+
+
+    def OnPaint(self, event):
+        """ Handles the wx.EVT_PAINT event for ProgressGauge. """
+
+        dc = wx.BufferedPaintDC(self)
+        dc.SetBackground(self._background)
+        dc.SetBackground(wx.WHITE_BRUSH) 
+        dc.Clear()
+
+        xsize, ysize = self.GetClientSize()
+        interval = xsize/float(self._steps)
+
+        self._pos = interval*self._value
+        
+        status = self._current/(self._steps - int((self._gaugeproportion*xsize/interval)))
+
+        if status%2 == 0:
+            increment = 1
+        else:
+            increment = -1
+            
+        self._value = self._value + increment
+        self._current = self._current + 1
+
+        self.DrawProgress(dc, xsize, ysize, increment)
+
+        dc.SetBrush(wx.TRANSPARENT_BRUSH)
+        dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_GRADIENTINACTIVECAPTION)))
+        dc.DrawRectangleRect(self.GetClientRect())
+        
+
+    def LightColour(self, color, percent):
+        """
+        Return light contrast of color. The color returned is from the scale of
+        color -> white. The percent determines how light the color will be.
+        Percent = 100 return white, percent = 0 returns color.
+        """
+
+        end_color = wx.WHITE
+        rd = end_color.Red() - color.Red()
+        gd = end_color.Green() - color.Green()
+        bd = end_color.Blue() - color.Blue()
+        high = 100
+
+        # We take the percent way of the color from color -. white
+        i = percent
+        r = color.Red() + ((i*rd*100)/high)/100
+        g = color.Green() + ((i*gd*100)/high)/100
+        b = color.Blue() + ((i*bd*100)/high)/100
+
+        return wx.Colour(r, g, b)
+
+
+    def DrawProgress(self, dc, xsize, ysize, increment):
+        """ Actually draws the sliding bar. """
+
+        interval = self._gaugeproportion*xsize
+        gc = wx.GraphicsContext.Create(dc)
+        
+        clientRect = self.GetClientRect()
+        gradientRect = wx.Rect(*clientRect)
+
+        x, y, width, height = clientRect
+        x, width = self._pos, interval
+        
+        gradientRect.SetHeight(gradientRect.GetHeight()/2)
+        topStart, topEnd = self._topStartColour, self._topEndColour
+
+        rc1 = wx.Rect(x, y, width, height/2)
+        path1 = self.GetPath(gc, rc1, 8)
+        br1 = gc.CreateLinearGradientBrush(x, y, x, y+height/2, topStart, topEnd)
+        gc.SetBrush(br1)
+        gc.FillPath(path1) #draw main
+
+        path4 = gc.CreatePath()
+        path4.AddRectangle(x, y+height/2-8, width, 8)
+        path4.CloseSubpath()
+        gc.SetBrush(br1)
+        gc.FillPath(path4)            
+        
+        gradientRect.Offset((0, gradientRect.GetHeight()))
+
+        bottomStart, bottomEnd = self._bottomStartColour, self._bottomEndColour
+
+        rc3 = wx.Rect(x, y+height/2, width, height/2)
+        path3 = self.GetPath(gc, rc3, 8)
+        br3 = gc.CreateLinearGradientBrush(x, y+height/2, x, y+height, bottomStart, bottomEnd)
+        gc.SetBrush(br3)
+        gc.FillPath(path3) #draw main
+
+        path4 = gc.CreatePath()
+        path4.AddRectangle(x, y+height/2, width, 8)
+        path4.CloseSubpath()
+        gc.SetBrush(br3)
+        gc.FillPath(path4)
+
+        
+    def GetPath(self, gc, rc, r):
+        """ Returns a rounded GraphicsPath. """
+    
+        x, y, w, h = rc
+        path = gc.CreatePath()
+        path.AddRoundedRectangle(x, y, w, h, r)
+        path.CloseSubpath()
+        return path
+
+
+
+    def Pulse(self):
+        """ Updates the gauge with a new value. """
+
+        self.Refresh()
+
+
 class AuiFrame(wx.Frame):
 
     def __init__(self, parent, id=wx.ID_ANY, title="", pos= wx.DefaultPosition,
@@ -731,7 +887,7 @@ class AuiFrame(wx.Frame):
         self.BuildPanes()
         self.CreateMenuBar()
         self.BindEvents()
-
+        
 
     def CreateMenuBar(self):
         
@@ -806,6 +962,8 @@ class AuiFrame(wx.Frame):
         options_menu.AppendRadioItem(ID_VerticalGradient, "Vertical Caption Gradient")
         options_menu.AppendRadioItem(ID_HorizontalGradient, "Horizontal Caption Gradient")
         options_menu.AppendSeparator()
+        options_menu.AppendCheckItem(ID_PreviewMinimized, "Preview Minimized Panes")
+        options_menu.AppendSeparator()
         options_menu.Append(ID_Settings, "Settings Pane")
 
         notebook_menu = wx.Menu()
@@ -842,7 +1000,9 @@ class AuiFrame(wx.Frame):
         notebook_menu.AppendCheckItem(ID_NotebookSmartTab, "Use Smart Tabbing")
         notebook_menu.AppendCheckItem(ID_NotebookUseImagesDropDown, "Use Tab Images In Dropdown Menu")
         notebook_menu.AppendCheckItem(ID_NotebookCustomButtons, "Show Custom Buttons In Tab Area")
-
+        notebook_menu.AppendSeparator()
+        notebook_menu.Append(ID_NotebookPreview, "Preview Of All Notebook Pages")
+        
         perspectives_menu = wx.Menu()
         
         self._perspectives_menu = wx.Menu()
@@ -858,9 +1018,15 @@ class AuiFrame(wx.Frame):
         self._nb_perspectives_menu.AppendSeparator()
         self._nb_perspectives_menu.Append(ID_FirstNBPerspective+0, "Default Startup")
 
+        guides_menu = wx.Menu()
+        guides_menu.AppendRadioItem(ID_StandardGuides, "Standard Docking Guides")
+        guides_menu.AppendRadioItem(ID_AeroGuides, "Aero-Style Docking Guides")
+
         perspectives_menu.AppendMenu(wx.ID_ANY, "Frame Perspectives", self._perspectives_menu)
         perspectives_menu.AppendMenu(wx.ID_ANY, "AuiNotebook Perspectives", self._nb_perspectives_menu)
-
+        perspectives_menu.AppendSeparator()
+        perspectives_menu.AppendMenu(wx.ID_ANY, "Docking Guides", guides_menu)
+        
         action_menu = wx.Menu()
         action_menu.AppendCheckItem(ID_VetoTree, "Veto Floating Of Tree Pane")
         action_menu.AppendCheckItem(ID_VetoText, "Veto Docking Of Fixed Pane")
@@ -1107,8 +1273,12 @@ class AuiFrame(wx.Frame):
         self._mgr.AddPane(wx.Button(self, -1, "Test Button"),
                           aui.AuiPaneInfo().Name("tb7").ToolbarPane().Top().Row(2).Position(1))
 
-        # make some default perspectives
+        # Show how to add a control inside a tab
+        notebook = self._mgr.GetPane("notebook_content").window
+        self.gauge = ProgressGauge(notebook, size=(55, 15))
+        notebook.AddControlToPage(4, self.gauge)
 
+        # make some default perspectives
         perspective_all = self._mgr.SavePerspective()
 
         all_panes = self._mgr.GetAllPanes()
@@ -1154,7 +1324,9 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnCreatePerspective, id=ID_CreatePerspective)
         self.Bind(wx.EVT_MENU, self.OnCopyPerspectiveCode, id=ID_CopyPerspectiveCode)
         self.Bind(wx.EVT_MENU, self.OnCreateNBPerspective, id=ID_CreateNBPerspective)
-        self.Bind(wx.EVT_MENU, self.OnCopyNBPerspectiveCode, id=ID_CopyNBPerspectiveCode)        
+        self.Bind(wx.EVT_MENU, self.OnCopyNBPerspectiveCode, id=ID_CopyNBPerspectiveCode)
+        self.Bind(wx.EVT_MENU, self.OnGuides, id=ID_StandardGuides)
+        self.Bind(wx.EVT_MENU, self.OnGuides, id=ID_AeroGuides)        
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_AllowFloating)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_TransparentHint)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_VenetianBlindsHint)
@@ -1208,11 +1380,13 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnTabAlignment, id=ID_NotebookAlignTop)
         self.Bind(wx.EVT_MENU, self.OnTabAlignment, id=ID_NotebookAlignBottom)
         self.Bind(wx.EVT_MENU, self.OnCustomTabButtons, id=ID_NotebookCustomButtons)
+        self.Bind(wx.EVT_MENU, self.OnPreview, id=ID_NotebookPreview)
         
         self.Bind(wx.EVT_MENU, self.OnGradient, id=ID_NoGradient)
         self.Bind(wx.EVT_MENU, self.OnGradient, id=ID_VerticalGradient)
         self.Bind(wx.EVT_MENU, self.OnGradient, id=ID_HorizontalGradient)
         self.Bind(wx.EVT_MENU, self.OnSettings, id=ID_Settings)
+        self.Bind(wx.EVT_MENU, self.OnPreviewMinimized, id=ID_PreviewMinimized)
         self.Bind(wx.EVT_MENU, self.OnCustomizeToolbar, id=ID_CustomizeToolbar)
         self.Bind(wx.EVT_MENU, self.OnChangeContentPane, id=ID_GridContent)
         self.Bind(wx.EVT_MENU, self.OnChangeContentPane, id=ID_TreeContent)
@@ -1273,6 +1447,8 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_NotebookCustomButtons)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_VetoTree)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_VetoText)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_StandardGuides)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_AeroGuides)        
 
         for ids in self._requestPanes:
             self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ids)
@@ -1287,7 +1463,24 @@ class AuiFrame(wx.Frame):
         self.Bind(aui.EVT_AUI_PANE_DOCKING, self.OnFloatDock)
         self.Bind(aui.EVT_AUI_PANE_DOCKED, self.OnFloatDock)
 
-        
+        self.Bind(wx.EVT_TIMER, self.TimerHandler)
+        self.timer = wx.Timer(self)
+        self.timer.Start(100)
+
+
+    def __del__(self):
+
+        self.timer.Stop()
+
+
+    def TimerHandler(self, event):
+
+        try:
+            self.gauge.Pulse()
+        except wx.PyDeadObjectError:
+            self.timer.Stop()
+
+
     def GetDockArt(self):
 
         return self._mgr.GetArtProvider()
@@ -1319,6 +1512,19 @@ class AuiFrame(wx.Frame):
 
         self._mgr.Update()
 
+
+    def OnPreviewMinimized(self, event):
+
+        checked = event.IsChecked()
+        flags = self._mgr.GetFlags()
+
+        if event.IsChecked():
+            flags ^= aui.AUI_MGR_PREVIEW_MINIMIZED_PANES
+        else:
+            flags &= ~aui.AUI_MGR_PREVIEW_MINIMIZED_PANES
+            
+        self._mgr.SetFlags(flags)
+        
 
     def OnSetIconsOnPanes(self, event):
 
@@ -1736,8 +1942,17 @@ class AuiFrame(wx.Frame):
             pane = self._mgr.GetPane("test8")
             event.Check(pane.IsFlyOut())
 
+        elif evId == ID_AeroGuides:
+            event.Check(flags & aui.AUI_MGR_AERO_DOCKING_GUIDES != 0)
+
+        elif evId == ID_StandardGuides:
+            event.Check(flags & aui.AUI_MGR_AERO_DOCKING_GUIDES == 0)
+            
         elif evId == ID_CustomPaneButtons:
             event.Check(self._custom_pane_buttons)
+
+        elif evId == ID_PreviewMinimized:
+            event.Check(flags & aui.AUI_MGR_PREVIEW_MINIMIZED_PANES)
             
         elif evId == ID_NotebookNoCloseButton:
             event.Check((self._notebook_style & (aui.AUI_NB_CLOSE_BUTTON|aui.AUI_NB_CLOSE_ON_ALL_TABS|aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)) != 0)
@@ -1902,6 +2117,19 @@ class AuiFrame(wx.Frame):
         auibook = self._mgr.GetPane("notebook_content").window
         auibook.LoadPerspective(self._nb_perspectives[event.GetId() - ID_FirstNBPerspective])
 
+
+    def OnGuides(self, event):
+
+        useAero = event.GetId() == ID_AeroGuides
+        flags = self._mgr.GetFlags()
+        
+        if useAero:
+            flags ^= aui.AUI_MGR_AERO_DOCKING_GUIDES
+        else:
+            flags &= ~AUI_MGR_AERO_DOCKING_GUIDES
+
+        self._mgr.SetFlags(flags)            
+            
         
     def OnNotebookPageClose(self, event):
 
@@ -2097,6 +2325,12 @@ class AuiFrame(wx.Frame):
 
         auibook.Refresh()
         auibook.Update()
+        
+
+    def OnPreview(self, event):
+
+        auibook = self._mgr.GetPane("notebook_content").window
+        auibook.NotebookPreview()
         
 
     def OnFloatDock(self, event):
@@ -2476,7 +2710,10 @@ def GetIntroText():
     "<li>Implementation of the <i>RequestUserAttention</i> method for panes;</li>" \
     "<li>Ability to show the caption bar of docked panes on the left instead of on the top (with caption " \
     "text rotated by 90 degrees then). This is similar to what <i>wxDockIt</i> did. To enable this feature on any " \
-    "given pane, simply call <i>CaptionVisible(True, left=True)</i>.</li>" \
+    "given pane, simply call <i>CaptionVisible(True, left=True)</i>;</li>" \
+    "<li>New Aero-style docking guides: you can enable them by using the <i>AuiManager</i> style <tt>AUI_MGR_AERO_DOCKING_GUIDES</tt>;</li>" \
+    "<li>A slide-in/slide-out preview of minimized panes can be seen by enabling the <i>AuiManager</i> style" \
+    "<tt>AUI_MGR_PREVIEW_MINIMIZED_PANES</tt> and by hovering with the mouse on the minimized pane toolbar tool.</li>" \
     "</ul><p>" \
     "<li><b>AuiNotebook:</b></li>" \
     "<ul>" \
@@ -2505,7 +2742,12 @@ def GetIntroText():
     "<li>Implementation of the style <tt>AUI_NB_DRAW_DND_TAB</tt> (on by default), which draws an image " \
     "representation of a tab while dragging;</li>" \
     "<li>Implementation of the style <tt>AUI_NB_SASH_DCLICK_UNSPLIT</tt>, which unsplit a splitted AuiNotebook " \
-    "when double-clicking on a sash." \
+    "when double-clicking on a sash;</li>" \
+    "<li>Possibility to hide all the tabs by calling <i>HideAllTAbs</i>;</li>" \
+    "<li>wxPython controls can now be added inside page tabs by calling <i>AddControlToPage</i>, and they can be " \
+    "removed by calling <i>RemoveControlFromPage</i>;</li>" \
+    "<li>Possibility to preview all the pages in a <i>AuiNotebook</i> (as thumbnails) by using the <i>NotebookPreview</i> " \
+    "method of <i>AuiNotebook</i></li>." \
     "</ul><p>" \
     "<li><b>AuiToolBar:</b></li>" \
     "<ul>" \
@@ -2525,7 +2767,8 @@ def GetIntroText():
     "<li><i>AuiToolBar</i> idle update only when visible: <a href='http://trac.wxwidgets.org/ticket/10075'>" \
     "http://trac.wxwidgets.org/ticket/10075</a>;</li>" \
     "<li>Ability of creating <i>AuiToolBar</i> tools with [counter]clockwise rotation. This allows to propose a " \
-    "variant of the minimizing functionality with a rotated button which keeps the caption of the pane as label.</li>" \
+    "variant of the minimizing functionality with a rotated button which keeps the caption of the pane as label;</li>" \
+    "<li>Allow setting the alignment of all tools in a toolbar that is expanded.</li>" \
     "</ul>" \
     "</ul><p>" \
     "<p>" \
