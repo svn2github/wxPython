@@ -3125,7 +3125,12 @@ class AuiToolBar(wx.PyControl):
     def GetAuiManager(self):
         """ Returns the L{AuiManager} which manages the toolbar. """
 
-        return framemanager.GetManager(self)
+        return self._auiManager
+
+
+    def SetAuiManager(self, auiManager):
+        
+        self._auiManager = auiManager        
 
         
     def DoIdleUpdate(self):
@@ -3394,7 +3399,7 @@ class AuiToolBar(wx.PyControl):
             if gripper_rect.Contains(event.GetPosition()):
             
                 # find aui manager
-                manager = framemanager.GetManager(self)
+                manager = self.GetAuiManager()
                 if not manager:
                     return
 
@@ -3542,7 +3547,7 @@ class AuiToolBar(wx.PyControl):
 
                     if self._action_item.id == ID_RESTORE_FRAME:
                         # find aui manager
-                        manager = framemanager.GetManager(self)
+                        manager = self.GetAuiManager()
 
                         if not manager:
                             return
@@ -3807,7 +3812,11 @@ class AuiToolBar(wx.PyControl):
     def IsPaneMinimized(self):
         """ Returns whether this L{AuiToolBar} contains a minimized pane tool. """
         
-        manager = self.GetAuiManager()
+        try:
+            manager = self.GetAuiManager()
+        except TypeError:
+            return False
+        
         if manager.GetFlags() & AUI_MGR_PREVIEW_MINIMIZED_PANES == 0:
             # No previews here
             return False

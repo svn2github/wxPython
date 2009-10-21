@@ -893,7 +893,7 @@ class AuiTabContainer(object):
         """
         
         if idx < 0 or idx >= len(self._pages):
-            raise Exception("Invalid Page index")
+            return False
 
         return self._pages[idx].enabled
 
@@ -1016,6 +1016,13 @@ class AuiTabContainer(object):
             
                 close_button = True
 
+            control = page.control
+            if control:
+                try:
+                    control.GetSize()
+                except wx.PyDeadObjectError:
+                    page.control = None
+                
             size, x_extent = self._art.GetTabSize(dc, wnd, page.caption, page.bitmap, page.active,
                                                   (close_button and [AUI_BUTTON_STATE_NORMAL] or \
                                                    [AUI_BUTTON_STATE_HIDDEN])[0], page.control)
@@ -4199,14 +4206,14 @@ class AuiNotebook(wx.PyControl):
                              style=wx.DEFAULT_FRAME_STYLE|wx.FRAME_TOOL_WINDOW|
                                    wx.FRAME_FLOAT_ON_PARENT | wx.FRAME_NO_TASKBAR) 
 
-            if control:
-                control.Reparent(frame)
-                control.Hide()
+            if info.control:
+                info.control.Reparent(frame)
+                info.control.Hide()
                 
             frame.bitmap = page_bitmap            
             frame.page_index = page_index
             frame.text_colour = text_colour
-            frame.control = control
+            frame.control = info.control
             page_contents.Reparent(frame) 
             frame.Bind(wx.EVT_CLOSE, self.OnCloseFloatingPage) 
             frame.Move(wx.GetMousePosition()) 

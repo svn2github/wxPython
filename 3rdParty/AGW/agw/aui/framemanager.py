@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 15 Oct 2009, 12.00 GMT
+# Latest Revision: 21 Oct 2009, 11.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -2692,6 +2692,10 @@ class AuiFloatingFrame(wx.MiniFrame):
         """
 
         self._pane_window = pane.window
+
+        if isinstance(pane.window, auibar.AuiToolBar):
+            pane.window.SetAuiManager(self._mgr)
+        
         self._pane_window.Reparent(self)
         
         contained_pane = self.CopyAttributes(pane)
@@ -2813,6 +2817,10 @@ class AuiFloatingFrame(wx.MiniFrame):
 
         if not event.GetVeto():
             self._mgr.DetachPane(self._pane_window)
+
+            if isinstance(self._pane_window, auibar.AuiToolBar):
+                pane.window.SetAuiManager(self._owner_mgr)
+            
             self.Destroy()
     
 
@@ -3500,9 +3508,14 @@ def GetManager(window):
      the window hierarchy underneath the managed window.
     """
     
+    if not isinstance(wx.GetTopLevelParent(window), AuiFloatingFrame):
+        if isinstance(window, auibar.AuiToolBar):
+            return window.GetAuiManager()
+    
     evt = AuiManagerEvent(wxEVT_AUI_FIND_MANAGER)
     evt.SetManager(None)
     evt.ResumePropagation(wx.EVENT_PROPAGATE_MAX)
+
     if not window.GetEventHandler().ProcessEvent(evt):
         return None
 
@@ -3646,7 +3659,6 @@ class AuiManager(wx.EvtHandler):
 
         self._preview_timer = wx.Timer(self, wx.ID_ANY)
         self._sliding_frame = None
-        
         
         if managed_window:
             self.SetManagedWindow(managed_window)
@@ -3943,28 +3955,6 @@ class AuiManager(wx.EvtHandler):
         return self._frame
 
 
-    def GetManager(self, window):
-        """
-        This function will return the aui manager for a given window.
-        
-        :param `window`: this parameter should be any child window or grand-child
-         window (and so on) of the frame/window managed by L{AuiManager}. The window
-         does not need to be managed by the manager itself, nor does it even need
-         to be a child or sub-child of a managed window. It must however be inside
-         the window hierarchy underneath the managed window.
-        """
-        
-        evt = AuiManagerEvent(wxEVT_AUI_FIND_MANAGER)
-        evt.SetManager(None)
-        evt.ResumePropagation(wx.EVENT_PROPAGATE_MAX)
-        if not window.GetEventHandler().ProcessEvent(evt):
-            return None
-
-        return evt.GetManager()
-
-    GetManager = staticmethod(GetManager)
-
-
     def CreateGuideWindows(self):
         """ Creates the VS2005 HUD guide windows. """
 
@@ -4231,6 +4221,8 @@ class AuiManager(wx.EvtHandler):
                     pinfo.best_size.y = pinfo.min_size.y
 
         self._panes[-1] = pinfo
+        if isinstance(window, auibar.AuiToolBar):
+            window.SetAuiManager(self)
 
         return True
 
@@ -5402,6 +5394,9 @@ class AuiManager(wx.EvtHandler):
                 # parameter specifies.  See SetDockSizeConstraint()
                 max_dock_x_size = int(self._dock_constraint_x*float(cli_size.x))
                 max_dock_y_size = int(self._dock_constraint_y*float(cli_size.y))
+                if cli_size <= wx.Size(20, 20):
+                    max_dock_x_size = 10000
+                    max_dock_y_size = 10000
 
                 if dock.IsHorizontal():
                     size = min(size, max_dock_y_size)
@@ -5686,6 +5681,9 @@ class AuiManager(wx.EvtHandler):
         
             # reparent to self._frame and destroy the pane
             p.window.Reparent(self._frame)
+            if isinstance(p.window, auibar.AuiToolBar):
+                p.window.SetAuiManager(self)
+
             p.frame.SetSizer(None)
             p.frame.Destroy()
             p.frame = None
@@ -7894,6 +7892,7 @@ class AuiManager(wx.EvtHandler):
 
         # try to find the pane
         paneInfo = self.GetPane(pane_window)
+
         if not paneInfo.IsOk():
             raise Exception("Pane window not found")
 
@@ -9224,6 +9223,7 @@ class AuiManager(wx.EvtHandler):
                 restore_bitmap = self._art._restore_bitmap
                 
             minimize_toolbar.AddSimpleTool(ID_RESTORE_FRAME, paneInfo.caption, restore_bitmap, "Restore " + paneInfo.caption)
+            minimize_toolbar.SetAuiManager(self)
             minimize_toolbar.Realize()
             toolpanelname = paneInfo.name + "_min"
 
