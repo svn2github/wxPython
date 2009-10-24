@@ -3125,10 +3125,14 @@ class AuiToolBar(wx.PyControl):
     def GetAuiManager(self):
         """ Returns the L{AuiManager} which manages the toolbar. """
 
-        return self._auiManager
+        try:
+            return self._auiManager
+        except AttributeError:
+            return False
 
 
     def SetAuiManager(self, auiManager):
+        """ Sets the L{AuiManager} which manages the toolbar. """
         
         self._auiManager = auiManager        
 
@@ -3812,9 +3816,8 @@ class AuiToolBar(wx.PyControl):
     def IsPaneMinimized(self):
         """ Returns whether this L{AuiToolBar} contains a minimized pane tool. """
         
-        try:
-            manager = self.GetAuiManager()
-        except TypeError:
+        manager = self.GetAuiManager()
+        if not manager:
             return False
         
         if manager.GetFlags() & AUI_MGR_PREVIEW_MINIMIZED_PANES == 0:

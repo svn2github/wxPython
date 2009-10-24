@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 21 Oct 2009, 11.00 GMT
+# Latest Revision: 22 Oct 2009, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -8137,7 +8137,8 @@ class AuiManager(wx.EvtHandler):
                 
             self.Update()
             
-            if isinstance(self._frame, wx.MDIParentFrame):
+            if isinstance(self._frame, wx.MDIParentFrame) or isinstance(self._frame, tabmdi.AuiMDIClientWindow) \
+               or isinstance(self._frame, tabmdi.AuiMDIParentFrame):
                 # for MDI parent frames, this event must not
                 # be "skipped".  In other words, the parent frame
                 # must not be allowed to resize the client window
