@@ -18,6 +18,8 @@ __date__ = "31 March 2009"
 import wx
 import types
 
+from wx.lib.expando import ExpandoTextCtrl
+
 import framemanager
 import tabart as TA
 
@@ -47,6 +49,11 @@ wxEVT_COMMAND_AUINOTEBOOK_TAB_DCLICK = wx.NewEventType()
 # Define a new event for a drag cancelled
 wxEVT_COMMAND_AUINOTEBOOK_CANCEL_DRAG = wx.NewEventType()
 
+# Define events for editing a tab label
+wxEVT_COMMAND_AUINOTEBOOK_BEGIN_LABEL_EDIT = wx.NewEventType()
+wxEVT_COMMAND_AUINOTEBOOK_END_LABEL_EDIT = wx.NewEventType()
+
+# Create event binders
 EVT_AUINOTEBOOK_PAGE_CLOSE = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_PAGE_CLOSE, 1)
 """ A tab in `AuiNotebook` is being closed. Can be vetoed by calling `Veto()`. """
 EVT_AUINOTEBOOK_PAGE_CLOSED = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_PAGE_CLOSED, 1)
@@ -81,6 +88,205 @@ EVT_AUINOTEBOOK_CANCEL_DRAG = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_CANCEL_
 """ A drag and drop operation has been cancelled. """
 EVT_AUINOTEBOOK_TAB_DCLICK = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_TAB_DCLICK, 1)
 """ The user double-clicked with the left mouse button on a tab. """
+EVT_AUINOTEBOOK_BEGIN_LABEL_EDIT = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_BEGIN_LABEL_EDIT, 1)
+""" The user double-clicked with the left mouse button on a tab which text is editable. """
+EVT_AUINOTEBOOK_END_LABEL_EDIT = wx.PyEventBinder(wxEVT_COMMAND_AUINOTEBOOK_END_LABEL_EDIT, 1)
+""" The user finished editing a tab label. """
+
+
+# -----------------------------------------------------------------------------
+# Auxiliary class: TabTextCtrl
+# This is the temporary ExpandoTextCtrl created when you edit the text of a tab
+# -----------------------------------------------------------------------------
+
+class TabTextCtrl(ExpandoTextCtrl):
+    """ Control used for in-place edit. """
+
+    def __init__(self, owner, tab, page_index):
+        """
+        Default class constructor.
+        For internal use: do not call it in your code!
+
+        :param `owner`: the L{AuiTabCtrl} owning the tab;
+        :param `tab`: the actual L{AuiNotebookPage} tab;
+        :param `page_index`: the L{AuiNotebook} page index for the tab.
+        """
+        
+        self._owner = owner
+        self._tabEdited = tab
+        self._pageIndex = page_index
+        self._startValue = tab.caption
+        self._finished = False
+        self._aboutToFinish = False
+        self._currentValue = self._startValue
+
+        x, y, w, h = self._tabEdited.rect
+
+        wnd = self._tabEdited.control
+        if wnd:
+            x += wnd.GetSize()[0] + 2
+            h = 0
+
+        image_h = 0
+        image_w = 0
+
+        image = tab.bitmap
+
+        if image.IsOk():
+            image_w, image_h = image.GetWidth(), image.GetHeight()
+            image_w += 6
+        
+        dc = wx.ClientDC(self._owner)
+        h = max(image_h, dc.GetMultiLineTextExtent(tab.caption)[1])
+        h = h + 2
+            
+        # FIXME: what are all these hardcoded 4, 8 and 11s really?
+        x += image_w
+        w -= image_w + 4
+
+        y = (self._tabEdited.rect.height - h)/2 + 1   
+
+        expandoStyle = wx.WANTS_CHARS
+        if wx.Platform in ["__WXGTK__", "__WXMAC__"]:
+            expandoStyle |= wx.SIMPLE_BORDER
+            xSize, ySize = w + 2, h
+        else:
+            expandoStyle |= wx.SUNKEN_BORDER
+            xSize, ySize = w + 2, h+2
+            
+        ExpandoTextCtrl.__init__(self, self._owner, wx.ID_ANY, self._startValue,
+                                 wx.Point(x, y), wx.Size(xSize, ySize),
+                                 expandoStyle)
+
+        if wx.Platform == "__WXMAC__":
+            self.SetFont(owner.GetFont())
+            bs = self.GetBestSize()
+            self.SetSize((-1, bs.height))
+        
+        self.Bind(wx.EVT_CHAR, self.OnChar)
+        self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
+        self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
+    
+
+    def AcceptChanges(self):
+        """ Accepts/refuses the changes made by the user. """
+
+        value = self.GetValue()
+        notebook = self._owner.GetParent()
+
+        if value == self._startValue:
+            # nothing changed, always accept
+            # when an item remains unchanged, the owner
+            # needs to be notified that the user decided
+            # not to change the tree item label, and that
+            # the edit has been cancelled
+            notebook.OnRenameCancelled(self._pageIndex)
+            return True
+
+        if not notebook.OnRenameAccept(self._pageIndex, value):
+            # vetoed by the user
+            return False
+
+        # accepted, do rename the item
+        notebook.SetPageText(self._pageIndex, value)
+        
+        return True
+
+
+    def Finish(self):
+        """ Finish editing. """
+
+        if not self._finished:
+
+            notebook = self._owner.GetParent()
+        
+            self._finished = True
+            self._owner.SetFocus()
+            notebook.ResetTextControl()
+        
+
+    def OnChar(self, event):
+        """
+        Handles the wx.EVT_CHAR event for TabTextCtrl.
+
+        :param `event`: a L{wx.KeyEvent} event to be processed.
+
+        """
+
+        keycode = event.GetKeyCode()
+        shiftDown = event.ShiftDown()
+
+        if keycode == wx.WXK_RETURN:
+            if shiftDown and self._tabEdited.IsMultiline():
+                event.Skip()
+            else:
+                self._aboutToFinish = True
+                self.SetValue(self._currentValue)
+                # Notify the owner about the changes
+                self.AcceptChanges()
+                # Even if vetoed, close the control (consistent with MSW)
+                wx.CallAfter(self.Finish)
+
+        elif keycode == wx.WXK_ESCAPE:
+            self.StopEditing()
+
+        else:
+            event.Skip()
+    
+
+    def OnKeyUp(self, event):
+        """
+        Handles the wx.EVT_KEY_UP event for L{TabTextCtrl}.
+
+        :param `event`: a L{wx.KeyEvent} event to be processed.
+        """
+
+        if not self._finished:
+
+            # auto-grow the textctrl:
+            mySize = self.GetSize()
+
+            dc = wx.ClientDC(self)
+            sx, sy, dummy = dc.GetMultiLineTextExtent(self.GetValue() + "M")
+
+            self.SetSize((sx, -1))
+            self._currentValue = self.GetValue()
+
+        event.Skip()
+
+
+    def OnKillFocus(self, event):
+        """
+        Handles the wx.EVT_KILL_FOCUS event for L{TabTextCtrl}.
+
+        :param `event`: a L{wx.FocusEvent} event to be processed.
+        """
+
+        if not self._finished and not self._aboutToFinish:
+        
+            # We must finish regardless of success, otherwise we'll get
+            # focus problems:
+            if not self.AcceptChanges():
+                self._owner.GetParent().OnRenameCancelled(self._pageIndex)
+
+        # We must let the native text control handle focus, too, otherwise
+        # it could have problems with the cursor (e.g., in wxGTK).
+        event.Skip()
+        wx.CallAfter(self._owner.GetParent().ResetTextControl)
+
+
+    def StopEditing(self):
+        """ Suddenly stops the editing. """
+
+        self._owner.GetParent().OnRenameCancelled(self._pageIndex)
+        self.Finish()
+        
+    
+    def item(self):
+        """ Returns the item currently edited. """
+
+        return self._tabEdited
+
 
 # ----------------------------------------------------------------------
 
@@ -105,9 +311,17 @@ class AuiNotebookPage(object):
         self.hasCloseButton = True      # True if the page has a close button using the style
                                         # AUI_NB_CLOSE_ON_ALL_TABS
         self.control = None             # A control can now be inside a tab
+        self.renamable = False          # If True, a tab can be renamed by a left double-click
+        
         self.text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT)
 
 
+    def IsMultiline(self):
+        """ Returns whether the tab contains multiline text. """
+
+        return "\n" in self.caption
+    
+        
 # ----------------------------------------------------------------------
 
 class AuiTabContainerButton(object):
@@ -150,6 +364,8 @@ class CommandNotebookEvent(wx.PyCommandEvent):
         self.selection = -1
         self.drag_source = None
         self.dispatched = 0
+        self.label = ""
+        self.editCancelled = False
 
 
     def Clone(self):
@@ -240,6 +456,38 @@ class CommandNotebookEvent(wx.PyCommandEvent):
         """ Returns whether the event was dispatched (used for automatic AuiNotebooks). """
 
         return self.dispatched
+
+
+    def IsEditCancelled(self):
+        """ Returns the edit cancel flag (for EVT_AUINOTEBOOK_BEGIN|END_LABEL_EDIT only)."""
+
+        return self.editCancelled
+
+
+    def SetEditCanceled(self, editCancelled):
+        """
+        Sets the edit cancel flag (for EVT_AUINOTEBOOK_BEGIN|END_LABEL_EDIT only).
+
+        :param `editCancelled`: whether the editing action has been cancelled or not.
+        """
+
+        self.editCancelled = editCancelled
+
+
+    def GetLabel(self):
+        """Returns the label-itemtext (for EVT_TREE_BEGIN|END_LABEL_EDIT only)."""
+
+        return self.label
+
+    
+    def SetLabel(self, label):
+        """
+        Sets the label. Useful only for EVT_AUINOTEBOOK_END_LABEL_EDIT.
+
+        :param `label`: the new label.
+        """
+
+        self.label = label
     
 
 # ----------------------------------------------------------------------
@@ -307,7 +555,7 @@ class AuiNotebookEvent(CommandNotebookEvent):
         """ The event is allowed. """
 
         self.notify.Allow()
-
+        
 
 # ---------------------------------------------------------------------------- #
 # Class TabNavigatorWindow
@@ -1707,16 +1955,18 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         """
         
         x, y = event.GetX(), event.GetY()
+        wnd = self.TabHitTest(x, y)
         
-        if not self.TabHitTest(x, y) and not self.ButtonHitTest(x, y):
+        if not wnd and not self.ButtonHitTest(x, y):
     
             e = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_BG_DCLICK, self.GetId())
             e.SetEventObject(self)
             self.GetEventHandler().ProcessEvent(e)
 
-        if self.TabHitTest(x, y):
+        if wnd:
             e = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_TAB_DCLICK, self.GetId())
             e.SetEventObject(self)
+            e.SetSelection(self.GetIdxFromWindow(wnd))
             self.GetEventHandler().ProcessEvent(e)
 
     
@@ -2099,7 +2349,7 @@ class TabFrame(wx.PyWindow):
             return
 
         hideOnSingle = ((self._tabs.GetFlags() & AUI_NB_HIDE_ON_SINGLE_TAB) and \
-                       self._tabs.GetPageCount() <= 1)
+                        self._tabs.GetPageCount() <= 1)
         
         if not hideOnSingle and not self._parent._hide_tabs:
             tab_height = self._tab_ctrl_height
@@ -2247,6 +2497,7 @@ class AuiNotebook(wx.PyControl):
         self._tab_ctrl_height = 20
         self._requested_bmp_size = wx.Size(-1, -1)
         self._requested_tabctrl_height = -1
+        self._textCtrl = None
 
         wx.PyControl.__init__(self, parent, id, pos, size, style)
         self._mgr = framemanager.AuiManager()
@@ -2900,11 +3151,13 @@ class AuiNotebook(wx.PyControl):
         ctrl, ctrl_idx = self.FindTab(page_info.window)
         if not ctrl:
             return False
-                
+        
         info = ctrl.GetPage(ctrl_idx)
         info.caption = text
         ctrl.Refresh()
         ctrl.Update()
+
+        self.UpdateTabCtrlHeight(force=True)
     
         return True
 
@@ -3197,7 +3450,7 @@ class AuiNotebook(wx.PyControl):
 
         This can only be called if ``AUI_NB_CLOSE_ON_ALL_TABS`` is specified.
         
-        :param `page_idx`: the page index
+        :param `page_idx`: the page index.
         """
 
         if page_idx >= self._tabs.GetPageCount():
@@ -3529,7 +3782,9 @@ class AuiNotebook(wx.PyControl):
         new_tabs._tabs.SetFlags(self._flags)
         dest_tabs = new_tabs._tabs
 
-        self.ReparentControl(src_tabs, dest_tabs)
+        page_info = src_tabs.GetPage(src_idx)
+        if page_info.control:
+            self.ReparentControl(page_info.control, dest_tabs)
         
         # create a pane info structure with the information
         # about where the pane should be added
@@ -3559,7 +3814,6 @@ class AuiNotebook(wx.PyControl):
         self._mgr.Update()
 
         # remove the page from the source tabs
-        page_info = src_tabs.GetPage(src_idx)
         page_info.active = False
         
         src_tabs.RemovePage(page_info.window)
@@ -3615,19 +3869,17 @@ class AuiNotebook(wx.PyControl):
         self.Thaw()
 
 
-    def ReparentControl(self, src_tabs, dest_tabs):
+    def ReparentControl(self, control, dest_tabs):
         """
         Reparents a control added inside a tab.
-        
+
+        :param `control`: an instance of L{wx.Window};        
         :param `src_tabs`: the source L{AuiTabCtrl};
         :param `dest_tabs`: the destination L{AuiTabCtrl}.
         """
         
-        children = src_tabs.GetChildren()
-        control = (children and [children[0]] or [None])[0]
-        if control:
-            control.Hide()
-            control.Reparent(dest_tabs)
+        control.Hide()
+        control.Reparent(dest_tabs)
         
 
     def UnsplitDClick(self, part, sash_size, pos):
@@ -3681,8 +3933,6 @@ class AuiNotebook(wx.PyControl):
             src_tabs = tab_ctrl_1
             dest_tabs = tab_ctrl_2
 
-        self.ReparentControl(src_tabs, dest_tabs)
-
         selection = -1
         page_count = dest_tabs.GetPageCount()
         
@@ -3695,6 +3945,8 @@ class AuiNotebook(wx.PyControl):
 
             # add the page to the destination tabs
             dest_tabs.AddPage(page_info.window, page_info)
+            if page_info.control:
+                self.ReparentControl(page_info.control, dest_tabs)
         
         self.RemoveEmptyTabFrames()
 
@@ -3722,6 +3974,9 @@ class AuiNotebook(wx.PyControl):
 
         :param `event`: a L{wx.EVT_AUINOTEBOOK_PAGE_CHANGING} event to be processed.        
         """
+
+        if self._textCtrl is not None:
+            self._textCtrl.StopEditing()
         
         ctrl = event.GetEventObject()
         assert ctrl != None
@@ -3738,6 +3993,9 @@ class AuiNotebook(wx.PyControl):
 
         :param `event`: a L{wx.EVT_AUINOTEBOOK_BG_DCLICK} event to be processed.        
         """
+
+        if self._textCtrl is not None:
+            self._textCtrl.StopEditing()
         
         # notify owner that the tabbar background has been double-clicked
         e = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_BG_DCLICK, self.GetId())
@@ -3756,6 +4014,15 @@ class AuiNotebook(wx.PyControl):
         e = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_TAB_DCLICK, self.GetId())
         e.SetEventObject(self)
         self.GetEventHandler().ProcessEvent(e)
+
+        tabs = event.GetEventObject()
+        if not tabs.GetEnabled(event.GetSelection()):
+            return
+
+        if not self.IsRenamable(event.GetSelection()):
+            return
+
+        self.EditTab(event.GetSelection())
         
 
     def OnTabBeginDrag(self, event):
@@ -3782,6 +4049,9 @@ class AuiNotebook(wx.PyControl):
         tabs = event.GetEventObject()
         if not tabs.GetEnabled(event.GetSelection()):
             return
+
+        if self._textCtrl is not None:
+            self._textCtrl.StopEditing()
 
         screen_pt = wx.GetMousePosition()
         client_pt = self.ScreenToClient(screen_pt)
@@ -3998,7 +4268,8 @@ class AuiNotebook(wx.PyControl):
                     src_page.Reparent(nb)
 
                     # Reparent the control in a tab (if any)
-                    self.ReparentControl(src_tabs, tab_ctrl)
+                    if page_info.control:
+                        self.ReparentControl(page_info.control, tab_ctrl)
 
                     # find out the insert idx
                     dest_tabs = tab_ctrl
@@ -4084,11 +4355,13 @@ class AuiNotebook(wx.PyControl):
                 self._mgr.AddPane(new_tabs, framemanager.AuiPaneInfo().Bottom().CaptionVisible(False), mouse_client_pt)
                 self._mgr.Update()
                 dest_tabs = new_tabs._tabs
-
-            self.ReparentControl(src_tabs, dest_tabs)
                 
             # remove the page from the source tabs
             page_info = src_tabs.GetPage(event.GetSelection())
+
+            if page_info.control:
+                self.ReparentControl(page_info.control, dest_tabs)
+
             page_info.active = False
             src_tabs.RemovePage(page_info.window)
 
@@ -4946,4 +5219,121 @@ class AuiNotebook(wx.PyControl):
         
         self.AddPage(listCtrl, "AuiNotebook Preview", True, bitmap=auinotebook_preview.GetBitmap(), disabled_bitmap=wx.NullBitmap)
 
+
+    def SetRenamable(self, page_idx, renamable):
+        """
+        Sets whether a tab can be renamed via a left double-click or not.
+
+        :param `page_idx`: the page index;
+        :param `renamable`: ``True`` if the page can be renamed.
+        """
+
+        if page_idx >= self._tabs.GetPageCount():
+            return False
         
+        # update our own tab catalog
+        page_info = self._tabs.GetPage(page_idx)
+        page_info.renamable = renamable
+
+        # update what's on screen
+        ctrl, ctrl_idx = self.FindTab(page_info.window)
+        if not ctrl:
+            return False
+        
+        info = ctrl.GetPage(ctrl_idx)
+        info.renamable = page_info.renamable
+        
+        return True
+        
+
+    def IsRenamable(self, page_idx):
+        """
+        Returns whether a tab can be renamed or not.
+        
+        :param `page_idx`: the page index.
+        """
+
+        if page_idx >= self._tabs.GetPageCount():
+            return False
+
+        page_info = self._tabs.GetPage(page_idx)
+        return page_info.renamable
+
+
+    def OnRenameCancelled(self, page_index):
+        """
+        Called by L{TabTextCtrl}, to cancel the changes and to send the
+        EVT_AUINOTEBOOK_END_LABEL_EDIT event.
+
+        :param `page_index`: the page index in the notebook.
+        """
+
+        # let owner know that the edit was cancelled
+        evt = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_END_LABEL_EDIT, self.GetId())
+
+        evt.SetSelection(page_index)
+        evt.SetEventObject(self)
+        evt.SetLabel("")
+        evt.SetEditCanceled(True)
+        self.GetEventHandler().ProcessEvent(evt)
+                
+
+    def OnRenameAccept(self, page_index, value):
+        """
+        Called by L{TabTextCtrl}, to accept the changes and to send the
+        EVT_AUINOTEBOOK_END_LABEL_EDIT event.
+        """
+
+        evt = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_END_LABEL_EDIT, self.GetId())
+        evt.SetSelection(page_index)
+        evt.SetEventObject(self)
+        evt.SetLabel(value)
+        evt.SetEditCanceled(False)
+
+        return not self.GetEventHandler().ProcessEvent(evt) or evt.IsAllowed()
+
+                
+    def ResetTextControl(self):
+        """ Called by L{TabTextCtrl} when it marks itself for deletion. """
+
+        if not self._textCtrl:
+            return
+        
+        self._textCtrl.Destroy()
+        self._textCtrl = None
+
+        # tab height might have changed
+        self.UpdateTabCtrlHeight(force=True)
+        
+
+    def EditTab(self, page_index):
+        """
+        Starts the editing of an item label, sending a EVT_AUINOTEBOOK_BEGIN_LABEL_EDIT event.
+
+        :param `page_index`: the page index we want to edit.        
+        """
+
+        if page_index >= self._tabs.GetPageCount():
+            return False
+
+        if not self.IsRenamable(page_index):
+            return False
+        
+        page_info = self._tabs.GetPage(page_index)        
+        ctrl, ctrl_idx = self.FindTab(page_info.window)
+        if not ctrl:
+            return False
+
+        evt = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_BEGIN_LABEL_EDIT, self.GetId())
+        evt.SetSelection(page_index)
+        evt.SetEventObject(self)
+        if self.GetEventHandler().ProcessEvent(evt) and not evt.IsAllowed():
+            # vetoed by user
+            return
+    
+        if self._textCtrl is not None and page_info != self._textCtrl.item():
+            self._textCtrl.StopEditing()
+
+        self._textCtrl = TabTextCtrl(ctrl, page_info, page_index)
+        self._textCtrl.SetFocus()
+

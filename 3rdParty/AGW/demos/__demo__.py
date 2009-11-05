@@ -13,7 +13,7 @@ this module returns the following information:
                        
 These meta data are merged into the wxPython demo tree at startup.
 
-Last updated: Andrea Gavana @ 07 October 2009, 10.00 GMT.
+Last updated: Andrea Gavana @ 05 November 2009, 12.00 GMT.
 Version 0.5.0.
 
 """
@@ -166,7 +166,7 @@ def GetOverview():
 
         strs += newLine
 
-        if widgetsFound == numWidgets and line.find(".") >= 0:
+        if widgetsFound == numWidgets and line.find(".") >= 0 and line.find("ListCtrl") < 0:
             # Break the loop, all widgets included
             strs += "\n</ul><p>"
             widgetsFound = 0

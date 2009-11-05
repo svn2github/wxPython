@@ -104,7 +104,7 @@ def ChopText(dc, text, max_size):
     """
     
     # first check if the text fits with no problems
-    x, y = dc.GetTextExtent(text)
+    x, y, dummy = dc.GetMultiLineTextExtent(text)
     
     if x <= max_size:
         return text
@@ -500,7 +500,13 @@ def GetDockingImage(direction, useAero, center):
     """
 
     suffix = (center and [""] or ["_single"])[0]
-    prefix = (useAero and ["aero_"] or [""])[0]
+    prefix = ""
+    if useAero == 2:
+        # Whidbey docking guides
+        prefix = "whidbey_"
+    elif useAero == 1:
+        # Aero docking style
+        prefix = "aero_"
         
     if direction == wx.TOP:
         bmp_unfocus = eval("%sup%s"%(prefix, suffix)).GetBitmap()
@@ -640,4 +646,22 @@ def GetSlidingPoints(rect, size, direction):
     
     return startX, startY, stopX, stopY
 
+
+def CopyAttributes(newArt, oldArt):
+    """
+    Copies pens, brushes, colours and fonts from the old tab art to the new one.
+
+    :param `newArt`: the new instance of L{AuiTabArt};
+    :param `oldArt`: the old instance of L{AuiTabArt}.
+    """    
+    
+    attrs = dir(oldArt)
+
+    for attr in attrs:
+        if attr.startswith("_") and (attr.endswith("_colour") or attr.endswith("_font") or \
+                                     attr.endswith("_font") or attr.endswith("_brush") or \
+                                     attr.endswith("Pen") or attr.endswith("_pen")):
+            setattr(newArt, attr, getattr(oldArt, attr))
+
+    return newArt            
 

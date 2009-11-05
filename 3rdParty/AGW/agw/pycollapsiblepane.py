@@ -3,7 +3,7 @@
 # Generic Implementation Based On wx.CollapsiblePane.
 #
 # Andrea Gavana, @ 09 Aug 2007
-# Latest Revision: 29 May 2009, 09.00 GMT
+# Latest Revision: 05 Nov 2009, 12.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -90,7 +90,7 @@ License And Version
 
 PyCollapsiblePane is freeware and distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
+Latest Revision: Andrea Gavana @ 05 Nov 2009, 12.00 GMT
 Version 0.2
 
 """
@@ -418,9 +418,24 @@ class PyCollapsiblePane(wx.PyPanel):
 
         self.Layout()
 
+
     def GetLabel(self):
+
         return self._strLabel
-    
+
+
+    def SetButtonFont(self, font):
+        """ Sets the button font. """
+        
+        self._pButton.SetFont(font)
+        self.Layout()    
+
+
+    def GetButtonFont(self):
+        """ Returns the button font. """
+        
+        return self._pButton.GetFont()
+
 
     def GetBorder(self):
         """ Returns the PyCollapsiblePane border (platform dependent). """

@@ -592,7 +592,7 @@ class AuiDefaultDockArt(object):
         state = pane.state
         pane.state &= ~optionActive
         
-        for indx in xrange(8):
+        for indx in xrange(6):
             active = (indx%2 == 0 and [True] or [False])[0]
             if active:
                 pane.state |= optionActive
@@ -1045,11 +1045,11 @@ class ModernDockArt(AuiDefaultDockArt):
         :param `rect`: the pane caption rectangle;
         :param `pane`: the pane for which the text is drawn.
         """        
-
+    
         state = pane.state
         pane.state &= ~optionActive
         
-        for indx in xrange(8):
+        for indx in xrange(6):
             active = (indx%2 == 0 and [True] or [False])[0]
             if active:
                 pane.state |= optionActive

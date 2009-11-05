@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 29 May 2009, 09.00 GMT
+# Latest Revision: 05 Nov 2009, 12.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -163,7 +163,7 @@ License And Version
 
 ButtonPanel is freeware and distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
+Latest Revision: Andrea Gavana @ 05 Nov 2009, 12.00 GMT
 Version 0.5.
 
 """
@@ -1099,7 +1099,7 @@ class ButtonInfo(Control):
             status = "Disabled"
             
         if self._bitmaps[status] is None:
-            return self._bitmaps["Normal"]
+            return self._bitmaps["Toggled" if self.GetToggled() else "Normal"]
             
         return self._bitmaps[status]
 

@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 29 May 2009, 09.00 GMT
+# Latest Revision: 05 Nov 2009, 12.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -112,7 +112,7 @@ License And Version
 
 FlatNotebook is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
+Latest Revision: Andrea Gavana @ 05 Nov 2009, 12.00 GMT
 Version 2.8
 
 
@@ -3312,7 +3312,7 @@ class FlatNotebook(wx.PyPanel):
     def SetSelection(self, page):
         """
         Sets the selection for the given page.
-        The call to this function generates the page changing events
+        The call to this function *does not* generate the page changing events.
         """
 
         if page >= len(self._windows) or not self._windows:
@@ -3994,8 +3994,9 @@ class PageContainer(wx.Panel):
         if where in [FNB_TAB, FNB_TAB_X]:
 
             if self._pagesInfoVec[tabIdx].GetEnabled():
+                # This shouldn't really change the selection, so it's commented out
                 # Fire events and eventually (if allowed) change selection
-                self.FireEvent(tabIdx)
+                # self.FireEvent(tabIdx)
 
                 # send a message to popup a custom menu
                 event = FlatNotebookEvent(wxEVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU, self.GetParent().GetId())
@@ -4966,7 +4967,7 @@ class PageContainer(wx.Panel):
     def GetPageText(self, page):
         """ Returns the tab caption of the page. """
         if page < len(self._pagesInfoVec):
-        	return self._pagesInfoVec[page].GetCaption() 
+            return self._pagesInfoVec[page].GetCaption() 
         else:
             return u''
 
@@ -4974,8 +4975,8 @@ class PageContainer(wx.Panel):
     def SetPageText(self, page, text):
         """ Sets the tab caption of the page. """
         if page < len(self._pagesInfoVec):
-        	self._pagesInfoVec[page].SetCaption(text)
-        	return True 
+            self._pagesInfoVec[page].SetCaption(text)
+            return True 
         else:
             return False
 
@@ -4990,3 +4991,53 @@ class PageContainer(wx.Panel):
         self._mgr.GetRenderer(self.GetParent().GetWindowStyleFlag()).DrawDragHint(self, tabIdx)
 
 
+# ---------------------------------------------------------------------------- #
+# Class FlatNotebookCompatible
+# This class is more compatible with the wx.Notebook API.
+# ---------------------------------------------------------------------------- #
+
+class FlatNotebookCompatible(FlatNotebook):
+    """
+    This class is more compatible with the wx.Notebook API, especially regarding
+    page changing events. Use the SetSelection method if you wish to send page changing
+    events, or ChangeSelection otherwise.
+    """
+    
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
+                 style=0, name="FlatNotebook"):
+        """
+        Default class constructor.
+
+        All the parameters are as in wxPython class construction, except the
+        'style': this can be assigned to whatever combination of FNB_* styles.
+        
+        """
+
+        FlatNotebook.__init__(self, parent, id, pos, size, style, name)
+
+
+    def SetSelection(self, page):
+        """
+        Sets the selection for the given page.
+        The call to this function *generates* the page changing events.
+        """
+
+        if page >= len(self._windows) or not self._windows:
+            return
+
+        # Support for disabed tabs
+        if not self._pages.GetEnabled(page) and len(self._windows) > 1 and not self._bForceSelection:
+            return
+        
+        self.FireEvent(page)
+
+
+    def ChangeSelection(self, page):
+        """
+        Sets the selection for the given page.
+        The call to this function *does not* generate the page changing events.
+        """
+
+        FlatNotebook.SetSelection(self, page)
+
+        

@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 22 Oct 2009, 21.00 GMT
+# Latest Revision: 26 Oct 2009, 11.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -1815,7 +1815,8 @@ class AuiDockingGuideWindow(wx.Window):
         :param `direction`: one of ``wx.TOP``, ``wx.BOTTOM``, ``wx.LEFT``, ``wx.RIGHT``,
          ``wx.CENTER``;
         :param `center`: whether the calling class is a L{AuiCenterDockingGuide};
-        :param `useAero`: whether to use the new Aero-style bitmaps for the docking guide.
+        :param `useAero`: whether to use the new Aero-style bitmaps or Whidbey-style bitmaps
+         for the docking guide.
         """
 
         wx.Window.__init__(self, parent, -1, rect.GetPosition(), rect.GetSize(), wx.NO_BORDER)
@@ -2078,6 +2079,7 @@ class AuiDockingGuideWindow(wx.Window):
         if image != self._currentImage:
             self._currentImage = image
             self.Refresh()
+            self.Update()
 
 
 # ---------------------------------------------------------------------------
@@ -2103,11 +2105,15 @@ class AuiSingleDockingGuide(AuiDockingGuide):
         self.Hide()
 
         useAero = GetManager(self.GetParent()).GetFlags() & AUI_MGR_AERO_DOCKING_GUIDES
-        self._useAero = useAero
+        useWhidbey = GetManager(self.GetParent()).GetFlags() & AUI_MGR_WHIDBEY_DOCKING_GUIDES
+        
+        self._useAero = useAero or useWhidbey
         self._valid = True
         
         if useAero:
             sizeX, sizeY = aeroguideSizeX, aeroguideSizeY
+        elif useWhidbey:
+            sizeX, sizeY = whidbeySizeX, whidbeySizeY
         else:
             sizeX, sizeY = guideSizeX, guideSizeY
 
@@ -2115,7 +2121,7 @@ class AuiSingleDockingGuide(AuiDockingGuide):
             sizeX, sizeY = sizeY, sizeX
 
         if self._useAero:
-            self.CreateShapesWithStyle()
+            self.CreateShapesWithStyle(useWhidbey)
             
             if wx.Platform == "__WXGTK__":
                 self.Bind(wx.EVT_WINDOW_CREATE, self.SetGuideShape)
@@ -2127,23 +2133,43 @@ class AuiSingleDockingGuide(AuiDockingGuide):
             self.SetSize((sizeX, sizeY))
             
         self.rect = wx.Rect(0, 0, sizeX, sizeY)
+
+        if self._useAero:
+            useAero = (useWhidbey and [2] or [1])[0]
+        else:
+            useAero = 0
+            
         self.target = AuiDockingGuideWindow(self, self.rect, direction, False, useAero)
 
 
-    def CreateShapesWithStyle(self):
+    def CreateShapesWithStyle(self, useWhidbey):
+        """
+        Creates the docking guide window shape based on which docking bitmaps are used.
+
+        :param `useWhidbey`: if ``True``, use Whidbey-style bitmaps; if ``False``, use the
+         Aero-style bitmaps.
+         """
 
         sizeX, sizeY = aeroguideSizeX, aeroguideSizeY
+        if useWhidbey:
+            sizeX, sizeY = whidbeySizeX, whidbeySizeY
 
         if self._direction not in [wx.TOP, wx.BOTTOM]:
             sizeX, sizeY = sizeY, sizeX
-            
-        bmp, dummy = GetDockingImage(self._direction, True, False)
+
+        useAero = (useWhidbey and [2] or [1])[0]      
+        bmp, dummy = GetDockingImage(self._direction, useAero, False)
         region = wx.RegionFromBitmap(bmp)
             
         self.region = region
         
 
     def AeroMove(self, pos):
+        """
+        Moves the docking window to the new position. Overridden in children classes.
+
+        :param `pos`: the new docking guide position.
+        """
 
         pass
     
@@ -2240,12 +2266,21 @@ class AuiCenterDockingGuide(AuiDockingGuide):
 
 
     def CreateShapesWithStyle(self):
+        """ Creates the docking guide window shape based on which docking bitmaps are used. """
 
         useAero = (GetManager(self.GetParent()).GetFlags() & AUI_MGR_AERO_DOCKING_GUIDES) != 0
-        self._useAero = useAero
+        useWhidbey = (GetManager(self.GetParent()).GetFlags() & AUI_MGR_WHIDBEY_DOCKING_GUIDES) != 0
+
+        self._useAero = 0
+        if useAero:
+            self._useAero = 1
+        elif useWhidbey:
+            self._useAero = 2
         
         if useAero:
             sizeX, sizeY = aeroguideSizeX, aeroguideSizeY
+        elif useWhidbey:
+            sizeX, sizeY = whidbeySizeX, whidbeySizeY          
         else:
             sizeX, sizeY = guideSizeX, guideSizeY
 
@@ -2255,7 +2290,7 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         rectBottom = wx.Rect(sizeY, sizeX + sizeY, sizeX, sizeY)
         rectCenter = wx.Rect(sizeY, sizeY, sizeX, sizeX)
             
-        if not useAero:
+        if not self._useAero:
 
             self.targetLeft = AuiDockingGuideWindow(self, rectLeft, wx.LEFT, True, useAero)
             self.targetTop = AuiDockingGuideWindow(self, rectTop, wx.TOP, True, useAero)
@@ -2298,7 +2333,7 @@ class AuiCenterDockingGuide(AuiDockingGuide):
             region.UnionRegion(wx.RegionFromPoints(trd))
             region.UnionRegion(wx.RegionFromPoints(brd))
 
-        else:
+        elif useAero:
 
             self._aeroBmp = aero_dock_pane.GetBitmap()
             region = wx.RegionFromBitmap(self._aeroBmp)
@@ -2309,6 +2344,19 @@ class AuiCenterDockingGuide(AuiDockingGuide):
             self._deniedBitmap = aero_denied.GetBitmap()
             self._aeroRects = [rectLeft, rectTop, rectRight, rectBottom, rectCenter]
             self._valid = True
+
+        elif useWhidbey:
+
+            self._aeroBmp = whidbey_dock_pane.GetBitmap()
+            region = wx.RegionFromBitmap(self._aeroBmp)
+
+            self._allAeroBmps = [whidbey_dock_pane_left.GetBitmap(), whidbey_dock_pane_top.GetBitmap(),
+                                 whidbey_dock_pane_right.GetBitmap(), whidbey_dock_pane_bottom.GetBitmap(),
+                                 whidbey_dock_pane_center.GetBitmap(), whidbey_dock_pane.GetBitmap()]
+            self._deniedBitmap = whidbey_denied.GetBitmap()
+            self._aeroRects = [rectLeft, rectTop, rectRight, rectBottom, rectCenter]
+            self._valid = True
+            
             
         self.region = region
         
@@ -2409,12 +2457,22 @@ class AuiCenterDockingGuide(AuiDockingGuide):
     
 
     def AeroMove(self, pos):
+        """
+        Moves the docking guide window to the new position.
+
+        :param `pos`: the new docking guide position.
+        """
 
         if not self._useAero:
             return
 
-        
-        sizeX, sizeY = aeroguideSizeX, aeroguideSizeY
+        useWhidbey = (GetManager(self.GetParent()).GetFlags() & AUI_MGR_WHIDBEY_DOCKING_GUIDES) != 0
+
+        if useWhidbey:
+            sizeX, sizeY = whidbeySizeX, whidbeySizeY            
+        else:
+            sizeX, sizeY = aeroguideSizeX, aeroguideSizeY
+            
         size = self.GetSize()
         
         leftRect, topRect, rightRect, bottomRect, centerRect = self._aeroRects
@@ -2461,9 +2519,10 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         if self._useAero:
             dc.DrawBitmap(self._aeroBmp, 0, 0, True)
             if not self._valid:
+                diff = (self._useAero == 2 and [1] or [0])[0]
                 bmpX, bmpY = self._deniedBitmap.GetWidth(), self._deniedBitmap.GetHeight()
                 xPos, yPos = (rect.x + (rect.width)/2 - bmpX/2), (rect.y + (rect.height)/2 - bmpY/2)
-                dc.DrawBitmap(self._deniedBitmap, xPos+1, yPos, True)
+                dc.DrawBitmap(self._deniedBitmap, xPos+1, yPos+diff, True)
                 
             return
         
@@ -3191,6 +3250,7 @@ def FindDocks(docks, dock_direction, dock_layer=-1, dock_row=-1, reverse=False):
     
     return arr
 
+
 def FindOppositeDocks(docks, dock_direction):
     """
     FindOppositeDocks() is an internal function that returns a list of docks
@@ -3602,6 +3662,10 @@ class AuiManager(wx.EvtHandler):
         ``AUI_MGR_HINT_FADE``                If the platform supports it, the hint window will fade in and out
         ``AUI_MGR_NO_VENETIAN_BLINDS_FADE``  Disables the "venetian blind" fade in and out
         ``AUI_MGR_LIVE_RESIZE``              Live resize when the user drag a sash
+        ``AUI_MGR_ANIMATE_FRAMES``           Fade-out floating panes when they are closed (all platforms which support frames transparency) and show a moving rectangle when they are docked (Windows < Vista and GTK only)
+        ``AUI_MGR_AERO_DOCKING_GUIDES``      Use the new Aero-style bitmaps as docking guides
+        ``AUI_MGR_PREVIEW_MINIMIZED_PANES``  Slide in and out minimized panes to preview them
+        ``AUI_MGR_WHIDBEY_DOCKING_GUIDES``   Use the new Whidbey-style bitmaps as docking guides        
         ==================================== ==================================
 
         Default value for `flags` is:
@@ -3874,6 +3938,10 @@ class AuiManager(wx.EvtHandler):
         ``AUI_MGR_HINT_FADE``                If the platform supports it, the hint window will fade in and out
         ``AUI_MGR_NO_VENETIAN_BLINDS_FADE``  Disables the "venetian blind" fade in and out
         ``AUI_MGR_LIVE_RESIZE``              Live resize when the user drag a sash
+        ``AUI_MGR_ANIMATE_FRAMES``           Fade-out floating panes when they are closed (all platforms which support frames transparency) and show a moving rectangle when they are docked (Windows < Vista and GTK only)
+        ``AUI_MGR_AERO_DOCKING_GUIDES``      Use the new Aero-style bitmaps as docking guides
+        ``AUI_MGR_PREVIEW_MINIMIZED_PANES``  Slide in and out minimized panes to preview them
+        ``AUI_MGR_WHIDBEY_DOCKING_GUIDES``   Use the new Whidbey-style bitmaps as docking guides        
         ==================================== ==================================
         
         """
@@ -4099,19 +4167,19 @@ class AuiManager(wx.EvtHandler):
         """
         Tells the frame manager to start managing a child window. There
         are three versions of this function. The first verison allows the full spectrum
-        of pane parameter possibilities (AddPane1). The second version is used for
-        simpler user interfaces which do not require as much configuration (AddPane2).
-        The last version allows a drop position to be specified, which will determine
-        where the pane will be added.
+        of pane parameter possibilities (`AddPane1`). The second version is used for
+        simpler user interfaces which do not require as much configuration (`AddPane2`).
+        The `AddPane3` version allows a drop position to be specified, which will determine
+        where the pane will be added. The `AddPane4` version allows to turn the target
+        L{AuiPaneInfo} pane into a notebook and the added pane into a page.
 
         In wxPython, simply call AddPane.
 
         :param `window`: the child window to manage;
         :param `arg1`: a L{AuiPaneInfo} or an integer value (direction);
-        :param `arg2`: a L{AuiPaneInfo} or a L{wx.Point} (drop position).
-        9/8/2009:
+        :param `arg2`: a L{AuiPaneInfo} or a L{wx.Point} (drop position);
         :param `target`: a L{AuiPaneInfo} to be turned into a notebook
-                         and new pane added to it as a page
+                         and new pane added to it as a page.
          """
  
         if target in self._panes:
@@ -6241,6 +6309,7 @@ class AuiManager(wx.EvtHandler):
                     return dock.rect.x
             
         return 0
+    
 
     def GetLastKnownDock(self, dock):
         """
@@ -6253,13 +6322,12 @@ class AuiManager(wx.EvtHandler):
 
         
         if dock.IsOk():
-            dockstr = "dock_%d%d%d"%(dock.dock_direction,dock.dock_layer,dock.dock_row)
-            
-            if dockstr in self._lastknowndocks:
-                
+            dockstr = "dock_%d%d%d"%(dock.dock_direction, dock.dock_layer, dock.dock_row)            
+            if dockstr in self._lastknowndocks:                
                 return self._lastknowndocks[dockstr]
 
         return None
+
         
     def UpdateLastKnownDock(self, dock):
         """
@@ -6268,10 +6336,9 @@ class AuiManager(wx.EvtHandler):
         :param `dock`: a L{AuiDockInfo} instance.
         """
 
-
         self._lastknowndocks["dock_%d%d%d"%(dock.dock_direction,
-                                                   dock.dock_layer,
-                                                   dock.dock_row)] = dock
+                                            dock.dock_layer,
+                                            dock.dock_row)] = dock
 
 
     def GetPartnerDock(self, dock):

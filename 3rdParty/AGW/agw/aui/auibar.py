@@ -1087,7 +1087,15 @@ class AuiDefaultToolBarArt(object):
             dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 170)))
             dc.DrawRectangleRect(button_rect)
             dc.DrawRectangleRect(dropdown_rect)
-        
+
+        elif item.GetState() & AUI_BUTTON_STATE_CHECKED:
+            # it's important to put this code in an else statment after the 
+            # hover, otherwise hovers won't draw properly for checked items 
+            dc.SetPen(wx.Pen(self._highlight_colour))
+            dc.SetBrush(wxBrush(StepColour(self._highlight_colour, 170)))
+            dc.DrawRectangle(button_rect)
+            dc.DrawRectangle(dropdown_rect)
+            
         if item.GetState() & AUI_BUTTON_STATE_DISABLED:
         
             bmp = item.GetDisabledBitmap()
@@ -3356,8 +3364,11 @@ class AuiToolBar(wx.PyControl):
                     self._art.DrawDropDownButton(dc, self, item, item_rect)
             
             elif item.kind == ITEM_CHECK:
-                # draw a toggle button
-                self._art.DrawButton(dc, self, item, item_rect)
+                # draw a regular toggle button or a dropdown one
+                if not item.dropdown:
+                    self._art.DrawButton(dc, self, item, item_rect)
+                else:
+                    self._art.DrawDropDownButton(dc, self, item, item_rect)
 
             elif item.kind == ITEM_RADIO:
                 # draw a toggle button

@@ -2,7 +2,7 @@
 # PYPROGRESS wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 29 May 2009, 09.00 GMT
+# Latest Revision: 05 Nov 2009, 12.00 GMT
 #
 #
 # TODO List
@@ -83,7 +83,7 @@ License And Version
 
 PyProgress is freeware and distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
+Latest Revision: Andrea Gavana @ 05 Nov 2009, 12.00 GMT
 Version 0.2
 
 """
@@ -150,6 +150,9 @@ class ProgressGauge(wx.PyWindow):
     def SetFirstGradientColour(self, colour):
         """ Sets the first gradient colour. """
 
+        if not isinstance(colour, wx.Colour):
+            colour = wx.NamedColour(colour)
+            
         self._firstGradient = colour
         self.Refresh()
 
@@ -163,6 +166,9 @@ class ProgressGauge(wx.PyWindow):
     def SetSecondGradientColour(self, colour):
         """ Sets the second gradient colour. """
 
+        if not isinstance(colour, wx.Colour):
+            colour = wx.NamedColour(colour)
+
         self._secondGradient = colour
         self.Refresh()
         
@@ -175,6 +181,9 @@ class ProgressGauge(wx.PyWindow):
 
     def SetGaugeBackground(self, colour):
         """ Sets the gauge background colour. """
+
+        if not isinstance(colour, wx.Colour):
+            colour = wx.NamedColour(colour)
 
         self._background = wx.Brush(colour, wx.SOLID)        
 

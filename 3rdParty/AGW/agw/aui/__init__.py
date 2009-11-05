@@ -127,6 +127,8 @@ missing features (the list is not exhaustive):
 - wxAuiManager & wxToolBar - ToolBar Of Size Zero: http://trac.wxwidgets.org/ticket/9724 
 - wxAuiNotebook doesn't behave properly like a container as far as...: http://trac.wxwidgets.org/ticket/9911
 - Serious layout bugs in wxAUI: http://trac.wxwidgets.org/ticket/10620
+- wAuiDefaultTabArt::Clone() should just use copy contructor: http://trac.wxwidgets.org/ticket/11388
+- Drop down button for check tool on wxAuiToolbar: http://trac.wxwidgets.org/ticket/11139
 
 Plus the following features:
 
@@ -164,7 +166,9 @@ Plus the following features:
       given pane, simply call `CaptionVisible(True, left=True)`;
   (s) New Aero-style docking guides: you can enable them by using the `AuiManager` style ``AUI_MGR_AERO_DOCKING_GUIDES``;
   (t) A slide-in/slide-out preview of minimized panes can be seen by enabling the `AuiManager` style
-      ``AUI_MGR_PREVIEW_MINIMIZED_PANES`` and by hovering with the mouse on the minimized pane toolbar tool.
+      ``AUI_MGR_PREVIEW_MINIMIZED_PANES`` and by hovering with the mouse on the minimized pane toolbar tool;
+  (s) New Whidbey-style docking guides: you can enable them by using the `AuiManager` style ``AUI_MGR_WHIDBEY_DOCKING_GUIDES``.
+      
 
 - AuiNotebook:
   (a) Implementation of the style ``AUI_NB_HIDE_ON_SINGLE_TAB``, a la `wx.lib.agw.flatnotebook`;
@@ -195,7 +199,9 @@ Plus the following features:
   (n) wxPython controls can now be added inside page tabs by calling `AddControlToPage`, and they can be
       removed by calling `RemoveControlFromPage`;
   (o) Possibility to preview all the pages in a `AuiNotebook` (as thumbnails) by using the `NotebookPreview`
-      method of `AuiNotebook`.
+      method of `AuiNotebook`;
+  (p) Tab labels can be edited by calling the `SetRenamable` method on a `AuiNotebook` page;
+  (q) Support for multi-lines tab labels in `AuiNotebook`.
   
 - AuiToolBar:
   (a) ``AUI_TB_PLAIN_BACKGROUND`` style that allows to easy setup a plain background to the AUI toolbar,
@@ -249,7 +255,7 @@ License And Version
 
 AUI library is freeware and distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 21 Oct 2009, 11.00 GMT
+Latest revision: Andrea Gavana @ 28 Oct 2009, 11.00 GMT
 Version 1.0. 
 
 """

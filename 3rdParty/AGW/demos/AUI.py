@@ -328,8 +328,9 @@ ID_NotebookCustomButtons = ID_CreateTree + 75
 ID_SampleItem = ID_CreateTree + 76
 ID_StandardGuides = ID_CreateTree + 77
 ID_AeroGuides = ID_CreateTree + 78
-ID_NotebookPreview = ID_CreateTree + 79
-ID_PreviewMinimized = ID_CreateTree + 80
+ID_WhidbeyGuides = ID_CreateTree + 79
+ID_NotebookPreview = ID_CreateTree + 80
+ID_PreviewMinimized = ID_CreateTree + 81
 
 ID_FirstPerspective = ID_CreatePerspective + 1000
 ID_FirstNBPerspective = ID_CreateNBPerspective + 10000
@@ -351,7 +352,7 @@ ID_SashGrip = ID_PaneBorderSize + 14
 
 ID_VetoTree = ID_PaneBorderSize + 15
 ID_VetoText = ID_PaneBorderSize + 16
-
+ID_NotebookMultiLine = ID_PaneBorderSize + 17
 
 # -- SizeReportCtrl --
 # (a utility control that always reports it's client size)
@@ -1001,6 +1002,8 @@ class AuiFrame(wx.Frame):
         notebook_menu.AppendCheckItem(ID_NotebookUseImagesDropDown, "Use Tab Images In Dropdown Menu")
         notebook_menu.AppendCheckItem(ID_NotebookCustomButtons, "Show Custom Buttons In Tab Area")
         notebook_menu.AppendSeparator()
+        notebook_menu.Append(ID_NotebookMultiLine, "Add A Multi-Line Label Tab")
+        notebook_menu.AppendSeparator()
         notebook_menu.Append(ID_NotebookPreview, "Preview Of All Notebook Pages")
         
         perspectives_menu = wx.Menu()
@@ -1021,7 +1024,8 @@ class AuiFrame(wx.Frame):
         guides_menu = wx.Menu()
         guides_menu.AppendRadioItem(ID_StandardGuides, "Standard Docking Guides")
         guides_menu.AppendRadioItem(ID_AeroGuides, "Aero-Style Docking Guides")
-
+        guides_menu.AppendRadioItem(ID_WhidbeyGuides, "Whidbey-Style Docking Guides")
+        
         perspectives_menu.AppendMenu(wx.ID_ANY, "Frame Perspectives", self._perspectives_menu)
         perspectives_menu.AppendMenu(wx.ID_ANY, "AuiNotebook Perspectives", self._nb_perspectives_menu)
         perspectives_menu.AppendSeparator()
@@ -1206,7 +1210,7 @@ class AuiFrame(wx.Frame):
 
         self._mgr.AddPane(self.CreateTreeCtrl(), aui.AuiPaneInfo().Name("test8").Caption("Tree Pane").
                           Left().Layer(1).Position(1).CloseButton(True).MaximizeButton(True).
-                          MinimizeButton(True).MinimizeButton(True))
+                          MinimizeButton(True))
 
         self._mgr.AddPane(self.CreateSizeReportCtrl(), aui.AuiPaneInfo().
                           Name("test9").Caption("Min Size 200x100").
@@ -1327,6 +1331,7 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnCopyNBPerspectiveCode, id=ID_CopyNBPerspectiveCode)
         self.Bind(wx.EVT_MENU, self.OnGuides, id=ID_StandardGuides)
         self.Bind(wx.EVT_MENU, self.OnGuides, id=ID_AeroGuides)        
+        self.Bind(wx.EVT_MENU, self.OnGuides, id=ID_WhidbeyGuides)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_AllowFloating)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_TransparentHint)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_VenetianBlindsHint)
@@ -1381,7 +1386,8 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnTabAlignment, id=ID_NotebookAlignBottom)
         self.Bind(wx.EVT_MENU, self.OnCustomTabButtons, id=ID_NotebookCustomButtons)
         self.Bind(wx.EVT_MENU, self.OnPreview, id=ID_NotebookPreview)
-        
+        self.Bind(wx.EVT_MENU, self.OnAddMultiLine, id=ID_NotebookMultiLine)
+                
         self.Bind(wx.EVT_MENU, self.OnGradient, id=ID_NoGradient)
         self.Bind(wx.EVT_MENU, self.OnGradient, id=ID_VerticalGradient)
         self.Bind(wx.EVT_MENU, self.OnGradient, id=ID_HorizontalGradient)
@@ -1448,7 +1454,8 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_VetoTree)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_VetoText)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_StandardGuides)
-        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_AeroGuides)        
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_AeroGuides)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ID_WhidbeyGuides)        
 
         for ids in self._requestPanes:
             self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI, id=ids)
@@ -1945,8 +1952,11 @@ class AuiFrame(wx.Frame):
         elif evId == ID_AeroGuides:
             event.Check(flags & aui.AUI_MGR_AERO_DOCKING_GUIDES != 0)
 
+        elif evId == ID_WhidbeyGuides:
+            event.Check(flags & aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES != 0)
+
         elif evId == ID_StandardGuides:
-            event.Check(flags & aui.AUI_MGR_AERO_DOCKING_GUIDES == 0)
+            event.Check((flags & aui.AUI_MGR_AERO_DOCKING_GUIDES == 0) and (flags & aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES == 0))
             
         elif evId == ID_CustomPaneButtons:
             event.Check(self._custom_pane_buttons)
@@ -2121,12 +2131,18 @@ class AuiFrame(wx.Frame):
     def OnGuides(self, event):
 
         useAero = event.GetId() == ID_AeroGuides
+        useWhidbey = event.GetId() == ID_WhidbeyGuides
         flags = self._mgr.GetFlags()
         
         if useAero:
             flags ^= aui.AUI_MGR_AERO_DOCKING_GUIDES
+            flags &= ~aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES
+        elif useWhidbey:
+            flags ^= aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES
+            flags &= ~aui.AUI_MGR_AERO_DOCKING_GUIDES            
         else:
-            flags &= ~AUI_MGR_AERO_DOCKING_GUIDES
+            flags &= ~aui.AUI_MGR_AERO_DOCKING_GUIDES
+            flags &= ~aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES
 
         self._mgr.SetFlags(flags)            
             
@@ -2333,6 +2349,16 @@ class AuiFrame(wx.Frame):
         auibook.NotebookPreview()
         
 
+    def OnAddMultiLine(self, event):
+
+        auibook = self._mgr.GetPane("notebook_content").window
+
+        auibook.InsertPage(1, wx.TextCtrl(auibook, -1, "Some more text", wx.DefaultPosition, wx.DefaultSize,
+                                          wx.TE_MULTILINE|wx.NO_BORDER), "Multi-Line\nTab Labels", True)
+        
+        auibook.SetPageTextColour(1, wx.BLUE)
+
+        
     def OnFloatDock(self, event):
 
         paneLabel = event.pane.caption
@@ -2488,16 +2514,16 @@ class AuiFrame(wx.Frame):
         flex.AddGrowableRow(3)
         flex.AddGrowableCol(1)
         panel.SetSizer(flex)
-        ctrl.AddPage(panel, "wxPanel", False, page_bmp)
+        ctrl.AddPage(panel, "Disabled", False, page_bmp)
  
         ctrl.AddPage(wx.TextCtrl(ctrl, -1, "Some text", wx.DefaultPosition, wx.DefaultSize,
-                                 wx.TE_MULTILINE|wx.NO_BORDER), "wxTextCtrl 1", False, page_bmp)
+                                 wx.TE_MULTILINE|wx.NO_BORDER), "DClick Edit!", False, page_bmp)
 
         ctrl.AddPage(wx.TextCtrl(ctrl, -1, "Some more text", wx.DefaultPosition, wx.DefaultSize,
-                                 wx.TE_MULTILINE|wx.NO_BORDER), "wxTextCtrl 2")
+                                 wx.TE_MULTILINE|wx.NO_BORDER), "Blue Tab")
 
         ctrl.AddPage(wx.TextCtrl(ctrl, -1, "Some more text", wx.DefaultPosition, wx.DefaultSize,
-                                 wx.TE_MULTILINE|wx.NO_BORDER), "wxTextCtrl 3")
+                                 wx.TE_MULTILINE|wx.NO_BORDER), "A Control")
 
         ctrl.AddPage(wx.TextCtrl(ctrl, -1, "Some more text", wx.DefaultPosition, wx.DefaultSize,
                                  wx.TE_MULTILINE|wx.NO_BORDER), "wxTextCtrl 4")
@@ -2519,6 +2545,8 @@ class AuiFrame(wx.Frame):
 
         ctrl.SetPageTextColour(2, wx.RED)
         ctrl.SetPageTextColour(3, wx.BLUE)
+        ctrl.SetRenamable(2, True)
+        
         return ctrl
 
 
@@ -2645,7 +2673,7 @@ def GetIntroText():
     "<li>Patch to show the resize hint on mouse-down in aui: <a href='http://trac.wxwidgets.org/ticket/9612'>" \
     "http://trac.wxwidgets.org/ticket/9612</a></li> " \
     "<li>The Left/Right and Top/Bottom Docks over draw each other: <a href='http://trac.wxwidgets.org/ticket/3516'>" \
-    "<http://trac.wxwidgets.org/ticket/3516</a>/li>" \
+    "http://trac.wxwidgets.org/ticket/3516</a></li>" \
     "<li>MinSize() not honoured: <a href='http://trac.wxwidgets.org/ticket/3562'>" \
     "http://trac.wxwidgets.org/ticket/3562</a></li> " \
     "<li>Layout problem with wxAUI: <a href='http://trac.wxwidgets.org/ticket/3597'>" \
@@ -2674,6 +2702,12 @@ def GetIntroText():
     "http://trac.wxwidgets.org/ticket/9911</a></li>" \
     "<li>Serious layout bugs in wxAUI: <a href='http://trac.wxwidgets.org/ticket/10620'>" \
     "http://trac.wxwidgets.org/ticket/10620</a></li>" \
+    "<li>wAuiDefaultTabArt::Clone() should just use copy contructor: <a href='http://trac.wxwidgets.org/ticket/11388'>" \
+    "http://trac.wxwidgets.org/ticket/11388</a></li>" \
+    "<li>Drop down button for check tool on wxAuiToolbar: <a href='http://trac.wxwidgets.org/ticket/11139'>" \
+    "http://trac.wxwidgets.org/ticket/11139</a></li>" \
+    "<li>Rename a wxAuiNotebook tab with double-click: <a href='http://trac.wxwidgets.org/ticket/10847'>" \
+    "http://trac.wxwidgets.org/ticket/10847</a></li>" \
     "</ul>" \
     "<p>Plus the following features:" \
     "<p><ul>" \
@@ -2712,6 +2746,7 @@ def GetIntroText():
     "text rotated by 90 degrees then). This is similar to what <i>wxDockIt</i> did. To enable this feature on any " \
     "given pane, simply call <i>CaptionVisible(True, left=True)</i>;</li>" \
     "<li>New Aero-style docking guides: you can enable them by using the <i>AuiManager</i> style <tt>AUI_MGR_AERO_DOCKING_GUIDES</tt>;</li>" \
+    "<li>New Whidbey-style docking guides: you can enable them by using the <i>AuiManager</i> style <tt>AUI_MGR_WHIDBEY_DOCKING_GUIDES</tt>;</li>" \
     "<li>A slide-in/slide-out preview of minimized panes can be seen by enabling the <i>AuiManager</i> style" \
     "<tt>AUI_MGR_PREVIEW_MINIMIZED_PANES</tt> and by hovering with the mouse on the minimized pane toolbar tool.</li>" \
     "</ul><p>" \
@@ -2747,7 +2782,9 @@ def GetIntroText():
     "<li>wxPython controls can now be added inside page tabs by calling <i>AddControlToPage</i>, and they can be " \
     "removed by calling <i>RemoveControlFromPage</i>;</li>" \
     "<li>Possibility to preview all the pages in a <i>AuiNotebook</i> (as thumbnails) by using the <i>NotebookPreview</i> " \
-    "method of <i>AuiNotebook</i></li>." \
+    "method of <i>AuiNotebook</i></li>;" \
+    "<li>Tab labels can be edited by calling the <i>SetRenamable</i> method on a <i>AuiNotebook</i> page;</li>" \
+    "<li>Support for multi-lines tab labels in <i>AuiNotebook</i>.</li>" \
     "</ul><p>" \
     "<li><b>AuiToolBar:</b></li>" \
     "<ul>" \
@@ -2777,6 +2814,73 @@ def GetIntroText():
     return text
 
 
+#----------------------------------------------------------------------
+
+class ParentFrame(aui.AuiMDIParentFrame):
+    
+    def __init__(self, parent):
+
+        aui.AuiMDIParentFrame.__init__(self, parent, -1, title="AGW AuiMDIParentFrame",
+                                       size=(640,480), style=wx.DEFAULT_FRAME_STYLE)
+        self.count = 0
+
+        # set frame icon
+        self.SetIcon(images.Mondrian.GetIcon())
+        
+        mb = self.MakeMenuBar()
+        self.SetMenuBar(mb)
+        self.CreateStatusBar()
+        
+
+    def MakeMenuBar(self):
+
+        mb = wx.MenuBar()
+        menu = wx.Menu()
+        item = menu.Append(-1, "New child window\tCtrl-N")
+        self.Bind(wx.EVT_MENU, self.OnNewChild, item)
+        item = menu.Append(-1, "Close parent")
+        self.Bind(wx.EVT_MENU, self.OnDoClose, item)
+        mb.Append(menu, "&File")
+        return mb
+        
+
+    def OnNewChild(self, evt):
+
+        self.count += 1
+        child = ChildFrame(self, self.count)
+        child.Show()
+
+
+    def OnDoClose(self, evt):
+        self.Close()
+        
+
+#----------------------------------------------------------------------
+
+class ChildFrame(aui.AuiMDIChildFrame):
+
+    def __init__(self, parent, count):
+
+        aui.AuiMDIChildFrame.__init__(self, parent, -1, title="Child: %d" % count)
+        mb = parent.MakeMenuBar()
+        menu = wx.Menu()
+        item = menu.Append(-1, "This is child %d's menu" % count)
+        mb.Append(menu, "&Child")
+        self.SetMenuBar(mb)
+        
+        p = wx.Panel(self)
+        wx.StaticText(p, -1, "This is child %d" % count, (10,10))
+        p.SetBackgroundColour('light blue')
+
+        sizer = wx.BoxSizer()
+        sizer.Add(p, 1, wx.EXPAND)
+        self.SetSizer(sizer)
+        
+        wx.CallAfter(self.Layout)
+
+
+#---------------------------------------------------------------------------
+        
 def MainAUI(parent, log):
 
     frame = AuiFrame(parent, -1, "AUI Test Frame", size=(800, 600), log=log)
@@ -2785,6 +2889,14 @@ def MainAUI(parent, log):
 
 
 #---------------------------------------------------------------------------
+    
+def MDIAUI(parent, log):
+
+    frame = ParentFrame(parent)
+    frame.CenterOnScreen()
+    frame.Show()
+    
+#---------------------------------------------------------------------------
 
 
 class TestPanel(wx.Panel):
@@ -2792,12 +2904,19 @@ class TestPanel(wx.Panel):
         self.log = log
         wx.Panel.__init__(self, parent, -1)
 
-        b = wx.Button(self, -1, " Test wxPython-AUI ", (50,50))
-        self.Bind(wx.EVT_BUTTON, self.OnButton, b)
+        b1 = wx.Button(self, -1, " AGW AUI Docking Library ", (50,50))
+        self.Bind(wx.EVT_BUTTON, self.OnButton1, b1)
+
+##        b2 = wx.Button(self, -1, " AGW AuiMDIs ", (50, 80))
+##        self.Bind(wx.EVT_BUTTON, self.OnButton2, b2)
 
 
-    def OnButton(self, event):
+    def OnButton1(self, event):
         self.win = MainAUI(self, self.log)
+
+
+    def OnButton2(self, event):
+        self.win = MDIAUI(self, self.log)
 
 #----------------------------------------------------------------------
 
