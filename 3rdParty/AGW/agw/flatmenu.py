@@ -203,7 +203,7 @@ import wx.aui as AUI
 AuiPaneInfo = AUI.AuiPaneInfo
 
 try:
-    import wx.lib.agw.aui as PyAUI
+    import aui as PyAUI
     PyAuiPaneInfo = PyAUI.AuiPaneInfo
 except ImportError:
     pass
