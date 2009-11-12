@@ -2,7 +2,7 @@
 # FLATMENU wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 23 Sep 2009, 08.00 GMT
+# Latest Revision: 12 Nov 2009, 16.00 GMT
 #
 #
 # TODO List
@@ -129,8 +129,8 @@ License And Version
 
 FlatMenu is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 23 Sep 2009, 08.00 GMT
-Version 0.9.3
+Latest Revision: Andrea Gavana @ 12 Nov 2009, 16.00 GMT
+Version 0.9.4
 
 """
 
@@ -1339,6 +1339,12 @@ class FlatMenuBar(wx.Panel):
             return None
         
         return self._items[menuIdx].GetMenu()
+
+
+    def GetMenuCount(self):
+        """ Returns the number of menus in the menubar. """
+
+        return len(self._items)        
 
 
     def Insert(self, pos, menu, title):
@@ -3318,6 +3324,12 @@ class FlatMenu(FlatMenuBase):
 
         return menuItem
 
+
+    def GetMenuItems(self):
+        """ Returns the list of menu items in the menu. """
+
+        return self._itemsArr
+    
 
     def GetMenuItemWidth(self, menuItem):
         """ Returns the width of a particular item. """
