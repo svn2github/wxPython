@@ -104,6 +104,8 @@ Event Name                             Description
 ``EVT_FLATNOTEBOOK_PAGE_CLOSED``       Notify client objects when a page in `FlatNotebook` has been closed.
 ``EVT_FLATNOTEBOOK_PAGE_CLOSING``      Notify client objects when a page in `FlatNotebook` is closing.
 ``EVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU`` Notify client objects when a pop-up menu should appear next to a tab.
+``EVT_FLATNOTEBOOK_PAGE_DROPPED``         Notify client objects when a tab has been dropped and re-arranged (on the *same* notebook)
+``EVT_FLATNOTEBOOK_PAGE_DROPPED_FOREIGN`` Notify client objects when a tab has been dropped and re-arranged (from a foreign notebook)
 ====================================== ==================================================
 
 
@@ -262,12 +264,15 @@ FNB_DEFAULT_STYLE = FNB_MOUSE_MIDDLE_CLOSES_TABS | FNB_HIDE_ON_SINGLE_TAB
 # In Your Event Handler;
 # wxEVT_FLATNOTEBOOK_PAGE_CLOSED: Event Fired When A Page Is Closed.
 # wxEVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU: Event Fired When A Menu Pops-up In A Tab.
+# wxEVT_FLATNOTEBOOK_PAGE_DROPPED: Event Fired When A Tab Is Dropped On The Same Notebook
 
 wxEVT_FLATNOTEBOOK_PAGE_CHANGED = wx.wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED
 wxEVT_FLATNOTEBOOK_PAGE_CHANGING = wx.wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGING
 wxEVT_FLATNOTEBOOK_PAGE_CLOSING = wx.NewEventType()
 wxEVT_FLATNOTEBOOK_PAGE_CLOSED = wx.NewEventType()
 wxEVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU = wx.NewEventType()
+wxEVT_FLATNOTEBOOK_PAGE_DROPPED = wx.NewEventType()
+wxEVT_FLATNOTEBOOK_PAGE_DROPPED_FOREIGN = wx.NewEventType()
 
 #-----------------------------------#
 #        FlatNotebookEvent
@@ -283,7 +288,10 @@ EVT_FLATNOTEBOOK_PAGE_CLOSED = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_CLOSED, 
 """ Notify client objects when a page in `FlatNotebook` has been closed."""
 EVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU, 1)
 """ Notify client objects when a pop-up menu should appear next to a tab."""
-
+EVT_FLATNOTEBOOK_PAGE_DROPPED = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_DROPPED, 1)
+""" Notify client objects when a tab has been dropped and re-arranged (on the *same* notebook)."""
+EVT_FLATNOTEBOOK_PAGE_DROPPED_FOREIGN = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_DROPPED_FOREIGN, 1)
+""" Notify client objects when a tab has been dropped and re-arranged (from a foreign notebook)."""
 
 # Some icons in XPM format
 
@@ -1113,6 +1121,38 @@ class FlatNotebookEvent(wx.PyCommandEvent):
         
         return self._oldselection
 
+
+# ---------------------------------------------------------------------------- #
+# Class TabNavigatorWindow
+# ---------------------------------------------------------------------------- #
+
+class FlatNotebookDragEvent(FlatNotebookEvent):
+    """
+    This event will be sent when a EVT_FLATNOTEBOOK_PAGE_DRAGGED_FOREIGN is
+    mapped in the parent.
+    """
+
+    def __init__(self, eventType, id=1, nSel=-1, nOldSel=-1):
+        """ Default class constructor. """
+
+        wx.PyCommandEvent.__init__(self, eventType, id)
+        self._eventType = eventType
+
+        self.notify = wx.NotifyEvent(eventType, id)
+        self._oldnotebook = -1
+        self._newnotebook = -1
+
+    def GetNotebook(self):
+        return self._newnotebook
+
+    def GetOldNotebook(self):
+        return self._oldnotebook
+
+    def SetNotebook(self, notebook):
+        self._newnotebook = notebook
+
+    def SetOldNotebook(self, old):
+        self._oldnotebook = old
 
 # ---------------------------------------------------------------------------- #
 # Class TabNavigatorWindow
@@ -4633,6 +4673,12 @@ class PageContainer(wx.Panel):
                 if where == FNB_TAB:
                     self.MoveTabPage(nTabPage, nIndex)
                            
+                event = FlatNotebookEvent(wxEVT_FLATNOTEBOOK_PAGE_DROPPED, self.GetParent().GetId())
+                event.SetSelection(nIndex)
+                event.SetOldSelection(nTabPage)
+                event.SetEventObject(self.GetParent())
+                self.GetParent().GetEventHandler().ProcessEvent(event)
+
         elif self.GetParent().GetWindowStyleFlag() & FNB_ALLOW_FOREIGN_DND:
         
             if wx.Platform in ["__WXMSW__", "__WXGTK__", "__WXMAC__"]:
@@ -4663,6 +4709,14 @@ class PageContainer(wx.Panel):
                             newNotebook.SetImageList(newImageList)
                                 
                         newNotebook.InsertPage(nIndex, window, caption, True, imageindex)
+
+                    event = FlatNotebookDragEvent(wxEVT_FLATNOTEBOOK_PAGE_DROPPED_FOREIGN, self.GetParent().GetId())
+                    event.SetSelection(nIndex)
+                    event.SetOldSelection(nTabPage)
+                    event.SetNotebook(newNotebook)
+                    event.SetOldNotebook(oldNotebook)
+                    event.SetEventObject(self.GetParent())
+                    self.GetParent().GetEventHandler().ProcessEvent(event)
 
         self._isdragging = False
         
