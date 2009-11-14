@@ -58,7 +58,7 @@ MENU_SET_TAB_AREA_COLOR = wx.NewId()
 MENU_SELECT_NONACTIVE_TEXT_COLOR = wx.NewId()
 MENU_GRADIENT_BACKGROUND = wx.NewId()
 MENU_COLORFUL_TABS = wx.NewId()
-MENU_SMART_TABS	= wx.NewId()
+MENU_SMART_TABS = wx.NewId()
 MENU_USE_DROP_ARROW_BUTTON = wx.NewId()
 MENU_ALLOW_FOREIGN_DND = wx.NewId()
 
@@ -96,7 +96,9 @@ class FlatNotebookDemo(wx.Frame):
         self.Bind(fnb.EVT_FLATNOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
         self.Bind(fnb.EVT_FLATNOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         self.Bind(fnb.EVT_FLATNOTEBOOK_PAGE_CLOSING, self.OnPageClosing)
-
+        self.Bind(fnb.EVT_FLATNOTEBOOK_PAGE_DROPPED_FOREIGN, self.OnForeignDrop)
+        self.Bind(fnb.EVT_FLATNOTEBOOK_PAGE_DROPPED, self.OnDrop)
+        
         self.Bind(wx.EVT_UPDATE_UI, self.OnDropDownArrowUI, id=MENU_USE_DROP_ARROW_BUTTON)
         self.Bind(wx.EVT_UPDATE_UI, self.OnHideNavigationButtonsUI, id=MENU_HIDE_NAV_BUTTONS)
         self.Bind(wx.EVT_UPDATE_UI, self.OnAllowForeignDndUI, id=MENU_ALLOW_FOREIGN_DND)
@@ -359,7 +361,7 @@ class FlatNotebookDemo(wx.Frame):
         text = wx.TextCtrl(self.secondBook, -1, "Second Book Page 2\n", style=wx.TE_MULTILINE|wx.TE_READONLY)
         self.secondBook.AddPage(text,  "Second Book Page 2")
 
-        self.Thaw()	
+        self.Thaw() 
 
         mainSizer.Layout()
         self.SendSizeEvent()
@@ -450,6 +452,19 @@ class FlatNotebookDemo(wx.Frame):
     def OnShowImages(self, event):
 
         self._bShowImages = event.IsChecked()
+
+
+    def OnForeignDrop(self, event):
+
+        self.log.write('Foreign drop received\n')
+        self.log.write('new NB: %s  ||  old NB: %s\n' % (event.GetNotebook(), event.GetOldNotebook()))
+        self.log.write('new tab: %s  ||  old tab: %s\n' % (event.GetSelection(), event.GetOldSelection()))
+        
+
+    def OnDrop(self, event):
+
+        self.log.write('Drop received - same notebook\n')
+        self.log.write('new: %s old: %s\n' % (event.GetSelection(), event.GetOldSelection()))
 
 
     def OnFF2Style(self, event):
@@ -589,7 +604,7 @@ class FlatNotebookDemo(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
 
             val = dlg.GetValue()
-            self.book.EnableTab(int(val))	
+            self.book.EnableTab(int(val))   
 
 
     def OnDisableTab(self, event):
@@ -599,7 +614,7 @@ class FlatNotebookDemo(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
 
             val = dlg.GetValue()
-            self.book.EnableTab(int(val), False)	
+            self.book.EnableTab(int(val), False)    
 
 
     def OnEnableDrag(self, event):
@@ -685,7 +700,7 @@ class FlatNotebookDemo(wx.Frame):
             style |= fnb.FNB_X_ON_TAB
         else:
             if style & fnb.FNB_X_ON_TAB:
-                style ^= fnb.FNB_X_ON_TAB		
+                style ^= fnb.FNB_X_ON_TAB       
 
         self.book.SetWindowStyleFlag(style)
 
@@ -696,7 +711,7 @@ class FlatNotebookDemo(wx.Frame):
         if event.IsChecked():       
             style |= fnb.FNB_DCLICK_CLOSES_TABS
         else:
-            style &= ~(fnb.FNB_DCLICK_CLOSES_TABS)		
+            style &= ~(fnb.FNB_DCLICK_CLOSES_TABS)      
 
         self.book.SetWindowStyleFlag(style)
 
