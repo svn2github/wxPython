@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 03 Oct 2009, 21.00 GMT
+# Latest Revision: 16 Nov 2009, 18.00 GMT
 #
 #
 # TODO List
@@ -220,7 +220,7 @@ License And Version
 
 HyperTreeList is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 03 Oct 2009, 21.00 GMT
+Latest Revision: Andrea Gavana @ 16 Nov 2009, 18.00 GMT
 Version 1.0
 
 """
@@ -2010,8 +2010,8 @@ class TreeListMainWindow(CustomTreeCtrl):
             if attr and attr.HasTextColour():
                 colText = attr.GetTextColour()
             
-            if self._vistaselection:
-                colText = wx.BLACK
+        if self._vistaselection:
+            colText = colTextHilight = wx.BLACK
                 
         total_w = self._owner.GetHeaderWindow().GetWidth()
         total_h = self.GetLineHeight(item)
