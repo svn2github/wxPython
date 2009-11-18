@@ -58,6 +58,9 @@ an asterisk were already present in wx.lib before:
   C++ code of wx.CollapsiblePane, with customizable buttons;
 - PyProgress: it is similar to wx.ProgressDialog in indeterminated mode, but
   with a different gauge appearance and a different spinning behavior;
+- RibbonBar: the RibbonBar library is a set of classes for writing a ribbon
+  user interface, similar to the user interface present in recent versions
+  of Microsoft Office;
 - RulerCtrl: it implements a ruler window that can be placed on top, bottom,
   left or right to any wxPython widget. It is somewhat similar to the rulers
   you can find in text editors software;
@@ -97,10 +100,10 @@ You can contact me at:
 andrea.gavana@gmail.com
 gavana@kpo.kz
 
-AGW version: 0.5.0
-Last updated: 05 November 2009, 12.00 GMT
+AGW version: 0.6.0
+Last updated: 18 November 2009, 22.00 GMT
 
 """
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"

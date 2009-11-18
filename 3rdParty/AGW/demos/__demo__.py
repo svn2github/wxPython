@@ -13,12 +13,12 @@ this module returns the following information:
                        
 These meta data are merged into the wxPython demo tree at startup.
 
-Last updated: Andrea Gavana @ 05 November 2009, 12.00 GMT.
+Last updated: Andrea Gavana @ 18 November 2009, 22.00 GMT.
 Version 0.5.0.
 
 """
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 
 
@@ -81,10 +81,11 @@ def GetRecentAdditions():
                            'GradientButton', 'HyperLinkCtrl', 'HyperTreeList',
                            'KnobCtrl', 'LabelBook', 'MultiDirDialog',
                            'PeakMeter', 'PieCtrl', 'PyCollapsiblePane', 'PyProgress',
-                           'RulerCtrl', 'ShapedButton', 'SpeedMeter', 'SuperToolTip',
-                           'ThumbnailCtrl', 'ToasterBox', 'UltimateListCtrl']
+                           'RibbonBar', 'RulerCtrl', 'ShapedButton', 'SpeedMeter',
+                           'SuperToolTip', 'ThumbnailCtrl', 'ToasterBox',
+                           'UltimateListCtrl']
     else:
-        recentAdditions = ['AUI', 'UltimateListCtrl']
+        recentAdditions = ['AUI', 'RibbonBar', 'UltimateListCtrl']
 
     # Return the Recent Additions for AGW    
     return recentAdditions
@@ -107,8 +108,9 @@ def GetDemos():
                 'GradientButton', 'HyperLinkCtrl', 'HyperTreeList',
                 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
                 'PeakMeter', 'PieCtrl', 'PyCollapsiblePane', 'PyProgress',
-                'RulerCtrl', 'ShapedButton', 'SpeedMeter', 'SuperToolTip',
-                'ThumbnailCtrl', 'ToasterBox', 'UltimateListCtrl']
+                'RibbonBar', 'RulerCtrl', 'ShapedButton', 'SpeedMeter',
+                'SuperToolTip', 'ThumbnailCtrl', 'ToasterBox',
+                'UltimateListCtrl']
 
     return AGWTreeItem, AGWDemos
 
