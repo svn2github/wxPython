@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2005
-# Latest Revision: 31 Aug 2009, 12.00 GMT
+# Latest Revision: 18 Nov 2009, 22.00 GMT
 #
 #
 # TODO List/Caveats
@@ -133,7 +133,7 @@ License And Version
 
 FloatSpin control is freeware and distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 31 Aug 2009, 12.00 GMT
+Latest revision: Andrea Gavana @ 18 Nov 2009, 22.00 GMT
 Version 0.7
 
 
@@ -375,7 +375,7 @@ class FloatSpin(wx.PyControl):
             self.Bind(wx.EVT_SPIN_DOWN, self.OnSpinDown)
             self._spinbutton.Bind(wx.EVT_LEFT_DOWN, self.OnSpinMouseDown)
             
-        self.Bind(wx.EVT_TEXT_ENTER, self.OnTextEnter)
+        self._textctrl.Bind(wx.EVT_TEXT_ENTER, self.OnTextEnter)
         self.Bind(wx.EVT_SET_FOCUS, self.OnFocus)
         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
         self.Bind(wx.EVT_MOUSEWHEEL, self.OnMouseWheel)
