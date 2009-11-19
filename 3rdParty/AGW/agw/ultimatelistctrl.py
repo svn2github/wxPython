@@ -96,8 +96,8 @@ Window Styles             Hex Value  Description
 ``ULC_SINGLE_SEL``            0x2000 Single selection (default is multiple).
 ``ULC_SORT_ASCENDING``        0x4000 Sort in ascending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
 ``ULC_SORT_DESCENDING``       0x8000 Sort in descending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
-``ULC_TILE``                 0x10000 each item appears as a full-sized icon with a label of one or more lines beside it (partially implemented).
-======================== =========== ===================================================================================================================
+``ULC_TILE``                 0x10000 Each item appears as a full-sized icon with a label of one or more lines beside it (partially implemented).
+======================== =========== ===================================================================================================
 
 
 Window Extra Styles
@@ -157,17 +157,17 @@ Event Name                               Description
 ``EVT_LIST_ITEM_ACTIVATED``              The item has been activated (``ENTER`` or double click).
 ``EVT_LIST_ITEM_FOCUSED``                The currently focused item has changed.
 ``EVT_LIST_CACHE_HINT``                  Prepare cache for a virtual list control.
-``EVT_LIST_ITEM_CHECKING``               an item/subitem is being checked.
-``EVT_LIST_ITEM_CHECKED``                an item/subitem has been checked.
-``EVT_LIST_COL_CHECKING``                a column header is being checked.
-``EVT_LIST_COL_CHECKED``                 a column header has being checked.
-``EVT_LIST_FOOTER_CHECKING``             a column footer is being checked.
-``EVT_LIST_FOOTER_CHECKED``              a column footer has being checked.
-``EVT_LIST_ITEM_HYPERLINK``              an hyperlink item has been clicked.
-``EVT_LIST_FOOTER_CLICK``                the user left-clicked on a column footer.
-``EVT_LIST_FOOTER_RIGHT_CLICK``          the user right-clicked on a column footer.
-``EVT_LIST_ITEM_LEFT_CLICK``             send a left-click event after an item is selected.
-``EVT_LIST_END_DRAG``                    notify an end-drag operation.
+``EVT_LIST_ITEM_CHECKING``               An item/subitem is being checked.
+``EVT_LIST_ITEM_CHECKED``                An item/subitem has been checked.
+``EVT_LIST_COL_CHECKING``                A column header is being checked.
+``EVT_LIST_COL_CHECKED``                 A column header has being checked.
+``EVT_LIST_FOOTER_CHECKING``             A column footer is being checked.
+``EVT_LIST_FOOTER_CHECKED``              A column footer has being checked.
+``EVT_LIST_ITEM_HYPERLINK``              An hyperlink item has been clicked.
+``EVT_LIST_FOOTER_CLICK``                The user left-clicked on a column footer.
+``EVT_LIST_FOOTER_RIGHT_CLICK``          The user right-clicked on a column footer.
+``EVT_LIST_ITEM_LEFT_CLICK``             Send a left-click event after an item is selected.
+``EVT_LIST_END_DRAG``                    Notify an end-drag operation.
 ======================================== ====================================================================================================
 
 
