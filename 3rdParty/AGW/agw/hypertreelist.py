@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 16 Nov 2009, 18.00 GMT
+# Latest Revision: 19 Nov 2009, 10.00 GMT
 #
 #
 # TODO List
@@ -220,7 +220,7 @@ License And Version
 
 HyperTreeList is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 16 Nov 2009, 18.00 GMT
+Latest Revision: Andrea Gavana @ 19 Nov 2009, 10.00 GMT
 Version 1.0
 
 """
@@ -234,7 +234,7 @@ from customtreectrl import TreeRenameTimer as TreeListRenameTimer
 from customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHECKED
 
 # Version Info
-__version__ = "0.9"
+__version__ = "1.0"
 
 # --------------------------------------------------------------------------
 # Constants

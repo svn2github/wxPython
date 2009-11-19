@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 07 Oct 2009, 10.00 GMT
+# Latest Revision: 19 Nov 2009, 10.00 GMT
 #
 #
 # TODO List
@@ -45,7 +45,7 @@ In addition to the standard `wx.ListCtrl` behaviour this class supports:
 
 
 Appearance
-^^^^^^^^^^
+==========
 
 * Multiple images for items/subitems;
 * Font, colour, background, custom renderers and formatting for items and subitems;
@@ -72,73 +72,103 @@ Appearance
   Vista selection style.
 
 
-Styles
-^^^^^^
+Window Styles
+=============
 
-* A ``ULC_TILE`` style, in which each item appears as a full-sized icon with a label of
-  one or more lines beside it (partially implemented);
+This class supports the following window styles:
+
+======================== =========== ====================================================================================================
+Window Styles             Hex Value  Description
+======================== =========== ====================================================================================================
+``ULC_VRULES``                   0x1 Draws light vertical rules between rows in report mode.
+``ULC_HRULES``                   0x2 Draws light horizontal rules between rows in report mode.
+``ULC_ICON``                     0x4 Large icon view, with optional labels.
+``ULC_SMALL_ICON``               0x8 Small icon view, with optional labels.
+``ULC_LIST``                    0x10 Multicolumn list view, with optional small icons. Columns are computed automatically, i.e. you don't set columns as in ``ULC_REPORT``. In other words, the list wraps, unlike a `wx.ListBox`.
+``ULC_REPORT``                  0x20 Single or multicolumn report view, with optional header.
+``ULC_ALIGN_TOP``               0x40 Icons align to the top. Win32 default, Win32 only.
+``ULC_ALIGN_LEFT``              0x80 Icons align to the left.
+``ULC_AUTOARRANGE``            0x100 Icons arrange themselves. Win32 only.
+``ULC_VIRTUAL``                0x200 The application provides items text on demand. May only be used with ``ULC_REPORT``.
+``ULC_EDIT_LABELS``            0x400 Labels are editable: the application will be notified when editing starts.
+``ULC_NO_HEADER``              0x800 No header in report mode.
+``ULC_NO_SORT_HEADER``        0x1000 No Docs.
+``ULC_SINGLE_SEL``            0x2000 Single selection (default is multiple).
+``ULC_SORT_ASCENDING``        0x4000 Sort in ascending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+``ULC_SORT_DESCENDING``       0x8000 Sort in descending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+``ULC_TILE``                 0x10000 each item appears as a full-sized icon with a label of one or more lines beside it (partially implemented).
+======================== =========== ===================================================================================================================
 
 
-Extra Styles
-^^^^^^^^^^^^
+Window Extra Styles
+===================
 
-* ``ULC_NO_HIGHLIGHT``: No highlight when an item is selected;
-* ``ULC_STICKY_HIGHLIGHT``: Items are selected by simply hovering on them, with no need to
-  click on them;
-* ``ULC_STICKY_NOSELEVENT``: Don't send a selection event when using ``ULC_STICKY_HIGHLIGHT``
-  extra style;
-* ``ULC_SEND_LEFTCLICK``: Send a left click event when an item is selected;
-* ``ULC_AUTO_CHECK_CHILD``: When a column header has a checkbox associated, auto-check all
-  the subitems in that column;
-* ``ULC_AUTO_TOGGLE_CHILD``: When a column header has a checkbox associated, toggle all
-  the subitems in that column;
-* ``ULC_SHOW_TOOLTIPS``: Show tooltips for ellipsized items/subitems (text too long to be
-  shown in the available space) containing the full item/subitem text;
-* ``ULC_HOT_TRACKING``: Enable hot tracking of items on mouse motion;
-* ``ULC_BORDER_SELECT``: Changes border color whan an item is selected, instead of
-  highlighting the item;
-* ``ULC_TRACK_SELECT``: Enables hot-track selection in a list control. Hot track selection
-  means that an item is automatically selected when the cursor remains over the item for
-  a certain period of time. The delay is retrieved on Windows using the `win32api` call
-  `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms
-  on other platforms. This extra style applies to all views of `UltimateListCtrl`;
-* `ULC_HEADER_IN_ALL_VIEWS`: Show column headers in all view modes;
-* `ULC_NO_FULL_ROW_SELECT`: When an item is selected, the only the item in the first column
-  is highlighted;
-* `ULC_FOOTER`: Show a footer too (only when header is present);
+This class supports the following window extra styles:
+
+=============================== =========== ====================================================================================================
+Window Extra Styles              Hex Value  Description
+=============================== =========== ====================================================================================================
+``ULC_NO_HIGHLIGHT``                 0x0001 No highlight when an item is selected.
+``ULC_STICKY_HIGHLIGHT``             0x0002 Items are selected by simply hovering on them, with no need to click on them.
+``ULC_STICKY_NOSELEVENT``            0x0004 Don't send a selection event when using ``ULC_STICKY_HIGHLIGHT`` extra style.
+``ULC_SEND_LEFTCLICK``               0x0008 Send a left click event when an item is selected.
+``ULC_HAS_VARIABLE_ROW_HEIGHT``      0x0010 The list has variable row heights.
+``ULC_AUTO_CHECK_CHILD``             0x0020 When a column header has a checkbox associated, auto-check all the subitems in that column.
+``ULC_AUTO_TOGGLE_CHILD``            0x0040 When a column header has a checkbox associated, toggle all the subitems in that column.
+``ULC_AUTO_CHECK_PARENT``            0x0080 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
+``ULC_SHOW_TOOLTIPS``                0x0100 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
+``ULC_HOT_TRACKING``                 0x0200 Enable hot tracking of items on mouse motion.
+``ULC_BORDER_SELECT``                0x0400 Changes border color whan an item is selected, instead of highlighting the item.
+``ULC_TRACK_SELECT``                 0x0800 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This extra style applies to all views of `UltimateListCtrl`.
+``ULC_HEADER_IN_ALL_VIEWS``          0x1000 Show column headers in all view modes.
+``ULC_NO_FULL_ROW_SELECT``           0x2000 When an item is selected, the only the item in the first column is highlighted.
+``ULC_FOOTER``                       0x4000 Show a footer too (only when header is present).
+=============================== =========== ====================================================================================================
 
 
 And a lot more. Check the demo for an almost complete review of the functionalities.
 
 
-Events
-======
+Events Processing
+=================
 
-All the events supported by `wx.ListCtrl` are also available in `UltimateListCtrl`.
+This class processes the following events:
 
-Plus, `UltimateListCtrl` supports the events related to the checkbutton-type items, subitems
-and column headers/footers:
-
-  - ``EVT_LIST_ITEM_CHECKING``: an item/subitem is being checked;
-  - ``EVT_LIST_ITEM_CHECKED``: an item/subitem has been checked;
-  - ``EVT_LIST_COL_CHECKING``: a column header is being checked;
-  - ``EVT_LIST_COL_CHECKED``: a column header has being checked;
-  - ``EVT_LIST_FOOTER_CHECKING``: a column footer is being checked;
-  - ``EVT_LIST_FOOTER_CHECKED``: a column footer has being checked.
-
-And to hyperlink-type items:
-
-  - ``EVT_LIST_ITEM_HYPERLINK``: an hyperlink item has been clicked.
-
-And footer-related events:
-
-  - ``EVT_LIST_FOOTER_CLICK``: the user left-clicked on a column footer;
-  - ``EVT_LIST_FOOTER_RIGHT_CLICK``: the user right-clicked on a column footer.
-
-Plus the following specialized events:
-
-  - ``EVT_LIST_ITEM_LEFT_CLICK``: send a left-click event after an item is selected;
-  - ``EVT_LIST_END_DRAG``: notify an end-drag operation.
+======================================== ====================================================================================================
+Event Name                               Description
+======================================== ====================================================================================================
+``EVT_LIST_BEGIN_DRAG``                  Begin dragging with the left mouse button.
+``EVT_LIST_BEGIN_RDRAG``                 Begin dragging with the right mouse button.
+``EVT_LIST_BEGIN_LABEL_EDIT``            Begin editing a label. This can be prevented by calling `Veto()`.
+``EVT_LIST_END_LABEL_EDIT``              Finish editing a label. This can be prevented by calling `Veto()`.
+``EVT_LIST_DELETE_ITEM``                 An item was deleted.
+``EVT_LIST_DELETE_ALL_ITEMS``            All items were deleted.
+``EVT_LIST_KEY_DOWN``                    A key has been pressed.
+``EVT_LIST_INSERT_ITEM``                 An item has been inserted.
+``EVT_LIST_COL_CLICK``                   A column (`m_col`) has been left-clicked.
+``EVT_LIST_COL_RIGHT_CLICK``             A column (`m_col`) has been right-clicked.
+``EVT_LIST_COL_BEGIN_DRAG``              The user started resizing a column - can be vetoed.
+``EVT_LIST_COL_END_DRAG``                The user finished resizing a column.
+``EVT_LIST_COL_DRAGGING``                The divider between columns is being dragged.
+``EVT_LIST_ITEM_SELECTED``               The item has been selected.
+``EVT_LIST_ITEM_DESELECTED``             The item has been deselected.
+``EVT_LIST_ITEM_RIGHT_CLICK``            The right mouse button has been clicked on an item.
+``EVT_LIST_ITEM_MIDDLE_CLICK``           The middle mouse button has been clicked on an item.
+``EVT_LIST_ITEM_ACTIVATED``              The item has been activated (``ENTER`` or double click).
+``EVT_LIST_ITEM_FOCUSED``                The currently focused item has changed.
+``EVT_LIST_CACHE_HINT``                  Prepare cache for a virtual list control.
+``EVT_LIST_ITEM_CHECKING``               an item/subitem is being checked.
+``EVT_LIST_ITEM_CHECKED``                an item/subitem has been checked.
+``EVT_LIST_COL_CHECKING``                a column header is being checked.
+``EVT_LIST_COL_CHECKED``                 a column header has being checked.
+``EVT_LIST_FOOTER_CHECKING``             a column footer is being checked.
+``EVT_LIST_FOOTER_CHECKED``              a column footer has being checked.
+``EVT_LIST_ITEM_HYPERLINK``              an hyperlink item has been clicked.
+``EVT_LIST_FOOTER_CLICK``                the user left-clicked on a column footer.
+``EVT_LIST_FOOTER_RIGHT_CLICK``          the user right-clicked on a column footer.
+``EVT_LIST_ITEM_LEFT_CLICK``             send a left-click event after an item is selected.
+``EVT_LIST_END_DRAG``                    notify an end-drag operation.
+======================================== ====================================================================================================
 
 
 Supported Platforms
@@ -148,8 +178,14 @@ Supported Platforms
   * Windows (Windows XP);
 
 
-Latest Revision: Andrea Gavana @ 07 Oct 2009, 10.00 GMT
-Version 0.3
+License And Version
+===================
+
+UltimateListCtrl is freeware and distributed under the wxPython license.
+
+Latest Revision: Andrea Gavana @ 19 Nov 2009, 10.00 GMT
+Version 0.4
+
 """
 
 import wx
@@ -162,7 +198,7 @@ import cStringIO
 from wx.lib.expando import ExpandoTextCtrl
 
 # Version Info
-__version__ = "0.3"
+__version__ = "0.4"
 
 
 # ----------------------------------------------------------------------------

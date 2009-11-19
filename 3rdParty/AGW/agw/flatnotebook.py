@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 05 Nov 2009, 12.00 GMT
+# Latest Revision: 19 Nov 2009, 10.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -96,17 +96,17 @@ Events Processing
 
 This class processes the following events:
 
-====================================== ==================================================
-Event Name                             Description
-====================================== ==================================================
-``EVT_FLATNOTEBOOK_PAGE_CHANGED``      Notify client objects when the active page in `FlatNotebook` has changed.
-``EVT_FLATNOTEBOOK_PAGE_CHANGING``     Notify client objects when the active page in `FlatNotebook` is about to change.
-``EVT_FLATNOTEBOOK_PAGE_CLOSED``       Notify client objects when a page in `FlatNotebook` has been closed.
-``EVT_FLATNOTEBOOK_PAGE_CLOSING``      Notify client objects when a page in `FlatNotebook` is closing.
-``EVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU`` Notify client objects when a pop-up menu should appear next to a tab.
+========================================= ==================================================
+Event Name                                Description
+========================================= ==================================================
+``EVT_FLATNOTEBOOK_PAGE_CHANGED``         Notify client objects when the active page in `FlatNotebook` has changed.
+``EVT_FLATNOTEBOOK_PAGE_CHANGING``        Notify client objects when the active page in `FlatNotebook` is about to change.
+``EVT_FLATNOTEBOOK_PAGE_CLOSED``          Notify client objects when a page in `FlatNotebook` has been closed.
+``EVT_FLATNOTEBOOK_PAGE_CLOSING``         Notify client objects when a page in `FlatNotebook` is closing.
+``EVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU``    Notify client objects when a pop-up menu should appear next to a tab.
 ``EVT_FLATNOTEBOOK_PAGE_DROPPED``         Notify client objects when a tab has been dropped and re-arranged (on the *same* notebook)
 ``EVT_FLATNOTEBOOK_PAGE_DROPPED_FOREIGN`` Notify client objects when a tab has been dropped and re-arranged (from a foreign notebook)
-====================================== ==================================================
+========================================= ==================================================
 
 
 License And Version
@@ -114,7 +114,7 @@ License And Version
 
 FlatNotebook is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 05 Nov 2009, 12.00 GMT
+Latest Revision: Andrea Gavana @ 19 Nov 2009, 10.00 GMT
 Version 2.8
 
 
