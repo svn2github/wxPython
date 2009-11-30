@@ -141,20 +141,3 @@ class GCPen(object):
             pass
         else:
             gc.SetPen( self.pen )
-                
-
-class GCBitmap(object):
-    # implements (IBitmap)
-    ''' An object which can render a bitmap.
-        Todo: with the upcoming wxWidgets 2.9 there will be a wxGraphicsBitmap
-        object which optimizes performance since no conversion of the bitmap
-        has to happen. Add this when possible.
-    '''
-
-    def __init__(self, renderer, bmp):
-        self.renderer = renderer
-        #self.bitmap = renderer.CreateBitmap()
-        self.bmp = bmp
-
-    def Draw(self, x, y, w, h):
-        self.renderer.GC.DrawBitmap(self.bmp, x, y, w, h)

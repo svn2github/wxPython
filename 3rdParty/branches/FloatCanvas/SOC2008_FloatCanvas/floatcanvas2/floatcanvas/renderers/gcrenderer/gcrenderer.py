@@ -1,7 +1,7 @@
 import wx
 from constantTable import ConstantTable
 from buffering import MemoryDoubleBuffer, SingleBuffer
-from graphicsObjects import GCPath, GCFont, GCBrush, GCPen, GCBitmap
+from graphicsObjects import GCPath, GCFont, GCBrush, GCPen
 from renderObjects import GCRenderObjectPath, GCRenderObjectText, GCRenderObjectBitmap
 from renderSurface import RenderSurface
 

@@ -83,7 +83,7 @@ class MainFrame(wx.Frame):
         
         ## Create a TreeCtrl
         leftPanel = wx.Panel( pnl, style = wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN )
-        self.tree = DemoTree( leftPanel )
+        self.tree = DemoTree( leftPanel, style = wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT )
 
         self.overview_win = wx.html.HtmlWindow( notebook, -1, size = (400, 400) )
         def OnLinkClicked(evt):
@@ -257,7 +257,7 @@ class DemoTree(ExpansionState, wx.TreeCtrl):
     def SetItems(self, items):        
         self.DeleteAllItems()
                 
-        self.AddRoot( 'FloatCanvas demos', image = self.addIcon( 'kpaint16x16' ) )
+        self.AddRoot('root')
 
         category_name_to_item = {}
         for entry in items:

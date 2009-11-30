@@ -1,3 +1,3 @@
-name = ''
-icon = None
+name = 'FloatCanvas demos'
+icon = 'kpaint16x16'
 

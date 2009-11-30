@@ -71,6 +71,7 @@ class SimpleCanvas(Canvas):
         else:
             self.updatePolicy = DefaultUpdatePolicy( self, max_update_delay )
 
+        self.controllers = []
         
         self.subscribe( self.onDirty, 'attribChanged' )
 
@@ -307,7 +308,9 @@ class SimpleCanvas(Canvas):
             camera is used.
             Calls the render policy.
         '''
-        backgroundColor = backgroundColor or self.backgroundColor or 'green'
+        for controller in self.controllers:
+            controller.update()
+        backgroundColor = backgroundColor or self.backgroundColor
         if camera is None:
             camera = self.camera
         self.renderPolicy.render(self, camera, backgroundColor)
@@ -424,6 +427,11 @@ class SimpleCanvas(Canvas):
         data = f.read()
         f.close()        
         return self.unserialize( data, format )
+
+    def addController(self, controller):
+        if hasattr( controller, 'onSize' ):
+            self.subscribe( controller.onSize, 'onSize' )
+        self.controllers.append( controller )
     
     def destroy(self):
         self.updatePolicy.stop()

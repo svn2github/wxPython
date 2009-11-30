@@ -2,6 +2,7 @@ from simpleCanvas import SimpleCanvas
 from ..renderers import GCRenderer
 from ..nodes.camera import Viewport
 from ..patterns.partial import partial
+from ..math import numpy
 import wx
 
 class FloatCanvas(SimpleCanvas):
@@ -34,9 +35,11 @@ class FloatCanvas(SimpleCanvas):
 
     def OnSize(self, evt):
         ''' redraw ourselves '''
+        oldSize = self.renderer.screen_size
         self.renderer.screen_size = self.window.GetClientSizeTuple()
         self.camera.viewport.size = self.screen_size
         self.dirty = True
+        self.sendEvent( 'onSize', SizeEvent(oldSize, self.screen_size) )
         evt.Skip()
 
     def Bind(self, *args, **keys):
@@ -89,6 +92,11 @@ class FloatCanvas(SimpleCanvas):
        
         wx_event.Skip()
 
+
+class SizeEvent(object):
+    def __init__( self, oldSize, newSize ):
+        self.oldSize = numpy.asarray( oldSize, 'float' )
+        self.newSize = numpy.asarray( newSize, 'float' )
 
 class InputEvent(object):
     class Coords(object):

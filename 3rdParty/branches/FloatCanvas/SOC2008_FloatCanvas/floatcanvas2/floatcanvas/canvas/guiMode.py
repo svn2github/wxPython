@@ -140,8 +140,7 @@ class GUIModeMove(GUIModeBase):
     ''' Move mode allows the user to drag the canvas around by using a hand-like
         tool. It also allows zooming with the scroll wheel.
     '''
-    def __init__(self, canvas=None):
-        GUIModeBase.__init__(self, canvas)
+    def __init__(self):
         self.startMove = None
 
     def Activate(self, canvas):

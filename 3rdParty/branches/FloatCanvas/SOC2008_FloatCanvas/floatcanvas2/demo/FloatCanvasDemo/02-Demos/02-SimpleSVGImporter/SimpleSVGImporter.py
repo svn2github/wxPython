@@ -61,6 +61,7 @@ class SimpleSVGImporter(object):
     
     def handle_g(self, attrs, data):
         node = self.canvas.createCircle( 0, look = self.parseLook( attrs ), where = 'front' )
+        node.look_attrs = attrs
         self.fc_nodes.append( node )
 
     def parseLook(self, attrs):
@@ -80,14 +81,13 @@ class SimpleSVGImporter(object):
                 name = name.strip()
                 value = value.strip()
                 if name == 'fill':
-                    props[ 'line_colour' ] = self.parseColour( value )
+                    props[ 'fill_colour' ] = self.parseColour( value )
                 elif name == 'fill-opacity':
                     pass
                 elif name == 'stroke':
-                    props[ 'fill_colour' ] = self.parseColour( value )
+                    props[ 'line_colour' ] = self.parseColour( value )
                 elif name == 'stroke-width':
                     props[ 'line_width' ] = float(value)
-                    print props['line_width']
                 else:
                     raise Exception( 'Unknown style property %s : %s' % ( name, value ) )
     
@@ -106,7 +106,7 @@ class SimpleSVGImporter(object):
         if props[ 'fill_colour' ] is not None:
             return fc.SolidColourFillLook( props['fill_colour'] )
         if props[ 'line_colour' ] is not None:
-            return fc.OutlineLook( props['line_colour'], props['line_width'] )
+            return fc.OutlineLook( props['line_colour'], props.get( 'line_width', 1 ) )
         
         raise Exception('internal error')
         
@@ -122,16 +122,35 @@ class SimpleSVGImporter(object):
             
         raise Exception('Colour is neither hex nor rgb %s' % string)
 
+    def getLook( self, thisAttrs, parentNode ):
+        def getParentLook(parentNode):
+            if not parentNode:
+                return {}
+
+            try:
+                parentAttrs = parentNode.look_attrs.copy()
+            except AttributeError:
+                return {}
+            else:
+                parentAttrs.update( getParentLook( parentNode.parent ) )
+                return parentAttrs
+
+        lookAttrs = getParentLook( parentNode )            
+        lookAttrs.update( thisAttrs.copy() )
+        return self.parseLook( lookAttrs )
+
     def handle_path(self, attrs, data):
-        parent = self.fc_nodes[-1]
+        parent = self.fc_nodes[-1] if self.fc_nodes else self.canvas
         
     def handle_polygon(self, attrs, data):
-        parent = self.fc_nodes[-1]
+        parent = self.fc_nodes[-1] if self.fc_nodes else self.canvas
         points = []
         for p in attrs['points'].strip().split(' '):
             x, y = p.strip().split(',')
             points.append( (float(x), float(y)) )
-        self.canvas.createPolygon( points, parent = parent, look = self.parseLook( attrs ), where = 'front' )
+        look = self.getLook( attrs, parent )
+        node = self.canvas.createPolygon( points, parent = parent, look = look, where = 'front' )
+        node.look_attrs = attrs
 
     
 def run_standalone():

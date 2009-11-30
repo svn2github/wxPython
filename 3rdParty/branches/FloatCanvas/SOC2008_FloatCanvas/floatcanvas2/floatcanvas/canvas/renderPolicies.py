@@ -13,7 +13,8 @@ class DefaultRenderPolicy(object):
     def render(self, canvas, camera, backgroundColor):        
         from simpleCanvas import SimpleCanvas
         canvas.renderer.BeginRendering()
-        canvas.renderer.Clear( backgroundColor )
+        if backgroundColor:
+            canvas.renderer.Clear( backgroundColor )
         camera.viewport.size = canvas.screen_size
         cam_transform = camera.viewTransform
 
@@ -36,7 +37,8 @@ class CullingRenderPolicy(object):
     '''
     def render(self, canvas, camera, backgroundColor):        
         canvas.renderer.BeginRendering()
-        canvas.renderer.Clear( backgroundColor )
+        if backgroundColor:
+            canvas.renderer.Clear( backgroundColor )
         
         camera.viewport.size = canvas.screen_size
         cam_transform = camera.viewTransform
@@ -68,7 +70,7 @@ class CullingRenderPolicy(object):
             
             self.renderedNodes.append( node )
             # if we got here, render this node
-            node.Render( canvas.renderer, camera, renderChildren = False )
+            node.Render( canvas.renderer, camera, renderChildren = True )
             
         canvas.renderer.EndRendering()
         canvas.renderer.Present()

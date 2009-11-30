@@ -143,12 +143,18 @@ class GCRenderObjectBitmap(GCRenderObjectBase):
 
         self.width, self.height = w, h        
         self._localBoundingBox = boundingBoxModule.fromRectangleCenterSize( (0,0), numpy.array( (w, h) ) )
+        # using the measuring context here is more than ugly, should really be
+        #  self.renderer.wx_renderer, but that one does not have a CreateBitmap function
+        #  for whatever reason. Post on wxPython-users "wxGraphicsRenderer" about this problem.
+        # following line does not work, nother post titled "wxGraphicsContext.CreateBitmap"
+        # It's here to speed things up, the bitmap doesn't have to be converted on every draw then.
+        self.bitmap = self.renderer.measuringContext.CreateBitmap( self.bitmap )
         
     def DoDraw(self, camera):
         #GCRenderObjectBase.Draw(self, camera)
 
         offset = self.localBoundingBox.min
-        self.renderer.GC.DrawBitmap( self.bitmap, offset[0], offset[1], self.width, self.height )
+        self.renderer.GC.DrawGraphicsBitmap( self.bitmap, offset[0], offset[1], self.width, self.height )
         
     def intersects(self, primitive):
         return True

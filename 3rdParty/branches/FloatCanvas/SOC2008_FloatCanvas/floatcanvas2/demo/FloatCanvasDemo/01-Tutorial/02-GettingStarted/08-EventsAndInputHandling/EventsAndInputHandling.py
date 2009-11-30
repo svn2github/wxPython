@@ -21,7 +21,7 @@ def start(frame):
     circle = canvas.create( 'Circle', 75, name = 'circle', pos = (200, 40), look = look )
     rect = canvas.createRectangle( (200, 200), name = 'rectangle', pos = (0, 0), rotation = 0, look = ('brown', (0,255,0,128)) )
     poly = canvas.create( 'Polygon', [ (0,0), (137,12), (42,123), (50,70), (54,52) ], name = 'polygon', pos = (-40, -250), look = look2 )
-    text = canvas.create( 'Text', 'Click me!', name = 'text', pos = (0, 0), look = fc.TextLook(14, background_fill_look = fc.SolidColourLook(None, None)), parent = rect )
+    text = canvas.create( 'Text', 'Click me!', name = 'text', pos = (0, 0), look = fc.TextLook(14, colour = (0,0,0,128), background_fill_look = fc.SolidColourLook(None, None)), parent = rect )
     
     # now we start all the event-related things
 
