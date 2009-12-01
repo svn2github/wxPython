@@ -9,6 +9,11 @@ from ..resources import Resources, navCanvasIcons
 import guiMode
 from ..patterns.partial import partial
 
+def get_bitmap(module, name, size = None):
+    image = getattr( module, 'get%sImage' % name )()
+    if size is not None:
+        image.Rescale( size[0], size[1] )
+    return wx.BitmapFromImage( image )
 
 class GUIModeDescription(object):
     ''' Little helper to hold info about a GUIMode '''
@@ -34,13 +39,15 @@ class NavCanvas(floatCanvas.FloatCanvas):
         
         self.mainPanel = wx.Panel(parent, id, size=size)
 
-        modes = [ ( 'Pointer',  guiMode.GUIModeMouse(),   Resources.getPointerBitmap() ),
-                  ( 'Zoom In',  guiMode.GUIModeZoomIn(),  navCanvasIcons.getviewmag_plusBitmap() ),
-                  ( 'Zoom Out', guiMode.GUIModeZoomOut(), navCanvasIcons.getviewmag_minusBitmap() ),
-                  ( 'Pan',      guiMode.GUIModeMove(),    Resources.getHandBitmap() ),
-                  ( 'Move',     guiMode.GUIModeMoveObjects(),    navCanvasIcons.getpackage_games_arcadeBitmap() ),
-                  ( 'Rotate',     guiMode.GUIModeRotateObjects(),    navCanvasIcons.getdesignerBitmap() ),
-                  ( 'Scale',     guiMode.GUIModeScaleObjects(),   navCanvasIcons.getviewmagfitBitmap() ),
+        self.toolSize = ( 24, 24 )
+
+        modes = [ ( 'Pointer',  guiMode.GUIModeMouse(),           get_bitmap( Resources, 'Pointer', self.toolSize ) ),
+                  ( 'Zoom In',  guiMode.GUIModeZoomIn(),          get_bitmap( navCanvasIcons, 'viewmag_plus', self.toolSize ) ),
+                  ( 'Zoom Out', guiMode.GUIModeZoomOut(),         get_bitmap( navCanvasIcons, 'viewmag_minus', self.toolSize ) ),
+                  ( 'Pan',      guiMode.GUIModeMove(),            get_bitmap( Resources, 'Hand', self.toolSize ) ),
+                  ( 'Move',     guiMode.GUIModeMoveObjects(),     get_bitmap( navCanvasIcons, 'package_games_arcade', self.toolSize ) ),
+                  ( 'Rotate',     guiMode.GUIModeRotateObjects(), get_bitmap( navCanvasIcons, 'designer', self.toolSize ) ),
+                  ( 'Scale',     guiMode.GUIModeScaleObjects(),   get_bitmap( navCanvasIcons, 'viewmagfit', self.toolSize ) ),
                 ]
         
         self.mode_descriptions = [ GUIModeDescription(*mode_info) for mode_info in modes ]
@@ -100,7 +107,7 @@ class NavCanvas(floatCanvas.FloatCanvas):
         '''
         tb = wx.ToolBar(self.mainPanel)
         self.ToolBar = tb
-        tb.SetToolBitmapSize((24,24))
+        tb.SetToolBitmapSize( self.toolSize )
         self.AddToolbarModeButtons(tb, self.mode_descriptions )
         self.AddToolbarZoomButtons(tb)
         if self.enableSaveLoadButtons:
@@ -112,7 +119,7 @@ class NavCanvas(floatCanvas.FloatCanvas):
         self.active_mode = mode
         
     def _addTool(self, bitmap, short_help, handler):
-        tool = self.ToolBar.AddSimpleTool( wx.ID_ANY, getattr(navCanvasIcons, 'get%sBitmap' % bitmap)(), short_help )
+        tool = self.ToolBar.AddSimpleTool( wx.ID_ANY, get_bitmap( navCanvasIcons, bitmap, self.toolSize ), short_help )
         self.mainPanel.Bind( wx.EVT_TOOL, handler, tool )
 
     def AddToolbarModeButtons(self, tb, mode_descriptions):

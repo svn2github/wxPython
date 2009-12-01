@@ -13,19 +13,22 @@ class GCRenderObjectBase(object):
         self._transform = LinearTransform2D()
         
     def Draw(self, camera):
-        self._rendererTransform.Set( *list( (camera.viewTransform * self.transform).matrix[ :-1, ... ].transpose().flat) )
+        if wx.Platform == '__WXMAC__':
+            camera.zoom *= (1, -1)
+
+        finalTransform = ( camera.viewTransform * self.transform ).matrix[ :-1, ... ].transpose()
+
+        if wx.Platform == '__WXMAC__':
+            camera.zoom *= (1, -1)
+        
+        self._rendererTransform.Set( *list( finalTransform.flat) )
         self.renderer.SetTransform( self._rendererTransform )
         self.DoDraw( camera )
-        
-        #self.renderer.SwitchToGreyscale()
-        
-        #self.DoDraw( camera )
-                                     
+
     def _getTransform(self):
         return self._transform
     
     def _setTransform(self, transform):
-        self._rendererTransform.Set( *list(transform.matrix[ :-1, ... ].transpose().flat) )
         self._transform = transform
         
     transform = property( _getTransform, _setTransform )    

@@ -32,8 +32,11 @@ class FloatCanvasDemo(object):
 
 import icons.icons
 
-def get_bitmap(name):
-    return icons.icons.catalog[name].GetBitmap()
+def get_bitmap(name, size = None):
+    image = icons.icons.catalog[name].GetImage()
+    if size is not None:
+        image.Rescale( size[0], size[1], wx.IMAGE_QUALITY_HIGH  )
+    return wx.BitmapFromImage( image )
 
 def get_icon(name):
     return wx.IconFromBitmap( get_bitmap(name) )
@@ -76,9 +79,10 @@ class MainFrame(wx.Frame):
         
         ## Create a Notebook
         self.notebook = notebook = wx.Notebook( pnl, -1, style = wx.CLIP_CHILDREN )
-        imgList = wx.ImageList( 32, 32 )
+        size = ( 16, 16 ) if wx.Platform == '__WXMAC__' else ( 32, 32 )
+        imgList = wx.ImageList( *size )
         for pic in [ 'edu_miscellaneous32x32', 'source32x32', 'kpaint32x32']:
-            imgList.Add( get_bitmap( pic ) )
+            imgList.Add( get_bitmap( pic, size ) )
         notebook.AssignImageList( imgList )
         
         ## Create a TreeCtrl
