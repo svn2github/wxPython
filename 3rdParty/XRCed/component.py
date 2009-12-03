@@ -320,6 +320,15 @@ class Component(object):
                     value = self.getAttribute(srcNode, a)
                     dstComp.addAttribute(dstNode, a, value)
 
+    def copyImplicitAttributes(self, srcNode, dstNode, dstComp):
+        '''Copy relevant implicit attribute nodes from srcNode to dstNode.'''
+        for n in srcNode.childNodes:
+            if n.nodeType == n.ELEMENT_NODE and not is_object(n):
+                a = n.tagName
+                if a in dstComp.implicitAttributes:
+                    value = self.getAttribute(srcNode, a)
+                    dstComp.addAttribute(dstNode, a, value)
+
 
 class SimpleComponent(Component):
     '''Component without window attributes and styles.'''
@@ -475,7 +484,6 @@ class SmartContainer(Container):
     def removeChild(self, parentNode, node):
         if self.requireImplicit(node):
             implicitNode = node.parentNode
-            #implicitNode.removeChild(node)
             return parentNode.removeChild(implicitNode)
         else:
             return parentNode.removeChild(node)

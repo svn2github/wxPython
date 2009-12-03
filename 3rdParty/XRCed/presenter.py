@@ -406,11 +406,18 @@ class _Presenter:
         if not self.applied:
             self.update(item)
         node = view.tree.GetPyData(item)
+        if self.container.requireImplicit(node):
+            implicit = node.parentNode
+        else:
+            implicit = None
         if wx.TheClipboard.Open():
             if node.nodeType == node.ELEMENT_NODE:
                 data = wx.CustomDataObject('XRCED_elem')
                 s = node.toxml(encoding=expat.native_encoding)
+                # Replace by a pair
+                if implicit: s = [s, implicit.toxml(encoding=expat.native_encoding)]
             else:
+                # Non-element nodes are normally comments
                 data = wx.CustomDataObject('XRCED_node')
                 s = node.data
             data.SetData(cPickle.dumps(s))
@@ -457,10 +464,15 @@ class _Presenter:
         # XML representation of element or node value string
         data = cPickle.loads(data.GetData()) 
         if success:
-            node = Model.parseString(data)
+            if type(data) is list:
+                node = Model.parseString(data[0])
+                implicit = Model.parseString(data[1])
+            else:
+                node = Model.parseString(data)
+                implicit = None
             comp = Manager.getNodeComp(node)
         else:
-            node = Model.dom.createComment(data)
+            #node = Model.dom.createComment(data)
             raise NotImplementedError
 
         # Check compatibility
@@ -473,6 +485,14 @@ class _Presenter:
             self.update(item)
         
         item = self.create(comp, node)
+        if implicit:   # copy parameters for implicit node if possible
+            parentNode = view.tree.GetPyData(view.tree.GetItemParent(item))
+            parentComp = Manager.getNodeComp(parentNode)
+            if parentComp.requireImplicit(node) and \
+                    parentComp.implicitKlass == implicit.getAttribute('class'):
+                parentComp.copyImplicitAttributes(implicit, node.parentNode, parentComp)
+            implicit.unlink()
+
         # Add children
         for n in filter(is_object, node.childNodes):
             view.tree.AddNode(item, comp.getTreeNode(n))
