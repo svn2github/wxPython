@@ -34,11 +34,29 @@ class Canvas(observables.ObservableDefaultRenderableNode):
         '''
         result = self.rtree.performSpatialQuery( query )
         if order:
+            nodeInfo = {}
+            currentId = 0
             # now sort the picked nodes by their (render) order, nodes that appear
             # on top are first in the returned list
-            env = EnumerateNodesVisitor()
-            env.visit( self )
-            result.sort( key = lambda node: env.getPosition(node) )
+            def getOrder(node):
+                order = 0
+                parent = node.parent
+                if parent:
+                    if parent not in nodeInfo:
+                        getOrder( parent )
+                    parentInfo = nodeInfo[parent]
+                    depth = parentInfo[0] + 1
+                    childIndex = parent.children.index( node )
+                    order = parentInfo[1] + (len(parent.children) - childIndex) * ( 10000 ** (10 - depth * 2) )
+                else:
+                    depth, order = 0, 0
+                nodeInfo[node] = depth, order
+                return order            
+            result.sort( key = getOrder )
+            
+            #env = EnumerateNodesVisitor()
+            #env.visit( self )
+            #result.sort( key = lambda node: env.getPosition(node) )
 
         return result
         

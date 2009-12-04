@@ -13,7 +13,10 @@ class RecursiveAttributeObservable(DirtyObservable):
     '''
     
     def __setattr__(self, name, value):
-        if name in self.observer_attribs:
+        currentValue = getattr( self, name, None )
+        reregister = (name in self.observer_attribs) and (value is not currentValue)
+        
+        if reregister:
             try:
                 getattr(self, name).unsubscribe( self._forwardDirty, self.notify_msg )
             except:
@@ -22,7 +25,7 @@ class RecursiveAttributeObservable(DirtyObservable):
         object.__setattr__( self, name, value )
         
 
-        if name in self.observer_attribs:
+        if reregister:
             try:
                 getattr(self, name).subscribe( self._forwardDirty, self.notify_msg )
             except:

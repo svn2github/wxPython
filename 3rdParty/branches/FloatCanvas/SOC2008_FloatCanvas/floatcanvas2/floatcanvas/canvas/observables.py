@@ -14,7 +14,7 @@ def makeObservable( klass, attribs, msg, prefix = 'Observable', observer_type = 
         observer_type.__init__(self)
         klass.__init__(self, *args, **keys)
     new_observable_klass.__init__ = __init__
-    new_observable_klass.observer_attribs = attribs
+    new_observable_klass.observer_attribs = set(attribs)
     new_observable_klass.notify_msg = msg
     #globals()[name] = new_observable_klass
     return new_observable_klass

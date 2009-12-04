@@ -3,7 +3,7 @@ class SpatialQuery(object):
     def __init__(self):
         pass
 
-    def GetIntersection(self, rootNode):
+    def GetIntersection(self, rtree):
         ''' Derived classes provide this method. rootNode gets passed and this
             function returns a list of nodes that match the query
         '''
@@ -27,12 +27,12 @@ class QueryWithPrimitive(SpatialQuery):
         self.primitive = primitive
         self.exact = exact
         
-    def GetIntersection(self, rootNode):
+    def GetIntersection(self, rtree):
         ''' Implementation of the base class method. Returns a list of the nodes
             that match the criteria. The intersection method should return one
             of 'full', 'none' or 'partial'.
         '''
-        result = [ node for node in rootNode.children if node.boundingBox.intersection( self.primitive ) != 'none' ]
+        result = rtree.intersect( self.primitive )
         if self.exact:
             result = [ node for node in result if node.intersection( self.primitive ) != 'none' ]
         return result

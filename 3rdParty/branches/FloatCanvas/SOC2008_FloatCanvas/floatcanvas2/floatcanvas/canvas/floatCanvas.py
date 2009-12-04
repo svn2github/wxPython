@@ -82,6 +82,7 @@ class FloatCanvas(SimpleCanvas):
         world_pnt = self.pointToWorld( screen_pnt )
         
         nodes = self.hitTest(screen_pnt, True)
+        nodes.reverse()
         if not nodes:
             nodes = ( self, )
         node = nodes[0]

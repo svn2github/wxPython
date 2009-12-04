@@ -111,7 +111,7 @@ class BasicRenderableNode(RenderableNode):
         else:
             if (self.worldTransform.matrix != self.xxx.matrix).any():
                 self.view.transform = self.worldTransform
-            
+        
         self.xxx = self.worldTransform
         
     def _getBoundingBox(self):
@@ -132,7 +132,9 @@ class BasicRenderableNode(RenderableNode):
 
             return childBB
 
-        self._update_view_transform()
+        if self._cachedWorldTransform is None:            
+            self._update_view_transform()
+
         return self.view.boundingBox
     
     boundingBox = property( _getBoundingBox )

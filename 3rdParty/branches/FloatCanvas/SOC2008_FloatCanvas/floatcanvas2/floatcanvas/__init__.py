@@ -25,3 +25,11 @@ from models import *
 from nodes import *
 from renderers import *
 from views import *
+
+# hack
+def enableSpeedMode():
+    del patterns.observer.recursiveAttributeObservable.RecursiveAttributeObservable.__setattr__
+    del patterns.observer.recursiveAttributeObservable.RecursiveAttributeObservable._forwardDirty
+    del patterns.observer.dirtyObservable.DirtyObservable.dirty
+    patterns.observer.dirtyObservable.DirtyObservable.dirty = False
+    

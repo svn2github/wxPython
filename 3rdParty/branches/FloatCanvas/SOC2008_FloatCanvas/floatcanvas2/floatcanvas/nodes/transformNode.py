@@ -7,7 +7,6 @@ class NodeWithTransform(Node):
     ''' A node with a transform property.
     '''
     def __init__(self, transform, name = '', parent = None, children = []):
-        self.transform = transform
         #try:
         #    transform = keys['transform']
         #except KeyError:
@@ -17,7 +16,7 @@ class NodeWithTransform(Node):
         #    del keys['transform']
         #    
         Node.__init__(self, name, parent, children)
-        
+        self.transform = transform        
 
     def _getLocalTransform(self):
         ''' Returns the local transform '''
@@ -25,6 +24,21 @@ class NodeWithTransform(Node):
 
     def _setLocalTransform(self, transform):
         self._transform = transform
+        self.invalidateWorldTransform()
+        
+    def invalidateWorldTransform(self):
+        self._cachedWorldTransform = None
+        for child in self.children:
+            child.invalidateWorldTransform()
+
+    def _getParentInternal(self):
+        return Node._getParentInternal(self)
+    
+    def _setParentInternal(self, value):
+        self.invalidateWorldTransform()
+        return Node._setParentInternal(self, value)
+
+    _parent = property( _getParentInternal, _setParentInternal )
 
     def _getWorldTransform(self):
         ''' Returns the world transform (which is the transform of all
@@ -40,6 +54,9 @@ class NodeWithTransform(Node):
            we'd get independent of Linear/Compound/otherTransformType issues.
           Iterative instead of recursive.
         '''
+        if self._cachedWorldTransform:
+            return self._cachedWorldTransform
+        
         transform = self.localTransform
         node = self.parent
         while node:
@@ -49,6 +66,7 @@ class NodeWithTransform(Node):
                 transform = CompoundTransform( node.localTransform, transform )
             node = node.parent
         #print transform, self.localTransform, self.parent.localTransform, self.parent.localTransform * self.localTransform
+        self._cachedWorldTransform = transform
         return transform
 
     def _setWorldTransform(self, transform):
@@ -115,6 +133,10 @@ class NodeWithBounds(NodeWithTransform):
         ''' implement in derived class '''
         raise NotImplementedError()
     
+    def invalidateWorldTransform(self):
+        NodeWithTransform.invalidateWorldTransform(self)
+        self.send( 'nodeBoundsInvalid', node = self )
+
     def _getParentInternal(self):
         return NodeWithTransform._getParentInternal(self)
     

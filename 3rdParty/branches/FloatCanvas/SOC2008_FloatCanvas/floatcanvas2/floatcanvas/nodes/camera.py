@@ -22,6 +22,7 @@ class Camera(NodeWithTransform):
         NodeWithTransform.__init__( self, transform, *args, **keys )
         self.zoom = zoom
         self.viewport = Viewport( [1, 1] )
+        self._viewTransform = None
         
     def _getZoom(self):
         ''' camera zoom is the inverse of the node's scale '''
@@ -31,12 +32,17 @@ class Camera(NodeWithTransform):
         ''' camera zoom is the inverse of the node's scale '''
         self.scale = ( 1.0 / value[0], 1.0 / value[1] )
         
+    def invalidateWorldTransform(self):
+        NodeWithTransform.invalidateWorldTransform(self)
+        self._viewTransform = None
+        
     def _getViewTransform(self):
         ''' returns the view transform, (0,0) centered on screen '''
-        transform = self.transform.inverse
-        transform.position += self.viewport.size / 2
-        return transform
-    
+        if self._viewTransform is None:
+            self._viewTransform = self.transform.inverse
+            self._viewTransform.position += self.viewport.size / 2
+        return self._viewTransform
+
     def _getViewBox(self):
         ''' returns the view box which is the viewport in world coords '''
         size = self.viewport.size

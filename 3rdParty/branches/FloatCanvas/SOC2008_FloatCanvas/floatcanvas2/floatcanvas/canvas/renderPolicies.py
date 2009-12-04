@@ -23,7 +23,7 @@ class DefaultRenderPolicy(object):
         nodes_to_render = canvas.performSpatialQuery( query )
 
         self.renderedNodes = []
-        for node in reversed(nodes_to_render):
+        for node in nodes_to_render:
             node.Render( canvas.renderer, camera, renderChildren = False )
         canvas.renderer.EndRendering()
         canvas.renderer.Present()
@@ -47,9 +47,10 @@ class CullingRenderPolicy(object):
         view_box = camera.viewBox
         query = QueryWithPrimitive( view_box, exact = False )
         nodes_to_render = canvas.performSpatialQuery( query )
+        #print len(nodes_to_render)
 
         self.renderedNodes = []
-        for node in reversed(nodes_to_render):
+        for node in nodes_to_render:
             #  check whether some parent of the node is a
             #  render-to-surface node. If this is the case, don't render the
             #  child, because the parent will take care of rendering everything
@@ -57,6 +58,8 @@ class CullingRenderPolicy(object):
             #                but there should rather be some method to retrieve
             #                the nodes which should be rendered (either the
             #                parent node returns the info or somehow else)
+            
+            # todo: this is slow
             parent = node.parent
             doRender = True
             while parent:
@@ -64,13 +67,13 @@ class CullingRenderPolicy(object):
                     doRender = False
                     break
                 parent = parent.parent
-            
+
             if not doRender:
                 continue
             
-            self.renderedNodes.append( node )
+            #self.renderedNodes.append( node )
             # if we got here, render this node
-            node.Render( canvas.renderer, camera, renderChildren = True )
-            
+            node.Render( canvas.renderer, camera, renderChildren = False )
+
         canvas.renderer.EndRendering()
         canvas.renderer.Present()

@@ -101,10 +101,11 @@ class GCRenderObjectText(GCRenderObjectBase):
         
     def _getLocalBoundingBox(self):
         assert not ( (self.active_font is None) and (self.renderer.active_font is None) ), 'Could not get text bounding box, first need to set a font'
-        if self.active_font != self.renderer.active_font and self.renderer.active_font:
+        if (self.active_font != self.renderer.active_font) and self.renderer.active_font:
             w, h = self.renderer.measuringContext.GetTextExtent( self.text )
             size = numpy.array( (w,h) )
             self._localBoundingBox = boundingBoxModule.fromRectangleCenterSize( (0,0), size )
+            self.active_font = self.renderer.active_font
 
         return self._localBoundingBox
 
