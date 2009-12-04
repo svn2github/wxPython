@@ -1,4 +1,5 @@
 from transformNode import NodeWithBounds
+from ..config import config
 
 class RenderableNode(NodeWithBounds):
     ''' Base class for a node that can be rendered '''
@@ -48,9 +49,11 @@ class BasicRenderableNode(RenderableNode):
             return False
         
         self.DoRender(renderer, camera)
-        if self.view: self.view.dirty = False
-        if self.model: self.model.dirty = False
-        self.dirty = False
+        if not config.speedMode:
+            if self.view: self.view.dirty = False
+            if self.model: self.model.dirty = False
+            self.dirty = False
+            
         # traverse children in back-front order (so front objects overdraw back ones)
         if renderChildren:
             for child in reversed(self.children):
@@ -61,11 +64,12 @@ class BasicRenderableNode(RenderableNode):
                 else:
                     render( renderer, camera )
 
-        if self.view: self.view.dirty = False
-        if self.model: self.model.dirty = False
-        self.dirty = False
-        self._children.dirty = False
-        self.transform.dirty = False
+        if not config.speedMode:
+            if self.view: self.view.dirty = False
+            if self.model: self.model.dirty = False
+            self.dirty = False
+            self._children.dirty = False
+            self.transform.dirty = False
         
         if self._debugDrawBoundingBoxes and self.view:
             self._drawDebugBoundingBoxes(renderer, camera)

@@ -1,3 +1,5 @@
+from ..config import config
+
 class DefaultView(object):
     ''' The default view holds a look and a primitive_renderer. Those two
         define how an object will be rendereed.
@@ -9,9 +11,10 @@ class DefaultView(object):
     def Render(self, renderer, camera):
         self.look.Apply(renderer)
         self.primitive_renderer.Render(camera)
-        self.look.dirty = False
-        self.transform.dirty = False
-        self.dirty = False
+        if not config.speedMode:
+            self.look.dirty = False
+            self.transform.dirty = False
+            self.dirty = False
         
     def rebuild(self):
         self.primitive_renderer.rebuild()

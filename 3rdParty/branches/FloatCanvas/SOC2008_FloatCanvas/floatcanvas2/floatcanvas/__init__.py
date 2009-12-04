@@ -5,6 +5,7 @@ except ImportError:
     raise
 
 # for people who like structured namespaces
+import config
 import canvas
 import events
 import filters
@@ -16,6 +17,7 @@ import renderers
 import views
 
 # for people who like flat namespaces
+from config import *
 from canvas import *
 from events import *
 from filters import *
@@ -25,11 +27,3 @@ from models import *
 from nodes import *
 from renderers import *
 from views import *
-
-# hack
-def enableSpeedMode():
-    del patterns.observer.recursiveAttributeObservable.RecursiveAttributeObservable.__setattr__
-    del patterns.observer.recursiveAttributeObservable.RecursiveAttributeObservable._forwardDirty
-    del patterns.observer.dirtyObservable.DirtyObservable.dirty
-    patterns.observer.dirtyObservable.DirtyObservable.dirty = False
-    
