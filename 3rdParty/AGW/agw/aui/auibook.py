@@ -4795,9 +4795,7 @@ class AuiNotebook(wx.PyControl):
         button_id = event.GetInt()
 
         if button_id == AUI_BUTTON_CLOSE:
-            if not tabs.GetEnabled(event.GetSelection()):
-                return
-
+            
             selection = event.GetSelection()
 
             if selection == -1:
@@ -4805,6 +4803,9 @@ class AuiNotebook(wx.PyControl):
                 # if the close button is to the right, use the active
                 # page selection to determine which page to close
                 selection = tabs.GetActivePage()
+
+            if selection == -1 or not tabs.GetEnabled(selection):
+                return
             
             if selection != -1:
             
