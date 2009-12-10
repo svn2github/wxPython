@@ -4840,11 +4840,7 @@ class AuiNotebook(wx.PyControl):
         button_id = event.GetInt()
 
         if button_id == AUI_BUTTON_CLOSE:
-<<<<<<< .mine
 
-=======
-            
->>>>>>> .r62850
             selection = event.GetSelection()
 
             if selection == -1:

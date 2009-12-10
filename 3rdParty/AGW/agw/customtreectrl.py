@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 24 Nov 2009, 09.00 GMT
+# Latest Revision: 09 Dec 2009, 21.00 GMT
 #
 #
 # TODO List
@@ -211,7 +211,7 @@ License And Version
 
 CustomTreeCtrl is freeware and distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 24 Nov 2009, 09.00 GMT
+Latest Revision: Andrea Gavana @ 09 Dec 2009, 21.00 GMT
 
 Version 2.0
 
@@ -454,7 +454,7 @@ def DrawTreeItemButton(win, dc, rect, flags):
     """
     Draw the expanded/collapsed icon for a tree control item.
 
-    :param `wnd`: an instance of `wx.Window`;
+    :param `win`: an instance of `wx.Window`;
     :param `dc`: an instance of `wx.DC`;
     :param `rect`: the client rectangle where to draw the tree item button;
     :param `flags`: contains ``wx.CONTROL_EXPANDED`` bit for expanded tree items.
