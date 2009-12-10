@@ -2135,6 +2135,10 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `wnd`: a non-toplevel window to be displayed next to the item;
         :param `column`: if not ``None``, an integer specifying the column index.
          If it is ``None``, the main column index is used.
+
+        :note: The window parent should not be the L{HyperTreeList} itself, but actually
+         an instance of L{TreeListMainWindow}. The current solution here is to reparent
+         the window to this class.
         """
 
         # Reparent the window to ourselves
