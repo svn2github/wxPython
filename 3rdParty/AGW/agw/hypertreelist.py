@@ -2137,6 +2137,10 @@ class TreeListMainWindow(CustomTreeCtrl):
          If it is ``None``, the main column index is used.
         """
 
+        # Reparent the window to ourselves
+        if window.GetParent() != self:
+            window.Reparent(self)
+        
         item.SetWindow(window, column)
         if window:
             self._hasWindows = True
