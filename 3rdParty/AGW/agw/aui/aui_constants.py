@@ -2482,9 +2482,9 @@ BUTTON_DROPDOWN_WIDTH = 10
 
 DISABLED_TEXT_GREY_HUE = 153.0
 """ Hue text colour for the disabled text in AuiToolBar. """
-DISABLED_TEXT_COLOR = wx.Colour(DISABLED_TEXT_GREY_HUE,
-                                DISABLED_TEXT_GREY_HUE,
-                                DISABLED_TEXT_GREY_HUE)
+DISABLED_TEXT_COLOUR = wx.Colour(DISABLED_TEXT_GREY_HUE,
+                                 DISABLED_TEXT_GREY_HUE,
+                                 DISABLED_TEXT_GREY_HUE)
 """ Text colour for the disabled text in AuiToolBar. """
 
 AUI_TB_TEXT             = 1 << 0

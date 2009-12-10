@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 19 Nov 2009, 10.00 GMT
+# Latest Revision: 01 Dec 2009, 15.00 GMT
 #
 #
 # TODO List
@@ -37,7 +37,7 @@
 Description
 ===========
 
-`UltimateListCtrl` is a class that mimics the behaviour of `wx.ListCtrl`, with almost
+UltimateListCtrl is a class that mimics the behaviour of `wx.ListCtrl`, with almost
 the same base functionalities plus some more enhancements. This class does
 not rely on the native control, as it is a full owner-drawn list control.
 
@@ -49,8 +49,8 @@ Appearance
 
 * Multiple images for items/subitems;
 * Font, colour, background, custom renderers and formatting for items and subitems;
-* Ability to add persistent data to an item using `SetPyData` and `GetPyData`: the data
-  can be any Python object and not necessarily an integer as in `wx.ListCtrl`;
+* Ability to add persistent data to an item using L{SetItemPyData} and L{GetItemPyData}:
+  the data can be any Python object and not necessarily an integer as in `wx.ListCtrl`;
 * CheckBox-type items and subitems;
 * RadioButton-type items and subitems;
 * Overflowing items/subitems, a la `wx.grid.Grid`, i.e. an item/subitem may overwrite neighboring
@@ -59,7 +59,7 @@ Appearance
   cursor on hovering;
 * Multiline text items and subitems;
 * Variable row heights depending on the item/subitem kind/text/window;
-* User defined item/subitem renderers: these renderer classes *must* implement the methods
+* User defined item/subitem renderers: these renderer classes **must** implement the methods
   `DrawSubItem`, `GetLineHeight` and `GetSubItemWidth` (see the demo);
 * Enabling/disabling items (together with their plain or grayed out icons);
 * Whatever non-toplevel widget can be attached next to an item/subitem;
@@ -70,6 +70,9 @@ Appearance
 * Ability to hide/show columns;
 * Default selection style, gradient (horizontal/vertical) selection style and Windows
   Vista selection style.
+
+
+And a lot more. Check the demo for an almost complete review of the functionalities.
 
 
 Window Styles
@@ -97,7 +100,7 @@ Window Styles             Hex Value  Description
 ``ULC_SORT_ASCENDING``        0x4000 Sort in ascending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
 ``ULC_SORT_DESCENDING``       0x8000 Sort in descending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
 ``ULC_TILE``                 0x10000 Each item appears as a full-sized icon with a label of one or more lines beside it (partially implemented).
-======================== =========== ===================================================================================================
+======================== =========== ====================================================================================================
 
 
 Window Extra Styles
@@ -118,15 +121,12 @@ Window Extra Styles              Hex Value  Description
 ``ULC_AUTO_CHECK_PARENT``            0x0080 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
 ``ULC_SHOW_TOOLTIPS``                0x0100 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
 ``ULC_HOT_TRACKING``                 0x0200 Enable hot tracking of items on mouse motion.
-``ULC_BORDER_SELECT``                0x0400 Changes border color whan an item is selected, instead of highlighting the item.
+``ULC_BORDER_SELECT``                0x0400 Changes border colour whan an item is selected, instead of highlighting the item.
 ``ULC_TRACK_SELECT``                 0x0800 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This extra style applies to all views of `UltimateListCtrl`.
 ``ULC_HEADER_IN_ALL_VIEWS``          0x1000 Show column headers in all view modes.
 ``ULC_NO_FULL_ROW_SELECT``           0x2000 When an item is selected, the only the item in the first column is highlighted.
 ``ULC_FOOTER``                       0x4000 Show a footer too (only when header is present).
 =============================== =========== ====================================================================================================
-
-
-And a lot more. Check the demo for an almost complete review of the functionalities.
 
 
 Events Processing
@@ -174,7 +174,7 @@ Event Name                               Description
 Supported Platforms
 ===================
 
-`UltimateListCtrl` has been tested on the following platforms:
+UltimateListCtrl has been tested on the following platforms:
   * Windows (Windows XP);
 
 
@@ -183,8 +183,9 @@ License And Version
 
 UltimateListCtrl is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 19 Nov 2009, 10.00 GMT
-Version 0.4
+Latest Revision: Andrea Gavana @ 01 Dec 2009, 15.00 GMT
+
+Version 0.5
 
 """
 
@@ -198,7 +199,7 @@ import cStringIO
 from wx.lib.expando import ExpandoTextCtrl
 
 # Version Info
-__version__ = "0.4"
+__version__ = "0.5"
 
 
 # ----------------------------------------------------------------------------
@@ -238,7 +239,7 @@ ULC_AUTO_TOGGLE_CHILD   = 0x0040  # only meaningful for checkboxes
 ULC_AUTO_CHECK_PARENT   = 0x0080  # only meaningful for checkboxes
 ULC_SHOW_TOOLTIPS       = 0x0100  # shows tooltips on items with ellipsis (...)
 ULC_HOT_TRACKING        = 0x0200  # enable hot tracking on mouse motion
-ULC_BORDER_SELECT       = 0x0400  # changes border color whan an item is selected, instead of highlighting the item
+ULC_BORDER_SELECT       = 0x0400  # changes border colour whan an item is selected, instead of highlighting the item
 ULC_TRACK_SELECT        = 0x0800  # Enables hot-track selection in a list control. Hot track selection means that an item
                                   # is automatically selected when the cursor remains over the item for a certain period
                                   # of time. The delay is retrieved on Windows using the win32api call
@@ -503,6 +504,12 @@ if wx.Platform == "__WXMSW__":
 
 # Utility method
 def to_list(input):
+    """
+    Converts the input data into a Python list.
+
+    :param `input`: can be an integer or a Python list (in which case nothing will
+     be done to `input`.
+    """
 
     if isinstance(input, types.ListType):
         return input
@@ -513,6 +520,13 @@ def to_list(input):
         
 
 def CheckVariableRowHeight(listCtrl, text):
+    """
+    Checks whether a text contains multiline strings and if the `listCtrl` window
+    extra style is compatible with multiline strings.
+
+    :param `listCtrl`: an instance of L{UltimateListCtrl};
+    :param `text`: the text to analyze.
+    """
 
     if not listCtrl.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
         if "\n" in text:
@@ -520,6 +534,12 @@ def CheckVariableRowHeight(listCtrl, text):
 
 
 def CreateListItem(itemOrId, col):
+    """
+    Creates a new instance of L{UltimateListItem}.
+
+    :param `itemOrId`: can be an instance of L{UltimateListItem} or an integer;
+    :param `col`: the item column.
+    """
 
     if type(itemOrId) == types.IntType:
         item = UltimateListItem()
@@ -531,44 +551,19 @@ def CreateListItem(itemOrId, col):
     return item
 
 
-def GrayOut(anImage):
+# ----------------------------------------------------------------------------
+
+def MakeDisabledBitmap(original):
     """
-    Convert the given image (in place) to a grayed-out version,
-    appropriate for a 'disabled' appearance.
-    """
-    
-    factor = 0.7        # 0 < f < 1.  Higher Is Grayer
-    
-    if anImage.HasMask():
-        maskColour = (anImage.GetMaskRed(), anImage.GetMaskGreen(), anImage.GetMaskBlue())
-    else:
-        maskColour = None
-        
-    data = map(ord, list(anImage.GetData()))
+    Creates a disabled-looking bitmap starting from the input one.
 
-    for i in range(0, len(data), 3):
-        
-        pixel = (data[i], data[i+1], data[i+2])
-        pixel = MakeGray(pixel, factor, maskColour)
-
-        for x in range(3):
-            data[i+x] = pixel[x]
-
-    anImage.SetData(''.join(map(chr, data)))
-    
-    return anImage
-
-
-def MakeGray((r,g,b), factor, maskColour):
-    """
-    Make a pixel grayed-out. If the pixel matches the maskcolour, it won't be
-    changed.
+    :param `original`: an instance of `wx.Bitmap` to be greyed-out.
     """
     
-    if (r,g,b) != maskColour:
-        return map(lambda x: int((230 - x) * factor) + x, (r,g,b))
-    else:
-        return (r,g,b)
+    img = original.ConvertToImage()
+    return wx.BitmapFromImage(img.ConvertToGreyscale())
+
+# ----------------------------------------------------------------------------
 
 
 #----------------------------------------------------------------------
@@ -599,8 +594,20 @@ def GetdragcursorImage():
 
 
 class SelectionStore(object):
+    """
+    SelectionStore is used to store the selected items in the virtual
+    controls, i.e. it is well suited for storing even when the control contains
+    a huge (practically infinite) number of items.
+
+    Of course, internally it still has to store the selected items somehow (as
+    an array currently) but the advantage is that it can handle the selection
+    of all items (common operation) efficiently and that it could be made even
+    smarter in the future (e.g. store the selections as an array of ranges +
+    individual items) without changing its API.
+    """
 
     def __init__(self):
+        """ Default class constructor. """
 
         # the array of items whose selection state is different from default
         self._itemsSel = []
@@ -613,6 +620,7 @@ class SelectionStore(object):
 
     # special case of SetItemCount(0)
     def Clear(self):
+        """ Clears the number of selected items. """
 
         self._itemsSel = []
         self._count = 0
@@ -620,11 +628,17 @@ class SelectionStore(object):
 
     # return the total number of selected items
     def GetSelectedCount(self):
-
+        """ Return the total number of selected items. """
+        
         return (self._defaultState and [self._count - len(self._itemsSel)] or [len(self._itemsSel)])[0]
 
 
     def IsSelected(self, item):
+        """
+        Returns ``True`` if the given item is selected.
+
+        :param `item`: the item to check for selection state.
+        """
 
         isSel = item in self._itemsSel
 
@@ -634,6 +648,14 @@ class SelectionStore(object):
 
 
     def SelectItem(self, item, select=True):
+        """
+        Selects the given item.
+
+        :param `item`: the item to select;
+        :param `select`: ``True`` to select the item, ``False`` otherwise.
+
+        :return: ``True`` if the items selection really changed.
+        """
 
         # search for the item ourselves as like this we get the index where to
         # insert it later if needed, so we do only one search in the array instead
@@ -657,7 +679,18 @@ class SelectionStore(object):
 
 
     def SelectRange(self, itemFrom, itemTo, select=True):
+        """
+        Selects a range of items.
 
+        :param `itemFrom`: the first index of the selection range;
+        :param `itemTo`: the last index of the selection range;
+        :param `select`: ``True`` to select the items, ``False`` otherwise.
+        
+        :return: ``True`` and fill the `itemsChanged` array with the indices of items
+         which have changed state if "few" of them did, otherwise return ``False``
+         (meaning that too many items changed state to bother counting them individually).
+        """
+    
         # 100 is hardcoded but it shouldn't matter much: the important thing is
         # that we don't refresh everything when really few (e.g. 1 or 2) items
         # change state
@@ -738,6 +771,11 @@ class SelectionStore(object):
 
 
     def OnItemDelete(self, item):
+        """
+        Must be called when an item is deleted.
+
+        :param `item`: the item that is being deleted.
+        """
 
         count = len(self._itemsSel)
         i = bisect.bisect_right(self._itemsSel, item)
@@ -756,6 +794,11 @@ class SelectionStore(object):
         
 
     def SetItemCount(self, count):
+        """
+        Sets the total number of items we handle.
+
+        :param `count`: the total number of items we handle.
+        """
 
         # forget about all items whose indices are now invalid if the size
         # decreased
@@ -773,11 +816,26 @@ class SelectionStore(object):
 # ----------------------------------------------------------------------------
 
 class UltimateListItemAttr(object):
-
+    """
+    Represents the attributes (colour, font, ...) of a L{UltimateListCtrl}
+    L{UltimateListItem}.
+    """
+    
     def __init__(self, colText=wx.NullColour, colBack=wx.NullColour, font=wx.NullFont,
                  enabled=True, footerColText=wx.NullColour, footerColBack=wx.NullColour,
                  footerFont=wx.NullFont):
+        """
+        Default class constructor.
 
+        :param `colText`: the item text colour;
+        :param `colBack`: the item background colour;
+        :param `font`: the item font;
+        :param `enabled`: ``True`` if the item should be enabled, ``False`` if it is disabled;
+        :param `footerColText`: for footer items, the item text colour;
+        :param `footerColBack`: for footer items, the item background colour;
+        :param `footerFont`: for footer items, the item font.
+        """
+        
         self._colText = colText
         self._colBack = colBack
         self._font = font
@@ -790,103 +848,160 @@ class UltimateListItemAttr(object):
 
     # setters
     def SetTextColour(self, colText):
+        """
+        Sets a new text colour.
 
+        :param `colText`: an instance of `wx.Colour`.
+        """
+        
         self._colText = colText
 
 
     def SetBackgroundColour(self, colBack):
+        """
+        Sets a new background colour.
+
+        :param `colBack`: an instance of `wx.Colour`.
+        """
 
         self._colBack = colBack
 
 
     def SetFont(self, font):
+        """
+        Sets a new font for the item.
+
+        :param `font`: an instance of `wx.Font`.
+        """
 
         self._font = font
 
 
     def Enable(self, enable=True):
+        """
+        Enables or disables the item.
+
+        :param `enable`: ``True`` to enable the item, ``False`` to disable it.
+        """
 
         self._enabled = enable        
 
 
     def SetFooterTextColour(self, colText):
+        """
+        Sets a new footer item text colour.
+
+        :param `colText`: an instance of `wx.Colour`.
+        """
 
         self._footerColText = colText
 
 
     def SetFooterBackgroundColour(self, colBack):
+        """
+        Sets a new footer item background colour.
+
+        :param `colBack`: an instance of `wx.Colour`.
+        """
 
         self._footerColBack = colBack
 
 
     def SetFooterFont(self, font):
+        """
+        Sets a new font for the footer item.
+
+        :param `font`: an instance of `wx.Font`.
+        """
 
         self._footerFont = font
 
 
     # accessors
     def HasTextColour(self):
-
+        """ Returns ``True`` if the currently set text colour is valid. """
+        
         return self._colText.Ok()
 
 
     def HasBackgroundColour(self):
+        """ Returns ``True`` if the currently set background colour is valid. """
 
         return self._colBack.Ok()
 
 
     def HasFont(self):
+        """ Returns ``True`` if the currently set font is valid. """
 
         return self._font.Ok()
 
 
     def HasFooterTextColour(self):
+        """
+        Returns ``True`` if the currently set text colour for the footer item
+        is valid.
+        """
 
         return self._footerColText.Ok()
 
 
     def HasFooterBackgroundColour(self):
+        """
+        Returns ``True`` if the currently set background colour for the footer item
+        is valid.
+        """
 
         return self._footerColBack.Ok()
 
 
     def HasFooterFont(self):
+        """
+        Returns ``True`` if the currently set font for the footer item
+        is valid.
+        """
 
         return self._footerFont.Ok()
 
 
     # getters
     def GetTextColour(self):
+        """ Returns the currently set text colour. """
 
         return self._colText
 
 
     def GetBackgroundColour(self):
+        """ Returns the currently set background colour. """
 
         return self._colBack
 
 
     def GetFont(self):
+        """ Returns the currently set item font. """
 
         return self._font
 
 
     def GetFooterTextColour(self):
+        """ Returns the currently set text colour for a footer item. """
 
         return self._footerColText
 
 
     def GetFooterBackgroundColour(self):
+        """ Returns the currently set background colour for a footer item. """
 
         return self._footerColBack
 
 
     def GetFooterFont(self):
+        """ Returns the currently set font for a footer item. """
 
         return self._footerFont
 
 
     def IsEnabled(self):
+        """ Returns ``True`` if the item is enabled. """
 
         return self._enabled        
 
@@ -895,9 +1010,15 @@ class UltimateListItemAttr(object):
 # ----------------------------------------------------------------------------
 
 class UltimateListItem(wx.Object):
-
+    """ This class stores information about a L{UltimateListCtrl} item or column. """
+    
     def __init__(self, item=None):
+        """
+        Default class constructor.
 
+        :param `item`: if not ``None``, another instance of L{UltimateListItem}.
+        """
+        
         if not item:
             self.Init()
             self._attr = None
@@ -940,199 +1061,424 @@ class UltimateListItem(wx.Object):
 
     # resetting
     def Clear(self):
-
+        """ Resets the item state to the default. """
+        
         self.Init()
         self._text = ""
         self.ClearAttributes()
 
 
     def ClearAttributes(self):
-
+        """ Deletes the item attributes if they have been stored. """
+        
         if self._attr:
             del self._attr
             self._attr = None
 
     # setters
     def SetMask(self, mask):
+        """
+        Sets the mask of valid fields.
 
+        :param `mask`: any combination of the following bits:
+
+         ============================ ========= ==============================
+         Mask Bits                    Hex Value Description
+         ============================ ========= ==============================
+         ``ULC_MASK_STATE``                 0x1 L{GetState} is valid
+         ``ULC_MASK_TEXT``                  0x2 L{GetText} is valid
+         ``ULC_MASK_IMAGE``                 0x4 L{GetImage} is valid
+         ``ULC_MASK_DATA``                  0x8 L{GetData} is valid
+         ``ULC_MASK_WIDTH``                0x20 L{GetWidth} is valid
+         ``ULC_MASK_FORMAT``               0x40 L{GetFormat} is valid
+         ``ULC_MASK_FONTCOLOUR``           0x80 L{GetTextColour} is valid
+         ``ULC_MASK_FONT``                0x100 L{GetFont} is valid
+         ``ULC_MASK_BACKCOLOUR``          0x200 L{GetBackgroundColour} is valid
+         ``ULC_MASK_KIND``                0x400 L{GetKind} is valid
+         ``ULC_MASK_ENABLE``              0x800 L{IsEnabled} is valid
+         ``ULC_MASK_CHECK``              0x1000 L{IsChecked} is valid
+         ``ULC_MASK_HYPERTEXT``          0x2000 L{IsHyperText} is valid
+         ``ULC_MASK_WINDOW``             0x4000 L{GetWindow} is valid
+         ``ULC_MASK_PYDATA``             0x8000 L{GetPyData} is valid
+         ``ULC_MASK_SHOWN``             0x10000 L{IsShown} is valid
+         ``ULC_MASK_RENDERER``          0x20000 L{GetCustomRenderer} is valid
+         ``ULC_MASK_OVERFLOW``          0x40000 L{GetOverFlow} is valid
+         ``ULC_MASK_FOOTER_TEXT``       0x80000 L{GetFooterText} is valid
+         ``ULC_MASK_FOOTER_IMAGE``     0x100000 L{GetFooterImage} is valid
+         ``ULC_MASK_FOOTER_FORMAT``    0x200000 L{GetFooterFormat} is valid
+         ``ULC_MASK_FOOTER_FONT``      0x400000 L{GetFooterFont} is valid
+         ``ULC_MASK_FOOTER_CHECK``     0x800000 L{IsFooterChecked} is valid
+         ``ULC_MASK_FOOTER_KIND``     0x1000000 L{GetFooterKind} is valid
+         ============================ ========= ==============================
+        
+        """
+        
         self._mask = mask
 
 
     def SetId(self, id):
+        """
+        Sets the zero-based item position.
 
+        :param `id`: the zero-based item position.
+        """
+        
         self._itemId = id
 
 
     def SetColumn(self, col):
+        """
+        Sets the zero-based column.
 
+        :param `col`: the zero-based column.
+        
+        :note: This method is neaningful only in report mode.
+        """
+        
         self._col = col
 
 
     def SetState(self, state):
+        """
+        Sets the item state flags.
 
+        :param `state`: any combination of the following bits:
+        
+         ============================ ========= ==============================
+         State Bits                   Hex Value Description
+         ============================ ========= ==============================
+         ``ULC_STATE_DONTCARE``             0x0 Don't care what the state is
+         ``ULC_STATE_DROPHILITED``          0x1 The item is highlighted to receive a drop event
+         ``ULC_STATE_FOCUSED``              0x2 The item has the focus
+         ``ULC_STATE_SELECTED``             0x4 The item is selected
+         ``ULC_STATE_CUT``                  0x8 The item is in the cut state
+         ``ULC_STATE_DISABLED``            0x10 The item is disabled
+         ``ULC_STATE_FILTERED``            0x20 The item has been filtered
+         ``ULC_STATE_INUSE``               0x40 The item is in use
+         ``ULC_STATE_PICKED``              0x80 The item has been picked
+         ``ULC_STATE_SOURCE``             0x100 The item is a drag and drop source
+         ============================ ========= ==============================
+
+        :note: The valid state flags are influenced by the value of the state mask.
+
+        :see: L{SetStateMask}
+        """
+        
         self._mask |= ULC_MASK_STATE
         self._state = state
         self._stateMask |= state
 
 
     def SetStateMask(self, stateMask):
+        """
+        Sets the bitmask that is used to determine which of the state flags are
+        to be set.
 
+        :param `stateMask`: the state bitmask.
+        
+        :see: L{SetState} for a list of valid state bits.
+        """
+        
         self._stateMask = stateMask
 
 
     def SetText(self, text):
+        """
+        Sets the text label for the item.
 
+        :param `text`: the text label for the item.
+        """
+        
         self._mask |= ULC_MASK_TEXT
         self._text = text
 
 
     def SetImage(self, image):
+        """
+        Sets the zero-based indexes of the images associated with the item into the
+        image list.
 
+        :param `image`: a Python list with the zero-based indexes of the images
+         associated with the item into the image list.
+        """
+        
         self._mask |= ULC_MASK_IMAGE
         self._image = to_list(image)
 
 
     def SetData(self, data):
+        """
+        Sets client data for the item.
+
+        :param `data`: the client data associated to the item.
+        
+        :note: Please note that client data is associated with the item and not
+         with subitems.
+        """
         
         self._mask |= ULC_MASK_DATA
         self._data = data
 
 
     def SetPyData(self, pyData):
+        """
+        Sets data for the item, which can be any Python object.
+
+        :param `data`: any Python object associated to the item.
+        
+        :note: Please note that Python data is associated with the item and not
+         with subitems.
+        """
 
         self._mask |= ULC_MASK_PYDATA
         self._pyData = pyData
         
 
     def SetWidth(self, width):
+        """
+        Sets the column width.
 
+        :param `width`: the column width.
+
+        :note: This method is meaningful only for column headers in report mode.
+        """
+        
         self._mask |= ULC_MASK_WIDTH
         self._width = width
 
 
     def SetAlign(self, align):
+        """
+        Sets the alignment for the item.
 
+        :param `align`: one of the following bits:
+
+         ============================ ========= ==============================
+         Alignment Bits               Hex Value Description
+         ============================ ========= ==============================
+         ``ULC_FORMAT_LEFT``                0x0 The item is left-aligned
+         ``ULC_FORMAT_RIGHT``               0x1 The item is right-aligned
+         ``ULC_FORMAT_CENTRE``              0x2 The item is centre-aligned
+         ``ULC_FORMAT_CENTER``              0x2 The item is center-aligned
+         ============================ ========= ==============================
+
+        """
+        
         self._mask |= ULC_MASK_FORMAT
         self._format = align
 
 
     def SetTextColour(self, colText):
+        """
+        Sets the text colour for the item.
 
+        :param `colText`: a valid `wx.Colour` object.
+        """
+        
         self.Attributes().SetTextColour(colText)
 
 
     def SetBackgroundColour(self, colBack):
+        """
+        Sets the background colour for the item.
+
+        :param `colBack`: a valid `wx.Colour` object.
+        """
 
         self.Attributes().SetBackgroundColour(colBack)
 
 
     def SetFont(self, font):
+        """
+        Sets the font for the item.
+
+        :param `font`: a valid `wx.Font` object.
+        """
 
         self.Attributes().SetFont(font)
 
 
     def SetFooterTextColour(self, colText):
+        """
+        Sets the text colour for the footer item.
+
+        :param `colText`: a valid `wx.Colour` object.
+        """
 
         self.Attributes().SetFooterTextColour(colText)
 
 
     def SetFooterBackgroundColour(self, colBack):
+        """
+        Sets the background colour for the footer item.
+
+        :param `colBack`: a valid `wx.Colour` object.
+        """
 
         self.Attributes().SetFooterBackgroundColour(colBack)
 
 
     def SetFooterFont(self, font):
+        """
+        Sets the font for the footer item.
+
+        :param `font`: a valid `wx.Font` object.
+        """
 
         self.Attributes().SetFooterFont(font)
 
 
     def Enable(self, enable=True):
+        """
+        Enables or disables the item.
+
+        :param `enable`: ``True`` to enable the item, ``False`` to disable it.
+        """
 
         self.Attributes().Enable(enable)        
 
     # accessors
     def GetMask(self):
+        """
+        Returns a bit mask indicating which fields of the structure are valid.
 
+        :see: L{SetMask} for a list of valid bit masks.
+        """
+        
         return self._mask
 
 
     def GetId(self):
-
+        """ Returns the zero-based item position. """
+        
         return self._itemId
 
 
     def GetColumn(self):
+        """
+        Returns the zero-based column.
+
+        :note: This method is meaningful only in report mode.
+        """
 
         return self._col
 
 
-    def GetState(self):
+    def GetFormat(self):
+        """ Returns the header item format. """
 
+        return self._format
+
+
+    def GetState(self):
+        """
+        Returns a bit field representing the state of the item.
+
+        :see: L{SetState} for a list of valid item states.
+        """
+        
         return self._state & self._stateMask
 
 
     def GetText(self):
+        """ Returns the label/header text. """
 
         return self._text
 
 
     def GetImage(self):
-
+        """
+        Returns a Python list with the zero-based indexes of the images associated
+        with the item into the image list.
+        """
+        
         return self._image
 
 
     def GetData(self):
+        """
+        Returns client data associated with the control.
 
+        :note: Please note that client data is associated with the item and not
+         with subitems.
+        """
+        
         return self._data
 
 
     def GetPyData(self):
+        """
+        Returns data for the item, which can be any Python object.
+
+        :note: Please note that Python data is associated with the item and not
+         with subitems.
+        """
 
         return self._pyData
     
 
     def GetWidth(self):
+        """
+        Returns the column width.
+
+        :note: This method is meaningful only for column headers in report mode.
+        """
 
         return self._width
 
 
     def GetAlign(self):
+        """
+        Returns the alignment for the item.
 
+        :see: L{SetAlign} for a list of valid alignment bits.
+        """
+        
         return self._format
 
 
     def GetAttributes(self):
+        """ Returns the associated L{UltimateListItemAttr} attributes. """
 
         return self._attr
 
 
     def HasAttributes(self):
+        """ Returns ``True`` if the item has attributes associated with it. """
 
         return self._attr != None
 
 
     def GetTextColour(self):
+        """ Returns the text colour. """
 
         return (self.HasAttributes() and [self._attr.GetTextColour()] or [wx.NullColour])[0]
 
 
     def GetBackgroundColour(self):
+        """ Returns the background colour. """
 
         return (self.HasAttributes() and [self._attr.GetBackgroundColour()] or [wx.NullColour])[0]
 
 
     def GetFont(self):
+        """ Returns the item font. """
 
         return (self.HasAttributes() and [self._attr.GetFont()] or [wx.NullFont])[0]
 
 
     def IsEnabled(self):
-        
+        """ Returns ``True`` if the item is enabled. """
+
         return (self.HasAttributes() and [self._attr.IsEnabled()] or [True])[0]
     
     # creates self._attr if we don't have it yet
     def Attributes(self):
-
+        """
+        Returns the associated attributes if they exist, or create a new L{UltimateListItemAttr}
+        structure and associate it with this item.
+        """
+        
         if not self._attr:
             self._attr = UltimateListItemAttr()
 
@@ -1140,68 +1486,113 @@ class UltimateListItem(wx.Object):
 
 
     def SetKind(self, kind): 
+        """
+        Sets the item kind.
+
+        :param `kind`: may be one of the following integers:
+
+         =============== ==========================
+         Item Kind       Description
+         =============== ==========================
+                0        A normal item
+                1        A checkbox-like item
+                2        A radiobutton-type item
+         =============== ==========================
+
+        """
 
         self._mask |= ULC_MASK_KIND
         self._kind = kind
         
 
     def GetKind(self):
+        """
+        Returns the item kind.
+
+        :see: L{SetKind} for a valid list of item's kind.
+        """
 
         return self._kind
     
 
     def IsChecked(self):
-        """Returns whether the item is checked or not."""
+        """ Returns whether the item is checked or not. """
 
         return self._checked
 
 
     def Check(self, checked=True):
-        """Check an item. Meaningful only for check and radio items."""
+        """
+        Checks/unchecks an item.
+
+        :param `checked`: ``True`` to check an item, ``False`` to uncheck it.
+        
+        :note: This method is meaningful only for check and radio items.
+        """
 
         self._mask |= ULC_MASK_CHECK
         self._checked = checked
 
 
     def IsShown(self):
+        """ Returns ``True`` if the item is shown, or ``False`` if it is hidden. """
 
         return self._isColumnShown
     
 
     def SetShown(self, shown=True):
+        """
+        Sets an item as shown/hidden.
+
+        :param `shown`: ``True`` to show the item, ``False`` to hide it.
+        """
 
         self._mask |= ULC_MASK_SHOWN
         self._isColumnShown = shown
 
         
     def SetHyperText(self, hyper=True):
-        """Sets whether the item is hypertext or not."""
+        """
+        Sets whether the item is hypertext or not.
+
+        :param `hyper`: ``True`` to set hypertext behaviour, ``False`` otherwise.
+        """
         
         self._mask |= ULC_MASK_HYPERTEXT
         self._hypertext = hyper
 
 
     def SetVisited(self, visited=True):
-        """Sets whether an hypertext item was visited or not."""
+        """
+        Sets whether an hypertext item was visited or not.
+
+        :param `visited`: ``True`` to set a hypertext item as visited, ``False`` otherwise.
+        """
 
         self._mask |= ULC_MASK_HYPERTEXT
         self._visited = visited
 
 
     def GetVisited(self):
-        """Returns whether an hypertext item was visited or not."""
+        """ Returns whether an hypertext item was visited or not. """
 
         return self._visited        
 
 
     def IsHyperText(self):
-        """Returns whether the item is hypetext or not."""
+        """ Returns whether the item is hypetext or not. """
 
         return self._hypertext
 
 
     def SetWindow(self, wnd, expand=False):
-        """Sets the window associated to the item."""
+        """
+        Sets the window associated to the item.
+
+        :param `wnd`: a non-toplevel window to be displayed next to the item;
+        :param `expand`: ``True`` to expand the column where the item/subitem lives,
+         so that the window will be fully visible.
+        """
 
         self._mask |= ULC_MASK_WINDOW
         self._wnd = wnd
@@ -1216,7 +1607,7 @@ class UltimateListItem(wx.Object):
 
         # We have to bind the wx.EVT_SET_FOCUS for the associated window
         # No other solution to handle the focus changing from an item in
-        # CustomTreeCtrl and the window associated to an item
+        # UltimateListCtrl and the window associated to an item
         # Do better strategies exist?
         self._wnd.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)        
         self._windowsize = size
@@ -1231,13 +1622,13 @@ class UltimateListItem(wx.Object):
         
 
     def GetWindow(self):
-        """Returns the window associated to the item."""
+        """ Returns the window associated to the item. """
 
         return self._wnd        
 
 
     def DeleteWindow(self):
-        """Deletes the window associated to the item (if any)."""
+        """ Deletes the window associated to the item (if any). """
 
         if self._wnd:
             listCtrl = self._wnd.GetParent()            
@@ -1248,7 +1639,7 @@ class UltimateListItem(wx.Object):
         
 
     def GetWindowEnabled(self):
-        """Returns whether the associated window is enabled or not."""
+        """ Returns whether the associated window is enabled or not. """
 
         if not self._wnd:
             raise Exception("\nERROR: This Item Has No Window Associated")
@@ -1257,7 +1648,11 @@ class UltimateListItem(wx.Object):
 
 
     def SetWindowEnabled(self, enable=True):
-        """Sets whether the associated window is enabled or not."""
+        """
+        Sets whether the associated window is enabled or not.
+
+        :param `enable`: ``True`` to enable the associated window, ``False`` to disable it.
+        """
 
         if not self._wnd:
             raise Exception("\nERROR: This Item Has No Window Associated")
@@ -1267,34 +1662,58 @@ class UltimateListItem(wx.Object):
 
 
     def GetWindowSize(self):
-        """Returns the associated window size."""
+        """ Returns the associated window size. """
         
         return self._windowsize        
 
 
     def SetCustomRenderer(self, renderer):
+        """
+        Associate a custom renderer to this item.
+
+        :param `renderer`: a class able to correctly render the item.
+
+        :note: the renderer class **must** implement the methods `DrawSubItem`,
+         `GetLineHeight` and `GetSubItemWidth`. 
+        """
 
         self._mask |= ULC_MASK_RENDERER
         self._customRenderer = renderer
 
 
     def GetCustomRenderer(self):
+        """ Returns the custom renderer associated with this item (if any). """
 
         return self._customRenderer
     
 
     def SetOverFlow(self, over=True):
+        """
+        Sets the item in the overflow/non overflow state.
 
+        An item/subitem may overwrite neighboring items/subitems if its text would
+        not normally fit in the space allotted to it.
+        
+        :param `over`: ``True`` to set the item in a overflow state, ``False`` otherwise.        
+        """
+        
         self._mask |= ULC_MASK_OVERFLOW
         self._overFlow = over
 
 
     def GetOverFlow(self):
+        """
+        Returns if the item is in the overflow state.
+
+        An item/subitem may overwrite neighboring items/subitems if its text would
+        not normally fit in the space allotted to it.
+        """
 
         return self._overFlow
     
         
     def Init(self):
+        """ Initializes an empty L{UltimateListItem}. """
 
         self._mask = 0
         self._itemId = 0
@@ -1334,90 +1753,146 @@ class UltimateListItem(wx.Object):
 
 
     def SetFooterKind(self, kind): 
+        """
+        Sets the footer item kind.
+
+        :see: L{SetKind} for a list of valid items kind.
+        """
 
         self._mask |= ULC_MASK_FOOTER_KIND
         self._footerKind = kind
         
 
     def GetFooterKind(self):
+        """
+        Returns the footer item kind.
+
+        :see: L{SetKind} for a list of valid items kind.
+        """
 
         return self._footerKind
     
 
     def IsFooterChecked(self):
-        """Returns whether the item is checked or not."""
+        """ Returns whether the footer item is checked or not. """
 
         return self._footerChecked
 
 
     def CheckFooter(self, checked=True):
-        """Check an item. Meaningful only for check and radio items."""
+        """
+        Checks/unchecks a footer item.
+
+        :param `checked`: ``True`` to check an item, ``False`` to uncheck it.
+        
+        :note: This method is meaningful only for check and radio footer items.
+        """
 
         self._mask |= ULC_MASK_FOOTER_CHECK
         self._footerChecked = checked
 
 
     def GetFooterFormat(self):
+        """ Returns the footer item format. """
 
         return self._footerFormat
 
 
     def SetFooterFormat(self, format):
+        """
+        Sets the footer item format.
+
+        :param `format`: the footer item format.
+        """
 
         self._mask |= ULC_MASK_FOOTER_FORMAT
         self._footerFormat = format
 
 
     def GetFooterText(self):
+        """ Returns the footer text. """
 
         return self._footerText
 
 
     def SetFooterText(self, text):
-        
+        """
+        Sets the text label for the footer item.
+
+        :param `text`: the text label for the footer item.
+        """
+
         self._mask |= ULC_MASK_FOOTER_TEXT
         self._footerText = text
 
 
     def GetFooterImage(self):
+        """
+        Returns the zero-based index of the image associated with the footer item into
+        the image list.
+        """
 
         return self._footerImage
 
 
     def SetFooterImage(self, image):
+        """
+        Sets the zero-based index of the image associated with the footer item into the
+        image list.
+
+        :param `image`: the zero-based index of the image associated with the footer item
+         into the image list.
+        """
 
         self._mask |= ULC_MASK_FOOTER_IMAGE
         self._footerImage = to_list(image)
 
 
     def GetFooterTextColour(self):
+        """ Returns the footer item text colour. """
 
         return (self.HasAttributes() and [self._attr.GetFooterTextColour()] or [wx.NullColour])[0]
 
 
     def GetFooterBackgroundColour(self):
+        """ Returns the footer item background colour. """
 
         return (self.HasAttributes() and [self._attr.GetFooterBackgroundColour()] or [wx.NullColour])[0]
 
 
     def GetFooterFont(self):
+        """ Returns the footer item font. """
 
         return (self.HasAttributes() and [self._attr.GetFooterFont()] or [wx.NullFont])[0]
 
 
     def SetFooterAlign(self, align):
+        """
+        Sets the alignment for the footer item.
+
+        :see: L{SetAlign} for a list of valid alignment flags.
+        """
 
         self._mask |= ULC_MASK_FOOTER_FORMAT
         self._footerFormat = align
 
 
     def GetFooterAlign(self):
+        """
+        Returns the alignment for the footer item.
+
+        :see: L{SetAlign} for a list of valid alignment flags.
+        """
 
         return self._footerFormat
     
 
     def OnSetFocus(self, event):
-        """Handles the wx.EVT_SET_FOCUS event for the associated window."""
+        """
+        Handles the ``wx.EVT_SET_FOCUS`` event for the window associated to an item.
+
+        :param `event`: a `wx.FocusEvent` event to be processed.
+        """
 
         listCtrl = self._wnd.GetParent()
         select = listCtrl.GetItemState(self._itemId, ULC_STATE_SELECTED)
@@ -1438,8 +1913,20 @@ class UltimateListItem(wx.Object):
 # ----------------------------------------------------------------------------
 
 class CommandListEvent(wx.PyCommandEvent):
-
+    """
+    A list event holds information about events associated with L{UltimateListCtrl}
+    objects.
+    """
+    
     def __init__(self, commandTypeOrEvent=None, winid=0):
+        """
+        Default class constructor.
+        For internal use: do not call it in your code!
+
+        :param `commandTypeOrEvent`: the event type or another instance of
+         `wx.PyCommandEvent`;
+        :param `winid`: the event identifier.
+        """
 
         if type(commandTypeOrEvent) == types.IntType:
 
@@ -1466,96 +1953,167 @@ class CommandListEvent(wx.PyCommandEvent):
 
 
     def GetKeyCode(self):
+        """ Returns the key code if the event is a keypress event. """
 
         return self.m_code
 
 
     def GetIndex(self):
+        """ Returns the item index. """
 
         return self.m_itemIndex
 
 
     def GetColumn(self):
+        """
+        Returns the column position: it is only used with ``COL`` events.
 
+        For the column dragging events, it is the column to the left of the divider
+        being dragged, for the column click events it may be -1 if the user clicked
+        in the list control header outside any column.
+        """
+        
         return self.m_col
 
 
     def GetPoint(self):
-
+        """ Returns the position of the mouse pointer if the event is a drag event. """
+        
         return self.m_pointDrag
 
 
     def GetLabel(self):
-
+        """ Returns the (new) item label for ``EVT_LIST_END_LABEL_EDIT`` event. """
+        
         return self.m_item._text
 
 
     def GetText(self):
+        """ Returns the item text. """
 
         return self.m_item._text
 
 
     def GetImage(self):
+        """ Returns the item image. """
 
         return self.m_item._image
 
 
     def GetData(self):
+        """ Returns the item data. """
 
         return self.m_item._data
 
 
     def GetMask(self):
+        """ Returns the item mask. """
 
         return self.m_item._mask
 
 
     def GetItem(self):
+        """ Returns the item itself. """
 
         return self.m_item
 
 
     # for wxEVT_COMMAND_LIST_CACHE_HINT only
     def GetCacheFrom(self):
+        """
+        Returns the first item which the list control advises us to cache.
+
+        :note: This method is meaningful for ``EVT_LIST_CACHE_HINT`` event only.
+        """
 
         return self.m_oldItemIndex
 
 
     def GetCacheTo(self):
+        """
+        Returns the last item (inclusive) which the list control advises us to cache.
+
+        :note: This method is meaningful for ``EVT_LIST_CACHE_HINT`` event only.
+        """
 
         return self.m_itemIndex
 
 
     # was label editing canceled? (for wxEVT_COMMAND_LIST_END_LABEL_EDIT only)
     def IsEditCancelled(self):
+        """
+        Returns ``True`` if it the label editing has been cancelled by the user
+        (L{GetLabel} returns an empty string in this case but it doesn't allow
+        the application to distinguish between really cancelling the edit and
+        the admittedly rare case when the user wants to rename it to an empty
+        string).
+
+        :note: This method only makes sense for ``EVT_LIST_END_LABEL_EDIT`` messages.
+        """
 
         return self.m_editCancelled
 
 
     def SetEditCanceled(self, editCancelled):
+        """
+        Sets the item editing as cancelled/not cancelled.
+
+        :param `editCancelled`: ``True`` to set the item editing as cancelled, ``False``
+         otherwise.
+
+        :note: This method only makes sense for ``EVT_LIST_END_LABEL_EDIT`` messages.
+        """
 
         self.m_editCancelled = editCancelled
 
 
     def Clone(self):
+        """
+        Returns a copy of the event.
 
+        Any event that is posted to the wxPython event system for later action
+        (via `wx.EvtHandler.AddPendingEvent` or `wx.PostEvent`) must implement this
+        method.
+
+        All wxPython events fully implement this method, but any derived events
+        implemented by the user should also implement this method just in case they
+        (or some event derived from them) are ever posted.
+
+        All wxPython events implement a copy constructor, so the easiest way of
+        implementing the L{Clone} function is to implement a copy constructor for
+        a new event (call it `MyEvent`) and then define the L{Clone} function like
+        this::
+
+            def Clone(self):
+                return MyEvent(self)
+
+        """
+        
         return UltimateListEvent(self)
 
 
 
 # ----------------------------------------------------------------------------
-# TreeEvent is a special class for all events associated with list controls
+# UltimateListEvent is a special class for all events associated with list controls
 #
 # NB: note that not all accessors make sense for all events, see the event
 #     descriptions below
 # ----------------------------------------------------------------------------
 
 class UltimateListEvent(CommandListEvent):
-    
+    """
+    A list event holds information about events associated with L{UltimateListCtrl}
+    objects.
+    """
+
     def __init__(self, commandTypeOrEvent=None, winid=0):
         """
         Default class constructor.
         For internal use: do not call it in your code!
+
+        :param `commandTypeOrEvent`: the event type or another instance of
+         `wx.PyCommandEvent`;
+        :param `winid`: the event identifier.
         """
 
         CommandListEvent.__init__(self, commandTypeOrEvent, winid)
@@ -1567,25 +2125,39 @@ class UltimateListEvent(CommandListEvent):
 
         
     def GetNotifyEvent(self):
-        """Returns the actual wx.NotifyEvent."""
+        """ Returns the actual `wx.NotifyEvent`. """
         
         return self.notify
 
 
     def IsAllowed(self):
-        """Returns whether the event is allowed or not."""
+        """
+        Returns ``True`` if the change is allowed (L{Veto} hasn't been called) or
+        ``False`` otherwise (if it was).
+        """
 
         return self.notify.IsAllowed()
 
 
     def Veto(self):
-        """Vetos the event."""
+        """
+        Prevents the change announced by this event from happening.
+
+        :note: It is in general a good idea to notify the user about the reasons
+         for vetoing the change because otherwise the applications behaviour (which
+         just refuses to do what the user wants) might be quite surprising.
+        """
 
         self.notify.Veto()
 
 
     def Allow(self):
-        """The event is allowed."""
+        """
+        This is the opposite of L{Veto}: it explicitly allows the event to be processed.
+        For most events it is not necessary to call this method as the events are
+        allowed anyhow but some are forbidden by default (this will be mentioned
+        in the corresponding event description).
+        """
 
         self.notify.Allow()
 
@@ -1599,8 +2171,16 @@ class UltimateListEvent(CommandListEvent):
 #-----------------------------------------------------------------------------
 
 class ColWidthInfo(object):
+    """ A simple class which holds information about L{UltimateListCtrl} columns. """
 
     def __init__(self, w=0, needsUpdate=True):
+        """
+        Default class constructor
+
+        :param `w`: the initial width of the column;
+        :param `needsUpdate`: ``True`` if the column needs refreshing, ``False``
+         otherwise.
+        """
 
         self._nMaxWidth = w
         self._bNeedsUpdate = needsUpdate
@@ -1611,9 +2191,17 @@ class ColWidthInfo(object):
 #-----------------------------------------------------------------------------
 
 class UltimateListItemData(object):
+    """
+    A simple class which holds information about L{UltimateListItem} visual
+    attributes (client ractangles, positions, etc...).
+    """
 
     def __init__(self, owner):
+        """
+        Default class constructor
 
+        :param `owner`: an instance of L{UltimateListCtrl}.
+        """
 
         # the list ctrl we are in
         self._owner = owner
@@ -1630,46 +2218,76 @@ class UltimateListItemData(object):
 
 
     def SetImage(self, image):
+        """
+        Sets the zero-based indexes of the images associated with the item into the
+        image list.
+
+        :param `image`: a Python list with the zero-based indexes of the images
+         associated with the item into the image list.
+        """
 
         self._image = to_list(image)
 
 
     def SetData(self, data):
+        """
+        Sets client data for the item.
+
+        :param `data`: the client data associated to the item.
+        
+        :note: Please note that client data is associated with the item and not
+         with subitems.
+        """
 
         self._data = data
 
 
     def HasText(self):
-
+        """ Returns ``True`` if the item text is not the empty string. """
+        
         return self._text != ""
 
 
     def GetText(self):
+        """ Returns the item text. """
 
         return self._text
 
 
     def GetBackgroundColour(self):
+        """ Returns the currently set background colour. """
 
         return self._backColour
     
 
     def GetColour(self):
+        """ Returns the currently set text colour. """
 
         return self._colour
 
 
     def GetFont(self):
+        """ Returns the currently set font. """
 
         return (self._hasFont and [self._font] or [wx.NullFont])[0]
 
 
     def SetText(self, text):
+        """
+        Sets the text label for the item.
+
+        :param `text`: the text label for the item.
+        """
 
         self._text = text
 
 
     def SetColour(self, colour):
+        """
+        Sets the text colour for the item.
+
+        :param `colour`: an instance of `wx.Colour`.
+        """
 
         if colour == wx.NullColour:
             self._hasColour = False
@@ -1681,6 +2299,11 @@ class UltimateListItemData(object):
 
 
     def SetFont(self, font):
+        """
+        Sets the text font for the item.
+
+        :param `font`: an instance of `wx.Font`.
+        """
 
         if font == wx.NullFont:
             self._hasFont = False
@@ -1692,6 +2315,11 @@ class UltimateListItemData(object):
 
 
     def SetBackgroundColour(self, colour):
+        """
+        Sets the background colour for the item.
+
+        :param `colour`: an instance of `wx.Colour`.
+        """
 
         if colour == wx.NullColour:
             self._hasBackColour = False
@@ -1705,7 +2333,11 @@ class UltimateListItemData(object):
     # we can't use empty string for measuring the string width/height, so
     # always return something
     def GetTextForMeasuring(self):
-
+        """
+        Returns the item text or a simple string if the item text is the
+        empty string.
+        """
+        
         s = self.GetText()
         if not s.strip():
             s = 'H'
@@ -1714,45 +2346,83 @@ class UltimateListItemData(object):
 
 
     def GetImage(self):
+        """
+        Returns a Python list with the zero-based indexes of the images associated
+        with the item into the image list.
+        """
 
         return self._image
 
 
     def HasImage(self):
-
+        """ Returns ``True`` if the item has at least one image associated with it. """
+        
         return len(self._image) > 0
 
 
     def SetKind(self, kind): 
+        """
+        Sets the item kind.
+
+        :param `kind`: may be one of the following integers:
+
+         =============== ==========================
+         Item Kind       Description
+         =============== ==========================
+                0        A normal item
+                1        A checkbox-like item
+                2        A radiobutton-type item
+         =============== ==========================
+
+        """
 
         self._kind = kind
         
 
     def GetKind(self):
+        """
+        Returns the item kind.
+
+        :see: L{SetKind} for a list of valid item kinds.
+        """
 
         return self._kind
     
 
     def IsChecked(self):
-        """Returns whether the item is checked or not."""
+        """ Returns whether the item is checked or not. """
 
         return self._checked
 
 
     def Check(self, checked=True):
-        """Check an item. Meaningful only for check and radio items."""
+        """
+        Checks/unchecks an item.
+
+        :param `checked`: ``True`` to check an item, ``False`` to uncheck it.
+        
+        :note: This method is meaningful only for check and radio items.
+        """
 
         self._checked = checked
         
 
     def SetHyperText(self, hyper=True):
-        """Sets whether the item is hypertext or not."""
+        """
+        Sets whether the item is hypertext or not.
+
+        :param `hyper`: ``True`` to set hypertext behaviour, ``False`` otherwise.
+        """
         
         self._hypertext = hyper
 
 
     def SetVisited(self, visited=True):
-        """Sets whether an hypertext item was visited or not."""
+        """
+        Sets whether an hypertext item was visited or not.
+
+        :param `visited`: ``True`` to set a hypertext item as visited, ``False`` otherwise.
+        """
 
         self._visited = visited
 
@@ -1770,7 +2440,13 @@ class UltimateListItemData(object):
 
 
     def SetWindow(self, wnd, expand=False):
-        """Sets the window associated to the item."""
+        """
+        Sets the window associated to the item.
+
+        :param `wnd`: a non-toplevel window to be displayed next to the item;
+        :param `expand`: ``True`` to expand the column where the item/subitem lives,
+         so that the window will be fully visible.
+        """
 
         self._mask |= ULC_MASK_WINDOW
         self._wnd = wnd
@@ -1782,7 +2458,7 @@ class UltimateListItemData(object):
 
         # We have to bind the wx.EVT_SET_FOCUS for the associated window
         # No other solution to handle the focus changing from an item in
-        # CustomTreeCtrl and the window associated to an item
+        # UltimateListCtrl and the window associated to an item
         # Do better strategies exist?
         self._windowsize = size
         
@@ -1793,13 +2469,13 @@ class UltimateListItemData(object):
 
 
     def GetWindow(self):
-        """Returns the window associated to the item."""
+        """ Returns the window associated to the item. """
 
         return self._wnd        
 
 
     def DeleteWindow(self):
-        """Deletes the window associated to the item (if any)."""
+        """ Deletes the window associated to the item (if any). """
 
         if self._wnd:
             self._wnd.Destroy()
@@ -1807,7 +2483,7 @@ class UltimateListItemData(object):
         
 
     def GetWindowEnabled(self):
-        """Returns whether the associated window is enabled or not."""
+        """ Returns whether the associated window is enabled or not. """
 
         if not self._wnd:
             raise Exception("\nERROR: This Item Has No Window Associated")
@@ -1816,7 +2492,11 @@ class UltimateListItemData(object):
 
 
     def SetWindowEnabled(self, enable=True):
-        """Sets whether the associated window is enabled or not."""
+        """
+        Sets whether the associated window is enabled or not.
+
+        :param `enable`: ``True`` to enable the associated window, ``False`` to disable it.
+        """
 
         if not self._wnd:
             raise Exception("\nERROR: This Item Has No Window Associated")
@@ -1826,59 +2506,92 @@ class UltimateListItemData(object):
 
 
     def GetWindowSize(self):
-        """Returns the associated window size."""
+        """ Returns the associated window size. """
         
         return self._windowsize        
 
     
     def SetAttr(self, attr):
+        """
+        Sets the item attributes.
+
+        :param `attr`: an instance of L{UltimateListItemAttr}.
+        """
 
         self._attr = attr
 
 
     def GetAttr(self):
+        """ Returns the item attributes. """
 
         return self._attr
 
 
     def HasColour(self):
+        """ Returns ``True`` if the currently set text colour is valid. """
 
         return self._hasColour
 
 
     def HasFont(self):
+        """ Returns ``True`` if the currently set font is valid. """
 
         return self._hasFont
 
 
     def HasBackgroundColour(self):
+        """ Returns ``True`` if the currently set background colour is valid. """
 
         return self._hasBackColour
 
 
     def SetCustomRenderer(self, renderer):
+        """
+        Associate a custom renderer to this item.
+
+        :param `renderer`: a class able to correctly render the item.
+
+        :note: the renderer class **must** implement the methods `DrawSubItem`,
+         `GetLineHeight` and `GetSubItemWidth`. 
+        """
 
         self._mask |= ULC_MASK_RENDERER
         self._customRenderer = renderer
 
 
     def GetCustomRenderer(self):
+        """ Returns the custom renderer associated with this item (if any). """
 
         return self._customRenderer
     
 
     def SetOverFlow(self, over=True):
+        """
+        Sets the item in the overflow/non overflow state.
+
+        An item/subitem may overwrite neighboring items/subitems if its text would
+        not normally fit in the space allotted to it.
+        
+        :param `over`: ``True`` to set the item in a overflow state, ``False`` otherwise.        
+        """
 
         self._mask |= ULC_MASK_OVERFLOW
         self._overFlow = over
 
 
     def GetOverFlow(self):
+        """
+        Returns if the item is in the overflow state.
+
+        An item/subitem may overwrite neighboring items/subitems if its text would
+        not normally fit in the space allotted to it.
+        """
 
         return self._overFlow
     
 
     def Init(self):
+        """ Initializes the item data structure. """
 
         # the item image or -1
         self._image = []
@@ -1914,6 +2627,11 @@ class UltimateListItemData(object):
 
 
     def SetItem(self, info):
+        """
+        Sets information about the item.
+
+        :param `info`: an instance of L{UltimateListItemData}.
+        """
 
         if info._mask & ULC_MASK_TEXT:
             CheckVariableRowHeight(self._owner, info._text)
@@ -1983,12 +2701,24 @@ class UltimateListItemData(object):
 
 
     def SetPosition(self, x, y):
+        """
+        Sets the item position.
+
+        :param `x`: the item x position;
+        :param `y`: the item y position.
+        """
 
         self._rect.x = x
         self._rect.y = y
 
 
     def SetSize(self, width, height):
+        """
+        Sets the item size.
+
+        :param `width`: the item width;
+        :param `height`: the item height.
+        """
 
         if width != -1:
             self._rect.width = width
@@ -1997,31 +2727,46 @@ class UltimateListItemData(object):
 
 
     def IsHit(self, x, y):
+        """
+        Returns ``True`` if the input position is inside the item client rectangle.
+
+        :param `x`: the x mouse position;
+        :param `y`: the y mouse position.
+        """
 
         return wx.Rect(self.GetX(), self.GetY(), self.GetWidth(), self.GetHeight()).Contains((x, y))
 
 
     def GetX(self):
-
+        """ Returns the item x position. """
+        
         return self._rect.x
 
 
     def GetY(self):
+        """ Returns the item y position. """
 
         return self._rect.y
 
 
     def GetWidth(self):
+        """ Returns the item width. """
 
         return self._rect.width
 
 
     def GetHeight(self):
+        """ Returns the item height. """
 
         return self._rect.height
 
 
     def GetItem(self, info):
+        """
+        Returns information about the item.
+
+        :param `info`: an instance of L{UltimateListItemData}.
+        """
 
         mask = info._mask
         if not mask:
@@ -2073,11 +2818,17 @@ class UltimateListItemData(object):
 
 
     def IsEnabled(self):
+        """ Returns ``True`` if the item is enabled, ``False`` if it is disabled. """
 
         return self._enabled
 
 
     def Enable(self, enable=True):
+        """
+        Enables or disables the item.
+
+        :param `enable`: ``True`` to enable the item, ``False`` to disable it.
+        """
 
         self._enabled = enable        
         
@@ -2087,8 +2838,17 @@ class UltimateListItemData(object):
 #-----------------------------------------------------------------------------
 
 class UltimateListHeaderData(object):
+    """
+    A simple class which holds information about L{UltimateListItem} visual
+    attributes for the header/footer items (client ractangles, positions, etc...).
+    """
 
     def __init__(self, item=None):
+        """
+        Default class constructor.
+        
+        :param `item`: another instance of L{UltimateListHeaderData}.
+        """
 
         self.Init()
 
@@ -2097,26 +2857,35 @@ class UltimateListHeaderData(object):
 
 
     def HasText(self):
+        """ Returns ``True`` if the currently set text colour is valid. """
 
         return self._text != ""
 
 
     def GetText(self):
+        """ Returns the header/footer item text. """
 
         return self._text
 
 
     def SetText(self, text):
+        """
+        Sets the header/footer item text.
+
+        :param `text`: the new header/footer text.
+        """
 
         self._text = text
 
         
     def GetFont(self):
-
+        """ Returns the header/footer item font. """
+        
         return self._font
     
 
     def Init(self):
+        """ Initializes the header/footer item. """
 
         self._mask = 0
         self._image = []
@@ -2141,6 +2910,11 @@ class UltimateListHeaderData(object):
         
 
     def SetItem(self, item):
+        """
+        Sets information about the header/footer item.
+
+        :param `info`: an instance of L{UltimateListHeaderData}.
+        """
 
         self._mask = item._mask
 
@@ -2195,22 +2969,59 @@ class UltimateListHeaderData(object):
             
 
     def SetState(self, flag):
+        """
+        Sets the item state flags.
+
+        :param `state`: any combination of the following bits:
+        
+         ============================ ========= ==============================
+         State Bits                   Hex Value Description
+         ============================ ========= ==============================
+         ``ULC_STATE_DONTCARE``             0x0 Don't care what the state is
+         ``ULC_STATE_DROPHILITED``          0x1 The item is highlighted to receive a drop event
+         ``ULC_STATE_FOCUSED``              0x2 The item has the focus
+         ``ULC_STATE_SELECTED``             0x4 The item is selected
+         ``ULC_STATE_CUT``                  0x8 The item is in the cut state
+         ``ULC_STATE_DISABLED``            0x10 The item is disabled
+         ``ULC_STATE_FILTERED``            0x20 The item has been filtered
+         ``ULC_STATE_INUSE``               0x40 The item is in use
+         ``ULC_STATE_PICKED``              0x80 The item has been picked
+         ``ULC_STATE_SOURCE``             0x100 The item is a drag and drop source
+         ============================ ========= ==============================
+
+        """
 
         self._state = flag
 
 
     def SetPosition(self, x, y):
+        """
+        Sets the header/footer item position.
+
+        :param `x`: the item x position;
+        :param `y`: the item y position.
+        """
 
         self._xpos = x
         self._ypos = y
 
 
     def SetHeight(self, h):
+        """
+        Sets the header/footer item height.
+
+        :param `h`: an integer value representing the header/footer height.
+        """
 
         self._height = h
 
 
     def SetWidth(self, w):
+        """
+        Sets the header/footer item width.
+
+        :param `w`: an integer value representing the header/footer width.
+        """
 
         self._width = w
 
@@ -2221,31 +3032,60 @@ class UltimateListHeaderData(object):
 
 
     def SetFormat(self, format):
+        """
+        Sets the header item format.
 
+        :param `format`: the header item format.
+        """
+        
         self._format = format
 
 
     def SetFooterFormat(self, format):
+        """
+        Sets the footer item format.
+
+        :param `format`: the footer item format.
+        """
 
         self._footerFormat = format
         
 
     def HasImage(self):
+        """
+        Returns ``True`` if the header item has at least one image associated
+        with it.
+        """
 
         return len(self._image) > 0
 
 
     def HasFooterImage(self):
+        """
+        Returns ``True`` if the footer item has at least one image associated
+        with it.
+        """
 
         return len(self._footerImage) > 0
     
 
     def IsHit(self, x, y):
+        """
+        Returns ``True`` if the input position is inside the item client rectangle.
+
+        :param `x`: the x mouse position;
+        :param `y`: the y mouse position.
+        """
 
         return ((x >= self._xpos) and (x <= self._xpos+self._width) and (y >= self._ypos) and (y <= self._ypos+self._height))
 
 
     def GetItem(self, item):
+        """
+        Returns information about the item.
+
+        :param `item`: an instance of L{UltimateListHeaderData}.
+        """
 
         item._mask = self._mask
         item._text = self._text
@@ -2272,83 +3112,154 @@ class UltimateListHeaderData(object):
 
 
     def GetState(self):
+        """
+        Returns a bit field representing the state of the item.
+
+        :see: L{SetState} for a list of valid item states.
+        """
 
         return self._state
 
     
     def GetImage(self):
+        """
+        Returns a Python list with the zero-based indexes of the images associated
+        with the header item into the image list.
+        """
 
         return self._image
 
 
     def GetFooterImage(self):
+        """
+        Returns a Python list with the zero-based indexes of the images associated
+        with the footer item into the image list.
+        """
 
         return self._footerImage
     
 
     def GetWidth(self):
-
+        """ Returns the header/footer item width. """
+        
         return self._width
 
 
     def GetFormat(self):
+        """ Returns the header item format. """
 
         return self._format
 
 
     def GetFooterFormat(self):
+        """ Returns the footer item format. """
 
         return self._footerFormat
 
 
     def SetFont(self, font):
+        """
+        Sets a new font for the header item.
+
+        :param `font`: an instance of `wx.Font`.
+        """
 
         self._font = font
         
 
     def SetFooterFont(self, font):
+        """
+        Sets a new font for the footer item.
+
+        :param `font`: an instance of `wx.Font`.
+        """
 
         self._footerFont = font
 
 
     def SetKind(self, kind): 
+        """
+        Sets the header item kind.
+
+        :param `kind`: may be one of the following integers:
+
+         =============== ==========================
+         Item Kind       Description
+         =============== ==========================
+                0        A normal item
+                1        A checkbox-like item
+                2        A radiobutton-type item
+         =============== ==========================
+
+        """
 
         self._kind = kind
         
 
     def SetFooterKind(self, kind): 
+        """
+        Sets the footer item kind.
+
+        :param `kind`: the footer item kind.
+
+        :see: L{SetKind} for a list of valid item kinds.
+        """
 
         self._footerKind = kind
 
 
     def GetKind(self):
+        """
+        Returns the header item kind.
+
+        :see: L{SetKind} for a list of valid item kinds.
+        """
 
         return self._kind
     
 
     def GetFooterKind(self):
+        """
+        Returns the footer item kind.
+
+        :see: L{SetKind} for a list of valid item kinds.
+        """
 
         return self._footerKind
 
 
     def IsChecked(self):
-        """Returns whether the item is checked or not."""
+        """ Returns whether the header item is checked or not. """
 
         return self._checked
 
 
     def Check(self, checked=True):
-        """Check an item. Meaningful only for check and radio items."""
+        """
+        Checks/unchecks a header item.
+
+        :param `checked`: ``True`` to check an item, ``False`` to uncheck it.
+        
+        :note: This method is meaningful only for check and radio header items.
+        """
 
         self._checked = checked
 
 
     def IsFooterChecked(self):
+        """ Returns whether the footer item is checked or not. """
 
         return self._footerChecked
 
 
     def CheckFooter(self, check=True):
+        """
+        Checks/unchecks a footer item.
+
+        :param `checked`: ``True`` to check an item, ``False`` to uncheck it.
+        
+        :note: This method is meaningful only for check and radio footer items.
+        """
 
         self._footerChecked = check
             
@@ -2359,8 +3270,13 @@ class UltimateListHeaderData(object):
 #-----------------------------------------------------------------------------
 
 class GeometryInfo(object):
+    """
+    A simple class which holds items geometries for L{UltimateListCtrl} not in
+    report mode.
+    """
 
     def __init__(self):
+        """ Default class constructor. """
 
         # total item rect
         self._rectAll = wx.Rect()
@@ -2379,6 +3295,11 @@ class GeometryInfo(object):
 
     # extend all our rects to be centered inside the one of given width
     def ExtendWidth(self, w):
+        """
+        Extends all our rectangles to be centered inside the one of given width.
+
+        :param `w`: the given width.
+        """
 
         if self._rectAll.width > w:
             raise Exception("width can only be increased")
@@ -2394,12 +3315,17 @@ class GeometryInfo(object):
 #-----------------------------------------------------------------------------
 
 class UltimateListLineData(object):
+    """ A simple class which holds line geometries for L{UltimateListCtrl}. """
 
     def __init__(self, owner):
+        """
+        Default class constructor.
+
+        :param `owner`: an instance of L{UltimateListCtrl}.
+        """
 
         # the list of subitems: only may have more than one item in report mode
         self._items = []
-
 
         # is this item selected? [NB: not used in virtual mode]
         self._highlighted = False
@@ -2423,61 +3349,95 @@ class UltimateListLineData(object):
 
 
     def GetHeight(self):
+        """ Returns the line height. """
 
         return self._height
 
 
     def SetHeight(self, height):
+        """
+        Sets the line height.
+
+        :param `height`: the new line height.
+        """
 
         self._height = height
 
 
     def GetWidth(self):
+        """ Returns the line width. """
 
         return self._width
 
 
     def SetWidth(self, width):
+        """
+        Sets the line width.
+
+        :param `width`: the new line width.
+        """
 
         self._width = width
 
 
     def GetX(self):
+        """ Returns the line x position. """
 
         return self._x
 
 
     def SetX(self, x):
+        """
+        Sets the line x position.
+
+        :param `x`: the new line x position.
+        """
 
         self._x = x       
 
 
     def GetY(self):
+        """ Returns the line y position. """
 
         return self._y        
 
 
     def SetY(self, y):
+        """
+        Sets the line y position.
+
+        :param `y`: the new line y position.
+        """
 
         self._y = y
 
 
     def ResetDimensions(self):
+        """ Resets the line dimensions (client rectangle). """
 
         self._height = self._width = self._x = self._y = -1        
 
     
     def HasImage(self):
+        """
+        Returns ``True`` if the first item in the line has at least one image
+        associated with it.
+        """
 
         return self.GetImage() != []
 
 
     def HasText(self):
+        """
+        Returns ``True`` if the text of first item in the line is not the empty
+        string.
+        """
 
         return self.GetText(0) != ""
 
 
     def IsHighlighted(self):
+        """ Returns ``True`` if the line is highlighted. """
 
         if self.IsVirtual():
             raise Exception("unexpected call to IsHighlighted")
@@ -2486,26 +3446,41 @@ class UltimateListLineData(object):
 
 
     def GetMode(self):
+        """ Returns the current highlighting mode. """
 
         return self._owner.GetListCtrl().GetWindowStyleFlag() & ULC_MASK_TYPE
 
 
     def HasExtraMode(self, mode):
+        """
+        Returns ``True`` if the parent L{UltimateListCtrl} has the extra window
+        style specified by `mode`.
+
+        :param `mode`: the extra window style to check.
+        """
 
         return self._owner.GetListCtrl().HasExtraFlag(mode)
         
 
     def InReportView(self):
-
+        """ Returns ``True`` if the parent L{UltimateListCtrl} is in report view. """
+        
         return self._owner.HasFlag(ULC_REPORT)
 
 
     def IsVirtual(self):
+        """ Returns ``True`` if the parent L{UltimateListCtrl} has the ``ULC_VIRTUAL`` style set. """
 
         return self._owner.IsVirtual()
 
 
     def CalculateSize(self, dc, spacing):
+        """
+        Calculates the line size and item positions.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `spacing`: the spacing between the items, in pixels.
+        """
 
         item = self._items[0]
         mode = self.GetMode()
@@ -2606,6 +3581,13 @@ class UltimateListLineData(object):
 
 
     def SetPosition(self, x, y, spacing):
+        """
+        Sets the line position.
+
+        :param `x`: the current x coordinate;
+        :param `y`: the current y coordinate;
+        :param `spacing`: the spacing between items, in pixels.
+        """
 
         item = self._items[0]
         mode = self.GetMode()
@@ -2671,91 +3653,190 @@ class UltimateListLineData(object):
 
 
     def InitItems(self, num):
+        """
+        Initializes the list of items.
+
+        :param `num`: the initial number of items to store.
+        """
 
         for i in xrange(num):
             self._items.append(UltimateListItemData(self._owner))
 
 
     def SetItem(self, index, info):
+        """
+        Sets information about the item.
+
+        :param `index`: the index of the item;
+        :param `info`: an instance of L{UltimateListItem}.
+        """
 
         item = self._items[index]
         item.SetItem(info)
 
 
     def GetItem(self, index, info):
+        """
+        Returns information about the item.
+
+        :param `index`: the index of the item;
+        :param `info`: an instance of L{UltimateListItem}.
+        """
 
         item = self._items[index]
         return item.GetItem(info)
 
 
     def GetText(self, index):
+        """
+        Returns the item text at the position `index`.
 
+        :param `index`: the index of the item.
+        """
+        
         item = self._items[index]
         return item.GetText()
 
 
     def SetText(self, index, s):
+        """
+        Sets the item text at the position `index`.
+
+        :param `index`: the index of the item;
+        :param `s`: the new item text.
+        """
 
         item = self._items[index]
         item.SetText(s)
 
 
     def SetImage(self, index, image):
+        """
+        Sets the zero-based indexes of the images associated with the item into the
+        image list.
+
+        :param `index`: the index of the item;
+        :param `image`: a Python list with the zero-based indexes of the images
+         associated with the item into the image list.
+        """
 
         item = self._items[index]
         item.SetImage(image)
 
 
     def GetImage(self, index=0):
+        """
+        Returns a Python list with the zero-based indexes of the images associated
+        with the item into the image list.
+
+        :param `index`: the index of the item.
+        """
 
         item = self._items[index]
         return item.GetImage()
 
 
     def Check(self, index, checked=True):
+        """
+        Checks/unchecks an item.
+
+        :param `index`: the index of the item;
+        :param `checked`: ``True`` to check an item, ``False`` to uncheck it.
+        
+        :note: This method is meaningful only for check and radio items.
+        """
 
         item = self._items[index]
         item.Check(checked)
 
 
     def SetKind(self, index, kind=0):
+        """
+        Sets the item kind.
+
+        :param `index`: the index of the item;        
+        :param `kind`: may be one of the following integers:
+
+         =============== ==========================
+         Item Kind       Description
+         =============== ==========================
+                0        A normal item
+                1        A checkbox-like item
+                2        A radiobutton-type item
+         =============== ==========================
+
+        """
 
         item = self._items[index]
         item.SetKind(kind)
                 
 
     def GetKind(self, index=0):
+        """
+        Returns the item kind.
+
+        :param `index`: the index of the item.
+
+        :see: L{SetKind} for a list of valid item kinds.
+        """
 
         item = self._items[index]
         return item.GetKind()
 
 
     def IsChecked(self, index):
+        """
+        Returns whether the item is checked or not.
+
+        :param `index`: the index of the item.
+        """
 
         item = self._items[index]
         return item.IsChecked()
 
 
     def SetColour(self, index, c):
+        """
+        Sets the text colour for the item.
+
+        :param `index`: the index of the item;
+        :param `c`: an instance of `wx.Colour`.
+        """
 
         item = self._items[index]
         item.SetColour(c)
 
 
     def GetAttr(self):
-
+        """
+        Returns an instance of L{UltimateListItemAttr} associated with the first item
+        in the line.
+        """
+        
         item = self._items[0]
         return item.GetAttr()
 
 
     def SetAttr(self, attr):
+        """
+        Sets an instance of L{UltimateListItemAttr} to the first item in the line.
+
+        :param `attr`: an instance of L{UltimateListItemAttr}.
+        """
 
         item = self._items[0]
         item.SetAttr(attr)
 
 
     def SetAttributes(self, dc, attr, highlighted):
+        """
+        Sets various attributes to the input device context.
 
+        :param `dc`: an instance of `wx.DC`;
+        :param `attr`: an instance of L{UltimateListItemAttr};
+        :param `highlighted`: ``True`` if the item is highlighted, ``False`` otherwise.
+        """
+        
         listctrl = self._owner.GetParent()
 
         # fg colour
@@ -2806,6 +3887,12 @@ class UltimateListLineData(object):
 
 
     def Draw(self, line, dc):
+        """
+        Draws the line on the specified device context.
+
+        :param `line`: an instance of L{UltimateListLineData};
+        :param `dc`: an instance of `wx.DC`.
+        """
 
         item = self._items[0]
         highlighted = self.IsHighlighted()
@@ -2874,7 +3961,7 @@ class UltimateListLineData(object):
             if line == self._owner._newHotCurrent and not drawn:
                 r = wx.Rect(*self._gi._rectAll)
                 dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                dc.SetPen(wx.Pen(wx.NamedColor("orange")))
+                dc.SetPen(wx.Pen(wx.NamedColour("orange")))
                 dc.DrawRoundedRectangleRect(r, 3)
 
         if borderOnly and drawn:
@@ -2889,6 +3976,11 @@ class UltimateListLineData(object):
             
 
     def HideItemWindow(self, item):
+        """
+        If the input item has a window associated with it, hide it.
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         wnd = item.GetWindow()
         if wnd and wnd.IsShown():
@@ -2896,6 +3988,22 @@ class UltimateListLineData(object):
                 
 
     def DrawInReportMode(self, dc, line, rect, rectHL, highlighted, current, enabled, oldPN, oldBR):
+        """
+        Draws the line on the specified device context when the parent L{UltimateListCtrl}
+        is in report mode.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `line`: an instance of L{UltimateListLineData};
+        :param `rect`: the item client rectangle;
+        :param `rectHL`: the item client rectangle when the item is highlighted;
+        :param `highlighted`: ``True`` if the item is highlighted, ``False`` otherwise;
+        :param `current`: ``True`` if the item is the current item;
+        :param `enabled`: ``True`` if the item is enabled, ``False`` otherwise;
+        :param `oldPN`: an instance of `wx.Pen`, to save and restore at the end of
+         the drawing;
+        :param `oldBR`: an instance of `wx.Brush`, to save and restore at the end of
+         the drawing.     
+        """
 
         attr = self.GetAttr()
 
@@ -3098,7 +4206,7 @@ class UltimateListLineData(object):
                 r.y += 1
                 r.height -= 1
                 dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                dc.SetPen(wx.Pen(wx.NamedColor("orange")))
+                dc.SetPen(wx.Pen(wx.NamedColour("orange")))
                 dc.DrawRoundedRectangleRect(r, 3)
                 dc.SetPen(oldPN)
 
@@ -3113,6 +4221,17 @@ class UltimateListLineData(object):
             
 
     def DrawTextFormatted(self, dc, text, row, col, itemRect, overflow):
+        """
+        Draws the item text, correctly formatted.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `text`: the item text;
+        :param `row`: the line number to which this item belongs to;
+        :param `col`: the column number to which this item belongs to;
+        :param `itemRect`: the item client rectangle;
+        :param `overflow`: ``True`` if the item should overflow into neighboring columns,
+         ``False`` otherwise.
+        """
 
         # determine if the string can fit inside the current width
         w, h, dummy = dc.GetMultiLineTextExtent(text)
@@ -3182,7 +4301,14 @@ class UltimateListLineData(object):
 
 
     def DrawVerticalGradient(self, dc, rect, hasfocus):
-        """Gradient fill from colour 1 to colour 2 from top to bottom."""
+        """
+        Gradient fill from colour 1 to colour 2 from top to bottom.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `rect`: the rectangle to be filled with the gradient shading;
+        :param `hasfocus`: ``True`` if the main L{UltimateListCtrl} has focus, ``False``
+         otherwise.
+        """
 
         oldpen = dc.GetPen()
         oldbrush = dc.GetBrush()
@@ -3222,7 +4348,14 @@ class UltimateListLineData(object):
 
 
     def DrawHorizontalGradient(self, dc, rect, hasfocus):
-        """Gradient fill from colour 1 to colour 2 from left to right."""
+        """
+        Gradient fill from colour 1 to colour 2 from left to right.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `rect`: the rectangle to be filled with the gradient shading;
+        :param `hasfocus`: ``True`` if the main L{UltimateListCtrl} has focus, ``False``
+         otherwise.
+        """
 
         oldpen = dc.GetPen()
         oldbrush = dc.GetBrush()
@@ -3263,7 +4396,14 @@ class UltimateListLineData(object):
         
 
     def DrawVistaRectangle(self, dc, rect, hasfocus):
-        """Draw the selected item(s) with the Windows Vista style."""
+        """
+        Draws the selected item(s) with the Windows Vista style.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `rect`: the rectangle to be filled with the gradient shading;
+        :param `hasfocus`: ``True`` if the main L{UltimateListCtrl} has focus, ``False``
+         otherwise.
+        """
 
         if hasfocus:
             
@@ -3320,6 +4460,12 @@ class UltimateListLineData(object):
 
         
     def Highlight(self, on):
+        """
+        Sets the current line as highlighted or not highlighted.
+
+        :param `on`: ``True`` to set the current line as highlighted, ``False``
+         otherwise.
+        """
 
         if on == self._highlighted:
             return False
@@ -3330,6 +4476,9 @@ class UltimateListLineData(object):
 
 
     def ReverseHighlight(self):
+        """
+        Reverses the line highlighting, switching it off if it was on and vice-versa.
+        """
 
         self.Highlight(not self.IsHighlighted())
 
@@ -3340,11 +4489,30 @@ class UltimateListLineData(object):
 #-----------------------------------------------------------------------------
 
 class UltimateListHeaderWindow(wx.PyControl):
+    """
+    This class holds the header window for L{UltimateListCtrl}.
+    """
 
     def __init__(self, win, id, owner, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=0, validator=wx.DefaultValidator,
                  name="UltimateListCtrlcolumntitles", isFooter=False):
-
+        """
+        Default class constructor.
+        
+        :param `parent`: parent window. Must not be ``None``;
+        :param `id`: window identifier. A value of -1 indicates a default value;
+        :param `owner`: an instance of L{UltimateListCtrl};
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `style`: the window style;
+        :param `validator`: the window validator;
+        :param `name`: the window name;
+        :param `isFooter`: ``True`` if the L{UltimateListHeaderWindow} is in a footer
+         position, ``False`` otherwise.
+        """
+        
         wx.PyControl.__init__(self, win, id, pos, size, style|wx.NO_BORDER, validator, name)
 
         self._isFooter = isFooter
@@ -3398,6 +4566,11 @@ class UltimateListHeaderWindow(wx.PyControl):
 
 
     def DoGetBestSize(self):
+        """
+        Gets the size which best suits the window: for a control, it would be the
+        minimal size which doesn't truncate the control, for a panel - the same size
+        as it would have after a call to `Fit()`.
+        """
 
         w, h, d, dummy = self.GetFullTextExtent("Hg")
         maxH = self.GetTextHeight()
@@ -3416,6 +4589,11 @@ class UltimateListHeaderWindow(wx.PyControl):
 
 
     def IsColumnShown(self, column):
+        """
+        Returns ``True`` if the input column is shown, ``False`` if it is hidden.
+
+        :param `column`: an integer specifying the column index.
+        """
 
         if column < 0 or column >= self._owner.GetColumnCount():
             raise Exception("Invalid column")
@@ -3426,6 +4604,12 @@ class UltimateListHeaderWindow(wx.PyControl):
     # shift the DC origin to match the position of the main window horz
     # scrollbar: this allows us to always use logical coords
     def AdjustDC(self, dc):
+        """
+        Shifts the `wx.DC` origin to match the position of the main window horizontal
+        scrollbar: this allows us to always use logical coordinates.
+
+        :param `dc`: an instance of `wx.DC`.        
+        """
 
         xpix, dummy = self._owner.GetScrollPixelsPerUnit()
         x, dummy = self._owner.GetViewStart()
@@ -3435,6 +4619,7 @@ class UltimateListHeaderWindow(wx.PyControl):
 
 
     def GetTextHeight(self):
+        """ Returns the column text height, in pixels. """
 
         maxH = 0
         numColumns = self._owner.GetColumnCount()
@@ -3457,6 +4642,11 @@ class UltimateListHeaderWindow(wx.PyControl):
     
     
     def OnPaint(self, event):
+        """
+        Handles the ``wx.EVT_PAINT`` event for L{UltimateListHeaderWindow}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
 
         dc = wx.BufferedPaintDC(self)
         # width and height of the entire header window
@@ -3606,6 +4796,13 @@ class UltimateListHeaderWindow(wx.PyControl):
 
 
     def DrawTextFormatted(self, dc, text, rect):
+        """
+        Draws the item text, correctly formatted.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `text`: the item text;
+        :param `rect`: the item client rectangle.
+        """
 
         # determine if the string can fit inside the current width
         w, h, dummy = dc.GetMultiLineTextExtent(text)
@@ -3654,6 +4851,15 @@ class UltimateListHeaderWindow(wx.PyControl):
     
 
     def OnInternalIdle(self):
+        """
+        This method is normally only used internally, but sometimes an application
+        may need it to implement functionality that should not be disabled by an
+        application defining an `OnIdle` handler in a derived class.
+
+        This method may be used to do delayed painting, for example, and most
+        implementations call `wx.Window.UpdateWindowUI` in order to send update events
+        to the window in idle time.
+        """
 
         wx.PyControl.OnInternalIdle(self)
 
@@ -3666,6 +4872,7 @@ class UltimateListHeaderWindow(wx.PyControl):
 
     
     def DrawCurrent(self):
+        """ Force the redrawing of the column window. """
 
         self._sendSetColumnWidth = True
         self._colToSend = self._column
@@ -3673,6 +4880,11 @@ class UltimateListHeaderWindow(wx.PyControl):
 
 
     def OnMouse(self, event):
+        """
+        Handles the ``wx.EVT_MOUSE_EVENTS`` event for L{UltimateListHeaderWindow}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         # we want to work with logical coords
         x, dummy = self._owner.CalcUnscrolledPosition(event.GetX(), 0)
@@ -3837,7 +5049,13 @@ class UltimateListHeaderWindow(wx.PyControl):
                 
 
     def HandleColumnCheck(self, column, pos):
+        """
+        Handles the case in which a column contains a checkbox-like item.
 
+        :param `column`: the column index;
+        :param `pos`: the mouse position.
+        """
+        
         if column < 0 or column >= self._owner.GetColumnCount():
             return False
         
@@ -3897,6 +5115,11 @@ class UltimateListHeaderWindow(wx.PyControl):
 
 
     def OnEnterWindow(self, event):
+        """
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for L{UltimateListHeaderWindow}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         x, y = self._owner.CalcUnscrolledPosition(*self.ScreenToClient(wx.GetMousePosition()))
         column = self.HitTestColumn(x, y)
@@ -3908,6 +5131,11 @@ class UltimateListHeaderWindow(wx.PyControl):
 
 
     def OnLeaveWindow(self, event):
+        """
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{UltimateListHeaderWindow}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         self._enter = False
         self._leftDown = False
@@ -3917,6 +5145,15 @@ class UltimateListHeaderWindow(wx.PyControl):
 
 
     def HitTestColumn(self, x, y):
+        """
+        HitTest method for column headers.
+
+        :param `x`: the mouse x position;
+        :param `y`: the mouse y position.
+
+        :return: The column index if any column client rectangle contains the mouse
+         position, ``wx.NOT_FOUND`` otherwise.
+        """
         
         xOld = 0
         
@@ -3932,12 +5169,23 @@ class UltimateListHeaderWindow(wx.PyControl):
                 
         
     def OnSetFocus(self, event):
+        """
+        Handles the ``wx.EVT_SET_FOCUS`` event for L{UltimateListHeaderWindow}.
+
+        :param `event`: a `wx.FocusEvent` event to be processed.
+        """
 
         self._owner.SetFocusIgnoringChildren()
         self._owner.Update()
 
 
     def SendListEvent(self, eventType, pos):
+        """
+        Sends a L{UltimateListEvent} for the parent window.
+
+        :param `eventType`: the event type;
+        :param `pos`: an instance of `wx.Point`.
+        """
 
         parent = self.GetParent()
         le = UltimateListEvent(eventType, parent.GetId())
@@ -3955,6 +5203,7 @@ class UltimateListHeaderWindow(wx.PyControl):
 
 
     def GetOwner(self):
+        """ Returns the header window owner, an instance of L{UltimateListCtrl}. """
 
         return self._owner
 
@@ -3965,12 +5214,14 @@ class UltimateListHeaderWindow(wx.PyControl):
 #-----------------------------------------------------------------------------
 
 class UltimateListRenameTimer(wx.Timer):
-    """Timer used for enabling in-place edit."""
+    """ Timer used for enabling in-place edit. """
 
     def __init__(self, owner):
         """
         Default class constructor.
         For internal use: do not call it in your code!
+
+        :param `owner`: an instance of L{UltimateListCtrl}.
         """
         
         wx.Timer.__init__(self)
@@ -3978,7 +5229,7 @@ class UltimateListRenameTimer(wx.Timer):
 
 
     def Notify(self):
-        """The timer has expired."""
+        """ The timer has expired. """
 
         self._owner.OnRenameTimer()
         
@@ -3988,8 +5239,25 @@ class UltimateListRenameTimer(wx.Timer):
 #-----------------------------------------------------------------------------
 
 class UltimateListTextCtrl(ExpandoTextCtrl):
+    """
+    Control used for in-place edit.
+
+    This is a subclass of `ExpandoTextCtrl` as L{UltimateListCtrl} supports multiline
+    text items.
+
+    :note: To add a newline character in a multiline item, press ``Shift`` + ``Enter``
+     as the ``Enter`` key alone is consumed by L{UltimateListCtrl} to finish
+     the editing and ``Ctrl`` + ``Enter`` is consumed by the platform for tab navigation.
+    """
 
     def __init__(self, owner, itemEdit):
+        """
+        Default class constructor.
+        For internal use: do not call it in your code!
+
+        :param `owner`: the control parent (an instance of L{UltimateListCtrl} );
+        :param `itemEdit`: an instance of L{UltimateListItem}.
+        """
 
         self._startValue = owner.GetItemText(itemEdit)
         self._currentValue = self._startValue
@@ -4019,7 +5287,7 @@ class UltimateListTextCtrl(ExpandoTextCtrl):
 
 
     def AcceptChanges(self):
-        """Accepts/refuses the changes made by the user."""
+        """ Accepts/refuses the changes made by the user. """
 
         value = self.GetValue()
 
@@ -4047,7 +5315,7 @@ class UltimateListTextCtrl(ExpandoTextCtrl):
 
 
     def Finish(self):
-        """Finish editing."""
+        """ Finish editing. """
 
         try:
             if not self._finished:
@@ -4059,7 +5327,11 @@ class UltimateListTextCtrl(ExpandoTextCtrl):
         
 
     def OnChar(self, event):
-        """Handles the wx.EVT_CHAR event for UltimateListTextCtrl."""
+        """
+        Handles the ``wx.EVT_CHAR`` event for L{UltimateListTextCtrl}.
+
+        :param `event`: a `wx.KeyEvent` event to be processed.
+        """
 
         keycode = event.GetKeyCode()
         shiftDown = event.ShiftDown()
@@ -4083,7 +5355,11 @@ class UltimateListTextCtrl(ExpandoTextCtrl):
     
 
     def OnKeyUp(self, event):
-        """Handles the wx.EVT_KEY_UP event for UltimateListTextCtrl."""
+        """
+        Handles the ``wx.EVT_KEY_UP`` event for L{UltimateListTextCtrl}.
+
+        :param `event`: a `wx.KeyEvent` event to be processed.
+        """
 
         if not self._finished:
 
@@ -4107,7 +5383,11 @@ class UltimateListTextCtrl(ExpandoTextCtrl):
 
 
     def OnKillFocus(self, event):
-        """Handles the wx.EVT_KILL_FOCUS event for UltimateListTextCtrl."""
+        """
+        Handles the ``wx.EVT_KILL_FOCUS`` event for L{UltimateListTextCtrl}.
+
+        :param `event`: a `wx.FocusEvent` event to be processed.
+        """
         
         if not self._finished and not self._aboutToFinish:
         
@@ -4124,7 +5404,7 @@ class UltimateListTextCtrl(ExpandoTextCtrl):
 
 
     def StopEditing(self):
-        """Suddenly stops the editing."""
+        """ Suddenly stops the editing. """
 
         self._owner.OnRenameCancelled(self._itemEdited)
         self.Finish()
@@ -4135,10 +5415,25 @@ class UltimateListTextCtrl(ExpandoTextCtrl):
 #-----------------------------------------------------------------------------
 
 class UltimateListMainWindow(wx.PyScrolledWindow):
-
+    """
+    This is the main widget implementation of L{UltimateListCtrl}.
+    """
+    
     def __init__(self, parent, id, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=0, name="listctrlmainwindow"):
-
+        """
+        Default class constructor.
+        
+        :param `parent`: parent window. Must not be ``None``;
+        :param `id`: window identifier. A value of -1 indicates a default value;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `style`: the window style;
+        :param `name`: the window name.
+        """
+        
         wx.PyScrolledWindow.__init__(self, parent, id, pos, size, style|wx.HSCROLL|wx.VSCROLL, name)
 
         # the list of column objects
@@ -4196,7 +5491,8 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         
 
     def Init(self):
-
+        """ Initializes the L{UltimateListMainWindow} widget. """
+        
         self._dirty = True
         self._countVirt = 0
         self._lineFrom = None
@@ -4289,59 +5585,94 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetMainWindowOfCompositeControl(self):
-
+        """ Returns the L{UltimateListMainWindow} parent. """
+        
         return self.GetParent()
 
 
     def DoGetBestSize(self):
+        """
+        Gets the size which best suits the window: for a control, it would be the
+        minimal size which doesn't truncate the control, for a panel - the same size
+        as it would have after a call to `Fit()`.
+        """
 
         return wx.Size(100, 80)
     
 
     def HasFlag(self, flag):
+        """
+        Returns ``True`` if the window has the given `flag` bit set.
+
+        :param `flag`: the bit to check.
+
+        :see: L{UltimateListCtrl.SetSingleStyle} for a list of valid flags.
+        """
 
         return self._parent.HasFlag(flag)
 
 
     def HasExtraFlag(self, flag):
+        """
+        Returns ``True`` if the window has the given extra `flag` bit set.
+
+        :param `flag`: the extra bit to check.
+
+        :see: L{UltimateListCtrl.SetExtraStyle} for a list of valid flags.
+        """
 
         return self._parent.HasExtraFlag(flag)
     
 
     def IsColumnShown(self, column):
+        """
+        Returns ``True`` if the input column is shown, ``False`` if it is hidden.
+
+        :param `column`: an integer specifying the column index.
+        """
 
         return self.GetColumn(column).IsShown()
 
 
     # return True if this is a virtual list control
     def IsVirtual(self):
+        """ Returns ``True`` if the window has the ``ULC_VIRTUAL`` style set. """
 
         return self.HasFlag(ULC_VIRTUAL)
 
 
     # return True if the control is in report mode
     def InReportView(self):
+        """ Returns ``True`` if the window is in report mode. """
 
         return self.HasFlag(ULC_REPORT)
 
 
     def InTileView(self):
+        """
+        Returns ``True`` if the window is in tile mode (partially implemented).
+
+        :todo: Fully implement tile view for L{UltimateListCtrl}.        
+        """
 
         return self.HasFlag(ULC_TILE)        
 
     # return True if we are in single selection mode, False if multi sel
     def IsSingleSel(self):
-
+        """ Returns ``True`` if we are in single selection mode, ``False`` if multi selection. """
+        
         return self.HasFlag(ULC_SINGLE_SEL)
 
 
     def HasFocus(self):
-
+        """ Returns ``True`` if the window has focus. """
+        
         return self._hasFocus
 
     
     # do we have a header window?
     def HasHeader(self):
+        """ Returns ``True`` if the header window is shown. """
 
         if (self.InReportView() or self.InTileView()) and not self.HasFlag(ULC_NO_HEADER):
             return True
@@ -4353,6 +5684,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
     # do we have a footer window?
     def HasFooter(self):
+        """ Returns ``True`` if the footer window is shown. """
 
         if self.HasHeader() and self.HasExtraFlag(ULC_FOOTER):
             return True
@@ -4362,29 +5694,46 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
     # toggle the line state and refresh it
     def ReverseHighlight(self, line):
+        """
+        Toggles the line state and refreshes it.
 
+        :param `line`: an instance of L{UltimateListLineData}.
+        """
+        
         self.HighlightLine(line, not self.IsHighlighted(line))
         self.RefreshLine(line)
 
 
     # get the size of the total line rect
     def GetLineSize(self, line):
+        """
+        Returns the size of the total line client rectangle.
 
+        :param `line`: an instance of L{UltimateListLineData}.
+        """
+        
         return self.GetLineRect(line).GetSize()
 
 
     # bring the current item into view
     def MoveToFocus(self):
+        """ Brings tyhe current item into view. """
 
         self.MoveToItem(self._current)
 
 
     def GetColumnCount(self):
+        """ Returns the total number of columns in the L{UltimateListCtrl}. """
 
         return len(self._columns)
 
 
     def GetItemText(self, item):
+        """
+        Returns the item text.
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         info = UltimateListItem()
         info._mask = ULC_MASK_TEXT
@@ -4395,6 +5744,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def SetItemText(self, item, value):
+        """
+        Sets the item text.
+
+        :param `item`: an instance of L{UltimateListItem};
+        :param `value`: the new item text.
+        """
 
         info = UltimateListItem()
         info._mask = ULC_MASK_TEXT
@@ -4405,23 +5760,36 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def IsEmpty(self):
+        """ Returns ``True`` if the window has no items in it. """
 
         return self.GetItemCount() == 0
 
 
     def ResetCurrent(self):
+        """ Resets the current item to ``None``. """
 
         self.ChangeCurrent(-1)
 
 
     def HasCurrent(self):
+        """
+        Returns ``True`` if the current item has been set, either programmatically
+        or by user intervention.
+        """
 
         return self._current != -1
 
 
     # override base class virtual to reset self._lineHeight when the font changes
     def SetFont(self, font):
+        """
+        Overridden base class virtual to reset the line height when the font changes.
 
+        :param `font`: a valid `wx.Font` object.
+
+        :note: Overridden from `wx.PyScrolledWindow`.        
+        """
+        
         if not wx.PyScrolledWindow.SetFont(self, font):
             return False
 
@@ -4432,6 +5800,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def ResetLineDimensions(self, force=False):
+        """
+        Resets the line dimensions, so that client rectangles and positions are
+        recalculated.
+
+        :param `force`: ``True`` to reset all line dimensions.
+        """
 
         if (self.HasFlag(ULC_REPORT) and self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT) and not self.IsVirtual()) or force:
             for l in xrange(self.GetItemCount()):
@@ -4441,18 +5815,25 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     # these are for UltimateListLineData usage only
     # get the backpointer to the list ctrl
     def GetListCtrl(self):
+        """ Returns the parent widget, an instance of L{UltimateListCtrl}. """
 
         return self.GetParent()
 
 
     # get the brush to use for the item highlighting
     def GetHighlightBrush(self):
-
+        """ Returns the brush to use for the item highlighting. """
+        
         return (self._hasFocus and [self._highlightBrush] or [self._highlightUnfocusedBrush])[0]
 
 
     # get the line data for the given index
     def GetLine(self, n):
+        """
+        Returns the line data for the given index.
+
+        :param `n`: the line index.
+        """
 
         if self.IsVirtual():
 
@@ -4464,6 +5845,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
     # force us to recalculate the range of visible lines
     def ResetVisibleLinesRange(self, reset=False):
+        """
+        Forces us to recalculate the range of visible lines.
+
+        :param `reset`: ``True`` to reset all line dimensions, which will then be
+         recalculated.
+        """
 
         self._lineFrom = -1
         if self.IsShownOnScreen() and reset:
@@ -4472,11 +5859,20 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
     # get the colour to be used for drawing the rules
     def GetRuleColour(self):
+        """ Returns the colour to be used for drawing the horizontal and vertical rules. """
 
         return wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT)
 
 
     def CacheLineData(self, line):
+        """
+        Saves the current line attributes.
+
+        :param `line`: an instance of L{UltimateListLineData}.
+
+        :note: This method is used only if the L{UltimateListCtrl} has the ``ULC_VIRTUAL``
+         style set.
+        """
 
         listctrl = self.GetListCtrl()
         ld = self.GetDummyLine()
@@ -4494,7 +5890,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetDummyLine(self):
+        """
+        Returns a dummy line.
 
+        :note: This method is used only if the L{UltimateListCtrl} has the ``ULC_VIRTUAL``
+         style set.
+        """
+        
         if self.IsEmpty():
             raise Exception("invalid line index")
 
@@ -4519,6 +5921,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # ----------------------------------------------------------------------------
 
     def GetLineHeight(self, item=None):
+        """
+        Returns the line height for a specific item.
+
+        :param `item`: if not ``None``, an instance of L{UltimateListItem}.
+        """
 
         # we cache the line height as calling GetTextExtent() is slow
 
@@ -4579,6 +5986,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetLineY(self, line):
+        """
+        Returns the line y position.
+
+        :param `line`: an instance of L{UltimateListLineData}.
+        """
 
         if self.IsVirtual():
             return LINE_SPACING + line*self.GetLineHeight()
@@ -4597,6 +6009,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetLineRect(self, line):
+        """
+        Returns the line client rectangle.
+
+        :param `line`: an instance of L{UltimateListLineData}.
+        """
 
         if not self.InReportView():
             return self.GetLine(line)._gi._rectAll
@@ -4606,6 +6023,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetLineLabelRect(self, line):
+        """
+        Returns the line client rectangle for the item text only.
+
+        :param `line`: an instance of L{UltimateListLineData}.
+        """
 
         if not self.InReportView():
             return self.GetLine(line)._gi._rectLabel
@@ -4624,6 +6046,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     
 
     def GetLineIconRect(self, line):
+        """
+        Returns the line client rectangle for the item image only.
+
+        :param `line`: an instance of L{UltimateListLineData}.
+        """
 
         if not self.InReportView():
             return self.GetLine(line)._gi._rectIcon
@@ -4639,6 +6066,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetLineCheckboxRect(self, line):
+        """
+        Returns the line client rectangle for the item checkbox image only.
+
+        :param `line`: an instance of L{UltimateListLineData}.
+        """
 
         if not self.InReportView():
             return self.GetLine(line)._gi._rectCheck
@@ -4651,11 +6083,43 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     
 
     def GetLineHighlightRect(self, line):
+        """
+        Returns the line client rectangle when the line is highlighted.
+
+        :param `line`: an instance of L{UltimateListLineData}.
+        """
 
         return (self.InReportView() and [self.GetLineRect(line)] or [self.GetLine(line)._gi._rectHighlight])[0]
 
 
     def HitTestLine(self, line, x, y):
+        """
+        HitTest method for a L{UltimateListCtrl} line.
+
+        :param `line`: an instance of L{UltimateListLineData};
+        :param `x`: the mouse x position;
+        :param `y`: the mouse y position.
+
+        :return: a tuple of values, representing the item hit and a hit flag. The
+         hit flag can be one of the following bits:
+
+         =============================== ========= ================================
+         HitTest Flag                    Hex Value Description
+         =============================== ========= ================================
+         ``ULC_HITTEST_ABOVE``                 0x1 Above the client area
+         ``ULC_HITTEST_BELOW``                 0x2 Below the client area
+         ``ULC_HITTEST_NOWHERE``               0x4 In the client area but below the last item
+         ``ULC_HITTEST_ONITEM``              0x2a0 Anywhere on the item (text, icon, checkbox image)
+         ``ULC_HITTEST_ONITEMICON``           0x20 On the bitmap associated with an item
+         ``ULC_HITTEST_ONITEMLABEL``          0x80 On the label (string) associated with an item
+         ``ULC_HITTEST_ONITEMRIGHT``         0x100 In the area to the right of an item
+         ``ULC_HITTEST_ONITEMSTATEICON``     0x200 On the state icon for a list view item that is in a user-defined state
+         ``ULC_HITTEST_TOLEFT``              0x400 To the left of the client area
+         ``ULC_HITTEST_TORIGHT``             0x800 To the right of the client area
+         ``ULC_HITTEST_ONITEMCHECK``        0x1000 On the item checkbox (if any)
+         =============================== ========= ================================
+        
+        """
 
         ld = self.GetLine(line)
 
@@ -4726,6 +6190,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # ----------------------------------------------------------------------------
 
     def IsHighlighted(self, line):
+        """
+        Returns ``True`` if the input line is highlighted.
+
+        :param `line`: an instance of L{UltimateListLineData}.
+        """
 
         if self.IsVirtual():
 
@@ -4738,6 +6207,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def HighlightLines(self, lineFrom, lineTo, highlight=True):
+        """
+        Highlights a range of lines in L{UltimateListCtrl}.
+
+        :param `lineFrom`: an integer representing the first line to highlight;
+        :param `lineTo`: an integer representing the last line to highlight;
+        :param `highlight`: ``True`` to highlight the lines, ``False`` otherwise.
+        """
 
         if self.IsVirtual():
             linesChanged = self._selStore.SelectRange(lineFrom, lineTo, highlight)
@@ -4758,6 +6234,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def HighlightLine(self, line, highlight=True):
+        """
+        Highlights a line in L{UltimateListCtrl}.
+
+        :param `line`: an instance of L{UltimateListLineData};
+        :param `highlight`: ``True`` to highlight the line, ``False`` otherwise.
+        """
 
         changed = False
 
@@ -4779,6 +6261,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def RefreshLine(self, line):
+        """
+        Redraws the input line.
+
+        :param `line`: an instance of L{UltimateListLineData}.
+        """
 
         if self.InReportView():
 
@@ -4792,6 +6279,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def RefreshLines(self, lineFrom, lineTo):
+        """
+        Redraws a range of lines in L{UltimateListCtrl}.
+
+        :param `lineFrom`: an integer representing the first line to refresh;
+        :param `lineTo`: an integer representing the last line to refresh.
+        """
 
         if self.InReportView():
 
@@ -4819,6 +6312,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def RefreshAfter(self, lineFrom):
+        """
+        Redraws all the lines after the input one.
+
+        :param `lineFrom`: an integer representing the first line to refresh.
+        """
 
         if self.InReportView():
 
@@ -4848,6 +6346,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def RefreshSelected(self):
+        """ Redraws the selected lines. """
 
         if self.IsEmpty():
             return
@@ -4871,7 +6370,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def HideWindows(self):
-        """Hides the windows associated to the items. Used internally."""
+        """ Hides the windows associated to the items. Used internally. """
         
         for child in self._itemWithWindow:
             wnd = child.GetWindow()
@@ -4880,6 +6379,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def OnPaint(self, event):
+        """
+        Handles the ``wx.EVT_PAINT`` event for L{UltimateListMainWindow}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
 
         # Note: a wxPaintDC must be constructed even if no drawing is
         # done (a Windows requirement).
@@ -5009,12 +6513,25 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         
     def OnEraseBackground(self, event):
+        """
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{UltimateListMainWindow}.
+
+        :param `event`: a `wx.EraseEvent` event to be processed.
+
+        :note: This method is intentionally empty to reduce flicker.        
+        """
 
         pass
     
 
     def TileBackground(self, dc):
-        """Tiles the background image to fill all the available area."""
+        """
+        Tiles the background image to fill all the available area.
+
+        :param `dc`: an instance of `wx.DC`.
+
+        :todo: Support background images also in stretch and centered modes.
+        """
 
         if not self._backgroundImage:
             return
@@ -5042,6 +6559,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def PaintWaterMark(self, dc):
+        """
+        Draws a watermark at the bottom right of L{UltimateListCtrl}.
+
+        :param `dc`: an instance of `wx.DC`.
+
+        :todo: Better support for this is needed.
+        """
 
         if not self._waterMark:
             return
@@ -5058,6 +6582,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         
         
     def HighlightAll(self, on=True):
+        """
+        Highlights/unhighlights all the lines in L{UltimateListCtrl}.
+
+        :param `on`: ``True`` to highlight all the lines, ``False`` to unhighlight them.
+        """
 
         if self.IsSingleSel():
 
@@ -5075,8 +6604,17 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def OnChildFocus(self, event):
+        """
+        Handles the ``wx.EVT_CHILD_FOCUS`` event for L{UltimateListMainWindow}.
 
-        # Do nothing here.  This prevents the default handler in wxScrolledWindow
+        :param `event`: a `wx.ChildFocusEvent` event to be processed.
+
+        :note: This method is intentionally empty to prevent the default handler in
+         `wx.PyScrolledWindow` from needlessly scrolling the window when the edit
+         control is dismissed.
+        """
+
+        # Do nothing here.  This prevents the default handler in wx.PyScrolledWindow
         # from needlessly scrolling the window when the edit control is
         # dismissed.  See ticket #9563.
 
@@ -5084,6 +6622,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     
 
     def SendNotify(self, line, command, point=wx.DefaultPosition):
+        """
+        Actually sends a L{UltimateListEvent}.
+
+        :param `line`: an instance of L{UltimateListLineData};
+        :param `command`: the event type to send;
+        :param `point`: an instance of `wx.Point`.
+        """
 
         bRet = True
         le = UltimateListEvent(command, self.GetParent().GetId())
@@ -5114,6 +6659,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def ChangeCurrent(self, current):
+        """
+        Changes the current line to the specified one.
+
+        :param `current`: an integer specifying the index of the current line.
+        """        
 
         self._current = current
 
@@ -5126,6 +6676,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def EditLabel(self, item):
+        """
+        Starts editing an item label.
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         if item < 0 or item >= self.GetItemCount():
             raise Exception("wrong index in UltimateListCtrl.EditLabel()")
@@ -5158,6 +6713,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def OnRenameTimer(self):
+        """ The timer for renaming has expired. Start editing. """
 
         if not self.HasCurrent():
             raise Exception("unexpected rename timer")
@@ -5166,6 +6722,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def OnRenameAccept(self, itemEdit, value):
+        """
+        Called by L{UltimateListTextCtrl}, to accept the changes and to send the
+        ``EVT_LIST_END_LABEL_EDIT`` event.
+
+        :param `itemEdit`: an instance of L{UltimateListItem};
+        :param `value`: the new value of the item label.        
+        """
 
         le = UltimateListEvent(wxEVT_COMMAND_LIST_END_LABEL_EDIT, self.GetParent().GetId())
         le.SetEventObject(self.GetParent())
@@ -5180,6 +6743,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def OnRenameCancelled(self, itemEdit):
+        """
+        Called by L{UltimateListTextCtrl}, to cancel the changes and to send the
+        ``EVT_LIST_END_LABEL_EDIT`` event.
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         # let owner know that the edit was cancelled
         le = UltimateListEvent(wxEVT_COMMAND_LIST_END_LABEL_EDIT, self.GetParent().GetId())
@@ -5195,6 +6764,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def OnMouse(self, event):
+        """
+        Handles the ``wx.EVT_MOUSE_EVENTS`` event for L{UltimateListMainWindow}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         if wx.Platform == "__WXMAC__":
             # On wxMac we can't depend on the EVT_KILL_FOCUS event to properly
@@ -5527,6 +7101,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def DrawDnDArrow(self):
+        """ Draws a drag and drop visual representation of an arrow. """
         
         dc = wx.ClientDC(self)
         lineY = self.GetLineY(self._dropTarget)
@@ -5544,6 +7119,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         
 
     def DragFinish(self, event):
+        """
+        A drag and drop operation has just finished.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         if not self._isDragging:
             return False
@@ -5565,8 +7145,9 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
     def HandleHyperLink(self, item):
         """
-        Handles the hyperlink items. Put in a separate method to avoid repetitive
-        calls to the same code spread aound the file.
+        Handles the hyperlink items, sending the ``EVT_LIST_ITEM_HYPERLINK`` event.
+
+        :param `item`: an instance of L{UltimateListItem}.        
         """
 
         if self.IsItemHyperText(item):
@@ -5574,6 +7155,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def OnHoverTimer(self, event):
+        """
+        Handles the ``wx.EVT_TIMER`` event for L{UltimateListMainWindow}.
+
+        :param `event`: a `wx.TimerEvent` event to be processed.
+        """
 
         x, y = self.ScreenToClient(wx.GetMousePosition())
         x, y = self.CalcUnscrolledPosition(x, y)
@@ -5592,6 +7178,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def MoveToItem(self, item):
+        """
+        Scrolls the input item into view.
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         if item == -1:
             return
@@ -5669,7 +7260,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # ----------------------------------------------------------------------------
 
     def GetNextActiveItem(self, item, down=True):
-        """Returns the next active item. Used Internally at present. """
+        """
+        Returns the next active item. Used Internally at present.
+
+        :param `item`: an instance of L{UltimateListItem};
+        :param `down`: ``True`` to search downwards for an active item, ``False``
+         to search upwards.
+        """
 
         count = self.GetItemCount()
         initialItem = item
@@ -5687,6 +7284,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def OnArrowChar(self, newCurrent, event):
+        """
+        Handles the keyboard arrows key events.
+
+        :param `newCurrent`: an integer specifying the new current item;
+        :param `event`: a `wx.KeyEvent` event to be processed.
+        """
 
         oldCurrent = self._current
         newCurrent = self.GetNextActiveItem(newCurrent, newCurrent > oldCurrent)
@@ -5727,6 +7330,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def OnKeyDown(self, event):
+        """
+        Handles the ``wx.EVT_KEY_DOWN`` event for L{UltimateListMainWindow}.
+
+        :param `event`: a `wx.KeyEvent` event to be processed.
+        """
 
         parent = self.GetParent()
 
@@ -5741,6 +7349,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     
 
     def OnKeyUp(self, event):
+        """
+        Handles the ``wx.EVT_KEY_UP`` event for L{UltimateListMainWindow}.
+
+        :param `event`: a `wx.KeyEvent` event to be processed.
+        """
 
         parent = self.GetParent()
 
@@ -5755,6 +7368,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                 
 
     def OnChar(self, event):
+        """
+        Handles the ``wx.EVT_CHAR`` event for L{UltimateListMainWindow}.
+
+        :param `event`: a `wx.KeyEvent` event to be processed.
+        """
 
         parent = self.GetParent()
 
@@ -5881,6 +7499,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # ----------------------------------------------------------------------------
 
     def OnSetFocus(self, event):
+        """
+        Handles the ``wx.EVT_SET_FOCUS`` event for L{UltimateListMainWindow}.
+
+        :param `event`: a `wx.FocusEvent` event to be processed.
+        """
 
         if self.GetParent():
             event = wx.FocusEvent(wx.wxEVT_SET_FOCUS, self.GetParent().GetId())
@@ -5898,6 +7521,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def OnKillFocus(self, event):
+        """
+        Handles the ``wx.EVT_KILL_FOCUS`` event for L{UltimateListMainWindow}.
+
+        :param `event`: a `wx.FocusEvent` event to be processed.
+        """
 
         if self.GetParent():
             event = wx.FocusEvent(wx.wxEVT_KILL_FOCUS, self.GetParent().GetId())
@@ -5910,6 +7538,15 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def DrawImage(self, index, dc, x, y, enabled):
+        """
+        Draws one of the item images.
+
+        :param `index`: the index of the image inside the image list;
+        :param `dc`: an instance of `wx.DC`;
+        :param `x`: the x position where to draw the image;
+        :param `y`: the y position where to draw the image;
+        :param `enabled`: ``True`` if the item is enabled, ``False`` if it is disabled.
+        """
 
         if self.HasFlag(ULC_ICON) and self._normal_image_list:
             imgList = (enabled and [self._normal_image_list] or [self._normal_grayed_image_list])[0]
@@ -5929,6 +7566,25 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def DrawCheckbox(self, dc, x, y, kind, checked, enabled):
+        """
+        Draws the item checkbox/radiobutton image.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `x`: the x position where to draw the image;
+        :param `y`: the y position where to draw the image;
+        :param `kind`: may be one of the following integers:
+
+          =============== ==========================
+          Item Kind       Description
+          =============== ==========================
+                 0        A normal item
+                 1        A checkbox-like item
+                 2        A radiobutton-type item
+          =============== ==========================
+
+        :param `checked`: ``True`` if the item is checked, ``False`` otherwise;
+        :param `enabled`: ``True`` if the item is enabled, ``False`` if it is disabled.
+        """
 
         imgList = (enabled and [self._image_list_check] or [self._grayed_check_list])[0]
         if kind == 1:
@@ -5942,12 +7598,18 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             
 
     def GetCheckboxImageSize(self):
+        """ Returns the checkbox/radiobutton image size. """
 
         bmp = self._image_list_check.GetBitmap(0)
         return bmp.GetWidth(), bmp.GetHeight()
     
 
     def GetImageSize(self, index):
+        """
+        Returns the image size for the item.
+
+        :param `index`: the image index.
+        """
 
         width = height = 0
 
@@ -5983,6 +7645,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetTextLength(self, s):
+        """
+        Returns the text width for the input string.
+
+        :param `s`: the string to measure.
+        """
 
         dc = wx.ClientDC(self)
         dc.SetFont(self.GetFont())
@@ -5993,6 +7660,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def SetImageList(self, imageList, which):
+        """
+        Sets the image list associated with the control.
+
+        :param `imageList`: an instance of `wx.ImageList`;
+        :param `which`: one of ``wx.IMAGE_LIST_NORMAL``, ``wx.IMAGE_LIST_SMALL``,
+         ``wx.IMAGE_LIST_STATE`` (the last is unimplemented).
+        """
 
         self._dirty = True
 
@@ -6007,9 +7681,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
             for ii in xrange(imageList.GetImageCount()):
                 bmp = imageList.GetBitmap(ii)
-                image = wx.ImageFromBitmap(bmp)
-                image = GrayOut(image)
-                newbmp = wx.BitmapFromImage(image)
+                newbmp = MakeDisabledBitmap(bmp)
                 self._normal_grayed_image_list.Add(newbmp)
 
             self._normal_spacing = width + 8
@@ -6022,9 +7694,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
             for ii in xrange(imageList.GetImageCount()):
                 bmp = imageList.GetBitmap(ii)
-                image = wx.ImageFromBitmap(bmp)
-                image = GrayOut(image)
-                newbmp = wx.BitmapFromImage(image)
+                newbmp = MakeDisabledBitmap(bmp)
                 self._small_grayed_image_list.Add(newbmp)
 
         self._lineHeight = 0  # ensure that the line height will be recalc'd        
@@ -6032,7 +7702,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def SetImageListCheck(self, sizex, sizey, imglist=None):
-        """Sets the check image list."""
+        """
+        Sets the checkbox/radiobutton image list.
+
+        :param `sizex`: the width of the bitmaps in the `imglist`;
+        :param `sizey`: the height of the bitmaps in the `imglist`;
+        :param `imglist`: an instance of `wx.ImageList`.
+        """
 
         # Image list to hold disabled versions of each control
         self._grayed_check_list = wx.ImageList(sizex, sizey, True, 0)
@@ -6085,9 +7761,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             for ii in xrange(self._image_list_check.GetImageCount()):
                 
                 bmp = self._image_list_check.GetBitmap(ii)
-                image = wx.ImageFromBitmap(bmp)
-                image = GrayOut(image)
-                newbmp = wx.BitmapFromImage(image)
+                newbmp = MakeDisabledBitmap(bmp)
                 self._grayed_check_list.Add(newbmp)
 
         self._dirty = True
@@ -6096,13 +7770,18 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             self.RecalculatePositions()
 
 
-    def GetControlBmp(self, checkbox=True, checked=False,
-                      enabled=True, x=16, y=16):
-        """Get a native looking checkbox or radio button bitmap
-        @keyword checkbox: Get a checkbox=True, radiobutton=False
-        @keyword checked: contorl is marked or not
-
+    def GetControlBmp(self, checkbox=True, checked=False, enabled=True, x=16, y=16):
         """
+        Returns a native looking checkbox or radio button bitmap.
+        
+        :param `checkbox`: ``True`` to get a checkbox image, ``False`` for a radiobutton
+         one;
+        :param `checked`: ``True`` if the control is marked, ``False`` if it is not;
+        :param `enabled`: ``True`` if the control is enabled, ``False`` if it is not;
+        :param `x`: the width of the bitmap;
+        :param `y`: the height of the bitmap.        
+        """
+
         bmp = wx.EmptyBitmap(x, y)
         mdc = wx.MemoryDC(bmp)
         dc = wx.GCDC(mdc)
@@ -6126,6 +7805,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def SetItemSpacing(self, spacing, isSmall=False):
+        """
+        Sets the spacing between item texts and icons.
+
+        :param `spacing`: the spacing between item texts and icons, in pixels;
+        :param `isSmall`: ``True`` if using a ``wx.IMAGE_LIST_SMALL`` image list,
+         ``False`` if using a ``wx.IMAGE_LIST_NORMAL`` image list.
+        """
 
         self._dirty = True
         
@@ -6136,6 +7822,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetItemSpacing(self, isSmall=False):
+        """
+        Returns the spacing between item texts and icons, in pixels.
+
+        :param `isSmall`: ``True`` if using a ``wx.IMAGE_LIST_SMALL`` image list,
+         ``False`` if using a ``wx.IMAGE_LIST_NORMAL`` image list.
+        """
 
         return (isSmall and [self._small_spacing] or [self._normal_spacing])[0]
 
@@ -6145,6 +7837,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # ----------------------------------------------------------------------------
 
     def SetColumn(self, col, item):
+        """
+        Sets information about this column.
+
+        :param `col`: an integer specifying the column index;
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         column = self._columns[col]
 
@@ -6164,7 +7862,19 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def SetColumnWidth(self, col, width):
+        """
+        Sets the column width.
 
+        :param `width`: can be a width in pixels or ``wx.LIST_AUTOSIZE`` (-1) or
+         ``wx.LIST_AUTOSIZE_USEHEADER`` (-2). ``wx.LIST_AUTOSIZE`` will resize the
+         column to the length of its longest item. ``wx.LIST_AUTOSIZE_USEHEADER``
+         will resize the column to the length of the header (Win32) or 80 pixels
+         (other platforms).
+
+        :note: In small or normal icon view, col must be -1, and the column width
+         is set for all columns.
+        """
+    
         if col < 0:
             raise Exception("invalid column index")
 
@@ -6241,6 +7951,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetHeaderWidth(self):
+        """ Returns the header window width, in pixels. """
 
         if not self._headerWidth:
 
@@ -6259,6 +7970,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetColumn(self, col):
+        """
+        Returns information about this column.
+
+        :param `col`: an integer specifying the column index.
+        """
 
         item = UltimateListItem()
         column = self._columns[col]                
@@ -6268,12 +7984,18 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     
 
     def GetColumnWidth(self, col):
+        """
+        Returns the column width for the input column.
+
+        :param `col`: an integer specifying the column index.
+        """
 
         column = self._columns[col]
         return column.GetWidth()
 
 
     def GetTotalWidth(self):
+        """ Returns the total width of the columns in L{UltimateListCtrl}. """
 
         width = 0
         for column in self._columns:
@@ -6286,6 +8008,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # ----------------------------------------------------------------------------
 
     def SetItem(self, item):
+        """
+        Sets information about the item.
+
+        :param `item`: an instance of L{UltimateListItemData}.
+        """
 
         id = item._itemId
         
@@ -6320,6 +8047,30 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             
 
     def SetItemStateAll(self, state, stateMask):
+        """
+        Sets the item state flags for all the items.
+
+        :param `state`: any combination of the following bits:
+        
+         ============================ ========= ==============================
+         State Bits                   Hex Value Description
+         ============================ ========= ==============================
+         ``ULC_STATE_DONTCARE``             0x0 Don't care what the state is
+         ``ULC_STATE_DROPHILITED``          0x1 The item is highlighted to receive a drop event
+         ``ULC_STATE_FOCUSED``              0x2 The item has the focus
+         ``ULC_STATE_SELECTED``             0x4 The item is selected
+         ``ULC_STATE_CUT``                  0x8 The item is in the cut state
+         ``ULC_STATE_DISABLED``            0x10 The item is disabled
+         ``ULC_STATE_FILTERED``            0x20 The item has been filtered
+         ``ULC_STATE_INUSE``               0x40 The item is in use
+         ``ULC_STATE_PICKED``              0x80 The item has been picked
+         ``ULC_STATE_SOURCE``             0x100 The item is a drag and drop source
+         ============================ ========= ==============================
+
+        :param `stateMask`: the bitmask for the state flag.
+        
+        :note: The valid state flags are influenced by the value of the state mask.
+        """
 
         if self.IsEmpty():
             return
@@ -6361,6 +8112,16 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def SetItemState(self, litem, state, stateMask):
+        """
+        Sets the item state flags for the input item.
+
+        :param `litem`: the index of the item; if defaulted to -1, the state flag
+         will be set for all the items;
+        :param `state`: the item state flag;        
+        :param `stateMask`: the bitmask for the state flag.
+        
+        :see: L{SetItemStateAll} for a list of valid state flags.
+        """
 
         if litem == -1:
             self.SetItemStateAll(state, stateMask)
@@ -6439,6 +8200,14 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetItemState(self, item, stateMask):
+        """
+        Returns the item state flags for the input item.
+
+        :param `item`: the index of the item;
+        :param `stateMask`: the bitmask for the state flag.
+        
+        :see: L{SetItemStateAll} for a list of valid state flags.
+        """
 
         if item < 0 or item >= self.GetItemCount():
             raise Exception("invalid item index in GetItemState")
@@ -6457,6 +8226,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetItem(self, item, col=0):
+        """
+        Returns the information about the input item.
+
+        :param `item`: an instance of L{UltimateListItem};
+        :param `col`: the column to which the item belongs to.
+        """
 
         if item._itemId < 0 or item._itemId >= self.GetItemCount():
             raise Exception("invalid item index in GetItem")
@@ -6474,7 +8249,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     def CheckItem(self, item, checked=True, sendEvent=True):
         """
         Actually checks/uncheks an item, sending (eventually) the two
-        events EVT_LIST_ITEM_CHECKING/EVT_LIST_ITEM_CHECKED.
+        events ``EVT_LIST_ITEM_CHECKING``/``EVT_LIST_ITEM_CHECKED``.
+
+        :param `item`: an instance of L{UltimateListItem};
+        :param `checked`: ``True`` to check an item, ``False`` to uncheck it;
+        :param `sendEvent`: ``True`` to send a {UltimateListEvent}, ``False`` otherwise.
+
+        :note: This method is meaningful only for checkbox-like and radiobutton-like items.        
         """
 
         # Should we raise an error here?!?        
@@ -6508,6 +8289,14 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def AutoCheckChild(self, isChecked, column):
+        """
+        Checks/unchecks all the items.
+
+        :param `isChecked`: ``True`` to check the items, ``False`` to uncheck them;
+        :param `column`: the column to which the items belongs to.
+
+        :note: This method is meaningful only for checkbox-like and radiobutton-like items.
+        """ 
 
         for indx in xrange(self.GetItemCount()):
             item = CreateListItem(indx, column)
@@ -6516,6 +8305,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         
 
     def AutoToggleChild(self, column):
+        """
+        Toggles all the items.
+
+        :param `column`: the column to which the items belongs to.
+
+        :note: This method is meaningful only for checkbox-like and radiobutton-like items.
+        """ 
 
         for indx in xrange(self.GetItemCount()):
             item = CreateListItem(indx, column)
@@ -6528,20 +8324,34 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def IsItemChecked(self, item):
-        """Returns whether an item is checked or not."""
+        """
+        Returns whether an item is checked or not.
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         item = self.GetItem(item, item._col)
         return item.IsChecked()
 
 
     def IsItemEnabled(self, item):
-        """Returns whether an item is enabled or not."""
+        """
+        Returns whether an item is enabled or not.
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         item = self.GetItem(item, item._col)
         return item.IsEnabled()
 
 
     def EnableItem(self, item, enable=True):
+        """
+        Enables/disables an item.
+
+        :param `item`: an instance of L{UltimateListItem};
+        :param `enable`: ``True`` to enable the item, ``False`` otherwise.
+        """
 
         item = self.GetItem(item, 0)
         if item.IsEnabled() == enable:
@@ -6560,12 +8370,34 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     
                 
     def GetItemKind(self, item):
+        """
+        Returns the item kind.
+
+        :param `item`: an instance of L{UltimateListItem}.
+
+        :see: L{SetItemKind} for a list of valid item kinds.
+        """
 
         item = self.GetItem(item, item._col)
         return item.GetKind()
                 
 
     def SetItemKind(self, item, kind):
+        """
+        Sets the item kind.
+
+        :param `item`: an instance of L{UltimateListItem};
+        :param `kind`: may be one of the following integers:
+
+         =============== ==========================
+         Item Kind       Description
+         =============== ==========================
+                0        A normal item
+                1        A checkbox-like item
+                2        A radiobutton-type item
+         =============== ==========================
+
+        """
 
         item = self.GetItem(item, item._col)
         item.SetKind(kind)
@@ -6575,13 +8407,23 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     
 
     def IsItemHyperText(self, item):
-        """Returns whether an item is hypertext or not."""
+        """
+        Returns whether an item is hypertext or not.
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
         
         item = self.GetItem(item, item._col)
         return item.IsHyperText()
 
 
     def SetItemHyperText(self, item, hyper=True):
+        """
+        Sets whether the item is hypertext or not.
+
+        :param `item`: an instance of L{UltimateListItem};
+        :param `hyper`: ``True`` to have an item with hypertext behaviour, ``False`` otherwise.
+        """
 
         item = self.GetItem(item, item._col)
         item.SetHyperText(hyper)
@@ -6597,40 +8439,57 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def SetHyperTextFont(self, font):
-        """Sets the font used to render an hypertext item."""
+        """
+        Sets the font used to render hypertext items.
+
+        :param `font`: a valid `wx.Font` instance.
+        """
 
         self._hypertextfont = font
         self._dirty = True
         
 
     def SetHyperTextNewColour(self, colour):
-        """Sets the colour used to render a non-visited hypertext item."""
+        """
+        Sets the colour used to render a non-visited hypertext item.
+
+        :param `colour`: a valid `wx.Colour` instance.
+        """
 
         self._hypertextnewcolour = colour
         self._dirty = True
 
 
     def GetHyperTextNewColour(self):
-        """Returns the colour used to render a non-visited hypertext item."""
+        """ Returns the colour used to render a non-visited hypertext item. """
 
         return self._hypertextnewcolour
 
 
     def SetHyperTextVisitedColour(self, colour):
-        """Sets the colour used to render a visited hypertext item."""
+        """
+        Sets the colour used to render a visited hypertext item.
+
+        :param `colour`: a valid `wx.Colour` instance.
+        """
 
         self._hypertextvisitedcolour = colour
         self._dirty = True
 
 
     def GetHyperTextVisitedColour(self):
-        """Returns the colour used to render a visited hypertext item."""
+        """ Returns the colour used to render a visited hypertext item. """
 
         return self._hypertextvisitedcolour
 
 
     def SetItemVisited(self, item, visited=True):
-        """Sets whether an hypertext item was visited."""
+        """
+        Sets whether an hypertext item was visited.
+
+        :param `item`: an instance of L{UltimateListItem};
+        :param `visited`: ``True`` to mark an hypertext item as visited, ``False`` otherwise.
+        """
 
         newItem = self.GetItem(item, item._col)
         newItem.SetVisited(visited)
@@ -6641,21 +8500,37 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetItemVisited(self, item):
-        """Returns whether an hypertext item was visited."""
+        """
+        Returns whether an hypertext item was visited.
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         item = self.GetItem(item, item._col)
         return item.GetVisited()
 
 
     def GetItemWindow(self, item):
-        """Returns the window associated to the item (if any)."""
+        """
+        Returns the window associated to the item (if any).
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         item = self.GetItem(item, item._col)
         return item.GetWindow()
 
 
     def SetItemWindow(self, item, wnd, expand=False):
-        """Sets the window for the given item"""
+        """
+        Sets the window for the given item.
+
+        :param `item`: an instance of L{UltimateListItem};
+        :param `wnd`: if not ``None``, a non-toplevel window to be displayed next to
+         the item;
+        :param `expand`: ``True`` to expand the column where the item/subitem lives,
+         so that the window will be fully visible.
+        """
 
         if not self.InReportView() and not self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
             raise Exception("Widgets are only allowed in repotr mode and with the ULC_HAS_VARIABLE_ROW_HEIGHT extra style.")
@@ -6678,7 +8553,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
        
 
     def DeleteItemWindow(self, item):
-        """Deletes the window associated to an item (if any). """
+        """
+        Deletes the window associated to an item (if any).
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         if item.GetWindow() is None:
             return
@@ -6692,14 +8571,24 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         
 
     def GetItemWindowEnabled(self, item):
-        """Returns whether the window associated to the item is enabled."""
+        """
+        Returns whether the window associated to the item is enabled.
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         item = self.GetItem(item, item._col)
         return item.GetWindowEnabled()
 
 
     def SetItemWindowEnabled(self, item, enable=True):
-        """Enables/disables the window associated to the item."""
+        """
+        Enables/disables the window associated to the item.
+
+        :param `item`: an instance of L{UltimateListItem};
+        :param `enable`: ``True`` to enable the associated window, ``False`` to
+         disable it.
+        """
 
         item = self.GetItem(item, item._col)
         item.SetWindowEnabled(enable)
@@ -6708,12 +8597,26 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         
 
     def GetItemCustomRenderer(self, item):
+        """
+        Returns the custom renderer used to draw the input item (if any).
+
+        :param `item`: an instance of L{UltimateListItem}.        
+        """
 
         item = self.GetItem(item, item._col)
         return item.GetCustomRenderer()
 
 
     def SetItemCustomRenderer(self, item, renderer=None):
+        """
+        Associate a custom renderer to this item.
+
+        :param `item`: an instance of L{UltimateListItem};
+        :param `renderer`: a class able to correctly render the item.
+
+        :note: the renderer class **must** implement the methods `DrawSubItem`,
+         `GetLineHeight` and `GetSubItemWidth`. 
+        """
 
         item = self.GetItem(item, item._col)
         item.SetCustomRenderer(renderer)
@@ -6723,12 +8626,29 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetItemOverFlow(self, item):
+        """
+        Returns if the item is in the overflow state.
+
+        An item/subitem may overwrite neighboring items/subitems if its text would
+        not normally fit in the space allotted to it.
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         item = self.GetItem(item, item._col)
         return item.GetOverFlow()
 
 
     def SetItemOverFlow(self, item, over=True):
+        """
+        Sets the item in the overflow/non overflow state.
+
+        An item/subitem may overwrite neighboring items/subitems if its text would
+        not normally fit in the space allotted to it.
+        
+        :param `item`: an instance of L{UltimateListItem};
+        :param `over`: ``True`` to set the item in a overflow state, ``False`` otherwise.        
+        """
 
         item = self.GetItem(item, item._col)
         item.SetOverFlow(over)
@@ -6741,12 +8661,21 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # ----------------------------------------------------------------------------
 
     def GetItemCount(self):
-
+        """ Returns the number of items in the L{UltimateListCtrl}. """
+        
         return (self.IsVirtual() and [self._countVirt] or [len(self._lines)])[0]
 
 
     def SetItemCount(self, count):
+        """
+        This method can only be used with virtual L{UltimateListCtrl}. It is used to
+        indicate to the control the number of items it contains. After calling it,
+        the main program should be ready to handle calls to various item callbacks
+        (such as L{UltimateListCtrl.OnGetItemText}) for all items in the range from 0 to `count`.
 
+        :param `count`: the total number of items in L{UltimateListCtrl}.        
+        """
+        
         self._selStore.SetItemCount(count)
         self._countVirt = count
 
@@ -6757,6 +8686,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetSelectedItemCount(self):
+        """ Returns the number of selected items in L{UltimateListCtrl}. """
 
         # deal with the quick case first
         if self.IsSingleSel():
@@ -6782,7 +8712,15 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # ----------------------------------------------------------------------------
 
     def GetViewRect(self):
+        """
+        Returns the rectangle taken by all items in the control. In other words,
+        if the controls client size were equal to the size of this rectangle, no
+        scrollbars would be needed and no free space would be left.
 
+        :note: This function only works in the icon and small icon views, not in
+         list or report views.
+        """
+        
         if self.HasFlag(ULC_LIST):
             raise Exception("UltimateListCtrl.GetViewRect() not implemented for list view")
 
@@ -6817,6 +8755,18 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetSubItemRect(self, item, subItem):
+        """
+        Returns the rectangle representing the size and position, in physical coordinates,
+        of the given subitem, i.e. the part of the row `item` in the column `subItem`.
+
+        :param `item`: the row in which the item lives;
+        :param `subItem`: the column in which the item lives. If set equal to the special
+         value ``ULC_GETSUBITEMRECT_WHOLEITEM`` the return value is the same as for
+         L{GetItemRect}.
+        
+        :note: This method is only meaningful when the L{UltimateListCtrl} is in the
+         report mode.        
+        """
 
         if not self.InReportView() and subItem == ULC_GETSUBITEMRECT_WHOLEITEM:
             raise Exception("GetSubItemRect only meaningful in report view")
@@ -6845,12 +8795,23 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         
     def GetItemRect(self, item):
+        """
+        Returns the rectangle representing the item's size and position, in physical
+        coordinates.
 
+        :param `item`: the row in which the item lives.
+        """
+        
         return self.GetSubItemRect(item, ULC_GETSUBITEMRECT_WHOLEITEM)
     
 
     def GetItemPosition(self, item):
+        """
+        Returns the position of the item, in icon or small icon view.
 
+        :param `item`: the row in which the item lives.
+        """
+        
         rect = self.GetItemRect(item)
         return wx.Point(rect.x, rect.y)
 
@@ -6860,6 +8821,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # ----------------------------------------------------------------------------
 
     def RecalculatePositions(self, noRefresh=False):
+        """
+        Recalculates all the items positions, and sets the scrollbars positions
+        too.
+
+        :param `noRefresh`: ``True`` to avoid calling `Refresh`, ``False`` otherwise.
+        """
 
         count = self.GetItemCount()
 
@@ -7061,6 +9028,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def RefreshAll(self):
+        """ Refreshes the entire l{UltimateListCtrl}. """
 
         self._dirty = False
         self.Refresh()
@@ -7072,12 +9040,68 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def UpdateCurrent(self):
+        """ Updates the current line selection. """
 
         if not self.HasCurrent() and not self.IsEmpty():
             self.ChangeCurrent(0)
 
 
     def GetNextItem(self, item, geometry=ULC_NEXT_ALL, state=ULC_STATE_DONTCARE):
+        """
+        Searches for an item with the given `geometry` or `state`, starting from `item`
+        but excluding the `item` itself.
+
+        :param `item`: the item at which starting the search. If set to -1, the first
+         item that matches the specified flags will be returned.
+        :param `geometry`: can be one of:
+
+         =================== ========= =================================
+         Geometry Flag       Hex Value Description
+         =================== ========= =================================
+         ``ULC_NEXT_ABOVE``        0x0 Searches for an item above the specified item
+         ``ULC_NEXT_ALL``          0x1 Searches for subsequent item by index
+         ``ULC_NEXT_BELOW``        0x2 Searches for an item below the specified item
+         ``ULC_NEXT_LEFT``         0x3 Searches for an item to the left of the specified item
+         ``ULC_NEXT_RIGHT``        0x4 Searches for an item to the right of the specified item
+         =================== ========= =================================
+        
+        :param `state`: any combination of the following bits:
+        
+         ============================ ========= ==============================
+         State Bits                   Hex Value Description
+         ============================ ========= ==============================
+         ``ULC_STATE_DONTCARE``             0x0 Don't care what the state is
+         ``ULC_STATE_DROPHILITED``          0x1 The item is highlighted to receive a drop event
+         ``ULC_STATE_FOCUSED``              0x2 The item has the focus
+         ``ULC_STATE_SELECTED``             0x4 The item is selected
+         ``ULC_STATE_CUT``                  0x8 The item is in the cut state
+         ``ULC_STATE_DISABLED``            0x10 The item is disabled
+         ``ULC_STATE_FILTERED``            0x20 The item has been filtered
+         ``ULC_STATE_INUSE``               0x40 The item is in use
+         ``ULC_STATE_PICKED``              0x80 The item has been picked
+         ``ULC_STATE_SOURCE``             0x100 The item is a drag and drop source
+         ============================ ========= ==============================
+
+
+        :return: The first item with given state following item or -1 if no such item found.
+
+        :note: This function may be used to find all selected items in the
+         control like this::
+              
+             item = -1
+                        
+             while 1:
+                 item = listctrl.GetNextItem(item, ULC_NEXT_ALL, ULC_STATE_SELECTED)
+                   
+                 if item == -1:
+                     break
+                
+                 # This item is selected - do whatever is needed with it
+
+                 wx.LogMessage("Item %ld is selected."%item)
+
+                  
+        """
 
         ret = item
         maxI = self.GetItemCount()
@@ -7111,6 +9135,14 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # ----------------------------------------------------------------------------
 
     def DeleteItem(self, lindex):
+        """
+        Deletes the specified item.
+
+        :param `lindex`: the index of the item to delete.
+        
+        :note: This function sends the ``EVT_LIST_DELETE_ITEM`` event for the item
+         being deleted.
+        """
 
         count = self.GetItemCount()
         if lindex < 0 or lindex >= self.GetItemCount():
@@ -7164,6 +9196,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def DeleteColumn(self, col):
+        """
+        Deletes the specified column.
+
+        :param `col`: the index of the column to delete.        
+        """
 
         self._columns.pop(col)
         self._dirty = True
@@ -7182,7 +9219,8 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def DoDeleteAllItems(self):
-
+        """ Actually performs the deletion of all the items. """
+        
         if self.IsEmpty():
             # nothing to do - in particular, don't send the event
             return
@@ -7217,13 +9255,20 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def DeleteAllItems(self):
+        """
+        Deletes all items in the L{UltimateListCtrl}.
 
+        :note: This function does not send the ``EVT_LIST_DELETE_ITEM`` event because
+         deleting many items from the control would be too slow then (unlike L{DeleteItem}).
+        """
+        
         self.DoDeleteAllItems()
         self.RecalculatePositions()
 
 
     def DeleteEverything(self):
-
+        """ Deletes all items in the L{UltimateListCtrl}, resetting column widths to zero. """
+        
         self._columns = []
         self._aColWidths = []
 
@@ -7235,6 +9280,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # ----------------------------------------------------------------------------
 
     def EnsureVisible(self, index):
+        """
+        Ensures this item is visible.
+
+        :param `index`: the index of the item to scroll into view.
+        """
 
         if index < 0 or index >= self.GetItemCount():
             raise Exception("invalid item index in EnsureVisible")
@@ -7248,7 +9298,18 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def FindItem(self, start, string, partial=False):
+        """
+        Find an item whose label matches this string.
 
+        :param `start`: the starting point of the input `string` or the beginning
+         if `start` is -1;
+        :param `string`: the string to look for matches;
+        :param `partial`: if ``True`` then this method will look for items which
+         begin with `string`.
+
+        :note: The string comparison is case insensitive.         
+        """
+        
         if start < 0:
             start = 0
 
@@ -7270,7 +9331,14 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def FindItemData(self, start, data):
+        """
+        Find an item whose data matches this data.
 
+        :param `start`: the starting point of the input `data` or the beginning
+         if `start` is -1;
+        :param `data`: the data to look for matches.
+        """
+        
         if start < 0:
             start = 0
 
@@ -7288,7 +9356,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def FindItemAtPos(self, pt):
+        """
+        Find an item nearest this position.
 
+        :param `pt`: an instance of `wx.Point`.        
+        """
+        
         topItem, dummy = self.GetVisibleLinesRange()
         p = self.GetItemPosition(self.GetItemCount()-1)
         
@@ -7304,7 +9377,15 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def HitTest(self, x, y):
+        """
+        HitTest method for a L{UltimateListCtrl}.
 
+        :param `x`: the mouse x position;
+        :param `y`: the mouse y position.
+
+        :see: L{HitTestLine} for a list of return flags.        
+        """
+        
         x, y = self.CalcUnscrolledPosition(x, y)
         count = self.GetItemCount()
 
@@ -7337,7 +9418,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # ----------------------------------------------------------------------------
 
     def InsertItem(self, item):
+        """
+        Inserts an item into L{UltimateListCtrl}.
 
+        :param `item`: an instance of L{UltimateListItem}.
+        """
+        
         if self.IsVirtual():
             raise Exception("can't be used with virtual control")
 
@@ -7381,6 +9467,15 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def InsertColumn(self, col, item):
+        """
+        Inserts a column into L{UltimateListCtrl}.
+
+        :param `col`: the column index at which we wish to insert a new column;
+        :param `item`: an instance of L{UltimateListItem}.
+
+        :note: This method is meaningful only if L{UltimateListCtrl} has the ``ULC_REPORT``
+         or the ``ULC_TILE`` styles set.
+        """
 
         self._dirty = True
 
@@ -7419,6 +9514,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetItemWidthWithImage(self, item):
+        """
+        Returns the item width, in pixels, considering the item text and its images.
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         if item.GetCustomRenderer():
             return item.GetCustomRenderer().GetSubItemWidth()
@@ -7452,6 +9552,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetItemTextSize(self, item):
+        """
+        Returns the item width, in pixels, considering only the item text.
+
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         width = ix = iy = start = end = 0
         dc = wx.ClientDC(self)
@@ -7484,11 +9589,16 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
     def OnCompareItems(self, line1, line2):
         """
+        Returns whether 2 lines have the same index.
+        
         Override this function in the derived class to change the sort order of the items
-        in the UltimateListCtrl. The function should return a negative, zero or positive
-        value if the first item is less than, equal to or greater than the second one.
+        in the L{UltimateListCtrl}. The function should return a negative, zero or positive
+        value if the first line is less than, equal to or greater than the second one.
 
-        The base class version compares items by their index.
+        :param `line1`: an instance of L{UltimateListItem};
+        :param `line2`: another instance of L{UltimateListItem}.
+
+        :note: The base class version compares lines by their index.
         """
 
         item = UltimateListItem()
@@ -7506,6 +9616,24 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def SortItems(self, func):
+        """
+        Call this function to sort the items in the L{UltimateListCtrl}. Sorting is done
+        using the specified function `func`. This function must have the
+        following prototype::
+
+            def OnCompareItems(self, line1, line2):
+
+                DoSomething(line1, line2)
+                # function code            
+
+
+        It is called each time when the two items must be compared and should return 0
+        if the items are equal, negative value if the first item is less than the second
+        one and positive value if the first one is greater than the second one.
+
+        :param `func`: the method to use to sort the items. The default is to use the
+         L{OnCompareItems} method.
+        """
 
         self.HighlightAll(False)
         self.ResetCurrent()
@@ -7533,6 +9661,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # ----------------------------------------------------------------------------
 
     def OnScroll(self, event):
+        """
+        Handles the ``wx.EVT_SCROLLWIN`` event for L{UltimateListMainWindow}.
+
+        :param `event`: a `wx.ScrollEvent` event to be processed.
+        """
 
         event.Skip()
 
@@ -7556,7 +9689,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                 
         
     def GetCountPerPage(self):
-
+        """
+        Returns the number of items that can fit vertically in the visible area
+        of the L{UltimateListCtrl} (list or report view) or the total number of
+        items in the list control (icon or small icon view).
+        """
+        
         if not self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
             if not self._linesPerPage:
                 self._linesPerPage = self.GetClientSize().y/self.GetLineHeight()
@@ -7570,6 +9708,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetVisibleLinesRange(self):
+        """
+        Returns the range of visible items on screen.
+
+        :note: This method can be used only if L{UltimateListCtrl} has the ``ULC_REPORT``
+         style set.
+        """
 
         if not self.InReportView():
             raise Exception("this is for report mode only")
@@ -7628,7 +9772,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def ResetTextControl(self):
-        """Called by UltimateListTextCtrl when it marks itself for deletion."""
+        """ Called by L{UltimateListTextCtrl} when it marks itself for deletion."""
 
         self._textctrl.Destroy()
         self._textctrl = None
@@ -7638,7 +9782,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def SetFirstGradientColour(self, colour=None):
-        """Sets the first gradient colour."""
+        """
+        Sets the first gradient colour for gradient-style selections.
+
+        :param `colour`: if not ``None``, a valid `wx.Colour` instance. Otherwise,
+         the colour is taken from the system value ``wx.SYS_COLOUR_HIGHLIGHT``.
+        """
         
         if colour is None:
             colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
@@ -7649,7 +9798,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             
 
     def SetSecondGradientColour(self, colour=None):
-        """Sets the second gradient colour."""
+        """
+        Sets the second gradient colour for gradient-style selections.
+
+        :param `colour`: if not ``None``, a valid `wx.Colour` instance. Otherwise,
+         the colour generated is a slightly darker version of the L{UltimateListCtrl}
+         background colour.
+        """
 
         if colour is None:
             # No colour given, generate a slightly darker from the
@@ -7666,19 +9821,27 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetFirstGradientColour(self):
-        """Returns the first gradient colour."""
+        """ Returns the first gradient colour for gradient-style selections. """
         
         return self._firstcolour
 
 
     def GetSecondGradientColour(self):
-        """Returns the second gradient colour."""
+        """ Returns the second gradient colour for gradient-style selections. """
         
         return self._secondcolour
 
 
     def EnableSelectionGradient(self, enable=True):
-        """Globally enables/disables drawing of gradient selection."""
+        """
+        Globally enables/disables drawing of gradient selections.
+
+        :param `enable`: ``True`` to enable gradient-style selections, ``False``
+         to disable it.
+
+        :note: Calling this method disables any Vista-style selection previously
+         enabled.
+        """
 
         self._usegradients = enable
         self._vistaselection = False
@@ -7687,9 +9850,10 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
     def SetGradientStyle(self, vertical=0):
         """
-        Sets the gradient style:
-        0: horizontal gradient
-        1: vertical gradient
+        Sets the gradient style for gradient-style selections.
+
+        :param `vertical`: 0 for horizontal gradient-style selections, 1 for vertical
+         gradient-style selections.
         """
 
         # 0 = Horizontal, 1 = Vertical
@@ -7701,16 +9865,25 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
     def GetGradientStyle(self):
         """
-        Returns the gradient style:
-        0: horizontal gradient
-        1: vertical gradient
+        Returns the gradient style for gradient-style selections.
+
+        :return: 0 for horizontal gradient-style selections, 1 for vertical
+         gradient-style selections.
         """
 
         return self._gradientstyle
 
 
     def EnableSelectionVista(self, enable=True):
-        """Globally enables/disables drawing of Windows Vista selection."""
+        """
+        Globally enables/disables drawing of Windows Vista selections.
+
+        :param `enable`: ``True`` to enable Vista-style selections, ``False`` to
+         disable it.
+
+        :note: Calling this method disables any gradient-style selection previously
+         enabled.
+        """
 
         self._usegradients = False
         self._vistaselection = enable
@@ -7718,33 +9891,63 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def SetBackgroundImage(self, image):
-        """Sets the UltimateListCtrl background image (can be None)."""
+        """
+        Sets the L{UltimateListCtrl} background image.
+
+        :param `image`: if not ``None``, an instance of `wx.Bitmap`.
+
+        :note: At present, the background image can only be used in "tile" mode.
+
+        :todo: Support background images also in stretch and centered modes.
+        """
 
         self._backgroundImage = image
         self.Refresh()
         
 
     def GetBackgroundImage(self):
-        """Returns the UltimateListCtrl background image (can be None)."""
+        """
+        Returns the L{UltimateListCtrl} background image (if any).
+
+        :note: At present, the background image can only be used in "tile" mode.
+
+        :todo: Support background images also in stretch and centered modes.        
+        """
 
         return self._backgroundImage
 
 
     def SetWaterMark(self, watermark):
-        """Sets the UltimateListCtrl watermark image (can be None)."""
+        """
+        Sets the L{UltimateListCtrl} watermark image to be displayed in the bottom
+        right part of the window.
+
+        :param `watermark`: if not ``None``, an instance of `wx.Bitmap`.
+
+        :todo: Better support for this is needed.        
+        """        
 
         self._waterMark = watermark
         self.Refresh()
         
 
     def GetWaterMark(self):
-        """Returns the UltimateListCtrl watermark image (can be None)."""
+        """
+        Returns the L{UltimateListCtrl} watermark image (if any), displayed in the
+        bottom right part of the window.
+
+        :todo: Better support for this is needed.        
+        """
 
         return self._waterMark
     
 
     def SetDisabledTextColour(self, colour):
-        """Sets the items disabled colour."""
+        """
+        Sets the items disabled colour.
+
+        :param `colour`: an instance of `wx.Colour`.
+        """
         
         # Disabled items colour        
         self._disabledColour = colour
@@ -7752,12 +9955,20 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def GetDisabledTextColour(self):
-        """Returns the items disabled colour."""
+        """ Returns the items disabled colour. """
 
         return self._disabledColour
 
 
     def ScrollList(self, dx, dy):
+        """
+        Scrolls the L{UltimateListCtrl}.
+
+        :param `dx`: if in icon, small icon or report view mode, specifies the number
+         of pixels to scroll. If in list view mode, `dx` specifies the number of
+         columns to scroll.
+        :param `dy`: always specifies the number of pixels to scroll vertically.
+        """
 
         if not self.InReportView():
             # TODO: this should work in all views but is not implemented now
@@ -7787,9 +9998,74 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # -------------------------------------------------------------------------------------
 
 class UltimateListCtrl(wx.PyControl):
+    """
+    UltimateListCtrl is a class that mimics the behaviour of `wx.ListCtrl`, with almost
+    the same base functionalities plus some more enhancements. This class does
+    not rely on the native control, as it is a full owner-drawn list control.
+    """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=0, extraStyle=0, validator=wx.DefaultValidator, name="UltimateListCtrl"):
+        """
+        Default class constructor.
+        
+        :param `parent`: parent window. Must not be ``None``;
+        :param `id`: window identifier. A value of -1 indicates a default value;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `style`: the window style; can be almost any combination of the following
+         bits:
+
+         ======================== =========== ====================================================================================================
+         Window Styles             Hex Value  Description
+         ======================== =========== ====================================================================================================
+         ``ULC_VRULES``                   0x1 Draws light vertical rules between rows in report mode.
+         ``ULC_HRULES``                   0x2 Draws light horizontal rules between rows in report mode.
+         ``ULC_ICON``                     0x4 Large icon view, with optional labels.
+         ``ULC_SMALL_ICON``               0x8 Small icon view, with optional labels.
+         ``ULC_LIST``                    0x10 Multicolumn list view, with optional small icons. Columns are computed automatically, i.e. you don't set columns as in ``ULC_REPORT``. In other words, the list wraps, unlike a `wx.ListBox`.
+         ``ULC_REPORT``                  0x20 Single or multicolumn report view, with optional header.
+         ``ULC_ALIGN_TOP``               0x40 Icons align to the top. Win32 default, Win32 only.
+         ``ULC_ALIGN_LEFT``              0x80 Icons align to the left.
+         ``ULC_AUTOARRANGE``            0x100 Icons arrange themselves. Win32 only.
+         ``ULC_VIRTUAL``                0x200 The application provides items text on demand. May only be used with ``ULC_REPORT``.
+         ``ULC_EDIT_LABELS``            0x400 Labels are editable: the application will be notified when editing starts.
+         ``ULC_NO_HEADER``              0x800 No header in report mode.
+         ``ULC_NO_SORT_HEADER``        0x1000 No Docs.
+         ``ULC_SINGLE_SEL``            0x2000 Single selection (default is multiple).
+         ``ULC_SORT_ASCENDING``        0x4000 Sort in ascending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+         ``ULC_SORT_DESCENDING``       0x8000 Sort in descending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+         ``ULC_TILE``                 0x10000 Each item appears as a full-sized icon with a label of one or more lines beside it (partially implemented).
+         ======================== =========== ====================================================================================================
+
+        :param `extraStyle`: the window extra style; can be almost any combination of the following
+         bits:
+
+         =============================== =========== ====================================================================================================
+         Window Extra Styles              Hex Value  Description
+         =============================== =========== ====================================================================================================
+         ``ULC_NO_HIGHLIGHT``                 0x0001 No highlight when an item is selected.
+         ``ULC_STICKY_HIGHLIGHT``             0x0002 Items are selected by simply hovering on them, with no need to click on them.
+         ``ULC_STICKY_NOSELEVENT``            0x0004 Don't send a selection event when using ``ULC_STICKY_HIGHLIGHT`` extra style.
+         ``ULC_SEND_LEFTCLICK``               0x0008 Send a left click event when an item is selected.
+         ``ULC_HAS_VARIABLE_ROW_HEIGHT``      0x0010 The list has variable row heights.
+         ``ULC_AUTO_CHECK_CHILD``             0x0020 When a column header has a checkbox associated, auto-check all the subitems in that column.
+         ``ULC_AUTO_TOGGLE_CHILD``            0x0040 When a column header has a checkbox associated, toggle all the subitems in that column.
+         ``ULC_AUTO_CHECK_PARENT``            0x0080 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
+         ``ULC_SHOW_TOOLTIPS``                0x0100 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
+         ``ULC_HOT_TRACKING``                 0x0200 Enable hot tracking of items on mouse motion.
+         ``ULC_BORDER_SELECT``                0x0400 Changes border colour whan an item is selected, instead of highlighting the item.
+         ``ULC_TRACK_SELECT``                 0x0800 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This extra style applies to all views of `UltimateListCtrl`.
+         ``ULC_HEADER_IN_ALL_VIEWS``          0x1000 Show column headers in all view modes.
+         ``ULC_NO_FULL_ROW_SELECT``           0x2000 When an item is selected, the only the item in the first column is highlighted.
+         ``ULC_FOOTER``                       0x4000 Show a footer too (only when header is present).
+         =============================== =========== ====================================================================================================
+
+        :param `validator`: the window validator;         
+        :param `name`: the window name.
+        """
 
         self._imageListNormal = None
         self._imageListSmall = None
@@ -7842,6 +10118,7 @@ class UltimateListCtrl(wx.PyControl):
         
 
     def CreateOrDestroyHeaderWindowAsNeeded(self):
+        """ Creates or destroys the header window depending on the window style flags. """
 
         needs_header = self.HasHeader()
         has_header = self._headerWin is not None
@@ -7878,6 +10155,7 @@ class UltimateListCtrl(wx.PyControl):
             
 
     def CreateOrDestroyFooterWindowAsNeeded(self):
+        """ Creates or destroys the footer window depending on the window style flags. """
 
         needs_footer = self.HasFooter()
         has_footer = self._footerWin is not None
@@ -7914,21 +10192,55 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def HasHeader(self):
+        """ Returns ``True`` if L{UltimateListCtrl} has a header window. """
 
         return self._mainWin.HasHeader()
     
 
     def HasFooter(self):
+        """ Returns ``True`` if L{UltimateListCtrl} has a footer window. """
 
         return self._mainWin.HasFooter()
 
 
     def GetDefaultBorder(self):
+        """ Returns the default window border. """
 
         return wx.BORDER_THEME
 
 
     def SetSingleStyle(self, style, add=True):
+        """
+        Adds or removes a single window style.
+
+        :param `style`: can be one of the following bits:
+
+         ======================== =========== ====================================================================================================
+         Window Styles             Hex Value  Description
+         ======================== =========== ====================================================================================================
+         ``ULC_VRULES``                   0x1 Draws light vertical rules between rows in report mode.
+         ``ULC_HRULES``                   0x2 Draws light horizontal rules between rows in report mode.
+         ``ULC_ICON``                     0x4 Large icon view, with optional labels.
+         ``ULC_SMALL_ICON``               0x8 Small icon view, with optional labels.
+         ``ULC_LIST``                    0x10 Multicolumn list view, with optional small icons. Columns are computed automatically, i.e. you don't set columns as in ``ULC_REPORT``. In other words, the list wraps, unlike a `wx.ListBox`.
+         ``ULC_REPORT``                  0x20 Single or multicolumn report view, with optional header.
+         ``ULC_ALIGN_TOP``               0x40 Icons align to the top. Win32 default, Win32 only.
+         ``ULC_ALIGN_LEFT``              0x80 Icons align to the left.
+         ``ULC_AUTOARRANGE``            0x100 Icons arrange themselves. Win32 only.
+         ``ULC_VIRTUAL``                0x200 The application provides items text on demand. May only be used with ``ULC_REPORT``.
+         ``ULC_EDIT_LABELS``            0x400 Labels are editable: the application will be notified when editing starts.
+         ``ULC_NO_HEADER``              0x800 No header in report mode.
+         ``ULC_NO_SORT_HEADER``        0x1000 No Docs.
+         ``ULC_SINGLE_SEL``            0x2000 Single selection (default is multiple).
+         ``ULC_SORT_ASCENDING``        0x4000 Sort in ascending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+         ``ULC_SORT_DESCENDING``       0x8000 Sort in descending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+         ``ULC_TILE``                 0x10000 Each item appears as a full-sized icon with a label of one or more lines beside it (partially implemented).
+         ======================== =========== ====================================================================================================
+
+        :param `add`: ``True`` to add the window style, ``False`` to remove it.
+
+        :note: The style ``ULC_VIRTUAL`` can not be set/unset after construction.
+        """
 
         if style & ULC_VIRTUAL:
             raise Exception("ULC_VIRTUAL can't be [un]set")
@@ -7959,6 +10271,32 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def SetExtraStyle(self, style):
+        """
+        Sets the L{UltimateListCtrl} extra style flag.
+
+        :param `style`: the window extra style; can be almost any combination of the following
+         bits:
+
+         =============================== =========== ====================================================================================================
+         Window Extra Styles              Hex Value  Description
+         =============================== =========== ====================================================================================================
+         ``ULC_NO_HIGHLIGHT``                 0x0001 No highlight when an item is selected.
+         ``ULC_STICKY_HIGHLIGHT``             0x0002 Items are selected by simply hovering on them, with no need to click on them.
+         ``ULC_STICKY_NOSELEVENT``            0x0004 Don't send a selection event when using ``ULC_STICKY_HIGHLIGHT`` extra style.
+         ``ULC_SEND_LEFTCLICK``               0x0008 Send a left click event when an item is selected.
+         ``ULC_HAS_VARIABLE_ROW_HEIGHT``      0x0010 The list has variable row heights.
+         ``ULC_AUTO_CHECK_CHILD``             0x0020 When a column header has a checkbox associated, auto-check all the subitems in that column.
+         ``ULC_AUTO_TOGGLE_CHILD``            0x0040 When a column header has a checkbox associated, toggle all the subitems in that column.
+         ``ULC_AUTO_CHECK_PARENT``            0x0080 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
+         ``ULC_SHOW_TOOLTIPS``                0x0100 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
+         ``ULC_HOT_TRACKING``                 0x0200 Enable hot tracking of items on mouse motion.
+         ``ULC_BORDER_SELECT``                0x0400 Changes border colour whan an item is selected, instead of highlighting the item.
+         ``ULC_TRACK_SELECT``                 0x0800 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This extra style applies to all views of `UltimateListCtrl`.
+         ``ULC_HEADER_IN_ALL_VIEWS``          0x1000 Show column headers in all view modes.
+         ``ULC_NO_FULL_ROW_SELECT``           0x2000 When an item is selected, the only the item in the first column is highlighted.
+         ``ULC_FOOTER``                       0x4000 Show a footer too (only when header is present).
+         =============================== =========== ====================================================================================================
+        """        
 
         if style & ULC_HAS_VARIABLE_ROW_HEIGHT and not self.HasFlag(ULC_REPORT):
             raise Exception("ULC_HAS_VARIABLE_ROW_HEIGHT extra style can be used only in report mode")
@@ -7976,6 +10314,13 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def SetWindowStyleFlag(self, flag):
+        """
+        Sets the L{UltimateListCtrl} window style flags.
+
+        :param `flag`: the window style flags.
+
+        :see: L{SetSingleStyle} for a list of valid window styles.        
+        """        
 
         if self._mainWin:
 
@@ -7986,46 +10331,110 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def GetColumn(self, col):
+        """
+        Returns information about this column.
+
+        :param `col`: an integer specifying the column index.
+        """
 
         return self._mainWin.GetColumn(col)
 
 
     def SetColumn(self, col, item):
+        """
+        Sets information about this column.
+
+        :param `col`: an integer specifying the column index;
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         self._mainWin.SetColumn(col, item)
         return True
 
 
     def GetColumnWidth(self, col):
+        """
+        Returns the column width for the input column.
+
+        :param `col`: an integer specifying the column index.
+        """
 
         return self._mainWin.GetColumnWidth(col)
 
 
     def SetColumnWidth(self, col, width):
+        """
+        Sets the column width.
+
+        :param `width`: can be a width in pixels or ``wx.LIST_AUTOSIZE`` (-1) or
+         ``wx.LIST_AUTOSIZE_USEHEADER`` (-2). ``wx.LIST_AUTOSIZE`` will resize the
+         column to the length of its longest item. ``wx.LIST_AUTOSIZE_USEHEADER``
+         will resize the column to the length of the header (Win32) or 80 pixels
+         (other platforms).
+
+        :note: In small or normal icon view, col must be -1, and the column width
+         is set for all columns.
+        """
 
         self._mainWin.SetColumnWidth(col, width)
         return True
 
 
     def GetCountPerPage(self):
+        """
+        Returns the number of items that can fit vertically in the visible area
+        of the L{UltimateListCtrl} (list or report view) or the total number of
+        items in the list control (icon or small icon view).
+        """
 
         return self._mainWin.GetCountPerPage()  # different from Windows ?
 
 
     def GetItem(self, itemOrId, col=0):
+        """
+        Returns the information about the input item.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or an integer specifying
+         the item index;
+        :param `col`: the column to which the item belongs to.
+        """
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.GetItem(item, col)
 
 
     def SetItem(self, info):
+        """
+        Sets the information about the input item.
+
+        :param `info`: an instance of L{UltimateListItem}.
+        """
 
         self._mainWin.SetItem(info)
         return True
 
 
     def SetStringItem(self, index, col, label, imageIds=[], it_kind=0):
+        """
+        Sets a string or image at the given location.
 
+        :param `index`: the item index;
+        :param `col`: the column to which the item belongs to;
+        :param `label`: the item text;
+        :param `imageIds`: a Python list containing the image indexes for the
+         images associated to this item;
+        :param `it_kind`: the item kind. May be one of the following integers:
+
+         =============== ==========================
+         Item Kind       Description
+         =============== ==========================
+                0        A normal item
+                1        A checkbox-like item
+                2        A radiobutton-type item
+         =============== ==========================
+         
+        """
+        
         info = UltimateListItem()
         info._text = label
         info._mask = ULC_MASK_TEXT
@@ -8049,22 +10458,73 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def GetItemState(self, item, stateMask):
+        """
+        Returns the item state flags for the input item.
+
+        :param `item`: the index of the item;
+        :param `stateMask`: the bitmask for the state flag.
+        
+        :see: L{SetItemState} for a list of valid state flags.
+        """
 
         return self._mainWin.GetItemState(item, stateMask)
 
 
     def SetItemState(self, item, state, stateMask):
+        """
+        Sets the item state flags for the input item.
+
+        :param `item`: the index of the item; if defaulted to -1, the state flag
+         will be set for all the items;
+        :param `state`: any combination of the following bits:
+        
+         ============================ ========= ==============================
+         State Bits                   Hex Value Description
+         ============================ ========= ==============================
+         ``ULC_STATE_DONTCARE``             0x0 Don't care what the state is
+         ``ULC_STATE_DROPHILITED``          0x1 The item is highlighted to receive a drop event
+         ``ULC_STATE_FOCUSED``              0x2 The item has the focus
+         ``ULC_STATE_SELECTED``             0x4 The item is selected
+         ``ULC_STATE_CUT``                  0x8 The item is in the cut state
+         ``ULC_STATE_DISABLED``            0x10 The item is disabled
+         ``ULC_STATE_FILTERED``            0x20 The item has been filtered
+         ``ULC_STATE_INUSE``               0x40 The item is in use
+         ``ULC_STATE_PICKED``              0x80 The item has been picked
+         ``ULC_STATE_SOURCE``             0x100 The item is a drag and drop source
+         ============================ ========= ==============================
+
+        :param `stateMask`: the bitmask for the state flag.
+        
+        """
 
         self._mainWin.SetItemState(item, state, stateMask)
         return True
 
 
     def SetItemImage(self, item, image, selImage=-1):
+        """
+        Sets a Python list of image indexes associated with the item.
 
+        :param `item`: an integer specifying the item index;
+        :param `image`: a Python list of indexes into the image list associated
+         with the L{UltimateListCtrl}. In report view, this only sets the images
+         for the first column;
+        :param `selImage`: not used at present.
+        """
+        
         return self.SetItemColumnImage(item, 0, image)
 
 
     def SetItemColumnImage(self, item, column, image):
+        """
+        Sets a Python list of image indexes associated with the item in the input
+        column.
+
+        :param `item`: an integer specifying the item index;
+        :param `column`: the column to which the item belongs to;
+        :param `image`: a Python list of indexes into the image list associated
+         with the L{UltimateListCtrl}. 
+        """
 
         info = UltimateListItem()
         info._image = to_list(image)
@@ -8077,16 +10537,34 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def GetItemText(self, item):
+        """
+        Returns the item text.
+
+        :param `item`: an instance of L{UltimateListItem} or an integer specifying
+         the item index.
+        """
 
         return self._mainWin.GetItemText(item)
 
 
-    def SetItemText(self, item, str):
+    def SetItemText(self, item, text):
+        """
+        Sets the item text.
 
-        self._mainWin.SetItemText(item, str)
+        :param `item`: an instance of L{UltimateListItem} or an integer specifying
+         the item index;
+        :param `text`: the new item text.
+        """
+
+        self._mainWin.SetItemText(item, text)
 
 
     def GetItemData(self, item):
+        """
+        Gets the application-defined data associated with this item.
+
+        :param `item`: an integer specifying the item index.
+        """
 
         info = UltimateListItem()
         info._mask = ULC_MASK_DATA
@@ -8096,6 +10574,15 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def SetItemData(self, item, data):
+        """
+        Sets the application-defined data associated with this item.
+
+        :param `item`: an integer specifying the item index;
+        :param `data`: the data to be associated with the input item.
+
+        :note: Tthis function cannot be used to associate pointers with
+         the control items, use L{SetItemPyData} instead.
+        """
 
         info = UltimateListItem()
         info._mask = ULC_MASK_DATA
@@ -8106,6 +10593,14 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def GetItemPyData(self, item):
+        """
+        Returns the data for the item, which can be any Python object.
+
+        :param `item`: an integer specifying the item index.
+        
+        :note: Please note that Python data is associated with the item and not
+         with subitems.
+        """
 
         info = UltimateListItem()
         info._mask = ULC_MASK_PYDATA
@@ -8115,6 +10610,15 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def SetItemPyData(self, item, pyData):
+        """
+        Sets the data for the item, which can be any Python object.
+
+        :param `item`: an integer specifying the item index;
+        :param `pyData`: any Python object.
+        
+        :note: Please note that Python data is associated with the item and not
+         with subitems.
+        """
 
         info = UltimateListItem()
         info._mask = ULC_MASK_PYDATA
@@ -8129,16 +10633,44 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def GetViewRect(self):
+        """
+        Returns the rectangle taken by all items in the control. In other words,
+        if the controls client size were equal to the size of this rectangle, no
+        scrollbars would be needed and no free space would be left.
+
+        :note: This function only works in the icon and small icon views, not in
+         list or report views.
+        """
 
         return self._mainWin.GetViewRect()
 
 
     def GetItemRect(self, item, code=ULC_RECT_BOUNDS):
+        """
+        Returns the rectangle representing the item's size and position, in physical
+        coordinates.
+
+        :param `item`: the row in which the item lives;
+        :param `code`: one of ``ULC_RECT_BOUNDS``, ``ULC_RECT_ICON``, ``ULC_RECT_LABEL``.
+        """
 
         return self.GetSubItemRect(item, ULC_GETSUBITEMRECT_WHOLEITEM, code)
 
 
     def GetSubItemRect(self, item, subItem, code):
+        """
+        Returns the rectangle representing the size and position, in physical coordinates,
+        of the given subitem, i.e. the part of the row `item` in the column `subItem`.
+
+        :param `item`: the row in which the item lives;
+        :param `subItem`: the column in which the item lives. If set equal to the special
+         value ``ULC_GETSUBITEMRECT_WHOLEITEM`` the return value is the same as for
+         L{GetItemRect};
+        :param `code`: one of ``ULC_RECT_BOUNDS``, ``ULC_RECT_ICON``, ``ULC_RECT_LABEL``.
+        
+        :note: This method is only meaningful when the L{UltimateListCtrl} is in the
+         report mode.        
+        """
 
         rect = self._mainWin.GetSubItemRect(item, subItem)
         if self._mainWin.HasHeader():
@@ -8148,37 +10680,71 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def GetItemPosition(self, item):
+        """
+        Returns the position of the item, in icon or small icon view.
+
+        :param `item`: the row in which the item lives.
+        """
 
         return self._mainWin.GetItemPosition(item)
 
 
-    def SetItemPosition(item, pos):
+    def SetItemPosition(self, item, pos):
+        """
+        Sets the position of the item, in icon or small icon view.
+
+        :param `item`: the row in which the item lives;
+        :param `pos`: the item position.
+
+        :note: This method is currently unimplemented and does nothing.        
+        """
 
         return False
 
 
     def GetItemCount(self):
+        """ Returns the number of items in the L{UltimateListCtrl}. """
 
         return self._mainWin.GetItemCount()
 
 
     def GetColumnCount(self):
+        """ Returns the total number of columns in the L{UltimateListCtrl}. """
 
         return self._mainWin.GetColumnCount()
 
 
     def SetItemSpacing(self, spacing, isSmall=False):
+        """
+        Sets the spacing between item texts and icons.
+
+        :param `spacing`: the spacing between item texts and icons, in pixels;
+        :param `isSmall`: ``True`` if using a ``wx.IMAGE_LIST_SMALL`` image list,
+         ``False`` if using a ``wx.IMAGE_LIST_NORMAL`` image list.
+        """
 
         self._mainWin.SetItemSpacing(spacing, isSmall)
 
 
     def GetItemSpacing(self, isSmall=False):
+        """
+        Returns the spacing between item texts and icons, in pixels.
+
+        :param `isSmall`: ``True`` if using a ``wx.IMAGE_LIST_SMALL`` image list,
+         ``False`` if using a ``wx.IMAGE_LIST_NORMAL`` image list.
+        """
 
         return self._mainWin.GetItemSpacing(isSmall)
 
 
     def SetItemTextColour(self, item, col):
+        """
+        Sets the item text colour.
 
+        :param `item`: the index of the item;
+        :param `col`: a valid `wx.Colour` object.
+        """
+        
         info = UltimateListItem()
         info._itemId = item
         info.SetTextColour(col)
@@ -8186,6 +10752,11 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def GetItemTextColour(self, item):
+        """
+        Returns the item text colour.
+
+        :param `item`: the index of the item.
+        """
 
         info = UltimateListItem()
         info._itemId = item
@@ -8195,6 +10766,12 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def SetItemBackgroundColour(self, item, col):
+        """
+        Sets the item background colour.
+
+        :param `item`: the index of the item;
+        :param `col`: a valid `wx.Colour` object.
+        """
 
         info = UltimateListItem()
         info._itemId = item
@@ -8203,6 +10780,11 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def GetItemBackgroundColour(self, item):
+        """
+        Returns the item background colour.
+
+        :param `item`: the index of the item.
+        """
 
         info = UltimateListItem()
         info._itemId = item
@@ -8211,6 +10793,12 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def SetItemFont(self, item, f):
+        """
+        Sets the item font.
+
+        :param `item`: the index of the item;
+        :param `f`: a valid `wx.Font` object.
+        """
 
         info = UltimateListItem()
         info._itemId = item
@@ -8219,6 +10807,11 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def GetItemFont(self, item):
+        """
+        Returns the item font.
+
+        :param `item`: the index of the item.
+        """
 
         info = UltimateListItem()
         info._itemId = item
@@ -8227,32 +10820,101 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def GetSelectedItemCount(self):
+        """ Returns the number of selected items in L{UltimateListCtrl}. """
 
         return self._mainWin.GetSelectedItemCount()
 
 
     def GetTextColour(self):
+        """ Returns the L{UltimateListCtrl} foreground colour. """
 
         return self.GetForegroundColour()
 
 
     def SetTextColour(self, col):
+        """
+        Sets the L{UltimateListCtrl} foreground colour.
+
+        :param `col`: a valid `wx.Colour` object.
+        """
 
         self.SetForegroundColour(col)
 
 
     def GetTopItem(self):
+        """ Gets the index of the topmost visible item when in list or report view. """
 
         top, dummy = self._mainWin.GetVisibleLinesRange()
         return top
 
 
     def GetNextItem(self, item, geometry=ULC_NEXT_ALL, state=ULC_STATE_DONTCARE):
+        """
+        Searches for an item with the given `geometry` or `state`, starting from `item`
+        but excluding the `item` itself.
+
+        :param `item`: the item at which starting the search. If set to -1, the first
+         item that matches the specified flags will be returned.
+        :param `geometry`: can be one of:
+
+         =================== ========= =================================
+         Geometry Flag       Hex Value Description
+         =================== ========= =================================
+         ``ULC_NEXT_ABOVE``        0x0 Searches for an item above the specified item
+         ``ULC_NEXT_ALL``          0x1 Searches for subsequent item by index
+         ``ULC_NEXT_BELOW``        0x2 Searches for an item below the specified item
+         ``ULC_NEXT_LEFT``         0x3 Searches for an item to the left of the specified item
+         ``ULC_NEXT_RIGHT``        0x4 Searches for an item to the right of the specified item
+         =================== ========= =================================
+        
+        :param `state`: any combination of the following bits:
+        
+         ============================ ========= ==============================
+         State Bits                   Hex Value Description
+         ============================ ========= ==============================
+         ``ULC_STATE_DONTCARE``             0x0 Don't care what the state is
+         ``ULC_STATE_DROPHILITED``          0x1 The item is highlighted to receive a drop event
+         ``ULC_STATE_FOCUSED``              0x2 The item has the focus
+         ``ULC_STATE_SELECTED``             0x4 The item is selected
+         ``ULC_STATE_CUT``                  0x8 The item is in the cut state
+         ``ULC_STATE_DISABLED``            0x10 The item is disabled
+         ``ULC_STATE_FILTERED``            0x20 The item has been filtered
+         ``ULC_STATE_INUSE``               0x40 The item is in use
+         ``ULC_STATE_PICKED``              0x80 The item has been picked
+         ``ULC_STATE_SOURCE``             0x100 The item is a drag and drop source
+         ============================ ========= ==============================
+
+
+        :return: The first item with given state following item or -1 if no such item found.
+
+        :note: This function may be used to find all selected items in the
+         control like this::
+              
+             item = -1
+                        
+             while 1:
+                 item = listctrl.GetNextItem(item, ULC_NEXT_ALL, ULC_STATE_SELECTED)
+                   
+                 if item == -1:
+                     break
+                
+                 # This item is selected - do whatever is needed with it
+
+                 wx.LogMessage("Item %ld is selected."%item)
+
+
+        """
 
         return self._mainWin.GetNextItem(item, geometry, state)
 
 
     def GetImageList(self, which):
+        """
+        Returns the image list associated with the control.
+
+        :param `which`: one of ``wx.IMAGE_LIST_NORMAL``, ``wx.IMAGE_LIST_SMALL``,
+         ``wx.IMAGE_LIST_STATE`` (the last is unimplemented).
+        """
 
         if which == wx.IMAGE_LIST_NORMAL:
             return self._imageListNormal
@@ -8267,6 +10929,13 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def SetImageList(self, imageList, which):
+        """
+        Sets the image list associated with the control.
+
+        :param `imageList`: an instance of `wx.ImageList`;
+        :param `which`: one of ``wx.IMAGE_LIST_NORMAL``, ``wx.IMAGE_LIST_SMALL``,
+         ``wx.IMAGE_LIST_STATE`` (the last is unimplemented).
+        """
 
         if which == wx.IMAGE_LIST_NORMAL:
             self._imageListNormal = imageList
@@ -8281,28 +10950,67 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def AssignImageList(self, imageList, which):
+        """
+        Assigns the image list associated with the control.
+
+        :param `imageList`: an instance of `wx.ImageList`;
+        :param `which`: one of ``wx.IMAGE_LIST_NORMAL``, ``wx.IMAGE_LIST_SMALL``,
+         ``wx.IMAGE_LIST_STATE`` (the last is unimplemented).
+        """
 
         self.SetImageList(imageList, which)
 
 
     def Arrange(self, flag):
+        """
+        Arranges the items in icon or small icon view.
+
+        :param `flag`: one of the following bits:
+
+         ========================== ========= ===============================
+         Alignment Flag             Hex Value Description
+         ========================== ========= ===============================
+         ``ULC_ALIGN_DEFAULT``            0x0 Default alignment
+         ``ULC_ALIGN_LEFT``               0x1 Align to the left side of the control
+         ``ULC_ALIGN_TOP``                0x2 Align to the top side of the control
+         ``ULC_ALIGN_SNAP_TO_GRID``       0x3 Snap to grid
+         ========================== ========= ===============================
+
+        :note: This method is currently unimplemented and does nothing.
+        """
+
 
         return 0
 
 
     def DeleteItem(self, item):
+        """
+        Deletes the specified item.
+
+        :param `item`: the index of the item to delete.
+        
+        :note: This function sends the ``EVT_LIST_DELETE_ITEM`` event for the item
+         being deleted.
+        """
 
         self._mainWin.DeleteItem(item)
         return True
 
 
     def DeleteAllItems(self):
+        """
+        Deletes all items in the L{UltimateListCtrl}.
+
+        :note: This function does not send the ``EVT_LIST_DELETE_ITEM`` event because
+         deleting many items from the control would be too slow then (unlike L{DeleteItem}).
+        """
 
         self._mainWin.DeleteAllItems()
         return True
 
 
     def DeleteAllColumns(self):
+        """ Deletes all the column in L{UltimateListCtrl}. """
 
         count = len(self._mainWin._columns)
         for n in xrange(count):
@@ -8312,43 +11020,90 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def ClearAll(self):
+        """ Deletes everything in L{UltimateListCtrl}. """
 
         self._mainWin.DeleteEverything()
 
 
     def DeleteColumn(self, col):
+        """
+        Deletes the specified column.
+
+        :param `col`: the index of the column to delete.        
+        """
 
         self._mainWin.DeleteColumn(col)
         return True
 
 
     def EditLabel(self, item):
+        """
+        Starts editing an item label.
+
+        :param `item`: the index of the item to edit.
+        """
 
         self._mainWin.EditLabel(item)
 
 
     def EnsureVisible(self, item):
+        """
+        Ensures this item is visible.
+
+        :param `index`: the index of the item to scroll into view.
+        """
 
         self._mainWin.EnsureVisible(item)
         return True
 
 
     def FindItem(self, start, str, partial=False):
+        """
+        Find an item whose label matches this string.
+
+        :param `start`: the starting point of the input `string` or the beginning
+         if `start` is -1;
+        :param `string`: the string to look for matches;
+        :param `partial`: if ``True`` then this method will look for items which
+         begin with `string`.
+
+        :note: The string comparison is case insensitive.         
+        """
 
         return self._mainWin.FindItem(start, str, partial)
 
 
     def FindItemData(self, start, data):
+        """
+        Find an item whose data matches this data.
+
+        :param `start`: the starting point of the input `data` or the beginning
+         if `start` is -1;
+        :param `data`: the data to look for matches.
+        """
 
         return self._mainWin.FindItemData(start, data)
 
 
     def FindItemAtPos(self, start, pt, direction):
+        """
+        Find an item nearest this position.
+
+        :param `pt`: an instance of `wx.Point`.        
+        """
 
         return self._mainWin.FindItemAtPos(pt)
 
 
     def HitTest(self, pointOrTuple):
+        """
+        HitTest method for a L{UltimateListCtrl}.
+
+        :param `pointOrTuple`: an instance of `wx.Point` or a tuple representing
+         the mouse x, y position.
+
+        :see: L{UltimateListMainWindow.HitTestLine} for a list of return flags.        
+        """
 
         if isinstance(pointOrTuple, wx.Point):
             x, y = pointOrTuple.x, pointOrTuple.y
@@ -8359,12 +11114,26 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def InsertItem(self, info):
+        """
+        Inserts an item into L{UltimateListCtrl}.
+
+        :param `info`: an instance of L{UltimateListItem}.
+        """
 
         self._mainWin.InsertItem(info)
         return info._itemId
 
 
     def InsertStringItem(self, index, label, it_kind=0):
+        """
+        Inserts a string item at the given location.
+
+        :param `index`: the index at which we wish to insert the item;
+        :param `label`: the item text;
+        :param `it_kind`: the item kind.
+
+        :see: L{SetStringItem} for a list of valid item kinds.
+        """
 
         info = UltimateListItem()
         info._text = label
@@ -8379,6 +11148,16 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def InsertImageItem(self, index, imageIds, it_kind=0):
+        """
+        Inserts an image item at the given location.
+
+        :param `index`: the index at which we wish to insert the item;
+        :param `imageIds`: a Python list containing the image indexes for the
+         images associated to this item;
+        :param `it_kind`: the item kind.
+
+        :see: L{SetStringItem} for a list of valid item kinds.
+        """
 
         info = UltimateListItem()
         info._mask = ULC_MASK_IMAGE
@@ -8394,6 +11173,17 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def InsertImageStringItem(self, index, label, imageIds, it_kind=0):
+        """
+        Inserts an image+string item at the given location.
+
+        :param `index`: the index at which we wish to insert the item;
+        :param `label`: the item text;
+        :param `imageIds`: a Python list containing the image indexes for the
+         images associated to this item;
+        :param `it_kind`: the item kind.
+
+        :see: L{SetStringItem} for a list of valid item kinds.
+        """
 
         info = UltimateListItem()
         info._text = label
@@ -8409,6 +11199,12 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def InsertColumnInfo(self, col, item):
+        """
+        Inserts a column into L{UltimateListCtrl}.
+
+        :param `col`: the column index at which we wish to insert a column;
+        :param `item`: an instance of L{UltimateListItem}.
+        """
 
         if not self._mainWin.InReportView() and not self.HasExtraFlag(ULC_HEADER_IN_ALL_VIEWS) and \
            not self._mainWin.InTileView():
@@ -8422,7 +11218,31 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def InsertColumn(self, col, heading, format=ULC_FORMAT_LEFT, width=-1):
+        """
+        Inserts a column into L{UltimateListCtrl}.
 
+        :param `col`: the column index at which we wish to insert a column;
+        :param `heading`: the header text;
+        :param `format`: the column alignment flag. This can be one of the following
+         bits:
+
+         ============================ ========= ==============================
+         Alignment Bits               Hex Value Description
+         ============================ ========= ==============================
+         ``ULC_FORMAT_LEFT``                0x0 The item is left-aligned
+         ``ULC_FORMAT_RIGHT``               0x1 The item is right-aligned
+         ``ULC_FORMAT_CENTRE``              0x2 The item is centre-aligned
+         ``ULC_FORMAT_CENTER``              0x2 The item is center-aligned
+         ============================ ========= ==============================
+
+        :param `width`: can be a width in pixels or ``wx.LIST_AUTOSIZE`` (-1) or
+         ``wx.LIST_AUTOSIZE_USEHEADER`` (-2). ``wx.LIST_AUTOSIZE`` will resize the
+         column to the length of its longest item. ``wx.LIST_AUTOSIZE_USEHEADER``
+         will resize the column to the length of the header (Win32) or 80 pixels
+         (other platforms).
+
+        """
+        
         item = UltimateListItem()
         item._mask = ULC_MASK_TEXT | ULC_MASK_FORMAT | ULC_MASK_FONT
         item._text = heading
@@ -8437,6 +11257,11 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def IsColumnShown(self, column):
+        """
+        Returns ``True`` if the input column is shown, ``False`` if it is hidden.
+
+        :param `column`: an integer specifying the column index.
+        """
 
         if self._headerWin:
             return self._mainWin.IsColumnShown(column)
@@ -8445,6 +11270,12 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def SetColumnShown(self, column, shown=True):
+        """
+        Sets the specified column as shown or hidden.
+
+        :param `column`: an integer specifying the column index;
+        :param `shown`: ``True`` to show the column, ``False`` to hide it.
+        """
 
         col = self.GetColumn(column)
         col._mask |= ULC_MASK_SHOWN
@@ -8454,17 +11285,42 @@ class UltimateListCtrl(wx.PyControl):
 
         
     def ScrollList(self, dx, dy):
+        """
+        Scrolls the L{UltimateListCtrl}.
+
+        :param `dx`: if in icon, small icon or report view mode, specifies the number
+         of pixels to scroll. If in list view mode, `dx` specifies the number of
+         columns to scroll.
+        :param `dy`: always specifies the number of pixels to scroll vertically.
+        """
 
         return self._mainWin.ScrollList(dx, dy)
 
 
 # Sort items.
-# func is a function which takes 3 long arguments: item1, item2, data.
 # The return value is a negative number if the first item should precede the second
 # item, a positive number of the second item should precede the first,
 # or zero if the two items are equivalent.
 
     def SortItems(self, func=None):
+        """
+        Call this function to sort the items in the L{UltimateListCtrl}. Sorting is done
+        using the specified function `func`. This function must have the
+        following prototype::
+
+            def OnCompareItems(self, line1, line2):
+
+                DoSomething(line1, line2)
+                # function code            
+
+
+        It is called each time when the two items must be compared and should return 0
+        if the items are equal, negative value if the first item is less than the second
+        one and positive value if the first one is greater than the second one.
+
+        :param `func`: the method to use to sort the items. The default is to use the
+         L{UltimateListMainWindow.OnCompareItems} method.
+        """
 
         self._mainWin.SortItems(func)
         wx.CallAfter(self.Update)
@@ -8477,6 +11333,11 @@ class UltimateListCtrl(wx.PyControl):
 # ----------------------------------------------------------------------------
 
     def OnSize(self, event):
+        """
+        Handles the ``wx.EVT_SIZE`` event for L{UltimateListCtrl}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.
+        """
 
         if not self.IsShownOnScreen():
             return
@@ -8505,6 +11366,15 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def OnInternalIdle(self):
+        """
+        This method is normally only used internally, but sometimes an application
+        may need it to implement functionality that should not be disabled by an
+        application defining an `OnIdle` handler in a derived class.
+
+        This method may be used to do delayed painting, for example, and most
+        implementations call `wx.Window.UpdateWindowUI` in order to send update events
+        to the window in idle time.
+        """
 
         wx.PyControl.OnInternalIdle(self)
 
@@ -8519,6 +11389,21 @@ class UltimateListCtrl(wx.PyControl):
 # ----------------------------------------------------------------------------
 
     def SetBackgroundColour(self, colour):
+        """
+        Changes the background colour of L{UltimateListCtrl}.
+
+        :param `colour`: the colour to be used as the background colour, pass
+         `wx.NullColour` to reset to the default colour.
+
+        :note: The background colour is usually painted by the default `wx.EraseEvent`
+         event handler function under Windows and automatically under GTK.
+
+        :note: Setting the background colour does not cause an immediate refresh, so
+         you may wish to call `wx.Window.ClearBackground` or `wx.Window.Refresh` after
+         calling this function.
+
+        :note: Overridden from `wx.PyControl`.         
+        """
 
         if self._mainWin:
             self._mainWin.SetBackgroundColour(colour)
@@ -8528,6 +11413,14 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def SetForegroundColour(self, colour):
+        """
+        Changes the foreground colour of L{UltimateListCtrl}.
+
+        :param `colour`: the colour to be used as the foreground colour, pass
+         `wx.NullColour` to reset to the default colour.
+
+        :note: Overridden from `wx.PyControl`.         
+        """
 
         if not wx.PyControl.SetForegroundColour(self, colour):
             return False
@@ -8543,6 +11436,13 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def SetFont(self, font):
+        """
+        Sets the L{UltimateListCtrl} font.
+
+        :param `font`: a valid `wx.Font` instance.
+
+        :note: Overridden from `wx.PyControl`.        
+        """
 
         if not wx.PyControl.SetFont(self, font):
             return False
@@ -8560,6 +11460,26 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def GetClassDefaultAttributes(self, variant):
+        """
+        Returns the default font and colours which are used by the control. This is
+        useful if you want to use the same font or colour in your own control as in
+        a standard control -- which is a much better idea than hard coding specific
+        colours or fonts which might look completely out of place on the users system,
+        especially if it uses themes.
+
+        This static method is "overridden'' in many derived classes and so calling,
+        for example, `wx.Button.GetClassDefaultAttributes()` will typically return the
+        values appropriate for a button which will be normally different from those
+        returned by, say, `wx.ListCtrl.GetClassDefaultAttributes()`.
+
+        :note: The `wx.VisualAttributes` structure has at least the fields `font`,
+         `colFg` and `colBg`. All of them may be invalid if it was not possible to
+         determine the default control appearance or, especially for the background
+         colour, if the field doesn't make sense as is the case for `colBg` for the
+         controls with themed background.
+
+        :note: Overridden from `wx.PyControl`.         
+        """
 
         attr = wx.VisualAttributes()
         attr.colFg = wx.SystemSettings.GetColour(wx.SYS_COLOUR_LISTBOXTEXT)
@@ -8569,6 +11489,7 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def GetScrolledWin(self):
+        """ Returns the header window owner. """
 
         return self._headerWin.GetOwner()
 
@@ -8578,46 +11499,113 @@ class UltimateListCtrl(wx.PyControl):
 # ----------------------------------------------------------------------------
 
     def SetDropTarget(self, dropTarget):
+        """
+        Associates a drop target with this window.
+        If the window already has a drop target, it is deleted.
+
+        :param `dropTarget`: an instance of `wx.DropTarget`.
+
+        :note: Overridden from `wx.PyControl`.        
+        """
 
         self._mainWin.SetDropTarget(dropTarget)
 
 
     def GetDropTarget(self):
+        """
+        Returns the associated drop target, which may be ``None``.
+
+        :note: Overridden from `wx.PyControl`.
+        """
 
         return self._mainWin.GetDropTarget()
 
 
     def SetCursor(self, cursor):
+        """
+        Sets the window's cursor. 
+
+        :param `cursor`: specifies the cursor that the window should normally display.
+         The `cursor` may be `wx.NullCursor` in which case the window cursor will be
+         reset back to default.
+
+        :note: The window cursor also sets it for the children of the window implicitly.
+
+        :note: Overridden from `wx.PyControl`.
+        """
 
         return (self._mainWin and [self._mainWin.SetCursor(cursor)] or [False])[0]
 
 
     def GetBackgroundColour(self):
+        """
+        Returns the background colour of the window.
 
+        :note: Overridden from `wx.PyControl`.
+        """
+        
         return (self._mainWin and [self._mainWin.GetBackgroundColour()] or [wx.NullColour])[0]
 
 
     def GetForegroundColour(self):
+        """
+        Returns the foreground colour of the window.
+
+        :note: Overridden from `wx.PyControl`.
+        """
 
         return (self._mainWin and [self._mainWin.GetForegroundColour()] or [wx.NullColour])[0]
 
 
     def PopupMenu(self, menu, pos=wx.DefaultPosition):
+        """
+        Pops up the given menu at the specified coordinates, relative to this window,
+        and returns control when the user has dismissed the menu. If a menu item is
+        selected, the corresponding menu event is generated and will be processed as
+        usual. If the coordinates are not specified, the current mouse cursor position
+        is used.
+
+        :param `menu`: an instance of `wx.Menu` to pop up;
+        :param `pos`: the position where the menu will appear.
+
+        :note: Overridden from `wx.PyControl`.
+        """
 
         return self._mainWin.PopupMenu(menu, pos)
 
 
     def ClientToScreen(self, x, y):
+        """
+        Converts to screen coordinates from coordinates relative to this window.
+
+        :param `x`: an integer specifying the x client coordinate;        
+        :param `y`: an integer specifying the y client coordinate.
+
+        :return: the coordinates relative to the screen.
+        
+        :note: Overridden from `wx.PyControl`.
+        """
 
         return self._mainWin.ClientToScreen(x, y)
 
 
     def ScreenToClient(self, x, y):
+        """
+        Converts from screen to client window coordinates.
+
+        :param `x`: an integer specifying the x screen coordinate;        
+        :param `y`: an integer specifying the y screen coordinate.
+
+        :return: the coordinates relative to this window.
+        
+        :note: Overridden from `wx.PyControl`.
+        """
 
         return self._mainWin.ScreenToClient(x, y)
 
 
     def SetFocus(self):
+        """ This sets the window to receive keyboard input. """
 
         # The test in window.cpp fails as we are a composite
         # window, so it checks against "this", but not self._mainWin.
@@ -8626,6 +11614,11 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def DoGetBestSize(self):
+        """
+        Gets the size which best suits the window: for a control, it would be the
+        minimal size which doesn't truncate the control, for a panel - the same size
+        as it would have after a call to `Fit()`.
+        """
 
         # Something is better than nothing...
         # 100x80 is what the MSW version will get from the default
@@ -8638,6 +11631,14 @@ class UltimateListCtrl(wx.PyControl):
 # ----------------------------------------------------------------------------
 
     def OnGetItemText(self, item, col):
+        """
+        This function **must** be overloaded in the derived class for a control with
+        ``ULC_VIRTUAL`` style. It should return the string containing the text of
+        the given column for the specified item.
+
+        :param `item`: an integer specifying the item index;
+        :param `col`: the column index to which the item belongs to.
+        """
 
         # this is a pure virtual function, in fact - which is not really pure
         # because the controls which are not virtual don't need to implement it
@@ -8645,6 +11646,20 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def OnGetItemImage(self, item):
+        """
+        This function **must** be overloaded in the derived class for a control with
+        ``ULC_VIRTUAL`` style having an image list (if the control doesn't have an
+        image list, it is not necessary to overload it). It should return a Python
+        list of indexes representing the images associated to the input item or an
+        empty list for no images.
+
+        :param `item`: an integer specifying the item index;
+
+        :note: In a control with ``ULC_REPORT`` style, L{OnGetItemImage} only gets called
+         for the first column of each line.
+
+        :note: The base class version always returns an empty Python list.
+        """
 
         if self.GetImageList(wx.IMAGE_LIST_SMALL):
             raise Exception("List control has an image list, OnGetItemImage should be overridden.")
@@ -8653,6 +11668,16 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def OnGetItemColumnImage(self, item, column=0):
+        """
+        This function **must** be overloaded in the derived class for a control with
+        ``ULC_VIRTUAL`` and ``ULC_REPORT`` style. It should return a Python list of
+        indexes representing the images associated to the input item or an empty list
+        for no images.
+
+        :param `item`: an integer specifying the item index.
+
+        :note: The base class version always returns an empty Python list.
+        """
 
         if column == 0:
             return self.OnGetItemImage(item)
@@ -8661,6 +11686,19 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def OnGetItemAttr(self, item):
+        """
+        This function may be overloaded in the derived class for a control with
+        ``ULC_VIRTUAL`` style. It should return the attribute for the for the specified
+        item or ``None`` to use the default appearance parameters.
+
+        :param `item`: an integer specifying the item index.
+
+        :note: L{UltimateListCtrl} will not delete the pointer or keep a reference of it.
+         You can return the same L{UltimateListItemAttr} pointer for every
+         L{OnGetItemAttr} call.
+
+        :note: The base class version always returns ``None``.
+        """
 
         if item < 0 or item > self.GetItemCount():
             raise Exception("Invalid item index in OnGetItemAttr()")
@@ -8670,11 +11708,30 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def OnGetItemCheck(self, item):
+        """
+        This function may be overloaded in the derived class for a control with
+        ``ULC_VIRTUAL`` style. It should return whether a checkbox-like item or
+        a radiobutton-like item is checked or unchecked.
+
+        :param `item`: an integer specifying the item index.
+
+        :note: The base class version always returns an empty list.
+        """
 
         return []
 
 
     def OnGetItemColumnCheck(self, item, column=0):
+        """
+        This function **must** be overloaded in the derived class for a control with
+        ``ULC_VIRTUAL`` and ``ULC_REPORT`` style. It should return whether a
+        checkbox-like item or a radiobutton-like item in the column header is checked
+        or unchecked.
+        
+        :param `item`: an integer specifying the item index.
+
+        :note: The base class version always returns an empty Python list.
+        """
 
         if column == 0:
             return self.OnGetItemCheck(item)
@@ -8683,11 +11740,33 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def OnGetItemKind(self, item):
+        """
+        This function **must** be overloaded in the derived class for a control with
+        ``ULC_VIRTUAL`` style. It should return the item kind for the input item.
+
+        :param `item`: an integer specifying the item index.
+
+        :note: The base class version always returns 0 (a standard item).
+
+        :see: L{SetItemKind} for a list of valid item kinds.
+        """
 
         return 0
 
 
     def OnGetItemColumnKind(self, item, column=0):
+        """
+        This function **must** be overloaded in the derived class for a control with
+        ``ULC_VIRTUAL`` style. It should return the item kind for the input item in
+        the header window.
+
+        :param `item`: an integer specifying the item index;
+        :param `column`: the column index.
+
+        :note: The base class version always returns 0 (a standard item).
+
+        :see: L{SetItemKind} for a list of valid item kinds.
+        """
 
         if column == 0:
             return self.OnGetItemKind(item)
@@ -8696,6 +11775,11 @@ class UltimateListCtrl(wx.PyControl):
     
 
     def SetItemCount(self, count):
+        """
+        Sets the total number of items we handle.
+
+        :param `count`: the total number of items we handle.
+        """
 
         if not self._mainWin.IsVirtual():
             raise Exception("This is for virtual controls only")
@@ -8704,12 +11788,30 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def RefreshItem(self, item):
+        """
+        Redraws the given item.
+
+        :param `item`: an integer specifying the item index;
+
+        :note: This is only useful for the virtual list controls as without calling
+         this function the displayed value of the item doesn't change even when the
+         underlying data does change.
+        """
 
         self._mainWin.RefreshLine(item)
 
 
     def RefreshItems(self, itemFrom, itemTo):
+        """
+        Redraws the items between `itemFrom` and `itemTo`.
+        The starting item must be less than or equal to the ending one.
 
+        Just as L{RefreshItem} this is only useful for virtual list controls
+
+        :param `itemFrom`: the first index of the refresh range;
+        :param `itemTo`: the last index of the refresh range.
+        """
+        
         self._mainWin.RefreshLines(itemFrom, itemTo)
 
 
@@ -8722,6 +11824,19 @@ class UltimateListCtrl(wx.PyControl):
 #
 
     def Refresh(self, eraseBackground=True, rect=None):
+        """
+        Causes this window, and all of its children recursively (except under wxGTK1
+        where this is not implemented), to be repainted. 
+
+        :param `eraseBackground`: If ``True``, the background will be erased;
+        :param `rect`: If not ``None``, only the given rectangle will be treated as damaged.
+
+        :note: Note that repainting doesn't happen immediately but only during the next
+         event loop iteration, if you need to update the window immediately you should
+         use L{Update} instead.
+
+        :note: Overridden from `wx.PyControl`.         
+        """
 
         if not rect:
 
@@ -8756,12 +11871,28 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def Update(self):
+        """
+        Calling this method immediately repaints the invalidated area of the window
+        and all of its children recursively while this would usually only happen when
+        the flow of control returns to the event loop.
 
+        :note: This function doesn't invalidate any area of the window so nothing
+         happens if nothing has been invalidated (i.e. marked as requiring a redraw).
+         Use L{Refresh} first if you want to immediately redraw the window unconditionally.
+
+        :note: Overridden from `wx.PyControl`.         
+        """
+        
         self._mainWin.ResetVisibleLinesRange(True)
         wx.PyControl.Update(self)
 
 
     def GetEditControl(self):
+        """
+        Returns a pointer to the edit L{UltimateListTextCtrl} if the item is being edited or
+        ``None`` otherwise (it is assumed that no more than one item may be edited
+        simultaneously).
+        """
 
         retval = None
 
@@ -8771,8 +11902,13 @@ class UltimateListCtrl(wx.PyControl):
         return retval
 
 
-    def Select(self, idx, on=1):
-        '''[de]select an item'''
+    def Select(self, idx, on=True):
+        """
+        Selects/deselects an item.
+
+        :param `idx`: the index of the item to select;
+        :param `on`: ``True`` to select the item, ``False`` to deselect it.
+        """
 
         item = CreateListItem(idx, 0)
         item = self._mainWin.GetItem(item, 0)
@@ -8789,39 +11925,67 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def Focus(self, idx):
-        '''Focus and show the given item'''
+        """
+        Focus and show the given item.
+
+        :param `idx`: the index of the item to be focused.
+        """
 
         self.SetItemState(idx, ULC_STATE_FOCUSED, ULC_STATE_FOCUSED)
         self.EnsureVisible(idx)
 
 
     def GetFocusedItem(self):
-        '''get the currently focused item or -1 if none'''
+        """ Returns the currently focused item or -1 if none is focused. """
+        
         return self.GetNextItem(-1, ULC_NEXT_ALL, ULC_STATE_FOCUSED)
 
 
     def GetFirstSelected(self, *args):
-        '''return first selected item, or -1 when none'''
+        """ Return first selected item, or -1 when none is selected. """
+        
         return self.GetNextSelected(-1)
 
 
     def GetNextSelected(self, item):
-        '''return subsequent selected items, or -1 when no more'''
+        """
+        Returns subsequent selected items, or -1 when no more are selected.
+
+        :param `item`: the index of the item.
+        """
+
         return self.GetNextItem(item, ULC_NEXT_ALL, ULC_STATE_SELECTED)
 
 
     def IsSelected(self, idx):
-        '''return True if the item is selected'''
+        """
+        Returns ``True`` if the item is selected.
+
+        :param `idx`: the index of the item to check for selection.
+        """
+        
         return (self.GetItemState(idx, ULC_STATE_SELECTED) & ULC_STATE_SELECTED) != 0
 
 
     def IsItemChecked(self, itemOrId, col=0):
+        """
+        Returns whether an item is checked or not.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to.
+        """
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.IsItemChecked(item)
 
 
     def IsItemEnabled(self, itemOrId, col=0):
+        """
+        Returns whether an item is enabled or not.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to.
+        """
 
         item = CreateListItem(itemOrId, col)        
         return self._mainWin.IsItemEnabled(item)
@@ -8829,10 +11993,12 @@ class UltimateListCtrl(wx.PyControl):
 
     def GetItemKind(self, itemOrId, col=0):
         """
-        Returns the item type:
-        0: normal
-        1: checkbox item
-        2: radiobutton item
+        Returns the item kind.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to.
+
+        :see: L{SetItemKind} for a list of valid item kinds.
         """
         
         item = CreateListItem(itemOrId, col)
@@ -8840,32 +12006,74 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def SetItemKind(self, itemOrId, col=0, kind=0):
+        """
+        Sets the item kind.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to;
+        :param `kind`: may be one of the following integers:
+
+         =============== ==========================
+         Item Kind       Description
+         =============== ==========================
+                0        A normal item
+                1        A checkbox-like item
+                2        A radiobutton-type item
+         =============== ==========================
+
+        """
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.SetItemKind(item, kind)
     
 
     def EnableItem(self, itemOrId, col=0, enable=True):
+        """
+        Enables/disables an item.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to;
+        :param `enable`: ``True`` to enable the item, ``False`` otherwise.
+        """
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.EnableItem(item, enable)
         
 
     def IsItemHyperText(self, itemOrId, col=0):
-        """Returns whether an item is hypertext or not."""
+        """
+        Returns whether an item is hypertext or not.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to.
+        """
         
         item = CreateListItem(itemOrId, col)
         return self._mainWin.IsItemHyperText(item)
 
 
-    def SetItemHyperText(self, itemOrId, col=0):
-        """Returns whether an item is hypertext or not."""
+    def SetItemHyperText(self, itemOrId, col=0, hyper=True):
+        """
+        Sets whether the item is hypertext or not.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to;
+        :param `hyper`: ``True`` to have an item with hypertext behaviour, ``False`` otherwise.
+        """
         
         item = CreateListItem(itemOrId, col)
-        return self._mainWin.SetItemHyperText(item)
+        return self._mainWin.SetItemHyperText(item, hyper)
 
 
     def SetColumnImage(self, col, image):
+        """
+        Sets one or more images to the specified column.
+
+        :param `col`: the column index;
+        :param `image`: a Python list containing the image indexes for the
+         images associated to this column item.
+        """
+        
         item = self.GetColumn(col)
         # preserve all other attributes too
 
@@ -8885,13 +12093,25 @@ class UltimateListCtrl(wx.PyControl):
         item.SetImage(image)
         self.SetColumn(col, item)
 
+
     def ClearColumnImage(self, col):
+        """
+        Clears all the images in the specified column.
+
+        :param `col`: the column index;
+        """
+        
         self.SetColumnImage(col, -1)
 
+
     def Append(self, entry):
-        '''Append an item to the list control.  The entry parameter should be a
-           sequence with an item for each column'''
-        if len(entry):
+        """
+        Append an item to the L{UltimateListCtrl}.
+
+        :param `entry`: should be a sequence with an item for each column.
+        """
+        
+        if entry:
             if wx.USE_UNICODE:
                 cvtfunc = unicode
             else:
@@ -8900,44 +12120,65 @@ class UltimateListCtrl(wx.PyControl):
             self.InsertStringItem(pos, cvtfunc(entry[0]))
             for i in range(1, len(entry)):
                 self.SetStringItem(pos, i, cvtfunc(entry[i]))
+                
             return pos
 
 
     def SetFirstGradientColour(self, colour=None):
-        """Sets the first gradient colour."""
+        """
+        Sets the first gradient colour for gradient-style selections.
+
+        :param `colour`: if not ``None``, a valid `wx.Colour` instance. Otherwise,
+         the colour is taken from the system value ``wx.SYS_COLOUR_HIGHLIGHT``.
+        """
         
         self._mainWin.SetFirstGradientColour(colour)
         
 
     def SetSecondGradientColour(self, colour=None):
-        """Sets the second gradient colour."""
+        """
+        Sets the second gradient colour for gradient-style selections.
+
+        :param `colour`: if not ``None``, a valid `wx.Colour` instance. Otherwise,
+         the colour generated is a slightly darker version of the L{UltimateListCtrl}
+         background colour.
+        """
 
         self._mainWin.SetSecondGradientColour(colour)
 
 
     def GetFirstGradientColour(self):
-        """Returns the first gradient colour."""
+        """ Returns the first gradient colour for gradient-style selections. """
         
         return self._mainWin.GetFirstGradientColour()
 
 
     def GetSecondGradientColour(self):
-        """Returns the second gradient colour."""
+        """ Returns the second gradient colour for gradient-style selections. """
         
         return self._mainWin.GetSecondGradientColour()
 
 
     def EnableSelectionGradient(self, enable=True):
-        """Globally enables/disables drawing of gradient selection."""
+        """
+        Globally enables/disables drawing of gradient selections.
+
+        :param `enable`: ``True`` to enable gradient-style selections, ``False``
+         to disable it.
+
+        :note: Calling this method disables any Vista-style selection previously
+         enabled.
+        """
 
         self._mainWin.EnableSelectionGradient(enable)
         
 
     def SetGradientStyle(self, vertical=0):
         """
-        Sets the gradient style:
-        0: horizontal gradient
-        1: vertical gradient
+        Sets the gradient style for gradient-style selections.
+
+        :param `vertical`: 0 for horizontal gradient-style selections, 1 for vertical
+         gradient-style selections.
         """
 
         self._mainWin.SetGradientStyle(vertical)
@@ -8945,148 +12186,255 @@ class UltimateListCtrl(wx.PyControl):
 
     def GetGradientStyle(self):
         """
-        Returns the gradient style:
-        0: horizontal gradient
-        1: vertical gradient
+        Returns the gradient style for gradient-style selections.
+
+        :return: 0 for horizontal gradient-style selections, 1 for vertical
+         gradient-style selections.
         """
 
         return self._mainWin.GetGradientStyle()
 
 
     def EnableSelectionVista(self, enable=True):
-        """Globally enables/disables drawing of Windows Vista selection."""
+        """
+        Globally enables/disables drawing of Windows Vista selections.
+
+        :param `enable`: ``True`` to enable Vista-style selections, ``False`` to
+         disable it.
+
+        :note: Calling this method disables any gradient-style selection previously
+         enabled.
+        """
 
         self._mainWin.EnableSelectionVista(enable)
 
 
     def SetBackgroundImage(self, image=None):
-        """Sets the UltimateListCtrl background image (can be None)."""
+        """
+        Sets the L{UltimateListCtrl} background image.
+
+        :param `image`: if not ``None``, an instance of `wx.Bitmap`.
+
+        :note: At present, the background image can only be used in "tile" mode.
+
+        :todo: Support background images also in stretch and centered modes.
+        """
 
         self._mainWin.SetBackgroundImage(image)
         
 
     def GetBackgroundImage(self):
-        """Returns the UltimateListCtrl background image (can be None)."""
+        """
+        Returns the L{UltimateListCtrl} background image (if any).
+
+        :note: At present, the background image can only be used in "tile" mode.
+
+        :todo: Support background images also in stretch and centered modes.        
+        """
 
         return self._mainWin.GetBackgroundImage()
 
 
     def SetWaterMark(self, watermark=None):
-        """Sets the UltimateListCtrl watermark image (can be None)."""
+        """
+        Sets the L{UltimateListCtrl} watermark image to be displayed in the bottom
+        right part of the window.
+
+        :param `watermark`: if not ``None``, an instance of `wx.Bitmap`.
+
+        :todo: Better support for this is needed.        
+        """        
 
         self._mainWin.SetWaterMark(watermark)
         
 
     def GetWaterMark(self):
-        """Returns the UltimateListCtrl watermark image (can be None)."""
+        """
+        Returns the L{UltimateListCtrl} watermark image (if any), displayed in the
+        bottom right part of the window.
+
+        :todo: Better support for this is needed.        
+        """
 
         return self._mainWin.GetWaterMark()
 
 
     def SetDisabledTextColour(self, colour):
-        """Sets the items disabled colour."""
+        """
+        Sets the items disabled colour.
+
+        :param `colour`: an instance of `wx.Colour`.
+        """
 
         self._mainWin.SetDisabledTextColour(colour)
 
 
     def GetDisabledTextColour(self):
-        """Returns the items disabled colour."""
+        """ Returns the items disabled colour. """
 
         return self._mainWin.GetDisabledTextColour()
 
 
     def GetHyperTextFont(self):
-        """Returns the font used to render an hypertext item."""
+        """ Returns the font used to render an hypertext item. """
 
         return self._mainWin.GetHyperTextFont()
 
 
     def SetHyperTextFont(self, font):
-        """Sets the font used to render an hypertext item."""
+        """
+        Sets the font used to render hypertext items.
+
+        :param `font`: a valid `wx.Font` instance.
+        """
 
         self._mainWin.SetHyperTextFont(font)
         
 
     def SetHyperTextNewColour(self, colour):
-        """Sets the colour used to render a non-visited hypertext item."""
+        """
+        Sets the colour used to render a non-visited hypertext item.
+
+        :param `colour`: a valid `wx.Colour` instance.
+        """
 
         self._mainWin.SetHyperTextNewColour(colour)
         
 
     def GetHyperTextNewColour(self):
-        """Returns the colour used to render a non-visited hypertext item."""
+        """ Returns the colour used to render a non-visited hypertext item. """
 
         return self._mainWin.GetHyperTextNewColour()
 
 
     def SetHyperTextVisitedColour(self, colour):
-        """Sets the colour used to render a visited hypertext item."""
+        """
+        Sets the colour used to render a visited hypertext item.
+
+        :param `colour`: a valid `wx.Colour` instance.
+        """
 
         self._mainWin.SetHyperTextVisitedColour(colour)
         
 
     def GetHyperTextVisitedColour(self):
-        """Returns the colour used to render a visited hypertext item."""
+        """ Returns the colour used to render a visited hypertext item. """
 
         return self._mainWin.GetHyperTextVisitedColour()
 
 
     def SetItemVisited(self, itemOrId, col=0, visited=True):
-        """Sets whether an hypertext item was visited."""
+        """
+        Sets whether an hypertext item was visited or not.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to;
+        :param `visited`: ``True`` to mark an hypertext item as visited, ``False`` otherwise.
+        """
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.SetItemVisited(item, visited)
     
 
     def GetItemVisited(self, itemOrId, col=0):
-        """Returns whether an hypertext item was visited."""
+        """
+        Returns whether an hypertext item was visited.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to.
+        """
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.GetItemVisited(item)
 
 
     def GetItemWindow(self, itemOrId, col=0):
-        """Returns the window associated to the item (if any)."""
+        """
+        Returns the window associated to the item (if any).
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to.
+        """
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.GetItemWindow(item)
 
 
     def SetItemWindow(self, itemOrId, col=0, wnd=None, expand=False):
-        """Sets the window for the given item"""
+        """
+        Sets the window for the given item.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to;
+        :param `wnd`: a non-toplevel window to be displayed next to the item;
+        :param `expand`: ``True`` to expand the column where the item/subitem lives,
+         so that the window will be fully visible.        
+        """
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.SetItemWindow(item, wnd, expand)
        
 
     def DeleteItemWindow(self, itemOrId, col=0):
-        """Deletes the window associated to an item (if any). """
+        """
+        Deletes the window associated to an item (if any).
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to.
+        """
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.DeleteItemWindow(item)
         
 
     def GetItemWindowEnabled(self, itemOrId, col=0):
-        """Returns whether the window associated to the item is enabled."""
+        """
+        Returns whether the window associated to the item is enabled.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to;
+        """
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.GetItemWindowEnabled(item)
 
 
     def SetItemWindowEnabled(self, itemOrId, col=0, enable=True):
-        """Enables/disables the window associated to the item."""
+        """
+        Enables/disables the window associated to the item.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to;
+        :param `enable`: ``True`` to enable the associated window, ``False`` to disable it.
+        """
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.SetItemWindowEnabled(item, enable)
 
 
     def GetItemCustomRenderer(self, itemOrId, col=0):
+        """
+        Returns the custom renderer used to draw the input item (if any).
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to.
+        """
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.GetItemCustomRenderer(item)
 
 
     def SetItemCustomRenderer(self, itemOrId, col=0, renderer=None):
+        """
+        Associate a custom renderer to this item.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to;
+        :param `renderer`: a class able to correctly render the input item.
+
+        :note: the renderer class **must** implement the methods `DrawSubItem`,
+         `GetLineHeight` and `GetSubItemWidth`. 
+        """
 
         if not self.HasFlag(ULC_REPORT) or not self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
             raise Exception("Custom renderers can be used on with style = ULC_REPORT and extraStyle = ULC_HAS_VARIABLE_ROW_HEIGHT")
@@ -9096,6 +12444,16 @@ class UltimateListCtrl(wx.PyControl):
 
 
     def SetItemOverFlow(self, itemOrId, col=0, over=True):
+        """
+        Sets the item in the overflow/non overflow state.
+
+        An item/subitem may overwrite neighboring items/subitems if its text would
+        not normally fit in the space allotted to it.
+        
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to;
+        :param `over`: ``True`` to set the item in a overflow state, ``False`` otherwise.        
+        """
 
         if not self.HasFlag(ULC_REPORT) or self._mainWin.IsVirtual():
             raise Exception("Overflowing items can be used only in report, non-virtual mode")
@@ -9105,18 +12463,36 @@ class UltimateListCtrl(wx.PyControl):
                 
 
     def GetItemOverFlow(self, itemOrId, col=0):
+        """
+        Returns if the item is in the overflow state.
+
+        An item/subitem may overwrite neighboring items/subitems if its text would
+        not normally fit in the space allotted to it.
+
+        :param `itemOrId`: an instance of L{UltimateListItem} or the item index;
+        :param `col`: the column index to which the input item belongs to.
+        """
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.GetItemOverFlow(item)
 
 
     def HasExtraFlag(self, flag):
+        """
+        Returns ``True`` if the window has the given extra flag bit set.
 
+        :param `flag`: the extra window style to check.
+
+        :see: L{SetExtraStyle} for a list of valid extra window styles.        
+        """
+        
         return self._extraStyle & flag
 
 
     def IsVirtual(self):
+        """ Returns ``True`` if the L{UltimateListCtrl} has the ``ULC_VIRTUAL`` style set. """
 
         return self._mainWin.IsVirtual()
+
 
     

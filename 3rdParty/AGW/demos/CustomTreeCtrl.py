@@ -200,15 +200,15 @@ class PenDialog(wx.Dialog):
         self.parent = parent
         self.pentype = pentype
 
-        self.__set_properties()
-        self.__do_layout()
+        self.SetProperties()
+        self.DoLayout()
 
         self.Bind(wx.EVT_COMBOBOX, self.OnStyle, self.combostyle)
         self.Bind(wx.EVT_BUTTON, self.OnOk, self.okbutton)
         self.Bind(wx.EVT_BUTTON, self.OnCancel, self.cancelbutton)
 
 
-    def __set_properties(self):
+    def SetProperties(self):
 
         self.SetTitle("Pen Dialog Selector")
         self.colourbutton.SetMinSize((25, 25))
@@ -235,7 +235,7 @@ class PenDialog(wx.Dialog):
             self.spinwidth.Enable(False)
 
 
-    def __do_layout(self):
+    def DoLayout(self):
 
         mainsizer = wx.BoxSizer(wx.VERTICAL)
         bottomsizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -273,8 +273,6 @@ class PenDialog(wx.Dialog):
         mainsizer.SetSizeHints(self)
         self.Layout()
         self.Centre()
-
-
 
 
     def OnStyle(self, event):
@@ -346,22 +344,22 @@ class TreeButtonsDialog(wx.Dialog):
 
         self.parent = parent        
 
-        self.__set_properties()
-        self.__do_layout()
+        self.SetProperties()
+        self.DoLayout()
 
         self.Bind(wx.EVT_BUTTON, self.OnOk, self.okbutton)
         self.Bind(wx.EVT_BUTTON, self.OnCancel, self.cancelbutton)
         self.Bind(wx.EVT_LISTBOX, self.OnListBox, self.listicons)
 
 
-    def __set_properties(self):
+    def SetProperties(self):
 
         self.SetTitle("Tree Buttons Selector")
         self.listicons.SetSelection(0)
         self.okbutton.SetDefault()
 
 
-    def __do_layout(self):
+    def DoLayout(self):
 
         mainsizer = wx.BoxSizer(wx.VERTICAL)
         bottomsizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -458,22 +456,22 @@ class CheckDialog(wx.Dialog):
 
         self.parent = parent        
 
-        self.__set_properties()
-        self.__do_layout()
+        self.SetProperties()
+        self.DoLayout()
 
         self.Bind(wx.EVT_BUTTON, self.OnOk, self.okbutton)
         self.Bind(wx.EVT_BUTTON, self.OnCancel, self.cancelbutton)
         self.Bind(wx.EVT_LISTBOX, self.OnListBox, self.listicons)
 
 
-    def __set_properties(self):
+    def SetProperties(self):
 
         self.SetTitle("Check/Radio Icon Selector")
         self.listicons.SetSelection(0)
         self.okbutton.SetDefault()
 
 
-    def __do_layout(self):
+    def DoLayout(self):
 
         mainsizer = wx.BoxSizer(wx.VERTICAL)
         bottomsizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -601,8 +599,8 @@ class TreeIcons(wx.Dialog):
 
         self.GetBitmaps(bitmaps)
     
-        self.__set_properties()
-        self.__do_layout()
+        self.SetProperties()
+        self.DoLayout()
 
         self.Bind(wx.EVT_COMBOBOX, self.OnComboNormal, self.combonormal)
         self.Bind(wx.EVT_COMBOBOX, self.OnComboSelected, self.comboselected)
@@ -612,13 +610,13 @@ class TreeIcons(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self.OnCancel, self.cancelbutton)
 
 
-    def __set_properties(self):
+    def SetProperties(self):
 
         self.SetTitle("Item Icon Selector")
         self.okbutton.SetDefault()
 
 
-    def __do_layout(self):
+    def DoLayout(self):
 
         mainsizer = wx.BoxSizer(wx.VERTICAL)
         sizer_2 = wx.BoxSizer(wx.HORIZONTAL)

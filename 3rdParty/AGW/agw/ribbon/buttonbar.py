@@ -266,7 +266,7 @@ class RibbonButtonBar(RibbonControl):
          all other large bitmaps used on the button bar;
         :param `help_string`: The UI help string to associate with the new button.
 
-        :seealso: L{AddButton}
+        :see: L{AddButton}
         """
 
         return self.AddSimpleButton(button_id, label, bitmap, help_string, RIBBON_BUTTON_DROPDOWN)
@@ -282,7 +282,7 @@ class RibbonButtonBar(RibbonControl):
          all other large bitmaps used on the button bar;
         :param `help_string`: The UI help string to associate with the new button.
 
-        :seealso: L{AddButton}
+        :see: L{AddButton}
         """
 
         return self.AddSimpleButton(button_id, label, bitmap, help_string, RIBBON_BUTTON_HYBRID)
@@ -310,7 +310,7 @@ class RibbonButtonBar(RibbonControl):
 
         :returns: An opaque pointer which can be used only with other button bar methods.
         
-        :seealso: L{AddDropdownButton}, L{AddHybridButton}
+        :see: L{AddDropdownButton}, L{AddHybridButton}
         """
 
         if not bitmap.IsOk() and not bitmap_small.IsOk():
@@ -427,7 +427,7 @@ class RibbonButtonBar(RibbonControl):
         """
         Delete all buttons from the button bar.
 
-        :seealso: L{DeleteButton}
+        :see: L{DeleteButton}
         """
 
         self._layouts_valid = False
@@ -441,7 +441,7 @@ class RibbonButtonBar(RibbonControl):
 
         :param `button_id`: ID of the button to enable or disable.
 
-        :seealso: L{ClearButtons}
+        :see: L{ClearButtons}
         """
 
         for button in self._buttons:

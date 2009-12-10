@@ -188,7 +188,7 @@ class RibbonToolBar(RibbonControl):
         :param `help_string`: The UI help string to associate with the new button;
         :param `kind`: The kind of button to add.
 
-        :seealso: L{AddDropdownTool}, L{AddHybridTool}, L{AddTool}
+        :see: L{AddDropdownTool}, L{AddHybridTool}, L{AddTool}
 
         """
 
@@ -204,7 +204,7 @@ class RibbonToolBar(RibbonControl):
          other large bitmaps used on the button bar;
         :param `help_string`: The UI help string to associate with the new button.
 
-        :seealso: L{AddTool}
+        :see: L{AddTool}
         """
 
         return self.AddTool(tool_id, bitmap, wx.NullBitmap, help_string, RIBBON_BUTTON_DROPDOWN, None)
@@ -220,7 +220,7 @@ class RibbonToolBar(RibbonControl):
          other large bitmaps used on the button bar;
         :param `help_string`: The UI help string to associate with the new button.
 
-        :seealso: L{AddTool}
+        :see: L{AddTool}
         """
 
         return self.AddTool(tool_id, bitmap, wx.NullBitmap, help_string, RIBBON_BUTTON_HYBRID, None)
@@ -242,7 +242,7 @@ class RibbonToolBar(RibbonControl):
 
         :returns: An opaque pointer which can be used only with other tool bar methods.
         
-        :seealso: L{AddDropdownTool}, L{AddHybridTool}, L{AddSeparator}
+        :see: L{AddDropdownTool}, L{AddHybridTool}, L{AddSeparator}
         """
 
         if not bitmap.IsOk():

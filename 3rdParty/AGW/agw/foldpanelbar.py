@@ -3,7 +3,7 @@
 # Ported From Jorgen Bodde & Julian Smart (Extended Demo) C++ Code By:
 #
 # Andrea Gavana, @ 23 Mar 2005
-# Latest Revision: 29 May 2009, 09.00 GMT
+# Latest Revision: 27 Nov 2009, 15.00 GMT
 #
 #
 # TODO List
@@ -66,56 +66,59 @@ or collapsed.
 Description
 ===========
 
-The `FoldPanelBar` is a control that contains multiple panels (of type
+The FoldPanelBar is a control that contains multiple panels (of type
 `FoldPanelItem`) that can be expanded or collapsed. The captionbar of
-the FoldPanel can be customized by setting it to a horizontal gradient
-style, vertical gradient style, a single color, a rectangle or filled
+the FoldPanelBar can be customized by setting it to a horizontal gradient
+style, vertical gradient style, a single colour, a rectangle or filled
 rectangle. The FoldPanel items can be collapsed in place or to the
 bottom of the control. `wx.Window` derived controls can be added
-dynamically, and separated by separator lines.  FoldPanelBar is
-freeware and distributed under the wxPython license.
+dynamically, and separated by separator lines.
  
    
 How does it work
-================
+----------------
 
 The internals of the FoldPanelBar is a list of FoldPanelItem objects. Through
 the reference of FoldPanel these panels can be controlled by adding new controls
-to a FoldPanel or adding new FoldPanels to the FoldPanelBar. 
+to a FoldPanel or adding new FoldPanels to the FoldPanelBar.
+
 The CaptionBar fires events to the parent (container of all panel items) when a
 sub-panel needs resizing (either folding or expanding). The fold or expand process
 is simply a resize of the panel so it looks like all controls on it are gone. All
 controls are still child of the FoldPanel they are located on. If they don't
 handle the event (and they won't) then the owner of the FoldPanelBar gets the
-events. This is what you need to handle the controls. There isn't much to it just
+events.
+
+This is what you need to handle the controls. There isn't much to it just
 a lot of calculations to see what panel belongs where. There are no sizers
 involved in the panels, everything is purely x-y positioning. 
 
 
 What can it do and what not?
-============================
+----------------------------
 
-    a) What it can do:
-        * Run-time addition of panels (no deletion just yet) 
-        * Run time addition of controls to the panel (it will be resized accordingly)
-        * Creating panels in collapsed mode or expanded mode 
-        * Various modes of caption behaviour and filling to make it more appealing 
-        * Panels can be folded and collapsed (or all of them) to allow more space
+a) What it can do:
+
+   * Run-time addition of panels (no deletion just yet);
+   * Run time addition of controls to the panel (it will be resized accordingly);
+   * Creating panels in collapsed mode or expanded mode;
+   * Various modes of caption behaviour and filling to make it more appealing;
+   * Panels can be folded and collapsed (or all of them) to allow more space.
         
-    b) What it cannot do:
+b) What it cannot do:
 
-        * Selection of a panel like in a list ctrl 
-        * Dragging and dropping the panels 
-        * Re-ordering the panels (not yet)  
+   * Selection of a panel like in a listctrl;
+   * Dragging and dropping the panels;
+   * Re-ordering the panels (not yet). 
 
  
-Supported platforms
+Supported Platforms
 ===================
 
 FoldPanelBar is supported on the following platforms: 
   * Windows (Verified on Windows XP, 2000)
-  * Linux/Unix (GTK2) (Thanks To Toni Brkic And Robin Dunn)
-  * Mac OSX (Thanks To Robin Dunn For The CaptionBar Size Patch)
+  * Linux/Unix (GTK2) (Thanks to Toni Brkic and Robin Dunn)
+  * Mac OSX (Thanks to Robin Dunn for the CaptionBar size patch)
 
 
 Window Styles
@@ -150,11 +153,11 @@ Event Name         Description
 License And Version
 ===================
 
-FoldPanelBar is based upon Jorgen Bodde's C++ implementation.
 FoldPanelBar is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
-Version 0.4
+Latest Revision: Andrea Gavana @ 27 Nov 2009, 15.00 GMT
+
+Version 0.5
 
 """
 
@@ -259,9 +262,8 @@ class CaptionBarStyle(object):
     At construction time, all styles are set to their default
     transparency.  This means none of the styles will be applied to
     the `CaptionBar` in question, meaning it will be created using the
-    default internals. When setting i.e the color, font or panel
+    default internals. When setting i.e the colour, font or panel
     style, these styles become active to be used.
-    
     """
 
     def __init__(self):
@@ -286,16 +288,19 @@ class CaptionBarStyle(object):
         """
         Sets font for the caption bar.
 
-        If this is not set, the font property is undefined and will
-        not be used. Use `CaptionFontUsed` to check if this style is
-        used.
-        """        
+        :param `font`: a valid `wx.Font` object.
+        
+        :note: If this is not set, the font property is undefined and will not be used.
+         Use L{CaptionFontUsed} to check if this style is used.
+        """
+        
         self._captionFont = font
         self._captionFontUsed = True
 
 
     def CaptionFontUsed(self):
-        """ Checks if the caption bar font is set. """        
+        """ Checks if the caption bar font is set. """
+        
         return self._captionFontUsed
 
 
@@ -303,11 +308,12 @@ class CaptionBarStyle(object):
         """
         Returns the font for the caption bar.
 
-        Please be warned this will result in an assertion failure when
-        this property is not previously set.
+        :note: Please be warned this will result in an assertion failure when
+         this property is not previously set.
         
-        :see: `SetCaptionFont`, `CaptionFontUsed`
+        :see: L{SetCaptionFont}, L{CaptionFontUsed}
         """        
+
         return self._captionFont
 
 
@@ -317,16 +323,19 @@ class CaptionBarStyle(object):
         """
         Sets first colour for the caption bar.
 
-        If this is not set, the colour property is undefined and will
-        not be used. Use `FirstColourUsed` to check if this style is
-        used.
-        """        
+        :param `colour`: a valid `wx.Colour` object.
+        
+        :note: If this is not set, the colour property is undefined and will not be used.
+         Use L{FirstColourUsed} to check if this style is used.
+        """
+        
         self._firstColour = colour
         self._firstColourUsed = True
 
 
     def FirstColourUsed(self):
-        """ Checks if the first colour of the caption bar is set."""        
+        """ Checks if the first colour of the caption bar is set."""
+        
         return self._firstColourUsed
 
 
@@ -334,11 +343,12 @@ class CaptionBarStyle(object):
         """
         Returns the first colour for the caption bar.
 
-        Please be warned this will result in an assertion failure when
-        this property is not previously set.
+        :note: Please be warned this will result in an assertion failure when
+         this property is not previously set.
         
-        :see: `SetFirstColour`, `FirstColourUsed`
-        """        
+        :see: L{SetFirstColour}, L{FirstColourUsed}
+        """
+        
         return self._firstColour
 
 
@@ -348,16 +358,19 @@ class CaptionBarStyle(object):
         """
         Sets second colour for the caption bar.
 
-        If this is not set, the colour property is undefined and will
-        not be used. Use `SecondColourUsed` to check if this style is
-        used.
-        """        
+        :param `colour`: a valid `wx.Colour` object.
+
+        :note: If this is not set, the colour property is undefined and will not be used.
+         Use L{SecondColourUsed} to check if this style is used.
+        """
+        
         self._secondColour = colour
         self._secondColourUsed = True
 
 
     def SecondColourUsed(self):
-        """ Checks if the second colour of the caption bar is set."""        
+        """ Checks if the second colour of the caption bar is set."""
+        
         return self._secondColourUsed
 
 
@@ -365,11 +378,12 @@ class CaptionBarStyle(object):
         """
         Returns the second colour for the caption bar.
 
-        Please be warned this will result in an assertion failure when
-        this property is not previously set.
+        :note: Please be warned this will result in an assertion failure when
+         this property is not previously set.
         
-        :see: `SetSecondColour`, `SecondColourUsed`
-        """        
+        :see: L{SetSecondColour}, L{SecondColourUsed}
+        """
+        
         return self._secondColour
 
 
@@ -379,16 +393,19 @@ class CaptionBarStyle(object):
         """
         Sets caption colour for the caption bar.
 
-        If this is not set, the colour property is undefined and will
-        not be used. Use `CaptionColourUsed` to check if this style is
-        used.
-        """        
+        :param `colour`: a valid `wx.Colour` object.
+
+        :note: If this is not set, the colour property is undefined and will not be used.
+         Use L{CaptionColourUsed} to check if this style is used.
+        """
+        
         self._textColour = colour
         self._textColourUsed = True
 
 
     def CaptionColourUsed(self):
         """ Checks if the caption colour of the caption bar is set."""        
+
         return self._textColourUsed
 
 
@@ -396,10 +413,12 @@ class CaptionBarStyle(object):
         """
         Returns the caption colour for the caption bar.
 
-        Please be warned this will result in an assertion failure
-        when this property is not previously set.
-        See also SetCaptionColour(), CaptionColourUsed()
-        """        
+        :note: Please be warned this will result in an assertion failure
+         when this property is not previously set.
+         
+        :see: L{SetCaptionColour}, L{CaptionColourUsed}
+        """
+        
         return self._textColour
 
 
@@ -409,31 +428,29 @@ class CaptionBarStyle(object):
         """
         Sets caption style for the caption bar.
 
-        If this is not set, the property is undefined and will not be
-        used. Use CaptionStyleUsed() to check if this style is used.
-        The following styles can be applied:
+        :param `style`: can be one of the following bits:
 
-            * CAPTIONBAR_GRADIENT_V: Draws a vertical gradient from top to bottom
-            
-            * CAPTIONBAR_GRADIENT_H: Draws a horizontal gradient from
-              left to right
-                                         
-            * CAPTIONBAR_SINGLE: Draws a single filled rectangle to
-              draw the caption
-              
-            * CAPTIONBAR_RECTANGLE: Draws a single colour with a
-              rectangle around the caption
-              
-            * CAPTIONBAR_FILLED_RECTANGLE: Draws a filled rectangle
-              and a border around it
-              
-        """    
+         =============================== ======= =============================
+         Caption Style                    Value  Description
+         =============================== ======= =============================
+         ``CAPTIONBAR_GRADIENT_V``             1 Draws a vertical gradient from top to bottom
+         ``CAPTIONBAR_GRADIENT_H``             2 Draws a horizontal gradient from left to right
+         ``CAPTIONBAR_SINGLE``                 3 Draws a single filled rectangle to draw the caption
+         ``CAPTIONBAR_RECTANGLE``              4 Draws a single colour with a rectangle around the caption
+         ``CAPTIONBAR_FILLED_RECTANGLE``       5 Draws a filled rectangle and a border around it
+         =============================== ======= =============================
+
+        :note: If this is not set, the property is undefined and will not be used.
+         Use L{CaptionStyleUsed} to check if this style is used.
+        """
+        
         self._captionStyle = style
         self._captionStyleUsed = True
         
 
     def CaptionStyleUsed(self):
-        """ Checks if the caption style of the caption bar is set."""        
+        """ Checks if the caption style of the caption bar is set."""
+        
         return self._captionStyleUsed
 
 
@@ -441,11 +458,12 @@ class CaptionBarStyle(object):
         """
         Returns the caption style for the caption bar.
         
-        Please be warned this will result in an assertion failure
-        when this property is not previously set.
+        :note: Please be warned this will result in an assertion failure
+         when this property is not previously set.
         
-        :see: `SetCaptionStyle`, `CaptionStyleUsed`
-        """        
+        :see: L{SetCaptionStyle}, L{CaptionStyleUsed}
+        """
+        
         return self._captionStyle
 
 
@@ -464,35 +482,49 @@ EVT_CAPTIONBAR = wx.PyEventBinder(wxEVT_CAPTIONBAR, 0)
 
 class CaptionBarEvent(wx.PyCommandEvent):
     """
-    This event will be sent when a EVT_CAPTIONBAR is mapped in the parent.
+    This event will be sent when a ``EVT_CAPTIONBAR`` is mapped in the parent.
     It is to notify the parent that the bar is now in collapsed or expanded
     state. The parent should re-arrange the associated windows accordingly
-    """    
+    """
+    
     def __init__(self, evtType):
-        """ Default Constructor For This Class."""        
+        """
+        Default class constructor.
+
+        :param `evtType`: the event type.
+        """
+
         wx.PyCommandEvent.__init__(self, evtType)
 
         
     def GetFoldStatus(self):
         """
-        Returns whether the bar is expanded or collapsed. True means
+        Returns whether the bar is expanded or collapsed. ``True`` means
         expanded.
         """        
+
         return not self._bar.IsCollapsed()
 
 
     def GetBar(self):
-        """ Returns The CaptionBar Selected."""        
+        """ Returns the selected L{CaptionBar}. """
+        
         return self._bar
 
 
     def SetTag(self, tag):
-        """ Assign A Tag To The Selected CaptionBar."""        
+        """
+        Assigns a tag to the selected L{CaptionBar}.
+
+        :param `tag`: an instance of L{FoldPanelBar}.
+        """  
+
         self._tag = tag
 
 
     def GetTag(self):
-        """ Returns The Tag Assigned To The Selected CaptionBar."""        
+        """ Returns the tag assigned to the selected L{CaptionBar}. """
+        
         return self._tag
 
 
@@ -500,8 +532,11 @@ class CaptionBarEvent(wx.PyCommandEvent):
         """
         Sets the bar associated with this event.
 
-        Should not used by any other then the originator of the event.
+        :param `bar`: an instance of L{CaptionBar}.
+        
+        :note: Should not be used by any other then the originator of the event.
         """        
+
         self._bar = bar
 
 
@@ -514,10 +549,10 @@ class CaptionBar(wx.Window):
     This class is a graphical caption component that consists of a
     caption and a clickable arrow.
 
-    The CaptionBar fires an event EVT_CAPTIONBAR which is a
-    `CaptionBarEvent`.  This event can be caught and the parent window
+    The CaptionBar fires an event ``EVT_CAPTIONBAR`` which is a
+    L{CaptionBarEvent}. This event can be caught and the parent window
     can act upon the collapsed or expanded state of the bar (which is
-    actually just the icon which changed).  The parent panel can
+    actually just the icon which changed). The parent panel can
     reduce size or expand again.
     """
     
@@ -528,7 +563,27 @@ class CaptionBar(wx.Window):
                  foldIcons=None, cbstyle=EmptyCaptionBarStyle,
                  rightIndent=FPB_BMP_RIGHTSPACE,
                  iconWidth=16, iconHeight=16, collapsed=False):
-        """ Default Class Constructor."""
+        """
+        Default class constructor.
+
+        :param `parent`: the L{CaptionBar} parent window;
+        :param `id`: an identifier for the control: a value of -1 is taken to mean a default;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `caption`: the string to be displayed in L{CaptionBar};
+        :param `foldIcons`: an instance of `wx.ImageList` containing the icons to display
+         next to the caption text;
+        :param `cbstyle`: the L{CaptionBar} window style. Must be an instance of
+         L{CaptionBarStyle};
+        :param `rightIndent`: number of pixels of the bmp to be aligned from the right filled
+         with space;
+        :param `iconWidth`: the L{CaptionBar} icon width;
+        :param `iconHeight`: the L{CaptionBar} icon height;        
+        :param `collapsed`: ``True`` if the L{CaptionBar} should start in the collapsed state,
+         ``False`` otherwise.
+        """
         
         wx.Window.__init__(self, parent, wx.ID_ANY, pos=pos,
                            size=(20,20), style=wx.NO_BORDER)
@@ -567,7 +622,13 @@ class CaptionBar(wx.Window):
         
 
     def ApplyCaptionStyle(self, cbstyle=EmptyCaptionBarStyle, applyDefault=True):
-        """ Applies the style defined in cbstyle to the CaptionBar."""
+        """
+        Applies the style defined in `cbstyle` to the L{CaptionBar}.
+
+        :param `cbstyle`: an instance of L{CaptionBarStyle};
+        :param `applyDefault`: if ``True``, the colours used in the L{CaptionBarStyle}
+         will be reset to their default values.
+        """
         
         newstyle = cbstyle
         
@@ -580,10 +641,10 @@ class CaptionBar(wx.Window):
             # get second colour from style or make it default
             if not newstyle.SecondColourUsed():
                 # make the second colour slightly darker then the background
-                color = self.GetParent().GetBackgroundColour()
-                r, g, b = int(color.Red()), int(color.Green()), int(color.Blue())
-                color = ((r >> 1) + 20, (g >> 1) + 20, (b >> 1) + 20)
-                newstyle.SetSecondColour(wx.Colour(color[0], color[1], color[2]))
+                colour = self.GetParent().GetBackgroundColour()
+                r, g, b = int(colour.Red()), int(colour.Green()), int(colour.Blue())
+                colour = ((r >> 1) + 20, (g >> 1) + 20, (b >> 1) + 20)
+                newstyle.SetSecondColour(wx.Colour(colour[0], colour[1], colour[2]))
 
             # get text colour
             if not newstyle.CaptionColourUsed():
@@ -602,31 +663,34 @@ class CaptionBar(wx.Window):
 
     def SetCaptionStyle(self, cbstyle=EmptyCaptionBarStyle, applyDefault=True):
         """
-        Sets CaptionBar styles with CapionBarStyle class.
+        Sets L{CaptionBar} styles with L{CaptionBarStyle} class.
 
-        All styles that are actually set, are applied. If you set
-        applyDefault to True, all other (not defined) styles will be
-        set to default. If it is False, the styles which are not set
-        in the CaptionBarStyle will be ignored.
-        """        
+        :param `cbstyle`: an instance of L{CaptionBarStyle};
+        :param `applyDefault`: if ``True``, the colours used in the L{CaptionBarStyle}
+         will be reset to their default values.
+
+        :note: All styles that are actually set, are applied. If you set `applyDefault`
+         to ``True``, all other (not defined) styles will be set to default. If it is
+         ``False``, the styles which are not set in the L{CaptionBarStyle} will be ignored.
+        """
+        
         self.ApplyCaptionStyle(cbstyle, applyDefault)
         self.Refresh()
 
     
     def GetCaptionStyle(self):
         """
-        Returns the current style of the captionbar in a
-        `CaptionBarStyle` class.
+        Returns the current style of the captionbar in a L{CaptionBarStyle} class.
 
-        This can be used to change and set back the changes.
-        """        
+        :note: This can be used to change and set back the changes.
+        """
+        
         return self._style
 
 
     def IsCollapsed(self):
-        """
-        Returns wether the status of the bar is expanded or collapsed.
-        """        
+        """ Returns wether the status of the bar is expanded or collapsed. """
+        
         return self._collapsed
     
 
@@ -635,10 +699,12 @@ class CaptionBar(wx.Window):
         Sets the amount of pixels on the right from which the bitmap
         is trailing.
 
-        If this is 0, it will be drawn all the way to the right,
-        default is equal to FPB_BMP_RIGHTSPACE. Assign this before
-        assigning an image list to prevent a redraw.
+        :param `pixels`: the number of pixels on the right from which the bitmap
+         is trailing. If this is 0, it will be drawn all the way to the right,
+         default is equal to ``FPB_BMP_RIGHTSPACE``. Assign this before
+         assigning an image list to prevent a redraw.
         """
+        
         assert pixels >= 0
         self._rightIndent = pixels
         if self._foldIcons:
@@ -647,42 +713,43 @@ class CaptionBar(wx.Window):
 
     def Collapse(self):
         """
-        This sets the internal state / representation to collapsed.
+        This sets the internal state/representation to collapsed.
 
-        This does not trigger a `CaptionBarEvent` to be sent to the
-        parent.
-        """        
+        :note: This does not trigger a L{CaptionBarEvent} to be sent to the
+         parent.
+        """
+        
         self._collapsed = True
         self.RedrawIconBitmap()
 
 
     def Expand(self):
         """
-        This sets the internal state / representation to expanded.
+        This sets the internal state/representation to expanded.
 
-        This does not trigger a `CaptionBarEvent` to be sent to the
-        parent.
+        :note: This does not trigger a L{CaptionBarEvent} to be sent to the
+         parent.
         """        
+
         self._collapsed = False
         self.RedrawIconBitmap()
         
 
     def SetBoldFont(self):
-        """ Sets the CaptionBarFont weight to BOLD."""
+        """ Sets the L{CaptionBar} font weight to bold."""
         
         self.GetFont().SetWeight(wx.BOLD)
 
 
     def SetNormalFont(self):
-        """ Sets the CaptionBarFont weight to NORMAL."""
+        """ Sets the L{CaptionBar} font weight to normal."""
         
         self.GetFont().SetWeight(wx.NORMAL)
 
 
     def IsVertical(self):
         """
-        Returns wether the CaptionBar Has Default Orientation Or Not.
-
+        Returns wether the L{CaptionBar} has a default orientation or not.
         Default is vertical.
         """
         
@@ -694,7 +761,11 @@ class CaptionBar(wx.Window):
 
         
     def OnPaint(self, event):
-        """ The paint event for flat or gradient fill. """
+        """
+        Handles the ``wx.EVT_PAINT`` event for L{CaptionBar}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
         
         if not self._controlCreated:
             event.Skip()
@@ -740,7 +811,9 @@ class CaptionBar(wx.Window):
     def FillCaptionBackground(self, dc):
         """
         Fills the background of the caption with either a gradient or
-        a solid color.
+        a solid colour.
+
+        :param `dc`: an instance of `wx.DC`.        
         """
 
         style = self._style.GetCaptionStyle()
@@ -767,10 +840,13 @@ class CaptionBar(wx.Window):
 
     def OnMouseEvent(self, event):
         """
-        Catches the mouse click-double click.
-        
-        If clicked on the arrow (single) or double on the caption we change state
-        and an event must be fired to let this panel collapse or expand.
+        Handles the ``wx.EVT_MOUSE_EVENTS`` event for L{CaptionBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+
+        :note: This method catches the mouse click-double click. If clicked on
+         the arrow (single) or double on the caption we change state and an event
+         must be fired to let this panel collapse or expand.
         """
 
         send_event = False
@@ -826,7 +902,14 @@ class CaptionBar(wx.Window):
         
 
     def OnChar(self, event):
-        """ Unused Methods. Any Ideas?!?"""
+        """
+        Handles the ``wx.EVT_CHAR`` event for L{CaptionBar}.
+
+        :param `event`: a `wx.KeyEvent` event to be processed.
+
+        :note: This method currently does nothing.
+        """
+        
         # TODO: Anything here?
         event.Skip()
 
@@ -834,7 +917,7 @@ class CaptionBar(wx.Window):
     def DoGetBestSize(self):
         """
         Returns the best size for this panel, based upon the font
-        assigned to this window, and the caption string
+        assigned to this window, and the caption string.
         """
         
         if self.IsVertical():
@@ -854,7 +937,12 @@ class CaptionBar(wx.Window):
 
 
     def DrawVerticalGradient(self, dc, rect):
-        """ Gradient fill from colour 1 to colour 2 with top to bottom. """
+        """
+        Gradient fill from colour 1 to colour 2 from top to bottom.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `rect`: the L{CaptionBar} client rectangle.
+        """
 
         if  rect.height < 1 or rect.width < 1:
             return
@@ -887,7 +975,12 @@ class CaptionBar(wx.Window):
 
 
     def DrawHorizontalGradient(self, dc, rect):
-        """ Gradient fill from colour 1 to colour 2 with left to right. """
+        """
+        Gradient fill from colour 1 to colour 2 from left to right.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `rect`: the L{CaptionBar} client rectangle.
+        """
 
         if rect.height < 1 or rect.width < 1:
             return
@@ -920,7 +1013,12 @@ class CaptionBar(wx.Window):
 
 
     def DrawSingleColour(self, dc, rect):
-        """ Single colour fill. This is the most easy one to find. """
+        """
+        Single colour fill for L{CaptionBar}.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `rect`: the L{CaptionBar} client rectangle.        
+        """
 
         if rect.height < 1 or rect.width < 1:
             return
@@ -933,7 +1031,12 @@ class CaptionBar(wx.Window):
         
 
     def DrawSingleRectangle(self, dc, rect):
-        """ Single rectangle. This is the most easy one to find. """
+        """
+        Single rectangle for L{CaptionBar}.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `rect`: the L{CaptionBar} client rectangle.        
+        """
         
         if rect.height < 2 or rect.width < 1:
             return
@@ -941,11 +1044,11 @@ class CaptionBar(wx.Window):
         # single frame, set up internal fill colour
 
         if self._style.GetCaptionStyle() == CAPTIONBAR_RECTANGLE:
-            color = self.GetParent().GetBackgroundColour()
-            br = wx.Brush(color, wx.SOLID)
+            colour = self.GetParent().GetBackgroundColour()
+            br = wx.Brush(colour, wx.SOLID)
         else:
-            color = self._style.GetFirstColour()
-            br = wx.Brush(color, wx.SOLID)
+            colour = self._style.GetFirstColour()
+            br = wx.Brush(colour, wx.SOLID)
 
         # setup the pen frame
 
@@ -961,7 +1064,11 @@ class CaptionBar(wx.Window):
 
 
     def OnSize(self, event):
-        """ Handles the size events for the CaptionBar."""
+        """
+        Handles the ``wx.EVT_SIZE`` event for L{CaptionBar}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.
+        """
 
         if not self._controlCreated:
             event.Skip()
@@ -1026,27 +1133,52 @@ class CaptionBar(wx.Window):
 class FoldPanelBar(wx.Panel):
     """
     The FoldPanelBar is a class which can maintain a list of
-    collapsable panels.  Once a panel is collapsed, only it's caption
+    collapsable panels. Once a panel is collapsed, only it's caption
     bar is visible to the user. This will provide more space for the
     other panels, or allow the user to close panels which are not used
     often to get the most out of the work area.
 
     This control is easy to use. Simply create it as a child for a
     panel or sash window, and populate panels with
-    `AddFoldPanel`. Then use the `AddFoldPanelWindow` to add
+    L{FoldPanelBar.AddFoldPanel}. Then use the L{FoldPanelBar.AddFoldPanelWindow} to add
     `wx.Window` derived controls to the current fold panel. Use
-    `AddFoldPanelSeparator` to put separators between the groups of
+    L{FoldPanelBar.AddFoldPanelSeparator} to put separators between the groups of
     controls that need a visual separator to group them
     together. After all is constructed, the user can fold the panels
-    by doubleclicking on the bar or single click on the arrow, which
+    by double clicking on the bar or single click on the arrow, which
     will indicate the collapsed or expanded state.
     """
+    
     # Define Empty CaptionBar Style
     EmptyCaptionBarStyle = CaptionBarStyle()
     
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=FPB_DEFAULT_STYLE, extraStyle=FPB_DEFAULT_EXTRASTYLE): 
-        """ Default Class Constructor. """
+        """
+        Default class constructor.
+
+        :param `parent`: the L{FoldPanelBar} parent window;
+        :param `id`: an identifier for the control: a value of -1 is taken to mean a default;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `style`: the L{FoldPanelBar} window style. It is basically the underlying
+         `wx.Panel` window style, and the default is
+         ``FPB_DEFAULT_STYLE`` = ``wx.TAB_TRAVERSAL`` | ``wx.NO_BORDER``.
+        :param `extraStyle`: the L{FoldPanelBar} window extra style. It can be one of the following
+         bits:
+         
+         ========================== =========== ==================================================
+         Window Styles              Hex Value   Description
+         ========================== =========== ==================================================
+         ``FPB_SINGLE_FOLD``                0x1 Single fold forces other panels to close when they are open, and only opens the current panel. This will allow the open panel to gain the full size left in the client area. This is an extra style.
+         ``FPB_COLLAPSE_TO_BOTTOM``         0x2 All panels are stacked to the bottom. When they are expanded again they show up at the top. This is an extra style.
+         ``FPB_EXCLUSIVE_FOLD``             0x4 ``FPB_SINGLE_FOLD`` style plus the panels will be stacked at the bottom.  This is an extra style.
+         ``FPB_HORIZONTAL``                 0x4 `FoldPanelBar` will be horizontal.
+         ``FPB_VERTICAL``                   0x8 `FoldPanelBar` will be vertical.
+         ========================== =========== ==================================================
+        """
         
         self._controlCreated = False
         self._extraStyle = extraStyle
@@ -1083,14 +1215,18 @@ class FoldPanelBar(wx.Panel):
         """
         Adds a fold panel to the list of panels.
 
-        If the flag collapsed is set to True, the panel is collapsed
-        initially.  The FoldPanel item which is returned, can be used
-        as a reference to perform actions upon the fold panel like
-        collapsing it, expanding it, or deleting it from the list.
+        :param `caption`: the caption to be displayed in the associated L{CaptionBar};
+        :param `collapsed`: if set to ``True``, the panel is collapsed initially;
+        :param `foldIcons`: an instance of `wx.ImageList` containing the icons to display
+         next to the caption text;
+        :param `cbstyle`: an instance of L{CaptionBarStyle}.
 
-        Use this foldpanel to add windows to it. Please consult
-        `AddFoldPanelWindow` and `AddFoldPanelSeparator` to know how
-        to add items derived from `wx.Window` to the panels.
+        :note: The FoldPanel item which is returned, can be used as a reference to perform
+         actions upon the fold panel like collapsing it, expanding it, or deleting it
+         from the list. Use this foldpanel to add windows to it.
+         
+        :see: L{AddFoldPanelWindow} and L{AddFoldPanelSeparator} to see how to add
+         items derived from `wx.Window` to the panels.
         """
 
         # create a fold panel item, which is first only the caption.
@@ -1124,55 +1260,50 @@ class FoldPanelBar(wx.Panel):
                            leftSpacing=FPB_DEFAULT_LEFTLINESPACING,
                            rightSpacing=FPB_DEFAULT_RIGHTLINESPACING):
         """
-        Adds a `wx.Window` derived instance to the referenced
-        FoldPanel.
+        Adds a `wx.Window` derived instance to the referenced fold panel.
 
-        IMPORTANT: Make the window be a child of the FoldPanel. See
-        example that follows. The flags to be used are:
+        :param `panel`: an instance of L{FoldPanelItem};
+        :param `window`: the window we wish to add to the fold panel, an instance
+         of `wx.Window`;
+        :param `flags`: can be one of the following bits:
+
+         ====================== ======= ====================================
+         Align Flag              Value  Description
+         ====================== ======= ====================================
+         ``FPB_ALIGN_WIDTH``          1 The `wx.Window` to be added will be aligned to fit the width of the FoldPanel when it is resized. Very handy for sizer items, buttons and text boxes.
+         ``FPB_ALIGN_LEFT``           0 Aligns left instead of fitting the width of the child window to be added. Use either this one or ``FPB_ALIGN_WIDTH``.
+         ====================== ======= ====================================
+
+        :param `Spacing`: the `wx.Window` to be added can be slightly indented from
+         left and right so it is more visibly placed in the fold panel. Use `Spacing` > 0
+         to give the control an y offset from the previous `wx.Window` added;
+        :param `leftSpacing`: give the `wx.Window` added a slight indent from the left;
+        :param `rightSpacing`: give the `wx.Window` added a slight indent from the right;
         
-            * FPB_ALIGN_WIDTH: Which means the wxWindow to be added
-              will be aligned to fit the width of the FoldPanel when
-              it is resized.  Very handy for sizer items, buttons and
-              text boxes.
+        :note: Make the window be a child of the fold panel!
+        
+         The following example adds a FoldPanel to the FoldPanelBar and
+         adds two `wx.Window` derived controls to the FoldPanel::
 
-            * FPB_ALIGN_LEFT: Aligns left instead of fitting the
-              width of the child window to be added. Use either this
-              one or FPB_ALIGN_WIDTH.
+               # Create the FoldPanelBar
+               m_pnl = FoldPanelBar(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, FPB_DEFAULT_STYLE, FPB_COLLAPSE_TO_BOTTOM)
 
-        The wx.Window to be added can be slightly indented from left
-        and right so it is more visibly placed in the FoldPanel. Use
-        Spacing > 0 to give the control an y offset from the previous
-        wx.Window added, use leftSpacing to give it a slight indent
-        from the left, and rightSpacing also reserves a little space
-        on the right so the wxWindow can be properly placed in the
-        FoldPanel.
+               # Add a foldpanel to the control. "Test me" is the caption and it is
+               # initially not collapsed.
+               item = m_pnl.AddFoldPanel("Test me", False)
 
-        The following example adds a FoldPanel to the FoldPanelBar and
-        adds two wx.Window derived controls to the FoldPanel::
+               # Now add a button to the fold panel. Mind that the button should be
+               # made child of the FoldPanel and not of the main form.
+               m_pnl.AddFoldPanelWindow(item, wx.Button(item, ID_COLLAPSEME, "Collapse Me"))
 
-            # create the FoldPanelBar
-            >>> m_pnl = FoldPanelBar(self, wx.ID_ANY, wx.DefaultPosition,
-                                     wx.DefaultSize, FPB_DEFAULT_STYLE,
-                                     FPB_COLLAPSE_TO_BOTTOM)
-
-            # add a foldpanel to the control. "Test me" is the caption and it is
-            # initially not collapsed.
-            >>> item = m_pnl.AddFoldPanel("Test me", False)
-
-            # now add a button to the fold panel. Mind that the button should be
-            # made child of the FoldPanel and not of the main form.
-            >>> m_pnl.AddFoldPanelWindow(item, wx.Button(item, ID_COLLAPSEME,
-                                        "Collapse Me"))
-
-            # add a separator between the two controls. This is purely a visual
-            # line that can have a certain color and also the indents and width
-            # aligning like a control.
-            >>> m_pnl.AddFoldPanelSeparator(item)
-
-            # now add a text ctrl. Also very easy. Align this on width so that
-            # when the control gets wider the text control also sizes along.
-            >>> m_pnl.AddFoldPanelWindow(item, wx.TextCtrl(item, wx.ID_ANY, "Comment"),
-                                         FPB_ALIGN_WIDTH, FPB_DEFAULT_SPACING, 20)
+               # Add a separator between the two controls. This is purely a visual
+               # line that can have a certain colour and also the indents and width
+               # aligning like a control.
+               m_pnl.AddFoldPanelSeparator(item)
+ 
+               # Now add a text ctrl. Also very easy. Align this on width so that
+               # when the control gets wider the text control also sizes along.
+               m_pnl.AddFoldPanelWindow(item, wx.TextCtrl(item, wx.ID_ANY, "Comment"), FPB_ALIGN_WIDTH, FPB_DEFAULT_SPACING, 20)
 
         """
         
@@ -1195,13 +1326,18 @@ class FoldPanelBar(wx.Panel):
                               leftSpacing=FPB_DEFAULT_LEFTLINESPACING,
                               rightSpacing=FPB_DEFAULT_RIGHTLINESPACING):
         """
-        Adds a separator line to the current FoldPanel.
+        Adds a separator line to the current fold panel.
         
-        The seperator is a simple line which is drawn and is no real
-        component.  It can be used to separate groups of controls
-        which belong to each other.  The colour is adjustable, and it
-        takes the same Spacing, leftSpacing and rightSpacing as
-        `AddFoldPanelWindow`.
+        The separator is a simple line which is drawn and is no real
+        component. It can be used to separate groups of controls
+        which belong to each other.
+
+        :param `colour`: the separator colour, an instance of `wx.Colour`;
+        :param `Spacing`: the separator to be added can be slightly indented from
+         left and right so it is more visibly placed in the fold panel. Use `Spacing` > 0
+         to give the control an y offset from the previous `wx.Window` added;
+        :param `leftSpacing`: give the added separator a slight indent from the left;
+        :param `rightSpacing`: give the added separator a slight indent from the right.
         """
         
         try:
@@ -1214,7 +1350,11 @@ class FoldPanelBar(wx.Panel):
 
 
     def OnSizePanel(self, event):
-        """ Handles the EVT_SIZE event for the FoldPanelBar. """
+        """
+        Handles the ``wx.EVT_SIZE`` event for L{FoldPanelBar}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.
+        """
 
         # skip all stuff when we are not initialised yet
 
@@ -1245,7 +1385,11 @@ class FoldPanelBar(wx.Panel):
     
 
     def OnPressCaption(self, event):
-        """ Handles the EVT_CAPTIONBAR event in the FoldPanelBar. """
+        """
+        Handles the ``wx.EVT_CAPTIONBAR`` event for L{CaptionBar}.
+
+        :param `event`: a L{CaptionBarEvent} event to be processed.
+        """
 
         # act upon the folding or expanding status of the bar
         # to expand or collapse the panel(s)
@@ -1258,7 +1402,11 @@ class FoldPanelBar(wx.Panel):
        
 
     def RefreshPanelsFrom(self, item):
-        """ Refreshes all the panels from given index down to last one. """
+        """
+        Refreshes all the panels from given one down to last one.
+
+        :param `item`: the first L{FoldPanelItem} to be refreshed.        
+        """
         
         try:
             i = self._panels.index(item)
@@ -1296,6 +1444,7 @@ class FoldPanelBar(wx.Panel):
 
     def RedisplayFoldPanelItems(self):
         """ Resizes the fold panels so they match the width. """
+        
         # resize them all. No need to reposition
         for panels in self._panels:
             panels.ResizePanel()
@@ -1306,10 +1455,8 @@ class FoldPanelBar(wx.Panel):
         """
         Repositions all the collapsed panels to the bottom.
 
-        When it is not possible to align them to the bottom, stick
-        them behind the visible panels. The Rect holds the slack area
-        left between last repositioned panel and the bottom
-        panels. This needs to get a refresh.
+        When it is not possible to align them to the bottom, stick them behind
+        the visible panels.
         """
 
         value = wx.Rect(0,0,0,0)
@@ -1363,9 +1510,11 @@ class FoldPanelBar(wx.Panel):
         Returns the length of the panels that are expanded and
         collapsed.
 
-        This is useful to determine quickly what size is used to
-        display, and what is left at the bottom (right) to align the
-        collapsed panels.
+        :param `collapsed`: the current value of the collapsed panels;
+        :param `expanded`: the current value of the expanded panels.
+        
+        :note: This is useful to determine quickly what size is used to display,
+         and what is left at the bottom (right) to align the collapsed panels.
         """
         
         value = 0
@@ -1386,12 +1535,13 @@ class FoldPanelBar(wx.Panel):
 
     def Collapse(self, foldpanel):
         """
-        Collapses the given FoldPanel reference, and updates the
-        foldpanel bar.
+        Collapses the given fold panel reference, and updates the foldpanel bar.
 
-        In the FPB_COLLAPSE_TO_BOTTOM style, all collapsed captions
-        are put at the bottom of the control. In the normal mode, they
-        stay where they are.
+        :param `foldpanel`: an instance of L{FoldPanelItem}.
+        
+        :note: With the ``FPB_COLLAPSE_TO_BOTTOM`` style set, all collapsed captions
+         are put at the bottom of the control. In the normal mode, they stay where
+         they are.
         """
         
         try:
@@ -1405,12 +1555,13 @@ class FoldPanelBar(wx.Panel):
 
     def Expand(self, foldpanel):
         """
-        Expands the given FoldPanel reference, and updates the
-        foldpanel bar.
+        Expands the given fold panel reference, and updates the foldpanel bar.
+
+        :param `foldpanel`: an instance of L{FoldPanelItem}.
         
-        In the FPB_COLLAPSE_TO_BOTTOM style, they will be removed from
-        the bottom and the order where the panel originally was placed
-        is restored.
+        :note: With the ``FPB_COLLAPSE_TO_BOTTOM`` style set, they will be removed
+         from the bottom and the order where the panel originally was placed is
+         restored.
         """
 
         fpbextrastyle = 0
@@ -1432,54 +1583,62 @@ class FoldPanelBar(wx.Panel):
 
     def ApplyCaptionStyle(self, foldpanel, cbstyle):
         """
-        Sets the style of the caption bar (`CaptionBar`) of the
-        FoldPanel.
+        Sets the style of the caption bar (L{CaptionBar}) of the fold panel.
 
-        The changes are applied immediately. All styles not set in the
-        CaptionBarStyle class are not applied. Use the CaptionBar
-        reference to indicate what captionbar you want to apply the
-        style to. To apply one style to all CaptionBar items, use
-        `ApplyCaptionStyleAll`
-        """        
+        :param `foldpanel`: an instance of L{FoldPanelItem};
+        :param `cbstyle`: an instance of L{CaptionBarStyle}.
+
+        :note: The changes are applied immediately. All styles not set in the
+         L{CaptionBarStyle} class are not applied. Use the L{CaptionBar} reference
+         to indicate what captionbar you want to apply the style to. To apply one
+         style to all L{CaptionBar} items, use L{ApplyCaptionStyleAll}.
+        """
+        
         foldpanel.ApplyCaptionStyle(cbstyle)
         
 
     def ApplyCaptionStyleAll(self, cbstyle):
         """
-        Sets the style of all the caption bars of the FoldPanel.
-
+        Sets the style of all the caption bars of the fold panel.
         The changes are applied immediately.
-        """ 
+
+        :param `cbstyle`: an instance of L{CaptionBarStyle}.
+        """
+        
         for panels in self._panels:
             self.ApplyCaptionStyle(panels, cbstyle)
             
 
     def GetCaptionStyle(self, foldpanel):
         """
-        Returns the currently used caption style for the FoldPanel.
+        Returns the currently used caption style for the fold panel.
 
-        It is returned as a CaptionBarStyle class. After modifying it,
-        it can be set again.
-        """        
+        It is returned as a L{CaptionBarStyle} class. After modifying it, it can
+        be set again.
+
+        :param `foldpanel`: an instance of L{FoldPanelItem}.
+        """
+        
         return foldpanel.GetCaptionStyle()
 
 
     def IsVertical(self):
         """
-        Returns whether the CaptionBar has default orientation or not.
-
+        Returns whether the L{CaptionBar} has default orientation or not.
         Default is vertical.
-        """        
+        """
+        
         return self._isVertical
 
 
     def GetFoldPanel(self, item):
         """
-        Returns the panel associated with the index "item".
+        Returns the panel associated with the index `item`.
 
-        See the example at the bottom of the module, especially the events
-        for the "Collapse Me" and "Expand Me" buttons.
+        :param `item`: an integer representing the L{FoldPanelItem} in the list of
+         panels in this L{FoldPanelBar}.
         """
+        
         try:
             ind = self._panels[item]
             return self._panels[item]
@@ -1490,7 +1649,7 @@ class FoldPanelBar(wx.Panel):
 
 
     def GetCount(self):
-        """ Returns the number of panels in the FoldPanelBar. """
+        """ Returns the number of panels in the L{FoldPanelBar}. """
 
         try:
             return len(self._panels)
@@ -1505,16 +1664,29 @@ class FoldPanelBar(wx.Panel):
 
 class FoldPanelItem(wx.Panel):
     """
-    This class is a child sibling of the `FoldPanelBar` class. It will
-    contain a `CaptionBar` class for receiving of events, and a the
+    This class is a child sibling of the L{FoldPanelBar} class. It will
+    contain a L{CaptionBar} class for receiving of events, and a the
     rest of the area can be populated by a `wx.Panel` derived class.
     """
+    
     # Define Empty CaptionBar Style
     EmptyCaptionBarStyle = CaptionBarStyle()
     
     def __init__(self, parent, id=wx.ID_ANY, caption="", foldIcons=None,
                  collapsed=False, cbstyle=EmptyCaptionBarStyle):
-        """ Default Class Constructor. """
+        """
+        Default class constructor.
+
+        :param `parent`: the L{FoldPanelItem} parent window;
+        :param `id`: an identifier for the control: a value of -1 is taken to mean a default;
+        :param `caption`: the string to be displayed in L{CaptionBar};
+        :param `foldIcons`: an instance of `wx.ImageList` containing the icons to display
+         next to the caption text;
+        :param `collapsed`: ``True`` if the L{CaptionBar} should start in the collapsed state,
+         ``False`` otherwise;
+        :param `cbstyle`: the L{CaptionBar} window style. Must be an instance of
+         L{CaptionBarStyle}.
+        """
         
         wx.Panel.__init__(self, parent, id, wx.Point(0,0), style=wx.CLIP_CHILDREN)
         self._controlCreated = False
@@ -1566,11 +1738,20 @@ class FoldPanelItem(wx.Panel):
         """
         Adds a window item to the list of items on this panel.
 
-        The flags are FPB_ALIGN_LEFT for a non sizing window element,
-        and FPB_ALIGN_WIDTH for a width aligned item. The Spacing
-        parameter reserves a number of pixels before the window
-        element, and leftSpacing is an indent.  rightSpacing is only
-        relevant when the style FPB_ALIGN_WIDTH is chosen.
+        :param `window`: an instance of `wx.Window`;
+        :param `flags`: can be one of the following bits:
+
+         ====================== ======= ====================================
+         Align Flag              Value  Description
+         ====================== ======= ====================================
+         ``FPB_ALIGN_WIDTH``          1 The `wx.Window` to be added will be aligned to fit the width of the FoldPanel when it is resized. Very handy for sizer items, buttons and text boxes.
+         ``FPB_ALIGN_LEFT``           0 Aligns left instead of fitting the width of the child window to be added. Use either this one or ``FPB_ALIGN_WIDTH``.
+         ====================== ======= ====================================
+
+        :param `Spacing`: reserves a number of pixels before the window element;
+        :param `leftSpacing`: an indent, in pixels;
+        :param `rightSpacing`: a right spacing, only relevant when the style
+         ``FPB_ALIGN_WIDTH`` is chosen.
         """
         
         wi = FoldWindowItem(self, window, Type="WINDOW", flags=flags, Spacing=Spacing,
@@ -1597,7 +1778,15 @@ class FoldPanelItem(wx.Panel):
                      leftSpacing=FPB_DEFAULT_LEFTSPACING,
                      rightSpacing=FPB_DEFAULT_RIGHTSPACING):
         """
-        Adds a separator item to the list of items on this panel. """
+        Adds a separator item to the list of items on this panel.
+
+        :param `colour`: the separator colour, an instance of `wx.Colour`;
+        :param `Spacing`: the separator to be added can be slightly indented from
+         left and right so it is more visibly placed in the fold panel. Use `Spacing` > 0
+         to give the control an y offset from the previous `wx.Window` added;
+        :param `leftSpacing`: give the added separator a slight indent from the left;
+        :param `rightSpacing`: give the added separator a slight indent from the right.        
+        """
         
         wi = FoldWindowItem(self, window=None, Type="SEPARATOR",
                             flags=FPB_ALIGN_WIDTH, y=self._LastInsertPos,
@@ -1613,9 +1802,12 @@ class FoldPanelItem(wx.Panel):
 
     def Reposition(self, pos):
         """
-        Repositions this FoldPanelBar and reports the length occupied
-        for the next FoldPanelBar in the list.
-        """        
+        Repositions this L{FoldPanelItem} and reports the length occupied
+        for the next L{FoldPanelItem} in the list.
+
+        :param `pos`: the new item position.        
+        """
+        
         # NOTE: Call Resize before Reposition when an item is added, because the new
         # size needed will be calculated by Resize. Of course the relative position
         # of the controls have to be correct in respect to the caption bar
@@ -1635,7 +1827,11 @@ class FoldPanelItem(wx.Panel):
 
 
     def OnPressCaption(self, event):
-        """ Handles the EVT_CAPTIONBAR event in the FoldPanelItem. """
+        """
+        Handles the ``wx.EVT_CAPTIONBAR`` event for L{FoldPanelItem}.
+
+        :param `event`: a L{CaptionBarEvent} event to be processed.
+        """
         
         # tell the upper container we are responsible
         # for this event, so it can fold the panel item
@@ -1696,7 +1892,11 @@ class FoldPanelItem(wx.Panel):
         
 
     def OnPaint(self, event):
-        """ Handles the EVT_PAINT event in the FoldPanelItem. """
+        """
+        Handles the ``wx.EVT_PAINT`` event for L{FoldPanelItem}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
   
         # draw all the items that are lines
 
@@ -1723,8 +1923,7 @@ class FoldPanelItem(wx.Panel):
 
     def IsVertical(self):
         """
-        Returns wether the CaptionBar Has Default Orientation Or Not.
-
+        Returns whether the L{CaptionBar} has default orientation or not.
         Default is vertical.
         """
         
@@ -1740,7 +1939,7 @@ class FoldPanelItem(wx.Panel):
     def IsExpanded(self):
         """
         Returns expanded or collapsed status.  If the panel is
-        expanded, True is returned.
+        expanded, ``True`` is returned.
         """
         
         return not self._captionBar.IsCollapsed()
@@ -1753,18 +1952,26 @@ class FoldPanelItem(wx.Panel):
 
 
     def Collapse(self):
-        # this should not be called by the user, because it doesn't trigger the
-        # parent  to tell it that we are collapsed or expanded, it only changes
-        # visual state
+        """
+        Internal method.
+
+        This should not be called by the user, because it doesn't trigger the
+        parent  to tell it that we are collapsed or expanded, it only changes
+        visual state.
+        """
         
         self._captionBar.Collapse()
         self.ResizePanel()
 
 
     def Expand(self):
-        # this should not be called by the user, because it doesn't trigger the
-        # parent to tell it that we are collapsed or expanded, it only changes
-        # visual state
+        """
+        Internal method.
+        
+        This should not be called by the user, because it doesn't trigger the
+        parent to tell it that we are collapsed or expanded, it only changes
+        visual state.
+        """
         
         self._captionBar.Expand()
         self.ResizePanel()
@@ -1782,25 +1989,21 @@ class FoldPanelItem(wx.Panel):
 
 
     def GetCaptionLength(self):
-        """
-        Returns height of caption only. This is for folding
-        calculation purposes.
-        """
+        """ Returns height of caption only. This is for folding calculation purposes. """
         
         size = self._captionBar.GetSize()
         return (self.IsVertical() and [size.GetHeight()] or [size.GetWidth()])[0]
 
 
     def ApplyCaptionStyle(self, cbstyle):
-        """ Applies the style defined in cbstyle to the CaptionBar."""
+        """ Applies the style defined in `cbstyle` to the L{CaptionBar}."""
         
         self._captionBar.SetCaptionStyle(cbstyle)
 
 
     def GetCaptionStyle(self):
         """
-        Returns the current style of the captionbar in a
-        CaptionBarStyle class.
+        Returns the current style of the captionbar in a L{CaptionBarStyle} class.
 
         This can be used to change and set back the changes.
         """
@@ -1814,32 +2017,30 @@ class FoldPanelItem(wx.Panel):
 
 class FoldWindowItem(object):
     """
-    This class is a child sibling of the `FoldPanelItem` class. It
-    will contain wx.Window that can be either a separator (a colored
-    line simulated by a wx.Window) or a wxPython controls (such as a
-    wx.Button, a wx.ListCtrl etc...).
+    This class is a child sibling of the L{FoldPanelItem} class. It
+    will contain `wx.Window` that can be either a separator (a coloured
+    line simulated by a `wx.Window`) or a wxPython controls (such as a
+    `wx.Button`, a `wx.ListCtrl` etc...).
     """
+    
     def __init__(self, parent, window=None, **kw):
         """
-        Default Class Constructor
+        Default class constructor
+
+        :param `parent`: the L{FoldWindowItem} parent;
+        :param `window`: the window contained in this item.
         
-        Initialize with::
+        :keyword `Type`: can be "WINDOW" or "SEPARATOR";
+        :keyword `lineColour`: the separator colour (meaningful for separators only);
+        :keyword `y`: the separator y position (meaningful for separators only);
+        :keyword `flags`: the alignment flags;
+        :keyword `Spacing`: reserves a number of pixels before the window/separator element;
+        :keyword `leftSpacing`: an indent, in pixels;
+        :keyword `rightSpacing`: a right spacing, only relevant when the style
+         ``FPB_ALIGN_WIDTH`` is chosen.
 
-            Type = "WINDOW", flags = FPB_ALIGN_WIDTH,
-            Spacing = FPB_DEFAULT_SPACING,
-            leftSpacing = FPB_DEFAULT_LEFTSPACING,
-            rightSpacing = FPB_DEFAULT_RIGHTSPACING
-
-        or::
-
-            Type = "SEPARATOR"
-            y, lineColor = wx.BLACK,
-            flags = FPB_ALIGN_WIDTH,
-            Spacing = FPB_DEFAULT_SPACING,
-            leftSpacing = FPB_DEFAULT_LEFTLINESPACING,
-            rightSpacing = FPB_DEFAULT_RIGHTLINESPACING
+        :see: L{FoldPanelBar.AddFoldPanelWindow} for a list of valid alignment flags.
         """
-
 
         if not kw.has_key("Type"):
             raise Exception('ERROR: Missing Window Type Information. This Should Be "WINDOW" Or "SEPARATOR"')
@@ -1907,31 +2108,54 @@ class FoldWindowItem(object):
         
 
     def GetType(self):
+        """ Returns the L{FoldWindowItem} type. """
+        
         return self._type
 
+
     def GetLineY(self):
+        """ Returns the y position of the separator. """
+        
         return self._lineY
 
+
     def GetLineLength(self):
+        """ Returns the separator line length. """
+        
         return self._lineLength
 
+
     def GetLineColour(self):
+        """ Returns the separator line colour. """
+        
         return self._sepLineColour
 
+
     def GetLeftSpacing(self):
+        """ Returns the left indent of L{FoldWindowItem}. """
+        
         return self._leftSpacing
 
+
     def GetRightSpacing(self):
+        """ Returns the right indent of L{FoldWindowItem}. """
+
         return self._rightSpacing
 
+
     def GetSpacing(self):
+        """ Returns the spacing of L{FoldWindowItem}. """
+
         return self._Spacing
 
 
     def GetWindowLength(self, vertical=True):
         """
-        Returns space needed by the window if type is FoldWindowItem
+        Returns space needed by the window if type is L{FoldWindowItem}
         "WINDOW" and returns the total size plus the extra spacing.
+
+        :param `vertical`: ``True`` if the parent L{FoldPanelBar} is in vertical
+         mode.
         """
 
         value = 0
@@ -1952,6 +2176,10 @@ class FoldWindowItem(object):
         
         A separator or line will be always aligned by width or height
         depending on orientation of the whole panel.
+
+        :param `size`: the maximum size available for the L{FoldWindowItem};
+        :param `vertical`: ``True`` if the parent L{FoldPanelBar} is in vertical
+         mode.
         """
         
         if self._flags & FPB_ALIGN_WIDTH:

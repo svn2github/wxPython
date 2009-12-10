@@ -67,7 +67,7 @@ class RibbonControl(wx.PyControl):
         :returns: ``True`` if this window can take any size (greater than its minimum size),
          ``False`` if it can only take certain sizes.
         
-        :seealso: L{GetNextSmallerSize}, L{GetNextLargerSize}
+        :see: L{GetNextSmallerSize}, L{GetNextLargerSize}
         """
 
         return True
@@ -128,7 +128,7 @@ class RibbonControl(wx.PyControl):
         :returns: if there is no smaller size, otherwise a suitable size which is smaller
          in the given direction(s), and the same as in the other direction (if any).
          
-        :seealso: L{IsSizingContinuous}, L{DoGetNextSmallerSize}
+        :see: L{IsSizingContinuous}, L{DoGetNextSmallerSize}
         """
 
         if relative_to is not None:
@@ -148,7 +148,7 @@ class RibbonControl(wx.PyControl):
         :returns: if there is no larger size, otherwise a suitable size which is larger
          in the given direction(s), and the same as in the other direction (if any).
          
-        :seealso: L{IsSizingContinuous}, L{DoGetNextLargerSize}
+        :see: L{IsSizingContinuous}, L{DoGetNextLargerSize}
         """
 
         if relative_to is not None:

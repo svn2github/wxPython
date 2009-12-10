@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 19 Nov 2009, 10.00 GMT
+# Latest Revision: 26 Nov 2009, 16.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -27,34 +27,34 @@
 # --------------------------------------------------------------------------- #
 
 """
-FlatNotebook is a full, generic and owner-drawn implementation of wx.Notebook.
+FlatNotebook is a full, generic and owner-drawn implementation of `wx.Notebook`.
 
 
 Description
 ===========
 
-The FlatNotebook is a full implementation of the wx.Notebook, and designed to be
-a drop-in replacement for wx.Notebook. The API functions are similar so one can
+The FlatNotebook is a full implementation of the `wx.Notebook`, and designed to be
+a drop-in replacement for `wx.Notebook`. The API functions are similar so one can
 expect the function to behave in the same way. 
 
 Some features:
 
-  - The buttons are highlighted a la Firefox style
-  - The scrolling is done for bulks of tabs (so, the scrolling is faster and better)
-  - The buttons area is never overdrawn by tabs (unlike many other implementations I saw)
-  - It is a generic control
-  - Currently there are 5 differnt styles - VC8, VC 71, Standard, Fancy and Firefox 2;
-  - Mouse middle click can be used to close tabs
-  - A function to add right click menu for tabs (simple as SetRightClickMenu)
-  - All styles has bottom style as well (they can be drawn in the bottom of screen)
-  - An option to hide 'X' button or navigation buttons (separately)
-  - Gradient coloring of the selected tabs and border
-  - Support for drag 'n' drop of tabs, both in the same notebook or to another notebook
-  - Possibility to have closing button on the active tab directly
-  - Support for disabled tabs
-  - Colours for active/inactive tabs, and captions
-  - Background of tab area can be painted in gradient (VC8 style only)
-  - Colourful tabs - a random gentle colour is generated for each new tab (very cool, VC8 style only)
+- The buttons are highlighted a la Firefox style;
+- The scrolling is done for bulks of tabs (so, the scrolling is faster and better);
+- The buttons area is never overdrawn by tabs (unlike many other implementations I saw);
+- It is a generic control;
+- Currently there are 5 different styles - VC8, VC 71, Standard, Fancy and Firefox 2;
+- Mouse middle click can be used to close tabs;
+- A function to add right click menu for tabs (simple as L{SetRightClickMenu});
+- All styles has bottom style as well (they can be drawn in the bottom of screen);
+- An option to hide 'X' button or navigation buttons (separately);
+- Gradient colouring of the selected tabs and border;
+- Support for drag 'n' drop of tabs, both in the same notebook or to another notebook;
+- Possibility to have closing button on the active tab directly;
+- Support for disabled tabs;
+- Colours for active/inactive tabs, and captions;
+- Background of tab area can be painted in gradient (VC8 style only);
+- Colourful tabs - a random gentle colour is generated for each new tab (very cool, VC8 style only);
 
 
 And much more.
@@ -69,7 +69,7 @@ This class supports the following window styles:
 Window Styles                    Hex Value   Description
 ================================ =========== ==================================================
 ``FNB_VC71``                             0x1 Use Visual Studio 2003 (VC7.1) style for tabs.
-``FNB_FANCY_TABS``                       0x2 Use fancy style - square tabs filled with gradient coloring.
+``FNB_FANCY_TABS``                       0x2 Use fancy style - square tabs filled with gradient colouring.
 ``FNB_TABS_BORDER_SIMPLE``               0x4 Draw thin border around the page.
 ``FNB_NO_X_BUTTON``                      0x8 Do not display the 'X' button.
 ``FNB_NO_NAV_BUTTONS``                  0x10 Do not display the right/left arrows.
@@ -79,7 +79,7 @@ Window Styles                    Hex Value   Description
 ``FNB_VC8``                            0x100 Use Visual Studio 2005 (VC8) style for tabs.
 ``FNB_X_ON_TAB``                       0x200 Place 'X' close button on the active tab.
 ``FNB_BACKGROUND_GRADIENT``            0x400 Use gradients to paint the tabs background.
-``FNB_COLORFUL_TABS``                  0x800 Use colourful tabs (VC8 style only).
+``FNB_COLOURFUL_TABS``                 0x800 Use colourful tabs (VC8 style only).
 ``FNB_DCLICK_CLOSES_TABS``            0x1000 Style to close tab using double click.
 ``FNB_SMART_TABS``                    0x2000 Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows.
 ``FNB_DROPDOWN_TABS_LIST``            0x4000 Use a dropdown menu on the left in place of the arrows.
@@ -114,13 +114,9 @@ License And Version
 
 FlatNotebook is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 19 Nov 2009, 10.00 GMT
+Latest Revision: Andrea Gavana @ 26 Nov 2009, 16.00 GMT
+
 Version 2.8
-
-
-@undocumented: FNB_HEIGHT_SPACER, VERTICAL_BORDER_PADDING, VC8_SHAPE_LEN,
-    wxEVT*, left_arrow_*, right_arrow*, x_button*, down_arrow*,
-    FNBDragInfo, FNBDropTarget, GetMondrian*
 """
 
 __docformat__ = "epytext"
@@ -150,9 +146,9 @@ FNB_HEIGHT_SPACER = 10
 FNB_VC71 = 1
 """Use Visual Studio 2003 (VC7.1) style for tabs"""
 
-# Use fancy style - square tabs filled with gradient coloring
+# Use fancy style - square tabs filled with gradient colouring
 FNB_FANCY_TABS = 2
-"""Use fancy style - square tabs filled with gradient coloring"""
+"""Use fancy style - square tabs filled with gradient colouring"""
 
 # Draw thin border around the page
 FNB_TABS_BORDER_SIMPLE = 4
@@ -194,7 +190,7 @@ FNB_X_ON_TAB = 512
 FNB_BACKGROUND_GRADIENT = 1024
 """Use gradients to paint the tabs background"""
 
-FNB_COLORFUL_TABS = 2048
+FNB_COLOURFUL_TABS = 2048
 """Use colourful tabs (VC8 style only)"""
 
 # Style to close tab using double click - styles 1024, 2048 are reserved
@@ -224,7 +220,7 @@ BUTTON_SPACE = 16
 
 VC8_SHAPE_LEN = 16
 
-MASK_COLOR  = wx.Colour(0, 128, 128)
+MASK_COLOUR  = wx.Colour(0, 128, 128)
 """Mask colour for the arrow bitmaps"""
 
 # Button status
@@ -703,22 +699,27 @@ Mondrian = PyEmbeddedImage(
 #----------------------------------------------------------------------
 
 
-def LightColour(color, percent):
-    """ Brighten input colour by percent. """
+def LightColour(colour, percent):
+    """
+    Brighten the input colour by a percentage.
+
+    :param `colour`: a valid `wx.Colour` instance;
+    :param `percent`: the percentage by which the input colour should be brightened.
+    """
     
-    end_color = wx.WHITE
+    end_colour = wx.WHITE
     
-    rd = end_color.Red() - color.Red()
-    gd = end_color.Green() - color.Green()
-    bd = end_color.Blue() - color.Blue()
+    rd = end_colour.Red() - colour.Red()
+    gd = end_colour.Green() - colour.Green()
+    bd = end_colour.Blue() - colour.Blue()
 
     high = 100
 
-    # We take the percent way of the color from color -. white
+    # We take the percent way of the colour from colour -. white
     i = percent
-    r = color.Red() + ((i*rd*100)/high)/100
-    g = color.Green() + ((i*gd*100)/high)/100
-    b = color.Blue() + ((i*bd*100)/high)/100
+    r = colour.Red() + ((i*rd*100)/high)/100
+    g = colour.Green() + ((i*gd*100)/high)/100
+    b = colour.Blue() + ((i*bd*100)/high)/100
     return wx.Colour(r, g, b)
 
 
@@ -732,12 +733,21 @@ def RandomColour():
     return wx.Colour(r, g, b)
 
 
-def PaintStraightGradientBox(dc, rect, startColor, endColor, vertical=True):
-    """ Draws a gradient colored box from startColor to endColor. """
+def PaintStraightGradientBox(dc, rect, startColour, endColour, vertical=True):
+    """
+    Draws a gradient coloured box from `startColour` to `endColour`.
 
-    rd = endColor.Red() - startColor.Red()
-    gd = endColor.Green() - startColor.Green()
-    bd = endColor.Blue() - startColor.Blue()
+    :param `dc`: an instance of `wx.DC`;
+    :param `rect`: the rectangle to fill with the gradient shading;
+    :param `startColour`: the first colour in the gradient shading;
+    :param `endColour`: the last colour in the gradient shading;
+    :param `vertical`: ``True`` if the gradient shading is north to south, ``False``
+     if it is east to west.
+    """
+
+    rd = endColour.Red() - startColour.Red()
+    gd = endColour.Green() - startColour.Green()
+    bd = endColour.Blue() - startColour.Blue()
 
     # Save the current pen and brush
     savedPen = dc.GetPen()
@@ -753,9 +763,9 @@ def PaintStraightGradientBox(dc, rect, startColor, endColor, vertical=True):
 
     for i in xrange(high+1):
     
-        r = startColor.Red() + ((i*rd*100)/high)/100
-        g = startColor.Green() + ((i*gd*100)/high)/100
-        b = startColor.Blue() + ((i*bd*100)/high)/100
+        r = startColour.Red() + ((i*rd*100)/high)/100
+        g = startColour.Green() + ((i*gd*100)/high)/100
+        b = startColour.Blue() + ((i*bd*100)/high)/100
 
         p = wx.Pen(wx.Colour(r, g, b))
         dc.SetPen(p)
@@ -776,7 +786,16 @@ def PaintStraightGradientBox(dc, rect, startColor, endColor, vertical=True):
 # -----------------------------------------------------------------------------
 
 def DrawButton(dc, rect, focus, upperTabs):
+    """
+    Draws a L{FlatNotebook} tab.
 
+    :param `dc`: an instance of `wx.DC`;
+    :param `rect`: the tab's client rectangle;
+    :param `focus`: ``True`` if the tab has focus, ``False`` otherwise;
+    :param `upperTabs`: ``True`` if the tabs are at the top, ``False`` if they are
+     at the bottom.
+    """
+    
     # Define the rounded rectangle base on the given rect
     # we need an array of 9 points for it
     regPts = [wx.Point() for indx in xrange(9)]
@@ -796,31 +815,31 @@ def DrawButton(dc, rect, focus, upperTabs):
     top = wx.RectPP(rect.GetTopLeft(), rightPt)
     bottom = wx.RectPP(leftPt, rect.GetBottomRight())
 
-    topStartColor = wx.WHITE
+    topStartColour = wx.WHITE
 
     if not focus:
-        topStartColor = LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE), 50)
+        topStartColour = LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE), 50)
 
-    topEndColor = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
-    bottomStartColor = topEndColor
-    bottomEndColor = topEndColor
+    topEndColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
+    bottomStartColour = topEndColour
+    bottomEndColour = topEndColour
 
-    # Incase we use bottom tabs, switch the colors
+    # Incase we use bottom tabs, switch the colours
     if upperTabs:
         if focus:
-            PaintStraightGradientBox(dc, top, topStartColor, topEndColor)
-            PaintStraightGradientBox(dc, bottom, bottomStartColor, bottomEndColor)
+            PaintStraightGradientBox(dc, top, topStartColour, topEndColour)
+            PaintStraightGradientBox(dc, bottom, bottomStartColour, bottomEndColour)
         else:
-            PaintStraightGradientBox(dc, top, topEndColor , topStartColor)
-            PaintStraightGradientBox(dc, bottom, bottomStartColor, bottomEndColor)
+            PaintStraightGradientBox(dc, top, topEndColour , topStartColour)
+            PaintStraightGradientBox(dc, bottom, bottomStartColour, bottomEndColour)
 
     else:
         if focus:
-            PaintStraightGradientBox(dc, bottom, topEndColor, bottomEndColor)
-            PaintStraightGradientBox(dc, top,topStartColor,  topStartColor)
+            PaintStraightGradientBox(dc, bottom, topEndColour, bottomEndColour)
+            PaintStraightGradientBox(dc, top,topStartColour,  topStartColour)
         else:
-            PaintStraightGradientBox(dc, bottom, bottomStartColor, bottomEndColor)
-            PaintStraightGradientBox(dc, top, topEndColor, topStartColor)
+            PaintStraightGradientBox(dc, bottom, bottomStartColour, bottomEndColour)
+            PaintStraightGradientBox(dc, top, topEndColour, topStartColour)
     
     dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -838,14 +857,33 @@ class FNBDropSource(wx.DropSource):
     """
     
     def __init__(self, win):
-        """ Default class constructor. Used internally. """
+        """
+        Default class constructor.
+        Used internally.
+
+        :param `win`: the source window for which we wish to provide UI feedback
+         during drag and drop operations.
+        """
         
         wx.DropSource.__init__(self, win)
         self._win = win
 
 
     def GiveFeedback(self, effect):
-        """ Provides user with a nice feedback when tab is being dragged. """
+        """
+        You may give some custom UI feedback during the drag and drop operation
+        in this function. It is called on each mouse move, so your implementation
+        must not be too slow.
+
+        :param `effect`: the effect to implement. One of ``wx.DragCopy``, ``wx.DragMove``,
+         ``wx.DragLink`` and ``wx.DragNone``.
+
+        :return: Return ``False`` if you want default feedback, or ``True`` if you
+         implement your own feedback. The return values is ignored under GTK.
+        
+        :note: To show your own custom drag and drop UI feedback, you must override
+         this method.
+        """
 
         self._win.DrawDragHint()
         return False
@@ -857,12 +895,21 @@ class FNBDropSource(wx.DropSource):
 # FlatNotebooks.
 # ---------------------------------------------------------------------------- #
 
-class FNBDragInfo:
-
+class FNBDragInfo(object):
+    """
+    Stores all the information to allow drag and drop between different
+    L{FlatNotebook} instances.
+    """
+    
     _map = weakref.WeakValueDictionary()
 
     def __init__(self, container, pageindex):
-        """ Default class constructor. """
+        """
+        Default class constructor.
+
+        :param `container`: the drag and drop container, a page in L{FlatNotebook};
+        :param `pageindex`: the index of the tab that is actually being dragged.
+        """
         
         self._id = id(container)
         FNBDragInfo._map[self._id] = container
@@ -888,9 +935,18 @@ class FNBDragInfo:
 # ---------------------------------------------------------------------------- #
 
 class FNBDropTarget(wx.DropTarget):
-
+    """
+    Class used to handle the L{FlatNotebook.OnDropTarget} method when dragging and
+    dropping between different L{FlatNotebook} instances.
+    """
+    
     def __init__(self, parent):
-        """ Default class constructor. """
+        """
+        Default class constructor.
+
+        :param `parent`: the window handling the drag and drop, an instance of
+         L{FlatNotebook}.
+        """
         
         wx.DropTarget.__init__(self)
 
@@ -900,7 +956,14 @@ class FNBDropTarget(wx.DropTarget):
 
 
     def OnData(self, x, y, dragres):
-        """ Handles the OnData() method to call the real DnD routine. """
+        """
+        Called after `OnDrop` returns ``True``. By default this will usually call
+        `GetData` and will return the suggested default value `dragres`.
+
+        :param `x`: the current x position of the mouse while dragging and dropping;
+        :param `y`: the current y position of the mouse while dragging and dropping;
+        :param `dragres`: an optional default return value.
+        """
         
         if not self.GetData():
             return wx.DragNone
@@ -916,7 +979,7 @@ class FNBDropTarget(wx.DropTarget):
 # Contains parameters for every FlatNotebook page
 # ---------------------------------------------------------------------------- #
 
-class PageInfo:
+class PageInfo(object):
     """
     This class holds all the information (caption, image, etc...) belonging to a
     single tab in L{FlatNotebook}.
@@ -926,11 +989,12 @@ class PageInfo:
         """
         Default Class Constructor.
 
-        Parameters:
-        @param caption: the tab caption;
-        @param imageindex: the tab image index based on the assigned (set) wx.ImageList (if any);
-        @param tabangle: the tab angle (only on standard tabs, from 0 to 15 degrees);
-        @param enabled: sets enabled or disabled the tab.
+        :param `caption`: the tab caption;
+        :param `imageindex`: the tab image index based on the assigned (set)
+         `wx.ImageList` (if any);
+        :param `tabangle`: the tab angle (only on standard tabs, from 0 to 15
+         degrees);
+        :param `enabled`: sets the tab as enabled or disabled.
         """
 
         self._strCaption = caption
@@ -941,12 +1005,17 @@ class PageInfo:
         self._size = wx.Size(-1, -1)
         self._region = wx.Region()
         self._xRect = wx.Rect()
-        self._color = None
+        self._colour = None
         self._hasFocus = False
+        self._pageTextColour = None
 
 
     def SetCaption(self, value):
-        """ Sets the tab caption. """
+        """
+        Sets the tab caption.
+
+        :param `value`: the new tab caption string.
+        """
         
         self._strCaption = value
 
@@ -958,7 +1027,11 @@ class PageInfo:
 
 
     def SetPosition(self, value):
-        """ Sets the tab position. """
+        """
+        Sets the tab position.
+
+        :param `value`: an instance of `wx.Point`.
+        """
 
         self._pos = value
 
@@ -970,7 +1043,11 @@ class PageInfo:
 
 
     def SetSize(self, value):
-        """ Sets the tab size. """
+        """
+        Sets the tab size.
+
+        :param `value`: an instance of `wx.Size`.
+        """
 
         self._size = value
 
@@ -982,7 +1059,11 @@ class PageInfo:
 
 
     def SetTabAngle(self, value):
-        """ Sets the tab header angle (0 <= tab <= 15 degrees). """
+        """
+        Sets the tab header angle.
+
+        :param `value`: the tab header angle (0 <= value <= 15 degrees).
+        """
 
         self._TabAngle = min(45, value)
 
@@ -994,15 +1075,43 @@ class PageInfo:
 
     
     def SetImageIndex(self, value):
-        """ Sets the tab image index. """
+        """
+        Sets the tab image index.
+
+        :param `value`: an index within the L{FlatNotebook} image list specifying
+         the image to use for this tab.
+        """
 
         self._ImageIndex = value
 
 
     def GetImageIndex(self):
-        """ Returns the tab umage index. """
+        """ Returns the tab image index. """
 
         return self._ImageIndex
+
+
+    def GetPageTextColour(self):
+        """
+        Returns the tab text colour if it has been set previously, or ``None``
+        otherwise.
+        """
+
+        return self._pageTextColour
+    
+
+    def SetPageTextColour(self, colour):
+        """
+        Sets the tab text colour for this tab.
+
+        :param `colour`: an instance of `wx.Colour`. You can pass ``None`` or
+         `wx.NullColour` to return to the default page text colour.
+        """
+
+        if colour is None or not colour.IsOk():
+            self._pageTextColour = None
+        else:
+            self._pageTextColour = colour
 
 
     def GetEnabled(self):
@@ -1012,13 +1121,21 @@ class PageInfo:
 
 
     def EnableTab(self, enabled):
-        """ Sets the tab enabled or disabled. """
+        """
+        Sets the tab enabled or disabled.
+
+        :param `enabled`: ``True`` to enable a tab, ``False`` to disable it.
+        """
 
         self._bEnabled = enabled 
 
 
     def SetRegion(self, points=[]):
-        """ Sets the tab region. """
+        """
+        Sets the tab region.
+
+        :param `points`: a Python list of `wx.Points`
+        """
         
         self._region = wx.RegionFromPoints(points) 
 
@@ -1030,7 +1147,12 @@ class PageInfo:
 
 
     def SetXRect(self, xrect):
-        """ Sets the button 'X' area rect. """
+        """
+        Sets the button 'X' area rect.
+
+        :param `xrect`: an instance of `wx.Rect`, specifying the client rectangle
+         of the 'X' button.
+        """
 
         self._xRect = xrect 
 
@@ -1044,13 +1166,17 @@ class PageInfo:
     def GetColour(self):
         """ Returns the tab colour. """
 
-        return self._color 
+        return self._colour 
 
 
-    def SetColour(self, color):
-        """ Sets the tab colour. """
+    def SetColour(self, colour):
+        """
+        Sets the tab colour.
 
-        self._color = color 
+        :param `colour`: a valid `wx.Colour` object.
+        """
+
+        self._colour = colour 
 
 
 # ---------------------------------------------------------------------------- #
@@ -1059,65 +1185,94 @@ class PageInfo:
 
 class FlatNotebookEvent(wx.PyCommandEvent):
     """
-    This events will be sent when a EVT_FLATNOTEBOOK_PAGE_CHANGED,
-    EVT_FLATNOTEBOOK_PAGE_CHANGING, EVT_FLATNOTEBOOK_PAGE_CLOSING,
-    EVT_FLATNOTEBOOK_PAGE_CLOSED and EVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU is
+    This events will be sent when a ``EVT_FLATNOTEBOOK_PAGE_CHANGED``,
+    ``EVT_FLATNOTEBOOK_PAGE_CHANGING``, ``EVT_FLATNOTEBOOK_PAGE_CLOSING``,
+    ``EVT_FLATNOTEBOOK_PAGE_CLOSED`` and ``EVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU`` is
     mapped in the parent.
     """
         
-    def __init__(self, eventType, id=1, nSel=-1, nOldSel=-1):
-        """ Default class constructor. """
+    def __init__(self, eventType, eventId=1, nSel=-1, nOldSel=-1):
+        """
+        Default class constructor.
 
-        wx.PyCommandEvent.__init__(self, eventType, id)
+        :param `eventType`: the event type;
+        :param `eventId`: the event identifier;
+        :param `nSel`: the current selection;
+        :param `nOldSel`: the old selection.
+        """
+
+        wx.PyCommandEvent.__init__(self, eventType, eventId)
         self._eventType = eventType
 
-        self.notify = wx.NotifyEvent(eventType, id)
+        self.notify = wx.NotifyEvent(eventType, eventId)
 
 
     def GetNotifyEvent(self):
-        """Returns the actual wx.NotifyEvent."""
+        """ Returns the actual `wx.NotifyEvent`. """
         
         return self.notify
 
 
     def IsAllowed(self):
-        """Returns whether the event is allowed or not."""
+        """
+        Returns ``True`` if the change is allowed (L{Veto} hasn't been called) or
+        ``False`` otherwise (if it was).
+        """
 
         return self.notify.IsAllowed()
 
 
     def Veto(self):
-        """Vetos the event."""
+        """
+        Prevents the change announced by this event from happening.
+
+        :note: It is in general a good idea to notify the user about the reasons
+         for vetoing the change because otherwise the applications behaviour (which
+         just refuses to do what the user wants) might be quite surprising.
+        """
 
         self.notify.Veto()
 
 
     def Allow(self):
-        """The event is allowed."""
+        """
+        This is the opposite of L{Veto}: it explicitly allows the event to be processed.
+        For most events it is not necessary to call this method as the events are
+        allowed anyhow but some are forbidden by default (this will be mentioned
+        in the corresponding event description).
+        """
 
         self.notify.Allow()
 
 
     def SetSelection(self, nSel):
-        """ Sets event selection. """
+        """
+        Sets the event selection.
+
+        :param `nSel`: an integer specifying the new selection.
+        """
         
         self._selection = nSel
         
 
     def SetOldSelection(self, nOldSel):
-        """ Sets old event selection. """
+        """
+        Sets the id of the page selected before the change.
+
+        :param `nOldSel`: an integer specifying the old selection.
+        """
         
         self._oldselection = nOldSel
 
 
     def GetSelection(self):
-        """ Returns event selection. """
+        """ Returns the currently selected page, or -1 if none was selected. """
         
         return self._selection
         
 
     def GetOldSelection(self):
-        """ Returns old event selection """
+        """ Returns the page that was selected before the change, -1 if none was selected. """
         
         return self._oldselection
 
@@ -1128,30 +1283,57 @@ class FlatNotebookEvent(wx.PyCommandEvent):
 
 class FlatNotebookDragEvent(FlatNotebookEvent):
     """
-    This event will be sent when a EVT_FLATNOTEBOOK_PAGE_DRAGGED_FOREIGN is
+    This event will be sent when a ``EVT_FLATNOTEBOOK_PAGE_DRAGGED_FOREIGN`` is
     mapped in the parent.
     """
 
-    def __init__(self, eventType, id=1, nSel=-1, nOldSel=-1):
-        """ Default class constructor. """
+    def __init__(self, eventType, eventId=1, nSel=-1, nOldSel=-1):
+        """
+        Default class constructor.
 
-        wx.PyCommandEvent.__init__(self, eventType, id)
+        :param `eventType`: the event type;
+        :param `eventId`: the event identifier;
+        :param `nSel`: the current selection;
+        :param `nOldSel`: the old selection.
+        """
+
+        wx.PyCommandEvent.__init__(self, eventType, eventId)
         self._eventType = eventType
 
-        self.notify = wx.NotifyEvent(eventType, id)
+        self.notify = wx.NotifyEvent(eventType, eventId)
         self._oldnotebook = -1
         self._newnotebook = -1
 
+
     def GetNotebook(self):
+        """ Returns the new notebook. """
+        
         return self._newnotebook
 
+
     def GetOldNotebook(self):
+        """ Returns the old notebook. """
+
         return self._oldnotebook
 
+
     def SetNotebook(self, notebook):
+        """
+        Sets the new notebook.
+
+        :param `notebook`: an instance of L{FlatNotebook}.
+        """
+        
         self._newnotebook = notebook
 
+
     def SetOldNotebook(self, old):
+        """
+        Sets the old notebook.
+
+        :param `notebook`: an instance of L{FlatNotebook}.
+        """
+
         self._oldnotebook = old
 
 # ---------------------------------------------------------------------------- #
@@ -1160,12 +1342,19 @@ class FlatNotebookDragEvent(FlatNotebookEvent):
 
 class TabNavigatorWindow(wx.Dialog):
     """
-    This class is used to create a modal dialog that enables "Smart Tabbing",
-    similar to what you would get by hitting Alt+Tab on Windows.
+    This class is used to create a modal dialog that enables `Smart Tabbing`,
+    similar to what you would get by hitting ``Alt`` + ``Tab`` on Windows.
     """
 
     def __init__(self, parent=None, icon=None):
-        """ Default class constructor. Used internally."""
+        """
+        Default class constructor.
+        Used internally.
+
+        :param `parent`: the L{TabNavigatorWindow} parent window;
+        :param `icon`: a valid `wx.Bitmap` object representing the icon to be displayed
+         in the L{TabNavigatorWindow}.
+        """
 
         wx.Dialog.__init__(self, parent, wx.ID_ANY, "", style=0)
 
@@ -1225,14 +1414,22 @@ class TabNavigatorWindow(wx.Dialog):
 
 
     def OnKeyUp(self, event):
-        """Handles the wx.EVT_KEY_UP for the L{TabNavigatorWindow}."""
+        """
+        Handles the ``wx.EVT_KEY_UP`` for the L{TabNavigatorWindow}.
+
+        :param `event`: a `wx.KeyEvent` event to be processed.
+        """
         
         if event.GetKeyCode() == wx.WXK_CONTROL:
             self.CloseDialog()
 
 
     def OnNavigationKey(self, event):
-        """Handles the wx.EVT_NAVIGATION_KEY for the L{TabNavigatorWindow}. """
+        """
+        Handles the ``wx.EVT_NAVIGATION_KEY`` for the L{TabNavigatorWindow}.
+
+        :param `event`: a `wx.NavigationKeyEvent` event to be processed.
+        """
 
         selected = self._listBox.GetSelection()
         bk = self.GetParent()
@@ -1258,7 +1455,12 @@ class TabNavigatorWindow(wx.Dialog):
 
 
     def PopulateListControl(self, book):
-        """Populates the L{TabNavigatorWindow} listbox with a list of tabs."""
+        """
+        Populates the L{TabNavigatorWindow} listbox with a list of tabs.
+
+        :param `book`: an instance of L{FlatNotebook} containing the tabs to be
+         displayed in the listbox.
+        """
 
         selection = book.GetSelection()
         count = book.GetPageCount()
@@ -1295,13 +1497,20 @@ class TabNavigatorWindow(wx.Dialog):
 
 
     def OnItemSelected(self, event):
-        """Handles the wx.EVT_LISTBOX_DCLICK event for the wx.ListBox inside L{TabNavigatorWindow}. """
+        """
+        Handles the ``wx.EVT_LISTBOX_DCLICK`` for the L{TabNavigatorWindow}.
+
+        :param `event`: a `wx.ListEvent` event to be processed.
+        """
 
         self.CloseDialog()
 
 
     def CloseDialog(self):
-        """Closes the L{TabNavigatorWindow} dialog, setting selection in L{FlatNotebook}."""
+        """
+        Closes the L{TabNavigatorWindow} dialog, setting the new selection in
+        L{FlatNotebook}.
+        """
 
         bk = self.GetParent()
         self._selectedItem = self._listBox.GetSelection()
@@ -1311,7 +1520,11 @@ class TabNavigatorWindow(wx.Dialog):
         
 
     def OnPanelPaint(self, event):
-        """Handles the wx.EVT_PAINT event for L{TabNavigatorWindow} top panel. """
+        """
+        Handles the ``wx.EVT_PAINT`` for the L{TabNavigatorWindow} top panel.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
 
         dc = wx.PaintDC(self._panel)
         rect = self._panel.GetClientRect()
@@ -1348,7 +1561,13 @@ class TabNavigatorWindow(wx.Dialog):
 
 
     def OnPanelEraseBg(self, event):
-        """Handles the wx.EVT_ERASE_BACKGROUND event for L{TabNavigatorWindow} top panel. """
+        """
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` for the L{TabNavigatorWindow} top panel.
+
+        :param `event`: a `wx.EraseEvent` event to be processed.
+
+        :note: This method is intentionally empty to reduce flicker.        
+        """
 
         pass
 
@@ -1357,19 +1576,19 @@ class TabNavigatorWindow(wx.Dialog):
 # Class FNBRenderer
 # ---------------------------------------------------------------------------- #
 
-class FNBRenderer:
+class FNBRenderer(object):
     """
-    Parent class for the 4 renderers defined: I{Standard}, I{VC71}, I{Fancy}
-    and I{VC8}. This class implements the common methods of all 4 renderers.
+    Parent class for the 4 renderers defined: `Standard`, `VC71`, `Fancy`
+    and `VC8`. This class implements the common methods of all 4 renderers.
     """
 
     def __init__(self):
-        """Default class constructor. """
+        """ Default class constructor. """
         
         self._tabHeight = None
 
         if wx.Platform == "__WXMAC__":
-            # Get proper highlight color for focus rectangle from the
+            # Get proper highlight colour for focus rectangle from the
             # current Mac theme.  kThemeBrushFocusHighlight is
             # available on Mac OS 8.5 and higher
             if hasattr(wx, 'MacThemeColour'):
@@ -1386,7 +1605,11 @@ class FNBRenderer:
 
 
     def GetLeftButtonPos(self, pageContainer):
-        """ Returns the left button position in the navigation area. """
+        """
+        Returns the left button position in the navigation area.
+
+        :param `pageContainer`: an instance of L{FlatNotebook}.
+        """
 
         pc = pageContainer
         style = pc.GetParent().GetWindowStyleFlag()
@@ -1400,7 +1623,11 @@ class FNBRenderer:
 
 
     def GetRightButtonPos(self, pageContainer):
-        """ Returns the right button position in the navigation area. """
+        """
+        Returns the right button position in the navigation area.
+
+        :param `pageContainer`: an instance of L{FlatNotebook}.
+        """
 
         pc = pageContainer
         style = pc.GetParent().GetWindowStyleFlag()
@@ -1414,13 +1641,21 @@ class FNBRenderer:
 
 
     def GetDropArrowButtonPos(self, pageContainer):
-        """ Returns the drop down button position in the navigation area. """
+        """
+        Returns the drop down button position in the navigation area.
+
+        :param `pageContainer`: an instance of L{FlatNotebook}.
+        """
 
         return self.GetRightButtonPos(pageContainer)
 
 
     def GetXPos(self, pageContainer):
-        """ Returns the 'X' button position in the navigation area. """
+        """
+        Returns the 'X' button position in the navigation area.
+
+        :param `pageContainer`: an instance of L{FlatNotebook}.
+        """
 
         pc = pageContainer
         style = pc.GetParent().GetWindowStyleFlag()
@@ -1434,7 +1669,11 @@ class FNBRenderer:
 
 
     def GetButtonsAreaLength(self, pageContainer):
-        """ Returns the navigation area width. """
+        """
+        Returns the navigation area width.
+
+        :param `pageContainer`: an instance of L{FlatNotebook}.
+        """
 
         pc = pageContainer
         style = pc.GetParent().GetWindowStyleFlag()
@@ -1464,13 +1703,25 @@ class FNBRenderer:
 
 
     def DrawArrowAccordingToState(self, dc, pc, rect):
+        """
+        Draws the left and right scrolling arrows.
 
+        :param `dc`: an instance of `wx.DC`;
+        :param `pc`: an instance of L{FlatNotebook};
+        :param `rect`: the client rectangle containing the scrolling arrows.
+        """
+        
         lightFactor = (pc.HasFlag(FNB_BACKGROUND_GRADIENT) and [70] or [0])[0]
-        PaintStraightGradientBox(dc, rect, pc._tabAreaColor, LightColour(pc._tabAreaColor, lightFactor))
+        PaintStraightGradientBox(dc, rect, pc._tabAreaColour, LightColour(pc._tabAreaColour, lightFactor))
 
     
     def DrawLeftArrow(self, pageContainer, dc):
-        """ Draw the left navigation arrow. """
+        """
+        Draws the left navigation arrow.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`.        
+        """
 
         pc = pageContainer
         
@@ -1494,7 +1745,7 @@ class FNBRenderer:
             # Handle disabled arrow
             arrowBmp = wx.BitmapFromXPMData(left_arrow_disabled_xpm)
         
-        arrowBmp.SetMask(wx.Mask(arrowBmp, MASK_COLOR))
+        arrowBmp.SetMask(wx.Mask(arrowBmp, MASK_COLOUR))
 
         # Erase old bitmap
         posx = self.GetLeftButtonPos(pc)
@@ -1505,7 +1756,12 @@ class FNBRenderer:
 
 
     def DrawRightArrow(self, pageContainer, dc):
-        """ Draw the right navigation arrow. """
+        """
+        Draws the right navigation arrow.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`.        
+        """
 
         pc = pageContainer
         
@@ -1530,7 +1786,7 @@ class FNBRenderer:
         if pc._pagesInfoVec[-1].GetPosition() != wx.Point(-1, -1):
             arrowBmp = wx.BitmapFromXPMData(right_arrow_disabled_xpm)
         
-        arrowBmp.SetMask(wx.Mask(arrowBmp, MASK_COLOR))
+        arrowBmp.SetMask(wx.Mask(arrowBmp, MASK_COLOUR))
 
         # erase old bitmap
         posx = self.GetRightButtonPos(pc)
@@ -1541,7 +1797,12 @@ class FNBRenderer:
 
 
     def DrawDropDownArrow(self, pageContainer, dc):
-        """ Draws the drop-down arrow in the navigation area. """
+        """
+        Draws the drop-down arrow in the navigation area.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`.
+        """
 
         pc = pageContainer
         
@@ -1561,7 +1822,7 @@ class FNBRenderer:
         else:
             downBmp = wx.BitmapFromXPMData(down_arrow_xpm)
 
-        downBmp.SetMask(wx.Mask(downBmp, MASK_COLOR))
+        downBmp.SetMask(wx.Mask(downBmp, MASK_COLOUR))
 
         # erase old bitmap
         posx = self.GetDropArrowButtonPos(pc)
@@ -1572,7 +1833,12 @@ class FNBRenderer:
 
 
     def DrawX(self, pageContainer, dc):
-        """ Draw the 'X' navigation button in the navigation area. """
+        """
+        Draw the 'X' navigation button in the navigation area.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`.
+        """
 
         pc = pageContainer
         
@@ -1593,7 +1859,7 @@ class FNBRenderer:
         else:
             xbmp = wx.BitmapFromXPMData(x_button_xpm)
 
-        xbmp.SetMask(wx.Mask(xbmp, MASK_COLOR))
+        xbmp.SetMask(wx.Mask(xbmp, MASK_COLOUR))
         
         # erase old bitmap
         posx = self.GetXPos(pc) 
@@ -1604,7 +1870,15 @@ class FNBRenderer:
 
 
     def DrawTabX(self, pageContainer, dc, rect, tabIdx, btnStatus):
-        """ Draws the 'X' in the selected tab. """
+        """
+        Draws the 'X' in the selected tab.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`;
+        :param `rect`: the current tab client rectangle;
+        :param `tabIdx`: the index of the current tab;
+        :param `btnStatus`: the status of the 'X' button in the current tab.
+        """
 
         pc = pageContainer
         if not pc.HasFlag(FNB_X_ON_TAB):
@@ -1624,7 +1898,7 @@ class FNBRenderer:
             xBmp = wx.BitmapFromXPMData(x_button_xpm)
 
         # Set the masking
-        xBmp.SetMask(wx.Mask(xBmp, MASK_COLOR))
+        xBmp.SetMask(wx.Mask(xBmp, MASK_COLOUR))
 
         # Draw the new bitmap
         dc.DrawBitmap(xBmp, rect.x, rect.y, True)
@@ -1635,7 +1909,14 @@ class FNBRenderer:
 
 
     def DrawTabsLine(self, pageContainer, dc, selTabX1=-1, selTabX2=-1):
-        """ Draws a line over the tabs. """
+        """
+        Draws a line over the tabs.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`;
+        :param `selTabX1`: first x coordinate of the tab line;
+        :param `selTabX2`: second x coordinate of the tab line.        
+        """
 
         pc = pageContainer
         
@@ -1644,11 +1925,11 @@ class FNBRenderer:
 
         if pc.HasFlag(FNB_FF2):
             if not pc.HasFlag(FNB_BOTTOM):
-                fillColor = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
+                fillColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
             else:
-                fillColor = wx.WHITE
+                fillColour = wx.WHITE
 
-            dc.SetPen(wx.Pen(fillColor))
+            dc.SetPen(wx.Pen(fillColour))
 
             if pc.HasFlag(FNB_BOTTOM):
 
@@ -1658,7 +1939,7 @@ class FNBRenderer:
                 dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)))
                 dc.DrawLine(1, 2, clntRect.width-1, 2)
 
-                dc.SetPen(wx.Pen(fillColor))
+                dc.SetPen(wx.Pen(fillColour))
                 dc.DrawLine(selTabX1 + 2, 2, selTabX2 - 1, 2)
                 
             else:
@@ -1694,7 +1975,7 @@ class FNBRenderer:
 
             if not pc.HasFlag(FNB_TABS_BORDER_SIMPLE):
             
-                dc.SetPen(wx.Pen((pc.HasFlag(FNB_VC71) and [wx.Colour(247, 243, 233)] or [pc._tabAreaColor])[0]))
+                dc.SetPen(wx.Pen((pc.HasFlag(FNB_VC71) and [wx.Colour(247, 243, 233)] or [pc._tabAreaColour])[0]))
                 dc.DrawLine(0, 0, 0, clientRect.height+1)
                 
                 if pc.HasFlag(FNB_BOTTOM):
@@ -1709,7 +1990,13 @@ class FNBRenderer:
 
 
     def CalcTabWidth(self, pageContainer, tabIdx, tabHeight):
-        """ Calculates the width of the input tab. """
+        """
+        Calculates the width of the input tab.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `tabIdx`: the index of the input tab;
+        :param `tabHeight`: the height of the tab.
+        """
 
         pc = pageContainer
         dc = wx.MemoryDC()
@@ -1761,7 +2048,11 @@ class FNBRenderer:
 
 
     def CalcTabHeight(self, pageContainer):
-        """ Calculates the height of the input tab. """
+        """
+        Calculates the height of the input tab.
+
+        :param `pageContainer`: an instance of L{FlatNotebook}.
+        """
 
         if self._tabHeight:
             return self._tabHeight
@@ -1793,7 +2084,12 @@ class FNBRenderer:
 
 
     def DrawTabs(self, pageContainer, dc):
-        """ Actually draws the tabs in L{FlatNotebook}."""
+        """
+        Actually draws the tabs in L{FlatNotebook}.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`.
+        """
 
         pc = pageContainer
         if "__WXMAC__" in wx.PlatformInfo:
@@ -1817,16 +2113,16 @@ class FNBRenderer:
         if style & FNB_VC71:
             backBrush = wx.Brush(wx.Colour(247, 243, 233))
         else:
-            backBrush = wx.Brush(pc._tabAreaColor)
+            backBrush = wx.Brush(pc._tabAreaColour)
 
         noselBrush = wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNFACE))
-        selBrush = wx.Brush(pc._activeTabColor)
+        selBrush = wx.Brush(pc._activeTabColour)
 
         size = pc.GetSize()
 
         # Background
         dc.SetTextBackground((style & FNB_VC71 and [wx.Colour(247, 243, 233)] or [pc.GetBackgroundColour()])[0])
-        dc.SetTextForeground(pc._activeTextColor)
+        dc.SetTextForeground(pc._activeTextColour)
         dc.SetBrush(backBrush)
 
         # If border style is set, set the pen to be border pen
@@ -1838,7 +2134,7 @@ class FNBRenderer:
 
         if pc.HasFlag(FNB_FF2):
             lightFactor = (pc.HasFlag(FNB_BACKGROUND_GRADIENT) and [70] or [0])[0]
-            PaintStraightGradientBox(dc, pc.GetClientRect(), pc._tabAreaColor, LightColour(pc._tabAreaColor, lightFactor))
+            PaintStraightGradientBox(dc, pc.GetClientRect(), pc._tabAreaColour, LightColour(pc._tabAreaColour, lightFactor))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
         dc.DrawRectangle(0, 0, size.x, size.y)
@@ -1932,7 +2228,7 @@ class FNBRenderer:
                 x2 = posx + tabWidth + 2
 
             # Restore the text forground
-            dc.SetTextForeground(pc._activeTextColor)
+            dc.SetTextForeground(pc._activeTextColour)
 
             # Update the tab position & size
             posy = (pc.HasFlag(FNB_BOTTOM) and [0] or [VERTICAL_BORDER_PADDING])[0]
@@ -1960,7 +2256,13 @@ class FNBRenderer:
 
 
     def DrawFocusRectangle(self, dc, pageContainer, page):
-        """ Draws a focus rectangle like the native Notebooks. """
+        """
+        Draws a focus rectangle like the native `wx.Notebooks`.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `page`: an instance of L{PageInfo}, representing a page in the notebook.
+        """
         
         if not page._hasFocus:
             return
@@ -1985,12 +2287,24 @@ class FNBRenderer:
         """
         Draws tab drag hint, the default implementation is to do nothing.
         You can override this function to provide a nice feedback to user.
+
+        :param `pc`: an instance of L{FlatNotebook};
+        :param `tabIdx`: the index of the tab we are dragging.
+
+        :note: To show your own custom drag and drop UI feedback, you must override
+         this method in your derived class.        
         """
         
         pass
 
 
     def NumberTabsCanFit(self, pageContainer, fr=-1):
+        """
+        Calculates the number of tabs that can fit on the available space on screen.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `fr`: the current first visible tab.
+        """
 
         pc = pageContainer
         
@@ -2029,7 +2343,7 @@ class FNBRenderer:
 # appropriate one when drawing is needed
 # ---------------------------------------------------------------------------- #
 
-class FNBRendererMgr:
+class FNBRendererMgr(object):
     """
     This class represents a manager that handles all the 4 renderers defined
     and calls the appropriate one when drawing is needed.
@@ -2049,7 +2363,22 @@ class FNBRendererMgr:
 
 
     def GetRenderer(self, style):
-        """ Returns the current renderer based on the style selected. """
+        """
+        Returns the current renderer based on the style selected.
+
+        :param `style`: represents one of the 4 implemented styles for L{FlatNotebook},
+         namely one of these bits:
+
+         ===================== ========= ======================
+         Tabs style            Hex Value Description
+         ===================== ========= ======================
+         ``FNB_VC71``                0x1 Use Visual Studio 2003 (VC7.1) style for tabs
+         ``FNB_FANCY_TABS``          0x2 Use fancy style - square tabs filled with gradient colouring
+         ``FNB_VC8``               0x100 Use Visual Studio 2005 (VC8) style for tabs
+         ``FNB_FF2``             0x20000 Use Firefox 2 style for tabs
+         ===================== ========= ======================
+
+        """
 
         if style & FNB_VC71:
             return self._renderers[FNB_VC71]
@@ -2083,7 +2412,17 @@ class FNBRendererDefault(FNBRenderer):
         
 
     def DrawTab(self, pageContainer, dc, posx, tabIdx, tabWidth, tabHeight, btnStatus):
-        """ Draws a tab using the I{Standard} style. """
+        """
+        Draws a tab using the `Standard` style.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`;
+        :param `posx`: the x position of the tab;
+        :param `tabIdx`: the index of the tab;
+        :param `tabWidth`: the tab's width;
+        :param `tabHeight`: the tab's height;
+        :param `btnStatus`: the status of the 'X' button inside this tab.
+        """
 
         # Default style
         borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
@@ -2171,7 +2510,11 @@ class FNBRendererDefault(FNBRenderer):
             pc._ImageList.Draw(pc._pagesInfoVec[tabIdx].GetImageIndex(), dc,
                                      posx + imageXOffset, imageYCoord,
                                      wx.IMAGELIST_DRAW_TRANSPARENT, True)
-        
+
+        pageTextColour = pc._pParent.GetPageTextColour(tabIdx)
+        if pageTextColour is not None:
+            dc.SetTextForeground(pageTextColour)
+            
         dc.DrawText(pc.GetPageText(tabIdx), posx + textOffset, imageYCoord)
 
         # draw 'x' on tab (if enabled)
@@ -2194,7 +2537,7 @@ class FNBRendererDefault(FNBRenderer):
 #------------------------------------------
 class FNBRendererFirefox2(FNBRenderer):
     """
-    This class handles the drawing of tabs using the I{Firefox 2} renderer.
+    This class handles the drawing of tabs using the `Firefox 2` renderer.
     """
     
     def __init__(self):
@@ -2204,7 +2547,17 @@ class FNBRendererFirefox2(FNBRenderer):
 
         
     def DrawTab(self, pageContainer, dc, posx, tabIdx, tabWidth, tabHeight, btnStatus):
-        """ Draws a tab using the I{Firefox 2} style. """
+        """
+        Draws a tab using the `Firefox 2` style.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`;
+        :param `posx`: the x position of the tab;
+        :param `tabIdx`: the index of the tab;
+        :param `tabWidth`: the tab's width;
+        :param `tabHeight`: the tab's height;
+        :param `btnStatus`: the status of the 'X' button inside this tab.
+        """
 
         borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
         pc = pageContainer
@@ -2270,6 +2623,10 @@ class FNBRendererFirefox2(FNBRenderer):
             pc._ImageList.Draw(pc._pagesInfoVec[tabIdx].GetImageIndex(), dc,
                                posx + imageXOffset, imageYCoord,
                                wx.IMAGELIST_DRAW_TRANSPARENT, True)
+
+        pageTextColour = pc._pParent.GetPageTextColour(tabIdx)
+        if pageTextColour is not None:
+            dc.SetTextForeground(pageTextColour)
         
         dc.DrawText(pc.GetPageText(tabIdx), posx + textOffset, imageYCoord)
 
@@ -2294,7 +2651,7 @@ class FNBRendererFirefox2(FNBRenderer):
 
 class FNBRendererVC71(FNBRenderer):
     """
-    This class handles the drawing of tabs using the I{VC71} renderer.
+    This class handles the drawing of tabs using the `VC71` renderer.
     """
 
     def __init__(self):
@@ -2304,7 +2661,17 @@ class FNBRendererVC71(FNBRenderer):
 
 
     def DrawTab(self, pageContainer, dc, posx, tabIdx, tabWidth, tabHeight, btnStatus):
-        """ Draws a tab using the I{VC71} style. """
+        """
+        Draws a tab using the `VC71` style.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`;
+        :param `posx`: the x position of the tab;
+        :param `tabIdx`: the index of the tab;
+        :param `tabWidth`: the tab's width;
+        :param `tabHeight`: the tab's height;
+        :param `btnStatus`: the status of the 'X' button inside this tab.
+        """
 
         # Visual studio 7.1 style
         borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
@@ -2381,6 +2748,10 @@ class FNBRendererVC71(FNBRenderer):
             pc._ImageList.Draw(pc._pagesInfoVec[tabIdx].GetImageIndex(), dc,
                                      posx + imageXOffset, imageYCoord,
                                      wx.IMAGELIST_DRAW_TRANSPARENT, True)
+
+        pageTextColour = pc._pParent.GetPageTextColour(tabIdx)
+        if pageTextColour is not None:
+            dc.SetTextForeground(pageTextColour)
         
         dc.DrawText(pc.GetPageText(tabIdx), posx + textOffset, imageYCoord)
         
@@ -2405,7 +2776,7 @@ class FNBRendererVC71(FNBRenderer):
 
 class FNBRendererFancy(FNBRenderer):
     """
-    This class handles the drawing of tabs using the I{Fancy} renderer.
+    This class handles the drawing of tabs using the `Fancy` renderer.
     """
 
     def __init__(self):
@@ -2415,10 +2786,20 @@ class FNBRendererFancy(FNBRenderer):
 
 
     def DrawTab(self, pageContainer, dc, posx, tabIdx, tabWidth, tabHeight, btnStatus):
-        """ Draws a tab using the I{Fancy} style, similar to VC71 but with gradients. """
+        """
+        Draws a tab using the `Fancy` style, similar to the `VC71` one but with gradients.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`;
+        :param `posx`: the x position of the tab;
+        :param `tabIdx`: the index of the tab;
+        :param `tabWidth`: the tab's width;
+        :param `tabHeight`: the tab's height;
+        :param `btnStatus`: the status of the 'X' button inside this tab.
+        """
 
         # Fancy tabs - like with VC71 but with the following differences:
-        # - The Selected tab is colored with gradient color
+        # - The Selected tab is coloured with gradient colour
         borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
         pc = pageContainer
 
@@ -2484,6 +2865,10 @@ class FNBRendererFancy(FNBRenderer):
             pc._ImageList.Draw(pc._pagesInfoVec[tabIdx].GetImageIndex(), dc,
                                      posx + imageXOffset, imageYCoord,
                                      wx.IMAGELIST_DRAW_TRANSPARENT, True)
+
+        pageTextColour = pc._pParent.GetPageTextColour(tabIdx)
+        if pageTextColour is not None:
+            dc.SetTextForeground(pageTextColour)
         
         dc.DrawText(pc.GetPageText(tabIdx), posx + textOffset, imageYCoord)
         
@@ -2507,7 +2892,7 @@ class FNBRendererFancy(FNBRenderer):
 #------------------------------------------------------------------
 class FNBRendererVC8(FNBRenderer):    
     """
-    This class handles the drawing of tabs using the I{VC8} renderer.
+    This class handles the drawing of tabs using the `VC8` renderer.
     """
 
     def __init__(self):
@@ -2519,7 +2904,14 @@ class FNBRendererVC8(FNBRenderer):
 
         
     def DrawTabs(self, pageContainer, dc):
-        """ Draws all the tabs using VC8 style. Overloads The DrawTabs method in parent class. """
+        """
+        Draws all the tabs using VC8 style.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`.
+
+        :note: This method overloads The `DrawTabs` method in the parent class.
+        """
 
         pc = pageContainer
 
@@ -2545,14 +2937,14 @@ class FNBRendererVC8(FNBRenderer):
         borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
 
         # Create brushes
-        backBrush = wx.Brush(pc._tabAreaColor)
+        backBrush = wx.Brush(pc._tabAreaColour)
         noselBrush = wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNFACE))
-        selBrush = wx.Brush(pc._activeTabColor)
+        selBrush = wx.Brush(pc._activeTabColour)
         size = pc.GetSize()
 
         # Background
         dc.SetTextBackground(pc.GetBackgroundColour())
-        dc.SetTextForeground(pc._activeTextColor)
+        dc.SetTextForeground(pc._activeTextColour)
         
         # If border style is set, set the pen to be border pen
         if pc.HasFlag(FNB_TABS_BORDER_SIMPLE):
@@ -2562,9 +2954,9 @@ class FNBRendererVC8(FNBRenderer):
 
         lightFactor = (pc.HasFlag(FNB_BACKGROUND_GRADIENT) and [70] or [0])[0]
         
-        # For VC8 style, we color the tab area in gradient coloring
-        lightcolour = LightColour(pc._tabAreaColor, lightFactor)
-        PaintStraightGradientBox(dc, pc.GetClientRect(), pc._tabAreaColor, lightcolour)
+        # For VC8 style, we colour the tab area in gradient colouring
+        lightcolour = LightColour(pc._tabAreaColour, lightFactor)
+        PaintStraightGradientBox(dc, pc.GetClientRect(), pc._tabAreaColour, lightcolour)
 
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.DrawRectangle(0, 0, size.x, size.y)
@@ -2641,7 +3033,7 @@ class FNBRendererVC8(FNBRenderer):
                 self.DrawTab(pc, dc, posx, i, tabWidth, tabHeight, pc._nTabXButtonStatus)
             
             # Restore the text forground
-            dc.SetTextForeground(pc._activeTextColor)
+            dc.SetTextForeground(pc._activeTextColour)
 
             # Update the tab position & size
             pc._pagesInfoVec[i].SetPosition(wx.Point(posx, VERTICAL_BORDER_PADDING))
@@ -2667,7 +3059,17 @@ class FNBRendererVC8(FNBRenderer):
 
 
     def DrawTab(self, pageContainer, dc, posx, tabIdx, tabWidth, tabHeight, btnStatus):
-        """ Draws a tab using VC8 style. """
+        """
+        Draws a tab using the `VC8` style.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`;
+        :param `posx`: the x position of the tab;
+        :param `tabIdx`: the index of the tab;
+        :param `tabWidth`: the tab's width;
+        :param `tabHeight`: the tab's height;
+        :param `btnStatus`: the status of the 'X' button inside this tab.
+        """
 
         pc = pageContainer
         borderPen = wx.Pen(pc._pParent.GetBorderColour())
@@ -2713,8 +3115,8 @@ class FNBRendererVC8(FNBRenderer):
 
         # Draw the polygon
         br = dc.GetBrush()
-        dc.SetBrush(wx.Brush((tabIdx == pc.GetSelection() and [pc._activeTabColor] or [pc._colorTo])[0]))
-        dc.SetPen(wx.Pen((tabIdx == pc.GetSelection() and [wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)] or [pc._colorBorder])[0]))
+        dc.SetBrush(wx.Brush((tabIdx == pc.GetSelection() and [pc._activeTabColour] or [pc._colourTo])[0]))
+        dc.SetPen(wx.Pen((tabIdx == pc.GetSelection() and [wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)] or [pc._colourBorder])[0]))
         dc.DrawPolygon(tabPoints)
 
         # Restore the brush
@@ -2780,6 +3182,11 @@ class FNBRendererVC8(FNBRenderer):
             boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
         
         dc.SetFont(boldFont)
+
+        pageTextColour = pc._pParent.GetPageTextColour(tabIdx)
+        if pageTextColour is not None:
+            dc.SetTextForeground(pageTextColour)
+        
         dc.DrawText(pc.GetPageText(tabIdx), posx + textOffset, imageYCoord)
 
         # draw 'x' on tab (if enabled)
@@ -2799,27 +3206,35 @@ class FNBRendererVC8(FNBRenderer):
 
 
     def FillVC8GradientColour(self, pageContainer, dc, tabPoints, bSelectedTab, tabIdx):
-        """ Fills a tab with a gradient shading. """
+        """
+        Fills a tab with a gradient shading.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`;
+        :param `tabPoints`: a Python list of `wx.Points` representing the tab outline;
+        :param `bSelectedTab`: ``True`` if the tab is selected, ``False`` otherwise;
+        :param `tabIdx`: the index of the tab;
+        """
 
         # calculate gradient coefficients
         pc = pageContainer
 
         if self._first:
             self._first = False
-            pc._colorTo   = LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE), 0) 
-            pc._colorFrom = LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE), 60)
+            pc._colourTo   = LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE), 0) 
+            pc._colourFrom = LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE), 60)
         
         col2 = pc._pParent.GetGradientColourTo()
         col1 = pc._pParent.GetGradientColourFrom()
 
-        # If colorful tabs style is set, override the tab color
-        if pc.HasFlag(FNB_COLORFUL_TABS):
+        # If colourful tabs style is set, override the tab colour
+        if pc.HasFlag(FNB_COLOURFUL_TABS):
         
             if not pc._pagesInfoVec[tabIdx].GetColour():
             
-                # First time, generate color, and keep it in the vector
-                tabColor = RandomColour()
-                pc._pagesInfoVec[tabIdx].SetColour(tabColor)
+                # First time, generate colour, and keep it in the vector
+                tabColour = RandomColour()
+                pc._pagesInfoVec[tabIdx].SetColour(tabColour)
             
             if pc.HasFlag(FNB_BOTTOM):
             
@@ -2861,18 +3276,18 @@ class FNBRendererVC8(FNBRenderer):
             
             currCol = wx.Colour(col1.Red() + rf, col1.Green() + gf, col1.Blue() + bf)
 
-            dc.SetPen((bSelectedTab and [wx.Pen(pc._activeTabColor)] or [wx.Pen(currCol)])[0])
+            dc.SetPen((bSelectedTab and [wx.Pen(pc._activeTabColour)] or [wx.Pen(currCol)])[0])
             startX = self.GetStartX(tabPoints, y, pc.GetParent().GetWindowStyleFlag()) 
             endX = self.GetEndX(tabPoints, y, pc.GetParent().GetWindowStyleFlag())
             dc.DrawLine(startX, y, endX, y)
 
             # Draw the border using the 'edge' point
-            dc.SetPen(wx.Pen((bSelectedTab and [wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)] or [pc._colorBorder])[0]))
+            dc.SetPen(wx.Pen((bSelectedTab and [wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)] or [pc._colourBorder])[0]))
             
             dc.DrawPoint(startX, y)
             dc.DrawPoint(endX, y)
             
-            # Progress the color 
+            # Progress the colour 
             rf += rstep
             gf += gstep
             bf += bstep
@@ -2884,7 +3299,13 @@ class FNBRendererVC8(FNBRenderer):
 
 
     def GetStartX(self, tabPoints, y, style):
-        """ Returns the x start position of a tab. """
+        """
+        Returns the x start position of a tab.
+
+        :param `tabPoints`: a Python list of `wx.Points` representing the tab outline;
+        :param `y`: the y start position of the tab;
+        :param `style`: can be ``FNB_BOTTOM`` or the default (tabs at top).
+        """
 
         x1, x2, y1, y2 = 0.0, 0.0, 0.0, 0.0
 
@@ -2941,7 +3362,13 @@ class FNBRendererVC8(FNBRenderer):
 
 
     def GetEndX(self, tabPoints, y, style):
-        """ Returns the x end position of a tab. """
+        """
+        Returns the x end position of a tab.
+
+        :param `tabPoints`: a Python list of `wx.Points` representing the tab outline;
+        :param `y`: the y end position of the tab;
+        :param `style`: can be ``FNB_BOTTOM`` or the default (tabs at top).
+        """
 
         x1, x2, y1, y2 = 0.0, 0.0, 0.0, 0.0
 
@@ -2997,7 +3424,12 @@ class FNBRendererVC8(FNBRenderer):
 
 
     def NumberTabsCanFit(self, pageContainer, fr=-1):
-        """ Returns the number of tabs that can fit in the visible area. """
+        """
+        Calculates the number of tabs that can fit on the available space on screen.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `fr`: the current first visible tab.
+        """
 
         pc = pageContainer
         
@@ -3038,20 +3470,9 @@ class FNBRendererVC8(FNBRenderer):
 
 class FlatNotebook(wx.PyPanel):
     """
-    Display one or more windows in a notebook.
-    
-    B{Events}:
-        - B{EVT_FLATNOTEBOOK_PAGE_CHANGING}: sent when the active 
-            page in the notebook is changing
-        - B{EVT_FLATNOTEBOOK_PAGE_CHANGED}: sent when the active 
-            page in the notebook has changed
-        - B{EVT_FLATNOTEBOOK_PAGE_CLOSING}: sent when a page in the 
-            notebook is closing
-        - B{EVT_FLATNOTEBOOK_PAGE_CLOSED}: sent when a page in the 
-            notebook has been closed
-        - B{EVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU}: sent when the user
-            clicks a tab in the notebook with the right mouse
-            button
+    The L{FlatNotebook} is a full implementation of the `wx.Notebook`, and designed to be
+    a drop-in replacement for `wx.Notebook`. The API functions are similar so one can
+    expect the function to behave in the same way. 
     """
     
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
@@ -3059,9 +3480,40 @@ class FlatNotebook(wx.PyPanel):
         """
         Default class constructor.
 
-        All the parameters are as in wxPython class construction, except the
-        'style': this can be assigned to whatever combination of FNB_* styles.
+        :param `parent`: the L{FlatNotebook} parent;
+        :param `id`: an identifier for the control: a value of -1 is taken to mean a default;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `style`: the window style. This can be a combination of the following bits:
+
+         ================================ =========== ==================================================
+         Window Styles                    Hex Value   Description
+         ================================ =========== ==================================================
+         ``FNB_VC71``                             0x1 Use Visual Studio 2003 (VC7.1) style for tabs.
+         ``FNB_FANCY_TABS``                       0x2 Use fancy style - square tabs filled with gradient colouring.
+         ``FNB_TABS_BORDER_SIMPLE``               0x4 Draw thin border around the page.
+         ``FNB_NO_X_BUTTON``                      0x8 Do not display the 'X' button.
+         ``FNB_NO_NAV_BUTTONS``                  0x10 Do not display the right/left arrows.
+         ``FNB_MOUSE_MIDDLE_CLOSES_TABS``        0x20 Use the mouse middle button for cloing tabs.
+         ``FNB_BOTTOM``                          0x40 Place tabs at bottom - the default is to place them at top.
+         ``FNB_NODRAG``                          0x80 Disable dragging of tabs.
+         ``FNB_VC8``                            0x100 Use Visual Studio 2005 (VC8) style for tabs.
+         ``FNB_X_ON_TAB``                       0x200 Place 'X' close button on the active tab.
+         ``FNB_BACKGROUND_GRADIENT``            0x400 Use gradients to paint the tabs background.
+         ``FNB_COLOURFUL_TABS``                 0x800 Use colourful tabs (VC8 style only).
+         ``FNB_DCLICK_CLOSES_TABS``            0x1000 Style to close tab using double click.
+         ``FNB_SMART_TABS``                    0x2000 Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows.
+         ``FNB_DROPDOWN_TABS_LIST``            0x4000 Use a dropdown menu on the left in place of the arrows.
+         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different FlatNotebooks.
+         ``FNB_HIDE_ON_SINGLE_TAB``           0x10000 Hides the Page Container when there is one or fewer tabs.
+         ``FNB_DEFAULT_STYLE``                0x10020 FlatNotebook default style.
+         ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
+         ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
+         ================================ =========== ==================================================
         
+        :param `name`: the window name. 
         """
 
         self._bForceSelection = False
@@ -3085,12 +3537,12 @@ class FlatNotebook(wx.PyPanel):
     def Init(self):
         """ Initializes all the class attributes. """
         
-        self._pages._colorBorder = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)
+        self._pages._colourBorder = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)
 
         self._mainSizer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(self._mainSizer)
 
-        # The child panels will inherit this bg color, so leave it at the default value
+        # The child panels will inherit this bg colour, so leave it at the default value
         #self.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_APPWORKSPACE))
 
         # Set default page height
@@ -3122,7 +3574,13 @@ class FlatNotebook(wx.PyPanel):
 
 
     def DoGetBestSize(self):
-        """ Overrides DoGetBestSize to handle sizers nicely. """
+        """
+        Gets the size which best suits the window: for a control, it would be the
+        minimal size which doesn't truncate the control, for a panel - the same
+        size as it would have after a call to `Fit()`.
+        
+        :note: Overridden from `wx.PyPanel`.
+        """
 
         if not self._windows:
             # Something is better than nothing... no pages!
@@ -3140,13 +3598,25 @@ class FlatNotebook(wx.PyPanel):
     
 
     def SetActiveTabTextColour(self, textColour):
-        """ Sets the text colour for the active tab. """
+        """
+        Sets the text colour for the active tab.
 
-        self._pages._activeTextColor = textColour
+        :param `textColour`: a valid `wx.Colour` object.
+        """
+
+        self._pages._activeTextColour = textColour
 
 
     def OnDropTarget(self, x, y, nTabPage, wnd_oldContainer):
-        """ Handles the drop action from a DND operation. """
+        """
+        Handles the drop action from a drag and drop operation.
+
+        :param `x`: the x position of the drop action;
+        :param `y`: the y position of the drop action;
+        :param `nTabPage`: the index of the tab being dropped;
+        :param `wnd_oldContainer`: the L{FlatNotebook} to which the dropped tab previously
+         belonged to.
+        """
 
         return self._pages.OnDropTarget(x, y, nTabPage, wnd_oldContainer)
 
@@ -3159,15 +3629,14 @@ class FlatNotebook(wx.PyPanel):
 
     def AddPage(self, page, text, select=False, imageId=-1):
         """
-        Add a page to the L{FlatNotebook}.
+        Adds a page to the L{FlatNotebook}.
 
-        @param page: Specifies the new page.
-        @param text: Specifies the text for the new page.
-        @param select: Specifies whether the page should be selected.
-        @param imageId: Specifies the optional image index for the new page.
+        :param `page`: specifies the new page;
+        :param `text`: specifies the text for the new page;
+        :param `select`: specifies whether the page should be selected;
+        :param `imageId`: specifies the optional image index for the new page.
         
-        Return value:
-        True if successful, False otherwise.
+        :return: ``True`` if successful, ``False`` otherwise.
         """
 
         # sanity check
@@ -3242,13 +3711,21 @@ class FlatNotebook(wx.PyPanel):
 
 
     def SetImageList(self, imageList):
-        """ Sets the image list for the page control. """
+        """
+        Sets the image list for the page control.
+
+        :param `imageList`: an instance of `wx.ImageList`.
+        """
 
         self._pages.SetImageList(imageList)
 
 
     def AssignImageList(self, imageList):
-        """ Assigns the image list for the page control. """
+        """
+        Assigns the image list for the page control.
+
+        :param `imageList`: an instance of `wx.ImageList`.
+        """
 
         self._pages.AssignImageList(imageList)
 
@@ -3263,14 +3740,13 @@ class FlatNotebook(wx.PyPanel):
         """
         Inserts a new page at the specified position.
 
-        @param indx: Specifies the position of the new page.
-        @param page: Specifies the new page.
-        @param text: Specifies the text for the new page.
-        @param select: Specifies whether the page should be selected.
-        @param imageId: Specifies the optional image index for the new page.
+        :param `indx`: specifies the position of the new page;
+        :param `page`: specifies the new page;
+        :param `text`: specifies the text for the new page;
+        :param `select`: specifies whether the page should be selected;
+        :param `imageId`: specifies the optional image index for the new page.
         
-        Return value:
-        True if successful, False otherwise.
+        :return: ``True`` if successful, ``False`` otherwise.
         """     
 
         # sanity check
@@ -3352,7 +3828,10 @@ class FlatNotebook(wx.PyPanel):
     def SetSelection(self, page):
         """
         Sets the selection for the given page.
-        The call to this function *does not* generate the page changing events.
+
+        :param `page`: an integer specifying the new selected page.
+        
+        :note: The call to this function **does not** generate the page changing events.
         """
 
         if page >= len(self._windows) or not self._windows:
@@ -3397,7 +3876,10 @@ class FlatNotebook(wx.PyPanel):
     def DeletePage(self, page):
         """
         Deletes the specified page, and the associated window.
-        The call to this function generates the page changing events.
+
+        :param `page`: an integer specifying the new selected page.
+        
+        :note: The call to this function generates the page changing events.
         """
 
         if page >= len(self._windows) or page < 0:
@@ -3443,7 +3925,7 @@ class FlatNotebook(wx.PyPanel):
 
 
     def DeleteAllPages(self):
-        """ Deletes all the pages. """
+        """ Deletes all the pages in the L{FlatNotebook}. """
 
         if not self._windows:
             return False
@@ -3462,7 +3944,7 @@ class FlatNotebook(wx.PyPanel):
 
 
     def GetCurrentPage(self):
-        """ Returns the currently selected notebook page or None. """
+        """ Returns the currently selected notebook page or ``None`` if none is selected. """
         
         sel = self._pages.GetSelection()
         if sel < 0 or sel >= len(self._windows):
@@ -3472,7 +3954,7 @@ class FlatNotebook(wx.PyPanel):
 
 
     def GetPage(self, page):
-        """ Returns the window at the given page position, or None. """
+        """ Returns the window at the given page position, or ``None``. """
 
         if page >= len(self._windows):
             return None
@@ -3481,7 +3963,11 @@ class FlatNotebook(wx.PyPanel):
 
 
     def GetPageIndex(self, win):
-        """ Returns the index at which the window is found. """
+        """
+        Returns the index at which the window is found.
+
+        :param `win`: an instance of `wx.Window`.
+        """
 
         try:
             return self._windows.index(win)
@@ -3498,7 +3984,11 @@ class FlatNotebook(wx.PyPanel):
     def AdvanceSelection(self, forward=True):
         """
         Cycles through the tabs.
-        The call to this function generates the page changing events.
+
+        :param `forward`: if ``True``, the selection is advanced in ascending order
+         (to the right), otherwise the selection is advanced in descending order.
+         
+        :note: The call to this function generates the page changing events.
         """
 
         self._pages.AdvanceSelection(forward)
@@ -3509,8 +3999,14 @@ class FlatNotebook(wx.PyPanel):
 
         return self._pages.GetPageCount()
 
+
     def SetNavigatorIcon(self, bmp):
-        """ Set the icon used by the L{TabNavigatorWindow} """
+        """
+        Set the icon used by the L{TabNavigatorWindow}.
+
+        :param `bmp`: a valid `wx.Bitmap` object.
+        """
+        
         if isinstance(bmp, wx.Bitmap) and bmp.IsOk():
             # Make sure image is proper size
             if bmp.GetSize() != (16, 16):
@@ -3521,8 +4017,13 @@ class FlatNotebook(wx.PyPanel):
         else:
             raise TypeError("SetNavigatorIcon requires a valid bitmap")
 
+
     def OnNavigationKey(self, event):
-        """ Handles the wx.EVT_NAVIGATION_KEY event for L{FlatNotebook}. """
+        """
+        Handles the ``wx.EVT_NAVIGATION_KEY`` event for L{FlatNotebook}.
+
+        :param `event`: a `wx.NavigationKeyEvent` event to be processed.
+        """
 
         if event.IsWindowChange():
             if len(self._windows) == 0:
@@ -3548,7 +4049,11 @@ class FlatNotebook(wx.PyPanel):
             
 
     def GetPageShapeAngle(self, page_index):
-        """ Returns the angle associated to a tab. """
+        """
+        Returns the angle associated to a tab.
+
+        :param `page_index`: the index of the tab for which we wish to get the shape angle.
+        """
 
         if page_index < 0 or page_index >= len(self._pages._pagesInfoVec):
             return None, False
@@ -3558,7 +4063,12 @@ class FlatNotebook(wx.PyPanel):
 
 
     def SetPageShapeAngle(self, page_index, angle):
-        """ Sets the angle associated to a tab. """
+        """
+        Sets the angle associated to a tab.
+
+        :param `page_index`: the index of the tab for which we wish to get the shape angle;
+        :param `angle`: the new shape angle for the tab (must be less than 15 degrees).
+        """
 
         if page_index < 0 or page_index >= len(self._pages._pagesInfoVec):
             return
@@ -3570,7 +4080,11 @@ class FlatNotebook(wx.PyPanel):
 
 
     def SetAllPagesShapeAngle(self, angle):
-        """ Sets the angle associated to all the tab. """
+        """
+        Sets the angle associated to all the tab.
+
+        :param `angle`: the new shape angle for the tab (must be less than 15 degrees).
+        """
 
         if angle > 15:
             return
@@ -3588,7 +4102,12 @@ class FlatNotebook(wx.PyPanel):
 
 
     def SetPageText(self, page, text):
-        """ Sets the text for the given page. """
+        """
+        Sets the text for the given page.
+
+        :param `page`: an integer specifying the page index;
+        :param `text`: the new tab label.
+        """
 
         bVal = self._pages.SetPageText(page, text)
         self._pages.Refresh()
@@ -3599,7 +4118,11 @@ class FlatNotebook(wx.PyPanel):
     def SetPadding(self, padding):
         """
         Sets the amount of space around each page's icon and label, in pixels.
-        NB: only the horizontal padding is considered.
+
+        :param `padding`: the amount of space around each page's icon and label,
+         in pixels.
+         
+        :note: Only the horizontal padding is considered.
         """
 
         self._nPadding = padding.GetWidth()
@@ -3618,7 +4141,38 @@ class FlatNotebook(wx.PyPanel):
 
 
     def SetWindowStyleFlag(self, style):
-        """ Sets the L{FlatNotebook} window style flags. """
+        """
+        Sets the L{FlatNotebook} window style flags.
+
+        :param `style`: the window style. This can be a combination of the following bits:
+
+         ================================ =========== ==================================================
+         Window Styles                    Hex Value   Description
+         ================================ =========== ==================================================
+         ``FNB_VC71``                             0x1 Use Visual Studio 2003 (VC7.1) style for tabs.
+         ``FNB_FANCY_TABS``                       0x2 Use fancy style - square tabs filled with gradient colouring.
+         ``FNB_TABS_BORDER_SIMPLE``               0x4 Draw thin border around the page.
+         ``FNB_NO_X_BUTTON``                      0x8 Do not display the 'X' button.
+         ``FNB_NO_NAV_BUTTONS``                  0x10 Do not display the right/left arrows.
+         ``FNB_MOUSE_MIDDLE_CLOSES_TABS``        0x20 Use the mouse middle button for cloing tabs.
+         ``FNB_BOTTOM``                          0x40 Place tabs at bottom - the default is to place them at top.
+         ``FNB_NODRAG``                          0x80 Disable dragging of tabs.
+         ``FNB_VC8``                            0x100 Use Visual Studio 2005 (VC8) style for tabs.
+         ``FNB_X_ON_TAB``                       0x200 Place 'X' close button on the active tab.
+         ``FNB_BACKGROUND_GRADIENT``            0x400 Use gradients to paint the tabs background.
+         ``FNB_COLOURFUL_TABS``                 0x800 Use colourful tabs (VC8 style only).
+         ``FNB_DCLICK_CLOSES_TABS``            0x1000 Style to close tab using double click.
+         ``FNB_SMART_TABS``                    0x2000 Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows.
+         ``FNB_DROPDOWN_TABS_LIST``            0x4000 Use a dropdown menu on the left in place of the arrows.
+         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different FlatNotebooks.
+         ``FNB_HIDE_ON_SINGLE_TAB``           0x10000 Hides the Page Container when there is one or fewer tabs.
+         ``FNB_DEFAULT_STYLE``                0x10020 FlatNotebook default style.
+         ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
+         ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
+         ================================ =========== ==================================================
+
+        :note: Overridden from `wx.PyPanel`.
+        """
             
         wx.PyPanel.SetWindowStyleFlag(self, style)
         renderer = self._pages._mgr.GetRenderer(self.GetWindowStyleFlag())
@@ -3636,7 +4190,11 @@ class FlatNotebook(wx.PyPanel):
 
 
     def RemovePage(self, page):
-        """ Deletes the specified page, without deleting the associated window. """
+        """
+        Deletes the specified page, without deleting the associated window.
+
+        :param `page`: an integer specifying the page index.
+        """
 
         if page >= len(self._windows):
             return False
@@ -3671,99 +4229,137 @@ class FlatNotebook(wx.PyPanel):
 
 
     def SetRightClickMenu(self, menu):
-        """ Sets the popup menu associated to a right click on a tab. """
+        """
+        Sets the popup menu associated to a right click on a tab.
+
+        :param `menu`: an instance of `wx.Menu`.
+        """
 
         self._pages._pRightClickMenu = menu
 
 
-    def GetPageText(self, nPage):
-        """ Returns the tab caption. """
+    def GetPageText(self, page):
+        """
+        Returns the string for the given page.
 
-        return self._pages.GetPageText(nPage)
+        :param `page`: an integer specifying the page index.
+        """
+
+        return self._pages.GetPageText(page)
 
 
     def SetGradientColours(self, fr, to, border):
-        """ Sets the gradient colours for the tab. """
+        """
+        Sets the gradient colours for the tab.
 
-        self._pages._colorFrom = fr
-        self._pages._colorTo   = to
-        self._pages._colorBorder = border
+        :param `fr`: the first gradient colour, an instance of `wx.Colour`;
+        :param `to`: the second gradient colour, an instance of `wx.Colour`;
+        :param `border`: the border colour, an instance of `wx.Colour`.
+        """
+
+        self._pages._colourFrom = fr
+        self._pages._colourTo   = to
+        self._pages._colourBorder = border
 
 
     def SetGradientColourFrom(self, fr):
-        """ Sets the starting colour for the gradient. """
+        """
+        Sets the starting colour for the gradient.
 
-        self._pages._colorFrom = fr
+        :param `fr`: the first gradient colour, an instance of `wx.Colour`.
+        """
+
+        self._pages._colourFrom = fr
 
 
     def SetGradientColourTo(self, to):
-        """ Sets the ending colour for the gradient. """
+        """
+        Sets the ending colour for the gradient.
 
-        self._pages._colorTo = to
+        :param `to`: the second gradient colour, an instance of `wx.Colour`;
+        """
+
+        self._pages._colourTo = to
 
 
     def SetGradientColourBorder(self, border):
-        """ Sets the tab border colour. """
+        """
+        Sets the tab border colour.
 
-        self._pages._colorBorder = border
+        :param `border`: the border colour, an instance of `wx.Colour`.
+        """
+
+        self._pages._colourBorder = border
 
 
     def GetGradientColourFrom(self):
         """ Gets first gradient colour. """
 
-        return self._pages._colorFrom
+        return self._pages._colourFrom
 
 
     def GetGradientColourTo(self):
         """ Gets second gradient colour. """
 
-        return self._pages._colorTo
+        return self._pages._colourTo
 
 
     def GetGradientColourBorder(self):
         """ Gets the tab border colour. """
 
-        return self._pages._colorBorder
+        return self._pages._colourBorder
 
 
     def GetBorderColour(self):
         """ Returns the border colour. """
 
-        return self._pages._colorBorder
+        return self._pages._colourBorder
     
 
     def GetActiveTabTextColour(self):
         """ Get the active tab text colour. """
 
-        return self._pages._activeTextColor
+        return self._pages._activeTextColour
 
 
     def SetPageImage(self, page, image):
         """
-        Sets the image index for the given page. Image is an index into the
-        image list which was set with SetImageList.
+        Sets the image index for the given page.
+
+        :param `page`: an integer specifying the page index;
+        :param `image`: an index into the image list which was set with L{SetImageList}.
         """
 
         self._pages.SetPageImage(page, image)
 
 
-    def GetPageImage(self, nPage):
+    def GetPageImage(self, page):
         """
-        Returns the image index for the given page. Image is an index into the
-        image list which was set with SetImageList.
+        Returns the image index for the given page.
+
+        :param `page`: an integer specifying the page index.
         """
 
-        return self._pages.GetPageImage(nPage)
+        return self._pages.GetPageImage(page)
 
 
     def GetEnabled(self, page):
-        """ Returns whether a tab is enabled or not. """
+        """
+        Returns whether a tab is enabled or not.
+
+        :param `page`: an integer specifying the page index.
+        """
 
         return self._pages.GetEnabled(page)
 
 
     def EnableTab(self, page, enabled=True):
-        """ Enables or disables a tab. """
+        """
+        Enables or disables a tab.
+
+        :param `page`: an integer specifying the page index;
+        :param `enabled`: ``True`` to enable a tab, ``False`` to disable it.
+        """
 
         if page >= len(self._windows):
             return
@@ -3775,41 +4371,79 @@ class FlatNotebook(wx.PyPanel):
     def GetNonActiveTabTextColour(self):
         """ Returns the non active tabs text colour. """
 
-        return self._pages._nonActiveTextColor
+        return self._pages._nonActiveTextColour
 
 
-    def SetNonActiveTabTextColour(self, color):
-        """ Sets the non active tabs text colour. """
+    def SetNonActiveTabTextColour(self, colour):
+        """
+        Sets the non active tabs text colour.
 
-        self._pages._nonActiveTextColor = color
+        :param `colour`: a valid instance of `wx.Colour`.
+        """
+
+        self._pages._nonActiveTextColour = colour
 
 
-    def SetTabAreaColour(self, color):
-        """ Sets the area behind the tabs colour. """
+    def GetPageTextColour(self, page):
+        """
+        Returns the tab text colour if it has been set previously, or ``None`` otherwise.
 
-        self._pages._tabAreaColor = color
+        :param `page`: an integer specifying the page index.
+        """
+
+        return self._pages.GetPageTextColour(page)
+        
+
+    def SetPageTextColour(self, page, colour):
+        """
+        Sets the tab text colour individually.
+
+        :param `page`: an integer specifying the page index;
+        :param `colour`: an instance of `wx.Colour`. You can pass ``None`` or
+         `wx.NullColour` to return to the default page text colour.
+        """
+
+        self._pages.SetPageTextColour(page, colour)
+        
+
+    def SetTabAreaColour(self, colour):
+        """
+        Sets the area behind the tabs colour.
+
+        :param `colour`: a valid instance of `wx.Colour`.
+        """
+
+        self._pages._tabAreaColour = colour
 
 
     def GetTabAreaColour(self):
         """ Returns the area behind the tabs colour. """
 
-        return self._pages._tabAreaColor
+        return self._pages._tabAreaColour
 
 
-    def SetActiveTabColour(self, color):
-        """ Sets the active tab colour. """
+    def SetActiveTabColour(self, colour):
+        """
+        Sets the active tab colour.
 
-        self._pages._activeTabColor = color
+        :param `colour`: a valid instance of `wx.Colour`.
+        """
+
+        self._pages._activeTabColour = colour
 
 
     def GetActiveTabColour(self):
         """ Returns the active tab colour. """
 
-        return self._pages._activeTabColor
+        return self._pages._activeTabColour
 
 
     def EnsureVisible(self, page):
-       """ Ensures that a tab is visible. """
+       """
+       Ensures that a tab is visible.
+
+       :param `page`: an integer specifying the page index.
+       """
 
        self._pages.DoSetSelection(page)
 
@@ -3826,7 +4460,19 @@ class PageContainer(wx.Panel):
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=0):
-        """ Default class constructor. """
+        """
+        Default class constructor.
+
+        Used internally, do not call it in your code!        
+
+        :param `parent`: the L{PageContainer} parent;
+        :param `id`: an identifier for the control: a value of -1 is taken to mean a default;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `style`: the window style.
+        """
         
         self._ImageList = None
         self._iActivePage = -1
@@ -3846,12 +4492,12 @@ class PageContainer(wx.Panel):
 
         self._pagesInfoVec = []        
 
-        self._colorTo = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
-        self._colorFrom = wx.WHITE
-        self._activeTabColor = wx.WHITE
-        self._activeTextColor = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNTEXT)
-        self._nonActiveTextColor = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNTEXT)
-        self._tabAreaColor = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNFACE)
+        self._colourTo = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self._colourFrom = wx.WHITE
+        self._activeTabColour = wx.WHITE
+        self._activeTextColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNTEXT)
+        self._nonActiveTextColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNTEXT)
+        self._tabAreaColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNFACE)
 
         self._nFrom = 0
         self._isdragging = False
@@ -3893,20 +4539,33 @@ class PageContainer(wx.Panel):
         
 
     def OnEraseBackground(self, event):
-        """ Handles the wx.EVT_ERASE_BACKGROUND event for L{PageContainer} (does nothing)."""
+        """
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{PageContainer}.
+
+        :param `event`: a `wx.EraseEvent` event to be processed.
+
+        :note: This method is intentionally empty to reduce flicker.        
+        """
 
         pass
 
     
     def _ReShow(self):
-        """ Handles the Redraw of the tabs when the FNB_HIDE_ON_SINGLE_TAB has been removed """
+        """
+        Handles the redraw of the tabs when the ``FNB_HIDE_ON_SINGLE_TAB`` has been removed.
+        """
+        
         self.Show()
         self.GetParent()._mainSizer.Layout()
         self.Refresh()
 
 
     def OnPaint(self, event):
-        """ Handles the wx.EVT_PAINT event for L{PageContainer}."""
+        """
+        Handles the ``wx.EVT_PAINT`` event for L{PageContainer}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
 
         dc = wx.BufferedPaintDC(self)
         renderer = self._mgr.GetRenderer(self.GetParent().GetWindowStyleFlag())
@@ -3920,15 +4579,12 @@ class PageContainer(wx.Panel):
 
     def AddPage(self, caption, selected=False, imgindex=-1):
         """
-        Add a page to the L{FlatNotebook}.
+        Adds a page to the L{PageContainer}.
 
-        @param window: Specifies the new page.
-        @param caption: Specifies the text for the new page.
-        @param selected: Specifies whether the page should be selected.
-        @param imgindex: Specifies the optional image index for the new page.
-        
-        Return value:
-        True if successful, False otherwise.
+        :param `page`: specifies the new page;
+        :param `text`: specifies the text for the new page;
+        :param `select`: specifies whether the page should be selected;
+        :param `imageId`: specifies the optional image index for the new page.
         """
 
         if selected:
@@ -3946,14 +4602,11 @@ class PageContainer(wx.Panel):
         """
         Inserts a new page at the specified position.
 
-        @param indx: Specifies the position of the new page.
-        @param page: Specifies the new page.
-        @param text: Specifies the text for the new page.
-        @param select: Specifies whether the page should be selected.
-        @param imgindex: Specifies the optional image index for the new page.
-        
-        Return value:
-        True if successful, False otherwise.
+        :param `indx`: specifies the position of the new page;
+        :param `page`: specifies the new page;
+        :param `text`: specifies the text for the new page;
+        :param `select`: specifies whether the page should be selected;
+        :param `imageId`: specifies the optional image index for the new page.        
         """     
 
         if selected:
@@ -3968,7 +4621,11 @@ class PageContainer(wx.Panel):
 
 
     def OnSize(self, event):
-        """ Handles the wx.EVT_SIZE events for L{PageContainer}. """
+        """
+        Handles the ``wx.EVT_SIZE`` event for L{PageContainer}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.
+        """
 
         # When resizing the control, try to fit to screen as many tabs as we can 
         style = self.GetParent().GetWindowStyleFlag() 
@@ -3990,7 +4647,11 @@ class PageContainer(wx.Panel):
 
 
     def OnMiddleDown(self, event):
-        """ Handles the wx.EVT_MIDDLE_DOWN events for L{PageContainer}. """
+        """
+        Handles the ``wx.EVT_MIDDLE_DOWN`` event for L{PageContainer}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         # Test if this style is enabled
         style = self.GetParent().GetWindowStyleFlag()
@@ -4007,7 +4668,11 @@ class PageContainer(wx.Panel):
 
 
     def OnMouseWheel(self, event):
-        """ Scroll tabs when the mouse wheels. """
+        """
+        Handles the ``wx.EVT_MOUSEWHEEL`` event for L{PageContainer}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         delta = event.GetWheelRotation()
 
@@ -4027,7 +4692,11 @@ class PageContainer(wx.Panel):
 
 
     def OnRightDown(self, event):
-        """ Handles the wx.EVT_RIGHT_DOWN events for L{PageContainer}. """
+        """
+        Handles the ``wx.EVT_RIGHT_DOWN`` event for L{PageContainer}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
         
         where, tabIdx = self.HitTest(event.GetPosition())
 
@@ -4052,7 +4721,11 @@ class PageContainer(wx.Panel):
 
 
     def OnLeftDown(self, event):
-        """ Handles the wx.EVT_LEFT_DOWN events for L{PageContainer}. """
+        """
+        Handles the ``wx.EVT_LEFT_DOWN`` event for L{PageContainer}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         # Reset buttons status
         self._nXButtonStatus     = FNB_BTN_NONE
@@ -4090,6 +4763,7 @@ class PageContainer(wx.Panel):
 
 
     def RotateLeft(self):
+        """ Scrolls tabs to the left by bulk of 5 tabs. """
 
         if self._nFrom == 0:
             return
@@ -4111,6 +4785,7 @@ class PageContainer(wx.Panel):
 
 
     def RotateRight(self):
+        """ Scrolls tabs to the right by bulk of 5 tabs. """
 
         if self._nFrom >= len(self._pagesInfoVec) - 1:
             return
@@ -4131,7 +4806,11 @@ class PageContainer(wx.Panel):
 
 
     def OnLeftUp(self, event):
-        """ Handles the wx.EVT_LEFT_UP events for L{PageContainer}. """
+        """
+        Handles the ``wx.EVT_LEFT_UP`` event for L{PageContainer}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         # forget the zone that was initially clicked
         self._nLeftClickZone = FNB_NOWHERE
@@ -4189,7 +4868,24 @@ class PageContainer(wx.Panel):
     def HitTest(self, pt):
         """
         HitTest method for L{PageContainer}.
-        Returns the flag (if any) and the hit page (if any).
+
+        :param `pt`: an instance of `wx.Point`, to test for hits.
+        
+        :return: The hit test flag (if any) and the hit page index (if any). The return
+         value can be one of the following bits:
+
+         ========================= ======= =================================
+         HitTest Flag               Value  Description
+         ========================= ======= =================================
+         ``FNB_NOWHERE``                 0 Indicates mouse coordinates not on any tab of the notebook
+         ``FNB_TAB``                     1 Indicates mouse coordinates inside a tab
+         ``FNB_X``                       2 Indicates mouse coordinates inside the 'X' button region
+         ``FNB_TAB_X``                   3 Indicates mouse coordinates inside the 'X' region in a tab
+         ``FNB_LEFT_ARROW``              4 Indicates mouse coordinates inside the left arrow region
+         ``FNB_RIGHT_ARROW``             5 Indicates mouse coordinates inside the right arrow region
+         ``FNB_DROP_DOWN_ARROW``         6 Indicates mouse coordinates inside the drop down arrow region
+         ========================= ======= =================================
+         
         """
 
         style = self.GetParent().GetWindowStyleFlag()
@@ -4279,7 +4975,11 @@ class PageContainer(wx.Panel):
 
 
     def SetSelection(self, page):
-        """ Sets the selected page. """
+        """
+        Sets the selected page.
+
+        :param `page`: an integer specifying the page index.
+        """
 
         book = self.GetParent()
         book.SetSelection(page)
@@ -4287,7 +4987,11 @@ class PageContainer(wx.Panel):
 
 
     def DoSetSelection(self, page):
-        """ Does the actual selection of a page. """
+        """
+        Does the actual selection of a page.
+
+        :param `page`: an integer specifying the page index.
+        """
 
         if page < len(self._pagesInfoVec):
             #! fix for tabfocus
@@ -4313,7 +5017,11 @@ class PageContainer(wx.Panel):
 
 
     def DeletePage(self, page):
-        """ Delete the specified page from L{FlatNotebook}. """
+        """
+        Delete the specified page from L{PageContainer}.
+
+        :param `page`: an integer specifying the page index.
+        """
 
         book = self.GetParent()
         book.DeletePage(page)
@@ -4321,14 +5029,22 @@ class PageContainer(wx.Panel):
 
 
     def IsTabVisible(self, page):
-        """ Returns whether a tab is visible or not. """
+        """
+        Returns whether a tab is visible or not.
+
+        :param `page`: an integer specifying the page index.
+        """
 
         iLastVisiblePage = self.GetLastVisibleTab()
         return page <= iLastVisiblePage and page >= self._nFrom
 
 
     def DoDeletePage(self, page):
-        """ Does the actual page deletion. """
+        """
+        Does the actual page deletion.
+
+        :param `page`: an integer specifying the page index.
+        """
 
         # Remove the page from the vector
         book = self.GetParent()
@@ -4373,7 +5089,7 @@ class PageContainer(wx.Panel):
         
 
     def DeleteAllPages(self):
-        """ Deletes all the pages. """
+        """ Deletes all the pages in the L{PageContainer}. """
 
         self._iActivePage = -1
         self._iPreviousActivePage = -1
@@ -4386,7 +5102,11 @@ class PageContainer(wx.Panel):
 
 
     def OnMouseMove(self, event):
-        """ Handles the wx.EVT_MOTION for L{PageContainer}. """
+        """
+        Handles the ``wx.EVT_MOTION`` event for L{PageContainer}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         if self._pagesInfoVec and self.IsShown():
         
@@ -4512,7 +5232,7 @@ class PageContainer(wx.Panel):
 
 
     def GetLastVisibleTab(self):
-        """ Returns the last visible tab. """
+        """ Returns the last visible tab in the tab area. """
 
         if self._nFrom < 0:
             return -1
@@ -4544,10 +5264,14 @@ class PageContainer(wx.Panel):
         return not res
 
 
-    def AdvanceSelection(self, bForward=True):
+    def AdvanceSelection(self, forward=True):
         """
         Cycles through the tabs.
-        The call to this function generates the page changing events.
+
+        :param `forward`: if ``True``, the selection is advanced in ascending order
+         (to the right), otherwise the selection is advanced in descending order.
+         
+        :note: The call to this function generates the page changing events.
         """
 
         nSel = self.GetSelection()
@@ -4557,7 +5281,7 @@ class PageContainer(wx.Panel):
 
         nMax = self.GetPageCount() - 1
         
-        if bForward:
+        if forward:
             newSelection = (nSel == nMax and [0] or [nSel + 1])[0]
         else:
             newSelection = (nSel == 0 and [nMax] or [nSel - 1])[0]
@@ -4569,7 +5293,11 @@ class PageContainer(wx.Panel):
 
 
     def OnMouseLeave(self, event):
-        """ Handles the wx.EVT_LEAVE_WINDOW event for L{PageContainer}. """
+        """
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{PageContainer}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         self._nLeftButtonStatus = FNB_BTN_NONE
         self._nXButtonStatus = FNB_BTN_NONE
@@ -4608,7 +5336,11 @@ class PageContainer(wx.Panel):
 
 
     def OnMouseEnterWindow(self, event):
-        """ Handles the wx.EVT_ENTER_WINDOW event for L{PageContainer}. """
+        """
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for L{PageContainer}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         self._nLeftButtonStatus = FNB_BTN_NONE
         self._nXButtonStatus = FNB_BTN_NONE
@@ -4620,7 +5352,11 @@ class PageContainer(wx.Panel):
 
 
     def ShowTabTooltip(self, tabIdx):
-        """ Shows a tab tooltip. """
+        """
+        Shows a tab tooltip.
+    
+        :param `tabIdx`: an integer specifying the page index.
+        """
 
         pWindow = self._pParent.GetPage(tabIdx)
         
@@ -4630,27 +5366,69 @@ class PageContainer(wx.Panel):
                 self.SetToolTipString(pToolTip.GetTip())
         
 
-    def SetPageImage(self, page, imgindex):
-        """ Sets the image index associated to a page. """
+    def SetPageImage(self, page, image):
+        """
+        Sets the image index for the given page.
+
+        :param `page`: an integer specifying the page index;
+        :param `image`: an index into the image list which was set with L{SetImageList}.
+        """
 
         if page < len(self._pagesInfoVec):
-        
-            self._pagesInfoVec[page].SetImageIndex(imgindex)
+            self._pagesInfoVec[page].SetImageIndex(image)
             self.Refresh()
 
 
     def GetPageImage(self, page):
-        """ Returns the image index associated to a page. """
+        """
+        Returns the image index associated to a page.
+
+        :param `page`: an integer specifying the page index.
+        """
 
         if page < len(self._pagesInfoVec):
-        
             return self._pagesInfoVec[page].GetImageIndex()
         
         return -1
 
 
+    def GetPageTextColour(self, page):
+        """
+        Returns the tab text colour if it has been set previously, or ``None`` otherwise.
+
+        :param `page`: an integer specifying the page index.
+        """
+
+        if page < len(self._pagesInfoVec):    
+            return self._pagesInfoVec[page].GetPageTextColour()
+
+        return None
+    
+
+    def SetPageTextColour(self, page, colour):
+        """
+        Sets the tab text colour individually.
+
+        :param `page`: an integer specifying the page index;
+        :param `colour`: an instance of `wx.Colour`. You can pass ``None`` or
+         `wx.NullColour` to return to the default page text colour.
+        """
+
+        if page < len(self._pagesInfoVec):
+            self._pagesInfoVec[page].SetPageTextColour(colour)
+            self.Refresh()
+
+
     def OnDropTarget(self, x, y, nTabPage, wnd_oldContainer):
-        """ Handles the drop action from a DND operation. """
+        """
+        Handles the drop action from a drag and drop operation.
+
+        :param `x`: the x position of the drop action;
+        :param `y`: the y position of the drop action;
+        :param `nTabPage`: the index of the tab being dropped;
+        :param `wnd_oldContainer`: the L{FlatNotebook} to which the dropped tab previously
+         belonged to.
+        """
 
         # Disable drag'n'drop for disabled tab
         if len(wnd_oldContainer._pagesInfoVec) > nTabPage and \
@@ -4724,7 +5502,12 @@ class PageContainer(wx.Panel):
 
 
     def MoveTabPage(self, nMove, nMoveTo):
-        """ Moves a tab inside the same L{FlatNotebook}. """
+        """
+        Moves a tab inside the same L{FlatNotebook}.
+
+        :param `nMove`: the start index of the moved tab;
+        :param `nMoveTo`: the destination index of the moved tab.
+        """
 
         if nMove == nMoveTo:
             return
@@ -4772,7 +5555,11 @@ class PageContainer(wx.Panel):
 
 
     def CanFitToScreen(self, page):
-        """ Returns wheter a tab can fit in the left space in the screen or not. """
+        """
+        Returns wheter a tab can fit in the left space in the screen or not.
+
+        :param `page`: an integer specifying the page index.
+        """
 
         # Incase the from is greater than page,
         # we need to reset the self._nFrom, so in order
@@ -4804,7 +5591,11 @@ class PageContainer(wx.Panel):
 
 
     def GetEnabled(self, page):
-        """ Returns whether a tab is enabled or not. """
+        """
+        Returns whether a tab is enabled or not.
+
+        :param `page`: an integer specifying the page index.
+        """
 
         if page >= len(self._pagesInfoVec):
             return True # Seems strange, but this is the default
@@ -4813,7 +5604,12 @@ class PageContainer(wx.Panel):
 
 
     def EnableTab(self, page, enabled=True):
-        """ Enables or disables a tab. """
+        """
+        Enables or disables a tab.
+
+        :param `page`: an integer specifying the page index;
+        :param `enabled`: ``True`` to enable a tab, ``False`` to disable it.
+        """
 
         if page >= len(self._pagesInfoVec):
             return
@@ -4825,13 +5621,20 @@ class PageContainer(wx.Panel):
         """ Returns the colour for the single line border. """
 
         if self.HasFlag(FNB_FANCY_TABS):
-            return self._colorFrom
+            return self._colourFrom
         
         return wx.WHITE
 
 
     def HasFlag(self, flag):
-        """ Returns whether a flag is present in the L{FlatNotebook} style. """
+        """
+        Returns whether a flag is present in the L{FlatNotebook} style.
+
+        :param `flag`: one of the possible L{FlatNotebook} window styles.
+
+        :see: L{FlatNotebook.SetWindowStyleFlag} for a list of possible window
+         style flags.
+        """
 
         style = self.GetParent().GetWindowStyleFlag()
         res = (style & flag and [True] or [False])[0]
@@ -4839,7 +5642,14 @@ class PageContainer(wx.Panel):
 
 
     def ClearFlag(self, flag):
-        """ Deletes a flag from the L{FlatNotebook} style. """
+        """
+        Deletes a flag from the L{FlatNotebook} style.
+
+        :param `flag`: one of the possible L{FlatNotebook} window styles.
+
+        :see: L{FlatNotebook.SetWindowStyleFlag} for a list of possible window
+         style flags.
+        """
 
         style = self.GetParent().GetWindowStyleFlag()
         style &= ~flag 
@@ -4847,7 +5657,11 @@ class PageContainer(wx.Panel):
 
 
     def TabHasImage(self, tabIdx):
-        """ Returns whether a tab has an associated image index or not. """
+        """
+        Returns whether a tab has an associated image index or not.
+
+        :param `tabIdx`: an integer specifying the page index.
+        """
 
         if self._ImageList:
             return self._pagesInfoVec[tabIdx].GetImageIndex() != -1
@@ -4856,7 +5670,11 @@ class PageContainer(wx.Panel):
 
 
     def OnLeftDClick(self, event):
-        """ Handles the wx.EVT_LEFT_DCLICK event for L{PageContainer}. """
+        """
+        Handles the ``wx.EVT_LEFT_DCLICK`` event for L{PageContainer}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         where, tabIdx = self.HitTest(event.GetPosition())
         
@@ -4879,7 +5697,11 @@ class PageContainer(wx.Panel):
         
 
     def OnSetFocus(self, event):
-        """ Handles the wx.EVT_SET_FOCUS event for L{PageContainer}. """
+        """
+        Handles the ``wx.EVT_SET_FOCUS`` event for L{PageContainer}.
+
+        :param `event`: a `wx.FocusEvent` event to be processed.
+        """
 
         if self._iActivePage < 0:
             event.Skip()
@@ -4889,16 +5711,25 @@ class PageContainer(wx.Panel):
 
 
     def OnKillFocus(self, event):
-        """ Handles the wx.EVT_KILL_FOCUS event for L{PageContainer}. """
+        """
+        Handles the ``wx.EVT_KILL_FOCUS`` event for L{PageContainer}.
+
+        :param `event`: a `wx.FocusEvent` event to be processed.
+        """
 
         self.SetFocusedPage()
 
 
     def OnKeyDown(self, event):
         """
-        When the PageContainer has the focus tabs can be changed with
-        the left/right arrow keys.
+        Handles the ``wx.EVT_KEY_DOWN`` event for L{PageContainer}.
+
+        :param `event`: a `wx.KeyEvent` event to be processed.
+
+        :note: When the L{PageContainer} has the focus tabs can be changed with
+         the left/right arrow keys.
         """
+        
         key = event.GetKeyCode()
         if key == wx.WXK_LEFT:
             self.GetParent().AdvanceSelection(False)
@@ -4918,7 +5749,9 @@ class PageContainer(wx.Panel):
     def SetFocusedPage(self, pageIndex=-1):
         """
         Sets/Unsets the focus on the appropriate page.
-        If pageIndex is defaulted, we have lost focus and no focus indicator is drawn.
+        
+        :param `pageIndex`: an integer specifying the page index. If `pageIndex`
+         is defaulted to -1, we have lost focus and no focus indicator is drawn.
         """
 
         for indx, page in enumerate(self._pagesInfoVec):
@@ -4952,7 +5785,11 @@ class PageContainer(wx.Panel):
 
 
     def OnTabMenuSelection(self, event):
-        """ Handles the wx.EVT_MENU event for L{PageContainer}. """
+        """
+        Handles the ``wx.EVT_MENU`` event for L{PageContainer}.
+
+        :param `event`: a `wx.MenuEvent` event to be processed.
+        """
 
         selection = event.GetId() - 1
         self.FireEvent(selection)
@@ -4960,9 +5797,12 @@ class PageContainer(wx.Panel):
 
     def FireEvent(self, selection):
         """
-        Fires the wxEVT_FLATNOTEBOOK_PAGE_CHANGING and wxEVT_FLATNOTEBOOK_PAGE_CHANGED events
-        called from other methods (from menu selection or Smart Tabbing).
-        Utility function.
+        Fires the ``EVT_FLATNOTEBOOK_PAGE_CHANGING`` and ``EVT_FLATNOTEBOOK_PAGE_CHANGED``
+        events called from other methods (from menu selection or `Smart Tabbing`).
+
+        This is an utility function.
+
+        :param `selection`: the new selection inside L{FlatNotebook}.        
         """
 
         if selection == self._iActivePage:
@@ -4989,13 +5829,21 @@ class PageContainer(wx.Panel):
             
 
     def SetImageList(self, imglist):
-        """ Sets the image list for the page control. """
+        """
+        Sets the image list for the L{PageContainer}.
+
+        :param `imageList`: an instance of `wx.ImageList`.
+        """
 
         self._ImageList = imglist
 
 
     def AssignImageList(self, imglist):
-        """ Assigns the image list for the page control. """
+        """
+        Assigns the image list for the L{PageContainer}.
+
+        :param `imageList`: an instance of `wx.ImageList`.
+        """
 
         self._ImageList = imglist
 
@@ -5019,7 +5867,12 @@ class PageContainer(wx.Panel):
 
 
     def GetPageText(self, page):
-        """ Returns the tab caption of the page. """
+        """
+        Returns the tab caption of the page.
+
+        :param `page`: an integer specifying the page index.
+        """
+        
         if page < len(self._pagesInfoVec):
             return self._pagesInfoVec[page].GetCaption() 
         else:
@@ -5027,7 +5880,13 @@ class PageContainer(wx.Panel):
 
 
     def SetPageText(self, page, text):
-        """ Sets the tab caption of the page. """
+        """
+        Sets the tab caption of the page.
+
+        :param `page`: an integer specifying the page index;
+        :param `text`: the new tab label.
+        """
+        
         if page < len(self._pagesInfoVec):
             self._pagesInfoVec[page].SetCaption(text)
             return True 
@@ -5052,9 +5911,9 @@ class PageContainer(wx.Panel):
 
 class FlatNotebookCompatible(FlatNotebook):
     """
-    This class is more compatible with the wx.Notebook API, especially regarding
-    page changing events. Use the SetSelection method if you wish to send page changing
-    events, or ChangeSelection otherwise.
+    This class is more compatible with the `wx.Notebook` API, especially regarding
+    page changing events. Use the L{FlatNotebookCompatible.SetSelection} method if you wish to send page
+    changing events, or L{FlatNotebookCompatible.ChangeSelection} otherwise.
     """
     
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
@@ -5062,9 +5921,40 @@ class FlatNotebookCompatible(FlatNotebook):
         """
         Default class constructor.
 
-        All the parameters are as in wxPython class construction, except the
-        'style': this can be assigned to whatever combination of FNB_* styles.
+        :param `parent`: the L{FlatNotebook} parent;
+        :param `id`: an identifier for the control: a value of -1 is taken to mean a default;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `style`: the window style. This can be a combination of the following bits:
+
+         ================================ =========== ==================================================
+         Window Styles                    Hex Value   Description
+         ================================ =========== ==================================================
+         ``FNB_VC71``                             0x1 Use Visual Studio 2003 (VC7.1) style for tabs.
+         ``FNB_FANCY_TABS``                       0x2 Use fancy style - square tabs filled with gradient colouring.
+         ``FNB_TABS_BORDER_SIMPLE``               0x4 Draw thin border around the page.
+         ``FNB_NO_X_BUTTON``                      0x8 Do not display the 'X' button.
+         ``FNB_NO_NAV_BUTTONS``                  0x10 Do not display the right/left arrows.
+         ``FNB_MOUSE_MIDDLE_CLOSES_TABS``        0x20 Use the mouse middle button for cloing tabs.
+         ``FNB_BOTTOM``                          0x40 Place tabs at bottom - the default is to place them at top.
+         ``FNB_NODRAG``                          0x80 Disable dragging of tabs.
+         ``FNB_VC8``                            0x100 Use Visual Studio 2005 (VC8) style for tabs.
+         ``FNB_X_ON_TAB``                       0x200 Place 'X' close button on the active tab.
+         ``FNB_BACKGROUND_GRADIENT``            0x400 Use gradients to paint the tabs background.
+         ``FNB_COLOURFUL_TABS``                 0x800 Use colourful tabs (VC8 style only).
+         ``FNB_DCLICK_CLOSES_TABS``            0x1000 Style to close tab using double click.
+         ``FNB_SMART_TABS``                    0x2000 Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows.
+         ``FNB_DROPDOWN_TABS_LIST``            0x4000 Use a dropdown menu on the left in place of the arrows.
+         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different FlatNotebooks.
+         ``FNB_HIDE_ON_SINGLE_TAB``           0x10000 Hides the Page Container when there is one or fewer tabs.
+         ``FNB_DEFAULT_STYLE``                0x10020 FlatNotebook default style.
+         ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
+         ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
+         ================================ =========== ==================================================
         
+        :param `name`: the window name. 
         """
 
         FlatNotebook.__init__(self, parent, id, pos, size, style, name)
@@ -5073,7 +5963,10 @@ class FlatNotebookCompatible(FlatNotebook):
     def SetSelection(self, page):
         """
         Sets the selection for the given page.
-        The call to this function *generates* the page changing events.
+
+        :param `page`: an integer specifying the new selected page.
+        
+        :note: The call to this function **generates** the page changing events.
         """
 
         if page >= len(self._windows) or not self._windows:
@@ -5089,7 +5982,10 @@ class FlatNotebookCompatible(FlatNotebook):
     def ChangeSelection(self, page):
         """
         Sets the selection for the given page.
-        The call to this function *does not* generate the page changing events.
+
+        :param `page`: an integer specifying the new selected page.
+        
+        :note: The call to this function **does not** generate the page changing events.
         """
 
         FlatNotebook.SetSelection(self, page)

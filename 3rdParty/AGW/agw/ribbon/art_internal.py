@@ -1,3 +1,7 @@
+"""
+This module contains methods used throughout the L{RibbonBar} library.
+"""
+
 import wx
 import math
 

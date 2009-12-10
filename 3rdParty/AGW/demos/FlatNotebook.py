@@ -33,9 +33,9 @@ MENU_SHOW_IMAGES = wx.NewId()
 MENU_USE_VC71_STYLE = wx.NewId()
 MENU_USE_DEFAULT_STYLE = wx.NewId()
 MENU_USE_FANCY_STYLE = wx.NewId()
-MENU_SELECT_GRADIENT_COLOR_FROM = wx.NewId()
-MENU_SELECT_GRADIENT_COLOR_TO = wx.NewId()
-MENU_SELECT_GRADIENT_COLOR_BORDER = wx.NewId()
+MENU_SELECT_GRADIENT_COLOUR_FROM = wx.NewId()
+MENU_SELECT_GRADIENT_COLOUR_TO = wx.NewId()
+MENU_SELECT_GRADIENT_COLOUR_BORDER = wx.NewId()
 MENU_SET_PAGE_IMAGE_INDEX = wx.NewId()
 MENU_HIDE_X = wx.NewId()
 MENU_HIDE_NAV_BUTTONS = wx.NewId()
@@ -51,13 +51,13 @@ MENU_USE_FF2_STYLE = wx.NewId()
 MENU_HIDE_ON_SINGLE_TAB = wx.NewId()
 MENU_NO_TABS_FOCUS = wx.NewId()
 
-MENU_SET_ACTIVE_TEXT_COLOR = wx.NewId()
+MENU_SET_ACTIVE_TEXT_COLOUR = wx.NewId()
 MENU_DRAW_TAB_X = wx.NewId()
-MENU_SET_ACTIVE_TAB_COLOR = wx.NewId()
-MENU_SET_TAB_AREA_COLOR = wx.NewId()
-MENU_SELECT_NONACTIVE_TEXT_COLOR = wx.NewId()
+MENU_SET_ACTIVE_TAB_COLOUR = wx.NewId()
+MENU_SET_TAB_AREA_COLOUR = wx.NewId()
+MENU_SELECT_NONACTIVE_TEXT_COLOUR = wx.NewId()
 MENU_GRADIENT_BACKGROUND = wx.NewId()
-MENU_COLORFUL_TABS = wx.NewId()
+MENU_COLOURFUL_TABS = wx.NewId()
 MENU_SMART_TABS = wx.NewId()
 MENU_USE_DROP_ARROW_BUTTON = wx.NewId()
 MENU_ALLOW_FOREIGN_DND = wx.NewId()
@@ -178,22 +178,22 @@ class FlatNotebookDemo(wx.Frame):
 
         self._visualMenu.AppendMenu(wx.ID_ANY, "Tabs Style", styleMenu)
 
-        item = wx.MenuItem(self._visualMenu, MENU_SELECT_GRADIENT_COLOR_FROM, "Select fancy tab style 'from' color",
-                           "Select fancy tab style 'from' color")
+        item = wx.MenuItem(self._visualMenu, MENU_SELECT_GRADIENT_COLOUR_FROM, "Select fancy tab style 'from' colour",
+                           "Select fancy tab style 'from' colour")
         self._visualMenu.AppendItem(item)
 
-        item = wx.MenuItem(self._visualMenu, MENU_SELECT_GRADIENT_COLOR_TO, "Select fancy tab style 'to' color",
-                           "Select fancy tab style 'to' color")
+        item = wx.MenuItem(self._visualMenu, MENU_SELECT_GRADIENT_COLOUR_TO, "Select fancy tab style 'to' colour",
+                           "Select fancy tab style 'to' colour")
         self._visualMenu.AppendItem(item)
 
-        item = wx.MenuItem(self._visualMenu, MENU_SELECT_GRADIENT_COLOR_BORDER, "Select fancy tab style 'border' color",
-                           "Select fancy tab style 'border' color")
+        item = wx.MenuItem(self._visualMenu, MENU_SELECT_GRADIENT_COLOUR_BORDER, "Select fancy tab style 'border' colour",
+                           "Select fancy tab style 'border' colour")
         self._visualMenu.AppendItem(item)
 
         self._editMenu.AppendSeparator()        
 
-        self.Bind(wx.EVT_MENU_RANGE, self.OnSelectColor, id=MENU_SELECT_GRADIENT_COLOR_FROM,
-                  id2=MENU_SELECT_GRADIENT_COLOR_BORDER)        
+        self.Bind(wx.EVT_MENU_RANGE, self.OnSelectColour, id=MENU_SELECT_GRADIENT_COLOUR_FROM,
+                  id2=MENU_SELECT_GRADIENT_COLOUR_BORDER)        
 
         item = wx.MenuItem(self._editMenu, MENU_HIDE_ON_SINGLE_TAB, "Hide Page Container when only one Tab",
                            "Hide Page Container when only one Tab", wx.ITEM_CHECK)
@@ -273,34 +273,34 @@ class FlatNotebookDemo(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnDrawTabX, item)
         self._visualMenu.AppendItem(item)
 
-        item = wx.MenuItem(self._visualMenu, MENU_SET_ACTIVE_TAB_COLOR, "Select Active Tab Color",
-                           "Select Active Tab Color")
-        self.Bind(wx.EVT_MENU, self.OnSelectColor, item)
+        item = wx.MenuItem(self._visualMenu, MENU_SET_ACTIVE_TAB_COLOUR, "Select Active Tab Colour",
+                           "Select Active Tab Colour")
+        self.Bind(wx.EVT_MENU, self.OnSelectColour, item)
         self._visualMenu.AppendItem(item)
 
-        item = wx.MenuItem(self._visualMenu, MENU_SET_TAB_AREA_COLOR, "Select Tab Area Color",
-                           "Select Tab Area Color")
-        self.Bind(wx.EVT_MENU, self.OnSelectColor, item)
+        item = wx.MenuItem(self._visualMenu, MENU_SET_TAB_AREA_COLOUR, "Select Tab Area Colour",
+                           "Select Tab Area Colour")
+        self.Bind(wx.EVT_MENU, self.OnSelectColour, item)
         self._visualMenu.AppendItem(item)
 
-        item = wx.MenuItem(self._visualMenu, MENU_SET_ACTIVE_TEXT_COLOR, "Select active tab text color",
-                           "Select active tab text color")
-        self.Bind(wx.EVT_MENU, self.OnSelectColor, item)
+        item = wx.MenuItem(self._visualMenu, MENU_SET_ACTIVE_TEXT_COLOUR, "Select active tab text colour",
+                           "Select active tab text colour")
+        self.Bind(wx.EVT_MENU, self.OnSelectColour, item)
         self._visualMenu.AppendItem(item)
 
-        item = wx.MenuItem(self._visualMenu, MENU_SELECT_NONACTIVE_TEXT_COLOR,
-                           "Select NON-active tab text color", "Select NON-active tab text color")
-        self.Bind(wx.EVT_MENU, self.OnSelectColor, item)
+        item = wx.MenuItem(self._visualMenu, MENU_SELECT_NONACTIVE_TEXT_COLOUR,
+                           "Select NON-active tab text colour", "Select NON-active tab text colour")
+        self.Bind(wx.EVT_MENU, self.OnSelectColour, item)
         self._visualMenu.AppendItem(item)
 
-        item = wx.MenuItem(self._visualMenu, MENU_GRADIENT_BACKGROUND, "Use Gradient Coloring for tab area",
-                           "Use Gradient Coloring for tab area", wx.ITEM_CHECK)
+        item = wx.MenuItem(self._visualMenu, MENU_GRADIENT_BACKGROUND, "Use Gradient Colouring for tab area",
+                           "Use Gradient Colouring for tab area", wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnGradientBack, item)
         self._visualMenu.AppendItem(item)
         item.Check(False)
 
-        item = wx.MenuItem(self._visualMenu, MENU_COLORFUL_TABS, "Colorful tabs", "Colorful tabs", wx.ITEM_CHECK)
-        self.Bind(wx.EVT_MENU, self.OnColorfulTabs, item)
+        item = wx.MenuItem(self._visualMenu, MENU_COLOURFUL_TABS, "Colourful tabs", "Colourful tabs", wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnColourfulTabs, item)
         self._visualMenu.AppendItem(item)
         item.Check(False)
 
@@ -530,30 +530,30 @@ class FlatNotebookDemo(wx.Frame):
         self.book.SetWindowStyleFlag(style)
 
 
-    def OnSelectColor(self, event):
+    def OnSelectColour(self, event):
 
         eventid = event.GetId()
 
-        # Open a color dialog
+        # Open a colour dialog
         data = wx.ColourData()
 
         dlg = wx.ColourDialog(self, data)
 
         if dlg.ShowModal() == wx.ID_OK:
 
-            if eventid == MENU_SELECT_GRADIENT_COLOR_BORDER:
+            if eventid == MENU_SELECT_GRADIENT_COLOUR_BORDER:
                 self.book.SetGradientColourBorder(dlg.GetColourData().GetColour())
-            elif eventid == MENU_SELECT_GRADIENT_COLOR_FROM:
+            elif eventid == MENU_SELECT_GRADIENT_COLOUR_FROM:
                 self.book.SetGradientColourFrom(dlg.GetColourData().GetColour())
-            elif eventid == MENU_SELECT_GRADIENT_COLOR_TO:
+            elif eventid == MENU_SELECT_GRADIENT_COLOUR_TO:
                 self.book.SetGradientColourTo(dlg.GetColourData().GetColour())
-            elif eventid == MENU_SET_ACTIVE_TEXT_COLOR:
+            elif eventid == MENU_SET_ACTIVE_TEXT_COLOUR:
                 self.book.SetActiveTabTextColour(dlg.GetColourData().GetColour())
-            elif eventid == MENU_SELECT_NONACTIVE_TEXT_COLOR:
+            elif eventid == MENU_SELECT_NONACTIVE_TEXT_COLOUR:
                 self.book.SetNonActiveTabTextColour(dlg.GetColourData().GetColour())
-            elif eventid == MENU_SET_ACTIVE_TAB_COLOR:
+            elif eventid == MENU_SET_ACTIVE_TAB_COLOUR:
                 self.book.SetActiveTabColour(dlg.GetColourData().GetColour())
-            elif eventid == MENU_SET_TAB_AREA_COLOR:
+            elif eventid == MENU_SET_TAB_AREA_COLOUR:
                 self.book.SetTabAreaColour(dlg.GetColourData().GetColour())
 
             self.book.Refresh()
@@ -728,13 +728,13 @@ class FlatNotebookDemo(wx.Frame):
         self.book.Refresh()
 
 
-    def OnColorfulTabs(self, event):
+    def OnColourfulTabs(self, event):
 
         style = self.book.GetWindowStyleFlag()
         if event.IsChecked():
-            style |= fnb.FNB_COLORFUL_TABS
+            style |= fnb.FNB_COLOURFUL_TABS
         else:
-            style &= ~(fnb.FNB_COLORFUL_TABS)
+            style &= ~(fnb.FNB_COLOURFUL_TABS)
 
         self.book.SetWindowStyleFlag(style)
         self.book.Refresh()

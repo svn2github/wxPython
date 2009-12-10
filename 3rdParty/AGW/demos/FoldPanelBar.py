@@ -240,15 +240,15 @@ class Extended(wx.Frame):
         self._pnl.AddFoldPanelWindow(item, wx.StaticText(item, -1, "Adjust The First Colour"),
                                      fpb.FPB_ALIGN_WIDTH, 5, 20) 
 
-        # RED color spin control
+        # RED colour spin control
         self._rslider1 = wx.Slider(item, -1, 0, 0, 255)
         self._pnl.AddFoldPanelWindow(item, self._rslider1, fpb.FPB_ALIGN_WIDTH, 2, 20) 
 
-        # GREEN color spin control
+        # GREEN colour spin control
         self._gslider1 = wx.Slider(item, -1, 0, 0, 255)
         self._pnl.AddFoldPanelWindow(item, self._gslider1, fpb.FPB_ALIGN_WIDTH, 0, 20) 
 
-        # BLUE color spin control
+        # BLUE colour spin control
         self._bslider1 = wx.Slider(item, -1, 0, 0, 255)
         self._pnl.AddFoldPanelWindow(item, self._bslider1, fpb.FPB_ALIGN_WIDTH,  0, 20) 
         
@@ -257,15 +257,15 @@ class Extended(wx.Frame):
         self._pnl.AddFoldPanelWindow(item, wx.StaticText(item, -1, "Adjust The Second Colour"),
                                      fpb.FPB_ALIGN_WIDTH, 5, 20) 
 
-        # RED color spin control
+        # RED colour spin control
         self._rslider2 = wx.Slider(item, -1, 0, 0, 255)
         self._pnl.AddFoldPanelWindow(item, self._rslider2, fpb.FPB_ALIGN_WIDTH, 2, 20) 
 
-        # GREEN color spin control
+        # GREEN colour spin control
         self._gslider2 = wx.Slider(item, -1, 0, 0, 255)
         self._pnl.AddFoldPanelWindow(item, self._gslider2, fpb.FPB_ALIGN_WIDTH, 0, 20) 
 
-        # BLUE color spin control
+        # BLUE colour spin control
         self._bslider2 = wx.Slider(item, -1, 0, 0, 255)
         self._pnl.AddFoldPanelWindow(item, self._bslider2, fpb.FPB_ALIGN_WIDTH, 0, 20) 
 

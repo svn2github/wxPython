@@ -13,12 +13,12 @@ this module returns the following information:
                        
 These meta data are merged into the wxPython demo tree at startup.
 
-Last updated: Andrea Gavana @ 18 November 2009, 22.00 GMT.
-Version 0.6.0.
+Last updated: Andrea Gavana @ 02 Dec 2009, 16.00 GMT.
+Version 0.7.0.
 
 """
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 
 
@@ -80,12 +80,13 @@ def GetRecentAdditions():
                            'FoldPanelBar', 'FourWaySplitter', 'GenericMessageDialog',
                            'GradientButton', 'HyperLinkCtrl', 'HyperTreeList',
                            'KnobCtrl', 'LabelBook', 'MultiDirDialog',
-                           'PeakMeter', 'PieCtrl', 'PyCollapsiblePane', 'PyProgress',
-                           'RibbonBar', 'RulerCtrl', 'ShapedButton', 'SpeedMeter',
-                           'SuperToolTip', 'ThumbnailCtrl', 'ToasterBox',
-                           'UltimateListCtrl']
+                           'PeakMeter', 'PieCtrl', 'PyBusyInfo', 'PyCollapsiblePane',
+                           'PyProgress', 'RibbonBar', 'RulerCtrl', 'ShapedButton',
+                           'SpeedMeter', 'SuperToolTip', 'ThumbnailCtrl', 'ToasterBox',
+                           'UltimateListCtrl', 'ZoomBar']
     else:
-        recentAdditions = ['AUI', 'RibbonBar', 'UltimateListCtrl']
+        recentAdditions = ['AUI', 'PyBusyInfo', 'RibbonBar', 'UltimateListCtrl',
+                           'ZoomBar']
 
     # Return the Recent Additions for AGW    
     return recentAdditions
@@ -107,10 +108,10 @@ def GetDemos():
                 'FoldPanelBar', 'FourWaySplitter', 'GenericMessageDialog',
                 'GradientButton', 'HyperLinkCtrl', 'HyperTreeList',
                 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
-                'PeakMeter', 'PieCtrl', 'PyCollapsiblePane', 'PyProgress',
-                'RibbonBar', 'RulerCtrl', 'ShapedButton', 'SpeedMeter',
-                'SuperToolTip', 'ThumbnailCtrl', 'ToasterBox',
-                'UltimateListCtrl']
+                'PeakMeter', 'PieCtrl', 'PyBusyInfo', 'PyCollapsiblePane',
+                'PyProgress', 'RibbonBar', 'RulerCtrl', 'ShapedButton',
+                'SpeedMeter', 'SuperToolTip', 'ThumbnailCtrl', 'ToasterBox',
+                'UltimateListCtrl', 'ZoomBar']
 
     return AGWTreeItem, AGWDemos
 
@@ -125,8 +126,11 @@ def GetOverview():
     wxPythonWidgets = ["wx.SplashScreen", "wx.ColourDialog", "wx.TreeCtrl", "wx.MenuBar",
                        "wx.Menu", "wx.ToolBar", "wx.Notebook", "wx.MessageDialog",
                        "wx.gizmos.TreeListCtrl", "wx.DirDialog", "wx.CollapsiblePane",
-                       "wx.ProgressDialog", "wx.TipWindow", "wx.lib", "wx.aui", 'wx.ListCtrl']
+                       "wx.ProgressDialog", "wx.TipWindow", "wx.lib", "wx.aui", "wx.ListCtrl",
+                       "wx.BusyInfo", "wx.Panel"]
 
+    _agwDocs = _agwDocs.replace("`", "").replace("L{", "").replace("}", "")
+    
     # Split the docs in many lines                       
     splitted = _agwDocs.split("\n")
     # Add the title

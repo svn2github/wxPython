@@ -66,9 +66,9 @@ MENU_CUT = 10010
 MENU_PASTE = 10011
 
 
-def switchRGBtoBGR(color):
+def switchRGBtoBGR(colour):
 
-    return wx.Colour(color.Blue(), color.Green(), color.Red())
+    return wx.Colour(colour.Blue(), colour.Green(), colour.Red())
 
 #------------------------------------------------------------
 # A custom renderer class for FlatMenu
@@ -85,18 +85,18 @@ class FM_MyRenderer(RendererBase):
     def DrawButton(self, dc, rect, state, useLightColours=True):
 
         if state == ControlFocus:
-            penColor = switchRGBtoBGR(ArtManager.Get().FrameColour())
-            brushColor = switchRGBtoBGR(ArtManager.Get().BackgroundColor())
+            penColour = switchRGBtoBGR(ArtManager.Get().FrameColour())
+            brushColour = switchRGBtoBGR(ArtManager.Get().BackgroundColour())
         elif state == ControlPressed:
-            penColor = switchRGBtoBGR(ArtManager.Get().FrameColour())
-            brushColor = switchRGBtoBGR(ArtManager.Get().HighlightBackgroundColor())
+            penColour = switchRGBtoBGR(ArtManager.Get().FrameColour())
+            brushColour = switchRGBtoBGR(ArtManager.Get().HighlightBackgroundColour())
         else:   # ControlNormal, ControlDisabled, default
-            penColor = switchRGBtoBGR(ArtManager.Get().FrameColour())
-            brushColor = switchRGBtoBGR(ArtManager.Get().BackgroundColor())
+            penColour = switchRGBtoBGR(ArtManager.Get().FrameColour())
+            brushColour = switchRGBtoBGR(ArtManager.Get().BackgroundColour())
 
         # Draw the button borders
-        dc.SetPen(wx.Pen(penColor))
-        dc.SetBrush(wx.Brush(brushColor))
+        dc.SetPen(wx.Pen(penColour))
+        dc.SetBrush(wx.Brush(brushColour))
         dc.DrawRoundedRectangle(rect.x, rect.y, rect.width, rect.height,4)
 
 
@@ -108,11 +108,11 @@ class FM_MyRenderer(RendererBase):
         dcsaver = DCSaver(dc)
 
         # fill with gradient
-        startColor = ArtManager.Get().GetMenuBarFaceColour()
-        endColor   = ArtManager.Get().LightColour(startColor, 90)
+        startColour = ArtManager.Get().GetMenuBarFaceColour()
+        endColour   = ArtManager.Get().LightColour(startColour, 90)
 
-        dc.SetPen(wx.Pen(endColor))
-        dc.SetBrush(wx.Brush(endColor))
+        dc.SetPen(wx.Pen(endColour))
+        dc.SetBrush(wx.Brush(endColour))
         dc.DrawRectangleRect(rect)
 
 
@@ -122,9 +122,9 @@ class FM_MyRenderer(RendererBase):
             return
 
         # fill with gradient
-        startColor = ArtManager.Get().GetMenuBarFaceColour()
-        dc.SetPen(wx.Pen(startColor))
-        dc.SetBrush(wx.Brush(startColor))
+        startColour = ArtManager.Get().GetMenuBarFaceColour()
+        dc.SetPen(wx.Pen(startColour))
+        dc.SetBrush(wx.Brush(startColour))
         dc.DrawRectangle(0, 0, rect.GetWidth(), rect.GetHeight())
 
 

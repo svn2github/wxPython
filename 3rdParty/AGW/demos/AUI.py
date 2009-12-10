@@ -338,16 +338,16 @@ ID_FirstNBPerspective = ID_CreateNBPerspective + 10000
 ID_PaneBorderSize = ID_SampleItem + 100
 ID_SashSize = ID_PaneBorderSize + 2
 ID_CaptionSize = ID_PaneBorderSize + 3
-ID_BackgroundColor = ID_PaneBorderSize + 4
-ID_SashColor = ID_PaneBorderSize + 5
-ID_InactiveCaptionColor = ID_PaneBorderSize + 6
-ID_InactiveCaptionGradientColor = ID_PaneBorderSize + 7
-ID_InactiveCaptionTextColor = ID_PaneBorderSize + 8
-ID_ActiveCaptionColor = ID_PaneBorderSize + 9
-ID_ActiveCaptionGradientColor = ID_PaneBorderSize + 10
-ID_ActiveCaptionTextColor = ID_PaneBorderSize + 11
-ID_BorderColor = ID_PaneBorderSize + 12
-ID_GripperColor = ID_PaneBorderSize + 13
+ID_BackgroundColour = ID_PaneBorderSize + 4
+ID_SashColour = ID_PaneBorderSize + 5
+ID_InactiveCaptionColour = ID_PaneBorderSize + 6
+ID_InactiveCaptionGradientColour = ID_PaneBorderSize + 7
+ID_InactiveCaptionTextColour = ID_PaneBorderSize + 8
+ID_ActiveCaptionColour = ID_PaneBorderSize + 9
+ID_ActiveCaptionGradientColour = ID_PaneBorderSize + 10
+ID_ActiveCaptionTextColour = ID_PaneBorderSize + 11
+ID_BorderColour = ID_PaneBorderSize + 12
+ID_GripperColour = ID_PaneBorderSize + 13
 ID_SashGrip = ID_PaneBorderSize + 14
 
 ID_VetoTree = ID_PaneBorderSize + 15
@@ -454,85 +454,85 @@ class SettingsPanel(wx.Panel):
         s3.Add((1, 1), 1, wx.EXPAND)
         s3.SetItemMinSize(1, (180, 20))
 
-        b = self.CreateColorBitmap(wx.BLACK)
+        b = self.CreateColourBitmap(wx.BLACK)
 
         s4 = wx.BoxSizer(wx.HORIZONTAL)
-        self._background_color = wx.BitmapButton(self, ID_BackgroundColor, b, wx.DefaultPosition, wx.Size(50, 25))
+        self._background_colour = wx.BitmapButton(self, ID_BackgroundColour, b, wx.DefaultPosition, wx.Size(50, 25))
         s4.Add((1, 1), 1, wx.EXPAND)
-        s4.Add(wx.StaticText(self, -1, "Background Color:"))
-        s4.Add(self._background_color)
+        s4.Add(wx.StaticText(self, -1, "Background Colour:"))
+        s4.Add(self._background_colour)
         s4.Add((1, 1), 1, wx.EXPAND)
         s4.SetItemMinSize(1, (180, 20))
 
         s5 = wx.BoxSizer(wx.HORIZONTAL)
-        self._sash_color = wx.BitmapButton(self, ID_SashColor, b, wx.DefaultPosition, wx.Size(50, 25))
+        self._sash_colour = wx.BitmapButton(self, ID_SashColour, b, wx.DefaultPosition, wx.Size(50, 25))
         s5.Add((1, 1), 1, wx.EXPAND)
-        s5.Add(wx.StaticText(self, -1, "Sash Color:"))
-        s5.Add(self._sash_color)
+        s5.Add(wx.StaticText(self, -1, "Sash Colour:"))
+        s5.Add(self._sash_colour)
         s5.Add((1, 1), 1, wx.EXPAND)
         s5.SetItemMinSize(1, (180, 20))
 
         s6 = wx.BoxSizer(wx.HORIZONTAL)
-        self._inactive_caption_color = wx.BitmapButton(self, ID_InactiveCaptionColor, b, wx.DefaultPosition, wx.Size(50, 25))
+        self._inactive_caption_colour = wx.BitmapButton(self, ID_InactiveCaptionColour, b, wx.DefaultPosition, wx.Size(50, 25))
         s6.Add((1, 1), 1, wx.EXPAND)
         s6.Add(wx.StaticText(self, -1, "Normal Caption:"))
-        s6.Add(self._inactive_caption_color)
+        s6.Add(self._inactive_caption_colour)
         s6.Add((1, 1), 1, wx.EXPAND)
         s6.SetItemMinSize(1, (180, 20))
 
         s7 = wx.BoxSizer(wx.HORIZONTAL)
-        self._inactive_caption_gradient_color = wx.BitmapButton(self, ID_InactiveCaptionGradientColor, b, wx.DefaultPosition, wx.Size(50, 25))
+        self._inactive_caption_gradient_colour = wx.BitmapButton(self, ID_InactiveCaptionGradientColour, b, wx.DefaultPosition, wx.Size(50, 25))
         s7.Add((1, 1), 1, wx.EXPAND)
         s7.Add(wx.StaticText(self, -1, "Normal Caption Gradient:"))
-        s7.Add(self._inactive_caption_gradient_color)
+        s7.Add(self._inactive_caption_gradient_colour)
         s7.Add((1, 1), 1, wx.EXPAND)
         s7.SetItemMinSize(1, (180, 20))
 
         s8 = wx.BoxSizer(wx.HORIZONTAL)
-        self._inactive_caption_text_color = wx.BitmapButton(self, ID_InactiveCaptionTextColor, b, wx.DefaultPosition, wx.Size(50, 25))
+        self._inactive_caption_text_colour = wx.BitmapButton(self, ID_InactiveCaptionTextColour, b, wx.DefaultPosition, wx.Size(50, 25))
         s8.Add((1, 1), 1, wx.EXPAND)
         s8.Add(wx.StaticText(self, -1, "Normal Caption Text:"))
-        s8.Add(self._inactive_caption_text_color)
+        s8.Add(self._inactive_caption_text_colour)
         s8.Add((1, 1), 1, wx.EXPAND)
         s8.SetItemMinSize(1, (180, 20))
 
         s9 = wx.BoxSizer(wx.HORIZONTAL)
-        self._active_caption_color = wx.BitmapButton(self, ID_ActiveCaptionColor, b, wx.DefaultPosition, wx.Size(50, 25))
+        self._active_caption_colour = wx.BitmapButton(self, ID_ActiveCaptionColour, b, wx.DefaultPosition, wx.Size(50, 25))
         s9.Add((1, 1), 1, wx.EXPAND)
         s9.Add(wx.StaticText(self, -1, "Active Caption:"))
-        s9.Add(self._active_caption_color)
+        s9.Add(self._active_caption_colour)
         s9.Add((1, 1), 1, wx.EXPAND)
         s9.SetItemMinSize(1, (180, 20))
 
         s10 = wx.BoxSizer(wx.HORIZONTAL)
-        self._active_caption_gradient_color = wx.BitmapButton(self, ID_ActiveCaptionGradientColor, b, wx.DefaultPosition, wx.Size(50, 25))
+        self._active_caption_gradient_colour = wx.BitmapButton(self, ID_ActiveCaptionGradientColour, b, wx.DefaultPosition, wx.Size(50, 25))
         s10.Add((1, 1), 1, wx.EXPAND)
         s10.Add(wx.StaticText(self, -1, "Active Caption Gradient:"))
-        s10.Add(self._active_caption_gradient_color)
+        s10.Add(self._active_caption_gradient_colour)
         s10.Add((1, 1), 1, wx.EXPAND)
         s10.SetItemMinSize(1, (180, 20))
 
         s11 = wx.BoxSizer(wx.HORIZONTAL)
-        self._active_caption_text_color = wx.BitmapButton(self, ID_ActiveCaptionTextColor, b, wx.DefaultPosition, wx.Size(50, 25))
+        self._active_caption_text_colour = wx.BitmapButton(self, ID_ActiveCaptionTextColour, b, wx.DefaultPosition, wx.Size(50, 25))
         s11.Add((1, 1), 1, wx.EXPAND)
         s11.Add(wx.StaticText(self, -1, "Active Caption Text:"))
-        s11.Add(self._active_caption_text_color)
+        s11.Add(self._active_caption_text_colour)
         s11.Add((1, 1), 1, wx.EXPAND)
         s11.SetItemMinSize(1, (180, 20))
 
         s12 = wx.BoxSizer(wx.HORIZONTAL)
-        self._border_color = wx.BitmapButton(self, ID_BorderColor, b, wx.DefaultPosition, wx.Size(50, 25))
+        self._border_colour = wx.BitmapButton(self, ID_BorderColour, b, wx.DefaultPosition, wx.Size(50, 25))
         s12.Add((1, 1), 1, wx.EXPAND)
-        s12.Add(wx.StaticText(self, -1, "Border Color:"))
-        s12.Add(self._border_color)
+        s12.Add(wx.StaticText(self, -1, "Border Colour:"))
+        s12.Add(self._border_colour)
         s12.Add((1, 1), 1, wx.EXPAND)
         s12.SetItemMinSize(1, (180, 20))
 
         s13 = wx.BoxSizer(wx.HORIZONTAL)
-        self._gripper_color = wx.BitmapButton(self, ID_GripperColor, b, wx.DefaultPosition, wx.Size(50,25))
+        self._gripper_colour = wx.BitmapButton(self, ID_GripperColour, b, wx.DefaultPosition, wx.Size(50,25))
         s13.Add((1, 1), 1, wx.EXPAND)
-        s13.Add(wx.StaticText(self, -1, "Gripper Color:"))
-        s13.Add(self._gripper_color)
+        s13.Add(wx.StaticText(self, -1, "Gripper Colour:"))
+        s13.Add(self._gripper_colour)
         s13.Add((1, 1), 1, wx.EXPAND)
         s13.SetItemMinSize(1, (180, 20))
         
@@ -572,25 +572,25 @@ class SettingsPanel(wx.Panel):
         self._caption_size.SetValue(frame.GetDockArt().GetMetric(aui.AUI_DOCKART_CAPTION_SIZE))
         self._sash_grip.SetValue(frame.GetDockArt().GetMetric(aui.AUI_DOCKART_DRAW_SASH_GRIP))
 
-        self.UpdateColors()
+        self.UpdateColours()
 
         self.Bind(wx.EVT_SPINCTRL, self.OnPaneBorderSize, id=ID_PaneBorderSize)
         self.Bind(wx.EVT_SPINCTRL, self.OnSashSize, id=ID_SashSize)
         self.Bind(wx.EVT_SPINCTRL, self.OnCaptionSize, id=ID_CaptionSize)
         self.Bind(wx.EVT_CHECKBOX, self.OnDrawSashGrip, id=ID_SashGrip)
-        self.Bind(wx.EVT_BUTTON, self.OnSetColor, id=ID_BackgroundColor)
-        self.Bind(wx.EVT_BUTTON, self.OnSetColor, id=ID_SashColor)
-        self.Bind(wx.EVT_BUTTON, self.OnSetColor, id=ID_InactiveCaptionColor)
-        self.Bind(wx.EVT_BUTTON, self.OnSetColor, id=ID_InactiveCaptionGradientColor)
-        self.Bind(wx.EVT_BUTTON, self.OnSetColor, id=ID_InactiveCaptionTextColor)
-        self.Bind(wx.EVT_BUTTON, self.OnSetColor, id=ID_ActiveCaptionColor)
-        self.Bind(wx.EVT_BUTTON, self.OnSetColor, id=ID_ActiveCaptionGradientColor)
-        self.Bind(wx.EVT_BUTTON, self.OnSetColor, id=ID_ActiveCaptionTextColor)
-        self.Bind(wx.EVT_BUTTON, self.OnSetColor, id=ID_BorderColor)
-        self.Bind(wx.EVT_BUTTON, self.OnSetColor, id=ID_GripperColor)
+        self.Bind(wx.EVT_BUTTON, self.OnSetColour, id=ID_BackgroundColour)
+        self.Bind(wx.EVT_BUTTON, self.OnSetColour, id=ID_SashColour)
+        self.Bind(wx.EVT_BUTTON, self.OnSetColour, id=ID_InactiveCaptionColour)
+        self.Bind(wx.EVT_BUTTON, self.OnSetColour, id=ID_InactiveCaptionGradientColour)
+        self.Bind(wx.EVT_BUTTON, self.OnSetColour, id=ID_InactiveCaptionTextColour)
+        self.Bind(wx.EVT_BUTTON, self.OnSetColour, id=ID_ActiveCaptionColour)
+        self.Bind(wx.EVT_BUTTON, self.OnSetColour, id=ID_ActiveCaptionGradientColour)
+        self.Bind(wx.EVT_BUTTON, self.OnSetColour, id=ID_ActiveCaptionTextColour)
+        self.Bind(wx.EVT_BUTTON, self.OnSetColour, id=ID_BorderColour)
+        self.Bind(wx.EVT_BUTTON, self.OnSetColour, id=ID_GripperColour)
         
 
-    def CreateColorBitmap(self, c):
+    def CreateColourBitmap(self, c):
     
         image = wx.EmptyImage(25, 14)
         for x in xrange(25):
@@ -604,37 +604,37 @@ class SettingsPanel(wx.Panel):
         return image.ConvertToBitmap()
     
 
-    def UpdateColors(self):
+    def UpdateColours(self):
     
-        bk = self._frame.GetDockArt().GetColor(aui.AUI_DOCKART_BACKGROUND_COLOUR)
-        self._background_color.SetBitmapLabel(self.CreateColorBitmap(bk))
+        bk = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_BACKGROUND_COLOUR)
+        self._background_colour.SetBitmapLabel(self.CreateColourBitmap(bk))
 
-        cap = self._frame.GetDockArt().GetColor(aui.AUI_DOCKART_INACTIVE_CAPTION_COLOUR)
-        self._inactive_caption_color.SetBitmapLabel(self.CreateColorBitmap(cap))
+        cap = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_INACTIVE_CAPTION_COLOUR)
+        self._inactive_caption_colour.SetBitmapLabel(self.CreateColourBitmap(cap))
 
-        capgrad = self._frame.GetDockArt().GetColor(aui.AUI_DOCKART_INACTIVE_CAPTION_GRADIENT_COLOUR)
-        self._inactive_caption_gradient_color.SetBitmapLabel(self.CreateColorBitmap(capgrad))
+        capgrad = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_INACTIVE_CAPTION_GRADIENT_COLOUR)
+        self._inactive_caption_gradient_colour.SetBitmapLabel(self.CreateColourBitmap(capgrad))
 
-        captxt = self._frame.GetDockArt().GetColor(aui.AUI_DOCKART_INACTIVE_CAPTION_TEXT_COLOUR)
-        self._inactive_caption_text_color.SetBitmapLabel(self.CreateColorBitmap(captxt))
+        captxt = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_INACTIVE_CAPTION_TEXT_COLOUR)
+        self._inactive_caption_text_colour.SetBitmapLabel(self.CreateColourBitmap(captxt))
 
-        acap = self._frame.GetDockArt().GetColor(aui.AUI_DOCKART_ACTIVE_CAPTION_COLOUR)
-        self._active_caption_color.SetBitmapLabel(self.CreateColorBitmap(acap))
+        acap = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_ACTIVE_CAPTION_COLOUR)
+        self._active_caption_colour.SetBitmapLabel(self.CreateColourBitmap(acap))
 
-        acapgrad = self._frame.GetDockArt().GetColor(aui.AUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR)
-        self._active_caption_gradient_color.SetBitmapLabel(self.CreateColorBitmap(acapgrad))
+        acapgrad = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR)
+        self._active_caption_gradient_colour.SetBitmapLabel(self.CreateColourBitmap(acapgrad))
 
-        acaptxt = self._frame.GetDockArt().GetColor(aui.AUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR)
-        self._active_caption_text_color.SetBitmapLabel(self.CreateColorBitmap(acaptxt))
+        acaptxt = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR)
+        self._active_caption_text_colour.SetBitmapLabel(self.CreateColourBitmap(acaptxt))
 
-        sash = self._frame.GetDockArt().GetColor(aui.AUI_DOCKART_SASH_COLOUR)
-        self._sash_color.SetBitmapLabel(self.CreateColorBitmap(sash))
+        sash = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_SASH_COLOUR)
+        self._sash_colour.SetBitmapLabel(self.CreateColourBitmap(sash))
 
-        border = self._frame.GetDockArt().GetColor(aui.AUI_DOCKART_BORDER_COLOUR)
-        self._border_color.SetBitmapLabel(self.CreateColorBitmap(border))
+        border = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_BORDER_COLOUR)
+        self._border_colour.SetBitmapLabel(self.CreateColourBitmap(border))
 
-        gripper = self._frame.GetDockArt().GetColor(aui.AUI_DOCKART_GRIPPER_COLOUR)
-        self._gripper_color.SetBitmapLabel(self.CreateColorBitmap(gripper))
+        gripper = self._frame.GetDockArt().GetColour(aui.AUI_DOCKART_GRIPPER_COLOUR)
+        self._gripper_colour.SetBitmapLabel(self.CreateColourBitmap(gripper))
     
 
     def OnPaneBorderSize(self, event):
@@ -665,41 +665,41 @@ class SettingsPanel(wx.Panel):
         self._frame.DoUpdate()
 
         
-    def OnSetColor(self, event):
+    def OnSetColour(self, event):
     
         dlg = wx.ColourDialog(self._frame)
-        dlg.SetTitle("Color Picker")
+        dlg.SetTitle("Colour Picker")
         
         if dlg.ShowModal() != wx.ID_OK:
             return
 
         evId = event.GetId()
-        if evId == ID_BackgroundColor:
+        if evId == ID_BackgroundColour:
             var = aui.AUI_DOCKART_BACKGROUND_COLOUR
-        elif evId == ID_SashColor:
+        elif evId == ID_SashColour:
             var = aui.AUI_DOCKART_SASH_COLOUR 
-        elif evId == ID_InactiveCaptionColor:
+        elif evId == ID_InactiveCaptionColour:
             var = aui.AUI_DOCKART_INACTIVE_CAPTION_COLOUR 
-        elif evId == ID_InactiveCaptionGradientColor:
+        elif evId == ID_InactiveCaptionGradientColour:
             var = aui.AUI_DOCKART_INACTIVE_CAPTION_GRADIENT_COLOUR 
-        elif evId == ID_InactiveCaptionTextColor:
+        elif evId == ID_InactiveCaptionTextColour:
             var = aui.AUI_DOCKART_INACTIVE_CAPTION_TEXT_COLOUR 
-        elif evId == ID_ActiveCaptionColor:
+        elif evId == ID_ActiveCaptionColour:
             var = aui.AUI_DOCKART_ACTIVE_CAPTION_COLOUR 
-        elif evId == ID_ActiveCaptionGradientColor:
+        elif evId == ID_ActiveCaptionGradientColour:
             var = aui.AUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR 
-        elif evId == ID_ActiveCaptionTextColor:
+        elif evId == ID_ActiveCaptionTextColour:
             var = aui.AUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR 
-        elif evId == ID_BorderColor:
+        elif evId == ID_BorderColour:
             var = aui.AUI_DOCKART_BORDER_COLOUR 
-        elif evId == ID_GripperColor:
+        elif evId == ID_GripperColour:
             var = aui.AUI_DOCKART_GRIPPER_COLOUR
         else:
             return
         
-        self._frame.GetDockArt().SetColor(var, dlg.GetColourData().GetColour())
+        self._frame.GetDockArt().SetColour(var, dlg.GetColourData().GetColour())
         self._frame.DoUpdate()
-        self.UpdateColors()
+        self.UpdateColours()
     
 
 # ---------------------------------------------------------------------------- #
@@ -770,24 +770,24 @@ class ProgressGauge(wx.PyWindow):
         dc.DrawRectangleRect(self.GetClientRect())
         
 
-    def LightColour(self, color, percent):
+    def LightColour(self, colour, percent):
         """
-        Return light contrast of color. The color returned is from the scale of
-        color -> white. The percent determines how light the color will be.
-        Percent = 100 return white, percent = 0 returns color.
+        Return light contrast of colour. The colour returned is from the scale of
+        colour -> white. The percent determines how light the colour will be.
+        Percent = 100 return white, percent = 0 returns colour.
         """
 
-        end_color = wx.WHITE
-        rd = end_color.Red() - color.Red()
-        gd = end_color.Green() - color.Green()
-        bd = end_color.Blue() - color.Blue()
+        end_colour = wx.WHITE
+        rd = end_colour.Red() - colour.Red()
+        gd = end_colour.Green() - colour.Green()
+        bd = end_colour.Blue() - colour.Blue()
         high = 100
 
-        # We take the percent way of the color from color -. white
+        # We take the percent way of the colour from colour -> white
         i = percent
-        r = color.Red() + ((i*rd*100)/high)/100
-        g = color.Green() + ((i*gd*100)/high)/100
-        b = color.Blue() + ((i*bd*100)/high)/100
+        r = colour.Red() + ((i*rd*100)/high)/100
+        g = colour.Green() + ((i*gd*100)/high)/100
+        b = colour.Blue() + ((i*bd*100)/high)/100
 
         return wx.Colour(r, g, b)
 

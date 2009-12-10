@@ -1,11 +1,11 @@
 """
 Tab art provider code - a tab provider provides all drawing functionality to
-the AuiNotebook. This allows the AuiNotebook to have a plugable look-and-feel.
+the L{AuiNotebook}. This allows the L{AuiNotebook} to have a plugable look-and-feel.
 
-By default, a AuiNotebook uses an instance of this class called AuiDefaultTabArt
+By default, a L{AuiNotebook} uses an instance of this class called L{AuiDefaultTabArt}
 which provides bitmap art and a colour scheme that is adapted to the major platforms'
 look. You can either derive from that class to alter its behaviour or write a
-completely new tab art class. Call AuiNotebook.SetArtProvider to make use this
+completely new tab art class. Call L{AuiNotebook.SetArtProvider} to make use this
 new tab art.
 """
 
@@ -47,37 +47,37 @@ class AuiCommandCapture(wx.PyEvtHandler):
         Processes an event, searching event tables and calling zero or more suitable
         event handler function(s).
 
-        :param `event`: Event to process.
+        :param `event`: the event to process.
 
-        @note: Normally, your application would not call this function: it is called
-        in the wxWidgets implementation to dispatch incoming  user interface events
-        to the framework (and application).
-        However, you might need to call it if implementing new functionality (such as
-        a new control) where you define new event types,  as opposed to allowing the
-        user to override  functions.
+        :note: Normally, your application would not call this function: it is called
+         in the wxPython implementation to dispatch incoming user interface events
+         to the framework (and application).
+         However, you might need to call it if implementing new functionality (such as
+         a new control) where you define new event types, as opposed to allowing the
+         user to override functions.
 
-        An instance where you might actually override the ProcessEvent function is where
-        you want to direct event  processing to event handlers not normally noticed by
-        wxWidgets. For example, in the document/view architecture, documents and  views
-        are potential event handlers. When an event reaches a frame, ProcessEvent will
-        need to be called on  the associated document and view in case event handler
-        functions are associated with these objects. 
+         An instance where you might actually override the L{ProcessEvent} function is where
+         you want to direct event processing to event handlers not normally noticed by
+         wxPython. For example, in the document/view architecture, documents and views
+         are potential event handlers. When an event reaches a frame, L{ProcessEvent} will
+         need to be called on the associated document and view in case event handler
+         functions are associated with these objects. 
 
-        The normal order of event table searching is as follows:
+         The normal order of event table searching is as follows:
 
-        1. If the object is disabled (via a call to SetEvtHandlerEnabled) the function
-           skips to step (6).
-        2. If the object is a wx.Window, ProcessEvent is recursively called on the window's 
-           wx.Validator. If this returns ``True``, the function exits.
-        3. wxWidgets SearchEventTable is called for this event handler. If this fails, the
-           base class table is tried,  and so on until no more tables exist or an appropriate
-           function was found, in which case the function exits.
-        4. The search is applied down the entire chain of event handlers (usually the chain
-           has a length of one). If this succeeds, the function exits.
-        5. If the object is a wx.Window and the event is a wx.CommandEvent, ProcessEvent is
-           recursively applied to the parent window's event handler. If this returns ``True``,
-           the function exits.
-        6. Finally, ProcessEvent is called on the wx.App object.
+         1. If the object is disabled (via a call to `SetEvtHandlerEnabled`) the function
+            skips to step (6).
+         2. If the object is a `wx.Window`, L{ProcessEvent} is recursively called on the window's 
+            `wx.Validator`. If this returns ``True``, the function exits.
+         3. wxWidgets `SearchEventTable` is called for this event handler. If this fails, the
+            base class table is tried, and so on until no more tables exist or an appropriate
+            function was found, in which case the function exits.
+         4. The search is applied down the entire chain of event handlers (usually the chain
+            has a length of one). If this succeeds, the function exits.
+         5. If the object is a `wx.Window` and the event is a `wx.CommandEvent`, L{ProcessEvent} is
+            recursively applied to the parent window's event handler. If this returns ``True``,
+            the function exits.
+         6. Finally, L{ProcessEvent} is called on the `wx.App` object.
         """
         
         if event.GetEventType() == wx.wxEVT_COMMAND_MENU_SELECTED:
@@ -93,12 +93,12 @@ class AuiCommandCapture(wx.PyEvtHandler):
 class AuiDefaultTabArt(object):
     """
     Tab art provider code - a tab provider provides all drawing functionality to
-    the AuiNotebook. This allows the AuiNotebook to have a plugable look-and-feel.
+    the L{AuiNotebook}. This allows the L{AuiNotebook} to have a plugable look-and-feel.
 
-    By default, a AuiNotebook uses an instance of this class called AuiDefaultTabArt
+    By default, a L{AuiNotebook} uses an instance of this class called L{AuiDefaultTabArt}
     which provides bitmap art and a colour scheme that is adapted to the major platforms'
     look. You can either derive from that class to alter its behaviour or write a
-    completely new tab art class. Call AuiNotebook.SetArtProvider to make use this
+    completely new tab art class. Call L{AuiNotebook.SetArtProvider} to make use this
     new tab art.
     """
     
@@ -144,7 +144,7 @@ class AuiDefaultTabArt(object):
         self._disabled_windowlist_bmp = BitmapFromBits(nb_list_bits, 16, 16, wx.Colour(128, 128, 128))
 
         if wx.Platform == "__WXMAC__":
-            # Get proper highlight color for focus rectangle from the
+            # Get proper highlight colour for focus rectangle from the
             # current Mac theme.  kThemeBrushFocusHighlight is
             # available on Mac OS 8.5 and higher
             if hasattr(wx, 'MacThemeColour'):
@@ -178,32 +178,32 @@ class AuiDefaultTabArt(object):
 
         :param `flags`: a combination of the following values:
 
-        ==================================== ==================================
-        Flag name                            Description
-        ==================================== ==================================
-        ``AUI_NB_TOP``                       With this style, tabs are drawn along the top of the notebook
-        ``AUI_NB_LEFT``                      With this style, tabs are drawn along the left of the notebook. Not implemented yet.
-        ``AUI_NB_RIGHT``                     With this style, tabs are drawn along the right of the notebook. Not implemented yet.
-        ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook.
-        ``AUI_NB_TAB_SPLIT``                 Allows the tab control to be split by dragging a tab
-        ``AUI_NB_TAB_MOVE``                  Allows a tab to be moved horizontally by dragging
-        ``AUI_NB_TAB_EXTERNAL_MOVE``         Allows a tab to be moved to another tab control
-        ``AUI_NB_TAB_FIXED_WIDTH``           With this style, all tabs have the same width
-        ``AUI_NB_SCROLL_BUTTONS``            With this style, left and right scroll buttons are displayed
-        ``AUI_NB_WINDOWLIST_BUTTON``         With this style, a drop-down list of windows is available
-        ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
-        ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
-        ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-        ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close AuiNotebook tabs by mouse middle button click
-        ``AUI_NB_SUB_NOTEBOOK``              This style is used by AuiManager to create automatic AuiNotebooks
-        ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
-        ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like Alt+Tab on Windows
-        ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
-        ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
-        ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
-        ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
-        ``AUI_NB_SASH_DCLICK_UNSPLIT``       Unsplit a splitted AuiNotebook when double-clicking on a sash.
-        ==================================== ==================================
+         ==================================== ==================================
+         Flag name                            Description
+         ==================================== ==================================
+         ``AUI_NB_TOP``                       With this style, tabs are drawn along the top of the notebook
+         ``AUI_NB_LEFT``                      With this style, tabs are drawn along the left of the notebook. Not implemented yet.
+         ``AUI_NB_RIGHT``                     With this style, tabs are drawn along the right of the notebook. Not implemented yet.
+         ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook.
+         ``AUI_NB_TAB_SPLIT``                 Allows the tab control to be split by dragging a tab
+         ``AUI_NB_TAB_MOVE``                  Allows a tab to be moved horizontally by dragging
+         ``AUI_NB_TAB_EXTERNAL_MOVE``         Allows a tab to be moved to another tab control
+         ``AUI_NB_TAB_FIXED_WIDTH``           With this style, all tabs have the same width
+         ``AUI_NB_SCROLL_BUTTONS``            With this style, left and right scroll buttons are displayed
+         ``AUI_NB_WINDOWLIST_BUTTON``         With this style, a drop-down list of windows is available
+         ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
+         ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
+         ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close AuiNotebook tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by AuiManager to create automatic AuiNotebooks
+         ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
+         ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt``+``Tab`` on Windows
+         ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
+         ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
+         ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
+         ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
+         ``AUI_NB_SASH_DCLICK_UNSPLIT``       Unsplit a splitted AuiNotebook when double-clicking on a sash.
+         ==================================== ==================================
         
         """
 
@@ -214,7 +214,7 @@ class AuiDefaultTabArt(object):
         """
         Returns the tab art flags.
 
-        See L{SetFlags} for a list of possible return values.
+        :see: L{SetFlags} for a list of possible return values.
         """
 
         return self._flags
@@ -257,8 +257,8 @@ class AuiDefaultTabArt(object):
         """
         Draws the tab area background.
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `rect`: the tab control rectangle.
         """
 
@@ -274,10 +274,10 @@ class AuiDefaultTabArt(object):
         else: #for AUI_NB_TOP
             r = wx.Rect(rect.x, rect.y, rect.width+2, rect.height-3)
 
-        top_color = StepColour(self._base_colour, 90)
-        bottom_color = StepColour(self._base_colour, 170)
+        top_colour = StepColour(self._base_colour, 90)
+        bottom_colour = StepColour(self._base_colour, 170)
 
-        dc.GradientFillLinear(r, top_color, bottom_color, wx.SOUTH)
+        dc.GradientFillLinear(r, top_colour, bottom_colour, wx.SOUTH)
 
         # draw base lines
 
@@ -286,7 +286,7 @@ class AuiDefaultTabArt(object):
         w = rect.GetWidth()
 
         if flags & AUI_NB_BOTTOM:
-            dc.SetBrush(wx.Brush(bottom_color))
+            dc.SetBrush(wx.Brush(bottom_colour))
             dc.DrawRectangle(-1, 0, w+2, 4)
 
         # TODO: else if (flags & AUI_NB_LEFT) 
@@ -301,12 +301,12 @@ class AuiDefaultTabArt(object):
         """
         Draws a single tab.
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `page`: the tab control page associated with the tab;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a L{wx.MemoryDC}.
+        :param `paint_control`: whether to draw the control inside a tab (if any) on a `wx.MemoryDC`.
         """
 
         # if the caption is empty, measure some temporary text
@@ -393,7 +393,7 @@ class AuiDefaultTabArt(object):
         
             # draw active tab
 
-            # draw base background color
+            # draw base background colour
             r = wx.Rect(tab_x, tab_y, tab_width, tab_height)
             dc.SetPen(self._base_colour_pen)
             dc.SetBrush(self._base_colour_brush)
@@ -417,9 +417,9 @@ class AuiDefaultTabArt(object):
             r.y -= 2
 
             # draw gradient background
-            top_color = wx.WHITE
-            bottom_color = self._base_colour
-            dc.GradientFillLinear(r, bottom_color, top_color, wx.NORTH)
+            top_colour = wx.WHITE
+            bottom_colour = self._base_colour
+            dc.GradientFillLinear(r, bottom_colour, top_colour, wx.NORTH)
         
         else:
         
@@ -437,17 +437,17 @@ class AuiDefaultTabArt(object):
             r.height -= 1
 
             # -- draw top gradient fill for glossy look
-            top_color = self._base_colour
-            bottom_color = StepColour(top_color, 160)
-            dc.GradientFillLinear(r, bottom_color, top_color, wx.NORTH)
+            top_colour = self._base_colour
+            bottom_colour = StepColour(top_colour, 160)
+            dc.GradientFillLinear(r, bottom_colour, top_colour, wx.NORTH)
 
             r.y += r.height
             r.y -= 1
 
             # -- draw bottom fill for glossy look
-            top_color = self._base_colour
-            bottom_color = self._base_colour
-            dc.GradientFillLinear(r, top_color, bottom_color, wx.SOUTH)
+            top_colour = self._base_colour
+            bottom_colour = self._base_colour
+            dc.GradientFillLinear(r, top_colour, bottom_colour, wx.SOUTH)
         
         # draw tab outline
         dc.SetPen(self._border_pen)
@@ -616,13 +616,13 @@ class AuiDefaultTabArt(object):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `caption`: the tab text caption;
         :param `bitmap`: the bitmap displayed on the tab;
         :param `active`: whether the tab is selected or not;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a wx.Window instance inside a tab (or ``None``).
+        :param `control`: a `wx.Window` instance inside a tab (or ``None``).
         """
 
         dc.SetFont(self._measuring_font)
@@ -662,8 +662,8 @@ class AuiDefaultTabArt(object):
         """
         Draws a button on the tab or on the tab area, depending on the button identifier. 
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `button`: an instance of the button class;
         :param `orientation`: the tab orientation.
@@ -738,9 +738,9 @@ class AuiDefaultTabArt(object):
         """
         Draws the focus rectangle on a tab.
 
-        :param `dc`: a wx.DC device context;
+        :param `dc`: a `wx.DC` device context;
         :param `page`: the page associated with the tab;
-        :param `wnd`: a wx.Window instance object;
+        :param `wnd`: a `wx.Window` instance object;
         :param `draw_text`: the text that has been drawn on the tab;
         :param `text_offset`: the text offset on the tab;
         :param `bitmap_offset`: the bitmap offset on the tab;
@@ -777,7 +777,7 @@ class AuiDefaultTabArt(object):
         """
         Returns the best tab control size.
 
-        :param `wnd`: a wx.Window instance object;
+        :param `wnd`: a `wx.Window` instance object;
         :param `pages`: the pages associated with the tabs;
         :param `required_bmp_size`: the size of the bitmap on the tabs.
         """
@@ -822,7 +822,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the normal font for drawing tab labels.
 
-        :param `font`: a wx.Font object.
+        :param `font`: a `wx.Font` object.
         """
 
         self._normal_font = font
@@ -832,7 +832,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the selected tab font for drawing tab labels.
 
-        :param `font`: a wx.Font object.
+        :param `font`: a `wx.Font` object.
         """
 
         self._selected_font = font
@@ -842,7 +842,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the font for calculating text measurements.
 
-        :param `font`: a wx.Font object.
+        :param `font`: a `wx.Font` object.
         """
 
         self._measuring_font = font
@@ -870,7 +870,7 @@ class AuiDefaultTabArt(object):
         """
         Shows the drop-down window menu on the tab area.
 
-        :param `wnd`: a wx.Window derived window instance;
+        :param `wnd`: a `wx.Window` derived window instance;
         :param `pages`: the pages associated with the tabs;
         :param `active_idx`: the active tab index.
         """
@@ -981,32 +981,32 @@ class AuiSimpleTabArt(object):
 
         :param `flags`: a combination of the following values:
 
-        ==================================== ==================================
-        Flag name                            Description
-        ==================================== ==================================
-        ``AUI_NB_TOP``                       With this style, tabs are drawn along the top of the notebook
-        ``AUI_NB_LEFT``                      With this style, tabs are drawn along the left of the notebook. Not implemented yet.
-        ``AUI_NB_RIGHT``                     With this style, tabs are drawn along the right of the notebook. Not implemented yet.
-        ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook.
-        ``AUI_NB_TAB_SPLIT``                 Allows the tab control to be split by dragging a tab
-        ``AUI_NB_TAB_MOVE``                  Allows a tab to be moved horizontally by dragging
-        ``AUI_NB_TAB_EXTERNAL_MOVE``         Allows a tab to be moved to another tab control
-        ``AUI_NB_TAB_FIXED_WIDTH``           With this style, all tabs have the same width
-        ``AUI_NB_SCROLL_BUTTONS``            With this style, left and right scroll buttons are displayed
-        ``AUI_NB_WINDOWLIST_BUTTON``         With this style, a drop-down list of windows is available
-        ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
-        ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
-        ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-        ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close AuiNotebook tabs by mouse middle button click
-        ``AUI_NB_SUB_NOTEBOOK``              This style is used by AuiManager to create automatic AuiNotebooks
-        ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
-        ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like Alt+Tab on Windows
-        ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
-        ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
-        ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
-        ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
-        ``AUI_NB_SASH_DCLICK_UNSPLIT``       Unsplit a splitted AuiNotebook when double-clicking on a sash.
-        ==================================== ==================================
+         ==================================== ==================================
+         Flag name                            Description
+         ==================================== ==================================
+         ``AUI_NB_TOP``                       With this style, tabs are drawn along the top of the notebook
+         ``AUI_NB_LEFT``                      With this style, tabs are drawn along the left of the notebook. Not implemented yet.
+         ``AUI_NB_RIGHT``                     With this style, tabs are drawn along the right of the notebook. Not implemented yet.
+         ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook.
+         ``AUI_NB_TAB_SPLIT``                 Allows the tab control to be split by dragging a tab
+         ``AUI_NB_TAB_MOVE``                  Allows a tab to be moved horizontally by dragging
+         ``AUI_NB_TAB_EXTERNAL_MOVE``         Allows a tab to be moved to another tab control
+         ``AUI_NB_TAB_FIXED_WIDTH``           With this style, all tabs have the same width
+         ``AUI_NB_SCROLL_BUTTONS``            With this style, left and right scroll buttons are displayed
+         ``AUI_NB_WINDOWLIST_BUTTON``         With this style, a drop-down list of windows is available
+         ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
+         ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
+         ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close AuiNotebook tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by AuiManager to create automatic AuiNotebooks
+         ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
+         ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt``+``Tab`` on Windows
+         ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
+         ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
+         ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
+         ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
+         ``AUI_NB_SASH_DCLICK_UNSPLIT``       Unsplit a splitted AuiNotebook when double-clicking on a sash.
+         ==================================== ==================================
         
         """
 
@@ -1017,7 +1017,7 @@ class AuiSimpleTabArt(object):
         """
         Returns the tab art flags.
 
-        See L{SetFlags} for a list of possible return values.
+        :see: L{SetFlags} for a list of possible return values.
         """
 
         return self._flags
@@ -1059,8 +1059,8 @@ class AuiSimpleTabArt(object):
         """
         Draws the tab area background.
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `rect`: the tab control rectangle.
         """
         
@@ -1078,12 +1078,12 @@ class AuiSimpleTabArt(object):
         """
         Draws a single tab.
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `page`: the tab control page associated with the tab;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a L{wx.MemoryDC}.
+        :param `paint_control`: whether to draw the control inside a tab (if any) on a `wx.MemoryDC`.
         """
         
         # if the caption is empty, measure some temporary text
@@ -1257,7 +1257,7 @@ class AuiSimpleTabArt(object):
         """
         Convenience method to draw tab buttons.
 
-        :param `dc`: a wx.DC device context;
+        :param `dc`: a `wx.DC` device context;
         :param `_rect`: the tab rectangle;
         :param `bmp`: the tab bitmap;
         :param `bkcolour`: the tab background colour;
@@ -1291,13 +1291,13 @@ class AuiSimpleTabArt(object):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `caption`: the tab text caption;
         :param `bitmap`: the bitmap displayed on the tab;
         :param `active`: whether the tab is selected or not;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a wx.Window instance inside a tab (or ``None``).
+        :param `control`: a `wx.Window` instance inside a tab (or ``None``).
         """
         
         dc.SetFont(self._measuring_font)
@@ -1325,8 +1325,8 @@ class AuiSimpleTabArt(object):
         """
         Draws a button on the tab or on the tab area, depending on the button identifier. 
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `button`: an instance of the button class;
         :param `orientation`: the tab orientation.
@@ -1392,7 +1392,7 @@ class AuiSimpleTabArt(object):
         """
         Shows the drop-down window menu on the tab area.
 
-        :param `wnd`: a wx.Window derived window instance;
+        :param `wnd`: a `wx.Window` derived window instance;
         :param `pages`: the pages associated with the tabs;
         :param `active_idx`: the active tab index.
         """
@@ -1449,7 +1449,7 @@ class AuiSimpleTabArt(object):
         """
         Returns the best tab control size.
 
-        :param `wnd`: a wx.Window instance object;
+        :param `wnd`: a `wx.Window` instance object;
         :param `pages`: the pages associated with the tabs;
         :param `required_bmp_size`: the size of the bitmap on the tabs.
         """
@@ -1476,7 +1476,7 @@ class AuiSimpleTabArt(object):
         """
         Sets the normal font for drawing tab labels.
 
-        :param `font`: a wx.Font object.
+        :param `font`: a `wx.Font` object.
         """
         
         self._normal_font = font
@@ -1486,7 +1486,7 @@ class AuiSimpleTabArt(object):
         """
         Sets the selected tab font for drawing tab labels.
 
-        :param `font`: a wx.Font object.
+        :param `font`: a `wx.Font` object.
         """
         
         self._selected_font = font
@@ -1496,7 +1496,7 @@ class AuiSimpleTabArt(object):
         """
         Sets the font for calculating text measurements.
 
-        :param `font`: a wx.Font object.
+        :param `font`: a `wx.Font` object.
         """
         
         self._measuring_font = font
@@ -1588,12 +1588,12 @@ class VC71TabArt(AuiDefaultTabArt):
         """
         Draws a single tab.
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `page`: the tab control page associated with the tab;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a L{wx.MemoryDC}.
+        :param `paint_control`: whether to draw the control inside a tab (if any) on a `wx.MemoryDC`.
         """
         
         # Visual studio 7.1 style
@@ -1807,13 +1807,13 @@ class FF2TabArt(AuiDefaultTabArt):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `caption`: the tab text caption;
         :param `bitmap`: the bitmap displayed on the tab;
         :param `active`: whether the tab is selected or not;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a wx.Window instance inside a tab (or ``None``).
+        :param `control`: a `wx.Window` instance inside a tab (or ``None``).
         """
         
         tab_size, x_extent = AuiDefaultTabArt.GetTabSize(self, dc, wnd, caption, bitmap,
@@ -1831,12 +1831,12 @@ class FF2TabArt(AuiDefaultTabArt):
         """
         Draws a single tab.
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `page`: the tab control page associated with the tab;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a L{wx.MemoryDC}.
+        :param `paint_control`: whether to draw the control inside a tab (if any) on a `wx.MemoryDC`.
         """
         
         # Firefox 2 style
@@ -2020,9 +2020,9 @@ class FF2TabArt(AuiDefaultTabArt):
     def DrawTabBackground(self, dc, rect, focus, upperTabs):
         """
         Draws the tab background for the Firefox 2 style.
-        This is more consistent with L{wx.lib.agw.flatnotebook} than before.
+        This is more consistent with L{FlatNotebook} than before.
 
-        :param `dc`: a wx.DC device context;
+        :param `dc`: a `wx.DC` device context;
         :param `rect`: rectangle the tab should be confined to;
         :param `focus`: whether the tab has focus or not;
         :param `upperTabs`: whether the style is ``AUI_NB_TOP`` or ``AUI_NB_BOTTOM``.
@@ -2047,31 +2047,31 @@ class FF2TabArt(AuiDefaultTabArt):
         top = wx.RectPP(rect.GetTopLeft(), rightPt)
         bottom = wx.RectPP(leftPt, rect.GetBottomRight())
 
-        topStartColor = wx.WHITE
+        topStartColour = wx.WHITE
 
         if not focus:
-            topStartColor = LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE), 50)
+            topStartColour = LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE), 50)
 
-        topEndColor = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
-        bottomStartColor = topEndColor
-        bottomEndColor = topEndColor
+        topEndColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
+        bottomStartColour = topEndColour
+        bottomEndColour = topEndColour
 
-        # Incase we use bottom tabs, switch the colors
+        # Incase we use bottom tabs, switch the colours
         if upperTabs:
             if focus:
-                dc.GradientFillLinear(top, topStartColor, topEndColor, wx.SOUTH)
-                dc.GradientFillLinear(bottom, bottomStartColor, bottomEndColor, wx.SOUTH)
+                dc.GradientFillLinear(top, topStartColour, topEndColour, wx.SOUTH)
+                dc.GradientFillLinear(bottom, bottomStartColour, bottomEndColour, wx.SOUTH)
             else:
-                dc.GradientFillLinear(top, topEndColor , topStartColor, wx.SOUTH)
-                dc.GradientFillLinear(bottom, bottomStartColor, bottomEndColor, wx.SOUTH)
+                dc.GradientFillLinear(top, topEndColour , topStartColour, wx.SOUTH)
+                dc.GradientFillLinear(bottom, bottomStartColour, bottomEndColour, wx.SOUTH)
 
         else:
             if focus:
-                dc.GradientFillLinear(bottom, topEndColor, bottomEndColor, wx.SOUTH)
-                dc.GradientFillLinear(top, topStartColor, topStartColor, wx.SOUTH)
+                dc.GradientFillLinear(bottom, topEndColour, bottomEndColour, wx.SOUTH)
+                dc.GradientFillLinear(top, topStartColour, topStartColour, wx.SOUTH)
             else:
-                dc.GradientFillLinear(bottom, bottomStartColor, bottomEndColor, wx.SOUTH)
-                dc.GradientFillLinear(top, topEndColor, topStartColor, wx.SOUTH)
+                dc.GradientFillLinear(bottom, bottomStartColour, bottomEndColour, wx.SOUTH)
+                dc.GradientFillLinear(top, topEndColour, topStartColour, wx.SOUTH)
         
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -2113,13 +2113,13 @@ class VC8TabArt(AuiDefaultTabArt):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `caption`: the tab text caption;
         :param `bitmap`: the bitmap displayed on the tab;
         :param `active`: whether the tab is selected or not;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a wx.Window instance inside a tab (or ``None``).
+        :param `control`: a `wx.Window` instance inside a tab (or ``None``).
         """
         
         tab_size, x_extent = AuiDefaultTabArt.GetTabSize(self, dc, wnd, caption, bitmap,
@@ -2138,12 +2138,12 @@ class VC8TabArt(AuiDefaultTabArt):
         """
         Draws a single tab.
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `page`: the tab control page associated with the tab;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a L{wx.MemoryDC}.
+        :param `paint_control`: whether to draw the control inside a tab (if any) on a `wx.MemoryDC`.
         """
         
         # Visual Studio 8 style
@@ -2347,8 +2347,8 @@ class VC8TabArt(AuiDefaultTabArt):
         """
         Fills the tab with the Visual Studio 2005 gradient background.
 
-        :param `dc`: a wx.DC device context;
-        :param `tabPoints`: a list of wx.Point objects describing the tab shape;
+        :param `dc`: a `wx.DC` device context;
+        :param `tabPoints`: a list of `wx.Point` objects describing the tab shape;
         :param `active`: whether the tab is selected or not.
         """
 
@@ -2368,12 +2368,12 @@ class VC8TabArt(AuiDefaultTabArt):
         dc.SetClippingRegionAsRegion(region)
 
         if active:
-            bottom_color = top_color = wx.WHITE
+            bottom_colour = top_colour = wx.WHITE
         else:
-            bottom_color = StepColour(self._base_colour, 90)
-            top_color = StepColour(self._base_colour, 170)
+            bottom_colour = StepColour(self._base_colour, 90)
+            top_colour = StepColour(self._base_colour, 170)
 
-        dc.GradientFillLinear(rect, top_color, bottom_color, wx.SOUTH)
+        dc.GradientFillLinear(rect, top_colour, bottom_colour, wx.SOUTH)
         dc.DestroyClippingRegion()
         
 
@@ -2401,7 +2401,40 @@ class ChromeTabArt(AuiDefaultTabArt):
         
 
     def SetFlags(self, flags):
-        """ Overridden from L{AuiDefaultTabArt}. """
+        """
+        Sets the tab art flags.
+
+        :param `flags`: a combination of the following values:
+
+         ==================================== ==================================
+         Flag name                            Description
+         ==================================== ==================================
+         ``AUI_NB_TOP``                       With this style, tabs are drawn along the top of the notebook
+         ``AUI_NB_LEFT``                      With this style, tabs are drawn along the left of the notebook. Not implemented yet.
+         ``AUI_NB_RIGHT``                     With this style, tabs are drawn along the right of the notebook. Not implemented yet.
+         ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook.
+         ``AUI_NB_TAB_SPLIT``                 Allows the tab control to be split by dragging a tab
+         ``AUI_NB_TAB_MOVE``                  Allows a tab to be moved horizontally by dragging
+         ``AUI_NB_TAB_EXTERNAL_MOVE``         Allows a tab to be moved to another tab control
+         ``AUI_NB_TAB_FIXED_WIDTH``           With this style, all tabs have the same width
+         ``AUI_NB_SCROLL_BUTTONS``            With this style, left and right scroll buttons are displayed
+         ``AUI_NB_WINDOWLIST_BUTTON``         With this style, a drop-down list of windows is available
+         ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
+         ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
+         ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close AuiNotebook tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by AuiManager to create automatic AuiNotebooks
+         ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
+         ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt``+``Tab`` on Windows
+         ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
+         ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
+         ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
+         ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
+         ``AUI_NB_SASH_DCLICK_UNSPLIT``       Unsplit a splitted AuiNotebook when double-clicking on a sash.
+         ==================================== ==================================
+
+        :note: Overridden from L{AuiDefaultTabArt}.
+        """
 
         if flags & AUI_NB_TOP:
             self.SetBitmaps(mirror=False)
@@ -2464,13 +2497,13 @@ class ChromeTabArt(AuiDefaultTabArt):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `caption`: the tab text caption;
         :param `bitmap`: the bitmap displayed on the tab;
         :param `active`: whether the tab is selected or not;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a wx.Window instance inside a tab (or ``None``).
+        :param `control`: a `wx.Window` instance inside a tab (or ``None``).
         """
         
         tab_size, x_extent = AuiDefaultTabArt.GetTabSize(self, dc, wnd, caption, bitmap,
@@ -2491,12 +2524,12 @@ class ChromeTabArt(AuiDefaultTabArt):
         """
         Draws a single tab.
 
-        :param `dc`: a wx.DC device context;
-        :param `wnd`: a wx.Window instance object;
+        :param `dc`: a `wx.DC` device context;
+        :param `wnd`: a `wx.Window` instance object;
         :param `page`: the tab control page associated with the tab;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a L{wx.MemoryDC}.
+        :param `paint_control`: whether to draw the control inside a tab (if any) on a `wx.MemoryDC`.
         """
         
         # Chrome tab style

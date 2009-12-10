@@ -352,29 +352,29 @@ class LabelBookDemo(wx.Frame):
         colour = event.GetValue()
 
         if obj == self.background.GetId():
-            self.book.SetColour(INB_TAB_AREA_BACKGROUND_COLOR, colour)
+            self.book.SetColour(INB_TAB_AREA_BACKGROUND_COLOUR, colour)
         elif obj == self.activetab.GetId():
-            self.book.SetColour(INB_ACTIVE_TAB_COLOR, colour)
+            self.book.SetColour(INB_ACTIVE_TAB_COLOUR, colour)
         elif obj == self.tabsborder.GetId():
-            self.book.SetColour(INB_TABS_BORDER_COLOR, colour)
+            self.book.SetColour(INB_TABS_BORDER_COLOUR, colour)
         elif obj == self.textcolour.GetId():
-            self.book.SetColour(INB_TEXT_COLOR, colour)
+            self.book.SetColour(INB_TEXT_COLOUR, colour)
         elif obj == self.activetextcolour.GetId():
-            self.book.SetColour(INB_ACTIVE_TEXT_COLOR, colour)
+            self.book.SetColour(INB_ACTIVE_TEXT_COLOUR, colour)
         else:
-            self.book.SetColour(INB_HILITE_TAB_COLOR, colour)
+            self.book.SetColour(INB_HILITE_TAB_COLOUR, colour)
 
         self.book.Refresh()
 
 
     def SetUserColours(self):
 
-        self.book.SetColour(INB_TAB_AREA_BACKGROUND_COLOR, self.background.GetColour())
-        self.book.SetColour(INB_ACTIVE_TAB_COLOR, self.activetab.GetColour())
-        self.book.SetColour(INB_TABS_BORDER_COLOR, self.tabsborder.GetColour())
-        self.book.SetColour(INB_TEXT_COLOR, self.textcolour.GetColour())
-        self.book.SetColour(INB_ACTIVE_TEXT_COLOR, self.activetextcolour.GetColour())
-        self.book.SetColour(INB_HILITE_TAB_COLOR, self.hilite.GetColour())
+        self.book.SetColour(INB_TAB_AREA_BACKGROUND_COLOUR, self.background.GetColour())
+        self.book.SetColour(INB_ACTIVE_TAB_COLOUR, self.activetab.GetColour())
+        self.book.SetColour(INB_TABS_BORDER_COLOUR, self.tabsborder.GetColour())
+        self.book.SetColour(INB_TEXT_COLOUR, self.textcolour.GetColour())
+        self.book.SetColour(INB_ACTIVE_TEXT_COLOUR, self.activetextcolour.GetColour())
+        self.book.SetColour(INB_HILITE_TAB_COLOUR, self.hilite.GetColour())
 
 
     def OnPageChanging(self, event):

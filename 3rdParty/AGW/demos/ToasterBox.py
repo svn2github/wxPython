@@ -133,13 +133,13 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
 
         horSz5 = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz5, 1, wx.EXPAND | wx.ALL, 5)
-        self.colButton1 = wx.Button(self, -1, "Set BG Color")
+        self.colButton1 = wx.Button(self, -1, "Set BG Colour")
         self.colButton1.SetToolTip(wx.ToolTip("Set the ToasterBox background colour"))
-        self.colButton1.Bind(wx.EVT_BUTTON, self.SetColors)
+        self.colButton1.Bind(wx.EVT_BUTTON, self.SetColours)
         horSz5.Add(self.colButton1, 1, 0, 5)
-        self.colButton2 = wx.Button(self, -1, "Set FG Color")
+        self.colButton2 = wx.Button(self, -1, "Set FG Colour")
         self.colButton2.SetToolTip(wx.ToolTip("Set the ToasterBox text colour"))
-        self.colButton2.Bind(wx.EVT_BUTTON, self.SetColors2)
+        self.colButton2.Bind(wx.EVT_BUTTON, self.SetColours2)
         horSz5.Add(self.colButton2, 1, 0, 5)
 
         horSz6 = wx.BoxSizer(wx.HORIZONTAL)
@@ -189,7 +189,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         self.SetupScrolling()
 
 
-    def SetColors(self, event):
+    def SetColours(self, event):
         
         cd = wx.ColourDialog(self)
         cd.ShowModal()
@@ -198,7 +198,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         colButton1.SetBackgroundColour(colBg)  
 
 
-    def SetColors2(self, event):
+    def SetColours2(self, event):
         
         cd = wx.ColourDialog(self)
         cd.ShowModal()
@@ -317,8 +317,8 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
 
     def RunSimpleDemo(self, tb):
 
-        tb.SetPopupBackgroundColor(self.colButton1.GetBackgroundColour())
-        tb.SetPopupTextColor(self.colButton2.GetBackgroundColour())
+        tb.SetPopupBackgroundColour(self.colButton1.GetBackgroundColour())
+        tb.SetPopupTextColour(self.colButton2.GetBackgroundColour())
         bmp = self.backimage.GetPath()
         dummybmp = wx.NullBitmap
         

@@ -4,7 +4,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Aug 2007
-# Latest Revision: 29 May 2009, 09.00 GMT
+# Latest Revision: 24 Nov 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -28,39 +28,39 @@
 # --------------------------------------------------------------------------- #
 
 """
-CubeColourDialog is an alternative implementation of wx.ColourDialog.
+CubeColourDialog is an alternative implementation of `wx.ColourDialog`.
 
 
 Description
 ===========
 
-The CubeColourDialog is an alternative implementation of wx.ColourDialog, and it
+The CubeColourDialog is an alternative implementation of `wx.ColourDialog`, and it
 offers different functionalities with respect to the default wxPython one. It
-can be used as a replacement of wx.ColourDialog with exactly the same syntax and
+can be used as a replacement of `wx.ColourDialog` with exactly the same syntax and
 methods.
 
 Some features:
 
-  - RGB components may be controlled using spin controls or with mouse gestures
-    on a 3D RGB cube, with the 3 components laying on the X, Y, Z axes;
-  - HSB components may be controlled using spin controls or with mouse gestures
-    on a 2D colour wheel;
-  - Brightness has its own vertical slider to play with;
-  - The colour alpha channel can be controlled using another vertical slider, or
-    via spin control;
-  - The colour alpha channel controls can be completely hidden at startup or the
-    choice to use the alpha channel can be left to the user while playing with the
-    dialog, via a simple wx.CheckBox;
-  - The "old colour" and "new colour" are displayed in two small custom panel,
-    which support alpha transparency and texture;
-  - CubeColourDialog displays also the HTML colour code in hexadecimal format;
-  - When available, a corresponding "Web Safe" colour is generated using a 500
-    web colours "database" (a dictionary inside the widget source code). Web Safe
-    colours are recognized by all the browsers;
-  - When available, a corresponding "HTML name" for the selected colour is displayed,
-    by using the same 500 web colours "database";
-  - When available, a corresponding "Microsoft Access Code" for the selected colour
-    is displayed, by using the same 500 web colours "database".
+- RGB components may be controlled using spin controls or with mouse gestures
+  on a 3D RGB cube, with the 3 components laying on the X, Y, Z axes;
+- HSB components may be controlled using spin controls or with mouse gestures
+  on a 2D colour wheel;
+- Brightness has its own vertical slider to play with;
+- The colour alpha channel can be controlled using another vertical slider, or
+  via spin control;
+- The colour alpha channel controls can be completely hidden at startup or the
+  choice to use the alpha channel can be left to the user while playing with the
+  dialog, via a simple `wx.CheckBox`;
+- The "old colour" and "new colour" are displayed in two small custom panel,
+  which support alpha transparency and texture;
+- CubeColourDialog displays also the HTML colour code in hexadecimal format;
+- When available, a corresponding "Web Safe" colour is generated using a 500
+  web colours "database" (a dictionary inside the widget source code). Web Safe
+  colours are recognized by all the browsers;
+- When available, a corresponding "HTML name" for the selected colour is displayed,
+  by using the same 500 web colours "database";
+- When available, a corresponding "Microsoft Access Code" for the selected colour
+  is displayed, by using the same 500 web colours "database".
     
 And much more.
 
@@ -88,13 +88,9 @@ License And Version
 
 CubeColourDialog is freeware and distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
+Latest Revision: Andrea Gavana @ 24 Nov 2009, 09.00 GMT
+
 Version 0.2.
-
-
-@undocumented: Vertex, Left, Top, Right, colourAttributes, colourMaxValues,
-               checkColour, HTMLCodes
-               
 
 """
 
@@ -111,6 +107,9 @@ import colorsys
 from math import pi, sin, cos, sqrt, atan2
 
 from wx.lib.embeddedimage import PyEmbeddedImage
+
+# Define a translation string
+_ = wx.GetTranslation
 
 # Show the alpha control in the dialog
 CCD_SHOW_ALPHA = 1
@@ -1168,29 +1167,59 @@ RGBCubeImage = PyEmbeddedImage(
 
 
 def rad2deg(x):
-    """ Transforms radians into degrees. """
+    """
+    Transforms radians into degrees.
+
+    :param `x`: a float representing an angle in radians.    
+    """
+    
     return 180.0*x/pi
 
 def deg2rad(x):
-    """ Transforms degrees into radians. """
+    """
+    Transforms degrees into radians.
+
+    :param `x`: a float representing an angle in degrees.    
+    """
+
     return x*pi/180.0
 
 def toscale(x):
-    """ Normalize a value as a function of the radius. """ 
+    """
+    Normalize a value as a function of the radius.
+
+    :param `x`: a float value to normalize    
+    """ 
+
     return x*RADIUS/255.0
 
 def scaletomax(x):
-    """ Normalize a value as a function of the radius. """ 
+    """
+    Normalize a value as a function of the radius.
+
+    :param `x`: a float value to normalize    
+    """ 
+
     return x*255.0/RADIUS
 
 def rgb2html(colour):
-    """ Transforms a RGB triplet into an html hex string. """
+    """
+    Transforms a RGB triplet into an html hex string.
+
+    :param `colour`: a tuple of red, green, blue integers.
+    """
+
     hexColour = "#%02x%02x%02x"%(colour.r, colour.g, colour.b)
     return hexColour.upper()
 
     
 def Slope(pt1, pt2):
-    """ Calculates the slope of the line connecting 2 points. """
+    """
+    Calculates the slope of the line connecting 2 points.
+
+    :param `pt1`: an instance of `wx.Point`;
+    :param `pt2`: another instance of `wx.Point`.
+    """
 
     y = float(pt2.y - pt1.y)
     x = float(pt2.x - pt1.x)
@@ -1202,7 +1231,12 @@ def Slope(pt1, pt2):
 
 
 def Intersection(line1, line2):
-    """ Calculates the intersection point between 2 lines. """
+    """
+    Calculates the intersection point between 2 lines.
+
+    :param `line1`: an instance of L{LineDescription};
+    :param `line2`: another instance of L{LineDescription}.
+    """
 
     if line1.slope == line2.slope:
     
@@ -1275,7 +1309,6 @@ def PointOnLine(pt1, pt2, length, maxLen):
             y = m*x + c
             pt = wx.Point(int(x), int(y))
         
-    
     else:
     
         a2 = a*a
@@ -1296,7 +1329,12 @@ def PointOnLine(pt1, pt2, length, maxLen):
 
 
 def Distance(pt1, pt2):
-    """ Returns the distance between 2 points. """
+    """
+    Returns the distance between 2 points.
+
+    :param `pt1`: an instance of `wx.Point`;
+    :param `pt2`: another instance of `wx.Point`.    
+    """
 
     distance = sqrt((pt1.x - pt2.x)**2.0 + (pt1.y - pt2.y)**2.0)
     return int(distance)
@@ -1305,7 +1343,10 @@ def Distance(pt1, pt2):
 def AngleFromPoint(pt, center):
     """
     Returns the angle between the x-axis and the line connecting the center and
-    the point pt.
+    the point `pt`.
+
+    :param `pt`: an instance of `wx.Point`;
+    :param `center`: a float value representing the center.
     """
 
     y = -1*(pt.y - center.y)
@@ -1323,6 +1364,10 @@ def PtFromAngle(angle, sat, center):
     """
     Given the angle with respect to the x-axis, returns the point based on
     the saturation value.
+
+    :param `angle`: a float representing an angle;
+    :param `sat`: a float representing the colour saturation value;
+    :param `center`: a float value representing the center.
     """
 
     angle = deg2rad(angle)
@@ -1339,7 +1384,14 @@ def PtFromAngle(angle, sat, center):
 
 
 def RestoreOldDC(dc, oldPen, oldBrush, oldMode):
-    """ Restores the old settings for a wx.DC. """
+    """
+    Restores the old settings for a `wx.DC`.
+
+    :param `dc`: an instance of `wx.DC`;
+    :param `oldPen`: an instance of `wx.Pen`;
+    :param `oldBrush`: an instance of `wx.Brush`;
+    :param `oldMode`: the `wx.DC` drawing mode bit.
+    """
 
     dc.SetPen(oldPen)
     dc.SetBrush(oldBrush)
@@ -1348,8 +1400,14 @@ def RestoreOldDC(dc, oldPen, oldBrush, oldMode):
 
 def DrawCheckerBoard(dc, rect, checkColour, box=5):
     """
-    Draws a checkerboard on a wx.DC.
-    Used for the Alpha channel control and the colour panels.
+    Draws a checkerboard on a `wx.DC`.
+
+    :param `dc`: an instance of `wx.DC`;
+    :param `rect`: the client rectangle on which to draw the checkerboard;
+    :param `checkColour`: the colour used for the dark checkerboards;
+    :param `box`: the checkerboards box sizes.
+    
+    :note: Used for the Alpha channel control and the colour panels.
     """
 
     y = rect.y
@@ -1371,7 +1429,7 @@ def DrawCheckerBoard(dc, rect, checkColour, box=5):
 
 class Colour(wx.Colour):
     """
-    This is a subclass of wx.Colour, which adds Hue, Saturation and Brightness
+    This is a subclass of `wx.Colour`, which adds Hue, Saturation and Brightness
     capability to the base class. It contains also methods to convert RGB triplets
     into HSB triplets and vice-versa.
     """
@@ -1380,7 +1438,7 @@ class Colour(wx.Colour):
         """
         Default class constructor.
 
-        colour is a standard wxPython colour.
+        :param `colour`: a standard `wx.Colour`.
         """
 
         wx.Colour.__init__(self)
@@ -1495,7 +1553,7 @@ class Colour(wx.Colour):
 
 
     def GetPyColour(self):
-        """ Returns the wxPython wx.Colour associated with this instance. """
+        """ Returns the wxPython `wx.Colour` associated with this instance. """
 
         return wx.Colour(self.r, self.g, self.b, self._alpha)
 
@@ -1507,7 +1565,13 @@ class LineDescription(object):
     def __init__(self, x=0, y=0, slope=None, c=None):
         """
         Default class constructor.
+        
         Used internally. Do not call it in your code!
+
+        :param `x`: the x coordinate of the first point;
+        :param `y`: the y coordinate of the first point;
+        :param `slope`: the line's slope;
+        :param `c`: a floating point constant.        
         """
 
         self.x = x
@@ -1515,7 +1579,6 @@ class LineDescription(object):
         self.slope = slope
         self.c = c
 
-        
 
 class BasePyControl(wx.PyControl):
     """
@@ -1527,6 +1590,9 @@ class BasePyControl(wx.PyControl):
         """
         Default class constructor.
         Used internally. Do not call it in your code!
+
+        :param `parent`: the control parent;
+        :param `bitmap`: the background bitmap for this custom control.
         """
 
         wx.PyControl.__init__(self, parent, style=wx.NO_BORDER)
@@ -1547,7 +1613,11 @@ class BasePyControl(wx.PyControl):
 
 
     def OnPaint(self, event):
-        """ Handles the wx.EVT_PAINT for L{BasePyControl}. """
+        """
+        Handles the ``wx.EVT_PAINT`` for L{BasePyControl}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
 
         dc = wx.AutoBufferedPaintDC(self)
         dc.SetBackground(wx.Brush(self.GetParent().GetBackgroundColour()))
@@ -1560,39 +1630,76 @@ class BasePyControl(wx.PyControl):
         
 
     def OnEraseBackground(self, event):
-        """ Handles the wx.EVT_ERASE_BACKGROUND for L{BasePyControl}. """
+        """
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` for L{BasePyControl}.
+
+        :param `event`: a `wx.EraseEvent` event to be processed.
+
+        :note: This is intentionally empty to reduce flicker.        
+        """
 
         pass
 
     
     def DrawMarkers(self, dc=None):
-        """ Empty method. Must be overridden in subclasses. """
+        """
+        Draws the markers on top of the background bitmap.
+
+        :param `dc`: an instance of `wx.DC`.
+        
+        :note: This method must be overridden in derived classes.
+        """
 
         pass
 
 
     def DrawLines(self, dc):
-        """ Empty method. Must be overridden in subclasses. """
+        """
+        Draws the lines connecting the markers on top of the background bitmap.
+
+        :param `dc`: an instance of `wx.DC`.
+        
+        :note: This method must be overridden in derived classes.
+        """
 
         pass
     
 
     def AcceptsFocusFromKeyboard(self):
-        """ We do not accept focus from keyboard. """
+        """
+        Can this window be given focus by keyboard navigation? If not, the
+        only way to give it focus (provided it accepts it at all) is to click
+        it.
+
+        :note: This method always returns ``False`` as we do not accept focus from
+         the keyboard.
+
+        :note: Overridden from `wx.PyControl`.
+        """
 
         return False
 
 
-    def AcceptFocus(self):
-        """ We do not accept mouse focus. """
+    def AcceptsFocus(self):
+        """
+        Can this window be given focus by mouse click?
+
+        :note: This method always returns ``False`` as we do not accept focus from
+         mouse click.
+
+        :note: Overridden from `wx.PyControl`.
+        """
 
         return False
 
     
     def OnLeftDown(self, event):
         """
-        Handles the wx.EVT_LEFT_DOWN for L{BasePyControl}.
-        Must be overridden in subclasses.
+        Handles the ``wx.EVT_LEFT_DOWN`` for L{BasePyControl}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        
+        :note: This method must be overridden in derived classes.
         """
 
         pass
@@ -1600,8 +1707,11 @@ class BasePyControl(wx.PyControl):
 
     def OnLeftUp(self, event):
         """
-        Handles the wx.EVT_LEFT_UP for L{BasePyControl}.
-        Must be overridden in subclasses.
+        Handles the ``wx.EVT_LEFT_UP`` for L{BasePyControl}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        
+        :note: This method must be overridden in derived classes.
         """
 
         pass
@@ -1609,15 +1719,22 @@ class BasePyControl(wx.PyControl):
 
     def OnMotion(self, event):
         """
-        Handles the wx.EVT_MOTION for L{BasePyControl}.
-        Must be overridden in subclasses.
+        Handles the ``wx.EVT_MOTION`` for L{BasePyControl}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        
+        :note: This method must be overridden in derived classes.
         """
 
         pass
     
     
     def OnSize(self, event):
-        """ Handles the wx.EVT_SIZE event for L{BasePyControl}. """
+        """
+        Handles the ``wx.EVT_SIZE`` for L{BasePyControl}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.        
+        """
 
         self.Refresh()
         
@@ -1639,6 +1756,8 @@ class RGBCube(BasePyControl):
         """
         Default class constructor.
         Used internally. Do not call it in your code!
+
+        :param `parent`: the control parent window.        
         """
 
         BasePyControl.__init__(self, parent, bitmap=RGBCubeImage.GetBitmap())
@@ -1646,8 +1765,12 @@ class RGBCube(BasePyControl):
 
 
     def DrawMarkers(self, dc=None):
-        """ Draws the square markers used with mouse gestures. """
+        """
+        Draws the markers on top of the background bitmap.
 
+        :param `dc`: an instance of `wx.DC`.
+        """
+        
         if dc is None:
             dc = wx.ClientDC(self)
 
@@ -1679,8 +1802,12 @@ class RGBCube(BasePyControl):
         
 
     def DrawLines(self, dc):
-        """ Draws lines connecting the markers. """
-    
+        """
+        Draws the lines connecting the markers on top of the background bitmap.
+
+        :param `dc`: an instance of `wx.DC`.
+        """
+        
         cuboid = self._mainDialog._cuboid
         
         dc.DrawLinePoint(cuboid[1], cuboid[2])
@@ -1697,8 +1824,12 @@ class RGBCube(BasePyControl):
         
 
     def OnLeftDown(self, event):
-        """ Handles the wx.EVT_LEFT_DOWN event for L{RGBCube}. """
+        """
+        Handles the ``wx.EVT_LEFT_DOWN`` for L{RGBCube}.
 
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
+        
         point = wx.Point(event.GetX(), event.GetY())
         self._mouseIn = False
 
@@ -1718,18 +1849,25 @@ class RGBCube(BasePyControl):
             self._index = BLUE
 
         
-
     def OnLeftUp(self, event):
-        """ Handles the wx.EVT_LEFT_UP event for L{RGBCube}. """
+        """
+        Handles the ``wx.EVT_LEFT_UP`` for L{RGBCube}.
 
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
+        
         if self.GetCapture():
             self.ReleaseMouse()
             self._mouseIn = False
         
 
     def OnMotion(self, event):
-        """ Handles the wx.EVT_MOTION event for L{RGBCube}. """
+        """
+        Handles the ``wx.EVT_MOTION`` for L{RGBCube}.
 
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
+        
         point = wx.Point(event.GetX(), event.GetY())
         
         if not (self.GetCapture() and self._mouseIn):
@@ -1825,6 +1963,8 @@ class HSVWheel(BasePyControl):
         """
         Default class constructor.
         Used internally. Do not call it in your code!
+
+        :param `parent`: the control parent window.
         """
 
         BasePyControl.__init__(self, parent, bitmap=HSVWheelImage.GetBitmap())
@@ -1832,7 +1972,11 @@ class HSVWheel(BasePyControl):
 
 
     def DrawMarkers(self, dc=None):
-        """ Draws the square markers used with mouse gestures. """
+        """
+        Draws the markers on top of the background bitmap.
+
+        :param `dc`: an instance of `wx.DC`.
+        """
 
         if dc is None:
             dc = wx.ClientDC(self)
@@ -1847,7 +1991,11 @@ class HSVWheel(BasePyControl):
         
 
     def OnLeftDown(self, event):
-        """ Handles the wx.EVT_LEFT_DOWN event for L{HSVWheel}. """
+        """
+        Handles the ``wx.EVT_LEFT_DOWN`` for L{HSVWheel}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         point = wx.Point(event.GetX(), event.GetY())
         self._mouseIn = False
@@ -1861,7 +2009,11 @@ class HSVWheel(BasePyControl):
 
 
     def OnLeftUp(self, event):
-        """ Handles the wx.EVT_LEFT_UP event for L{HSVWheel}. """
+        """
+        Handles the ``wx.EVT_LEFT_UP`` for L{HSVWheel}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         if self.GetCapture():
             self.ReleaseMouse()
@@ -1869,7 +2021,11 @@ class HSVWheel(BasePyControl):
 
 
     def OnMotion(self, event):
-        """ Handles the wx.EVT_MOTION event for L{HSVWheel}. """
+        """
+        Handles the ``wx.EVT_MOTION`` for L{HSVWheel}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         point = wx.Point(event.GetX(), event.GetY())
 
@@ -1878,13 +2034,21 @@ class HSVWheel(BasePyControl):
         
 
     def InCircle(self, pt):
-        """ Returns whether a point is inside the HSV wheel or not. """
+        """
+        Returns whether a point is inside the HSV wheel or not.
+
+        :param `pt`: an instance of `wx.Point`.
+        """
 
         return Distance(pt, self._mainDialog._centre) <= RADIUS
 
 
     def TrackPoint(self, pt):
-        """ Track a mouse event inside the HSV colour wheel. """
+        """
+        Track a mouse event inside the HSV colour wheel.
+
+        :param `pt`: an instance of `wx.Point`.
+        """
 
         if not self._mouseIn:
             return
@@ -1923,6 +2087,8 @@ class BaseLineCtrl(wx.PyControl):
         """
         Default class constructor.
         Used internally. Do not call it in your code!
+
+        :param `parent`: the control parent window.
         """
 
         wx.PyControl.__init__(self, parent, size=(20, 200), style=wx.NO_BORDER)
@@ -1938,13 +2104,23 @@ class BaseLineCtrl(wx.PyControl):
 
 
     def OnEraseBackground(self, event):
-        """ Handles the wx.EVT_ERASE_BACKGROUND for L{BaseLineCtrl}. """
+        """
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` for L{BaseLineCtrl}.
+
+        :param `event`: a `wx.EraseEvent` event to be processed.
+
+        :note: This is intentionally empty to reduce flicker.        
+        """
 
         pass
 
     
     def OnLeftDown(self, event):
-        """ Handles the wx.EVT_LEFT_DOWN for L{BaseLineCtrl}. """
+        """
+        Handles the ``wx.EVT_LEFT_DOWN`` for L{BaseLineCtrl}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         point = wx.Point(event.GetX(), event.GetY())
         theRect = self.GetClientRect()
@@ -1958,14 +2134,22 @@ class BaseLineCtrl(wx.PyControl):
 
 
     def OnLeftUp(self, event):
-        """ Handles the wx.EVT_LEFT_UP for L{BaseLineCtrl}. """
+        """
+        Handles the ``wx.EVT_LEFT_UP`` for L{BaseLineCtrl}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         if self.GetCapture():
             self.ReleaseMouse()
             
 
     def OnMotion(self, event):
-        """ Handles the wx.EVT_MOTION for L{BaseLineCtrl}. """
+        """
+        Handles the ``wx.EVT_MOTION`` for L{BaseLineCtrl}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         point = wx.Point(event.GetX(), event.GetY())
 
@@ -1974,7 +2158,11 @@ class BaseLineCtrl(wx.PyControl):
 
 
     def OnSize(self, event):
-        """ Handles the wx.EVT_SIZE for L{BaseLineCtrl}. """
+        """
+        Handles the ``wx.EVT_SIZE`` for L{BaseLineCtrl}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.
+        """
 
         self.Refresh()
 
@@ -1998,13 +2186,29 @@ class BaseLineCtrl(wx.PyControl):
 
 
     def AcceptsFocusFromKeyboard(self):
-        """ We do not accept focus from keyboard. """
+        """
+        Can this window be given focus by keyboard navigation? If not, the
+        only way to give it focus (provided it accepts it at all) is to click
+        it.
+
+        :note: This method always returns ``False`` as we do not accept focus from
+         the keyboard.
+
+        :note: Overridden from `wx.PyControl`.
+        """
 
         return False
 
 
-    def AcceptFocus(self):
-        """ We do not accept mouse focus. """
+    def AcceptsFocus(self):
+        """
+        Can this window be given focus by mouse click? 
+
+        :note: This method always returns ``False`` as we do not accept focus from
+         mouse click.
+
+        :note: Overridden from `wx.PyControl`.
+        """
 
         return False
 
@@ -2020,6 +2224,8 @@ class BrightCtrl(BaseLineCtrl):
         """
         Default class constructor.
         Used internally. Do not call it in your code!
+
+        :param `parent`: the control parent window.
         """
 
         BaseLineCtrl.__init__(self, parent)
@@ -2027,7 +2233,11 @@ class BrightCtrl(BaseLineCtrl):
 
         
     def OnPaint(self, event):
-        """ Handles the wx.EVT_PAINT event for L{BrightCtrl}. """
+        """
+        Handles the ``wx.EVT_PAINT`` for L{BrightCtrl}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
 
         dc = wx.AutoBufferedPaintDC(self)
         dc.SetBackground(wx.Brush(self.GetParent().GetBackgroundColour()))
@@ -2060,7 +2270,11 @@ class BrightCtrl(BaseLineCtrl):
         
         
     def TrackPoint(self, pt):
-        """ Tracks a mouse action inside the palette control. """
+        """
+        Tracks a mouse action inside the palette control.
+
+        :param `pt`: an instance of `wx.Point`.
+        """
 
         brightRect = self.BuildRect()
         d = brightRect.GetBottom() - pt.y
@@ -2087,7 +2301,11 @@ class BrightCtrl(BaseLineCtrl):
 
 
     def DrawMarkers(self, dc=None):
-        """ Draws square markers used with mouse gestures. """
+        """
+        Draws square markers used with mouse gestures.
+
+        :param `dc`: an instance of `wx.DC`.
+        """
 
         if dc is None:
             dc = wx.ClientDC(self)
@@ -2108,7 +2326,6 @@ class BrightCtrl(BaseLineCtrl):
         RestoreOldDC(dc, oldPen, oldBrush, oldMode)
 
 
-
 class AlphaCtrl(BaseLineCtrl):
     """
     Implements the drawing, mouse handling and sizing routines for the alpha
@@ -2119,6 +2336,8 @@ class AlphaCtrl(BaseLineCtrl):
         """
         Default class constructor.
         Used internally. Do not call it in your code!
+
+        :param `parent`: the control parent window.
         """
 
         BaseLineCtrl.__init__(self, parent)
@@ -2126,7 +2345,11 @@ class AlphaCtrl(BaseLineCtrl):
 
 
     def OnPaint(self, event):
-        """ Handles the wx.EVT_PAINT event for L{AlphaCtrl}. """
+        """
+        Handles the ``wx.EVT_PAINT`` for L{AlphaCtrl}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
 
         pdc = wx.PaintDC(self)
         dc = wx.GCDC(pdc)
@@ -2159,7 +2382,12 @@ class AlphaCtrl(BaseLineCtrl):
         
 
     def DrawAlphaShading(self, dc, rect):
-        """ Draws the alpha shading on top of the checkerboard. """
+        """
+        Draws the alpha shading on top of the checkerboard.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `rect`: the L{AlphaCtrl} client rectangle.
+        """
 
         gcdc = wx.GCDC(dc)
         
@@ -2180,7 +2408,11 @@ class AlphaCtrl(BaseLineCtrl):
 
 
     def TrackPoint(self, pt):
-        """ Tracks a mouse action inside the Alpha channel control. """
+        """
+        Tracks a mouse action inside the Alpha channel control.
+
+        :param `pt`: an instance of `wx.Point`.            
+        """
 
         alphaRect = self.BuildRect()
         d = alphaRect.GetBottom() - pt.y
@@ -2197,7 +2429,11 @@ class AlphaCtrl(BaseLineCtrl):
 
 
     def DrawMarkers(self, dc=None):
-        """ Draws square markers used with mouse gestures. """
+        """
+        Draws square markers used with mouse gestures.
+
+        :param `dc`: an instance of `wx.DC`.
+        """
 
         if dc is None:
             dc = wx.ClientDC(self)
@@ -2228,6 +2464,9 @@ class ColourPanel(wx.PyPanel):
         """
         Default class constructor.
         Used internally. Do not call it in your code!
+
+        :param `parent`: the control parent window;
+        :param `style`: the L{ColourPanel} window style.
         """
 
         wx.PyPanel.__init__(self, parent, style=style)
@@ -2241,7 +2480,11 @@ class ColourPanel(wx.PyPanel):
         
 
     def OnPaint(self, event):
-        """ Handles the wx.EVT_PAINT event for L{ColourPanel}. """
+        """
+        Handles the ``wx.EVT_PAINT`` for L{ColourPanel}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
 
         pdc = wx.PaintDC(self)
         dc = wx.GCDC(pdc)
@@ -2271,40 +2514,81 @@ class ColourPanel(wx.PyPanel):
 
 
     def OnEraseBackground(self, event):
-        """ Handles the wx.EVT_ERASE_BACKGROUND event for L{ColourPanel}. """
+        """
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` for L{ColourPanel}.
+
+        :param `event`: a `wx.EraseEvent` event to be processed.
+
+        :note: This is intentionally empty to reduce flicker.        
+        """
 
         pass
     
 
     def OnSize(self, event):
-        """ Handles the wx.EVT_SIZE event for L{ColourPanel}. """
+        """
+        Handles the ``wx.EVT_SIZE`` for L{ColourPanel}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.
+        """
 
         self.Refresh()
 
         
     def RefreshColour(self, colour):
-        """ Refresh the panel after a colour/alpha change. """
+        """
+        Refresh the panel after a colour/alpha change.
+
+        :param `colour`: the new background colour of L{ColourPanel}.
+        """
 
         self._colour = colour
         self.Refresh()
         
         
     def AcceptsFocusFromKeyboard(self):
-        """ We do not accept focus from keyboard. """
+        """
+        Can this window be given focus by keyboard navigation? If not, the
+        only way to give it focus (provided it accepts it at all) is to click
+        it.
+
+        :note: This method always returns ``False`` as we do not accept focus from
+         the keyboard.
+
+        :note: Overridden from `wx.PyPanel`.
+        """
 
         return False
 
 
-    def AcceptFocus(self):
-        """ We do not accept mouse focus. """
+    def AcceptsFocus(self):
+        """
+        Can this window be given focus by mouse click?
+
+        :note: This method always returns ``False`` as we do not accept focus from
+         mouse click.
+
+        :note: Overridden from `wx.PyPanel`.
+        """
 
         return False
 
 
 class CustomPanel(wx.PyControl):
+    """
+    This panel displays a series of cutom colours (chosen by the user) just like
+    the standard `wx.ColourDialog`.
+    """
 
     def __init__(self, parent, colourData):
+        """
+        Default class constructor.
+        Used internally. Do not call it in your code!
 
+        :param `parent`: the control parent window;
+        :param `colourData`: an instance of `wx.ColourData`.
+        """
+        
         wx.PyControl.__init__(self, parent, style=wx.NO_BORDER)
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 
@@ -2326,6 +2610,7 @@ class CustomPanel(wx.PyControl):
         
 
     def InitializeColours(self):
+        """ Initializes the 16 custom colours in L{CustomPanel}. """
 
         curr = self._colourData.GetColour()
         self._colourSelection = -1
@@ -2342,32 +2627,54 @@ class CustomPanel(wx.PyControl):
 
 
     def DoGetBestSize(self):
+        """ Returns the custom control best size (used by sizers). """
 
         return self._customColourRect.width+4, self._customColourRect.height+4
 
 
     def OnPaint(self, event):
+        """
+        Handles the ``wx.EVT_PAINT`` for L{CustomPanel}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
 
         dc = wx.AutoBufferedPaintDC(self)
         dc.SetBackground(wx.Brush(self.GetParent().GetBackgroundColour()))
         dc.Clear()
 
         self.PaintCustomColours(dc)
-##        PaintCustomColour(dc);
         self.PaintHighlight(dc, True)
 
 
     def OnEraseBackground(self, event):
+        """
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` for L{CustomPanel}.
+
+        :param `event`: a `wx.EraseEvent` event to be processed.
+
+        :note: This is intentionally empty to reduce flicker.        
+        """
 
         pass
 
 
     def OnSize(self, event):
+        """
+        Handles the ``wx.EVT_SIZE`` for L{CustomPanel}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.        
+        """
 
         self.Refresh()
         
 
     def OnLeftDown(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_DOWN`` for L{CustomPanel}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         x, y = event.GetX(), event.GetY()
         
@@ -2387,6 +2694,11 @@ class CustomPanel(wx.PyControl):
 
 
     def PaintCustomColours(self, dc):
+        """
+        Draws all the 16 subpanels with their custom colours.
+
+        :param `dc`: an instance of `wx.DC`.
+        """
 
         for i in xrange(2):
             for j in xrange(8):
@@ -2404,6 +2716,13 @@ class CustomPanel(wx.PyControl):
     
 
     def PaintHighlight(self, dc, draw=True):
+        """
+        Highlight the current custom colour selection (if any).
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `draw`: whether to draw a thin black border around the selected custom
+         colour or not.
+        """
 
         if self._colourSelection < 0:
             return
@@ -2429,6 +2748,13 @@ class CustomPanel(wx.PyControl):
 
 
     def PaintCustomColour(self, dc, selX, selY):
+        """
+        Paints a newly added custom colour subpanel.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `selX`: the x coordinate of the custom colour subpanel;
+        :param `selY`: the y coordinate of the custom colour subpanel.        
+        """
 
         dc.SetPen(wx.BLACK_PEN)
 
@@ -2445,6 +2771,11 @@ class CustomPanel(wx.PyControl):
 
 
     def AddCustom(self, colour):
+        """
+        Adds a user-chosen colour to the list of custom colours.
+
+        :param `colour`: an instance of `wx.Colour`.
+        """
 
         self._colourSelection += 1
         self._colourSelection = self._colourSelection%16
@@ -2457,7 +2788,6 @@ class CustomPanel(wx.PyControl):
         
 
 class CubeColourDialog(wx.Dialog):
-
     """
     This is the CubeColourDialog main class implementation.
     """
@@ -2466,12 +2796,12 @@ class CubeColourDialog(wx.Dialog):
         """
         Default class constructor.
 
-        @param colourData: a wxPython wx.ColourData;
-        @param style: can be either None or CCD_SHOW_ALPHA, depending if you want
-                      to hide the alpha channel control or not.
+        :param `colourData`: a standard `wx.ColourData` (as used in `wx.ColourDialog`;
+        :param `style`: can be either ``None`` or ``CCD_SHOW_ALPHA``, depending if you want
+         to hide the alpha channel control or not.
         """
 
-        wx.Dialog.__init__(self, parent, id=wx.ID_ANY, title="CubeColourDialog: Choose Colour",
+        wx.Dialog.__init__(self, parent, id=wx.ID_ANY, title=_("CubeColourDialog: Choose Colour"),
                            pos=wx.DefaultPosition, size=(900, 900), style=wx.DEFAULT_DIALOG_STYLE|style)
 
         if colourData:
@@ -2555,7 +2885,7 @@ class CubeColourDialog(wx.Dialog):
         
         
     def SetProperties(self):
-        """ Sets some initial properties (sizes, values). """
+        """ Sets some initial properties for L{CubeColourDialog} (sizes, values). """
 
         self.okButton.SetDefault()
         self.oldColourPanel.SetMinSize((-1, 50))
@@ -2805,7 +3135,12 @@ class CubeColourDialog(wx.Dialog):
 
 
     def DrawMarkers(self, dc=None):
-        """ Draws the markers for all the controls. """
+        """
+        Draws the markers for all the controls.
+
+        :param `dc`: an instance of `wx.DC`. If `dc` is ``None``, a `wx.ClientDC` is
+         created on the fly.
+        """
 
         if dc is None:
             dc = wx.ClientDC(self)
@@ -2882,12 +3217,21 @@ class CubeColourDialog(wx.Dialog):
         
         
     def OnCloseWindow(self, event):
-        """ User canceled the dialog. """
+        """
+        Handles the ``wx.EVT_CLOSE`` event for L{CubeColourDialog}.
+        
+        :param `event`: a `wx.CloseEvent` event to be processed.
+        """
 
         self.EndModal(wx.ID_CANCEL)
 
 
     def OnKeyUp(self, event):
+        """
+        Handles the ``wx.EVT_CHAR_HOOK`` event for L{CubeColourDialog}.
+        
+        :param `event`: a `wx.KeyEvent` event to be processed.
+        """
 
         if event.GetKeyCode() == wx.WXK_ESCAPE:
             self.EndModal(wx.ID_CANCEL)
@@ -2896,13 +3240,24 @@ class CubeColourDialog(wx.Dialog):
         
 
     def ShowModal(self):
-        """ Overridden wx.Dialog.ShowModal. """
+        """
+        Shows L{CubeColourDialog} as a modal dialog. Program flow does
+        not return until the dialog has been dismissed with `EndModal`.
+
+        :note: Overridden from `wx.Dialog`. 
+        """
 
         return wx.Dialog.ShowModal(self)
 
 
     def SetWindowStyleFlag(self, style):
-        """ Sets the L{CubeColourDialog} window style flags. """
+        """
+        Sets the L{CubeColourDialog} window style flags.
+
+        :param `style`: can only be ``CCD_SHOW_ALPHA``.
+
+        :note: Overridden from `wx.Dialog`.        
+        """
 
         wx.Dialog.SetWindowStyleFlag(self, style)
 
@@ -2922,24 +3277,42 @@ class CubeColourDialog(wx.Dialog):
         
             
     def OnOk(self, event):
-        """ Handles the Ok wx.EVT_BUTTON event for L{CubeColourDialog}. """
+        """
+        Handles the Ok ``wx.EVT_BUTTON`` event for L{CubeColourDialog}.
+
+        :param `event`: a `wx.CommandEvent` event to be processed.
+        """
 
         self.EndModal(wx.ID_OK)
 
 
     def OnCancel(self, event):
-        """ Handles the Cancel wx.EVT_BUTTON event for L{CubeColourDialog}. """
+        """
+        Handles the Cancel ``wx.EVT_BUTTON`` event for L{CubeColourDialog}.
+
+        :param `event`: a `wx.CommandEvent` event to be processed.
+        """
 
         self.OnCloseWindow(event)
 
 
     def OnAddCustom(self, event):
+        """
+        Handles the Add Custom ``wx.EVT_BUTTON`` event for L{CubeColourDialog}.
+
+        :param `event`: a `wx.CommandEvent` event to be processed.
+        """
+
 
         self.customColours.AddCustom(self._colour)
 
   
     def OnShowAlpha(self, event):
-        """ Shows/hides the alpha channel control in L{CubeColourDialog}. """
+        """
+        Shows/hides the alpha channel control in L{CubeColourDialog}.
+
+        :param `event`: a `wx.CommandEvent` event to be processed.
+        """
 
         style = self.GetWindowStyleFlag()
         show = event.IsChecked()
@@ -2953,7 +3326,11 @@ class CubeColourDialog(wx.Dialog):
         
 
     def OnSpinCtrl(self, event):
-        """ Handles the wx.EVT_SPINCTRL event for RGB and HSB colours. """
+        """
+        Handles the ``wx.EVT_SPINCTRL`` event for RGB and HSB colours.
+
+        :param `event`: a `wx.SpinEvent` event to be processed.
+        """
 
         obj = event.GetEventObject()
         position = self.spinCtrls.index(obj)
@@ -2965,7 +3342,11 @@ class CubeColourDialog(wx.Dialog):
 
 
     def OnAlphaSpin(self, event):
-        """ Handles the wx.EVT_SPINCTRL event for the alpha channel. """
+        """
+        Handles the ``wx.EVT_SPINCTRL`` event for the alpha channel.
+
+        :param `event`: a `wx.SpinEvent` event to be processed.
+        """
 
         colourVal = event.GetInt()
         originalVal = self._colour._alpha
@@ -3031,7 +3412,7 @@ class CubeColourDialog(wx.Dialog):
 
 
     def GetColourData(self):
-        """ Returns a wxPython compatible wx.ColourData. """
+        """ Returns a wxPython compatible `wx.ColourData`. """
 
         self._colourData.SetColour(self._colour.GetPyColour())
         return self._colourData

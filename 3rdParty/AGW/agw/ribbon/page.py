@@ -249,7 +249,7 @@ class RibbonPage(RibbonControl):
         :returns: ``True`` if the page scrolled at least one pixel in the given direction,
          ``False`` if it did not scroll.
          
-        :seealso: L{GetMajorAxis}, L{ScrollPixels}
+        :see: L{GetMajorAxis}, L{ScrollPixels}
         """
 
         return self.ScrollPixels(lines * 8)
@@ -269,7 +269,7 @@ class RibbonPage(RibbonControl):
         :returns: ``True`` if the page scrolled at least one pixel in the given direction,
          ``False`` if it did not scroll.
          
-        :seealso: L{GetMajorAxis}, L{ScrollLines}
+        :see: L{GetMajorAxis}, L{ScrollLines}
         """
 
         if pixels < 0:        
@@ -315,11 +315,11 @@ class RibbonPage(RibbonControl):
         children of the page (to achieve correct cropping and paint ordering of the
         children and the buttons).
 
-        When there are no scroll buttons, this function behaves the same as L{SetSize},
+        When there are no scroll buttons, this function behaves the same as `SetSize`,
         however when there are scroll buttons, it positions them at the edges of the
-        given area, and then calls L{SetSize} with the remaining area. This is provided
-        as a separate function to L{SetSize} rather than within the implementation
-        of L{SetSize}, as iteracting algorithms may not expect L{SetSize} to also
+        given area, and then calls `SetSize` with the remaining area. This is provided
+        as a separate function to `SetSize` rather than within the implementation
+        of `SetSize`, as iteracting algorithms may not expect `SetSize` to also
         set the size of siblings.
 
         :param `x`: MISSING DESCRIPTION;

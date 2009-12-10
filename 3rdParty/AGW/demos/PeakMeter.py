@@ -170,7 +170,7 @@ class PeakMeterCtrlDemo(wx.Panel):
             low = self.lowColour.GetColour()
             med = self.mediumColour.GetColour()
             high = self.highColour.GetColour()
-            self.horzPeak.SetBandsColor(low, med, high)
+            self.horzPeak.SetBandsColour(low, med, high)
 
             
 #----------------------------------------------------------------------

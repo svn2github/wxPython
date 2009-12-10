@@ -143,7 +143,7 @@ class RibbonMSWArtProvider(object):
         :param `secondary`: MISSING DESCRIPTION;
         :param `tertiary`: MISSING DESCRIPTION.
 
-        :seealso: L{SetColour}, L{GetColourScheme}
+        :see: L{SetColour}, L{GetColourScheme}
         """
 
         self._primary_scheme_colour = primary
@@ -414,7 +414,7 @@ class RibbonMSWArtProvider(object):
         """
         Get the value of a certain integer setting.
 
-        can be one of the size values of L{RibbonArtSetting}.
+        can be one of the size values of `RibbonArtSetting`.
 
         :param `id`: a metric id.
 
@@ -452,7 +452,7 @@ class RibbonMSWArtProvider(object):
         """
         Set the value of a certain integer setting to the value.
 
-        can be one of the size values of L{RibbonArtSetting}.
+        can be one of the size values of `RibbonArtSetting`.
 
         :param `id`: a metric id;
         :param `new_val`: the new value of the metric setting.
@@ -491,7 +491,7 @@ class RibbonMSWArtProvider(object):
         """
         Set the value of a certain font setting to the value.
 
-        can be one of the font values of L{RibbonArtSetting}.
+        can be one of the font values of `RibbonArtSetting`.
 
         :param `id`: a font id;
         :param `font`: the new font.
@@ -512,7 +512,7 @@ class RibbonMSWArtProvider(object):
         """
         Get the value of a certain font setting.
 
-        can be one of the font values of L{RibbonArtSetting}.
+        can be one of the font values of `RibbonArtSetting`.
 
         :param `id`: the font id.
 
@@ -532,7 +532,7 @@ class RibbonMSWArtProvider(object):
         """
         Get the value of a certain colour setting.
 
-        can be one of the colour values of L{RibbonArtSetting}.
+        can be one of the colour values of `RibbonArtSetting`.
 
         :param `id`: the colour id.
 
@@ -678,13 +678,13 @@ class RibbonMSWArtProvider(object):
         """
         Set the value of a certain colour setting to the value.
 
-        can be one of the colour values of L{RibbonArtSetting}, though not all colour
+        can be one of the colour values of `RibbonArtSetting`, though not all colour
         settings will have an affect on every art provider.
 
         :param `id`: the colour id;
         :param `colour`: the colour.
 
-        :seealso: L{SetColourScheme}
+        :see: L{SetColourScheme}
         """
     
         if id == RIBBON_ART_BUTTON_BAR_LABEL_COLOUR:
@@ -1150,7 +1150,7 @@ class RibbonMSWArtProvider(object):
          L{RibbonPage} whose background is being drawn, but doesn't have to be);
         :param `rect`: The rectangle within which to draw.
 
-        :seealso: L{GetPageBackgroundRedrawArea}
+        :see: L{GetPageBackgroundRedrawArea}
         """
 
         dc.SetPen(wx.TRANSPARENT_PEN)
@@ -1210,7 +1210,7 @@ class RibbonMSWArtProvider(object):
          painted with L{DrawTabCtrlBackground}, but this is not guaranteed for other
          types of button (for example, page scroll buttons will not be painted on an
          area previously painted with L{DrawPageBackground} );
-        :param `style`: A combination of flags from L{RibbonScrollButtonStyle},
+        :param `style`: A combination of flags from `RibbonScrollButtonStyle`,
          including a direction, a for flag, and one or more states.
 
         """
@@ -2238,7 +2238,7 @@ class RibbonMSWArtProvider(object):
 
         :param `dc`: A device context to use when one is required for size calculations;
         :param `wnd`: The window onto which the scroll button will eventually be drawn;
-        :param `style`: A combination of flags from L{RibbonScrollButtonStyle}, including
+        :param `style`: A combination of flags from `RibbonScrollButtonStyle`, including
          a direction, and a for flag (state flags may be given too, but should be ignored,
          as a button should retain a constant size, regardless of its state).
 
@@ -2260,7 +2260,7 @@ class RibbonMSWArtProvider(object):
         :param `client_offset`: The offset where the client rectangle begins within the
          panel (may be ``None``).
 
-        :seealso: L{GetPanelClientSize}
+        :see: L{GetPanelClientSize}
         """
 
         dc.SetFont(self._panel_label_font)
@@ -2295,7 +2295,7 @@ class RibbonMSWArtProvider(object):
         :param `client_offset`: The offset where the returned client size begins within
          the given (may be ``None``).
 
-        :seealso: L{GetPanelSize}
+        :see: L{GetPanelSize}
         """
 
         dc.SetFont(self._panel_label_font)
@@ -2328,7 +2328,7 @@ class RibbonMSWArtProvider(object):
         :param `wnd`: The gallery in question;
         :param `client_size`: The client size.
 
-        :seealso: L{GetGalleryClientSize}
+        :see: L{GetGalleryClientSize}
         """
 
         client_size.IncBy(2, 1) # Left / top padding

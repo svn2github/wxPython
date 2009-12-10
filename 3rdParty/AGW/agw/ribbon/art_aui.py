@@ -121,7 +121,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         """
         Set the value of a certain font setting to the value.
 
-        can be one of the font values of L{RibbonArtSetting}.
+        can be one of the font values of `RibbonArtSetting`.
 
         :param `id`: the font id;
         :param `font`: MISSING DESCRIPTION.
@@ -139,7 +139,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         """
         Get the value of a certain colour setting.
 
-        can be one of the colour values of L{RibbonArtSetting}.
+        can be one of the colour values of `RibbonArtSetting`.
 
         :param `id`: the colour id.
 
@@ -179,13 +179,13 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         """
         Set the value of a certain colour setting to the value.
 
-        can be one of the colour values of L{RibbonArtSetting}, though not all colour
+        can be one of the colour values of `RibbonArtSetting`, though not all colour
         settings will have an affect on every art provider.
 
         :param `id`: the colour id;
         :param `colour`: MISSING DESCRIPTION.
 
-        :seealso: L{SetColourScheme}
+        :see: L{SetColourScheme}
         """
 
         if id in [RIBBON_ART_PAGE_BACKGROUND_COLOUR, RIBBON_ART_PAGE_BACKGROUND_GRADIENT_COLOUR]:
@@ -227,7 +227,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         :param `secondary`: MISSING DESCRIPTION;
         :param `tertiary`: MISSING DESCRIPTION.
 
-        :seealso: L{SetColour}, L{GetColourScheme}
+        :see: L{SetColour}, L{RibbonMSWArtProvider.GetColourScheme}
         """
 
         primary_hsl = RibbonHSLColour(primary)
@@ -525,7 +525,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
          L{RibbonPage} whose background is being drawn, but doesn't have to be);
         :param `rect`: The rectangle within which to draw.
 
-        :seealso: L{GetPageBackgroundRedrawArea}
+        :see: L{RibbonMSWArtProvider.GetPageBackgroundRedrawArea}
         """
 
         dc.SetPen(wx.TRANSPARENT_PEN)
@@ -544,7 +544,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
         :param `dc`: A device context to use when one is required for size calculations;
         :param `wnd`: The window onto which the scroll button will eventually be drawn;
-        :param `style`: A combination of flags from L{RibbonScrollButtonStyle}, including
+        :param `style`: A combination of flags from `RibbonScrollButtonStyle`, including
          a direction, and a for flag (state flags may be given too, but should be ignored,
          as a button should retain a constant size, regardless of its state).
 
@@ -566,7 +566,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
          painted with L{DrawTabCtrlBackground}, but this is not guaranteed for other
          types of button (for example, page scroll buttons will not be painted on
          an area previously painted with L{DrawPageBackground});
-        :param `style`: A combination of flags from L{RibbonScrollButtonStyle},
+        :param `style`: A combination of flags from `RibbonScrollButtonStyle`,
          including a direction, a for flag, and one or more states.
 
         """
@@ -639,7 +639,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         :param `client_offset`: The offset where the client rectangle begins within
          the panel (may be ``None``).
 
-        :seealso: L{GetPanelClientSize}
+        :see: L{GetPanelClientSize}
         """
 
         dc.SetFont(self._panel_label_font)
@@ -672,7 +672,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         :param `client_offset`: The offset where the returned client size begins within
          the given (may be ``None``).
 
-        :seealso: L{GetPanelSize}
+        :see: L{GetPanelSize}
         """
 
         dc.SetFont(self._panel_label_font)
@@ -773,12 +773,12 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         :param `wnd`: The window which is being drawn onto, which is always the panel
          which is minimised. The panel label can be obtained from this window. The
          minimised icon obtained from querying the window may not be the size requested
-         by L{GetMinimisedPanelMinimumSize} - the argument contains the icon in the
+         by L{RibbonMSWArtProvider.GetMinimisedPanelMinimumSize} - the argument contains the icon in the
          requested size;
         :param `rect`: The rectangle within which to draw. The size of the rectangle
-         will be at least the size returned by L{GetMinimisedPanelMinimumSize};
+         will be at least the size returned by L{RibbonMSWArtProvider.GetMinimisedPanelMinimumSize};
         :param `bitmap`: A copy of the panel's minimised bitmap rescaled to the size
-         returned by L{GetMinimisedPanelMinimumSize}.
+         returned by L{RibbonMSWArtProvider.GetMinimisedPanelMinimumSize}.
 
         """
 
@@ -981,7 +981,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
          context previously painted with L{DrawGalleryBackground};
         :param `item`: The item whose background is being painted. Typically the
          background will vary if the item is hovered, active, or selected;
-         L{RibbonGallery.GetSelection()}, L{RibbonGallery.GetActiveItem}, and
+         L{RibbonGallery.GetSelection}, L{RibbonGallery.GetActiveItem}, and
          L{RibbonGallery.GetHoveredItem} can be called to test if the given item is in one of these states.
 
         """
@@ -1001,7 +1001,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
     def DrawButtonBarBackground(self, dc, wnd, rect):
         """
-        Draw the background for a L{RibbonButtonBar} control.
+        Draw the background for a L{bar.RibbonButtonBar} control.
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto (which will typically
@@ -1015,12 +1015,12 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
     def DrawButtonBarButton(self, dc, wnd, rect, kind, state, label, bitmap_large, bitmap_small):
         """
-        Draw a single button for a L{RibbonButtonBar} control.
+        Draw a single button for a L{bar.RibbonButtonBar} control.
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto;
         :param `rect`: The rectangle within which to draw. The size of this rectangle
-         will be a size previously returned by L{GetButtonBarButtonSize}, and the
+         will be a size previously returned by L{RibbonMSWArtProvider.GetButtonBarButtonSize}, and the
          rectangle will be entirely within a rectangle on the same device context
          previously painted with L{DrawButtonBarBackground};
         :param `kind`: The kind of button to draw (normal, dropdown or hybrid);
@@ -1133,7 +1133,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         :param `wnd`: The window which is being drawn onto. In most cases this will
          be a L{RibbonToolBar}, but it doesn't have to be;
         :param `rect`: The rectangle within which to draw. The size of this rectangle
-         will at least the size returned by L{GetToolSize}, and the height of it will
+         will at least the size returned by L{RibbonMSWArtProvider.GetToolSize}, and the height of it will
          be equal for all tools within the same group. The rectangle will be entirely
          within a rectangle on the same device context previously painted with
          L{DrawToolGroupBackground};

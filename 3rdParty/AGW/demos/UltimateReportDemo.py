@@ -146,13 +146,13 @@ class UltimateRenderer_1(object):
             self.progressValue = 1
 
 
-    def DrawHorizontalPipe(self, dc, x, y, w, color):
+    def DrawHorizontalPipe(self, dc, x, y, w, colour):
         """Draws a horizontal 3D-looking pipe."""
         
         for r in range(PIPE_HEIGHT):
-            red = int(color.Red() * math.sin((math.pi/PIPE_HEIGHT)*r))
-            green = int(color.Green() * math.sin((math.pi/PIPE_HEIGHT)*r))
-            blue = int(color.Blue() * math.sin((math.pi/PIPE_HEIGHT)*r))
+            red = int(colour.Red() * math.sin((math.pi/PIPE_HEIGHT)*r))
+            green = int(colour.Green() * math.sin((math.pi/PIPE_HEIGHT)*r))
+            blue = int(colour.Blue() * math.sin((math.pi/PIPE_HEIGHT)*r))
             dc.SetPen(wx.Pen(wx.Colour(red, green, blue)))
             dc.DrawLine(x, y+r, x+w, y+r)
 
@@ -239,13 +239,13 @@ class UltimateRenderer_2(object):
         dc.SetBackgroundMode(wx.TRANSPARENT)        
         dc.SetFont(self.randomFont)
 
-        colors = [wx.RED, wx.WHITE, wx.GREEN, wx.NamedColour("SKY BLUE")]
+        colours = [wx.RED, wx.WHITE, wx.GREEN, wx.NamedColour("SKY BLUE")]
         w, h = dc.GetTextExtent("Hg")
         x = rect.x + 1
         y = rect.y + rect.height/2 - h/2
 
         for ch in self.text:
-            dc.SetTextForeground(random.choice(colors))
+            dc.SetTextForeground(random.choice(colours))
             dc.DrawText(ch, x, y)
             w, h = dc.GetTextExtent(ch)
             x = x + w

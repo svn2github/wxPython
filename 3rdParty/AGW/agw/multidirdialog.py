@@ -2,7 +2,7 @@
 # MULTIDIRDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 29 May 2009, 09.00 GMT
+# Latest Revision: 30 Nov 2009, 16.00 GMT
 #
 #
 # TODO List
@@ -26,14 +26,14 @@
 # --------------------------------------------------------------------------------- #
 
 """
-This class represents a possible replacement for wx.DirDialog, with the additional
+This class represents a possible replacement for `wx.DirDialog`, with the additional
 ability of selecting multiple folders at once.
 
 
 Description
 ===========
 
-This class represents a possible replacement for wx.DirDialog, with the additional
+This class represents a possible replacement for `wx.DirDialog`, with the additional
 ability of selecting multiple folders at once. It may be useful when you wish to
 present to the user a directory browser which allows multiple folder selections.
 MultiDirDialog sports the following features:
@@ -77,8 +77,9 @@ License And Version
 
 MultiDirDialog is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 29 May 2009, 09.00 GMT
-Version 0.1
+Latest Revision: Andrea Gavana @ 30 Nov 2009, 16.00 GMT
+
+Version 0.2
 
 """
 
@@ -261,25 +262,34 @@ _removable = PyEmbeddedImage(
 
 class MultiDirDialog(wx.Dialog):
     """
-    A different implementation of wx.DirDialog which allows multiple
+    A different implementation of `wx.DirDialog` which allows multiple
     folders to be selected at once.
     """
 
     def __init__(self, parent, message=_("Choose a directory"), title=_("Browse For Folders"),
                  defaultPath="", style=wx.DD_DEFAULT_STYLE|DD_MULTIPLE, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, name="multidirdialog"):
-        
         """
         Default class constructor.
 
-        @param parent: the dialog parent widget;
-        @param message: the message to show on the dialog;
-        @param title: the dialog title;
-        @param defaultPath: the default path, or the empty string;
-        @param style: the custom dir dialog style;
-        @param pos: the dialog position;
-        @param size: the dialog size;
-        @param name: the dialog name.
+        :param `parent`: the dialog parent widget;
+        :param `message`: the message to show on the dialog;
+        :param `title`: the dialog title;
+        :param `defaultPath`: the default path, or the empty string;
+        :param `style`: the custom dir dialog style; this can be a combination of the
+         following bits:
+
+         ===================== =========== ==================================================
+         Window Styles         Hex Value   Description
+         ===================== =========== ==================================================
+         ``DD_DIR_MUST_EXIST``       0x200 The dialog will allow the user to choose only an existing folder. When this style is not given, a "Create new directory" button is added to the dialog (on Windows) or some other way is provided to the user to type the name of a new folder.
+         ``DD_MULTIPLE``             0x400 Allows the selection of multiple folders.
+         ``DD_DEFAULT_STYLE``   0x20001840 Equivalent to a combination of ``wx.DEFAULT_DIALOG_STYLE`` and ``wx.RESIZE_BORDER``.
+         ===================== =========== ==================================================
+
+        :param `pos`: the dialog position;
+        :param `size`: the dialog size;
+        :param `name`: the dialog name.
         """
 
         self.ddStyle = style
@@ -301,7 +311,12 @@ class MultiDirDialog(wx.Dialog):
             
 
     def SetupDirCtrl(self, defaultPath):
-        """ Setup the wx.GenericDirCtrl (icons, labels, etc...). """
+        """
+        Setup the internal `wx.GenericDirCtrl` (icons, labels, etc...).
+
+        :param `defaultPath`: the default path for L{MultiDirDialog}, can be an
+         empty string.
+        """
 
         il = wx.ImageList(16, 16)
 
@@ -348,7 +363,11 @@ class MultiDirDialog(wx.Dialog):
         
 
     def SetProperties(self, title):
-        """ Sets few properties for the dialog. """        
+        """
+        Sets few properties for the dialog.
+
+        :param `title`: the dialog title.
+        """
 
         self.SetTitle(title)
         self.okButton.SetDefault()
@@ -393,7 +412,7 @@ class MultiDirDialog(wx.Dialog):
 
 
     def GetPaths(self):
-        """ Returns the folders selected by the user. """
+        """ Returns the folders selected by the user, or the default path. """
 
         # Retrieve the tree control and the selections the
         # user has made
@@ -416,9 +435,9 @@ class MultiDirDialog(wx.Dialog):
         """
         Recurse a directory tree to include the parent-folder.
 
-        @param treeCtrl: the tree control associated with wx.GenericDirCtrl;
-        @param item: the selected tree control item;
-        @param itemText: the selected tree control item text.
+        :param `treeCtrl`: the tree control associated with teh internal `wx.GenericDirCtrl`;
+        :param `item`: the selected tree control item;
+        :param `itemText`: the selected tree control item text.
         """
 
         # Get the item parent        
@@ -442,7 +461,7 @@ class MultiDirDialog(wx.Dialog):
 
 
     def CreateButtons(self):
-        """ Creates the Ok, cancel and new folder bitmap buttons. """
+        """ Creates the ``OK``, ``Cancel`` and ``New folder`` bitmap buttons. """
         
         # Build a couple of fancy buttons
         self.newButton = buttons.ThemedGenBitmapTextButton(self, wx.ID_NEW, _new.GetBitmap(),
@@ -454,25 +473,45 @@ class MultiDirDialog(wx.Dialog):
 
 
     def OnOk(self, event):
-        """ Handles the Ok wx.EVT_BUTTON event for the dialog. """
+        """
+        Handles the ``wx.EVT_BUTTON`` event for the dialog.
+
+        :param `event`: a `wx.CommandEvent` event to be processed.
+
+        :note: This method handles the ``OK`` button press. 
+        """
 
         self.EndModal(wx.ID_OK)
 
 
     def OnCancel(self, event):
-        """ Handles the Cancel wx.EVT_BUTTON event for the dialog. """
+        """
+        Handles the ``wx.EVT_BUTTON`` event for the dialog.
+
+        :param `event`: a `wx.CommandEvent` event to be processed.
+
+        :note: This method handles the ``Cancel`` button press. 
+        """
 
         self.OnClose(event)
 
 
     def OnClose(self, event):
-        """ User canceled the dialog. """
+        """
+        Handles the ``wx.EVT_CLOSE`` event for the dialog.
+
+        :param `event`: a `wx.CloseEvent` event to be processed.
+        """
 
         self.EndModal(wx.ID_CANCEL)
 
 
     def OnKeyUp(self, event):
-        """ Handles the wx.EVT_CHAR_HOOK event for the dialog. """
+        """
+        Handles the ``wx.EVT_CHAR_HOOK`` event for the dialog.
+
+        :param `event`: a `wx.KeyEvent` event to be processed.
+        """
         
         if event.GetKeyCode() == wx.WXK_ESCAPE:
             # Close the dialog, no action
@@ -486,8 +525,10 @@ class MultiDirDialog(wx.Dialog):
 
     def OnSelChanged(self, event):
         """
-        Handles the wx.EVT_TREE_SEL_CHANGED event for the tree control associated
-        with MultiDirDialog.
+        Handles the ``wx.EVT_TREE_SEL_CHANGED`` event for the tree control associated
+        with L{MultiDirDialog}.
+
+        :param `event`: a `wx.TreeEvent` event to be processed.        
         """
 
         if self.IsBeingDeleted():

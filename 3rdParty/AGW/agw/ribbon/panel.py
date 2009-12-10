@@ -51,6 +51,7 @@ def IsAncestorOf(ancestor, window):
 
 
 class RibbonPanel(RibbonControl):
+    """ This is the main implementation of L{RibbonPanel}. """
 
     def __init__(self, parent, id=wx.ID_ANY, label="", minimised_icon=wx.NullBitmap,
                  pos=wx.DefaultPosition, size=wx.DefaultSize, style=RIBBON_PANEL_DEFAULT_STYLE,
@@ -557,7 +558,7 @@ class RibbonPanel(RibbonControl):
         Note that this should be called on an expanded panel to get the dummy associated
         with it - it will return ``None`` when called on the dummy itself.
 
-        :seealso: L{ShowExpanded}, L{GetExpandedPanel}
+        :see: L{ShowExpanded}, L{GetExpandedPanel}
         """
 
         return self._expanded_dummy
@@ -571,7 +572,7 @@ class RibbonPanel(RibbonControl):
         associated with it - it will return ``None`` when called on the expanded panel
         itself.
 
-        :seealso: L{ShowExpanded}, L{GetExpandedDummy}
+        :see: L{ShowExpanded}, L{GetExpandedDummy}
         """
 
         return self._expanded_panel
@@ -592,7 +593,7 @@ class RibbonPanel(RibbonControl):
         :returns: ``True`` if the panel was expanded, ``False`` if it was not (possibly
          due to it not being minimised, or already being expanded).
          
-        :seealso: L{HideExpanded}, L{GetExpandedPanel}
+        :see: L{HideExpanded}, L{GetExpandedPanel}
         """
 
         if not self.IsMinimised():        
@@ -698,7 +699,7 @@ class RibbonPanel(RibbonControl):
         :returns: ``True`` if the panel was un-expanded, ``False`` if it was not
          (normally due to it not being expanded in the first place).
          
-        :seealso: L{HideExpanded}, L{GetExpandedPanel}
+        :see: L{HideExpanded}, L{GetExpandedPanel}
         """
 
         if self._expanded_dummy == None:        
