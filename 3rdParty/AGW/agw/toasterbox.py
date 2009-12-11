@@ -85,7 +85,7 @@ Events Processing
 License And Version
 ===================
 
-ToasterBox is freeware and distributed under the wxPython license.
+ToasterBox is distributed under the wxPython license.
 
 Latest revision: Andrea Gavana @ 01 Dec 2009, 14.00 GMT
 

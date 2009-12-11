@@ -86,7 +86,7 @@ Events Processing
 License And Version
 ===================
 
-CubeColourDialog is freeware and distributed under the wxPython license. 
+CubeColourDialog is distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 24 Nov 2009, 09.00 GMT
 

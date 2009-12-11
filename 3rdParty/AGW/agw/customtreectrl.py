@@ -209,7 +209,7 @@ Event Name                     Description
 License And Version
 ===================
 
-CustomTreeCtrl is freeware and distributed under the wxPython license. 
+CustomTreeCtrl is distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 09 Dec 2009, 21.00 GMT
 

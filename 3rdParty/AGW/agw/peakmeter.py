@@ -73,7 +73,7 @@ Events Processing
 License And Version
 ===================
 
-PeakMeterCtrl is freeware and distributed under the wxPython license.
+PeakMeterCtrl is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 30 Nov 2009, 17.00 GMT
 

@@ -119,7 +119,7 @@ Event Name                        Description
 License And Version
 ===================
 
-FlatMenu is freeware and distributed under the wxPython license.
+FlatMenu is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 26 Nov 2009, 11.00 GMT
 

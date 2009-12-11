@@ -75,7 +75,7 @@ Events Processing
 License And Version
 ===================
 
-MultiDirDialog is freeware and distributed under the wxPython license.
+MultiDirDialog is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 30 Nov 2009, 16.00 GMT
 

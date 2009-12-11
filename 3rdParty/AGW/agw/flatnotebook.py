@@ -112,7 +112,7 @@ Event Name                                Description
 License And Version
 ===================
 
-FlatNotebook is freeware and distributed under the wxPython license.
+FlatNotebook is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 26 Nov 2009, 16.00 GMT
 

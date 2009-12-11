@@ -125,7 +125,7 @@ Events Processing
 License And Version
 ===================
 
-SpeedMeter is freeware and distributed under the wxPython license.
+SpeedMeter is distributed under the wxPython license.
 
 Latest revision: Andrea Gavana @ 01 Dec 2009, 09.00 GMT
 

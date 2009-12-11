@@ -73,7 +73,7 @@ Events Processing
 License And Version
 ===================
 
-GenericMessageDialog is freeware and distributed under the wxPython license.
+GenericMessageDialog is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 27 Nov 2009, 17.00 GMT
 

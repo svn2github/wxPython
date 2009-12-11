@@ -136,7 +136,7 @@ Events Processing
 License And Version
 ===================
 
-BalloonTip is freeware and distributed under the wxPython license.
+BalloonTip is distributed under the wxPython license.
 
 Latest revision: Andrea Gavana @ 23 Nov 2009, 09.00 GMT
 

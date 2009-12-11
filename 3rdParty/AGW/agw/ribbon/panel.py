@@ -424,9 +424,7 @@ class RibbonPanel(RibbonControl):
 
 
     def CanAutoMinimise(self):
-        """
-        Query if the panel can automatically minimise itself at small sizes.
-        """
+        """ Query if the panel can automatically minimise itself at small sizes. """
 
         return (self._flags & RIBBON_PANEL_NO_AUTO_MINIMISE) == 0 \
                and self._minimised_size.IsFullySpecified()

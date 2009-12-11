@@ -67,7 +67,7 @@ Event Name                     Description
 License And Version
 ===================
 
-ZoomBar is freeware and distributed under the wxPython license.
+ZoomBar is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 03 Dec 2009, 09.00 GMT
 

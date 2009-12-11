@@ -83,7 +83,7 @@ Events Processing
 License And Version
 ===================
 
-PyProgress is freeware and distributed under the wxPython license. 
+PyProgress is distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 01 Dec 2009, 09.00 GMT
 

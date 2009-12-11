@@ -102,7 +102,7 @@ Event Name        Description
 License And Version
 ===================
 
-FloatSpin control is freeware and distributed under the wxPython license.
+FloatSpin control is distributed under the wxPython license.
 
 Latest revision: Andrea Gavana @ 27 Nov 2009, 11.00 GMT
 

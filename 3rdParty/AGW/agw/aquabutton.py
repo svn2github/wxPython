@@ -70,7 +70,7 @@ Event Name        Description
 License And Version
 ===================
 
-AquaButton control is freeware and distributed under the wxPython license.
+AquaButton control is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 30 Nov 2009, 16.00 GMT
 

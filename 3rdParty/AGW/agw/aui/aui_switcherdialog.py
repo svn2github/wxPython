@@ -40,11 +40,11 @@ Have created the dialog, you call `ShowModal()`, and if the return value is
 ``wx.ID_OK``, retrieve the selection from the dialog and activate the pane.
 
 The sample code below shows a generic method of finding panes and notebook
-tabs within the current `AuiManager`, and using the pane name or notebook
+tabs within the current L{AuiManager}, and using the pane name or notebook
 tab position to display the pane.
 
 The only other code to add is a menu item with the desired accelerator,
-whose modifier matches the one you pass to L{SwitcherDialog.SetModifierKey}
+whose modifier matches the one you pass to L{SwitcherDialog.SetModifierKey} 
 (the default being ``wx.WXK_CONTROL``).
 
 
@@ -180,9 +180,9 @@ class SwitcherItem(object):
 
     def Copy(self, item):
         """
-        Copy operator between 2 L{SwitcherItem}s.
+        Copy operator between 2 L{SwitcherItem} instances.
 
-        :param `item`: another instance of L{SwitcherItem} .
+        :param `item`: another instance of L{SwitcherItem}.
         """
 
         self._id = item._id

@@ -166,7 +166,7 @@ Event Name        Description
 License And Version
 ===================
 
-ButtonPanel is freeware and distributed under the wxPython license. 
+ButtonPanel is distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 23 Nov 2009, 12.00 GMT
 

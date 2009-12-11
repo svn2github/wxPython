@@ -85,7 +85,7 @@ Event Name                Description
 License And Version
 ===================
 
-KnobCtrl is freeware and distributed under the wxPython license. 
+KnobCtrl is distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 30 Nov 2009, 14.00 GMT
 

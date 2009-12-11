@@ -92,7 +92,7 @@ Event Name                 Description
 License And Version
 ===================
 
-RulerCtrl is freeware and distributed under the wxPython license. 
+RulerCtrl is distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 01 Dec 2009, 09.00 GMT
 

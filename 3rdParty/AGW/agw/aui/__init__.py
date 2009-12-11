@@ -261,7 +261,7 @@ TODOs
 License And Version
 ===================
 
-AUI library is freeware and distributed under the wxPython license. 
+AUI library is distributed under the wxPython license. 
 
 Latest revision: Andrea Gavana @ 23 Nov 2009, 11.00 GMT
 

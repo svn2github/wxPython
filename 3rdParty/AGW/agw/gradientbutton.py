@@ -70,7 +70,7 @@ Event Name        Description
 License And Version
 ===================
 
-GradientButton is freeware and distributed under the wxPython license.
+GradientButton is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 27 Nov 2009, 17.00 GMT
 

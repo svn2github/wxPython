@@ -104,7 +104,7 @@ Events Processing
 License And Version
 ===================
 
-AdvancedSplash control is freeware and distributed under the wxPython license.
+AdvancedSplash control is distributed under the wxPython license.
 
 Latest revision: Andrea Gavana @ 23 Nov 2009, 09.00 GMT
 

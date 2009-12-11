@@ -129,7 +129,7 @@ Event Name        Description
 License And Version
 ===================
 
-ShapedButton is freeware and distributed under the wxPython license.
+ShapedButton is distributed under the wxPython license.
 
 Latest revision: Andrea Gavana @ 01 Dec 2009, 09.00 GMT
 

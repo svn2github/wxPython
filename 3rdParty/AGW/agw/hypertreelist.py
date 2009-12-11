@@ -211,7 +211,7 @@ Event Name                     Description
 License And Version
 ===================
 
-HyperTreeList is freeware and distributed under the wxPython license.
+HyperTreeList is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 30 Nov 2009, 09.00 GMT
 

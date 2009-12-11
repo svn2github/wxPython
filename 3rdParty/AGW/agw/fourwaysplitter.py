@@ -87,7 +87,7 @@ Event Name                         Description
 License And Version
 ===================
 
-FourWaySplitter is freeware and distributed under the wxPython license. 
+FourWaySplitter is distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 27 Nov 2009, 17.00 GMT
 
@@ -254,11 +254,9 @@ class FourWaySplitter(wx.PyPanel):
     
      * Minimum pane size (minimum of what? Width? Height?);
      * Using negative sash positions to indicate a position offset from the end;
-     * User controlled unsplitting with double clicks on the sash (but supported
-       via the L{FourWaySplitter.SetExpanded} method);
+     * User controlled unsplitting with double clicks on the sash (but supported via the L{FourWaySplitter.SetExpanded} method);
      * Sash gravity.
 
-     
      
     """
 

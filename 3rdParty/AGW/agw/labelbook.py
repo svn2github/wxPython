@@ -110,7 +110,7 @@ Event Name                          Description
 License And Version
 ===================
 
-LabelBook and FlatImageBook are freeware and distributed under the wxPython license. 
+LabelBook and FlatImageBook are distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 30 Nov 2009, 15.00 GMT
 

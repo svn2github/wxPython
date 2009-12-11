@@ -113,7 +113,7 @@ Events Processing
 License And Version
 ===================
 
-PieCtrl is freeware and distributed under the wxPython license.
+PieCtrl is distributed under the wxPython license.
 
 Latest revision: Andrea Gavana @ 30 Nov 2009, 17.00 GMT
 

@@ -181,7 +181,7 @@ UltimateListCtrl has been tested on the following platforms:
 License And Version
 ===================
 
-UltimateListCtrl is freeware and distributed under the wxPython license.
+UltimateListCtrl is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 01 Dec 2009, 15.00 GMT
 

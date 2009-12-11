@@ -153,7 +153,7 @@ Event Name         Description
 License And Version
 ===================
 
-FoldPanelBar is freeware and distributed under the wxPython license.
+FoldPanelBar is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 27 Nov 2009, 15.00 GMT
 

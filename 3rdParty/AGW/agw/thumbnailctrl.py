@@ -118,7 +118,7 @@ Event Name                         Description
 License And Version
 ===================
 
-ThumbnailCtrl is freeware and distributed under the wxPython license.
+ThumbnailCtrl is distributed under the wxPython license.
 
 Latest revision: Andrea Gavana @ 01 Dec 2009, 10.00 GMT
 

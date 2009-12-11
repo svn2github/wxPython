@@ -75,7 +75,7 @@ Events Processing
 License And Version
 ===================
 
-SuperToolTip is freeware and distributed under the wxPython license.
+SuperToolTip is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 01 Dec 2009, 10.00 GMT
 
