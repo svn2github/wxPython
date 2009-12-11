@@ -9,6 +9,8 @@ import wx.lib.mixins.listctrl as listmix
 import wx.lib.colourdb as cdb
 import wx.lib.colourselect as csel
 
+from wx.lib.embeddedimage import PyEmbeddedImage
+
 import images
 
 try:
@@ -91,6 +93,89 @@ musicdata = {
 }
 
 #---------------------------------------------------------------------------
+
+coloursBitmap = PyEmbeddedImage(
+    "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")
+
+#----------------------------------------------------------------------
+decryptedBitmap = PyEmbeddedImage(
+    "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"
+    "GECAAQCxvOh5cbsDqwAAAABJRU5ErkJggg==")
+
+#----------------------------------------------------------------------
 
 PIPE_HEIGHT = 18
 PIPE_WIDTH = 300
@@ -311,7 +396,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.count = 0
         self.log = log
         
-        self.il = wx.ImageList(16, 16)
+        self.il = ULC.PyImageList(16, 16)
 
         self.idx1 = self.il.Add(images.Smiles.GetBitmap())
         self.sm_up = self.il.Add(images.SmallUpArrow.GetBitmap())
@@ -320,6 +405,8 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.il.Add(images.custom.GetBitmap())
         self.il.Add(images.exit.GetBitmap())
         self.il.Add(images.expansion.GetBitmap())
+        self.il.Add(decryptedBitmap.GetBitmap())
+        self.il.Add(coloursBitmap.GetBitmap())
         
         self.list = TestUltimateListCtrl(self, -1,
                                          style=wx.LC_REPORT
@@ -419,10 +506,10 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         
         for key, data in items:
             if key == 3:
-                index = self.list.InsertImageStringItem(sys.maxint, data[0], [3, 4, self.idx1], it_kind=1)
+                index = self.list.InsertImageStringItem(sys.maxint, data[0], [3, 4, 7], it_kind=1)
             elif key == 4:
                 dt = "\n".join(data[0].split())
-                index = self.list.InsertImageStringItem(sys.maxint, dt, self.idx1)
+                index = self.list.InsertImageStringItem(sys.maxint, dt, [self.idx1, 8, 7])
             else:
                 index = self.list.InsertImageStringItem(sys.maxint, data[0], self.idx1)
 

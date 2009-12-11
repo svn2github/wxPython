@@ -157,9 +157,7 @@ class RibbonPanel(RibbonControl):
     
 
     def IsMinimised1(self):
-        """
-        Query if the panel is currently minimised.
-        """
+        """ Query if the panel is currently minimised. """
 
         return self._minimised
 
@@ -553,8 +551,8 @@ class RibbonPanel(RibbonControl):
         """
         Get the dummy panel of an expanded panel.
 
-        Note that this should be called on an expanded panel to get the dummy associated
-        with it - it will return ``None`` when called on the dummy itself.
+        :note: This should be called on an expanded panel to get the dummy associated
+         with it - it will return ``None`` when called on the dummy itself.
 
         :see: L{ShowExpanded}, L{GetExpandedPanel}
         """
@@ -566,9 +564,9 @@ class RibbonPanel(RibbonControl):
         """
         Get the expanded panel of a dummy panel.
 
-        Note that this should be called on a dummy panel to get the expanded panel
-        associated with it - it will return ``None`` when called on the expanded panel
-        itself.
+        :note: This should be called on a dummy panel to get the expanded panel
+         associated with it - it will return ``None`` when called on the expanded panel
+         itself.
 
         :see: L{ShowExpanded}, L{GetExpandedDummy}
         """
@@ -583,13 +581,13 @@ class RibbonPanel(RibbonControl):
         When a panel is minimised, it can be shown full-size in a pop-out window, which
         is refered to as being (externally) expanded.
 
-        Note that when a panel is expanded, there exist two panels - the original panel
-        (which is refered to as the dummy panel) and the expanded panel. The original
-        is termed a dummy as it sits in the ribbon bar doing nothing, while the expanded
-        panel holds the panel children.
-
         :returns: ``True`` if the panel was expanded, ``False`` if it was not (possibly
          due to it not being minimised, or already being expanded).
+
+        :note: When a panel is expanded, there exist two panels - the original panel
+         (which is refered to as the dummy panel) and the expanded panel. The original
+         is termed a dummy as it sits in the ribbon bar doing nothing, while the expanded
+         panel holds the panel children.
          
         :see: L{HideExpanded}, L{GetExpandedPanel}
         """

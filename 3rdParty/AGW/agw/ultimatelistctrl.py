@@ -48,6 +48,9 @@ Appearance
 ==========
 
 * Multiple images for items/subitems;
+* Images can be of any size and not limited to a single specific pair of `width`, `height`
+  as it is the case of `wx.ImageList`. Simply use L{PyImageList} instead of `wx.ImageList`
+  to add your images.
 * Font, colour, background, custom renderers and formatting for items and subitems;
 * Ability to add persistent data to an item using L{SetItemPyData} and L{GetItemPyData}:
   the data can be any Python object and not necessarily an integer as in `wx.ListCtrl`;
@@ -502,6 +505,14 @@ if wx.Platform == "__WXMSW__":
         pass
 
 
+# For PyImageList
+IL_FIXED_SIZE = 0
+IL_VARIABLE_SIZE = 1
+
+# ----------------------------------------------------------------------------
+# Functions
+# ----------------------------------------------------------------------------
+
 # Utility method
 def to_list(input):
     """
@@ -591,6 +602,267 @@ def GetdragcursorBitmap():
 def GetdragcursorImage():
     stream = cStringIO.StringIO(GetdragcursorData())
     return wx.ImageFromStream(stream)
+
+
+#-----------------------------------------------------------------------------
+#  PyImageList
+#-----------------------------------------------------------------------------
+
+class PyImageList(object):
+    """
+    A L{PyImageList} contains a list of images. Images can have masks for
+    transparent drawing, and can be made from a variety of sources including
+    bitmaps and icons.
+
+    L{PyImageList} is used in conjunction with L{UltimateListCtrl}.
+
+    :note: The main improvements that L{PyImageList} introduces is the removal
+     of the limitation of same-size images inside the image list. If you use
+     the style ``IL_VARIABLE_SIZE`` then each image can have any size (in terms
+     of width and height).
+    """
+    
+    def __init__(self, width, height, mask=True, initialCount=1, style=IL_VARIABLE_SIZE):
+        """
+        Default class constructor.
+
+        :param `width`: the width of the images in the image list, in pixels (unused
+         if you specify the ``IL_VARIABLE_SIZE`` style;
+        :param `height`: the height of the images in the image list, in pixels (unused
+         if you specify the ``IL_VARIABLE_SIZE`` style;
+        :param `mask`: ``True`` if masks should be created for all images (unused in
+         L{PyImageList};
+        :param `initialCount`: the initial size of the list (unused in L{PyImageList});
+        :param `style`: can be one of the following bits:
+
+         ==================== ===== =================================
+         Style Flag           Value Description
+         ==================== ===== =================================
+         ``IL_FIXED_SIZE``        0 All the images in L{PyImageList} have the same size (width, height)
+         ``IL_VARIABLE_SIZE``     1 Each image can have any size (in terms of width and height)
+         ==================== ===== =================================
+
+        """         
+
+        self._width = width
+        self._height = height
+        self._mask = mask
+        self._initialCount = 1
+        self._style = style
+
+        self._images = []
+        
+
+    def GetImageCount(self):
+        """ Returns the number of images in the list. """
+
+        return len(self._images)
+
+
+
+    def Add(self, bitmap):
+        """
+        Adds a new image or images using a bitmap.
+
+        :param `bitmap`: a valid `wx.Bitmap` object.
+
+        :return: The new zero-based image index.
+
+        :note: If the bitmap is wider than the images in the list and you are not using
+         the ``IL_VARIABLE_SIZE`` style, then the bitmap will automatically be split
+         into smaller images, each matching the dimensions of the image list.
+        """
+
+        index = len(self._images)
+        
+        # Mimic behavior of Windows ImageList_Add that automatically breaks up the added
+        # bitmap into sub-images of the correct size
+
+        if self._style & IL_FIXED_SIZE:
+
+            if self._width > 0 and bitmap.GetWidth() > self._width and \
+               bitmap.GetHeight() >= self._height:
+                
+                numImages = bitmap.GetWidth()/self._width
+                for subIndex in xrange(numImages):
+                    rect = wx.Rect(self._width * subIndex, 0, self._width, self._height)
+                    tmpBmp = bitmap.GetSubBitmap(rect)
+                    self._images.append(tmpBmp)
+                
+            else:
+                
+                self._images.append(bitmap)
+        else:
+        
+            self._images.append(bitmap)
+
+        if self._width == 0 and self._height == 0:
+            self._width = bitmap.GetWidth()
+            self._height = bitmap.GetHeight()
+
+        return index
+
+
+    def AddIcon(self, icon):
+        """
+        Adds a new image using an icon.
+
+        :param `icon`: a valid `wx.Icon` object.
+
+        :return: The new zero-based image index.
+
+        :note: If the icon is wider than the images in the list and you are not using
+         the ``IL_VARIABLE_SIZE`` style, then the icon will automatically be split
+         into smaller images, each matching the dimensions of the image list.
+        """
+
+        return self.Add(wx.BitmapFromIcon(icon))
+
+
+    def AddWithColourMask(self, bitmap, colour):
+        """
+        Adds a new image or images using a bitmap and a colour mask.
+
+        :param `bitmap`: a valid `wx.Bitmap` object;
+        :param `colour`: an instance of `wx.Colour`, a colour indicating which parts
+         of the image are transparent.
+
+        :return: The new zero-based image index.
+
+        :note: If the bitmap is wider than the images in the list and you are not using
+         the ``IL_VARIABLE_SIZE`` style, then the bitmap will automatically be split
+         into smaller images, each matching the dimensions of the image list.
+        """
+
+        img = bitmap.ConvertToImage()
+        img.SetMaskColour(maskColour.Red(), maskColour.Green(), maskColour.Blue())
+        
+        return self.Add(wx.BitmapFromImage(img))
+
+
+    def GetBitmap(self, index):
+        """
+        Returns the bitmap corresponding to the given `index`, or `wx.NullBitmap`
+        if the index is invalid.
+
+        :param `index`: the bitmap index.
+        """
+
+        if index >= len(self._images):
+            return wx.NullBitmap
+        
+        return self._images[index]
+
+
+    def GetIcon(self, index):
+        """
+        Returns the icon corresponding to the given `index`, or `wx.NullIcon`
+        if the index is invalid.
+
+        :param `index`: the icon index.
+        """
+
+        if index >= len(self._images):
+            return wx.NullIcon
+        
+        return wx.IconFromBitmap(self._images[indx])
+        
+
+    def Replace(self, index, bitmap):
+        """
+        Replaces the existing image with the new bitmap.
+
+        :param `index`: the index at which the image should be replaced;
+        :param `bitmap`: the new bitmap to add to the image list, an instance of
+         `wx.Bitmap`.
+        """
+        
+        if index >= len(self._images):
+            raise Exception("Wrong index in image list")
+        
+        self._images[index] = bitmap
+
+        return True
+
+
+    def ReplaceIcon(self, index, icon):
+        """
+        Replaces the existing image with the new icon.
+
+        :param `index`: the index at which the image should be replaced;
+        :param `icon`: the new icon to add to the image list, an instance of
+         `wx.Icon`.
+        """
+
+        return self.Replace(index, wx.BitmapFromIcon(icon))
+
+
+    def Remove(self, index):
+        """
+        Removes the image at the given position.
+
+        :param `index`: the zero-based index of the image to be removed.
+        """
+
+        if index >= len(self._images):
+            raise Exception("Wrong index in image list")
+
+        self._images.pop(index)
+        return True
+
+
+    def RemoveAll(self):
+        """ Removes all the images in the list. """
+
+        self._images = []
+        return True
+
+
+    def GetSize(self, index):
+        """
+        Retrieves the size of an image in the list.
+
+        :param `index`: the zero-based index of the image.
+
+        :return: a tuple of `(width, height)` properties of the chosen bitmap.        
+        """
+                
+        if index >= len(self._images):
+            raise Exception("Wrong index in image list")
+
+        bmp = self._images[index]
+        return bmp.GetWidth(), bmp.GetHeight()
+
+
+    def Draw(self, index, dc, x, y, flags, solidBackground=True):
+        """
+        Draws a specified image onto a device context.
+
+        :param `index`: the image index, starting from zero;
+        :param `dc`: an instance of `wx.DC`;
+        :param `x`: x position on the device context;
+        :param `y`: y position on the device context;
+        :param `flags`: how to draw the image. A bitlist of a selection of the following:
+
+         ================================= =======================================
+         Flag Paarameter                   Description
+         ================================= =======================================
+         ``wx.IMAGELIST_DRAW_NORMAL``      Draw the image normally
+         ``wx.IMAGELIST_DRAW_TRANSPARENT`` Draw the image with transparency
+         ``wx.IMAGELIST_DRAW_SELECTED``    Draw the image in selected state
+         ``wx.IMAGELIST_DRAW_FOCUSED``     Draw the image in a focused state
+         ================================= =======================================
+
+        :param `solidBackground`: currently unused.
+        """
+        
+        if index >= len(self._images):
+            raise Exception("Wrong index in image list")
+
+        bmp = self._images[index]    
+        dc.DrawBitmap(bmp, x, y, (flags & wx.IMAGELIST_DRAW_TRANSPARENT) > 0)
+
+        return True
 
 
 class SelectionStore(object):
@@ -7663,21 +7935,41 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         """
         Sets the image list associated with the control.
 
-        :param `imageList`: an instance of `wx.ImageList`;
+        :param `imageList`: an instance of `wx.ImageList` or an instance of L{PyImageList};
         :param `which`: one of ``wx.IMAGE_LIST_NORMAL``, ``wx.IMAGE_LIST_SMALL``,
          ``wx.IMAGE_LIST_STATE`` (the last is unimplemented).
+
+        :note: Using L{PyImageList} enables you to have images of different size inside the
+         image list. In your derived class, instead of doing this::
+
+             imageList = wx.ImageList(16, 16)
+             imageList.Add(someBitmap)
+             self.SetImageList(imageList, wx.IMAGE_LIST_SMALL)
+
+         You should do this::
+
+             imageList = PyImageList(16, 16)
+             imageList.Add(someBitmap)
+             self.SetImageList(imageList, wx.IMAGE_LIST_SMALL)
+         
         """
 
         self._dirty = True
 
+        if isinstance(imageList, PyImageList):
+            # We have a custom PyImageList with variable image sizes
+            cls = PyImageList
+        else:
+            cls = wx.ImageList
+
         # calc the spacing from the icon size
-        width = height = 0    
+        width = height = 0
         if imageList and imageList.GetImageCount():
             width, height = imageList.GetSize(0)
 
         if which == wx.IMAGE_LIST_NORMAL:
             self._normal_image_list = imageList
-            self._normal_grayed_image_list = wx.ImageList(width, height, True, 0)
+            self._normal_grayed_image_list = cls(width, height, True, 0)
 
             for ii in xrange(imageList.GetImageCount()):
                 bmp = imageList.GetBitmap(ii)
@@ -7690,7 +7982,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             self._small_image_list = imageList
             self._small_spacing = width + 14
 
-            self._small_grayed_image_list = wx.ImageList(width, height, True, 0)
+            self._small_grayed_image_list = cls(width, height, True, 0)
 
             for ii in xrange(imageList.GetImageCount()):
                 bmp = imageList.GetBitmap(ii)
@@ -10932,9 +11224,23 @@ class UltimateListCtrl(wx.PyControl):
         """
         Sets the image list associated with the control.
 
-        :param `imageList`: an instance of `wx.ImageList`;
+        :param `imageList`: an instance of `wx.ImageList` or an instance of L{PyImageList};
         :param `which`: one of ``wx.IMAGE_LIST_NORMAL``, ``wx.IMAGE_LIST_SMALL``,
          ``wx.IMAGE_LIST_STATE`` (the last is unimplemented).
+
+        :note: Using L{PyImageList} enables you to have images of different size inside the
+         image list. In your derived class, instead of doing this::
+
+             imageList = wx.ImageList(16, 16)
+             imageList.Add(someBitmap)
+             self.SetImageList(imageList, wx.IMAGE_LIST_SMALL)
+
+         You should do this::
+
+             imageList = PyImageList(16, 16)
+             imageList.Add(someBitmap)
+             self.SetImageList(imageList, wx.IMAGE_LIST_SMALL)
+         
         """
 
         if which == wx.IMAGE_LIST_NORMAL:
@@ -10953,9 +11259,23 @@ class UltimateListCtrl(wx.PyControl):
         """
         Assigns the image list associated with the control.
 
-        :param `imageList`: an instance of `wx.ImageList`;
+        :param `imageList`: an instance of `wx.ImageList` or an instance of L{PyImageList};
         :param `which`: one of ``wx.IMAGE_LIST_NORMAL``, ``wx.IMAGE_LIST_SMALL``,
          ``wx.IMAGE_LIST_STATE`` (the last is unimplemented).
+
+        :note: Using L{PyImageList} enables you to have images of different size inside the
+         image list. In your derived class, instead of doing this::
+
+             imageList = wx.ImageList(16, 16)
+             imageList.Add(someBitmap)
+             self.SetImageList(imageList, wx.IMAGE_LIST_SMALL)
+
+         You should do this::
+
+             imageList = PyImageList(16, 16)
+             imageList.Add(someBitmap)
+             self.SetImageList(imageList, wx.IMAGE_LIST_SMALL)
+         
         """
 
         self.SetImageList(imageList, which)

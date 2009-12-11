@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 30 Nov 2009, 09.00 GMT
+# Latest Revision: 10 Dec 2009, 14.00 GMT
 #
 #
 # TODO List
@@ -213,7 +213,7 @@ License And Version
 
 HyperTreeList is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 30 Nov 2009, 09.00 GMT
+Latest Revision: Andrea Gavana @ 10 Dec 2009, 14.00 GMT
 
 Version 1.1
 
@@ -2631,6 +2631,29 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `dc`: an instance of `wx.DC`.
         """
 
+        def _paintText(text, textrect, alignment):
+            """
+            Sub-function to draw multi-lines text label aligned correctly.
+
+            :param `text`: the item text label (possibly multiline);
+            :param `textrect`: the label client rectangle;
+            :param `alignment`: the alignment for the text label, one of ``wx.ALIGN_LEFT``,
+             ``wx.ALIGN_RIGHT``, ``wx.ALIGN_CENTER``.
+            """
+            
+            txt = text.splitlines()
+            if alignment != wx.ALIGN_LEFT and len(txt):
+                yorigin = textrect.Y
+                for t in txt:
+                    w, h = dc.GetTextExtent(t)
+                    plus = textrect.Width - w
+                    if alignment == wx.ALIGN_CENTER:
+                        plus /= 2
+                    dc.DrawLabel(t, wx.Rect(textrect.X + plus, yorigin, w, yorigin+h))
+                    yorigin += h
+                return
+            dc.DrawLabel(text, textrect)
+        
         attr = item.GetAttributes()
         
         if attr and attr.HasFont():
@@ -2882,12 +2905,12 @@ class TreeListMainWindow(CustomTreeCtrl):
             if not item.IsEnabled():
                 foreground = dc.GetTextForeground()
                 dc.SetTextForeground(self._disabledColour)
-                dc.DrawLabel(text, textrect)
+                _paintText(text, textrect, alignment)
                 dc.SetTextForeground(foreground)
             else:
                 if wx.Platform == "__WXMAC__" and item.IsSelected() and self._hasFocus:
                     dc.SetTextForeground(wx.WHITE)
-                dc.DrawLabel(text, textrect)
+                _paintText(text, textrect, alignment)
 
             wnd = item.GetWindow(i)            
             if wnd:

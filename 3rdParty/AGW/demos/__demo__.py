@@ -13,7 +13,7 @@ this module returns the following information:
                        
 These meta data are merged into the wxPython demo tree at startup.
 
-Last updated: Andrea Gavana @ 02 Dec 2009, 16.00 GMT.
+Last updated: Andrea Gavana @ 10 Dec 2009, 14.00 GMT.
 Version 0.7.0.
 
 """
@@ -128,6 +128,9 @@ def GetOverview():
                        "wx.gizmos.TreeListCtrl", "wx.DirDialog", "wx.CollapsiblePane",
                        "wx.ProgressDialog", "wx.TipWindow", "wx.lib", "wx.aui", "wx.ListCtrl",
                        "wx.BusyInfo", "wx.Panel"]
+
+    import wx.lib.agw
+    _agwDocs = wx.lib.agw.__doc__
 
     _agwDocs = _agwDocs.replace("`", "").replace("L{", "").replace("}", "")
     
