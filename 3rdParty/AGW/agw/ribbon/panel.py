@@ -72,7 +72,7 @@ class RibbonPanel(RibbonControl):
          window will be sized to 20x20 pixels so that the window is visible but obviously
          not correctly sized;
         :param `style`: Window style;
-        :param `name` the window name.
+        :param `name`: the window name.
         """
 
         RibbonControl.__init__(self, parent, id, pos, size, wx.BORDER_NONE, name=name)
