@@ -2259,6 +2259,25 @@ class AuiSingleDockingGuide(AuiDockingGuide):
             wx.CallAfter(wx.SafeYield, self, True)
 
 
+    def SetShape(self, region):
+        """
+        If the platform supports it, sets the shape of the window to that depicted by `region`.
+        The system will not display or respond to any mouse event for the pixels that lie
+        outside of the region. To reset the window to the normal rectangular shape simply call
+        L{SetShape} again with an empty region. 
+
+        :param `region`: the shape of the frame.
+
+        :note: Overridden for wxMac.        
+        """
+        
+        if wx.Platform == '__WXMAC__':
+            # HACK so we don't crash when SetShape is called
+            return
+        else:
+            super(AuiSingleDockingGuide, self).SetShape(region)
+
+
     def SetValid(self, valid):
         """
         Sets the docking direction as valid or invalid.
