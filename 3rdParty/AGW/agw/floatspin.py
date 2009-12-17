@@ -349,8 +349,38 @@ class FloatSpin(wx.PyControl):
         self._textctrl = None
         self._spinctrl_bestsize = wx.Size(-999, -999)
 
+        # start Philip Semanchuk addition
+        # The textbox & spin button are drawn slightly differently 
+        # depending on the platform. The difference is most pronounced
+        # under OS X.
+        if "__WXMAC__" in wx.PlatformInfo:
+            self._gap = 8
+            self._spin_top = 3
+            self._text_left = 4
+            self._text_top = 4
+        elif "__WXMSW__" in wx.PlatformInfo:
+            self._gap = 1
+            self._spin_top = 0
+            self._text_left = 0
+            self._text_top = 0
+        else:
+            # GTK
+            self._gap = -1
+            self._spin_top = 0
+            self._text_left = 0
+            self._text_top = 0
+        # end Philip Semanchuk addition
+
         self.SetLabel(name)
-        self.SetBackgroundColour(parent.GetBackgroundColour())
+        # start Philip Semanchuk change
+        # Set the background color to match that of the parent. wxMac supports
+        # transparency, and that gives the best results on that platform.
+        # Other platforms ignore wx.ALPHA_TRANSPARENT.
+        colour = parent.GetBackgroundColour()
+        colour.Set(colour.Red(), colour.Green(), colour.Blue(), 
+                   wx.ALPHA_TRANSPARENT)
+        self.SetBackgroundColour(colour)
+        # end Philip Semanchuk change
         self.SetForegroundColour(parent.GetForegroundColour())
 
         width = size[0]
@@ -361,8 +391,6 @@ class FloatSpin(wx.PyControl):
             width = best_size.GetWidth()
         if height == -1:
             height = best_size.GetHeight()
-
-        self.SetBestSize((width, height))
 
         self._validkeycode = [43, 45, 46, 69, 101, 127, 314]
         self._validkeycode.extend(range(48, 58))
@@ -388,6 +416,25 @@ class FloatSpin(wx.PyControl):
                                        wx.DefaultPosition,
                                        (width-self._spinbutton.GetSize().GetWidth(), height),
                                        txtstyle)
+
+        # start Philip Semanchuk addition
+        # Setting the textctrl's size in the ctor also sets its min size. 
+        # But the textctrl is entirely controlled by the parent floatspin 
+        # control and should accept whatever size its parent dictates, so
+        # here we tell it to forget its min size.
+        self._textctrl.SetMinSize(wx.DefaultSize)
+        # Setting the spin buttons's size in the ctor also sets its min size. 
+        # Under OS X that results in a rendering artifact because spin buttons
+        # are a little shorter than textboxes. 
+        # Setting the min size to the default allows OS X to draw the spin 
+        # button correctly. However, Windows takes the call to SetMinSize() 
+        # as a cue to size the spin button considerably taller than the 
+        # textbox, so we avoid that call under Windows. 
+        # The call to SetMinSize() isn't necessary under GTK, nor does it
+        # do any harm.
+        if "__WXMSW__" not in wx.PlatformInfo:
+            self._spinbutton.SetMinSize(wx.DefaultSize)
+        # end Philip Semanchuk addition
 
         self._mainsizer = wx.BoxSizer(wx.HORIZONTAL)
         self._mainsizer.Add(self._textctrl, 0)
@@ -419,6 +466,10 @@ class FloatSpin(wx.PyControl):
         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
         self.Bind(wx.EVT_MOUSEWHEEL, self.OnMouseWheel)
         self.Bind(wx.EVT_SIZE, self.OnSize)
+
+        # start Philip Semanchuk move
+        self.SetBestSize((width, height))
+        # end Philip Semanchuk move
 
 
     def OnDestroy(self, event):
@@ -667,16 +718,25 @@ class FloatSpin(wx.PyControl):
         :note: This method resizes the text control and reposition the spin button when
          resized.
         """
-
+        # start Philip Semanchuk addition
         event_width = event.GetSize().width
+        
+        self._textctrl.SetPosition((self._text_left, self._text_top))
+        
         text_width, text_height = self._textctrl.GetSizeTuple()
+        
         spin_width, _ = self._spinbutton.GetSizeTuple()
-        text_width = event_width - spin_width
+        
+        text_width = event_width - (spin_width + self._gap + self._text_left)
 
         self._textctrl.SetSize(wx.Size(text_width, text_height))
-        self._spinbutton.SetPosition(wx.Point(text_width, 0))
-
+        
+        # The spin button is always snug against the right edge of the 
+        # control.
+        self._spinbutton.SetPosition((event_width - spin_width, self._spin_top))
+        
         event.Skip()
+        # end Philip Semanchuk addition
 
 
     def ReplaceDoubleZero(self, strs):
@@ -706,8 +766,7 @@ class FloatSpin(wx.PyControl):
         Sets the L{FloatSpin} value.
 
         :param `value`: the new value.
-        """
-
+        """        
         if not self._textctrl or not self.InRange(value):
             return
 
