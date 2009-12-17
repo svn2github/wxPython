@@ -332,6 +332,9 @@ ID_WhidbeyGuides = ID_CreateTree + 79
 ID_NotebookPreview = ID_CreateTree + 80
 ID_PreviewMinimized = ID_CreateTree + 81
 
+ID_SmoothDocking = ID_CreateTree + 82
+ID_NativeMiniframes = ID_CreateTree + 83
+
 ID_FirstPerspective = ID_CreatePerspective + 1000
 ID_FirstNBPerspective = ID_CreateNBPerspective + 10000
 
@@ -935,6 +938,8 @@ class AuiFrame(wx.Frame):
         options_menu.AppendCheckItem(ID_TransparentDrag, "Transparent Drag")
         options_menu.AppendCheckItem(ID_AllowActivePane, "Allow Active Pane")
         options_menu.AppendCheckItem(ID_LiveUpdate, "Live Resize Update")
+        options_menu.AppendCheckItem(ID_NativeMiniframes, "Use Native wx.MiniFrames")
+        options_menu.AppendSeparator()
         options_menu.AppendRadioItem(ID_MinimizePosSmart, "Minimize in Smart mode").Check()
         options_menu.AppendRadioItem(ID_MinimizePosTop, "Minimize on Top")
         options_menu.AppendRadioItem(ID_MinimizePosLeft, "Minimize on the Left")
@@ -947,6 +952,7 @@ class AuiFrame(wx.Frame):
         options_menu.AppendSeparator()
         options_menu.AppendCheckItem(ID_PaneIcons, "Set Icons On Panes")
         options_menu.AppendCheckItem(ID_AnimateFrames, "Animate Dock/Close/Minimize Of Floating Panes")
+        options_menu.AppendCheckItem(ID_SmoothDocking, "Smooth Docking Effects (PyQT Style)")
         options_menu.AppendSeparator()
         options_menu.Append(ID_TransparentPane, "Set Floating Panes Transparency")
         options_menu.AppendSeparator()
@@ -1341,6 +1347,8 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_NoVenetianFade)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_TransparentDrag)
         self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_LiveUpdate)
+        self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_SmoothDocking)
+        self.Bind(wx.EVT_MENU, self.OnManagerFlag, id=ID_NativeMiniframes)        
         self.Bind(wx.EVT_MENU, self.OnMinimizePosition, id=ID_MinimizePosSmart)
         self.Bind(wx.EVT_MENU, self.OnMinimizePosition, id=ID_MinimizePosTop)
         self.Bind(wx.EVT_MENU, self.OnMinimizePosition, id=ID_MinimizePosLeft)
@@ -1744,6 +1752,11 @@ class AuiFrame(wx.Frame):
             flag = aui.AUI_MGR_LIVE_RESIZE 
         elif evId == ID_AnimateFrames:
             flag = aui.AUI_MGR_ANIMATE_FRAMES
+        elif evId == ID_SmoothDocking:
+            flag = aui.AUI_MGR_SMOOTH_DOCKING
+        elif evId == ID_NativeMiniframes:
+            flag = aui.AUI_MGR_USE_NATIVE_MINIFRAMES
+            
         if flag:
             self._mgr.SetFlags(self._mgr.GetFlags() ^ flag)
         
@@ -1911,7 +1924,7 @@ class AuiFrame(wx.Frame):
             event.Check((flags & aui.AUI_MGR_TRANSPARENT_HINT) != 0)
                 
         elif evId == ID_LiveUpdate:
-            event.Check((flags & aui.AUI_MGR_LIVE_RESIZE) != 0)
+            event.Check(aui.AuiManager_HasLiveResize(self._mgr))
                 
         elif evId == ID_VenetianBlindsHint:
             event.Check((flags & aui.AUI_MGR_VENETIAN_BLINDS_HINT) != 0)
@@ -1930,9 +1943,15 @@ class AuiFrame(wx.Frame):
         elif evId == ID_NoVenetianFade:
             event.Check((flags & aui.AUI_MGR_NO_VENETIAN_BLINDS_FADE) != 0)
 
+        elif evId == ID_NativeMiniframes:
+            event.Check(aui.AuiManager_UseNativeMiniframes(self._mgr))
+
         elif evId == ID_PaneIcons:
             event.Check(self._pane_icons)
 
+        elif evId == ID_SmoothDocking:
+            event.Check((flags & aui.AUI_MGR_SMOOTH_DOCKING) != 0)
+            
         elif evId == ID_AnimateFrames:
             event.Check((flags & aui.AUI_MGR_ANIMATE_FRAMES) != 0)
             
@@ -2748,7 +2767,9 @@ def GetIntroText():
     "<li>New Aero-style docking guides: you can enable them by using the <i>AuiManager</i> style <tt>AUI_MGR_AERO_DOCKING_GUIDES</tt>;</li>" \
     "<li>New Whidbey-style docking guides: you can enable them by using the <i>AuiManager</i> style <tt>AUI_MGR_WHIDBEY_DOCKING_GUIDES</tt>;</li>" \
     "<li>A slide-in/slide-out preview of minimized panes can be seen by enabling the <i>AuiManager</i> style" \
-    "<tt>AUI_MGR_PREVIEW_MINIMIZED_PANES</tt> and by hovering with the mouse on the minimized pane toolbar tool.</li>" \
+    "<tt>AUI_MGR_PREVIEW_MINIMIZED_PANES</tt> and by hovering with the mouse on the minimized pane toolbar tool;</li>" \
+    "<li>Native of custom-drawn mini frames can be used as floating panes, depending on the <tt>AUI_MGR_USE_NATIVE_MINIFRAMES</tt> style;</li>" \
+    "<li>A 'smooth docking effect' can be obtained by using the <tt>AUI_MGR_SMOOTH_DOCKING</tt> style (similar to PyQT docking style).</li>" \
     "</ul><p>" \
     "<li><b>AuiNotebook:</b></li>" \
     "<ul>" \

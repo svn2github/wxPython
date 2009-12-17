@@ -773,6 +773,7 @@ class SuperToolTip(object):
         
         self.SetStartDelay()
         self.SetEndDelay()
+        self.ApplyStyle("XP Blue")
 
 
     def SetTarget(self, widget):
