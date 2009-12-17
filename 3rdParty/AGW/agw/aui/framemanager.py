@@ -2163,8 +2163,14 @@ class AuiSingleDockingGuide(AuiDockingGuide):
 
         self._direction = direction
 
-        AuiDockingGuide.__init__(self, parent, style=wx.FRAME_TOOL_WINDOW | wx.STAY_ON_TOP |
-                                 wx.FRAME_NO_TASKBAR | wx.NO_BORDER | wx.FRAME_SHAPED, name="auiSingleDockTarget")
+        style = wx.FRAME_TOOL_WINDOW | wx.STAY_ON_TOP | \
+                wx.FRAME_NO_TASKBAR | wx.NO_BORDER
+        # Use of FRAME_SHAPED on wxMac causes the frame to be visible
+        # breaking the docking hints.
+        if wx.Platform != '__WXMAC__':
+            style |= wx.FRAME_SHAPED
+
+        AuiDockingGuide.__init__(self, parent, style=style, name="auiSingleDockTarget")
         
         self.Hide()
 
@@ -8118,9 +8124,6 @@ class AuiManager(wx.EvtHandler):
 
         dc = event.GetDC()
         
-        if wx.Platform == "__WXMAC__":
-            dc.Clear()
-
         for part in self._uiparts:
         
             # don't draw hidden pane items or items that aren't windows
@@ -8286,10 +8289,9 @@ class AuiManager(wx.EvtHandler):
         :note: This is intentionally empty (excluding wxMAC) to reduce
          flickering while drawing.
         """
-        
-        if wx.Platform == "__WXMAC__":
-            event.Skip()        
 
+        if wx.Platform == "__WXMAC__":
+            event.Skip()
 
     def OnSize(self, event):
         """
