@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 17 Dec 2009, 17.00 GMT
+# Latest Revision: 18 Dec 2009, 09.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -3127,11 +3127,13 @@ class AuiFloatingFrame(wx.MiniFrame):
                 return
             self._owner_mgr._action_window = self._pane_window
             point = wx.GetMousePosition()
+            action_offset = point - self.GetPosition()
+
             if self._is_toolbar:
-                action_offset = point - self.GetPosition()
                 self._owner_mgr._toolbar_action_offset = action_offset
                 self._owner_mgr.OnMotion_DragToolbarPane(point)
             else:
+                self._owner_mgr._action_offset = action_offset
                 self._owner_mgr.OnMotion_DragFloatingPane(point)
 
     
@@ -3961,14 +3963,11 @@ class AuiManager(wx.EvtHandler):
          ==================================== ==================================
 
          Default value for `flags` is:
-         ``AUI_MGR_DEFAULT`` = ``AUI_MGR_ALLOW_FLOATING`` |
-                               ``AUI_MGR_TRANSPARENT_HINT`` | 
-                               ``AUI_MGR_HINT_FADE`` | 
-                               ``AUI_MGR_NO_VENETIAN_BLINDS_FADE``
+         ``AUI_MGR_DEFAULT`` = ``AUI_MGR_ALLOW_FLOATING`` | ``AUI_MGR_TRANSPARENT_HINT`` | ``AUI_MGR_HINT_FADE`` | ``AUI_MGR_NO_VENETIAN_BLINDS_FADE``
 
          :note: If using the ``AUI_MGR_USE_NATIVE_MINIFRAMES``, double-clicking on a
           floating pane caption will not re-dock the pane, but simply maximize it (if
-          L{MaximizeButton} has been set to ``True``) or do nothing.
+          L{AuiPaneInfo.MaximizeButton} has been set to ``True``) or do nothing.
         """
 
         wx.EvtHandler.__init__(self)
@@ -4248,7 +4247,7 @@ class AuiManager(wx.EvtHandler):
 
          :note: If using the ``AUI_MGR_USE_NATIVE_MINIFRAMES``, double-clicking on a
           floating pane caption will not re-dock the pane, but simply maximize it (if
-          L{MaximizeButton} has been set to ``True``) or do nothing.
+          L{AuiPaneInfo.MaximizeButton} has been set to ``True``) or do nothing.
         
         """
         
@@ -6058,7 +6057,7 @@ class AuiManager(wx.EvtHandler):
             # a pane, we need to cancel that action here to prevent
             # a spurious crash.
             if self._action_window == p.frame:
-                if wx.Window.GetCapture() == self._frame:
+                if self._frame.HasCapture():
                     self._frame.ReleaseMouse()
                 self._action = actionNone
                 self._action_window = None
@@ -8888,7 +8887,7 @@ class AuiManager(wx.EvtHandler):
         else:
             event.Skip()        
 
-        if wx.Window.GetCapture() == self._frame:
+        if self._frame.HasCapture():
             self._frame.ReleaseMouse()
             
         self._action = actionNone
@@ -9116,8 +9115,10 @@ class AuiManager(wx.EvtHandler):
                 self._action_part = self._uiparts[self._currentDragItem]
             else:
                 self._currentDragItem = self._uiparts.index(self._action_part)
-                        
-            self._frame.ReleaseMouse()
+
+            if self._frame.HasCapture():
+                self._frame.ReleaseMouse()
+                
             self.DoEndResizeAction(event)
             self._frame.CaptureMouse()
             return
@@ -9169,7 +9170,9 @@ class AuiManager(wx.EvtHandler):
         if self._currentDragItem != -1 and AuiManager_HasLiveResize(self):
             self._action_part = self._uiparts[self._currentDragItem]
 
-            self._frame.ReleaseMouse()
+            if self._frame.HasCapture():
+                self._frame.ReleaseMouse()
+                
             self.DoEndResizeAction(event)
             self._currentDragItem = -1
             return
@@ -9271,7 +9274,9 @@ class AuiManager(wx.EvtHandler):
                         
             if not self._hint_window or not self._hint_window.IsShown():
                 if (self._flags & AUI_MGR_USE_NATIVE_MINIFRAMES) == 0 or not isPoint:
+                    self._from_move = True
                     pane.frame.Move(pane.floating_pos)
+                    self._from_move = False
 
             if self._flags & AUI_MGR_TRANSPARENT_DRAG:
                 pane.frame.SetTransparent(150)
