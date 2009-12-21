@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 18 Dec 2009, 09.00 GMT
+# Latest Revision: 21 Dec 2009, 16.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -5752,7 +5752,7 @@ class AuiManager(wx.EvtHandler):
                     pane_size = pane.best_size
                     if pane_size == wx.Size(-1, -1):
                         pane_size = pane.min_size
-                    if pane_size == wx.Size(-1, -1):
+                    if pane_size == wx.Size(-1, -1) and pane.window:
                         pane_size = pane.window.GetSize()
                     if dock.IsHorizontal():
                         size = max(pane_size.y, size)
@@ -6155,7 +6155,8 @@ class AuiManager(wx.EvtHandler):
                     p.window.Show(p.IsShown())
 
             if p.frame and p.needsTransparency:
-                p.frame.SetTransparent(p.transparent)
+                if p.frame.IsShown():
+                    p.frame.SetTransparent(p.transparent)
                 p.needsTransparency = False
 
             # if "active panes" are no longer allowed, clear
@@ -7424,6 +7425,9 @@ class AuiManager(wx.EvtHandler):
         paneInfo = self.PaneHitTest(panes, pt)
 
         if paneInfo.IsMaximized():
+            return False, target
+
+        if paneInfo.window is None:
             return False, target
 
         # search the dock guides.
@@ -9271,17 +9275,16 @@ class AuiManager(wx.EvtHandler):
                 # return
                 # HACK: Terrible hack on wxMSW (!)
                 pane.frame.SetTransparent(254)
-                        
-            if not self._hint_window or not self._hint_window.IsShown():
-                if (self._flags & AUI_MGR_USE_NATIVE_MINIFRAMES) == 0 or not isPoint:
-                    self._from_move = True
-                    pane.frame.Move(pane.floating_pos)
-                    self._from_move = False
+ 
+##            if not self._hint_window or not self._hint_window.IsShown():
+            self._from_move = True
+            pane.frame.Move(pane.floating_pos)
+            self._from_move = False
 
             if self._flags & AUI_MGR_TRANSPARENT_DRAG:
                 pane.frame.SetTransparent(150)
 
-            framePos = pane.frame.GetPosition()
+            framePos = pane.floating_pos
         
         # calculate the offset from the upper left-hand corner
         # of the frame to the mouse pointer
@@ -9311,6 +9314,9 @@ class AuiManager(wx.EvtHandler):
             
             rc = paneInfo.window.GetScreenRect()
             if rc.Contains(screenPt):
+                if rc.height < 20 or rc.width < 20:
+                    return
+                
                 self.UpdateDockingGuides(paneInfo)
                 ShowDockingGuides(self._guides, True)
                 break
