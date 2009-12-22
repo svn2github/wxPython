@@ -131,6 +131,7 @@ wxEVT_AUI_PANE_FLOATING = wx.NewEventType()
 wxEVT_AUI_PANE_FLOATED = wx.NewEventType()
 wxEVT_AUI_PANE_DOCKING = wx.NewEventType()
 wxEVT_AUI_PANE_DOCKED = wx.NewEventType()
+wxEVT_AUI_PERSPECTIVE_CHANGED = wx.NewEventType()
 
 EVT_AUI_PANE_BUTTON = wx.PyEventBinder(wxEVT_AUI_PANE_BUTTON, 0)
 """ Fires an event when the user left-clicks on a pane button. """
@@ -156,7 +157,8 @@ EVT_AUI_PANE_DOCKING = wx.PyEventBinder(wxEVT_AUI_PANE_DOCKING, 0)
 """ A pane in `AuiManager` is about to be docked. """
 EVT_AUI_PANE_DOCKED = wx.PyEventBinder(wxEVT_AUI_PANE_DOCKED, 0)
 """ A pane in `AuiManager` has been docked. """
-
+EVT_AUI_PERSPECTIVE_CHANGED = wx.PyEventBinder(wxEVT_AUI_PERSPECTIVE_CHANGED, 0)
+""" The layout in `AuiManager` has been changed. """
 
 # ---------------------------------------------------------------------------- #
 
@@ -6198,7 +6200,10 @@ class AuiManager(wx.EvtHandler):
                     p.window.Update()
 
         self.Repaint()
-    
+
+        if not self._masterManager:
+            e = self.FireEvent(wxEVT_AUI_PERSPECTIVE_CHANGED, None, canVeto=False)    
+
 
     def UpdateNotebook(self):
         """ Updates the automatic L{AuiNotebook} in the layout (if any exists). """
@@ -9293,7 +9298,7 @@ class AuiManager(wx.EvtHandler):
 
             if self._flags & AUI_MGR_TRANSPARENT_DRAG:
                 pane.frame.SetTransparent(150)
-        
+
         # calculate the offset from the upper left-hand corner
         # of the frame to the mouse pointer
         action_offset = screenPt - framePos
@@ -9513,12 +9518,12 @@ class AuiManager(wx.EvtHandler):
         if not pane.IsOk():
             raise Exception("Pane window not found")
 
-        if pane.IsFloating():        
+        if pane.IsFloating():
             pane.floating_pos = pane.frame.GetPosition()
             if pane.frame._transparent != pane.transparent:
                 pane.frame.SetTransparent(pane.transparent)
                 pane.frame._transparent = pane.transparent
-                    
+        
         # save the new positions
         docks = FindDocks(self._docks, pane.dock_direction, pane.dock_layer, pane.dock_row)
         if len(docks) == 1:
