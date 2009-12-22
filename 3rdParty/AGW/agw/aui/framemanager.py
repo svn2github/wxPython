@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 22 Dec 2009, 09.00 GMT
+# Latest Revision: 17 Dec 2009, 17.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -131,7 +131,6 @@ wxEVT_AUI_PANE_FLOATING = wx.NewEventType()
 wxEVT_AUI_PANE_FLOATED = wx.NewEventType()
 wxEVT_AUI_PANE_DOCKING = wx.NewEventType()
 wxEVT_AUI_PANE_DOCKED = wx.NewEventType()
-wxEVT_AUI_PERSPECTIVE_CHANGED = wx.NewEventType()
 
 EVT_AUI_PANE_BUTTON = wx.PyEventBinder(wxEVT_AUI_PANE_BUTTON, 0)
 """ Fires an event when the user left-clicks on a pane button. """
@@ -157,8 +156,7 @@ EVT_AUI_PANE_DOCKING = wx.PyEventBinder(wxEVT_AUI_PANE_DOCKING, 0)
 """ A pane in `AuiManager` is about to be docked. """
 EVT_AUI_PANE_DOCKED = wx.PyEventBinder(wxEVT_AUI_PANE_DOCKED, 0)
 """ A pane in `AuiManager` has been docked. """
-EVT_AUI_PERSPECTIVE_CHANGED = wx.PyEventBinder(wxEVT_AUI_PERSPECTIVE_CHANGED, 0)
-""" The layout in `AuiManager` has been changed. """
+
 
 # ---------------------------------------------------------------------------- #
 
@@ -2826,6 +2824,7 @@ class AuiFloatingFrame(wx.MiniFrame):
         self._owner_mgr = owner_mgr
         self._moving = False
         self._lastDirection = None
+        self._transparent = 255
 
         self._last_rect = wx.Rect()
         self._last2_rect = wx.Rect()
@@ -4430,8 +4429,7 @@ class AuiManager(wx.EvtHandler):
 
     def FireEvent(self, evtType, pane, canVeto=False):
         """
-        Fires one of the ``EVT_AUI_PANE_FLOATED``/``FLOATING``/``DOCKING``/``DOCKED`` or
-        ``EVT_AUI_PERSPECTIVE_CHANGED`` events. 
+        Fires one of the ``EVT_AUI_PANE_FLOATED``/``FLOATING``/``DOCKING``/``DOCKED`` event. 
 
         :param `evtType`: one of the aforementioned events;
         :param `pane`: the `AuiPaneInfo` instance;
@@ -4685,7 +4683,7 @@ class AuiManager(wx.EvtHandler):
         # Add new item to notebook
         target.NotebookPage(paneInfo.notebook_id)
 
-        #Update for position and _notebooks in case we have another target
+        # Update for position and _notebooks in case we have another target
         self.Update()
         
         return True
@@ -6098,8 +6096,10 @@ class AuiManager(wx.EvtHandler):
         
         for ii in xrange(pane_count):
             p = self._panes[ii]
+            pFrame = p.frame
+
             if p.IsFloating():
-                if p.frame == None:
+                if pFrame is None:
                     # we need to create a frame for this
                     # pane, which has recently been floated
                     frame = self.CreateFloatingFrame(self._frame, p)
@@ -6125,26 +6125,26 @@ class AuiManager(wx.EvtHandler):
 
                     frame.SetPaneWindow(p)
                     p.needsTransparency = True
-                    p.frame = frame
+                    p.frame = pFrame = frame
                     if p.IsShown() and not frame.IsShown():
                         frame.Show()
                         frame.Update()
                 else:
-                
+
                     # frame already exists, make sure it's position
                     # and size reflect the information in AuiPaneInfo
-                    if p.frame.GetPosition() != p.floating_pos or p.frame.GetSize() != p.floating_size:
-                        p.frame.SetDimensions(p.floating_pos.x, p.floating_pos.y,
-                                              p.floating_size.x, p.floating_size.y, wx.SIZE_USE_EXISTING)
+                    if pFrame.GetPosition() != p.floating_pos or pFrame.GetSize() != p.floating_size:
+                        pFrame.SetDimensions(p.floating_pos.x, p.floating_pos.y,
+                                             p.floating_size.x, p.floating_size.y, wx.SIZE_USE_EXISTING)
 
-                    if p.frame.IsShown() != p.IsShown():
+                    if pFrame.IsShown() != p.IsShown():
                         p.needsTransparency = True
-                        p.frame.Show(p.IsShown())
+                        pFrame.Show(p.IsShown())
 
-                if p.frame.GetTitle() != p.caption:
-                    p.frame.SetTitle(p.caption)
+                if pFrame.GetTitle() != p.caption:
+                    pFrame.SetTitle(p.caption)
                 if p.icon.IsOk():
-                    p.frame.SetIcon(wx.IconFromBitmap(p.icon))
+                    pFrame.SetIcon(wx.IconFromBitmap(p.icon))
                     
             else:
 
@@ -6157,9 +6157,11 @@ class AuiManager(wx.EvtHandler):
                     p.window.SetSize((0, 0))
                     p.window.Show(p.IsShown())
 
-            if p.frame and p.needsTransparency:
-                if p.frame.IsShown():
-                    p.frame.SetTransparent(p.transparent)
+            if pFrame and p.needsTransparency:
+                if pFrame.IsShown() and pFrame._transparent != p.transparent:
+                    pFrame.SetTransparent(p.transparent)
+                    pFrame._transparent = p.transparent
+                    
                 p.needsTransparency = False
 
             # if "active panes" are no longer allowed, clear
@@ -6196,10 +6198,7 @@ class AuiManager(wx.EvtHandler):
                     p.window.Update()
 
         self.Repaint()
-        
-        if not self._masterManager:
-            e = self.FireEvent(wxEVT_AUI_PERSPECTIVE_CHANGED, None, canVeto=False)    
-
+    
 
     def UpdateNotebook(self):
         """ Updates the automatic L{AuiNotebook} in the layout (if any exists). """
@@ -6241,7 +6240,7 @@ class AuiManager(wx.EvtHandler):
                     allPages -= 1
 
                 pageCounter += 1
-                
+
         # Add notebook pages that aren't there already...
         for paneInfo in self._panes:
             if paneInfo.IsNotebookPage():
@@ -7451,7 +7450,7 @@ class AuiManager(wx.EvtHandler):
                 return self.DoDropLayer(docks, target, guide.dock_direction)
             
             elif dir == wx.CENTER:
-            
+
                 if not target.IsNotebookDockable():
                     continue
                 if not paneInfo.IsNotebookDockable() and not paneInfo.IsNotebookControl():
@@ -8003,7 +8002,7 @@ class AuiManager(wx.EvtHandler):
                     break
 
         for part in uiparts:
-            if part.pane and part.pane.name == sought:                
+            if part.pane and part.pane.name == sought:    
                 rect.Union(wx.RectPS(part.sizer_item.GetPosition(),
                                      part.sizer_item.GetSize()))
 
@@ -8551,7 +8550,8 @@ class AuiManager(wx.EvtHandler):
 
         if self._frame:
                 
-            self.Update()
+            self.DoFrameLayout()
+            self.Repaint()
             
             if isinstance(self._frame, wx.MDIParentFrame) or isinstance(self._frame, tabmdi.AuiMDIClientWindow) \
                or isinstance(self._frame, tabmdi.AuiMDIParentFrame):
@@ -8720,7 +8720,7 @@ class AuiManager(wx.EvtHandler):
                 rootManager = GetManager(part.pane.window)
             else:
                 rootManager = self
-                
+
             offset = wx.Point(event.GetX() - part.rect.x, event.GetY() - part.rect.y)
             rootManager.OnGripperClicked(part.pane.window, event.GetPosition(), offset)
         
@@ -9081,7 +9081,8 @@ class AuiManager(wx.EvtHandler):
 
             e = self.FireEvent(wxEVT_AUI_PANE_FLOATED, self._action_pane, canVeto=False)
 
-            self.Update()
+            if not self._action_pane.frame:
+                self.Update()
 
             self._action_window = self._action_pane.window
 
@@ -9272,25 +9273,26 @@ class AuiManager(wx.EvtHandler):
 
         # update floating position
         if pane.IsFloating():
+            diff = pane.floating_pos - (screenPt - self._action_offset)
             pane.floating_pos = screenPt - self._action_offset
+
+        framePos = pane.floating_pos
 
         # Move the pane window
         if pane.frame:
 
-            if wx.Platform == "__WXMSW__" and (self._flags & AUI_MGR_TRANSPARENT_DRAG) == 0: # and not self.CheckPaneMove(pane):
-                # return
-                # HACK: Terrible hack on wxMSW (!)
-                pane.frame.SetTransparent(254)
- 
-##            if not self._hint_window or not self._hint_window.IsShown():
-            self._from_move = True
-            pane.frame.Move(pane.floating_pos)
-            self._from_move = False
+            if diff.x != 0 or diff.y != 0:
+                if wx.Platform == "__WXMSW__" and (self._flags & AUI_MGR_TRANSPARENT_DRAG) == 0: # and not self.CheckPaneMove(pane):
+                    # return
+                    # HACK: Terrible hack on wxMSW (!)
+                    pane.frame.SetTransparent(254)
+                            
+                self._from_move = True
+                pane.frame.Move(pane.floating_pos)
+                self._from_move = False
 
             if self._flags & AUI_MGR_TRANSPARENT_DRAG:
                 pane.frame.SetTransparent(150)
-
-            framePos = pane.floating_pos
         
         # calculate the offset from the upper left-hand corner
         # of the frame to the mouse pointer
@@ -9349,6 +9351,8 @@ class AuiManager(wx.EvtHandler):
         if not paneInfo.IsOk():
             raise Exception("Pane window not found")
 
+        ret = False
+        
         if paneInfo.frame:
         
             # calculate the offset from the upper left-hand corner
@@ -9380,7 +9384,9 @@ class AuiManager(wx.EvtHandler):
         # position (that we store)
         if paneInfo.IsFloating():
             paneInfo.floating_pos = paneInfo.frame.GetPosition()
-            paneInfo.frame.SetTransparent(paneInfo.transparent)
+            if paneInfo.frame._transparent != paneInfo.transparent:
+                paneInfo.frame.SetTransparent(paneInfo.transparent)
+                paneInfo.frame._transparent = paneInfo.transparent
         
         elif self._has_maximized:
             self.RestoreMaximizedPane()
@@ -9391,8 +9397,8 @@ class AuiManager(wx.EvtHandler):
         self._panes.remove(paneInfo)
         self._panes.append(tempPaneInfo)
 
-        self.Update()
-        self.RefreshCaptions()
+        if ret:
+            self.Update()
 
         self.HideHint()
         ShowDockingGuides(self._guides, False)
@@ -9422,6 +9428,7 @@ class AuiManager(wx.EvtHandler):
         indx = self._panes.index(pane)
 
         ret = False
+        wasFloating = pane.IsFloating()
         # is the pane dockable?
         if self.CanDockPanel(pane):
             # do the drop calculation
@@ -9446,7 +9453,7 @@ class AuiManager(wx.EvtHandler):
                 pane.frame.SetTransparent(150)
 
         self._panes[indx] = pane
-        if ret:
+        if ret and wasFloating != pane.IsFloating():
             wx.CallAfter(self.Update)
 
         # when release the button out of the window.
@@ -9508,8 +9515,10 @@ class AuiManager(wx.EvtHandler):
 
         if pane.IsFloating():        
             pane.floating_pos = pane.frame.GetPosition()
-            pane.frame.SetTransparent(pane.transparent)
-        
+            if pane.frame._transparent != pane.transparent:
+                pane.frame.SetTransparent(pane.transparent)
+                pane.frame._transparent = pane.transparent
+                    
         # save the new positions
         docks = FindDocks(self._docks, pane.dock_direction, pane.dock_layer, pane.dock_row)
         if len(docks) == 1:
