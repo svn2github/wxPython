@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 21 Dec 2009, 16.00 GMT
+# Latest Revision: 22 Dec 2009, 09.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -131,6 +131,7 @@ wxEVT_AUI_PANE_FLOATING = wx.NewEventType()
 wxEVT_AUI_PANE_FLOATED = wx.NewEventType()
 wxEVT_AUI_PANE_DOCKING = wx.NewEventType()
 wxEVT_AUI_PANE_DOCKED = wx.NewEventType()
+wxEVT_AUI_PERSPECTIVE_CHANGED = wx.NewEventType()
 
 EVT_AUI_PANE_BUTTON = wx.PyEventBinder(wxEVT_AUI_PANE_BUTTON, 0)
 """ Fires an event when the user left-clicks on a pane button. """
@@ -156,7 +157,8 @@ EVT_AUI_PANE_DOCKING = wx.PyEventBinder(wxEVT_AUI_PANE_DOCKING, 0)
 """ A pane in `AuiManager` is about to be docked. """
 EVT_AUI_PANE_DOCKED = wx.PyEventBinder(wxEVT_AUI_PANE_DOCKED, 0)
 """ A pane in `AuiManager` has been docked. """
-
+EVT_AUI_PERSPECTIVE_CHANGED = wx.PyEventBinder(wxEVT_AUI_PERSPECTIVE_CHANGED, 0)
+""" The layout in `AuiManager` has been changed. """
 
 # ---------------------------------------------------------------------------- #
 
@@ -4428,7 +4430,8 @@ class AuiManager(wx.EvtHandler):
 
     def FireEvent(self, evtType, pane, canVeto=False):
         """
-        Fires one of the ``EVT_AUI_PANE_FLOATED``/``FLOATING``/``DOCKING``/``DOCKED`` event. 
+        Fires one of the ``EVT_AUI_PANE_FLOATED``/``FLOATING``/``DOCKING``/``DOCKED`` or
+        ``EVT_AUI_PERSPECTIVE_CHANGED`` events. 
 
         :param `evtType`: one of the aforementioned events;
         :param `pane`: the `AuiPaneInfo` instance;
@@ -6193,7 +6196,10 @@ class AuiManager(wx.EvtHandler):
                     p.window.Update()
 
         self.Repaint()
-    
+        
+        if not self._masterManager:
+            e = self.FireEvent(wxEVT_AUI_PERSPECTIVE_CHANGED, None, canVeto=False)    
+
 
     def UpdateNotebook(self):
         """ Updates the automatic L{AuiNotebook} in the layout (if any exists). """
