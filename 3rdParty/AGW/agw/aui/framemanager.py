@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 17 Dec 2009, 17.00 GMT
+# Latest Revision: 31 Dec 2009, 10.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -2976,7 +2976,9 @@ class AuiFloatingFrame(wx.MiniFrame):
                              (caption_size + 2*wx.SystemSettings.GetMetric(wx.SYS_EDGE_Y)))/10
 
         self._floating_size = wx.Size(*self.GetSize())
-        self._check_fly_timer.Start(50)
+
+        if pane.IsFlyOut():
+            self._check_fly_timer.Start(50)
 
         
     def GetOwnerManager(self):
