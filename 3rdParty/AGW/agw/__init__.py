@@ -109,7 +109,7 @@ gavana@kpo.kz
 
 AGW version: 0.7.0
 
-Last updated: 31 Dec 2009, 11.00 GMT
+Last updated: 05 Jan 2010, 16.00 GMT
 
 """
 

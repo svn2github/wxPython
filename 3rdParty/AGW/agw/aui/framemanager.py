@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 31 Dec 2009, 10.00 GMT
+# Latest Revision: 05 Jan 2010, 16.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -9442,7 +9442,7 @@ class AuiManager(wx.EvtHandler):
                 pane.frame.SetTransparent(150)
 
         self._panes[indx] = pane
-        if ret and wasFloating != pane.IsFloating():
+        if ret and wasFloating != pane.IsFloating() or (ret and not wasFloating):
             wx.CallAfter(self.Update)
 
         # when release the button out of the window.
