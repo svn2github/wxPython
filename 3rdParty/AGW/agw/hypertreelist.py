@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 29 Dec 2009, 11.00 GMT
+# Latest Revision: 07 Jan 2010, 10.00 GMT
 #
 #
 # TODO List
@@ -213,7 +213,7 @@ License And Version
 
 HyperTreeList is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 29 Dec 2009, 11.00 GMT
+Latest Revision: Andrea Gavana @ 07 Jan 2010, 10.00 GMT
 
 Version 1.1
 
@@ -1517,11 +1517,7 @@ class TreeListItem(GenericTreeItem):
         if column < len(self._text):
             self._text[column] = text
         elif column < self._owner.GetColumnCount():
-            howmany = self._owner.GetColumnCount()
-            for i in xrange(len(self._text)):
-                if i >= howmany:
-                    break
-                self._text.append("")
+            self._text.extend([""] * (column - len(self._text) + 1))
             self._text[column] = text
         
 
@@ -1544,12 +1540,7 @@ class TreeListItem(GenericTreeItem):
         elif column < len(self._col_images):
             self._col_images[column] = image
         elif column < self._owner.GetColumnCount():
-            howmany = self._owner.GetColumnCount()
-            for i in xrange(column+1):
-                if i >= howmany:
-                    break
-                self._col_images.append(_NO_IMAGE)
-
+            self._col_images.extend([_NO_IMAGE] * (column - len(self._col_images) + 1))
             self._col_images[column] = image
         
     
@@ -1586,11 +1577,7 @@ class TreeListItem(GenericTreeItem):
         if column < len(self._wnd):
             self._wnd[column] = wnd
         elif column < self._owner.GetColumnCount():
-            howmany = self._owner.GetColumnCount()
-            for i in xrange(len(self._wnd), column+1):
-                if i >= howmany:
-                    break
-                self._wnd.append(None)
+            self._wnd.extend([None] * (column - len(self._wnd) + 1))
             self._wnd[column] = wnd
 
         if self not in self._owner._itemWithWindow:
