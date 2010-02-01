@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 26 Nov 2009, 16.00 GMT
+# Latest Revision: 01 Feb 2010, 15.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -114,7 +114,7 @@ License And Version
 
 FlatNotebook is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 26 Nov 2009, 16.00 GMT
+Latest Revision: Andrea Gavana @ 01 Feb 2010, 15.00 GMT
 
 Version 2.8
 """
@@ -3346,7 +3346,9 @@ class FNBRendererVC8(FNBRenderer):
         # According to the equation y = ax + b => x = (y-b)/a
         # We know the first 2 points
 
-        if x2 == x1:
+        x1, x2, y1, y2 = map(float, (x1, x2, y1, y2))
+
+        if abs(x2 - x1) < 1e-6:
             return x2
         else:
             a = (y2 - y1)/(x2 - x1)
