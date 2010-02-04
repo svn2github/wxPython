@@ -1287,6 +1287,8 @@ class AuiFrame(wx.Frame):
         notebook = self._mgr.GetPane("notebook_content").window
         self.gauge = ProgressGauge(notebook, size=(55, 15))
         notebook.AddControlToPage(4, self.gauge)
+        
+        self._main_notebook = notebook
 
         # make some default perspectives
         perspective_all = self._mgr.SavePerspective()
@@ -1804,6 +1806,7 @@ class AuiFrame(wx.Frame):
     def OnNotebookFlag(self, event):
 
         evId = event.GetId()
+        unsplit = None
         
         if evId in [ID_NotebookNoCloseButton, ID_NotebookCloseButton, ID_NotebookCloseButtonAll, \
                     ID_NotebookCloseButtonActive]:
@@ -1830,9 +1833,6 @@ class AuiFrame(wx.Frame):
 
         elif evId == ID_NotebookTabFloat:
             self._notebook_style ^= aui.AUI_NB_TAB_FLOAT
-
-        elif evId == ID_NotebookDclickUnsplit:
-            self._notebook_style ^= aui.AUI_NB_SASH_DCLICK_UNSPLIT
 
         elif evId == ID_NotebookTabDrawDnd:
             self._notebook_style ^= aui.AUI_NB_DRAW_DND_TAB
@@ -1895,7 +1895,9 @@ class AuiFrame(wx.Frame):
                 if evId == ID_NotebookCloseButtonAll:
                     # Demonstrate how to remove a close button from a tab
                     nb.SetCloseButton(2, False)
-                
+                elif evId == ID_NotebookDclickUnsplit:
+                    nb.SetSashDClickUnsplit(event.IsChecked())
+
                 nb.Refresh()
                 nb.Update()
             
@@ -2002,7 +2004,7 @@ class AuiFrame(wx.Frame):
             event.Check((self._notebook_style & aui.AUI_NB_TAB_FLOAT) != 0)
 
         elif evId == ID_NotebookDclickUnsplit:
-            event.Check((self._notebook_style & aui.AUI_NB_SASH_DCLICK_UNSPLIT) != 0)
+            event.Check(self._main_notebook.GetSashDClickUnsplit())
 
         elif evId == ID_NotebookTabDrawDnd:
             event.Check((self._notebook_style & aui.AUI_NB_DRAW_DND_TAB) != 0)
@@ -2797,8 +2799,8 @@ def GetIntroText():
     "enough outside of the notebook to become floating pages. </li>" \
     "<li>Implementation of the style <tt>AUI_NB_DRAW_DND_TAB</tt> (on by default), which draws an image " \
     "representation of a tab while dragging;</li>" \
-    "<li>Implementation of the style <tt>AUI_NB_SASH_DCLICK_UNSPLIT</tt>, which unsplit a splitted AuiNotebook " \
-    "when double-clicking on a sash;</li>" \
+    "<li>Implementation of the <i>AuiNotebook</i> unsplit functionality, which unsplit a splitted AuiNotebook " \
+    "when double-clicking on a sash (Use <i>SetSashDClickUnsplit</i>);</li>" \
     "<li>Possibility to hide all the tabs by calling <i>HideAllTAbs</i>;</li>" \
     "<li>wxPython controls can now be added inside page tabs by calling <i>AddControlToPage</i>, and they can be " \
     "removed by calling <i>RemoveControlFromPage</i>;</li>" \
