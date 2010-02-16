@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 09 Dec 2009, 21.00 GMT
+# Latest Revision: 16 Feb 2010, 15.00 GMT
 #
 #
 # TODO List
@@ -211,7 +211,7 @@ License And Version
 
 CustomTreeCtrl is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 09 Dec 2009, 21.00 GMT
+Latest Revision: Andrea Gavana @ 16 Feb 2010, 15.00 GMT
 
 Version 2.0
 
@@ -2964,7 +2964,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         if font.IsOk():
             return font
 
-        return wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        return wx.NullFont
 
 
     def IsItemHyperText(self, item):

@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 07 Jan 2010, 10.00 GMT
+# Latest Revision: 16 Feb 2010, 15.00 GMT
 #
 #
 # TODO List
@@ -213,7 +213,7 @@ License And Version
 
 HyperTreeList is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 07 Jan 2010, 10.00 GMT
+Latest Revision: Andrea Gavana @ 16 Feb 2010, 15.00 GMT
 
 Version 1.1
 
@@ -3463,7 +3463,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             command = (event.LeftIsDown() and [wx.wxEVT_COMMAND_TREE_BEGIN_DRAG] or [wx.wxEVT_COMMAND_TREE_BEGIN_RDRAG])[0]
             nevent = TreeEvent(command, self._owner.GetId())
             nevent.SetEventObject(self._owner)
-            nevent.SetItem(item) # the item the drag is ended
+            nevent.SetItem(self._current) # the dragged item
             nevent.SetPoint(p)
             nevent.Veto()         # dragging must be explicit allowed!
             
@@ -3520,11 +3520,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             if self._dragImage:
                 self._dragImage = None
             
-            if wx.Platform in ["__WXMSW__", "__WXMAC__"]:
-                self.Refresh()
-            else:
-                # Probably this is not enough on GTK. Try a Refresh() if it does not work.
-                wx.YieldIfNeeded()
+            self.Refresh()
 
         elif self._dragCount > 0:  # just in case dragging is initiated
 
@@ -3853,7 +3849,18 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         # determine item width
         font = self.GetItemFont(item)
+        if not font.IsOk():
+            if item.IsBold():
+                font = self._boldFont
+            elif item.IsItalic():
+                font = self._italicFont
+            elif item.IsHyperText():
+                font = self.GetHyperTextFont()
+            else:
+                font = self._normalFont
+            
         dc = wx.ClientDC(self)
+        dc.SetFont(font)
         w, h, dummy = dc.GetMultiLineTextExtent(item.GetText(column))
         w += 2*_MARGIN
 
