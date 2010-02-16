@@ -118,7 +118,7 @@ def _cycleidxs(indexcount, maxvalue, step):
         dc.SelectObject(B)
         dc.SetBackground(wx.BLACK_BRUSH)
         dc.Clear()
-        dc.SetPen(wx.Pen(wx.Color(*color), 4))
+        dc.SetPen(wx.Pen(wx.Colour(*color), 4))
         dc.DrawPoint(0,0)
         if mac:
             del dc
