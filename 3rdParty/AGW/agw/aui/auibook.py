@@ -1715,6 +1715,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         self._hover_button = None
         self._pressed_button = None
         self._drag_image = None
+        self._drag_img_offset = (0, 0)
         self._on_button = False
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -2102,8 +2103,12 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
                         self._drag_image.BeginDrag(wx.Point(0,0), self, fullScreen=True)
                     else:
                         self._drag_image.BeginDragBounded(wx.Point(0,0), self, self.GetParent())
-                        
-                    self._drag_image.Move(pos)
+
+                    # Capture the mouse cursor position offset relative to
+                    # The tab image location
+                    self._drag_img_offset = (pos[0] - page.rect.x,
+                                             pos[1] - page.rect.y)
+
                     self._drag_image.Show()
 
         if not wnd:
@@ -2122,6 +2127,8 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         self.GetEventHandler().ProcessEvent(evt3)
 
         if self._drag_image:
+            # Apply the drag images offset
+            pos -= self._drag_img_offset
             self._drag_image.Move(pos)
             
 
@@ -2723,11 +2730,11 @@ class AuiNotebook(wx.PyControl):
                 tab_part = tabs
             else:
                 tab_part = tabs[0:tabs.index('|')]
- 
+          
             if "=" not in tab_part:
                 # No pages in this perspective...
                 return False
-            
+
             # Get pane name
             pane_name = tab_part[0:tab_part.index("=")]
 
