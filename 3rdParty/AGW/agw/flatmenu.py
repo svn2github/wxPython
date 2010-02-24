@@ -498,6 +498,7 @@ class FlatMenuBar(wx.Panel):
         self._showCustomize = options & FM_OPT_SHOW_CUSTOMIZE
         self._isLCD = options & FM_OPT_IS_LCD
         self._isMinibar = options & FM_OPT_MINIBAR
+        self._options = options
         
         self._dropDownButtonState = ControlNormal
         self._moreMenu = None
@@ -590,6 +591,42 @@ class FlatMenuBar(wx.Panel):
         if refresh:
             self.Refresh()
 
+
+    def SetOptions(self, options):
+        """
+        Sets the L{FlatMenuBar} options, whether to show a toolbar, to use LCD screen settings etc...
+
+        :param `options`: a combination of the following bits:
+        
+         ========================= ========= =============================
+         `options` Bit             Hex Value  Description
+         ========================= ========= =============================
+         ``FM_OPT_IS_LCD``               0x1 Use this style if your computer uses a LCD screen
+         ``FM_OPT_MINIBAR``              0x2 Use this if you plan to use toolbar only
+         ``FM_OPT_SHOW_CUSTOMIZE``       0x4 Show "customize link" in more menus, you will need to write your own handler. See demo.
+         ``FM_OPT_SHOW_TOOLBAR``         0x8 Set this option is you are planing to use the toolbar
+         ========================= ========= =============================
+
+        """
+
+        self._options = options
+
+        self._showToolbar = options & FM_OPT_SHOW_TOOLBAR
+        self._showCustomize = options & FM_OPT_SHOW_CUSTOMIZE
+        self._isLCD = options & FM_OPT_IS_LCD
+        self._isMinibar = options & FM_OPT_MINIBAR
+        
+        self.Refresh()
+        self.Update()
+                    
+
+    def GetOptions(self):
+        """
+        Returns the L{FlatMenuBar} options, whether to show a toolbar, to use LCD screen settings etc...
+        """
+
+        return self._options
+        
 
     def UpdateItem(self, item):
         """
