@@ -2,7 +2,7 @@
 # FLATMENU wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 26 Nov 2009, 11.00 GMT
+# Latest Revision: 26 Feb 2010, 21.00 GMT
 #
 #
 # TODO List
@@ -121,7 +121,7 @@ License And Version
 
 FlatMenu is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 26 Nov 2009, 11.00 GMT
+Latest Revision: Andrea Gavana @ 26 Feb 2010, 21.00 GMT
 
 Version 0.9.5
 
@@ -506,20 +506,9 @@ class FlatMenuBar(wx.Panel):
         self._tbMenu = None
         self._moreMenuBgBmp = None
         self._lastRadioGroup = 0
-        
-        mem_dc = wx.MemoryDC()
-        mem_dc.SelectObject(wx.EmptyBitmap(1, 1))
-        dummy, self._barHeight = mem_dc.GetTextExtent("Tp")
-        mem_dc.SelectObject(wx.NullBitmap)
-        
-        if not self._isMinibar:
-            self._barHeight += 4*self._spacer
-        else:
-            self._barHeight  = self._spacer
+        self._mgr = None
 
-        if self._showToolbar :
-            # add the toolbar height to the menubar height
-            self._barHeight += self._tbIconSize + self._spacer
+        self.SetBarHeight()
 
         wx.Panel.__init__(self, parent, id, size=(-1, self._barHeight), style=wx.WANTS_CHARS)
 
@@ -592,6 +581,32 @@ class FlatMenuBar(wx.Panel):
             self.Refresh()
 
 
+    def SetBarHeight(self):
+        """ Recalculates the L{FlatMenuBar} height when its settings change. """
+
+        mem_dc = wx.MemoryDC()
+        mem_dc.SelectObject(wx.EmptyBitmap(1, 1))
+        dummy, self._barHeight = mem_dc.GetTextExtent("Tp")
+        mem_dc.SelectObject(wx.NullBitmap)
+        
+        if not self._isMinibar:
+            self._barHeight += 4*self._spacer
+        else:
+            self._barHeight  = self._spacer
+
+        if self._showToolbar :
+            # add the toolbar height to the menubar height
+            self._barHeight += self._tbIconSize + self._spacer
+
+        if self._mgr is None:
+            return
+
+        pn = self._mgr.GetPane("flat_menu_bar")
+        pn.MinSize(wx.Size(-1, self._barHeight))
+        self._mgr.Update()
+        self.Refresh()
+
+        
     def SetOptions(self, options):
         """
         Sets the L{FlatMenuBar} options, whether to show a toolbar, to use LCD screen settings etc...
@@ -615,6 +630,8 @@ class FlatMenuBar(wx.Panel):
         self._showCustomize = options & FM_OPT_SHOW_CUSTOMIZE
         self._isLCD = options & FM_OPT_IS_LCD
         self._isMinibar = options & FM_OPT_MINIBAR
+
+        self.SetBarHeight()
         
         self.Refresh()
         self.Update()
@@ -1950,6 +1967,8 @@ class FlatMenuBar(wx.Panel):
         pn.Resizable(False)
         pn.PaneBorder(False)
         mgr.AddPane(self, pn)
+
+        self._mgr = mgr        
 
 
     def DoGiveHelp(self, hit):
