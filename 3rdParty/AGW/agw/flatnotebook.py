@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 01 Feb 2010, 15.00 GMT
+# Latest Revision: 25 Mar 2010, 22.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -114,7 +114,7 @@ License And Version
 
 FlatNotebook is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 01 Feb 2010, 15.00 GMT
+Latest Revision: Andrea Gavana @ 25 Mar 2010, 22.00 GMT
 
 Version 2.8
 """
@@ -4676,10 +4676,12 @@ class PageContainer(wx.Panel):
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
 
-        delta = event.GetWheelRotation()
+        rotation = event.GetWheelRotation()
+        delta = event.GetWheelDelta()
+        steps = rotation/delta
 
-        for tab in xrange(abs(delta)):
-            if delta > 0:
+        for tab in xrange(abs(steps)):
+            if steps > 0:
                 before = self._nLeftButtonStatus
                 self._nLeftButtonStatus = FNB_BTN_PRESSED
                 self.RotateLeft()
