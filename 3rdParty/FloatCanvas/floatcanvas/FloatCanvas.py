@@ -239,19 +239,6 @@ class DrawObject:
             "DotDash"    : wx.DOT_DASH,
             }
 
-#    def BBFromPoints(self, Points):
-#        """!
-#        Calculates a Bounding box from a set of points (NX2 array of coordinates)
-#        \param Points (array?) 
-#        """
-#
-#        ## fixme: this could be done with array.min() and vstack() in numpy.
-#        ##        This could use the Utilities.BBox module now.
-#        #return N.array( (N.minimum.reduce(Points),
-#        #                 N.maximum.reduce(Points) ),
-#        #                )
-#        return BBox.fromPoints(Points)
-
     def Bind(self, Event, CallBackFun):
         ##fixme: Way too much Canvas Manipulation here!
         self.CallBackFuncs[Event] = CallBackFun
@@ -404,11 +391,12 @@ class Group(DrawObject):
     def Move(self, Delta):
         for obj in self.ObjectList:
             obj.Move(Delta)
+        self.BoundingBox += Delta
 
     def Bind(self, Event, CallBackFun):
         ## slight variation on DrawObject Bind Method:
         ## fixme: There is a lot of repeated code from the DrawObject method, but
-        ## it all needs a l ot of cleaning up anyway.
+        ## it all needs a lot of cleaning up anyway.
         self.CallBackFuncs[Event] = CallBackFun
         self.HitAble = True
         self._Canvas.UseHitTest = True
@@ -429,7 +417,7 @@ class Group(DrawObject):
         # put the object in the hit dict, indexed by it's color
         if not self._Canvas.HitDict:
             self._Canvas.MakeHitDict()
-        self._Canvas.HitDict[Event][self.HitColor] = (self) # put the object in the hit dict, indexed by it's color 
+        self._Canvas.HitDict[Event][self.HitColor] = (self)
 
 
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel = None, HTdc=None):
@@ -462,7 +450,7 @@ class LineOnlyMixin:
     def SetLineColor(self, LineColor):
         self.LineColor = LineColor
         self.SetPen(LineColor,self.LineStyle,self.LineWidth)
-    SetColor = SetLineColor# so that it will do somethign reasonable
+    SetColor = SetLineColor# so that it will do something reasonable
     
     def SetLineStyle(self, LineStyle):
         self.LineStyle = LineStyle
@@ -1861,10 +1849,10 @@ class ScaledBitmap(TextObjectMixin, DrawObject, ):
     """
 
     This class creates a bitmap object, placed at the coordinates, XY,
-    of Height, H, in World coorsinates. The width is calculated from the
+    of Height, H, in World coordinates. The width is calculated from the
     aspect ratio of the bitmap.
 
-    the "Position" argument is a two charactor string, indicating
+    the "Position" argument is a two character string, indicating
     where in relation to the coordinates the bitmap should be oriented.
 
     The first letter is: t, c, or b, for top, center and bottom The
