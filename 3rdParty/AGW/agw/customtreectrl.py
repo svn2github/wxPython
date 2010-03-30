@@ -2224,15 +2224,18 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         # Default normal and bold fonts for an item
         self._hasFont = True
         self._normalFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._boldFont = wx.Font(self._normalFont.GetPointSize(), self._normalFont.GetFamily(),
+        family = self._normalFont.GetFamily()
+        if family == wx.FONTFAMILY_UNKNOWN:
+            family = wx.FONTFAMILY_SWISS
+        self._boldFont = wx.Font(self._normalFont.GetPointSize(), family,
                                  self._normalFont.GetStyle(), wx.BOLD, self._normalFont.GetUnderlined(),
                                  self._normalFont.GetFaceName(), self._normalFont.GetEncoding())
-        self._italicFont = wx.Font(self._normalFont.GetPointSize(), self._normalFont.GetFamily(),
+        self._italicFont = wx.Font(self._normalFont.GetPointSize(), family,
                                    wx.FONTSTYLE_ITALIC, wx.NORMAL, self._normalFont.GetUnderlined(),
                                    self._normalFont.GetFaceName(), self._normalFont.GetEncoding())
 
         # Hyperlinks things
-        self._hypertextfont = wx.Font(self._normalFont.GetPointSize(), self._normalFont.GetFamily(),
+        self._hypertextfont = wx.Font(self._normalFont.GetPointSize(), family,
                                       self._normalFont.GetStyle(), wx.NORMAL, True,
                                       self._normalFont.GetFaceName(), self._normalFont.GetEncoding())
         self._hypertextnewcolour = wx.BLUE
@@ -3140,10 +3143,13 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         wx.PyScrolledWindow.SetFont(self, font)
 
         self._normalFont = font 
-        self._boldFont = wx.Font(self._normalFont.GetPointSize(), self._normalFont.GetFamily(),
+        family = self._normalFont.GetFamily()
+        if family == wx.FONTFAMILY_UNKNOWN:
+            family = wx.FONTFAMILY_SWISS
+        self._boldFont = wx.Font(self._normalFont.GetPointSize(), family,
                                  self._normalFont.GetStyle(), wx.BOLD, self._normalFont.GetUnderlined(),
                                  self._normalFont.GetFaceName(), self._normalFont.GetEncoding())
-        self._italicFont = wx.Font(self._normalFont.GetPointSize(), self._normalFont.GetFamily(),
+        self._italicFont = wx.Font(self._normalFont.GetPointSize(), family,
                                    wx.FONTSTYLE_ITALIC, wx.NORMAL, self._normalFont.GetUnderlined(),
                                    self._normalFont.GetFaceName(), self._normalFont.GetEncoding())
 
