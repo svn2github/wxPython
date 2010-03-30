@@ -1871,7 +1871,9 @@ class UltimateListItem(wx.Object):
         self._wnd = wnd
 
         listCtrl = wnd.GetParent()
-        wnd.Reparent(listCtrl._mainWin)
+        mainWin = listCtrl._mainWin
+        
+        wnd.Reparent(mainWin)
 
         if wnd.GetSizer():      # the window is a complex one hold by a sizer
             size = wnd.GetBestSize()
@@ -1890,8 +1892,13 @@ class UltimateListItem(wx.Object):
         self._windowenabled = self._enabled
         self._expandWin = expand
 
-        listCtrl._mainWin._hasWindows = True
-        listCtrl._mainWin._itemWithWindow.append(self)   
+        mainWin._hasWindows = True
+        mainWin._itemWithWindow.append(self)
+
+        # This is needed as otherwise widgets that should be invisible
+        # are shown at the top left corner of ULC
+        mainWin.HideWindows()
+        mainWin.Refresh()
         
 
     def GetWindow(self):
