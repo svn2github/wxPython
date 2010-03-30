@@ -2006,6 +2006,7 @@ class UltimateListItem(wx.Object):
 
         self._kind = 0
         self._checked = False
+        self._enabled = True
 
         self._hypertext = False    # indicates if the item is hypertext
         self._visited = False      # visited state for an hypertext item
