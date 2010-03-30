@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 01 Dec 2009, 15.00 GMT
+# Latest Revision: 30 Mar 2010, 23.00 GMT
 #
 #
 # TODO List
@@ -17,7 +17,7 @@
 # 7)  Fading in and out on mouse motion (a la Windows Vista Aero);
 # 8)  Sub-text for headers/footers (grey text below the header/footer text);
 # 9)  Fixing the columns to the left or right side of the control layout;
-# 10) Skins for header and scrollbars.
+# 10) Skins for header and scrollbars (implemented for headers/footers).
 #
 #
 # For all kind of problems, requests of enhancements and bug reports, please
@@ -186,9 +186,9 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 01 Dec 2009, 15.00 GMT
+Latest Revision: Andrea Gavana @ 30 Mar 2010, 23.00 GMT
 
-Version 0.5
+Version 0.6
 
 """
 
@@ -202,7 +202,7 @@ import cStringIO
 from wx.lib.expando import ExpandoTextCtrl
 
 # Version Info
-__version__ = "0.5"
+__version__ = "0.6"
 
 
 # ----------------------------------------------------------------------------
@@ -344,6 +344,7 @@ ULC_FORMAT_CENTER = ULC_FORMAT_CENTRE
 # Autosize values for SetColumnWidth
 ULC_AUTOSIZE = wx.LIST_AUTOSIZE
 ULC_AUTOSIZE_USEHEADER = wx.LIST_AUTOSIZE_USEHEADER      # partly supported by generic version
+ULC_AUTOSIZE_FILL = -3
 
 # Flag values for GetItemRect
 ULC_RECT_BOUNDS = wx.LIST_RECT_BOUNDS
@@ -3172,6 +3173,7 @@ class UltimateListHeaderData(object):
         self._font = wx.NullFont
         self._state = 0
         self._isColumnShown = True
+        self._customRenderer = None
 
         self._footerImage = []
         self._footerFormat = 0
@@ -3239,6 +3241,8 @@ class UltimateListHeaderData(object):
         if self._mask & ULC_MASK_SHOWN:
             self._isColumnShown = item._isColumnShown
             
+        if self._mask & ULC_MASK_RENDERER:
+            self._customRenderer = item._customRenderer
 
     def SetState(self, flag):
         """
@@ -3379,6 +3383,7 @@ class UltimateListHeaderData(object):
         item._footerKind = self._footerKind
         item._footerChecked = self._footerChecked
         item._footerFont = self._footerFont
+        item._customRenderer = self._customRenderer
 
         return item
 
@@ -3534,6 +3539,26 @@ class UltimateListHeaderData(object):
         """
 
         self._footerChecked = check
+
+        
+    def SetCustomRenderer(self, renderer):
+        """
+        Associate a custom renderer to this item.
+
+        :param `renderer`: a class able to correctly render the item.
+
+        :note: the renderer class **must** implement the methods `DrawHeaderButton`
+         and `GetForegroundColor`. 
+        """
+
+        self._mask |= ULC_MASK_RENDERER
+        self._customRenderer = renderer
+
+
+    def GetCustomRenderer(self):
+        """ Returns the custom renderer associated with this item (if any). """
+
+        return self._customRenderer
             
 
 #-----------------------------------------------------------------------------
@@ -4504,7 +4529,6 @@ class UltimateListLineData(object):
         :param `overflow`: ``True`` if the item should overflow into neighboring columns,
          ``False`` otherwise.
         """
-
         # determine if the string can fit inside the current width
         w, h, dummy = dc.GetMultiLineTextExtent(text)
         width = itemRect.width
@@ -4792,7 +4816,10 @@ class UltimateListHeaderWindow(wx.PyControl):
         self._currentCursor = wx.NullCursor
         self._resizeCursor = wx.StockCursor(wx.CURSOR_SIZEWE)
         self._isDragging = False
-
+       
+        # Custom renderer for every column
+        self._headerCustomRenderer = None
+       
         # column being resized or -1
         self._column = -1
 
@@ -4835,6 +4862,21 @@ class UltimateListHeaderWindow(wx.PyControl):
 
             if not self._hasFont:
                 self.SetOwnFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
+
+    def SetCustomRenderer(self, renderer=None):
+        """
+        Associate a custom renderer with the header - all columns will use it
+
+        :param `renderer`: a class able to correctly render header buttons
+
+        :note: the renderer class **must** implement the methods `DrawHeaderButton`,
+          and `GetForegroundColor`. 
+        """
+
+        if not self._owner.HasFlag(ULC_REPORT):
+            raise Exception("Custom renderers can be used on with style = ULC_REPORT")
+        
+        self._headerCustomRenderer = renderer
 
 
     def DoGetBestSize(self):
@@ -4944,6 +4986,9 @@ class UltimateListHeaderWindow(wx.PyControl):
         isFooter = self._isFooter
 
         for i in xrange(numColumns):
+            
+            # Reset anything in the dc that a custom renderer might have changed
+            dc.SetTextForeground(self.GetForegroundColour())
 
             if x >= w:
                 break
@@ -4982,10 +5027,22 @@ class UltimateListHeaderWindow(wx.PyControl):
            
             # the width of the rect to draw: make it smaller to fit entirely
             # inside the column rect
+            header_rect = wx.Rect(x-1, HEADER_OFFSET_Y-1, cw-1, ch)
 
-            renderer.DrawHeaderButton(self, dc,
-                                      wx.Rect(x-1, HEADER_OFFSET_Y-1, cw-1, ch),
-                                      flags)
+            if self._headerCustomRenderer != None:
+               self._headerCustomRenderer.DrawHeaderButton(dc, header_rect, flags)
+              
+               # The custom renderer will specify the color to draw the header text and buttons
+               dc.SetTextForeground(self._headerCustomRenderer.GetForegroundColour())
+                
+            elif item._mask & ULC_MASK_RENDERER: 
+               item.GetCustomRenderer().DrawHeaderButton(dc, header_rect, flags)
+              
+               # The custom renderer will specify the color to draw the header text and buttons
+               dc.SetTextForeground(item.GetCustomRenderer().GetForegroundColour())
+            else:
+                renderer.DrawHeaderButton(self, dc, header_rect, flags)
+
 
             # see if we have enough space for the column label
             if isFooter:
@@ -5064,7 +5121,14 @@ class UltimateListHeaderWindow(wx.PyControl):
         # Fill in what's missing to the right of the columns, otherwise we will
         # leave an unpainted area when columns are removed (and it looks better)
         if x < w:
-            renderer.DrawHeaderButton(self, dc, wx.Rect(x, HEADER_OFFSET_Y, w - x, h), wx.CONTROL_DIRTY) # mark as last column
+            header_rect = wx.Rect(x, HEADER_OFFSET_Y, w - x, h)
+            if self._headerCustomRenderer != None:
+                # Why does the custom renderer need this adjustment??
+                header_rect.x = header_rect.x - 1
+                header_rect.y = header_rect.y - 1
+                self._headerCustomRenderer.DrawHeaderButton(dc, header_rect, wx.CONTROL_DIRTY)
+            else:
+                renderer.DrawHeaderButton(self, dc, header_rect, wx.CONTROL_DIRTY) # mark as last column
 
 
     def DrawTextFormatted(self, dc, text, rect):
@@ -5720,7 +5784,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         # the number of lines per page
         self._linesPerPage = 0
-
+        
+        # Automatically resized column - this column expands to fill the width of the window
+        self._resizeColumn = -1
+        self._resizeColMinWidth = None
+        
         # this flag is set when something which should result in the window
         # redrawing happens (i.e. an item was added or deleted, or its appearance
         # changed) and OnPaint() doesn't redraw the window while it is set which
@@ -6127,6 +6195,53 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         self._lineFrom = -1
         if self.IsShownOnScreen() and reset:
             self.ResetLineDimensions()
+
+           
+    # Called on EVT_SIZE to resize the _resizeColumn to fill the width of the window
+    def ResizeColumns(self):
+        """
+        If ``ULC_AUTOSIZE_FILL`` was passed to L{UltimateListCtrl.SetColumnWidth} then
+        that column's width will be expanded to fill the window on a resize event.
+
+        Called by L{UltimateListCtrl.OnSize} when the window is resized.
+        """
+
+        if self._resizeColumn == -1:
+            return
+        
+        numCols = self.GetColumnCount()
+        if numCols == 0: return # Nothing to resize.
+        
+        resizeCol = self._resizeColumn
+
+        if self._resizeColMinWidth == None:
+            self._resizeColMinWidth = self.GetColumnWidth(resizeCol)
+
+        # We're showing the vertical scrollbar -> allow for scrollbar width
+        # NOTE: on GTK, the scrollbar is included in the client size, but on
+        # Windows it is not included
+        listWidth = self.GetClientSize().width
+        if wx.Platform != '__WXMSW__':
+            if self.GetItemCount() > self.GetCountPerPage():
+                scrollWidth = wx.SystemSettings_GetMetric(wx.SYS_VSCROLL_X)
+                listWidth = listWidth - scrollWidth
+
+        totColWidth = 0 # Width of all columns except last one.
+        for col in range(numCols):
+            if col != (resizeCol):
+                totColWidth = totColWidth + self.GetColumnWidth(col)
+
+        resizeColWidth = self.GetColumnWidth(resizeCol)
+
+        if totColWidth + self._resizeColMinWidth > listWidth:
+            # We haven't got the width to show the last column at its minimum
+            # width -> set it to its minimum width and allow the horizontal
+            # scrollbar to show.
+            self.SetColumnWidth(resizeCol, self._resizeColMinWidth)
+            return
+
+        # Resize the last column to take up the remaining available space.
+        self.SetColumnWidth(resizeCol, listWidth - totColWidth)
 
 
     # get the colour to be used for drawing the rules
@@ -8158,15 +8273,17 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         Sets the column width.
 
         :param `width`: can be a width in pixels or ``wx.LIST_AUTOSIZE`` (-1) or
-         ``wx.LIST_AUTOSIZE_USEHEADER`` (-2). ``wx.LIST_AUTOSIZE`` will resize the
-         column to the length of its longest item. ``wx.LIST_AUTOSIZE_USEHEADER``
-         will resize the column to the length of the header (Win32) or 80 pixels
-         (other platforms).
+         ``wx.LIST_AUTOSIZE_USEHEADER`` (-2) or ``ULC_AUTOSIZE_FILL`` (-3). 
+         ``wx.LIST_AUTOSIZE`` will resize the column to the length of its longest
+         item. ``wx.LIST_AUTOSIZE_USEHEADER`` will resize the column to the
+         length of the header (Win32) or 80 pixels (other platforms). 
+         ``ULC_AUTOSIZE_FILL`` will resize the column fill the remaining width
+         of the window.
 
         :note: In small or normal icon view, col must be -1, and the column width
          is set for all columns.
         """
-    
+        
         if col < 0:
             raise Exception("invalid column index")
 
@@ -8186,7 +8303,14 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         column = self._columns[col]
         count = self.GetItemCount()
 
-        if width == ULC_AUTOSIZE_USEHEADER:
+        if width == ULC_AUTOSIZE_FILL:
+            
+            width = self.GetColumnWidth(col)
+            if width == 0:
+                width = WIDTH_COL_DEFAULT
+            self._resizeColumn = col
+            
+        elif width == ULC_AUTOSIZE_USEHEADER:
 
             width = self.GetTextLength(column.GetText())
             width += 2*EXTRA_WIDTH
@@ -8886,7 +9010,31 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         item.SetWindowEnabled(enable)
         self.SetItem(item)
         self.Refresh()
+
         
+    def SetColumnCustomRenderer(self, col=0, renderer=None):
+        """
+        Associate a custom renderer to this column's header
+
+        :param `col`: the column index.
+        :param `renderer`: a class able to correctly render the input item.
+
+        :note: the renderer class **must** implement the methods `DrawHeaderButton`,
+         and `GetForegroundColor`. 
+        """
+
+        self._columns[col].SetCustomRenderer(renderer)
+
+
+    def GetColumnCustomRenderer(self, col):
+        """
+        Returns the custom renderer used to draw the column header
+
+        :param `col`: the column index.
+        """
+
+        return self._columns[col].GetCustomRenderer()
+
 
     def GetItemCustomRenderer(self, item):
         """
@@ -10562,6 +10710,16 @@ class UltimateListCtrl(wx.PyControl):
             self.SetWindowStyleFlag(flag)
 
 
+    def GetExtraStyle(self):
+        """
+        Gets the L{UltimateListCtrl} extra style flag.
+        
+        See L{SetExtraStyle} for possible extra style flags.
+        """
+        
+        return self._extraStyle
+    
+    
     def SetExtraStyle(self, style):
         """
         Sets the L{UltimateListCtrl} extra style flag.
@@ -10659,10 +10817,12 @@ class UltimateListCtrl(wx.PyControl):
         Sets the column width.
 
         :param `width`: can be a width in pixels or ``wx.LIST_AUTOSIZE`` (-1) or
-         ``wx.LIST_AUTOSIZE_USEHEADER`` (-2). ``wx.LIST_AUTOSIZE`` will resize the
-         column to the length of its longest item. ``wx.LIST_AUTOSIZE_USEHEADER``
-         will resize the column to the length of the header (Win32) or 80 pixels
-         (other platforms).
+         ``wx.LIST_AUTOSIZE_USEHEADER`` (-2) or ``LIST_AUTOSIZE_FILL`` (-3). 
+         ``wx.LIST_AUTOSIZE`` will resize the column to the length of its longest
+         item. ``wx.LIST_AUTOSIZE_USEHEADER`` will resize the column to the
+         length of the header (Win32) or 80 pixels (other platforms). 
+         ``LIST_AUTOSIZE_FILL`` will resize the column fill the remaining width
+         of the window.
 
         :note: In small or normal icon view, col must be -1, and the column width
          is set for all columns.
@@ -11658,8 +11818,12 @@ class UltimateListCtrl(wx.PyControl):
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
-
+        
         if not self.IsShownOnScreen():
+            # We don't have the proper column sizes until we are visible so 
+            # use CallAfter to resize the columns on the first display
+            if self._mainWin:
+                wx.CallAfter(self._mainWin.ResizeColumns)
             return
         
         if not self._mainWin:
@@ -11674,6 +11838,7 @@ class UltimateListCtrl(wx.PyControl):
 
         self.Layout()
         
+        self._mainWin.ResizeColumns()
         self._mainWin.ResetVisibleLinesRange(True)
         self._mainWin.RecalculatePositions()
         self._mainWin.AdjustScrollbars()
@@ -12742,6 +12907,55 @@ class UltimateListCtrl(wx.PyControl):
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.GetItemCustomRenderer(item)
+
+
+    def SetHeaderCustomRenderer(self, renderer=None):
+        """
+        Associate a custom renderer with the header - all columns will use it.
+
+        :param `renderer`: a class able to correctly render header buttons
+
+        :note: the renderer class **must** implement the methods `DrawHeaderButton`,
+         and `GetForegroundColor`. 
+        """
+
+        if not self.HasFlag(ULC_REPORT):
+            raise Exception("Custom renderers can be used on with style = ULC_REPORT")
+        
+        self._headerWin.SetCustomRenderer(renderer)
+
+        
+    def SetFooterCustomRenderer(self, renderer=None):
+        """
+        Associate a custom renderer with the footer - all columns will use it.
+
+        :param `renderer`: a class able to correctly render header buttons
+
+        :note: the renderer class **must** implement the methods `DrawHeaderButton`,
+         and `GetForegroundColor`. 
+        """
+
+        if not self.HasFlag(ULC_REPORT) or not self.HasExtraFlag(ULC_FOOTER):
+            raise Exception("Custom renderers can only be used on with style = ULC_REPORT and extra_style ULC_FOOTER")
+       
+        self._footerWin.SetCustomRenderer(renderer)
+
+
+    def SetColumnCustomRenderer(self, col=0, renderer=None):
+        """
+        Associate a custom renderer to this column's header.
+
+        :param `col`: the column index.
+        :param `renderer`: a class able to correctly render the input item.
+
+        :note: the renderer class **must** implement the methods `DrawHeaderButton`,
+         and `GetForegroundColor`. 
+        """
+
+        if not self.HasFlag(ULC_REPORT):
+            raise Exception("Custom renderers can be used on with style = ULC_REPORT")
+        
+        return self._mainWin.SetCustomRenderer(col, renderer)
 
 
     def SetItemCustomRenderer(self, itemOrId, col=0, renderer=None):

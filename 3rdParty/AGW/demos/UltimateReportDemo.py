@@ -8,6 +8,7 @@ import math
 import wx.lib.mixins.listctrl as listmix
 import wx.lib.colourdb as cdb
 import wx.lib.colourselect as csel
+import wx.lib.colourutils as cutils
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 
@@ -305,7 +306,7 @@ class UltimateRenderer_2(object):
         randomFont.SetFaceName(fontList[rdn])
 
         self.randomFont = randomFont
-        self.text = "This is my renderer"        
+        self.text = "This is my renderer"
 
         dc = wx.ClientDC(parent)
         dc.SetFont(self.randomFont)
@@ -373,6 +374,46 @@ class UltimateRenderer_3(object):
     def GetSubItemWidth(self):
 
         return 40
+    
+    
+class UltimateHeaderRenderer(object):
+
+    def __init__(self, parent):
+        self._hover = False
+        self._pressed = False
+        
+    def DrawHeaderButton(self, dc, rect, flags):
+        
+        self._hover = False
+        self._pressed = False
+        
+        color = wx.Colour(150,150,150)
+        if flags & wx.CONTROL_DISABLED:
+            color = wx.Colour(wx.WHITE)
+        elif flags & wx.CONTROL_SELECTED:
+            color = wx.Colour(wx.BLUE)
+                
+        if flags & wx.CONTROL_PRESSED:
+            self._pressed = True
+            color = cutils.AdjustColour(color,-50)
+        elif flags & wx.CONTROL_CURRENT:
+            self._hover = True
+            color = cutils.AdjustColour(color,50)
+            
+        dc.SetBrush(wx.Brush(color, wx.SOLID))
+        dc.SetBackgroundMode(wx.SOLID)
+        dc.SetPen(wx.TRANSPARENT_PEN)
+        dc.DrawRectangleRect(rect)
+
+        dc.SetBackgroundMode(wx.TRANSPARENT)        
+
+    def GetForegroundColour(self):
+       
+        if self._hover:
+            return wx.Colour(30,30,30)
+        else:
+            return wx.Colour(230,230,230)
+        
     
 
 class TestUltimateListCtrl(ULC.UltimateListCtrl):
@@ -474,7 +515,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         info._format = 0
         info._kind = 1
         info._text = "Artist\nName"
-        
+         
         self.list.InsertColumnInfo(0, info)
 
         info = ULC.UltimateListItem()
@@ -499,7 +540,22 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         info._format = 0
         info._text = "Custom Renderer"
         info._colour = wx.RED
+        
+        # Add our custom renderer for the header of column 3, we can also use
+        # SetHeaderCustomRenderer to set the renderer for all the columns.
+        klass = UltimateHeaderRenderer(self)
+        info.SetCustomRenderer(klass) 
+        
         self.list.InsertColumnInfo(3, info)
+        
+        # The custom renderer can also be set for all columns on the header and/or footer
+        #self.list.SetHeaderCustomRenderer(klass)
+        
+        # We must first have a footer in order to set its custom renderer: 
+        #extra_style = self.list.GetExtraStyle() | ULC.ULC_FOOTER
+        #if self.list.GetExtraStyle() != extra_style:
+            #self.list.SetExtraStyle(extra_style)
+        #self.list.SetFooterCustomRenderer(klass)
 
         items = musicdata.items()
         renderers = {}

@@ -57,6 +57,11 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
         self.SetColumnWidth(1, 175)
         self.SetColumnWidth(2, 175)
 
+        # After setting the column width you can specify that 
+        # this column expands to fill the window. Only one
+        # column may be specified.
+        self.SetColumnWidth(2, ULC.ULC_AUTOSIZE_FILL)
+
         self.SetItemCount(1000000)
 
         self.attr1 = ULC.UltimateListItemAttr()
