@@ -12181,7 +12181,7 @@ class UltimateListCtrl(wx.PyControl):
     def OnGetItemAttr(self, item):
         """
         This function may be overloaded in the derived class for a control with
-        ``ULC_VIRTUAL`` style. It should return the attribute for the for the specified
+        ``ULC_VIRTUAL`` style. It should return the attribute for the specified
         item or ``None`` to use the default appearance parameters.
 
         :param `item`: an integer specifying the item index.
