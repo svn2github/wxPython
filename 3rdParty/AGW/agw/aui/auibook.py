@@ -1871,9 +1871,6 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
         self._on_button = False
         
-        if self.HasCapture():
-            self.ReleaseMouse()
-
         if self._is_dragging:
             
             self._is_dragging = False
@@ -1888,6 +1885,9 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
             evt.SetOldSelection(evt.GetSelection())
             evt.SetEventObject(self)
             self.GetEventHandler().ProcessEvent(evt)
+
+            if self.HasCapture():
+                self.ReleaseMouse()
 
             return
     
