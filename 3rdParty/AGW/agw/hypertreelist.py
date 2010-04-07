@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 07 Apr 2010, 16.00 GMT
+# Latest Revision: 07 Apr 2010, 21.00 GMT
 #
 #
 # TODO List
@@ -213,7 +213,7 @@ License And Version
 
 HyperTreeList is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 07 Apr 2010, 16.00 GMT
+Latest Revision: Andrea Gavana @ 07 Apr 2010, 21.00 GMT
 
 Version 1.1
 
@@ -2923,7 +2923,10 @@ class TreeListMainWindow(CustomTreeCtrl):
 
             wnd = item.GetWindow(i)            
             if wnd:
-                wndx = text_x + text_w + 2*_MARGIN
+                if text_w == 0:
+                    wndx = text_x
+                else:
+                    wndx = text_x + text_w + 2*_MARGIN
                 xa, ya = self.CalcScrolledPosition((0, item.GetY()))
                 wndx += xa
                 if item.GetHeight() > item.GetWindowSize(i)[1]:
