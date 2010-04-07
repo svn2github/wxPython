@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 16 Feb 2010, 15.00 GMT
+# Latest Revision: 07 Apr 2010, 16.00 GMT
 #
 #
 # TODO List
@@ -213,7 +213,7 @@ License And Version
 
 HyperTreeList is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 16 Feb 2010, 15.00 GMT
+Latest Revision: Andrea Gavana @ 07 Apr 2010, 16.00 GMT
 
 Version 1.1
 
@@ -2078,11 +2078,12 @@ class TreeListMainWindow(CustomTreeCtrl):
          ``TreeItemIcon_SelectedExpanded`` To get the selected expanded image (which is shown when an expanded item is currently selected) 
          ================================= ========================
         """
+        
+        column = (column is not None and [column] or [self._main_column])[0]
 
         if column < 0:
             return _NO_IMAGE
-        
-        column = (column is not None and [column] or [self._main_column])[0]
+
         return item.GetImage(which, column)
 
 
@@ -2098,11 +2099,11 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         :see: L{GetItemImage} for a list of valid item states.
         """
+        
+        column = (column is not None and [column] or [self._main_column])[0]
 
         if column < 0:
             return
-        
-        column = (column is not None and [column] or [self._main_column])[0]
         
         item.SetImage(column, image, which)
         dc = wx.ClientDC(self)
