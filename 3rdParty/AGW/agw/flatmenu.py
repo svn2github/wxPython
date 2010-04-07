@@ -3706,7 +3706,7 @@ class FlatMenu(FlatMenuBase):
             self._focusWin.PushEventHandler(newEvtHandler)
 
         
-    def Append(self, id, item, helpString, kind):
+    def Append(self, id, item, helpString="", kind=wx.ITEM_NORMAL):
         """
         Appends an item to this menu.
 
@@ -3726,7 +3726,17 @@ class FlatMenu(FlatMenuBase):
         return self.AppendItem(newItem)
 
 
-    def AppendMenu(self, id, item, subMenu, helpString):
+    def AppendSubMenu(self, subMenu, item, helpString=""):
+        """
+        Adds a pull-right submenu to the end of the menu. See AppendMenu()
+        
+        This function is added to duplicate the API of wx.Menu
+        """
+        
+        return self.AppendMenu(wx.ID_ANY, item, subMenu, helpString)
+        
+        
+    def AppendMenu(self, id, item, subMenu, helpString=""):
         """
         Adds a pull-right submenu to the end of the menu.
 
@@ -3907,7 +3917,7 @@ class FlatMenu(FlatMenuBase):
         return self._itemHeight
 
 
-    def AppendCheckItem(self, id, item, helpString):
+    def AppendCheckItem(self, id, item, helpString=""):
         """
         Adds a checkable item to the end of the menu.
 
@@ -3918,7 +3928,7 @@ class FlatMenu(FlatMenuBase):
         return self.AppendItem(newItem)
 
 
-    def AppendRadioItem(self, id, item, helpString):
+    def AppendRadioItem(self, id, item, helpString=""):
         """
         Adds a radio item to the end of the menu.
         All consequent radio items form a group and when an item in the group is

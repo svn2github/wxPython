@@ -4,6 +4,7 @@ import random
 
 import wx
 import wx.lib.colourselect as csel
+import wx.lib.colourutils as cutils
 
 import sys
 
@@ -869,6 +870,150 @@ class TreeIcons(wx.Dialog):
         dc.SetBackground(wx.Brush("white"))
         dc.Clear()
 
+
+#---------------------------------------------------------------------------
+# Custom Renderer for the column headers
+#---------------------------------------------------------------------------
+class HyperTreeHeaderRenderer(object):
+    """
+    Draws the column headers as a solid color (self.color) 
+    """
+
+    def __init__(self, parent):
+        self.color = wx.Colour(150,150,150)
+        
+    def DrawTextFormatted(self, dc, text, rect):
+        """
+        Draws the item text, correctly formatted.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `text`: the item text;
+        :param `rect`: the item client rectangle.
+        """
+
+        # determine if the string can fit inside the current width
+        w, h, dummy = dc.GetMultiLineTextExtent(text)
+        width = rect.width
+        
+        if w <= width:
+            
+            dc.DrawLabel(text, rect, wx.ALIGN_CENTER_VERTICAL)
+
+        else:
+            
+            # determine the base width
+            ellipsis = "..."
+            base_w, h = dc.GetTextExtent(ellipsis)
+
+            # continue until we have enough space or only one character left
+
+            newText = text.split("\n")
+            theText = ""
+
+            for text in newText:
+            
+                lenText = len(text)
+                drawntext = text
+                w, dummy = dc.GetTextExtent(text)
+
+                while lenText > 1:
+
+                    if w + base_w <= width:
+                        break
+
+                    w_c, h_c = dc.GetTextExtent(drawntext[-1])
+                    drawntext = drawntext[0:-1]
+                    lenText -= 1
+                    w -= w_c
+                
+                # if still not enough space, remove ellipsis characters
+                while len(ellipsis) > 0 and w + base_w > width:
+                    ellipsis = ellipsis[0:-1]
+                    base_w, h = dc.GetTextExtent(ellipsis)
+
+                theText += drawntext + ellipsis + "\n"
+
+            theText = theText.rstrip()
+            dc.DrawLabel(theText, rect, wx.ALIGN_CENTER_VERTICAL)
+    
+
+        
+    def DrawHeaderButton(self, dc, rect, flags=0, params=None):
+      
+        if params != None:
+            text_align = params.m_labelAlignment
+            bitmap     = params.m_labelBitmap
+            text_color = params.m_labelColour
+            text_font  = params.m_labelFont
+            text       = params.m_labelText
+            
+        color = self.color
+       
+        if flags & wx.CONTROL_DISABLED:
+            color = wx.Colour(wx.WHITE)
+        elif flags & wx.CONTROL_SELECTED:
+            color = wx.Colour(wx.BLUE)
+        if flags & wx.CONTROL_PRESSED:
+            self._pressed = True
+            color = cutils.AdjustColour(color,-30)
+        elif flags & wx.CONTROL_CURRENT:
+            self._hover = True
+            color = cutils.AdjustColour(color,50)
+       
+        # Draw a solid background in self.color
+        dc.SetBrush(wx.Brush(color, wx.SOLID))
+        dc.SetBackgroundMode(wx.SOLID)
+        dc.SetPen(wx.TRANSPARENT_PEN)
+        dc.DrawRectangleRect(rect)
+      
+        # Draw the column divider on the right
+        x = rect.width + rect.x - 2
+        dc.SetPen(wx.Pen(cutils.AdjustColour(color,-30)))
+        dc.DrawLine(x,2,x,rect.height-2)
+        x += 1
+        dc.SetPen(wx.Pen(cutils.AdjustColour(color,30)))
+        dc.DrawLine(x,2,x,rect.height-2)
+
+        dc.SetBackgroundMode(wx.TRANSPARENT)        
+      
+        if params == None:
+            return
+       
+        # We need to draw the text and/or icon bitmap
+        dc.SetFont(text_font)
+        dc.SetTextForeground(text_color)
+        
+        # Determine the width of the text
+        wLabel, hLabel, dummy = dc.GetMultiLineTextExtent(text)
+        wLabel += 4  # 2 pixel margin either side
+
+        # and the width of the icon, if any
+        if bitmap:
+            wLabel += bitmap.GetWidth() + 2  # 2 is a margin between the image and text
+           
+        # ALIGN_LEFT if the label is larger than the available space 
+        text_align = (wLabel < rect.width and [text_align] or [wx.ALIGN_LEFT])[0]
+        
+        x = rect.x + 2
+
+        if text_align == wx.ALIGN_LEFT:
+            xAligned = x 
+
+        elif text_align == wx.ALIGN_RIGHT:
+            xAligned = x + rect.width - wLabel - 1
+
+        elif text_align == wx.ALIGN_CENTER:
+            xAligned = x + (rect.width - wLabel)/2
+           
+        if bitmap: 
+            dc.DrawBitmap(bitmap, xAligned + wLabel - bitmap.GetWidth() , 2, True)
+
+        dc.SetClippingRegion(x, 1, rect.width-2, rect.height - 2)
+        self.DrawTextFormatted(dc, text, wx.Rect(xAligned+2, 1, rect.width-2, rect.height-2))
+        dc.DestroyClippingRegion()
+        
+
+
                 
 #---------------------------------------------------------------------------
 # HyperTreeList Demo Implementation
@@ -1042,6 +1187,12 @@ class HyperTreeListDemo(wx.Frame):
         columnimages = wx.CheckBox(self.leftpanel, -1, "Images On Columns", style=wx.ALIGN_RIGHT)
         columnimages.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
         columnimages.Bind(wx.EVT_CHECKBOX, self.OnColumnImages)
+        flexgridcolumn.Add(columnimages, 0, wx.ALIGN_CENTER_VERTICAL)
+        flexgridcolumn.Add((20,20), 0)
+
+        columnimages = wx.CheckBox(self.leftpanel, -1, "Custom Renderer", style=wx.ALIGN_RIGHT)
+        columnimages.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        columnimages.Bind(wx.EVT_CHECKBOX, self.OnCustomRenderer)
         flexgridcolumn.Add(columnimages, 0, wx.ALIGN_CENTER_VERTICAL)
         flexgridcolumn.Add((20,20), 0)
         
@@ -1295,6 +1446,22 @@ class HyperTreeListDemo(wx.Frame):
             self.tree.SetColumnImage(i, img)
             
         event.Skip()        
+
+    def OnCustomRenderer(self, event):
+
+        if event.IsChecked():
+            renderer = HyperTreeHeaderRenderer(self) 
+            renderer.color = wx.Colour(211,227,247)
+            renderer.text_color = wx.Colour(30,30,30)
+            self.tree.SetHeaderCustomRenderer(renderer)
+        else:
+            renderer = None
+            self.tree.SetHeaderCustomRenderer(renderer)
+            
+        self.Refresh()
+            
+        event.Skip()        
+
 
 
     def OnColumnWidth(self, event):

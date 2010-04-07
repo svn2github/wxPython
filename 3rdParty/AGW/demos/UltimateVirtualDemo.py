@@ -170,7 +170,7 @@ class TestFrame(wx.Frame):
         panel.SetSizer(sizer)
         sizer.Layout()
 
-        self.SetIcon(images.Mondrian.GetIcon())
+##        self.SetIcon(images.Mondrian.GetIcon())
         self.CenterOnScreen()
         self.Show()
 

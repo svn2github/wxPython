@@ -578,6 +578,7 @@ class TreeListHeaderWindow(wx.Window):
         self._total_col_width = 0
         self._hotTrackCol = -1
         self._columns = []
+        self._headerCustomRenderer = None
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
@@ -835,12 +836,19 @@ class TreeListHeaderWindow(wx.Window):
             if image != -1 and imageList:
                 params.m_labelBitmap = imageList.GetBitmap(image)
 
-            wx.RendererNative.Get().DrawHeaderButton(self, dc, rect, flags,
-                                                     wx.HDR_SORT_ICON_NONE, params)
-        
+            if self._headerCustomRenderer != None:
+               self._headerCustomRenderer.DrawHeaderButton(dc, rect, flags, params)
+            else:
+                wx.RendererNative.Get().DrawHeaderButton(self, dc, rect, flags,
+                                                         wx.HDR_SORT_ICON_NONE, params)
+       
+        # Fill up any unused space to the right of the columns
         if x < w:
             rect = wx.Rect(x, 0, w-x, h)
-            wx.RendererNative.Get().DrawHeaderButton(self, dc, rect)
+            if self._headerCustomRenderer != None:
+               self._headerCustomRenderer.DrawHeaderButton(dc, rect)
+            else:
+                wx.RendererNative.Get().DrawHeaderButton(self, dc, rect)
         
 
     def DrawCurrent(self):
@@ -864,6 +872,18 @@ class TreeListHeaderWindow(wx.Window):
         self.AdjustDC(dc)
         dc.DrawLine (x1, y1, x2, y2)
         dc.SetLogicalFunction(wx.COPY)
+        
+        
+    def SetCustomRenderer(self, renderer=None):
+        """
+        Associate a custom renderer with the header - all columns will use it
+
+        :param `renderer`: a class able to correctly render header buttons
+
+        :note: the renderer class **must** implement the method `DrawHeaderButton`
+        """
+
+        self._headerCustomRenderer = renderer
 
 
     def XToCol(self, x):
@@ -4127,6 +4147,17 @@ class HyperTreeList(wx.PyControl):
         else:
             return False
     
+    def SetHeaderCustomRenderer(self, renderer=None):
+        """
+        Associate a custom renderer with the header - all columns will use it
+
+        :param `renderer`: a class able to correctly render header buttons
+
+        :note: the renderer class **must** implement the method `DrawHeaderButton`
+        """
+
+        self._header_win.SetCustomRenderer(renderer)
+        
 
     def SetWindowStyle(self, style):
         """
