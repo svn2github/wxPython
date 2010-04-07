@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 30 Mar 2010, 23.00 GMT
+# Latest Revision: 07 Apr 2010, 16.00 GMT
 #
 #
 # TODO List
@@ -186,7 +186,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 30 Mar 2010, 23.00 GMT
+Latest Revision: Andrea Gavana @ 07 Apr 2010, 16.00 GMT
 
 Version 0.6
 
@@ -1476,6 +1476,9 @@ class UltimateListItem(wx.Object):
         """
         
         self._mask |= ULC_MASK_IMAGE
+        if image is None:
+            image = []
+            
         self._image = to_list(image)
 
 
