@@ -342,7 +342,7 @@ class Group(DrawObject):
     """
     A group of other FloatCanvas Objects
     
-    Not all DrawObject methods may apply here. In particular, you can't Bind events to a group.
+    Not all DrawObject methods may apply here.
     
     Note that if an object is in more than one group, it will get drawn more than once.
     
@@ -2523,6 +2523,14 @@ class FloatCanvas(wx.Panel):
         """
         self.HitDict = None
     
+    def _CallHitCallback(self, Object, xy, HitEvent):
+        """
+        a little book keeping to be done when a callback is called
+        """
+        Object.HitCoords = self.PixelToWorld( xy )
+        Object.HitCoordsPixel = xy
+        Object.CallBackFuncs[HitEvent](Object)
+
     def HitTest(self, event, HitEvent):
         if self.HitDict:
             # check if there are any objects in the dict for this event
@@ -2531,10 +2539,7 @@ class FloatCanvas(wx.Panel):
                 color = self.GetHitTestColor( xy )
                 if color in self.HitDict[ HitEvent ]:
                     Object = self.HitDict[ HitEvent ][color]
-                    ## Add the hit coords to the Object
-                    Object.HitCoords = self.PixelToWorld( xy )
-                    Object.HitCoordsPixel = xy
-                    Object.CallBackFuncs[HitEvent](Object)
+                    self._CallHitCallback(Object, xy, HitEvent)
                     return True
             return False
 
@@ -2554,22 +2559,22 @@ class FloatCanvas(wx.Panel):
                 Object = self.HitDict[ EVT_FC_ENTER_OBJECT][color]
                 if (OldObject is None):
                     try:
-                        Object.CallBackFuncs[EVT_FC_ENTER_OBJECT](Object)
+                        self._CallHitCallback(Object, xy, EVT_FC_ENTER_OBJECT)
                         ObjectCallbackCalled =  True
                     except KeyError:
                         pass # this means the enter event isn't bound for that object
                 elif OldObject == Object: # the mouse is still on the same object
                     pass
-                    ## Is the mouse on a differnt object as it was...
+                    ## Is the mouse on a different object as it was...
                 elif not (Object == OldObject):
                     # call the leave object callback
                     try:
-                        OldObject.CallBackFuncs[EVT_FC_LEAVE_OBJECT](OldObject)
+                        self._CallHitCallback(Object, xy, EVT_FC_LEAVE_OBJECT)
                         ObjectCallbackCalled =  True
                     except KeyError:
                         pass # this means the leave event isn't bound for that object
                     try:
-                        Object.CallBackFuncs[EVT_FC_ENTER_OBJECT](Object)
+                        self._CallHitCallback(Object, xy, EVT_FC_LEAVE_OBJECT)
                         ObjectCallbackCalled =  True
                     except KeyError:
                         pass # this means the enter event isn't bound for that object
@@ -2583,7 +2588,8 @@ class FloatCanvas(wx.Panel):
                 self.ObjectUnderMouse = None
                 if OldObject:
                     try:
-                        OldObject.CallBackFuncs[EVT_FC_LEAVE_OBJECT](OldObject)
+                        ## Add the hit coords to the Object
+                        self._CallHitCallback(OldObject, xy, EVT_FC_LEAVE_OBJECT)
                         ObjectCallbackCalled =  True
                     except KeyError:
                         pass # this means the leave event isn't bound for that object

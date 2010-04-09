@@ -1,4 +1,6 @@
 Notes on stuff to do on the FloatCanvas Project:
+* add the GetOutlinePoints() method to the DrawObject Base class, so every object can be moved.
+
 * FloatCanvas.SetMode should set the Canvas on the GUI mode, then GUIModes
   don't have to be initialized with a Canvas object.
 
