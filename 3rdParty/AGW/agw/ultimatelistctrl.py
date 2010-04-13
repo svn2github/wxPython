@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 07 Apr 2010, 16.00 GMT
+# Latest Revision: 13 Apr 2010, 10.00 GMT
 #
 #
 # TODO List
@@ -13,7 +13,7 @@
 # 3)  Groups? (Maybe, check ObjectListView);
 # 4)  Scrolling items as headers and footers;
 # 5)  Alpha channel for text/background of items;
-# 6)  Custom renderers for headers/footers;
+# 6)  Custom renderers for headers/footers (done);
 # 7)  Fading in and out on mouse motion (a la Windows Vista Aero);
 # 8)  Sub-text for headers/footers (grey text below the header/footer text);
 # 9)  Fixing the columns to the left or right side of the control layout;
@@ -186,7 +186,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 07 Apr 2010, 16.00 GMT
+Latest Revision: Andrea Gavana @ 13 Apr 2010, 10.00 GMT
 
 Version 0.6
 
@@ -6262,6 +6262,18 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         return wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT)
 
 
+    def SetReportView(self, inReportView):
+        """
+        Sets whether L{UltimateListCtrl} is in report view or not.
+
+        :param `inReportView`: ``True`` to set L{UltimateListCtrl} in report view, ``False``
+         otherwise.
+        """
+
+        for line in self._lines:
+            line.SetReportView(inReportView)
+
+
     def CacheLineData(self, line):
         """
         Saves the current line attributes.
@@ -10783,13 +10795,24 @@ class UltimateListCtrl(wx.PyControl):
         :see: L{SetSingleStyle} for a list of valid window styles.        
         """        
 
+        wasInReportView = self.HasFlag(ULC_REPORT)
+
+        # update the window style first so that the header is created or destroyed
+        # corresponding to the new style
+        wx.PyControl.SetWindowStyleFlag(self, flag)
+
         if self._mainWin:
+
+            inReportView = (flag & ULC_REPORT) != 0
+
+            if inReportView != wasInReportView:
+                # we need to notify the main window about this change as it must
+                # update its data structures
+                self._mainWin.SetReportView(inReportView)
 
             self.CreateOrDestroyHeaderWindowAsNeeded()
             self.GetSizer().Layout()
             
-        wx.PyControl.SetWindowStyleFlag(self, flag)
-
 
     def GetColumn(self, col):
         """
