@@ -37,7 +37,7 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
     def __init__(self, parent, log):
 
         ULC.UltimateListCtrl.__init__(self, parent, -1,
-                                      style=wx.LC_REPORT|wx.LC_VIRTUAL|wx.LC_HRULES|wx.LC_VRULES)
+                                      agwStyle=wx.LC_REPORT|wx.LC_VIRTUAL|wx.LC_HRULES|wx.LC_VRULES)
 
         self.log = log
         

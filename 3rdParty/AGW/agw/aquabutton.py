@@ -2,7 +2,7 @@
 # AQUABUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 30 Nov 2009, 16.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 #
 # TODO List
@@ -72,9 +72,9 @@ License And Version
 
 AquaButton control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 30 Nov 2009, 16.00 GMT
+Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
 
-Version 0.2
+Version 0.3
 
 """
 

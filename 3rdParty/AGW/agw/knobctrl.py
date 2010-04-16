@@ -2,7 +2,7 @@
 # KNOBCTRL wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 30 Nov 2009, 14.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 #
 # TODO List
@@ -87,9 +87,9 @@ License And Version
 
 KnobCtrl is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 30 Nov 2009, 14.00 GMT
+Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
 
-Version 0.2
+Version 0.3
 
 """
 
@@ -191,7 +191,7 @@ class BufferedWindow(wx.Window):
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=wx.NO_FULL_REPAINT_ON_RESIZE, bufferedstyle=KC_BUFFERED_DC):
+                 style=wx.NO_FULL_REPAINT_ON_RESIZE, agwStyle=KC_BUFFERED_DC):
         """
         Default class constructor.
 
@@ -202,7 +202,7 @@ class BufferedWindow(wx.Window):
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
         :param `style`: the window style;
-        :param `bufferedstyle`: if set to ``KC_BUFFERED_DC``, double-buffering will
+        :param `agwStyle`: if set to ``KC_BUFFERED_DC``, double-buffering will
          be used.
         """
 
@@ -236,7 +236,7 @@ class BufferedWindow(wx.Window):
         """
         
         # All that is needed here is to draw the buffer to screen        
-        if self._bufferedstyle == KC_BUFFERED_DC:
+        if self._agwStyle == KC_BUFFERED_DC:
             dc = wx.BufferedPaintDC(self, self._Buffer)
         else:
             dc = wx.PaintDC(self)
@@ -294,7 +294,7 @@ class BufferedWindow(wx.Window):
         be updated.
         """
 
-        if self._bufferedstyle == KC_BUFFERED_DC:
+        if self._agwStyle == KC_BUFFERED_DC:
             dc = wx.BufferedDC(wx.ClientDC(self), self._Buffer)
             self.Draw(dc)
         else:
@@ -319,7 +319,7 @@ class KnobCtrl(BufferedWindow):
     
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=wx.DefaultSize,
-                 bufferedstyle=KC_BUFFERED_DC):
+                 agwStyle=KC_BUFFERED_DC):
         """
         Default class constructor.
 
@@ -330,11 +330,11 @@ class KnobCtrl(BufferedWindow):
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
         :param `style`: the window style;
-        :param `bufferedstyle`: if set to ``KC_BUFFERED_DC``, double-buffering will
+        :param `agwStyle`: if set to ``KC_BUFFERED_DC``, double-buffering will
          be used.
         """
 
-        self._bufferedstyle = bufferedstyle
+        self._agwStyle = agwStyle
         self._knobcolour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
 
         self._startcolour = wx.WHITE
@@ -353,7 +353,7 @@ class KnobCtrl(BufferedWindow):
         
         BufferedWindow.__init__(self, parent, id, pos, size,
                                 style=wx.NO_FULL_REPAINT_ON_RESIZE,
-                                bufferedstyle=bufferedstyle)
+                                agwStyle=agwStyle)
 
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouseEvents)
         self.SetValue(self._trackposition)

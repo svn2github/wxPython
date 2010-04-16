@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 25 Sep 2005
-# Latest Revision: 01 Dec 2009, 09.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 #
 # TODO List/Caveats
@@ -63,7 +63,7 @@ Usage
 Sample usage::
 
     speedwindow1 = SM.SpeedMeter(parent, bufferedstyle,
-                                 extrastyle, mousestyle)
+                                 agwStyle, mousestyle)
 
 
 None of the options (a part of parent class) are strictly required, if you
@@ -127,9 +127,9 @@ License And Version
 
 SpeedMeter is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 01 Dec 2009, 09.00 GMT
+Latest revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
 
-Version 0.2
+Version 0.3
 
 """
 
@@ -359,7 +359,7 @@ class SpeedMeter(BufferedWindow):
     This is the main class implementation.
     """
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
-                 size=wx.DefaultSize, extrastyle=SM_DRAW_HAND,
+                 size=wx.DefaultSize, agwStyle=SM_DRAW_HAND,
                  bufferedstyle=SM_BUFFERED_DC,
                  mousestyle=0):
         """
@@ -371,7 +371,7 @@ class SpeedMeter(BufferedWindow):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `extrastyle`: this value specifies the L{SpeedMeter} styles, and can be a
+        :param `agwStyle`: this value specifies the L{SpeedMeter} styles, and can be a
          combination of the following bits:
 
          =========================== =========== ==================================================
@@ -405,36 +405,36 @@ class SpeedMeter(BufferedWindow):
          left click/drag allow you to change the L{SpeedMeter} value interactively.
         """
 
-        self._extrastyle = extrastyle
+        self._agwStyle = agwStyle
         self._bufferedstyle = bufferedstyle
         self._mousestyle = mousestyle
 
-        if self._extrastyle & SM_DRAW_SECTORS and self._extrastyle & SM_DRAW_GRADIENT:
+        if self._agwStyle & SM_DRAW_SECTORS and self._agwStyle & SM_DRAW_GRADIENT:
             errstr = "\nERROR: Incompatible Options: SM_DRAW_SECTORS Can Not Be Used In "
             errstr = errstr + "Conjunction With SM_DRAW_GRADIENT."
             raise Exception(errstr)
 
-        if self._extrastyle & SM_DRAW_PARTIAL_SECTORS and self._extrastyle & SM_DRAW_SECTORS:
+        if self._agwStyle & SM_DRAW_PARTIAL_SECTORS and self._agwStyle & SM_DRAW_SECTORS:
             errstr = "\nERROR: Incompatible Options: SM_DRAW_SECTORS Can Not Be Used In "
             errstr = errstr + "Conjunction With SM_DRAW_PARTIAL_SECTORS."
             raise Exception(errstr)
 
-        if self._extrastyle & SM_DRAW_PARTIAL_SECTORS and self._extrastyle & SM_DRAW_PARTIAL_FILLER:
+        if self._agwStyle & SM_DRAW_PARTIAL_SECTORS and self._agwStyle & SM_DRAW_PARTIAL_FILLER:
             errstr = "\nERROR: Incompatible Options: SM_DRAW_PARTIAL_SECTORS Can Not Be Used In "
             errstr = errstr + "Conjunction With SM_DRAW_PARTIAL_FILLER."
             raise Exception(errstr)
 
-        if self._extrastyle & SM_DRAW_FANCY_TICKS and self._extrastyle & SM_ROTATE_TEXT:
+        if self._agwStyle & SM_DRAW_FANCY_TICKS and self._agwStyle & SM_ROTATE_TEXT:
             errstr = "\nERROR: Incompatible Options: SM_DRAW_FANCY_TICKS Can Not Be Used In "
             errstr = errstr + "Conjunction With SM_ROTATE_TEXT."
             raise Exception(errstr)
 
-        if self._extrastyle & SM_DRAW_SHADOW and self._extrastyle & SM_DRAW_HAND == 0:
+        if self._agwStyle & SM_DRAW_SHADOW and self._agwStyle & SM_DRAW_HAND == 0:
             errstr = "\nERROR: Incompatible Options: SM_DRAW_SHADOW Can Be Used Only In "
             errstr = errstr + "Conjunction With SM_DRAW_HAND."
             raise Exception(errstr)
 
-        if self._extrastyle & SM_DRAW_FANCY_TICKS:
+        if self._agwStyle & SM_DRAW_FANCY_TICKS:
             wx.lib.colourdb.updateColourDB()
 
 
@@ -523,7 +523,7 @@ class SpeedMeter(BufferedWindow):
         colours = None
         intervals = None
 
-        if self._extrastyle & SM_DRAW_SECTORS or self._extrastyle & SM_DRAW_PARTIAL_SECTORS:
+        if self._agwStyle & SM_DRAW_SECTORS or self._agwStyle & SM_DRAW_PARTIAL_SECTORS:
             # Get The Intervals Colours
             colours = self.GetIntervalColours()[:]
 
@@ -552,7 +552,7 @@ class SpeedMeter(BufferedWindow):
         if direction == "Reverse":
             intervals.reverse()
 
-            if self._extrastyle & SM_DRAW_SECTORS or self._extrastyle & SM_DRAW_PARTIAL_SECTORS:
+            if self._agwStyle & SM_DRAW_SECTORS or self._agwStyle & SM_DRAW_PARTIAL_SECTORS:
                 colours.reverse()
 
             currentvalue = end - currentvalue
@@ -568,7 +568,7 @@ class SpeedMeter(BufferedWindow):
 
         dc.SetPen(wx.TRANSPARENT_PEN)
 
-        if self._extrastyle & SM_DRAW_PARTIAL_FILLER:
+        if self._agwStyle & SM_DRAW_PARTIAL_FILLER:
 
             # Get Some Data For The Partial Filler
             fillercolour = self.GetFillerColour()
@@ -595,13 +595,13 @@ class SpeedMeter(BufferedWindow):
 
             sectorradius = radius
 
-        if self._extrastyle & SM_DRAW_PARTIAL_FILLER:
+        if self._agwStyle & SM_DRAW_PARTIAL_FILLER:
             # Draw The Filler (Both In "Advance" And "Reverse" Directions)
 
             dc.SetBrush(wx.Brush(fillercolour))
             dc.DrawArc(xs2, ys2, xe2, ye2, centerX, centerY)
 
-            if self._extrastyle & SM_DRAW_SECTORS == 0:
+            if self._agwStyle & SM_DRAW_SECTORS == 0:
                 dc.SetBrush(wx.Brush(speedbackground))
                 xclean1, yclean1 = self.CircleCoords(sectorradius, -endangle, centerX, centerY)
                 xclean2, yclean2 = self.CircleCoords(sectorradius, -startangle-offset, centerX, centerY)
@@ -631,8 +631,8 @@ class SpeedMeter(BufferedWindow):
             x = xtick
             y = ytick
 
-            if self._extrastyle & SM_DRAW_SECTORS:
-                if self._extrastyle & SM_DRAW_PARTIAL_FILLER:
+            if self._agwStyle & SM_DRAW_SECTORS:
+                if self._agwStyle & SM_DRAW_PARTIAL_FILLER:
                     if direction == "Advance":
                         if current > currentvalue:
                             x, y = self.CircleCoords(radius, angle, centerX, centerY)
@@ -648,19 +648,19 @@ class SpeedMeter(BufferedWindow):
 
 
             if ii > 0:
-                if self._extrastyle & SM_DRAW_PARTIAL_FILLER and ii == intersection:
+                if self._agwStyle & SM_DRAW_PARTIAL_FILLER and ii == intersection:
                     # We Got The Interval In Which There Is The Current Value. If We Choose
                     # A "Reverse" Direction, First We Draw The Partial Sector, Next The Filler
 
                     dc.SetBrush(wx.Brush(speedbackground))
 
                     if direction == "Reverse":
-                        if self._extrastyle & SM_DRAW_SECTORS:
+                        if self._agwStyle & SM_DRAW_SECTORS:
                             dc.SetBrush(wx.Brush(colours[ii-1]))
 
                         dc.DrawArc(xe2, ye2, xold, yold, centerX, centerY)
 
-                    if self._extrastyle & SM_DRAW_SECTORS:
+                    if self._agwStyle & SM_DRAW_SECTORS:
                         dc.SetBrush(wx.Brush(colours[ii-1]))
                     else:
                         dc.SetBrush(wx.Brush(speedbackground))
@@ -668,7 +668,7 @@ class SpeedMeter(BufferedWindow):
 
                     dc.DrawArc(xs1, ys1, xe1, ye1, centerX, centerY)
 
-                    if self._extrastyle & SM_DRAW_SECTORS:
+                    if self._agwStyle & SM_DRAW_SECTORS:
                         dc.SetBrush(wx.Brush(colours[ii-1]))
                         # Here We Draw The Rest Of The Sector In Which The Current Value Is
                         if direction == "Advance":
@@ -678,12 +678,12 @@ class SpeedMeter(BufferedWindow):
                         else:
                             dc.DrawArc(xe2, ye2, x, y, centerX, centerY)
 
-                elif self._extrastyle & SM_DRAW_SECTORS:
+                elif self._agwStyle & SM_DRAW_SECTORS:
                     dc.SetBrush(wx.Brush(colours[ii-1]))
 
                     # Here We Still Use The SM_DRAW_PARTIAL_FILLER Style, But We Are Not
                     # In The Sector Where The Current Value Resides
-                    if self._extrastyle & SM_DRAW_PARTIAL_FILLER and ii != intersection:
+                    if self._agwStyle & SM_DRAW_PARTIAL_FILLER and ii != intersection:
                         if direction == "Advance":
                             dc.DrawArc(x, y, xold, yold, centerX, centerY)
                         else:
@@ -695,7 +695,7 @@ class SpeedMeter(BufferedWindow):
                         dc.DrawArc(x, y, xold, yold, centerX, centerY)
 
             else:
-                if self._extrastyle & SM_DRAW_PARTIAL_FILLER and self._extrastyle & SM_DRAW_SECTORS:
+                if self._agwStyle & SM_DRAW_PARTIAL_FILLER and self._agwStyle & SM_DRAW_SECTORS:
                     dc.SetBrush(wx.Brush(fillercolour))
                     dc.DrawArc(xs2, ys2, xe2, ye2, centerX, centerY)
                     x, y = self.CircleCoords(sectorradius, angle, centerX, centerY)
@@ -707,7 +707,7 @@ class SpeedMeter(BufferedWindow):
             xold = x
             yold = y
 
-            if self._extrastyle & SM_DRAW_PARTIAL_SECTORS:
+            if self._agwStyle & SM_DRAW_PARTIAL_SECTORS:
 
                 sectorendradius = radius - 10.0*self.scale
                 sectorstartradius = radius
@@ -722,7 +722,7 @@ class SpeedMeter(BufferedWindow):
                 ypsold = yps
 
 
-        if self._extrastyle & SM_DRAW_PARTIAL_SECTORS:
+        if self._agwStyle & SM_DRAW_PARTIAL_SECTORS:
 
             xps1, yps1 = self.CircleCoords(sectorendradius, -endangle+2*offset, centerX, centerY)
             xps2, yps2 = self.CircleCoords(sectorendradius, -startangle-2*offset, centerX, centerY)
@@ -731,7 +731,7 @@ class SpeedMeter(BufferedWindow):
             dc.DrawArc(xps1, yps1, xps2, yps2, centerX, centerY)
 
 
-        if self._extrastyle & SM_DRAW_GRADIENT:
+        if self._agwStyle & SM_DRAW_GRADIENT:
 
             dc.SetPen(wx.TRANSPARENT_PEN)
 
@@ -765,7 +765,7 @@ class SpeedMeter(BufferedWindow):
                 xst1, yst1 = self.CircleCoords(gradradius, -endangle, centerX, centerY)
                 xen1, yen1 = self.CircleCoords(gradradius, -startangle-offset, centerX, centerY)
 
-                if self._extrastyle & SM_DRAW_PARTIAL_FILLER:
+                if self._agwStyle & SM_DRAW_PARTIAL_FILLER:
                     if gradradius >= fillerendradius:
                         if direction == "Advance":
                             dc.DrawArc(xstart, ystart, xcurrent, ycurrent, centerX, centerY)
@@ -781,7 +781,7 @@ class SpeedMeter(BufferedWindow):
 
                         dc.DrawArc(xst1, yst1, xen1, yen1, centerX, centerY)
                 else:
-                    if self._extrastyle & SM_DRAW_PARTIAL_SECTORS:
+                    if self._agwStyle & SM_DRAW_PARTIAL_SECTORS:
                         if gradradius <= sectorendradius:
                             if interface == 0:
                                 interface = 1
@@ -807,7 +807,7 @@ class SpeedMeter(BufferedWindow):
         if direction == "Reverse":
             ticks.reverse()
 
-        if self._extrastyle & SM_DRAW_SECONDARY_TICKS:
+        if self._agwStyle & SM_DRAW_SECONDARY_TICKS:
             ticknum = self.GetNumberOfSecondaryTicks()
             oldinterval = intervals[0]
 
@@ -825,7 +825,7 @@ class SpeedMeter(BufferedWindow):
         tfont.SetFamily(myfamily)
         dc.SetFont(tfont)
 
-        if self._extrastyle & SM_DRAW_FANCY_TICKS:
+        if self._agwStyle & SM_DRAW_FANCY_TICKS:
             facename = tfont.GetFaceName()
             ffamily = familyname[fontfamily.index(tfont.GetFamily())]
             fweight = weightsname[weights.index(tfont.GetWeight())]
@@ -838,7 +838,7 @@ class SpeedMeter(BufferedWindow):
         for ii, angles in enumerate(textangles):
 
             strings = ticks[ii]
-            if self._extrastyle & SM_DRAW_FANCY_TICKS == 0:
+            if self._agwStyle & SM_DRAW_FANCY_TICKS == 0:
                 width, height, dummy, dummy = dc.GetFullTextExtent(strings, tfont)
                 textheight = height
             else:
@@ -848,19 +848,19 @@ class SpeedMeter(BufferedWindow):
             lX = dc.GetCharWidth()/2.0
             lY = dc.GetCharHeight()/2.0
 
-            if self._extrastyle & SM_ROTATE_TEXT:
+            if self._agwStyle & SM_ROTATE_TEXT:
                 angis = colourangles[ii] - float(width)/(2.0*radius)
                 x, y = self.CircleCoords(radius-10.0*self.scale, angis, centerX, centerY)
                 dc.DrawRotatedText(strings, x, y, angles)
             else:
                 angis = colourangles[ii]
-                if self._extrastyle & SM_DRAW_FANCY_TICKS == 0:
+                if self._agwStyle & SM_DRAW_FANCY_TICKS == 0:
                     x, y = self.CircleCoords(radius-10*self.scale, angis, centerX, centerY)
                     lX = lX*len(strings)
                     x = x - lX - width*cos(angis)/2.0
                     y = y - lY - height*sin(angis)/2.0
 
-                if self._extrastyle & SM_DRAW_FANCY_TICKS:
+                if self._agwStyle & SM_DRAW_FANCY_TICKS:
                     fancystr = '<font family="' + ffamily + '" size="' + str(int(fsize)) + '" weight="' + fweight + '"'
                     fancystr = fancystr + ' color="' + fcolour + '"' + ' style="' + fstyle + '"> ' + strings + ' </font>'
 
@@ -890,7 +890,7 @@ class SpeedMeter(BufferedWindow):
 
             dc.DrawPolygon(points)
 
-            if self._extrastyle & SM_DRAW_SECONDARY_TICKS:
+            if self._agwStyle & SM_DRAW_SECONDARY_TICKS:
                 if ii > 0:
                     newinterval = intervals[ii]
                     oldinterval = intervals[ii-1]
@@ -947,7 +947,7 @@ class SpeedMeter(BufferedWindow):
 
         # Here We Draw The Text In The Middle, Near The Start Of The Arrow (If Present)
         # This Is Like The "Km/h" Or "mph" Text In The Cars
-        if self._extrastyle & SM_DRAW_MIDDLE_TEXT:
+        if self._agwStyle & SM_DRAW_MIDDLE_TEXT:
 
             middlecolour = self.GetMiddleTextColour()
             middletext = self.GetMiddleText()
@@ -967,7 +967,7 @@ class SpeedMeter(BufferedWindow):
 
         # Here We Draw The Icon In The Middle, Near The Start Of The Arrow (If Present)
         # This Is Like The "Fuel" Icon In The Cars
-        if self._extrastyle & SM_DRAW_MIDDLE_ICON:
+        if self._agwStyle & SM_DRAW_MIDDLE_ICON:
 
             middleicon = self.GetMiddleIcon()
             middlewidth, middleheight = self.GetMiddleIconDimens()
@@ -989,7 +989,7 @@ class SpeedMeter(BufferedWindow):
 
 
         # Requested To Draw The Hand
-        if self._extrastyle & SM_DRAW_HAND:
+        if self._agwStyle & SM_DRAW_HAND:
 
             handstyle = self.GetHandStyle()
             handcolour = self.GetHandColour()
@@ -1021,7 +1021,7 @@ class SpeedMeter(BufferedWindow):
 
                 x4, y4 = self.CircleCoords(5*self.scale*sqrt(3), accelangle+pi, centerX, centerY)
 
-            if self._extrastyle & SM_DRAW_SHADOW:
+            if self._agwStyle & SM_DRAW_SHADOW:
 
                 if handstyle == "Arrow":
                     # Draw The Shadow
@@ -1663,47 +1663,47 @@ class SpeedMeter(BufferedWindow):
         stringstyle = []
         integerstyle = []
 
-        if self._extrastyle & SM_ROTATE_TEXT:
+        if self._agwStyle & SM_ROTATE_TEXT:
             stringstyle.append("SM_ROTATE_TEXT")
             integerstyle.append(SM_ROTATE_TEXT)
 
-        if self._extrastyle & SM_DRAW_SECTORS:
+        if self._agwStyle & SM_DRAW_SECTORS:
             stringstyle.append("SM_DRAW_SECTORS")
             integerstyle.append(SM_DRAW_SECTORS)
 
-        if self._extrastyle & SM_DRAW_PARTIAL_SECTORS:
+        if self._agwStyle & SM_DRAW_PARTIAL_SECTORS:
             stringstyle.append("SM_DRAW_PARTIAL_SECTORS")
             integerstyle.append(SM_DRAW_PARTIAL_SECTORS)
 
-        if self._extrastyle & SM_DRAW_HAND:
+        if self._agwStyle & SM_DRAW_HAND:
             stringstyle.append("SM_DRAW_HAND")
             integerstyle.append(SM_DRAW_HAND)
 
-        if self._extrastyle & SM_DRAW_SHADOW:
+        if self._agwStyle & SM_DRAW_SHADOW:
             stringstyle.append("SM_DRAW_SHADOW")
             integerstyle.append(SM_DRAW_SHADOW)
 
-        if self._extrastyle & SM_DRAW_PARTIAL_FILLER:
+        if self._agwStyle & SM_DRAW_PARTIAL_FILLER:
             stringstyle.append("SM_DRAW_PARTIAL_FILLER")
             integerstyle.append(SM_DRAW_PARTIAL_FILLER)
 
-        if self._extrastyle & SM_DRAW_SECONDARY_TICKS:
+        if self._agwStyle & SM_DRAW_SECONDARY_TICKS:
             stringstyle.append("SM_DRAW_SECONDARY_TICKS")
             integerstyle.append(SM_DRAW_SECONDARY_TICKS)
 
-        if self._extrastyle & SM_DRAW_MIDDLE_TEXT:
+        if self._agwStyle & SM_DRAW_MIDDLE_TEXT:
             stringstyle.append("SM_DRAW_MIDDLE_TEXT")
             integerstyle.append(SM_DRAW_MIDDLE_TEXT)
 
-        if self._extrastyle & SM_DRAW_MIDDLE_ICON:
+        if self._agwStyle & SM_DRAW_MIDDLE_ICON:
             stringstyle.append("SM_DRAW_MIDDLE_ICON")
             integerstyle.append(SM_DRAW_MIDDLE_ICON)
 
-        if self._extrastyle & SM_DRAW_GRADIENT:
+        if self._agwStyle & SM_DRAW_GRADIENT:
             stringstyle.append("SM_DRAW_GRADIENT")
             integerstyle.append(SM_DRAW_GRADIENT)
 
-        if self._extrastyle & SM_DRAW_FANCY_TICKS:
+        if self._agwStyle & SM_DRAW_FANCY_TICKS:
             stringstyle.append("SM_DRAW_FANCY_TICKS")
             integerstyle.append(SM_DRAW_FANCY_TICKS)
 

@@ -1,6 +1,5 @@
 import wx
 import os, sys
-import random
 import images
 
 from wx.lib.embeddedimage import PyEmbeddedImage
@@ -857,9 +856,8 @@ class TestFrame(wx.Frame):
 
         # create the list control
         self.list = ULC.UltimateListCtrl(self, -1,
-                                         style=wx.LC_ICON | wx.LC_AUTOARRANGE ,
-                                         extraStyle=ULC.ULC_HEADER_IN_ALL_VIEWS)
-##        self.list.EnableSelectionVista()
+                                         agwStyle=wx.LC_ICON | wx.LC_AUTOARRANGE |
+                                         ULC.ULC_HEADER_IN_ALL_VIEWS)
 
         # assign the image list to it
         self.list.AssignImageList(il, wx.IMAGE_LIST_NORMAL)

@@ -2,7 +2,7 @@
 # MULTIDIRDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 30 Nov 2009, 16.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 #
 # TODO List
@@ -60,9 +60,9 @@ This class supports the following window styles:
 ===================== =========== ==================================================
 Window Styles         Hex Value   Description
 ===================== =========== ==================================================
+``DD_NEW_DIR_BUTTON``       0x000 Enable/disable the "Make new folder" button
 ``DD_DIR_MUST_EXIST``       0x200 The dialog will allow the user to choose only an existing folder. When this style is not given, a "Create new directory" button is added to the dialog (on Windows) or some other way is provided to the user to type the name of a new folder.
 ``DD_MULTIPLE``             0x400 Allows the selection of multiple folders.
-``DD_DEFAULT_STYLE``   0x20001840 Equivalent to a combination of ``wx.DEFAULT_DIALOG_STYLE`` and ``wx.RESIZE_BORDER``.
 ===================== =========== ==================================================
 
 
@@ -77,9 +77,9 @@ License And Version
 
 MultiDirDialog is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 30 Nov 2009, 16.00 GMT
+Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
 
-Version 0.2
+Version 0.3
 
 """
 
@@ -98,6 +98,7 @@ DD_DIR_MUST_EXIST = wx.DD_DIR_MUST_EXIST
 """ The dialog will allow the user to choose only an existing folder. When this style""" \
 """ is not given, a "Create new directory" button is added to the dialog (on Windows)""" \
 """ or some other way is provided to the user to type the name of a new folder. """
+DD_NEW_DIR_BUTTON = wx.DD_NEW_DIR_BUTTON
 
 _ = wx.GetTranslation
 
@@ -267,7 +268,7 @@ class MultiDirDialog(wx.Dialog):
     """
 
     def __init__(self, parent, message=_("Choose a directory"), title=_("Browse For Folders"),
-                 defaultPath="", style=wx.DD_DEFAULT_STYLE|DD_MULTIPLE, pos=wx.DefaultPosition,
+                 defaultPath="", style=wx.DD_DEFAULT_STYLE, agwStyle=DD_MULTIPLE, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, name="multidirdialog"):
         """
         Default class constructor.
@@ -276,15 +277,16 @@ class MultiDirDialog(wx.Dialog):
         :param `message`: the message to show on the dialog;
         :param `title`: the dialog title;
         :param `defaultPath`: the default path, or the empty string;
-        :param `style`: the custom dir dialog style; this can be a combination of the
+        :param `style`: the underlying `wx.Dialog` window style;
+        :param `agwStyle`: the AGW-specific dialog style; this can be a combination of the
          following bits:
 
          ===================== =========== ==================================================
          Window Styles         Hex Value   Description
          ===================== =========== ==================================================
+         ``DD_NEW_DIR_BUTTON``       0x000 Enable/disable the "Make new folder" button
          ``DD_DIR_MUST_EXIST``       0x200 The dialog will allow the user to choose only an existing folder. When this style is not given, a "Create new directory" button is added to the dialog (on Windows) or some other way is provided to the user to type the name of a new folder.
          ``DD_MULTIPLE``             0x400 Allows the selection of multiple folders.
-         ``DD_DEFAULT_STYLE``   0x20001840 Equivalent to a combination of ``wx.DEFAULT_DIALOG_STYLE`` and ``wx.RESIZE_BORDER``.
          ===================== =========== ==================================================
 
         :param `pos`: the dialog position;
@@ -292,9 +294,9 @@ class MultiDirDialog(wx.Dialog):
         :param `name`: the dialog name.
         """
 
-        self.ddStyle = style
-
         wx.Dialog.__init__(self, parent, pos=pos, size=size, style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER, name=name)
+
+        self.agwStyle = agwStyle
         
         self.dirCtrl = wx.GenericDirCtrl(self, size=(300, 300), style=wx.DIRCTRL_3D_INTERNAL|wx.DIRCTRL_DIR_ONLY)
         self.folderText = wx.TextCtrl(self, -1, defaultPath, style=wx.TE_PROCESS_ENTER)
@@ -348,7 +350,7 @@ class MultiDirDialog(wx.Dialog):
         treeCtrl = self.dirCtrl.GetTreeCtrl()
         treeCtrl.AssignImageList(il)
 
-        if self.ddStyle & DD_MULTIPLE:
+        if self.agwStyle & DD_MULTIPLE:
             treeCtrl.SetWindowStyle(treeCtrl.GetWindowStyle() | wx.TR_MULTIPLE)
 
         if not defaultPath.strip():
@@ -372,7 +374,7 @@ class MultiDirDialog(wx.Dialog):
         self.SetTitle(title)
         self.okButton.SetDefault()
 
-        if self.ddStyle & wx.DD_DIR_MUST_EXIST:
+        if self.agwStyle & wx.DD_DIR_MUST_EXIST:
             self.newButton.Enable(False)
 
 

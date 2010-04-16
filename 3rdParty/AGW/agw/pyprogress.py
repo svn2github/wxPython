@@ -2,7 +2,7 @@
 # PYPROGRESS wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 01 Dec 2009, 09.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 #
 # TODO List
@@ -85,9 +85,9 @@ License And Version
 
 PyProgress is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 01 Dec 2009, 09.00 GMT
+Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
 
-Version 0.3
+Version 0.4
 
 """
 
@@ -363,7 +363,7 @@ class PyProgress(wx.Dialog):
     """
 
     def __init__(self, parent=None, id=-1, title="", message="",
-                 style=wx.PD_APP_MODAL|wx.PD_AUTO_HIDE):
+                 agwStyle=wx.PD_APP_MODAL|wx.PD_AUTO_HIDE):
         """
         Default class constructor.
 
@@ -392,7 +392,7 @@ class PyProgress(wx.Dialog):
         # we may disappear at any moment, let the others know about it
         self.SetExtraStyle(self.GetExtraStyle()|wx.WS_EX_TRANSIENT)
 
-        self._hasAbortButton = (style & wx.PD_CAN_ABORT)
+        self._hasAbortButton = (agwStyle & wx.PD_CAN_ABORT)
 
         if wx.Platform == "__WXMSW__":
             # we have to remove the "Close" button from the title bar then as it is
@@ -433,7 +433,7 @@ class PyProgress(wx.Dialog):
 
         nTimeLabels = 0
 
-        if style & wx.PD_ELAPSED_TIME:
+        if agwStyle & wx.PD_ELAPSED_TIME:
         
             nTimeLabels += 1
             self._elapsed = self.CreateLabel("Elapsed time : ", sizer)
@@ -471,7 +471,7 @@ class PyProgress(wx.Dialog):
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         
-        self._windowStyle = style
+        self._agwStyle = agwStyle
         
         self.SetSizerAndFit(sizer)
     
@@ -485,7 +485,7 @@ class PyProgress(wx.Dialog):
     
         self.Centre(wx.CENTER_FRAME|wx.BOTH)
 
-        if style & wx.PD_APP_MODAL:
+        if agwStyle & wx.PD_APP_MODAL:
             self._winDisabler = wx.WindowDisabler(self)
         else:
             if self._parentTop:
@@ -565,7 +565,7 @@ class PyProgress(wx.Dialog):
 
         if self._state == Finished:
 
-            if not self._windowStyle & wx.PD_AUTO_HIDE:
+            if not self._agwStyle & wx.PD_AUTO_HIDE:
                 
                 self.EnableClose()
                 
@@ -774,7 +774,7 @@ class PyProgress(wx.Dialog):
     def ReenableOtherWindows(self):
         """ Re-enables the other windows if using `wx.WindowDisabler`. """
 
-        if self._windowStyle & wx.PD_APP_MODAL:
+        if self._agwStyle & wx.PD_APP_MODAL:
             if hasattr(self, "_winDisabler"):
                 del self._winDisabler
         

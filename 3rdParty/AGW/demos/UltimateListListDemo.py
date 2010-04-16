@@ -95,8 +95,7 @@ class TestFrame(wx.Frame):
             il_max = il.Add(bmp)
 
         # create the list control
-        self.list = ULC.UltimateListCtrl(self, -1, style=wx.LC_LIST,
-                                         extraStyle=ULC.ULC_HOT_TRACKING)
+        self.list = ULC.UltimateListCtrl(self, -1, agwStyle=wx.LC_LIST|ULC.ULC_HOT_TRACKING)
         self.list.EnableSelectionVista()
 
         # assign the image list to it

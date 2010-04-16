@@ -246,9 +246,9 @@ class MacRenderer(object):
 
 class TestUltimateListCtrl(ULC.UltimateListCtrl, listmix.ListCtrlAutoWidthMixin):
     
-    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0, extraStyle=0):
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0, agwStyle=0):
         
-        ULC.UltimateListCtrl.__init__(self, parent, id, pos, size, style, extraStyle)
+        ULC.UltimateListCtrl.__init__(self, parent, id, pos, size, style, agwStyle)
         listmix.ListCtrlAutoWidthMixin.__init__(self)
         
         
@@ -267,15 +267,15 @@ class UltimateListCtrlPanel(wx.Panel):
         self.il.Add(movie.GetBitmap())
         
         self.list = TestUltimateListCtrl(self, -1,
-                                         style=wx.LC_REPORT
+                                         agwStyle=wx.LC_REPORT
                                          | wx.BORDER_SUNKEN
                                          #| wx.BORDER_NONE
                                          #| wx.LC_SORT_ASCENDING
                                          #| wx.LC_NO_HEADER
                                          #| wx.LC_VRULES
-                                         | wx.LC_HRULES,
+                                         | wx.LC_HRULES
                                          #| wx.LC_SINGLE_SEL
-                                         extraStyle=ULC.ULC_HAS_VARIABLE_ROW_HEIGHT)
+                                         | ULC.ULC_HAS_VARIABLE_ROW_HEIGHT)
         
         self.list.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
         sizer.Add(self.list, 1, wx.EXPAND)

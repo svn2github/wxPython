@@ -269,7 +269,7 @@ class RibbonFrame(wx.Frame):
         
         home = RB.RibbonPage(self._ribbon, wx.ID_ANY, "Examples", CreateBitmap("ribbon"))
         toolbar_panel = RB.RibbonPanel(home, wx.ID_ANY, "Toolbar", wx.NullBitmap, wx.DefaultPosition,
-                                       wx.DefaultSize, RB.RIBBON_PANEL_NO_AUTO_MINIMISE)
+                                       wx.DefaultSize, agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE)
         
         toolbar = RB.RibbonToolBar(toolbar_panel, ID_MAIN_TOOLBAR)
         toolbar.AddTool(wx.ID_ANY, CreateBitmap("align_left"))
@@ -309,7 +309,7 @@ class RibbonFrame(wx.Frame):
         shapes.AddDropdownButton(ID_POLYGON, "Other Polygon", CreateBitmap("hexagon"), "")
 
         dummy_1 = RB.RibbonPanel(home, wx.ID_ANY, "Another Panel", wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize,
-                                 RB.RIBBON_PANEL_EXT_BUTTON)
+                                 agwStyle=RB.RIBBON_PANEL_EXT_BUTTON)
     
         label_font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_LIGHT)
         self._bitmap_creation_dc.SetFont(label_font)
@@ -318,7 +318,7 @@ class RibbonFrame(wx.Frame):
         self._default_primary, self._default_secondary, self._default_tertiary = self._ribbon.GetArtProvider().GetColourScheme(1, 1, 1)
 
         provider_panel = RB.RibbonPanel(scheme, wx.ID_ANY, "Art", wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize,
-                                        RB.RIBBON_PANEL_NO_AUTO_MINIMISE)
+                                        agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE)
         provider_bar = RB.RibbonButtonBar(provider_panel, wx.ID_ANY)
         provider_bar.AddSimpleButton(ID_DEFAULT_PROVIDER, "Default Provider",
                                      wx.ArtProvider.GetBitmap(wx.ART_QUESTION, wx.ART_OTHER, wx.Size(32, 32)), "")
@@ -393,15 +393,15 @@ class RibbonFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnPositionTopBoth, id=ID_POSITION_TOP_BOTH)
 
 
-    def SetBarStyle(self, style):
+    def SetBarStyle(self, agwStyle):
 
         self._ribbon.Freeze()
-        self._ribbon.SetWindowStyleFlag(style)
+        self._ribbon.SetAGWWindowStyleFlag(agwStyle)
         
         pTopSize = self.GetSizer()
         pToolbar = wx.FindWindowById(ID_MAIN_TOOLBAR)
 
-        if style & RB.RIBBON_BAR_FLOW_VERTICAL:
+        if agwStyle & RB.RIBBON_BAR_FLOW_VERTICAL:
         
             self._ribbon.SetTabCtrlMargins(10, 10)
             pTopSize.SetOrientation(wx.HORIZONTAL)

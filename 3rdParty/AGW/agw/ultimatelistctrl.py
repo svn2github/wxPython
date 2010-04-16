@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 13 Apr 2010, 10.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 #
 # TODO List
@@ -83,53 +83,42 @@ Window Styles
 
 This class supports the following window styles:
 
-======================== =========== ====================================================================================================
-Window Styles             Hex Value  Description
-======================== =========== ====================================================================================================
-``ULC_VRULES``                   0x1 Draws light vertical rules between rows in report mode.
-``ULC_HRULES``                   0x2 Draws light horizontal rules between rows in report mode.
-``ULC_ICON``                     0x4 Large icon view, with optional labels.
-``ULC_SMALL_ICON``               0x8 Small icon view, with optional labels.
-``ULC_LIST``                    0x10 Multicolumn list view, with optional small icons. Columns are computed automatically, i.e. you don't set columns as in ``ULC_REPORT``. In other words, the list wraps, unlike a `wx.ListBox`.
-``ULC_REPORT``                  0x20 Single or multicolumn report view, with optional header.
-``ULC_ALIGN_TOP``               0x40 Icons align to the top. Win32 default, Win32 only.
-``ULC_ALIGN_LEFT``              0x80 Icons align to the left.
-``ULC_AUTOARRANGE``            0x100 Icons arrange themselves. Win32 only.
-``ULC_VIRTUAL``                0x200 The application provides items text on demand. May only be used with ``ULC_REPORT``.
-``ULC_EDIT_LABELS``            0x400 Labels are editable: the application will be notified when editing starts.
-``ULC_NO_HEADER``              0x800 No header in report mode.
-``ULC_NO_SORT_HEADER``        0x1000 No Docs.
-``ULC_SINGLE_SEL``            0x2000 Single selection (default is multiple).
-``ULC_SORT_ASCENDING``        0x4000 Sort in ascending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
-``ULC_SORT_DESCENDING``       0x8000 Sort in descending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
-``ULC_TILE``                 0x10000 Each item appears as a full-sized icon with a label of one or more lines beside it (partially implemented).
-======================== =========== ====================================================================================================
-
-
-Window Extra Styles
-===================
-
-This class supports the following window extra styles:
-
-=============================== =========== ====================================================================================================
-Window Extra Styles              Hex Value  Description
-=============================== =========== ====================================================================================================
-``ULC_NO_HIGHLIGHT``                 0x0001 No highlight when an item is selected.
-``ULC_STICKY_HIGHLIGHT``             0x0002 Items are selected by simply hovering on them, with no need to click on them.
-``ULC_STICKY_NOSELEVENT``            0x0004 Don't send a selection event when using ``ULC_STICKY_HIGHLIGHT`` extra style.
-``ULC_SEND_LEFTCLICK``               0x0008 Send a left click event when an item is selected.
-``ULC_HAS_VARIABLE_ROW_HEIGHT``      0x0010 The list has variable row heights.
-``ULC_AUTO_CHECK_CHILD``             0x0020 When a column header has a checkbox associated, auto-check all the subitems in that column.
-``ULC_AUTO_TOGGLE_CHILD``            0x0040 When a column header has a checkbox associated, toggle all the subitems in that column.
-``ULC_AUTO_CHECK_PARENT``            0x0080 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
-``ULC_SHOW_TOOLTIPS``                0x0100 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
-``ULC_HOT_TRACKING``                 0x0200 Enable hot tracking of items on mouse motion.
-``ULC_BORDER_SELECT``                0x0400 Changes border colour whan an item is selected, instead of highlighting the item.
-``ULC_TRACK_SELECT``                 0x0800 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This extra style applies to all views of `UltimateListCtrl`.
-``ULC_HEADER_IN_ALL_VIEWS``          0x1000 Show column headers in all view modes.
-``ULC_NO_FULL_ROW_SELECT``           0x2000 When an item is selected, the only the item in the first column is highlighted.
-``ULC_FOOTER``                       0x4000 Show a footer too (only when header is present).
-=============================== =========== ====================================================================================================
+===============================  =========== ====================================================================================================
+Window Styles                    Hex Value   Description
+===============================  =========== ====================================================================================================
+``ULC_VRULES``                           0x1 Draws light vertical rules between rows in report mode.
+``ULC_HRULES``                           0x2 Draws light horizontal rules between rows in report mode.
+``ULC_ICON``                             0x4 Large icon view, with optional labels.
+``ULC_SMALL_ICON``                       0x8 Small icon view, with optional labels.
+``ULC_LIST``                            0x10 Multicolumn list view, with optional small icons. Columns are computed automatically, i.e. you don't set columns as in ``ULC_REPORT``. In other words, the list wraps, unlike a `wx.ListBox`.
+``ULC_REPORT``                          0x20 Single or multicolumn report view, with optional header.
+``ULC_ALIGN_TOP``                       0x40 Icons align to the top. Win32 default, Win32 only.
+``ULC_ALIGN_LEFT``                      0x80 Icons align to the left.
+``ULC_AUTOARRANGE``                    0x100 Icons arrange themselves. Win32 only.
+``ULC_VIRTUAL``                        0x200 The application provides items text on demand. May only be used with ``ULC_REPORT``.
+``ULC_EDIT_LABELS``                    0x400 Labels are editable: the application will be notified when editing starts.
+``ULC_NO_HEADER``                      0x800 No header in report mode.
+``ULC_NO_SORT_HEADER``                0x1000 No Docs.
+``ULC_SINGLE_SEL``                    0x2000 Single selection (default is multiple).
+``ULC_SORT_ASCENDING``                0x4000 Sort in ascending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+``ULC_SORT_DESCENDING``               0x8000 Sort in descending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+``ULC_TILE``                         0x10000 Each item appears as a full-sized icon with a label of one or more lines beside it (partially implemented).
+``ULC_NO_HIGHLIGHT``                 0x20000 No highlight when an item is selected.
+``ULC_STICKY_HIGHLIGHT``             0x40000 Items are selected by simply hovering on them, with no need to click on them.
+``ULC_STICKY_NOSELEVENT``            0x80000 Don't send a selection event when using ``ULC_STICKY_HIGHLIGHT`` style.
+``ULC_SEND_LEFTCLICK``              0x100000 Send a left click event when an item is selected.
+``ULC_HAS_VARIABLE_ROW_HEIGHT``     0x200000 The list has variable row heights.
+``ULC_AUTO_CHECK_CHILD``            0x400000 When a column header has a checkbox associated, auto-check all the subitems in that column.
+``ULC_AUTO_TOGGLE_CHILD``           0x800000 When a column header has a checkbox associated, toggle all the subitems in that column.
+``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
+``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
+``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
+``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
+``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
+``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
+``ULC_FOOTER``                    0x80000000 Show a footer too (only when header is present).
+===============================  =========== ====================================================================================================
 
 
 Events Processing
@@ -186,7 +175,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 13 Apr 2010, 10.00 GMT
+Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
 
 Version 0.6
 
@@ -209,7 +198,7 @@ __version__ = "0.6"
 # UltimateListCtrl constants
 # ----------------------------------------------------------------------------
 
-# style flags (compatible with wx.ListCtrl, except for ULC_TILE)
+# style flags
 ULC_VRULES                  = wx.LC_VRULES
 ULC_HRULES                  = wx.LC_HRULES
 
@@ -230,27 +219,26 @@ ULC_SINGLE_SEL              = wx.LC_SINGLE_SEL
 ULC_SORT_ASCENDING          = wx.LC_SORT_ASCENDING
 ULC_SORT_DESCENDING         = wx.LC_SORT_DESCENDING
 
-# Extra styles
-ULC_NO_HIGHLIGHT            = 0x0001
-ULC_STICKY_HIGHLIGHT        = 0x0002
-ULC_STICKY_NOSELEVENT       = 0x0004
-ULC_SEND_LEFTCLICK          = 0x0008
-ULC_HAS_VARIABLE_ROW_HEIGHT = 0x0010
+ULC_NO_HIGHLIGHT            = 0x20000
+ULC_STICKY_HIGHLIGHT        = 0x40000
+ULC_STICKY_NOSELEVENT       = 0x80000
+ULC_SEND_LEFTCLICK          = 0x100000
+ULC_HAS_VARIABLE_ROW_HEIGHT = 0x200000
 
-ULC_AUTO_CHECK_CHILD    = 0x0020  # only meaningful for checkboxes
-ULC_AUTO_TOGGLE_CHILD   = 0x0040  # only meaningful for checkboxes
-ULC_AUTO_CHECK_PARENT   = 0x0080  # only meaningful for checkboxes
-ULC_SHOW_TOOLTIPS       = 0x0100  # shows tooltips on items with ellipsis (...)
-ULC_HOT_TRACKING        = 0x0200  # enable hot tracking on mouse motion
-ULC_BORDER_SELECT       = 0x0400  # changes border colour whan an item is selected, instead of highlighting the item
-ULC_TRACK_SELECT        = 0x0800  # Enables hot-track selection in a list control. Hot track selection means that an item
-                                  # is automatically selected when the cursor remains over the item for a certain period
-                                  # of time. The delay is retrieved on Windows using the win32api call
-                                  # win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME), and is defaulted to 400ms
-                                  # on other platforms. This style applies to all styles of UltimateListCtrl. 
-ULC_HEADER_IN_ALL_VIEWS = 0x1000  # Show column headers in all view modes
-ULC_NO_FULL_ROW_SELECT  = 0x2000  # When an item is selected, the only the item in the first column is highlighted
-ULC_FOOTER              = 0x4000  # Show a footer too (only when header is present)
+ULC_AUTO_CHECK_CHILD    = 0x400000     # only meaningful for checkboxes
+ULC_AUTO_TOGGLE_CHILD   = 0x800000     # only meaningful for checkboxes
+ULC_AUTO_CHECK_PARENT   = 0x1000000    # only meaningful for checkboxes
+ULC_SHOW_TOOLTIPS       = 0x2000000    # shows tooltips on items with ellipsis (...)
+ULC_HOT_TRACKING        = 0x4000000    # enable hot tracking on mouse motion
+ULC_BORDER_SELECT       = 0x8000000    # changes border colour whan an item is selected, instead of highlighting the item
+ULC_TRACK_SELECT        = 0x10000000   # Enables hot-track selection in a list control. Hot track selection means that an item
+                                       # is automatically selected when the cursor remains over the item for a certain period
+                                       # of time. The delay is retrieved on Windows using the win32api call
+                                       # win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME), and is defaulted to 400ms
+                                       # on other platforms. This style applies to all styles of UltimateListCtrl. 
+ULC_HEADER_IN_ALL_VIEWS = 0x20000000   # Show column headers in all view modes
+ULC_NO_FULL_ROW_SELECT  = 0x40000000   # When an item is selected, the only the item in the first column is highlighted
+ULC_FOOTER              = 0x80000000   # Show a footer too (only when header is present)
 
 ULC_MASK_TYPE  = ULC_ICON | ULC_SMALL_ICON | ULC_LIST | ULC_REPORT | ULC_TILE
 ULC_MASK_ALIGN = ULC_ALIGN_TOP | ULC_ALIGN_LEFT
@@ -331,8 +319,6 @@ ULC_NEXT_RIGHT = wx.LIST_NEXT_RIGHT         # Searches for an item to the right 
 
 # Alignment flags for Arrange (MSW only except ULC_ALIGN_LEFT)
 ULC_ALIGN_DEFAULT      = wx.LIST_ALIGN_DEFAULT
-ULC_ALIGN_LEFT         = wx.LIST_ALIGN_LEFT
-ULC_ALIGN_TOP          = wx.LIST_ALIGN_TOP
 ULC_ALIGN_SNAP_TO_GRID = wx.LIST_ALIGN_SNAP_TO_GRID
 
 # Column format (MSW only except ULC_FORMAT_LEFT)
@@ -534,15 +520,15 @@ def to_list(input):
 def CheckVariableRowHeight(listCtrl, text):
     """
     Checks whether a text contains multiline strings and if the `listCtrl` window
-    extra style is compatible with multiline strings.
+    style is compatible with multiline strings.
 
     :param `listCtrl`: an instance of L{UltimateListCtrl};
     :param `text`: the text to analyze.
     """
 
-    if not listCtrl.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+    if not listCtrl.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
         if "\n" in text:
-            raise Exception("Multiline text items are not allowed without the ULC_HAS_VARIABLE_ROW_HEIGHT extra style.")
+            raise Exception("Multiline text items are not allowed without the ULC_HAS_VARIABLE_ROW_HEIGHT style.")
 
 
 def CreateListItem(itemOrId, col):
@@ -720,7 +706,7 @@ class PyImageList(object):
         return self.Add(wx.BitmapFromIcon(icon))
 
 
-    def AddWithColourMask(self, bitmap, colour):
+    def AddWithColourMask(self, bitmap, maskColour):
         """
         Adds a new image or images using a bitmap and a colour mask.
 
@@ -766,7 +752,7 @@ class PyImageList(object):
         if index >= len(self._images):
             return wx.NullIcon
         
-        return wx.IconFromBitmap(self._images[indx])
+        return wx.IconFromBitmap(self._images[index])
         
 
     def Replace(self, index, bitmap):
@@ -3650,10 +3636,29 @@ class UltimateListLineData(object):
 
             self._gi = GeometryInfo()
 
-        if self.GetMode() in [ULC_REPORT, ULC_TILE] or self.HasExtraMode(ULC_HEADER_IN_ALL_VIEWS):
+        if self.GetMode() in [ULC_REPORT, ULC_TILE] or self.HasMode(ULC_HEADER_IN_ALL_VIEWS):
             self.InitItems(self._owner.GetColumnCount())
         else:
             self.InitItems(1)
+
+
+    def SetReportView(self, inReportView):
+        """
+        Sets whether L{UltimateListLineData} is in report view or not.
+
+        :param `inReportView`: ``True`` to set L{UltimateListLineData} in report view, ``False``
+         otherwise.
+        """
+
+        # we only need m_gi when we're not in report view so update as needed
+        if inReportView:
+
+            del self._gi
+            self._gi = None
+            
+        else:
+
+            self._gi = GeometryInfo()
 
 
     def GetHeight(self):
@@ -3756,24 +3761,24 @@ class UltimateListLineData(object):
     def GetMode(self):
         """ Returns the current highlighting mode. """
 
-        return self._owner.GetListCtrl().GetWindowStyleFlag() & ULC_MASK_TYPE
+        return self._owner.GetListCtrl().GetAGWWindowStyleFlag() & ULC_MASK_TYPE
 
 
-    def HasExtraMode(self, mode):
+    def HasMode(self, mode):
         """
-        Returns ``True`` if the parent L{UltimateListCtrl} has the extra window
+        Returns ``True`` if the parent L{UltimateListCtrl} has the window
         style specified by `mode`.
 
-        :param `mode`: the extra window style to check.
+        :param `mode`: the window style to check.
         """
 
-        return self._owner.GetListCtrl().HasExtraFlag(mode)
+        return self._owner.GetListCtrl().HasAGWFlag(mode)
         
 
     def InReportView(self):
         """ Returns ``True`` if the parent L{UltimateListCtrl} is in report view. """
         
-        return self._owner.HasFlag(ULC_REPORT)
+        return self._owner.HasAGWFlag(ULC_REPORT)
 
 
     def IsVirtual(self):
@@ -4152,7 +4157,7 @@ class UltimateListLineData(object):
         # make them completely invisible (and there is no way to do bit
         # arithmetics on wxColour, unfortunately)
 
-        if not self._owner.HasExtraFlag(ULC_BORDER_SELECT) and not self._owner.HasExtraFlag(ULC_NO_FULL_ROW_SELECT):
+        if not self._owner.HasAGWFlag(ULC_BORDER_SELECT) and not self._owner.HasAGWFlag(ULC_NO_FULL_ROW_SELECT):
             if highlighted:
                 if wx.Platform == "__WXMAC__":
                     if self._owner.HasFocus():
@@ -4210,7 +4215,7 @@ class UltimateListLineData(object):
         useGradient, gradientStyle = self._owner._usegradients, self._owner._gradientstyle
         useVista = self._owner._vistaselection
         hasFocus = self._owner._hasFocus
-        borderOnly = self._owner.HasExtraFlag(ULC_BORDER_SELECT)
+        borderOnly = self._owner.HasAGWFlag(ULC_BORDER_SELECT)
         drawn = False
 
         if self.SetAttributes(dc, attr, highlighted):
@@ -4265,7 +4270,7 @@ class UltimateListLineData(object):
             dc.DrawText(item.GetText(), rectLabel.x, rectLabel.y)
             dc.DestroyClippingRegion()
 
-        if self._owner.HasExtraFlag(ULC_HOT_TRACKING):
+        if self._owner.HasAGWFlag(ULC_HOT_TRACKING):
             if line == self._owner._newHotCurrent and not drawn:
                 r = wx.Rect(*self._gi._rectAll)
                 dc.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -4318,8 +4323,8 @@ class UltimateListLineData(object):
         useGradient, gradientStyle = self._owner._usegradients, self._owner._gradientstyle
         useVista = self._owner._vistaselection
         hasFocus = self._owner._hasFocus
-        borderOnly = self._owner.HasExtraFlag(ULC_BORDER_SELECT)
-        nofullRow = self._owner.HasExtraFlag(ULC_NO_FULL_ROW_SELECT)
+        borderOnly = self._owner.HasAGWFlag(ULC_BORDER_SELECT)
+        nofullRow = self._owner.HasAGWFlag(ULC_NO_FULL_ROW_SELECT)
         
         drawn = False
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -4508,7 +4513,7 @@ class UltimateListLineData(object):
                     if wnd.GetPosition() != (wndx, ya):
                         wnd.SetPosition((wndx, ya))
 
-        if self._owner.HasExtraFlag(ULC_HOT_TRACKING):
+        if self._owner.HasAGWFlag(ULC_HOT_TRACKING):
             if line == self._owner._newHotCurrent and not drawn:
                 r = wx.Rect(*paintRect)
                 r.y += 1
@@ -4884,7 +4889,7 @@ class UltimateListHeaderWindow(wx.PyControl):
           and `GetForegroundColor`. 
         """
 
-        if not self._owner.HasFlag(ULC_REPORT):
+        if not self._owner.HasAGWFlag(ULC_REPORT):
             raise Exception("Custom renderers can be used on with style = ULC_REPORT")
         
         self._headerCustomRenderer = renderer
@@ -5451,9 +5456,9 @@ class UltimateListHeaderWindow(wx.PyControl):
                 if self._isFooter:
                     return True
                 
-                if parent.HasExtraFlag(ULC_AUTO_CHECK_CHILD):
+                if parent.HasAGWFlag(ULC_AUTO_CHECK_CHILD):
                     self._owner.AutoCheckChild(isChecked, self._column)
-                elif parent.HasExtraFlag(ULC_AUTO_TOGGLE_CHILD):
+                elif parent.HasAGWFlag(ULC_AUTO_TOGGLE_CHILD):
                     self._owner.AutoToggleChild(self._column)
 
                 return True
@@ -5767,7 +5772,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     """
     
     def __init__(self, parent, id, pos=wx.DefaultPosition,
-                 size=wx.DefaultSize, style=0, name="listctrlmainwindow"):
+                 size=wx.DefaultSize, style=0, agwStyle=0, name="listctrlmainwindow"):
         """
         Default class constructor.
         
@@ -5777,7 +5782,47 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the window style;
+        :param `style`: the underlying `wx.PyScrolledWindow` window style;
+        :param `agwStyle`: the AGW-specific window style; can be almost any combination of the following
+         bits:
+
+         ===============================  =========== ====================================================================================================
+         Window Styles                    Hex Value   Description
+         ===============================  =========== ====================================================================================================
+         ``ULC_VRULES``                           0x1 Draws light vertical rules between rows in report mode.
+         ``ULC_HRULES``                           0x2 Draws light horizontal rules between rows in report mode.
+         ``ULC_ICON``                             0x4 Large icon view, with optional labels.
+         ``ULC_SMALL_ICON``                       0x8 Small icon view, with optional labels.
+         ``ULC_LIST``                            0x10 Multicolumn list view, with optional small icons. Columns are computed automatically, i.e. you don't set columns as in ``ULC_REPORT``. In other words, the list wraps, unlike a `wx.ListBox`.
+         ``ULC_REPORT``                          0x20 Single or multicolumn report view, with optional header.
+         ``ULC_ALIGN_TOP``                       0x40 Icons align to the top. Win32 default, Win32 only.
+         ``ULC_ALIGN_LEFT``                      0x80 Icons align to the left.
+         ``ULC_AUTOARRANGE``                    0x100 Icons arrange themselves. Win32 only.
+         ``ULC_VIRTUAL``                        0x200 The application provides items text on demand. May only be used with ``ULC_REPORT``.
+         ``ULC_EDIT_LABELS``                    0x400 Labels are editable: the application will be notified when editing starts.
+         ``ULC_NO_HEADER``                      0x800 No header in report mode.
+         ``ULC_NO_SORT_HEADER``                0x1000 No Docs.
+         ``ULC_SINGLE_SEL``                    0x2000 Single selection (default is multiple).
+         ``ULC_SORT_ASCENDING``                0x4000 Sort in ascending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+         ``ULC_SORT_DESCENDING``               0x8000 Sort in descending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+         ``ULC_TILE``                         0x10000 Each item appears as a full-sized icon with a label of one or more lines beside it (partially implemented).
+         ``ULC_NO_HIGHLIGHT``                 0x20000 No highlight when an item is selected.
+         ``ULC_STICKY_HIGHLIGHT``             0x40000 Items are selected by simply hovering on them, with no need to click on them.
+         ``ULC_STICKY_NOSELEVENT``            0x80000 Don't send a selection event when using ``ULC_STICKY_HIGHLIGHT`` style.
+         ``ULC_SEND_LEFTCLICK``              0x100000 Send a left click event when an item is selected.
+         ``ULC_HAS_VARIABLE_ROW_HEIGHT``     0x200000 The list has variable row heights.
+         ``ULC_AUTO_CHECK_CHILD``            0x400000 When a column header has a checkbox associated, auto-check all the subitems in that column.
+         ``ULC_AUTO_TOGGLE_CHILD``           0x800000 When a column header has a checkbox associated, toggle all the subitems in that column.
+         ``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
+         ``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
+         ``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
+         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+         ``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
+         ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
+         ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
+         ``ULC_FOOTER``                    0x80000000 Show a footer too (only when header is present).
+         ===============================  =========== ====================================================================================================
+
         :param `name`: the window name.
         """
         
@@ -5951,7 +5996,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         return wx.Size(100, 80)
     
 
-    def HasFlag(self, flag):
+    def HasAGWFlag(self, flag):
         """
         Returns ``True`` if the window has the given `flag` bit set.
 
@@ -5960,20 +6005,8 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         :see: L{UltimateListCtrl.SetSingleStyle} for a list of valid flags.
         """
 
-        return self._parent.HasFlag(flag)
+        return self._parent.HasAGWFlag(flag)
 
-
-    def HasExtraFlag(self, flag):
-        """
-        Returns ``True`` if the window has the given extra `flag` bit set.
-
-        :param `flag`: the extra bit to check.
-
-        :see: L{UltimateListCtrl.SetExtraStyle} for a list of valid flags.
-        """
-
-        return self._parent.HasExtraFlag(flag)
-    
 
     def IsColumnShown(self, column):
         """
@@ -5989,14 +6022,14 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     def IsVirtual(self):
         """ Returns ``True`` if the window has the ``ULC_VIRTUAL`` style set. """
 
-        return self.HasFlag(ULC_VIRTUAL)
+        return self.HasAGWFlag(ULC_VIRTUAL)
 
 
     # return True if the control is in report mode
     def InReportView(self):
         """ Returns ``True`` if the window is in report mode. """
 
-        return self.HasFlag(ULC_REPORT)
+        return self.HasAGWFlag(ULC_REPORT)
 
 
     def InTileView(self):
@@ -6006,13 +6039,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         :todo: Fully implement tile view for L{UltimateListCtrl}.        
         """
 
-        return self.HasFlag(ULC_TILE)        
+        return self.HasAGWFlag(ULC_TILE)        
 
     # return True if we are in single selection mode, False if multi sel
     def IsSingleSel(self):
         """ Returns ``True`` if we are in single selection mode, ``False`` if multi selection. """
         
-        return self.HasFlag(ULC_SINGLE_SEL)
+        return self.HasAGWFlag(ULC_SINGLE_SEL)
 
 
     def HasFocus(self):
@@ -6025,9 +6058,9 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     def HasHeader(self):
         """ Returns ``True`` if the header window is shown. """
 
-        if (self.InReportView() or self.InTileView()) and not self.HasFlag(ULC_NO_HEADER):
+        if (self.InReportView() or self.InTileView()) and not self.HasAGWFlag(ULC_NO_HEADER):
             return True
-        if self.HasExtraFlag(ULC_HEADER_IN_ALL_VIEWS):
+        if self.HasAGWFlag(ULC_HEADER_IN_ALL_VIEWS):
             return True
 
         return False
@@ -6037,7 +6070,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     def HasFooter(self):
         """ Returns ``True`` if the footer window is shown. """
 
-        if self.HasHeader() and self.HasExtraFlag(ULC_FOOTER):
+        if self.HasHeader() and self.HasAGWFlag(ULC_FOOTER):
             return True
 
         return False
@@ -6158,7 +6191,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         :param `force`: ``True`` to reset all line dimensions.
         """
 
-        if (self.HasFlag(ULC_REPORT) and self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT) and not self.IsVirtual()) or force:
+        if (self.HasAGWFlag(ULC_REPORT) and self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT) and not self.IsVirtual()) or force:
             for l in xrange(self.GetItemCount()):
                 line = self.GetLine(l)
                 line.ResetDimensions()
@@ -6339,7 +6372,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         # we cache the line height as calling GetTextExtent() is slow
 
-        if item is None or not self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+        if item is None or not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
             
             if not self._lineHeight:
                 dc = wx.ClientDC(self)
@@ -6662,7 +6695,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             ld = self.GetLine(line)
             changed = ld.Highlight(highlight)
 
-        dontNotify = self.HasExtraFlag(ULC_STICKY_HIGHLIGHT) and self.HasExtraFlag(ULC_STICKY_NOSELEVENT)
+        dontNotify = self.HasAGWFlag(ULC_STICKY_HIGHLIGHT) and self.HasAGWFlag(ULC_STICKY_NOSELEVENT)
 
         if changed and not dontNotify:
             self.SendNotify(line, (highlight and [wxEVT_COMMAND_LIST_ITEM_SELECTED] or [wxEVT_COMMAND_LIST_ITEM_DESELECTED])[0])
@@ -6845,7 +6878,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                 evCache.m_itemIndex = visibleTo
                 self.GetParent().GetEventHandler().ProcessEvent(evCache)
 
-            no_highlight = self.HasExtraFlag(ULC_NO_HIGHLIGHT)
+            no_highlight = self.HasAGWFlag(ULC_NO_HIGHLIGHT)
 
             for line in xrange(visibleFrom, visibleTo+1):
                 rectLine = self.GetLineRect(line)
@@ -6862,7 +6895,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                                          self.IsHighlighted(line) and not no_highlight,
                                          line==self._current, enabled, oldPN, oldBR)
 
-            if self.HasFlag(ULC_HRULES):
+            if self.HasAGWFlag(ULC_HRULES):
                 pen = wx.Pen(self.GetRuleColour(), 1, wx.SOLID)
                 clientSize = self.GetClientSize()
 
@@ -6883,7 +6916,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                     dc.DrawLine(0 - dev_x, lineY, clientSize.x - dev_x , lineY)
 
             # Draw vertical rules if required
-            if self.HasFlag(ULC_VRULES) and not self.IsEmpty():
+            if self.HasAGWFlag(ULC_VRULES) and not self.IsEmpty():
                 pen = wx.Pen(self.GetRuleColour(), 1, wx.SOLID)
 
                 firstItemRect = self.GetItemRect(visibleFrom)
@@ -6915,8 +6948,8 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             # Don't draw rect outline under Mac at all.
             # Draw it elsewhere on GTK
             if self.HasCurrent():
-                if self._hasFocus and not self.HasExtraFlag(ULC_NO_HIGHLIGHT) and not useVista and not useGradient \
-                   and not self.HasExtraFlag(ULC_BORDER_SELECT) and not self.HasExtraFlag(ULC_NO_FULL_ROW_SELECT):
+                if self._hasFocus and not self.HasAGWFlag(ULC_NO_HIGHLIGHT) and not useVista and not useGradient \
+                   and not self.HasAGWFlag(ULC_BORDER_SELECT) and not self.HasAGWFlag(ULC_NO_FULL_ROW_SELECT):
                     dc.SetPen(wx.BLACK_PEN)
                     dc.SetBrush(wx.TRANSPARENT_BRUSH)
                     dc.DrawRectangleRect(self.GetLineHighlightRect(self._current))
@@ -7230,7 +7263,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         count = self.GetItemCount()
 
         if self.InReportView():
-            if not self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+            if not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
                 current = y/self.GetLineHeight()
                 if current < count:
                     newItem, hitResult = self.HitTestLine(current, x, y)
@@ -7257,7 +7290,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         
         if event.GetEventType() == wx.wxEVT_MOTION and not event.Dragging():
 
-            if current >= 0 and current < count and self.HasExtraFlag(ULC_TRACK_SELECT) and not self._hoverTimer.IsRunning():
+            if current >= 0 and current < count and self.HasAGWFlag(ULC_TRACK_SELECT) and not self._hoverTimer.IsRunning():
                 self._hoverItem = current
                 self._hoverTimer.Start(HOVER_TIME, wx.TIMER_ONE_SHOT)
                 
@@ -7269,13 +7302,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                     self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
                     self._isonhyperlink = False
 
-            if self.HasExtraFlag(ULC_STICKY_HIGHLIGHT) and hitResult:
+            if self.HasAGWFlag(ULC_STICKY_HIGHLIGHT) and hitResult:
                 if not self.IsHighlighted(current):
                     self.HighlightAll(False)
                     self.ChangeCurrent(current)
                     self.ReverseHighlight(self._current)
 
-            if self.HasExtraFlag(ULC_SHOW_TOOLTIPS):
+            if self.HasAGWFlag(ULC_SHOW_TOOLTIPS):
                 if newItem and hitResult & ULC_HITTEST_ONITEM:                
                     if (newItem._itemId, newItem._col) in self._shortItems:
                         text = newItem.GetText()
@@ -7286,7 +7319,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                 else:
                     self.SetToolTipString("")
 
-            if self.HasExtraFlag(ULC_HOT_TRACKING):
+            if self.HasAGWFlag(ULC_HOT_TRACKING):
                 if hitResult:
                     if self._oldHotCurrent != current:                        
                         if self._oldHotCurrent is not None:
@@ -7353,7 +7386,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                     if self._dragItem == current:
                         self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))                    
 
-            if self.HasFlag(ULC_REPORT) and self._dragItem != current:
+            if self.HasAGWFlag(ULC_REPORT) and self._dragItem != current:
                 self.DrawDnDArrow()
 
             return
@@ -7412,7 +7445,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                 self.ReverseHighlight(self._lineSelectSingleOnUp)
 
             if self._lastOnSame:
-                if (current == self._current) and (hitResult == ULC_HITTEST_ONITEMLABEL) and self.HasFlag(ULC_EDIT_LABELS):
+                if (current == self._current) and (hitResult == ULC_HITTEST_ONITEMLABEL) and self.HasAGWFlag(ULC_EDIT_LABELS):
                     if not self.InReportView() or self.GetLineLabelRect(current).Contains((x, y)):
                         # This wx.SYS_DCLICK_MSEC is not yet wrapped in wxPython...
                         # dclick = wx.SystemSettings.GetMetric(wx.SYS_DCLICK_MSEC)
@@ -7506,7 +7539,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             # forceClick is only set if the previous click was on another item
             self._lastOnSame = not forceClick and (self._current == oldCurrent) and oldWasSelected
 
-            if self.HasExtraFlag(ULC_STICKY_HIGHLIGHT) and self.HasExtraFlag(ULC_STICKY_NOSELEVENT) and self.HasExtraFlag(ULC_SEND_LEFTCLICK):
+            if self.HasAGWFlag(ULC_STICKY_HIGHLIGHT) and self.HasAGWFlag(ULC_STICKY_NOSELEVENT) and self.HasAGWFlag(ULC_SEND_LEFTCLICK):
                 self.SendNotify(current, wxEVT_COMMAND_LIST_ITEM_LEFT_CLICK, event.GetPosition())
 
 
@@ -7578,7 +7611,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         if item and item._itemId == self._hoverItem:
             if not self.IsHighlighted(self._hoverItem):
                 
-                dontNotify = self.HasExtraFlag(ULC_STICKY_HIGHLIGHT) and self.HasExtraFlag(ULC_STICKY_NOSELEVENT)
+                dontNotify = self.HasAGWFlag(ULC_STICKY_HIGHLIGHT) and self.HasAGWFlag(ULC_STICKY_NOSELEVENT)
                 if not dontNotify:
                     self.SendNotify(self._hoverItem, wxEVT_COMMAND_LIST_ITEM_SELECTED)
             
@@ -7613,7 +7646,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             # recalculate it
             self.ResetVisibleLinesRange()
 
-            if not self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):            
+            if not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):            
 
                 if rect.y < view_y:
                     self.Scroll(-1, rect.y/hLine)
@@ -7824,13 +7857,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         if keyCode == wx.WXK_UP:
             if self._current > 0:
                 self.OnArrowChar(self._current - 1, event)
-                if self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+                if self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
                     self._dirty = True
 
         elif keyCode == wx.WXK_DOWN:
             if self._current < self.GetItemCount() - 1:
                 self.OnArrowChar(self._current + 1, event)
-                if self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+                if self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
                     self._dirty = True
 
         elif keyCode == wx.WXK_END:
@@ -7958,15 +7991,15 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         :param `enabled`: ``True`` if the item is enabled, ``False`` if it is disabled.
         """
 
-        if self.HasFlag(ULC_ICON) and self._normal_image_list:
+        if self.HasAGWFlag(ULC_ICON) and self._normal_image_list:
             imgList = (enabled and [self._normal_image_list] or [self._normal_grayed_image_list])[0]
             imgList.Draw(index, dc, x, y, wx.IMAGELIST_DRAW_TRANSPARENT)
 
-        elif self.HasFlag(ULC_SMALL_ICON) and self._small_image_list:
+        elif self.HasAGWFlag(ULC_SMALL_ICON) and self._small_image_list:
             imgList = (enabled and [self._small_image_list] or [self._small_grayed_image_list])[0]
             imgList.Draw(index, dc, x, y, wx.IMAGELIST_DRAW_TRANSPARENT)
 
-        elif self.HasFlag(ULC_LIST) and self._small_image_list:
+        elif self.HasAGWFlag(ULC_LIST) and self._small_image_list:
             imgList = (enabled and [self._small_image_list] or [self._small_grayed_image_list])[0]
             imgList.Draw(index, dc, x, y, wx.IMAGELIST_DRAW_TRANSPARENT)
 
@@ -8023,21 +8056,21 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         width = height = 0
 
-        if self.HasFlag(ULC_ICON) and self._normal_image_list:
+        if self.HasAGWFlag(ULC_ICON) and self._normal_image_list:
 
             for indx in index:
                 w, h = self._normal_image_list.GetSize(indx)
                 width += w + MARGIN_BETWEEN_TEXT_AND_ICON
                 height = max(height, h)
 
-        elif self.HasFlag(ULC_SMALL_ICON) and self._small_image_list:
+        elif self.HasAGWFlag(ULC_SMALL_ICON) and self._small_image_list:
 
             for indx in index:
                 w, h = self._small_image_list.GetSize(indx)
                 width += w + MARGIN_BETWEEN_TEXT_AND_ICON
                 height = max(height, h)
 
-        elif self.HasFlag(ULC_LIST) and self._small_image_list:
+        elif self.HasAGWFlag(ULC_LIST) and self._small_image_list:
 
             for indx in index:
                 w, h = self._small_image_list.GetSize(indx)
@@ -8310,8 +8343,8 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         if col < 0:
             raise Exception("invalid column index")
 
-        if not self.InReportView() and not self.InTileView() and not self.HasExtraFlag(ULC_HEADER_IN_ALL_VIEWS):
-            raise Exception("SetColumnWidth() can only be called in report/tile modes or with the ULC_HEADER_IN_ALL_VIEWS extra flag set.")
+        if not self.InReportView() and not self.InTileView() and not self.HasAGWFlag(ULC_HEADER_IN_ALL_VIEWS):
+            raise Exception("SetColumnWidth() can only be called in report/tile modes or with the ULC_HEADER_IN_ALL_VIEWS flag set.")
 
         self._dirty = True
         headerWin = self.GetListCtrl()._headerWin
@@ -8402,7 +8435,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                 
                 self._headerWidth += self.GetColumnWidth(col)
 
-        if self.HasExtraFlag(ULC_FOOTER):
+        if self.HasAGWFlag(ULC_FOOTER):
             self._footerWidth = self._headerWidth
             
         return self._headerWidth
@@ -8476,7 +8509,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                     self._aColWidths[item._col]._nMaxWidth = width
                     self._aColWidths[item._col]._bNeedsUpdate = True
 
-        if self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+        if self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
             line.ResetDimensions()
 
         # update the item on screen
@@ -8971,8 +9004,8 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
          so that the window will be fully visible.
         """
 
-        if not self.InReportView() and not self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
-            raise Exception("Widgets are only allowed in repotr mode and with the ULC_HAS_VARIABLE_ROW_HEIGHT extra style.")
+        if not self.InReportView() and not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+            raise Exception("Widgets are only allowed in repotr mode and with the ULC_HAS_VARIABLE_ROW_HEIGHT style.")
         
         item = self.GetItem(item, item._col)
 
@@ -9184,7 +9217,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
          list or report views.
         """
         
-        if self.HasFlag(ULC_LIST):
+        if self.HasAGWFlag(ULC_LIST):
             raise Exception("UltimateListCtrl.GetViewRect() not implemented for list view")
 
         # we need to find the longest/tallest label
@@ -9293,9 +9326,9 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         count = self.GetItemCount()
 
-        if self.HasFlag(ULC_ICON) and self._normal_image_list:
+        if self.HasAGWFlag(ULC_ICON) and self._normal_image_list:
             iconSpacing = self._normal_spacing
-        elif self.HasFlag(ULC_SMALL_ICON) and self._small_image_list:
+        elif self.HasAGWFlag(ULC_SMALL_ICON) and self._small_image_list:
             iconSpacing = self._small_spacing
         else:
             iconSpacing = 0
@@ -9322,7 +9355,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
             self.ResetVisibleLinesRange()
             
-            if not self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+            if not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
                 # all lines have the same height and we scroll one line per step
 
                 lineHeight = self.GetLineHeight()
@@ -9373,7 +9406,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             # horizontally/vertically (ULC_ALIGN_XXX styles explicitly given) or
             # to arrange them in top to bottom, left to right (don't ask me why
             # not the other way round...) order
-            if self.HasFlag(ULC_ALIGN_LEFT | ULC_ALIGN_TOP):
+            if self.HasAGWFlag(ULC_ALIGN_LEFT | ULC_ALIGN_TOP):
                 
                 x = EXTRA_BORDER_X
                 y = EXTRA_BORDER_Y
@@ -9387,7 +9420,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
                     sizeLine = self.GetLineSize(i)
 
-                    if self.HasFlag(ULC_ALIGN_TOP):
+                    if self.HasAGWFlag(ULC_ALIGN_TOP):
 
                         if sizeLine.x > widthMax:
                             widthMax = sizeLine.x
@@ -9398,7 +9431,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
                         x += sizeLine.x + MARGIN_BETWEEN_ROWS
 
-                if self.HasFlag(ULC_ALIGN_TOP):
+                if self.HasAGWFlag(ULC_ALIGN_TOP):
 
                     # traverse the items again and tweak their sizes so that they are
                     # all the same in a row
@@ -9853,7 +9886,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         count = self.GetItemCount()
 
         if self.InReportView():
-            if not self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+            if not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
                 current = y/self.GetLineHeight()
                 if current < count:
                     newItem, flags = self.HitTestLine(current, x, y)
@@ -9942,7 +9975,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         self._dirty = True
 
-        if self.InReportView() or self.InTileView() or self.HasExtraFlag(ULC_HEADER_IN_ALL_VIEWS):
+        if self.InReportView() or self.InTileView() or self.HasAGWFlag(ULC_HEADER_IN_ALL_VIEWS):
 
             if item._width == ULC_AUTOSIZE_USEHEADER:
                 item._width = self.GetTextLength(item._text)
@@ -10136,7 +10169,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         # next time
         self.ResetVisibleLinesRange()
         
-        if self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+        if self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
             wx.CallAfter(self.RecalculatePositions, True)
 
         if event.GetOrientation() == wx.HORIZONTAL:
@@ -10158,7 +10191,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         items in the list control (icon or small icon view).
         """
         
-        if not self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+        if not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
             if not self._linesPerPage:
                 self._linesPerPage = self.GetClientSize().y/self.GetLineHeight()
 
@@ -10187,7 +10220,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             
             if count:
 
-                if self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+                if self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
 
                     view_x, view_y = self.GetViewStart()
                     view_y *= SCROLL_UNIT_Y
@@ -10444,7 +10477,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         self.ResetVisibleLinesRange()
 
-        if not self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+        if not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
             hLine = self.GetLineHeight()
             self.Scroll(-1, top + dy/hLine)
         else:
@@ -10468,7 +10501,7 @@ class UltimateListCtrl(wx.PyControl):
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=0, extraStyle=0, validator=wx.DefaultValidator, name="UltimateListCtrl"):
+                 style=0, agwStyle=0, validator=wx.DefaultValidator, name="UltimateListCtrl"):
         """
         Default class constructor.
         
@@ -10478,53 +10511,46 @@ class UltimateListCtrl(wx.PyControl):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the window style; can be almost any combination of the following
+        :param `style`: the underlying `wx.PyControl` window style;
+        :param `agwStyle`: the AGW-specific window style; can be almost any combination of the following
          bits:
 
-         ======================== =========== ====================================================================================================
-         Window Styles             Hex Value  Description
-         ======================== =========== ====================================================================================================
-         ``ULC_VRULES``                   0x1 Draws light vertical rules between rows in report mode.
-         ``ULC_HRULES``                   0x2 Draws light horizontal rules between rows in report mode.
-         ``ULC_ICON``                     0x4 Large icon view, with optional labels.
-         ``ULC_SMALL_ICON``               0x8 Small icon view, with optional labels.
-         ``ULC_LIST``                    0x10 Multicolumn list view, with optional small icons. Columns are computed automatically, i.e. you don't set columns as in ``ULC_REPORT``. In other words, the list wraps, unlike a `wx.ListBox`.
-         ``ULC_REPORT``                  0x20 Single or multicolumn report view, with optional header.
-         ``ULC_ALIGN_TOP``               0x40 Icons align to the top. Win32 default, Win32 only.
-         ``ULC_ALIGN_LEFT``              0x80 Icons align to the left.
-         ``ULC_AUTOARRANGE``            0x100 Icons arrange themselves. Win32 only.
-         ``ULC_VIRTUAL``                0x200 The application provides items text on demand. May only be used with ``ULC_REPORT``.
-         ``ULC_EDIT_LABELS``            0x400 Labels are editable: the application will be notified when editing starts.
-         ``ULC_NO_HEADER``              0x800 No header in report mode.
-         ``ULC_NO_SORT_HEADER``        0x1000 No Docs.
-         ``ULC_SINGLE_SEL``            0x2000 Single selection (default is multiple).
-         ``ULC_SORT_ASCENDING``        0x4000 Sort in ascending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
-         ``ULC_SORT_DESCENDING``       0x8000 Sort in descending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
-         ``ULC_TILE``                 0x10000 Each item appears as a full-sized icon with a label of one or more lines beside it (partially implemented).
-         ======================== =========== ====================================================================================================
-
-        :param `extraStyle`: the window extra style; can be almost any combination of the following
-         bits:
-
-         =============================== =========== ====================================================================================================
-         Window Extra Styles              Hex Value  Description
-         =============================== =========== ====================================================================================================
-         ``ULC_NO_HIGHLIGHT``                 0x0001 No highlight when an item is selected.
-         ``ULC_STICKY_HIGHLIGHT``             0x0002 Items are selected by simply hovering on them, with no need to click on them.
-         ``ULC_STICKY_NOSELEVENT``            0x0004 Don't send a selection event when using ``ULC_STICKY_HIGHLIGHT`` extra style.
-         ``ULC_SEND_LEFTCLICK``               0x0008 Send a left click event when an item is selected.
-         ``ULC_HAS_VARIABLE_ROW_HEIGHT``      0x0010 The list has variable row heights.
-         ``ULC_AUTO_CHECK_CHILD``             0x0020 When a column header has a checkbox associated, auto-check all the subitems in that column.
-         ``ULC_AUTO_TOGGLE_CHILD``            0x0040 When a column header has a checkbox associated, toggle all the subitems in that column.
-         ``ULC_AUTO_CHECK_PARENT``            0x0080 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
-         ``ULC_SHOW_TOOLTIPS``                0x0100 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
-         ``ULC_HOT_TRACKING``                 0x0200 Enable hot tracking of items on mouse motion.
-         ``ULC_BORDER_SELECT``                0x0400 Changes border colour whan an item is selected, instead of highlighting the item.
-         ``ULC_TRACK_SELECT``                 0x0800 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This extra style applies to all views of `UltimateListCtrl`.
-         ``ULC_HEADER_IN_ALL_VIEWS``          0x1000 Show column headers in all view modes.
-         ``ULC_NO_FULL_ROW_SELECT``           0x2000 When an item is selected, the only the item in the first column is highlighted.
-         ``ULC_FOOTER``                       0x4000 Show a footer too (only when header is present).
-         =============================== =========== ====================================================================================================
+         ===============================  =========== ====================================================================================================
+         Window Styles                    Hex Value   Description
+         ===============================  =========== ====================================================================================================
+         ``ULC_VRULES``                           0x1 Draws light vertical rules between rows in report mode.
+         ``ULC_HRULES``                           0x2 Draws light horizontal rules between rows in report mode.
+         ``ULC_ICON``                             0x4 Large icon view, with optional labels.
+         ``ULC_SMALL_ICON``                       0x8 Small icon view, with optional labels.
+         ``ULC_LIST``                            0x10 Multicolumn list view, with optional small icons. Columns are computed automatically, i.e. you don't set columns as in ``ULC_REPORT``. In other words, the list wraps, unlike a `wx.ListBox`.
+         ``ULC_REPORT``                          0x20 Single or multicolumn report view, with optional header.
+         ``ULC_ALIGN_TOP``                       0x40 Icons align to the top. Win32 default, Win32 only.
+         ``ULC_ALIGN_LEFT``                      0x80 Icons align to the left.
+         ``ULC_AUTOARRANGE``                    0x100 Icons arrange themselves. Win32 only.
+         ``ULC_VIRTUAL``                        0x200 The application provides items text on demand. May only be used with ``ULC_REPORT``.
+         ``ULC_EDIT_LABELS``                    0x400 Labels are editable: the application will be notified when editing starts.
+         ``ULC_NO_HEADER``                      0x800 No header in report mode.
+         ``ULC_NO_SORT_HEADER``                0x1000 No Docs.
+         ``ULC_SINGLE_SEL``                    0x2000 Single selection (default is multiple).
+         ``ULC_SORT_ASCENDING``                0x4000 Sort in ascending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+         ``ULC_SORT_DESCENDING``               0x8000 Sort in descending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+         ``ULC_TILE``                         0x10000 Each item appears as a full-sized icon with a label of one or more lines beside it (partially implemented).
+         ``ULC_NO_HIGHLIGHT``                 0x20000 No highlight when an item is selected.
+         ``ULC_STICKY_HIGHLIGHT``             0x40000 Items are selected by simply hovering on them, with no need to click on them.
+         ``ULC_STICKY_NOSELEVENT``            0x80000 Don't send a selection event when using ``ULC_STICKY_HIGHLIGHT`` style.
+         ``ULC_SEND_LEFTCLICK``              0x100000 Send a left click event when an item is selected.
+         ``ULC_HAS_VARIABLE_ROW_HEIGHT``     0x200000 The list has variable row heights.
+         ``ULC_AUTO_CHECK_CHILD``            0x400000 When a column header has a checkbox associated, auto-check all the subitems in that column.
+         ``ULC_AUTO_TOGGLE_CHILD``           0x800000 When a column header has a checkbox associated, toggle all the subitems in that column.
+         ``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
+         ``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
+         ``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
+         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+         ``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
+         ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
+         ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
+         ``ULC_FOOTER``                    0x80000000 Show a footer too (only when header is present).
+         ===============================  =========== ====================================================================================================
 
         :param `validator`: the window validator;         
         :param `name`: the window name.
@@ -10534,17 +10560,17 @@ class UltimateListCtrl(wx.PyControl):
         self._imageListSmall = None
         self._imageListState = None
 
-        if not style & ULC_MASK_TYPE:
+        if not agwStyle & ULC_MASK_TYPE:
             raise Exception("UltimateListCtrl style should have exactly one mode bit set")
 
-        if not (style & ULC_REPORT) and extraStyle & ULC_HAS_VARIABLE_ROW_HEIGHT:
-            raise Exception("Extra Style ULC_HAS_VARIABLE_ROW_HEIGHT can only be used in report, non-virtual mode")
+        if not (agwStyle & ULC_REPORT) and agwStyle & ULC_HAS_VARIABLE_ROW_HEIGHT:
+            raise Exception("Style ULC_HAS_VARIABLE_ROW_HEIGHT can only be used in report, non-virtual mode")
 
-        if extraStyle & ULC_STICKY_HIGHLIGHT and extraStyle & ULC_TRACK_SELECT:
-            raise Exception("Extra styles ULC_STICKY_HIGHLIGHT and ULC_TRACK_SELECT can not be combined")
+        if agwStyle & ULC_STICKY_HIGHLIGHT and agwStyle & ULC_TRACK_SELECT:
+            raise Exception("Styles ULC_STICKY_HIGHLIGHT and ULC_TRACK_SELECT can not be combined")
 
-        if style & ULC_NO_HEADER and extraStyle & ULC_HEADER_IN_ALL_VIEWS:
-            raise Exception("Style ULC_NO_HEADER and extra style ULC_HEADER_IN_ALL_VIEWS can not be combined")
+        if agwStyle & ULC_NO_HEADER and agwStyle & ULC_HEADER_IN_ALL_VIEWS:
+            raise Exception("Styles ULC_NO_HEADER and ULC_HEADER_IN_ALL_VIEWS can not be combined")
 
         wx.PyControl.__init__(self, parent, id, pos, size, style|wx.CLIP_CHILDREN, validator, name)
 
@@ -10562,11 +10588,11 @@ class UltimateListCtrl(wx.PyControl):
             if style & wx.BORDER_THEME:
                 style -= wx.BORDER_THEME
 
-        self._extraStyle = extraStyle
+        self._agwStyle = agwStyle
         if style & wx.SUNKEN_BORDER:
             style -= wx.SUNKEN_BORDER
             
-        self._mainWin = UltimateListMainWindow(self, wx.ID_ANY, wx.Point(0, 0), size, style)
+        self._mainWin = UltimateListMainWindow(self, wx.ID_ANY, wx.Point(0, 0), size, style, agwStyle)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self._mainWin, 1, wx.GROW)
@@ -10585,6 +10611,7 @@ class UltimateListCtrl(wx.PyControl):
 
         needs_header = self.HasHeader()
         has_header = self._headerWin is not None
+        
         if needs_header == has_header:
             return
 
@@ -10622,6 +10649,7 @@ class UltimateListCtrl(wx.PyControl):
 
         needs_footer = self.HasFooter()
         has_footer = self._footerWin is not None
+        
         if needs_footer == has_footer:
             return
 
@@ -10678,28 +10706,43 @@ class UltimateListCtrl(wx.PyControl):
 
         :param `style`: can be one of the following bits:
 
-         ======================== =========== ====================================================================================================
-         Window Styles             Hex Value  Description
-         ======================== =========== ====================================================================================================
-         ``ULC_VRULES``                   0x1 Draws light vertical rules between rows in report mode.
-         ``ULC_HRULES``                   0x2 Draws light horizontal rules between rows in report mode.
-         ``ULC_ICON``                     0x4 Large icon view, with optional labels.
-         ``ULC_SMALL_ICON``               0x8 Small icon view, with optional labels.
-         ``ULC_LIST``                    0x10 Multicolumn list view, with optional small icons. Columns are computed automatically, i.e. you don't set columns as in ``ULC_REPORT``. In other words, the list wraps, unlike a `wx.ListBox`.
-         ``ULC_REPORT``                  0x20 Single or multicolumn report view, with optional header.
-         ``ULC_ALIGN_TOP``               0x40 Icons align to the top. Win32 default, Win32 only.
-         ``ULC_ALIGN_LEFT``              0x80 Icons align to the left.
-         ``ULC_AUTOARRANGE``            0x100 Icons arrange themselves. Win32 only.
-         ``ULC_VIRTUAL``                0x200 The application provides items text on demand. May only be used with ``ULC_REPORT``.
-         ``ULC_EDIT_LABELS``            0x400 Labels are editable: the application will be notified when editing starts.
-         ``ULC_NO_HEADER``              0x800 No header in report mode.
-         ``ULC_NO_SORT_HEADER``        0x1000 No Docs.
-         ``ULC_SINGLE_SEL``            0x2000 Single selection (default is multiple).
-         ``ULC_SORT_ASCENDING``        0x4000 Sort in ascending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
-         ``ULC_SORT_DESCENDING``       0x8000 Sort in descending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
-         ``ULC_TILE``                 0x10000 Each item appears as a full-sized icon with a label of one or more lines beside it (partially implemented).
-         ======================== =========== ====================================================================================================
-
+         ===============================  =========== ====================================================================================================
+         Window Styles                    Hex Value   Description
+         ===============================  =========== ====================================================================================================
+         ``ULC_VRULES``                           0x1 Draws light vertical rules between rows in report mode.
+         ``ULC_HRULES``                           0x2 Draws light horizontal rules between rows in report mode.
+         ``ULC_ICON``                             0x4 Large icon view, with optional labels.
+         ``ULC_SMALL_ICON``                       0x8 Small icon view, with optional labels.
+         ``ULC_LIST``                            0x10 Multicolumn list view, with optional small icons. Columns are computed automatically, i.e. you don't set columns as in ``ULC_REPORT``. In other words, the list wraps, unlike a `wx.ListBox`.
+         ``ULC_REPORT``                          0x20 Single or multicolumn report view, with optional header.
+         ``ULC_ALIGN_TOP``                       0x40 Icons align to the top. Win32 default, Win32 only.
+         ``ULC_ALIGN_LEFT``                      0x80 Icons align to the left.
+         ``ULC_AUTOARRANGE``                    0x100 Icons arrange themselves. Win32 only.
+         ``ULC_VIRTUAL``                        0x200 The application provides items text on demand. May only be used with ``ULC_REPORT``.
+         ``ULC_EDIT_LABELS``                    0x400 Labels are editable: the application will be notified when editing starts.
+         ``ULC_NO_HEADER``                      0x800 No header in report mode.
+         ``ULC_NO_SORT_HEADER``                0x1000 No Docs.
+         ``ULC_SINGLE_SEL``                    0x2000 Single selection (default is multiple).
+         ``ULC_SORT_ASCENDING``                0x4000 Sort in ascending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+         ``ULC_SORT_DESCENDING``               0x8000 Sort in descending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+         ``ULC_TILE``                         0x10000 Each item appears as a full-sized icon with a label of one or more lines beside it (partially implemented).
+         ``ULC_NO_HIGHLIGHT``                 0x20000 No highlight when an item is selected.
+         ``ULC_STICKY_HIGHLIGHT``             0x40000 Items are selected by simply hovering on them, with no need to click on them.
+         ``ULC_STICKY_NOSELEVENT``            0x80000 Don't send a selection event when using ``ULC_STICKY_HIGHLIGHT`` style.
+         ``ULC_SEND_LEFTCLICK``              0x100000 Send a left click event when an item is selected.
+         ``ULC_HAS_VARIABLE_ROW_HEIGHT``     0x200000 The list has variable row heights.
+         ``ULC_AUTO_CHECK_CHILD``            0x400000 When a column header has a checkbox associated, auto-check all the subitems in that column.
+         ``ULC_AUTO_TOGGLE_CHILD``           0x800000 When a column header has a checkbox associated, toggle all the subitems in that column.
+         ``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
+         ``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
+         ``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
+         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+         ``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
+         ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
+         ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
+         ``ULC_FOOTER``                    0x80000000 Show a footer too (only when header is present).
+         ===============================  =========== ====================================================================================================
+         
         :param `add`: ``True`` to add the window style, ``False`` to remove it.
 
         :note: The style ``ULC_VIRTUAL`` can not be set/unset after construction.
@@ -10708,7 +10751,7 @@ class UltimateListCtrl(wx.PyControl):
         if style & ULC_VIRTUAL:
             raise Exception("ULC_VIRTUAL can't be [un]set")
         
-        flag = self.GetWindowStyle()
+        flag = self.GetAGWWindowStyleFlag()
 
         if add:
 
@@ -10725,85 +10768,78 @@ class UltimateListCtrl(wx.PyControl):
             flag &= ~style
 
         # some styles can be set without recreating everything (as happens in
-        # SetWindowStyleFlag() which calls ListMainWindow.DeleteEverything())
+        # SetAGWWindowStyleFlag() which calls ListMainWindow.DeleteEverything())
         if not style & ~(ULC_HRULES | ULC_VRULES):
             self.Refresh()
-            wx.PyControl.SetWindowStyleFlag(self, flag)
+            self.SetAGWWindowStyleFlag(self, flag)
         else:
-            self.SetWindowStyleFlag(flag)
+            self.SetAGWWindowStyleFlag(flag)
 
 
-    def GetExtraStyle(self):
+    def GetAGWWindowStyleFlag(self):
         """
-        Gets the L{UltimateListCtrl} extra style flag.
+        Gets the L{UltimateListCtrl} AGW-specific style flag.
         
-        See L{SetExtraStyle} for possible extra style flags.
+        See L{SetAGWWindowStyleFlag} for possible style flags.
         """
         
-        return self._extraStyle
+        return self._agwStyle
     
     
-    def SetExtraStyle(self, style):
+    def SetAGWWindowStyleFlag(self, style):
         """
-        Sets the L{UltimateListCtrl} extra style flag.
+        Sets the L{UltimateListCtrl} AGW-specific style flag.
 
-        :param `style`: the window extra style; can be almost any combination of the following
+        :param `style`: the AGW-specific window style; can be almost any combination of the following
          bits:
 
-         =============================== =========== ====================================================================================================
-         Window Extra Styles              Hex Value  Description
-         =============================== =========== ====================================================================================================
-         ``ULC_NO_HIGHLIGHT``                 0x0001 No highlight when an item is selected.
-         ``ULC_STICKY_HIGHLIGHT``             0x0002 Items are selected by simply hovering on them, with no need to click on them.
-         ``ULC_STICKY_NOSELEVENT``            0x0004 Don't send a selection event when using ``ULC_STICKY_HIGHLIGHT`` extra style.
-         ``ULC_SEND_LEFTCLICK``               0x0008 Send a left click event when an item is selected.
-         ``ULC_HAS_VARIABLE_ROW_HEIGHT``      0x0010 The list has variable row heights.
-         ``ULC_AUTO_CHECK_CHILD``             0x0020 When a column header has a checkbox associated, auto-check all the subitems in that column.
-         ``ULC_AUTO_TOGGLE_CHILD``            0x0040 When a column header has a checkbox associated, toggle all the subitems in that column.
-         ``ULC_AUTO_CHECK_PARENT``            0x0080 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
-         ``ULC_SHOW_TOOLTIPS``                0x0100 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
-         ``ULC_HOT_TRACKING``                 0x0200 Enable hot tracking of items on mouse motion.
-         ``ULC_BORDER_SELECT``                0x0400 Changes border colour whan an item is selected, instead of highlighting the item.
-         ``ULC_TRACK_SELECT``                 0x0800 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This extra style applies to all views of `UltimateListCtrl`.
-         ``ULC_HEADER_IN_ALL_VIEWS``          0x1000 Show column headers in all view modes.
-         ``ULC_NO_FULL_ROW_SELECT``           0x2000 When an item is selected, the only the item in the first column is highlighted.
-         ``ULC_FOOTER``                       0x4000 Show a footer too (only when header is present).
-         =============================== =========== ====================================================================================================
-        """        
+         ===============================  =========== ====================================================================================================
+         Window Styles                    Hex Value   Description
+         ===============================  =========== ====================================================================================================
+         ``ULC_VRULES``                           0x1 Draws light vertical rules between rows in report mode.
+         ``ULC_HRULES``                           0x2 Draws light horizontal rules between rows in report mode.
+         ``ULC_ICON``                             0x4 Large icon view, with optional labels.
+         ``ULC_SMALL_ICON``                       0x8 Small icon view, with optional labels.
+         ``ULC_LIST``                            0x10 Multicolumn list view, with optional small icons. Columns are computed automatically, i.e. you don't set columns as in ``ULC_REPORT``. In other words, the list wraps, unlike a `wx.ListBox`.
+         ``ULC_REPORT``                          0x20 Single or multicolumn report view, with optional header.
+         ``ULC_ALIGN_TOP``                       0x40 Icons align to the top. Win32 default, Win32 only.
+         ``ULC_ALIGN_LEFT``                      0x80 Icons align to the left.
+         ``ULC_AUTOARRANGE``                    0x100 Icons arrange themselves. Win32 only.
+         ``ULC_VIRTUAL``                        0x200 The application provides items text on demand. May only be used with ``ULC_REPORT``.
+         ``ULC_EDIT_LABELS``                    0x400 Labels are editable: the application will be notified when editing starts.
+         ``ULC_NO_HEADER``                      0x800 No header in report mode.
+         ``ULC_NO_SORT_HEADER``                0x1000 No Docs.
+         ``ULC_SINGLE_SEL``                    0x2000 Single selection (default is multiple).
+         ``ULC_SORT_ASCENDING``                0x4000 Sort in ascending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+         ``ULC_SORT_DESCENDING``               0x8000 Sort in descending order. (You must still supply a comparison callback in `wx.ListCtrl.SortItems`.)
+         ``ULC_TILE``                         0x10000 Each item appears as a full-sized icon with a label of one or more lines beside it (partially implemented).
+         ``ULC_NO_HIGHLIGHT``                 0x20000 No highlight when an item is selected.
+         ``ULC_STICKY_HIGHLIGHT``             0x40000 Items are selected by simply hovering on them, with no need to click on them.
+         ``ULC_STICKY_NOSELEVENT``            0x80000 Don't send a selection event when using ``ULC_STICKY_HIGHLIGHT`` style.
+         ``ULC_SEND_LEFTCLICK``              0x100000 Send a left click event when an item is selected.
+         ``ULC_HAS_VARIABLE_ROW_HEIGHT``     0x200000 The list has variable row heights.
+         ``ULC_AUTO_CHECK_CHILD``            0x400000 When a column header has a checkbox associated, auto-check all the subitems in that column.
+         ``ULC_AUTO_TOGGLE_CHILD``           0x800000 When a column header has a checkbox associated, toggle all the subitems in that column.
+         ``ULC_AUTO_CHECK_PARENT``          0x1000000 Only meaningful foe checkbox-type items: when an item is checked/unchecked its column header item is checked/unchecked as well.
+         ``ULC_SHOW_TOOLTIPS``              0x2000000 Show tooltips for ellipsized items/subitems (text too long to be shown in the available space) containing the full item/subitem text.
+         ``ULC_HOT_TRACKING``               0x4000000 Enable hot tracking of items on mouse motion.
+         ``ULC_BORDER_SELECT``              0x8000000 Changes border colour whan an item is selected, instead of highlighting the item.
+         ``ULC_TRACK_SELECT``              0x10000000 Enables hot-track selection in a list control. Hot track selection means that an item is automatically selected when the cursor remains over the item for a certain period of time. The delay is retrieved on Windows using the `win32api` call `win32gui.SystemParametersInfo(win32con.SPI_GETMOUSEHOVERTIME)`, and is defaulted to 400ms on other platforms. This style applies to all views of `UltimateListCtrl`.
+         ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
+         ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
+         ``ULC_FOOTER``                    0x80000000 Show a footer too (only when header is present).
+         ===============================  =========== ====================================================================================================
+         """        
 
-        if style & ULC_HAS_VARIABLE_ROW_HEIGHT and not self.HasFlag(ULC_REPORT):
-            raise Exception("ULC_HAS_VARIABLE_ROW_HEIGHT extra style can be used only in report mode")
+        if style & ULC_HAS_VARIABLE_ROW_HEIGHT and not self.HasAGWFlag(ULC_REPORT):
+            raise Exception("ULC_HAS_VARIABLE_ROW_HEIGHT style can be used only in report mode")
         
-        self._extraStyle = style
-        
-        if style & ULC_HAS_VARIABLE_ROW_HEIGHT:
-            self._mainWin.ResetLineDimensions()
-            self._mainWin.ResetVisibleLinesRange()
-
-        self.CreateOrDestroyFooterWindowAsNeeded()
-
-        self.GetSizer().Layout()
-        self.Refresh()
-
-
-    def SetWindowStyleFlag(self, flag):
-        """
-        Sets the L{UltimateListCtrl} window style flags.
-
-        :param `flag`: the window style flags.
-
-        :see: L{SetSingleStyle} for a list of valid window styles.        
-        """        
-
-        wasInReportView = self.HasFlag(ULC_REPORT)
-
-        # update the window style first so that the header is created or destroyed
-        # corresponding to the new style
-        wx.PyControl.SetWindowStyleFlag(self, flag)
+        wasInReportView = self.HasAGWFlag(ULC_REPORT)
+        self._agwStyle = style
 
         if self._mainWin:
 
-            inReportView = (flag & ULC_REPORT) != 0
+            inReportView = (style & ULC_REPORT) != 0
 
             if inReportView != wasInReportView:
                 # we need to notify the main window about this change as it must
@@ -10811,7 +10847,26 @@ class UltimateListCtrl(wx.PyControl):
                 self._mainWin.SetReportView(inReportView)
 
             self.CreateOrDestroyHeaderWindowAsNeeded()
+            self.CreateOrDestroyFooterWindowAsNeeded()
             self.GetSizer().Layout()
+        
+        if style & ULC_HAS_VARIABLE_ROW_HEIGHT:
+            self._mainWin.ResetLineDimensions()
+            self._mainWin.ResetVisibleLinesRange()
+
+        self.Refresh()
+
+
+    def HasAGWFlag(self, flag):
+        """
+        Returns ``True`` if the window has the given flag bit set.
+
+        :param `flag`: the window style to check.
+
+        :see: L{SetAGWWindowStyleFlag} for a list of valid window styles.        
+        """
+        
+        return self._agwStyle & flag
             
 
     def GetColumn(self, col):
@@ -11485,8 +11540,6 @@ class UltimateListCtrl(wx.PyControl):
          Alignment Flag             Hex Value Description
          ========================== ========= ===============================
          ``ULC_ALIGN_DEFAULT``            0x0 Default alignment
-         ``ULC_ALIGN_LEFT``               0x1 Align to the left side of the control
-         ``ULC_ALIGN_TOP``                0x2 Align to the top side of the control
          ``ULC_ALIGN_SNAP_TO_GRID``       0x3 Snap to grid
          ========================== ========= ===============================
 
@@ -11720,9 +11773,9 @@ class UltimateListCtrl(wx.PyControl):
         :param `item`: an instance of L{UltimateListItem}.
         """
 
-        if not self._mainWin.InReportView() and not self.HasExtraFlag(ULC_HEADER_IN_ALL_VIEWS) and \
+        if not self._mainWin.InReportView() and not self.HasAGWFlag(ULC_HEADER_IN_ALL_VIEWS) and \
            not self._mainWin.InTileView():
-            raise Exception("Can't add column in non report/tile modes or without the ULC_HEADER_IN_ALL_VIEWS extra style set")
+            raise Exception("Can't add column in non report/tile modes or without the ULC_HEADER_IN_ALL_VIEWS style set")
 
         self._mainWin.InsertColumn(col, item)
         if self._headerWin:
@@ -12953,7 +13006,7 @@ class UltimateListCtrl(wx.PyControl):
          and `GetForegroundColor`. 
         """
 
-        if not self.HasFlag(ULC_REPORT):
+        if not self.HasAGWFlag(ULC_REPORT):
             raise Exception("Custom renderers can be used on with style = ULC_REPORT")
         
         self._headerWin.SetCustomRenderer(renderer)
@@ -12969,8 +13022,8 @@ class UltimateListCtrl(wx.PyControl):
          and `GetForegroundColor`. 
         """
 
-        if not self.HasFlag(ULC_REPORT) or not self.HasExtraFlag(ULC_FOOTER):
-            raise Exception("Custom renderers can only be used on with style = ULC_REPORT and extra_style ULC_FOOTER")
+        if not self.HasAGWFlag(ULC_REPORT) or not self.HasAGWFlag(ULC_FOOTER):
+            raise Exception("Custom renderers can only be used on with style = ULC_REPORT | ULC_FOOTER")
        
         self._footerWin.SetCustomRenderer(renderer)
 
@@ -12986,7 +13039,7 @@ class UltimateListCtrl(wx.PyControl):
          and `GetForegroundColor`. 
         """
 
-        if not self.HasFlag(ULC_REPORT):
+        if not self.HasAGWFlag(ULC_REPORT):
             raise Exception("Custom renderers can be used on with style = ULC_REPORT")
         
         return self._mainWin.SetCustomRenderer(col, renderer)
@@ -13004,8 +13057,8 @@ class UltimateListCtrl(wx.PyControl):
          `GetLineHeight` and `GetSubItemWidth`. 
         """
 
-        if not self.HasFlag(ULC_REPORT) or not self.HasExtraFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
-            raise Exception("Custom renderers can be used on with style = ULC_REPORT and extraStyle = ULC_HAS_VARIABLE_ROW_HEIGHT")
+        if not self.HasAGWFlag(ULC_REPORT) or not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+            raise Exception("Custom renderers can be used on with style = ULC_REPORT | ULC_HAS_VARIABLE_ROW_HEIGHT")
         
         item = CreateListItem(itemOrId, col)
         return self._mainWin.SetItemCustomRenderer(item, renderer)
@@ -13023,7 +13076,7 @@ class UltimateListCtrl(wx.PyControl):
         :param `over`: ``True`` to set the item in a overflow state, ``False`` otherwise.        
         """
 
-        if not self.HasFlag(ULC_REPORT) or self._mainWin.IsVirtual():
+        if not self.HasAGWFlag(ULC_REPORT) or self._mainWin.IsVirtual():
             raise Exception("Overflowing items can be used only in report, non-virtual mode")
 
         item = CreateListItem(itemOrId, col)
@@ -13043,18 +13096,6 @@ class UltimateListCtrl(wx.PyControl):
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.GetItemOverFlow(item)
-
-
-    def HasExtraFlag(self, flag):
-        """
-        Returns ``True`` if the window has the given extra flag bit set.
-
-        :param `flag`: the extra window style to check.
-
-        :see: L{SetExtraStyle} for a list of valid extra window styles.        
-        """
-        
-        return self._extraStyle & flag
 
 
     def IsVirtual(self):

@@ -2,7 +2,7 @@
 # PEAKMETERCTRL wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 30 Nov 2009, 17.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 #
 # TODO List
@@ -75,9 +75,9 @@ License And Version
 
 PeakMeterCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 30 Nov 2009, 17.00 GMT
+Latest Revision: Andrea Gavana @ 12 Apr 2010, 12.00 GMT
 
-Version 0.2
+Version 0.3
 
 """
 
@@ -202,7 +202,7 @@ class PeakMeterCtrl(wx.PyControl):
     """ The main L{PeakMeterCtrl} implementation. """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=PM_VERTICAL):
+                 style=0, agwStyle=PM_VERTICAL):
         """
         Default class constructor.
 
@@ -212,7 +212,8 @@ class PeakMeterCtrl(wx.PyControl):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param style: the widget style, which can be one of the following bits:
+        :param `style`: the underlying `wx.PyControl` window style;
+        :param `agwStyle`: the AGW-specific window style, which can be one of the following bits:
 
          ================= =========== ==================================================
          Window Styles     Hex Value   Description
@@ -226,6 +227,7 @@ class PeakMeterCtrl(wx.PyControl):
         wx.PyControl.__init__(self, parent, id, pos, size, style)
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 
+        self._agwStyle = agwStyle        
         # Initializes all data
         self.InitData()
 
@@ -261,6 +263,34 @@ class PeakMeterCtrl(wx.PyControl):
         self._meterData = []
 
 
+    def SetAGWWindowStyleFlag(self, agwStyle):
+        """
+        Sets the L{PeakMeterCtrl} window style flags.
+
+        :param `agwStyle`: the AGW-specific window style. This can be a combination of the
+         following bits:
+
+         ================= =========== ==================================================
+         Window Styles     Hex Value   Description
+         ================= =========== ==================================================
+         ``PM_HORIZONTAL``         0x0 Shows horizontal bands in `PeakMeterCtrl`.
+         ``PM_VERTICAL``           0x1 Shows vertical bands in `PeakMeterCtrl`.
+         ================= =========== ==================================================
+
+        """
+
+        self._agwStyle = agwStyle            
+        self.Refresh()
+        
+
+    def GetAGWWindowStyleFlag(self):
+        """
+        Returns the L{PeakMeterCtrl} window style.
+        """
+
+        return self._agwStyle
+
+    
     def ResetControl(self):
         """ Resets the L{PeakMeterCtrl}. """
 
@@ -545,7 +575,7 @@ class PeakMeterCtrl(wx.PyControl):
         pen = wx.Pen(self._clrBackground)
         dc.SetPen(pen)
         
-        if self.GetWindowStyleFlag() & PM_VERTICAL:
+        if self.GetAGWWindowStyleFlag() & PM_VERTICAL:
             self.DrawVertBand(dc, rc)
         else:
             self.DrawHorzBand(dc, rc)

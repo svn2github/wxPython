@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2005
-# Latest Revision: 27 Nov 2009, 11.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 #
 # TODO List/Caveats
@@ -104,9 +104,9 @@ License And Version
 
 FloatSpin control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 27 Nov 2009, 11.00 GMT
+Latest revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
 
-Version 0.8
+Version 0.9
 
 
 Backward Incompatibilities
@@ -300,7 +300,7 @@ class FloatSpin(wx.PyControl):
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=(95,-1), style=0, value=0.0, min_val=None, max_val=None,
-                 increment=1.0, digits=-1, extrastyle=FS_LEFT,
+                 increment=1.0, digits=-1, agwStyle=FS_LEFT,
                  name="FloatSpin"):
         """
         Default class constructor.
@@ -317,7 +317,7 @@ class FloatSpin(wx.PyControl):
         :param `max_val`: the maximum value, ignored if ``None``;
         :param `increment`: the increment for every L{FloatSpinEvent} event;
         :param `digits`: number of representative digits for your floating point numbers;
-        :param `extrastyle`: one of the following bits:
+        :param `agwStyle`: one of the following bits:
 
          =============== =========== ==================================================
          Window Styles   Hex Value   Description
@@ -404,12 +404,12 @@ class FloatSpin(wx.PyControl):
 
         txtstyle = wx.TE_NOHIDESEL | wx.TE_PROCESS_ENTER
 
-        if extrastyle & FS_RIGHT:
+        if agwStyle & FS_RIGHT:
             txtstyle = txtstyle | wx.TE_RIGHT
-        elif extrastyle & FS_CENTRE:
+        elif agwStyle & FS_CENTRE:
             txtstyle = txtstyle | wx.TE_CENTER
 
-        if extrastyle & FS_READONLY:
+        if agwStyle & FS_READONLY:
             txtstyle = txtstyle | wx.TE_READONLY
 
         self._textctrl = FloatTextCtrl(self, wx.ID_ANY, str(self._value),
@@ -432,7 +432,7 @@ class FloatSpin(wx.PyControl):
         # textbox, so we avoid that call under Windows. 
         # The call to SetMinSize() isn't necessary under GTK, nor does it
         # do any harm.
-        if "__WXMSW__" not in wx.PlatformInfo:
+        if "__WXMAC__" in wx.PlatformInfo:
             self._spinbutton.SetMinSize(wx.DefaultSize)
         # end Philip Semanchuk addition
 
@@ -456,7 +456,7 @@ class FloatSpin(wx.PyControl):
 
         self._textctrl.SetValue(strs)
 
-        if not (extrastyle & FS_READONLY):
+        if not (agwStyle & FS_READONLY):
             self.Bind(wx.EVT_SPIN_UP, self.OnSpinUp)
             self.Bind(wx.EVT_SPIN_DOWN, self.OnSpinDown)
             self._spinbutton.Bind(wx.EVT_LEFT_DOWN, self.OnSpinMouseDown)

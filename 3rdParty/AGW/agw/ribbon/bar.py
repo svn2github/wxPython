@@ -9,7 +9,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 15 Oct 2009
-# Latest Revision: 17 Nov 2009, 17.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -120,6 +120,7 @@ def SET_FLAG(variable, flag):
 
     return variable, refresh_tabs
 
+
 def UNSET_FLAG(variable, flag):
 
     refresh_tabs = False
@@ -186,7 +187,7 @@ class RibbonBarEvent(wx.NotifyEvent):
 
 class RibbonBar(RibbonControl):
     
-    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=RIBBON_BAR_DEFAULT_STYLE,
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, agwStyle=RIBBON_BAR_DEFAULT_STYLE,
                  validator=wx.DefaultValidator, name="RibbonBar"):
         """
         Default constructor.
@@ -200,7 +201,22 @@ class RibbonBar(RibbonControl):
          generate a default size for the window. If no suitable size can be found,
          the window will be sized to 20x20 pixels so that the window is visible but
          obviously not correctly sized;
-        :param `style`: Window style;
+        :param `agwStyle`: the AGW-specific window style. This can be a combination of the
+         following bits:
+
+         ========================================== =========== ==========================================
+         Window Styles                              Hex Value   Description
+         ========================================== =========== ==========================================
+         ``RIBBON_BAR_DEFAULT_STYLE``                       0x9 Defined as ``RIBBON_BAR_FLOW_HORIZONTAL`` | ``RIBBON_BAR_SHOW_PAGE_LABELS`` | ``RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS``
+         ``RIBBON_BAR_FOLDBAR_STYLE``                      0x1e Defined as ``RIBBON_BAR_FLOW_VERTICAL`` | ``RIBBON_BAR_SHOW_PAGE_ICONS`` | ``RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS`` | ``RIBBON_BAR_SHOW_PANEL_MINIMISE_BUTTONS``
+         ``RIBBON_BAR_SHOW_PAGE_LABELS``                    0x1 Causes labels to be shown on the tabs in the ribbon bar.
+         ``RIBBON_BAR_SHOW_PAGE_ICONS``                     0x2 Causes icons to be shown on the tabs in the ribbon bar.
+         ``RIBBON_BAR_FLOW_HORIZONTAL``                     0x0 Causes panels within pages to stack horizontally.
+         ``RIBBON_BAR_FLOW_VERTICAL``                       0x4 Causes panels within pages to stack vertically.
+         ``RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS``              0x8 Causes extension buttons to be shown on panels (where the panel has such a button).
+         ``RIBBON_BAR_SHOW_PANEL_MINIMISE_BUTTONS``        0x10 Causes minimise buttons to be shown on panels (where the panel has such a button).
+         ========================================== =========== ==========================================
+
         :param `validator`: the window validator;
         :param `name`: the window name.
 
@@ -234,7 +250,7 @@ class RibbonBar(RibbonControl):
         self.Bind(wx.EVT_RIGHT_UP, self.OnMouseRightUp)
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
-        self.CommonInit(style)
+        self.CommonInit(agwStyle)
         
 
     def AddPage(self, page):
@@ -291,15 +307,42 @@ class RibbonBar(RibbonControl):
         return self._pages[self._current_page].page.DismissExpandedPanel()
 
 
-    def SetWindowStyleFlag(self, style):
+    def SetAGWWindowStyleFlag(self, agwStyle):
+        """
+        Sets the window style for L{RibbonBar}.
 
-        self._flags = style
+        :param `agwStyle`: can be a combination of the following bits:
+
+         ========================================== =========== ==========================================
+         Window Styles                              Hex Value   Description
+         ========================================== =========== ==========================================
+         ``RIBBON_BAR_DEFAULT_STYLE``                       0x9 Defined as ``RIBBON_BAR_FLOW_HORIZONTAL`` | ``RIBBON_BAR_SHOW_PAGE_LABELS`` | ``RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS``
+         ``RIBBON_BAR_FOLDBAR_STYLE``                      0x1e Defined as ``RIBBON_BAR_FLOW_VERTICAL`` | ``RIBBON_BAR_SHOW_PAGE_ICONS`` | ``RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS`` | ``RIBBON_BAR_SHOW_PANEL_MINIMISE_BUTTONS``
+         ``RIBBON_BAR_SHOW_PAGE_LABELS``                    0x1 Causes labels to be shown on the tabs in the ribbon bar.
+         ``RIBBON_BAR_SHOW_PAGE_ICONS``                     0x2 Causes icons to be shown on the tabs in the ribbon bar.
+         ``RIBBON_BAR_FLOW_HORIZONTAL``                     0x0 Causes panels within pages to stack horizontally.
+         ``RIBBON_BAR_FLOW_VERTICAL``                       0x4 Causes panels within pages to stack vertically.
+         ``RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS``              0x8 Causes extension buttons to be shown on panels (where the panel has such a button).
+         ``RIBBON_BAR_SHOW_PANEL_MINIMISE_BUTTONS``        0x10 Causes minimise buttons to be shown on panels (where the panel has such a button).
+         ========================================== =========== ==========================================
+         
+        :note: Please note that some styles cannot be changed after the window creation
+         and that `Refresh()` might need to be be called after changing the others for
+         the change to take place immediately.
+        """
+
+        self._flags = agwStyle
         
         if self._art:
-            self._art.SetFlags(style)
+            self._art.SetFlags(agwStyle)
 
 
-    def GetWindowStyleFlag(self):
+    def GetAGWWindowStyleFlag(self):
+        """
+        Returns the L{RibbonBar} window style flag.
+
+        :see: L{SetAGWWindowStyleFlag} for a list of valid window styles.
+        """
 
         return self._flags
 
@@ -695,11 +738,11 @@ class RibbonBar(RibbonControl):
                         width -= info.rect.width
 
 
-    def CommonInit(self, style):
+    def CommonInit(self, agwStyle):
 
         self.SetName("RibbonBar")
 
-        self._flags = style
+        self._flags = agwStyle
         self._tabs_total_width_ideal = 0
         self._tabs_total_width_minimum = 0
         self._tab_margin_left = 50

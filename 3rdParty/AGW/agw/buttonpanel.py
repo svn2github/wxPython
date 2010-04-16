@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 23 Nov 2009, 12.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -168,9 +168,9 @@ License And Version
 
 ButtonPanel is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 23 Nov 2009, 12.00 GMT
+Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
 
-Version 0.5.
+Version 0.6.
 
 """
 
@@ -1599,7 +1599,7 @@ class ButtonPanel(wx.PyPanel):
     add buttons and controls still respecting the gradient background.
     """
 
-    def __init__(self, parent, id=wx.ID_ANY, text="", style=BP_DEFAULT_STYLE,
+    def __init__(self, parent, id=wx.ID_ANY, text="", agwStyle=BP_DEFAULT_STYLE,
                  alignment=BP_ALIGN_LEFT, name="buttonPanel"):
         """
         Default class constructor.
@@ -1607,7 +1607,7 @@ class ButtonPanel(wx.PyPanel):
         :param `parent`: the parent window;
         :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create an identifier;
         :param `text`: the main caption text for L{ButtonPanel};
-        :param `style`: the window style (one of ``BP_DEFAULT_STYLE``, ``BP_USE_GRADIENT``);
+        :param `agwStyle`: the AGW-specific window style (one of ``BP_DEFAULT_STYLE``, ``BP_USE_GRADIENT``);
         :param `alignment`: alignment of buttons (left or right);
         :param `name`: window class name.
         """
@@ -1618,7 +1618,7 @@ class ButtonPanel(wx.PyPanel):
         self._vButtons = []
         self._vSeparators = []
 
-        self._nStyle = style
+        self._agwStyle = agwStyle
         self._alignment = alignment
         self._statusTimer = None
         self._useHelp = True
@@ -1626,7 +1626,7 @@ class ButtonPanel(wx.PyPanel):
         self._currentButton = -1
         self._haveTip = False
 
-        self._art = BPArt(style)
+        self._art = BPArt(agwStyle)
 
         self._controlCreated = False
 
@@ -2044,7 +2044,7 @@ class ButtonPanel(wx.PyPanel):
         dc = wx.BufferedPaintDC(self) 
         rect = self.GetClientRect()
 
-        self._art.DrawButtonPanel(dc, rect, self._nStyle)
+        self._art.DrawButtonPanel(dc, rect, self._agwStyle)
         self._mainsizer.Draw(dc)
                 
 
@@ -2211,11 +2211,11 @@ class ButtonPanel(wx.PyPanel):
         return children1
 
 
-    def SetStyle(self, style):
+    def SetStyle(self, agwStyle):
         """
         Sets the L{ButtonPanel} window style.
 
-        :param `style`: one of the following bits:
+        :param `agwStyle`: one of the following bits:
 
          ==================== =========== ==================================================
          Window Styles        Hex Value   Description
@@ -2226,10 +2226,10 @@ class ButtonPanel(wx.PyPanel):
 
         """
 
-        if style == self._nStyle:
+        if agwStyle == self._agwStyle:
             return
 
-        self._nStyle = style
+        self._agwStyle = agwStyle
         self.Refresh()
 
 
@@ -2240,7 +2240,7 @@ class ButtonPanel(wx.PyPanel):
         :see: L{SetStyle} for a list of valid window styles.        
         """
 
-        return self._nStyle
+        return self._agwStyle
 
         
     def OnMouseMove(self, event):

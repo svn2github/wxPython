@@ -917,14 +917,14 @@ class AuiFrame(wx.Frame):
         view_menu.Append(ID_SizeReportContent, "Use a Size Reporter for the Content Pane")
         view_menu.AppendSeparator()
 
-        if wx.Platform == "__WXMAC__":
-            switcherAccel = "Alt+Tab"
-        elif wx.Platform == "__WXGTK__":
-            switcherAccel = "Ctrl+/"
-        else:
-            switcherAccel = "Ctrl+Tab"
-
-        view_menu.Append(ID_SwitchPane, _("S&witch Window...") + "\t" + switcherAccel)
+##        if wx.Platform == "__WXMAC__":
+##            switcherAccel = "Alt+Tab"
+##        elif wx.Platform == "__WXGTK__":
+##            switcherAccel = "Ctrl+/"
+##        else:
+##            switcherAccel = "Ctrl+Tab"
+##
+##        view_menu.Append(ID_SwitchPane, _("S&witch Window...") + "\t" + switcherAccel)
 
         options_menu = wx.Menu()
         options_menu.AppendRadioItem(ID_TransparentHint, "Transparent Hint")
@@ -1094,7 +1094,7 @@ class AuiFrame(wx.Frame):
 
         # create some toolbars
         tb1 = aui.AuiToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
-                            aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW)
+                             agwStyle=aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW)
         tb1.SetToolBitmapSize(wx.Size(48, 48))
         tb1.AddSimpleTool(ID_SampleItem+1, "Test", wx.ArtProvider.GetBitmap(wx.ART_ERROR))
         tb1.AddSeparator()
@@ -1106,7 +1106,7 @@ class AuiFrame(wx.Frame):
         tb1.Realize()
 
         tb2 = aui.AuiToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
-                            aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW)
+                             agwStyle=aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW)
         tb2.SetToolBitmapSize(wx.Size(16, 16))
 
         tb2_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_QUESTION, wx.ART_OTHER, wx.Size(16, 16))
@@ -1126,7 +1126,7 @@ class AuiFrame(wx.Frame):
         tb2.Realize()
 
         tb3 = aui.AuiToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
-                            aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW)
+                             agwStyle=aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW)
         tb3.SetToolBitmapSize(wx.Size(16, 16))
         tb3_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, wx.Size(16, 16))
         tb3.AddSimpleTool(ID_SampleItem+16, "Check 1", tb3_bmp1, "Check 1", aui.ITEM_CHECK)
@@ -1146,8 +1146,8 @@ class AuiFrame(wx.Frame):
         tb3.Realize()
 
         tb4 = aui.AuiToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
-                            aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW |
-                            aui.AUI_TB_TEXT | aui.AUI_TB_HORZ_TEXT)
+                             agwStyle=aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW |
+                             aui.AUI_TB_TEXT | aui.AUI_TB_HORZ_TEXT)
         tb4.SetToolBitmapSize(wx.Size(16, 16))
         tb4_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, wx.Size(16, 16))
         tb4.AddSimpleTool(ID_DropDownToolbarItem, "Item 1", tb4_bmp1)
@@ -1159,12 +1159,15 @@ class AuiFrame(wx.Frame):
         tb4.AddSimpleTool(ID_SampleItem+27, "Item 6", tb4_bmp1)
         tb4.AddSimpleTool(ID_SampleItem+28, "Item 7", tb4_bmp1)
         tb4.AddSimpleTool(ID_SampleItem+29, "Item 8", tb4_bmp1)
+
+        choice = wx.Choice(tb4, -1, choices=["One choice", "Another choice"])
+        tb4.AddControl(choice)
+
         tb4.SetToolDropDown(ID_DropDownToolbarItem, True)
-        tb4.SetCustomOverflowItems(prepend_items, append_items)
         tb4.Realize()
 
         tb5 = aui.AuiToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
-                            aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW | aui.AUI_TB_VERTICAL)
+                             agwStyle=aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW | aui.AUI_TB_VERTICAL)
         tb5.SetToolBitmapSize(wx.Size(48, 48))
         tb5.AddSimpleTool(ID_SampleItem+30, "Test", wx.ArtProvider.GetBitmap(wx.ART_ERROR))
         tb5.AddSeparator()
@@ -1176,7 +1179,7 @@ class AuiFrame(wx.Frame):
         tb5.Realize()
 
         tb6 = aui.AuiToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
-                             aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW | aui.AUI_TB_VERT_TEXT)
+                             agwStyle=aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW | aui.AUI_TB_VERT_TEXT)
         tb6.SetToolBitmapSize(wx.Size(48, 48))
         tb6.AddSimpleTool(ID_SampleItem+35, "Clockwise 1", wx.ArtProvider.GetBitmap(wx.ART_ERROR, wx.ART_OTHER, wx.Size(16, 16)))
         tb6.AddSeparator()
@@ -1332,7 +1335,7 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnCreateHTML, id=ID_CreateHTML)
         self.Bind(wx.EVT_MENU, self.OnCreateSizeReport, id=ID_CreateSizeReport)
         self.Bind(wx.EVT_MENU, self.OnCreateNotebook, id=ID_CreateNotebook)
-        self.Bind(wx.EVT_MENU, self.OnSwitchPane, id=ID_SwitchPane)
+##        self.Bind(wx.EVT_MENU, self.OnSwitchPane, id=ID_SwitchPane)
         self.Bind(wx.EVT_MENU, self.OnCreatePerspective, id=ID_CreatePerspective)
         self.Bind(wx.EVT_MENU, self.OnCopyPerspectiveCode, id=ID_CopyPerspectiveCode)
         self.Bind(wx.EVT_MENU, self.OnCreateNBPerspective, id=ID_CreateNBPerspective)
@@ -1533,14 +1536,14 @@ class AuiFrame(wx.Frame):
     def OnPreviewMinimized(self, event):
 
         checked = event.IsChecked()
-        flags = self._mgr.GetFlags()
+        agwFlags = self._mgr.GetAGWFlags()
 
         if event.IsChecked():
-            flags ^= aui.AUI_MGR_PREVIEW_MINIMIZED_PANES
+            agwFlags ^= aui.AUI_MGR_PREVIEW_MINIMIZED_PANES
         else:
-            flags &= ~aui.AUI_MGR_PREVIEW_MINIMIZED_PANES
+            agwFlags &= ~aui.AUI_MGR_PREVIEW_MINIMIZED_PANES
             
-        self._mgr.SetFlags(flags)
+        self._mgr.SetAGWFlags(agwFlags)
         
 
     def OnSetIconsOnPanes(self, event):
@@ -1728,11 +1731,11 @@ class AuiFrame(wx.Frame):
 
         if evId in [ID_TransparentHint, ID_VenetianBlindsHint, ID_RectangleHint, ID_NoHint]:
         
-            flags = self._mgr.GetFlags()
-            flags &= ~aui.AUI_MGR_TRANSPARENT_HINT
-            flags &= ~aui.AUI_MGR_VENETIAN_BLINDS_HINT
-            flags &= ~aui.AUI_MGR_RECTANGLE_HINT
-            self._mgr.SetFlags(flags)
+            agwFlags = self._mgr.GetAGWFlags()
+            agwFlags &= ~aui.AUI_MGR_TRANSPARENT_HINT
+            agwFlags &= ~aui.AUI_MGR_VENETIAN_BLINDS_HINT
+            agwFlags &= ~aui.AUI_MGR_RECTANGLE_HINT
+            self._mgr.SetAGWFlags(agwFlags)
         
         if evId == ID_AllowFloating:
             flag = aui.AUI_MGR_ALLOW_FLOATING 
@@ -1760,7 +1763,7 @@ class AuiFrame(wx.Frame):
             flag = aui.AUI_MGR_USE_NATIVE_MINIFRAMES
             
         if flag:
-            self._mgr.SetFlags(self._mgr.GetFlags() ^ flag)
+            self._mgr.SetAGWFlags(self._mgr.GetAGWFlags() ^ flag)
         
         self._mgr.Update()
 
@@ -1890,7 +1893,7 @@ class AuiFrame(wx.Frame):
                     nb.SetArtProvider(aui.ChromeTabArt())
                     self._notebook_theme = 5
 
-                nb.SetWindowStyleFlag(self._notebook_style)
+                nb.SetAGWWindowStyleFlag(self._notebook_style)
 
                 if evId == ID_NotebookCloseButtonAll:
                     # Demonstrate how to remove a close button from a tab
@@ -1904,7 +1907,7 @@ class AuiFrame(wx.Frame):
 
     def OnUpdateUI(self, event):
 
-        flags = self._mgr.GetFlags()
+        agwFlags = self._mgr.GetAGWFlags()
         evId = event.GetId()
 
         if evId == ID_NoGradient:
@@ -1917,33 +1920,33 @@ class AuiFrame(wx.Frame):
             event.Check(self._mgr.GetArtProvider().GetMetric(aui.AUI_DOCKART_GRADIENT_TYPE) == aui.AUI_GRADIENT_HORIZONTAL)
                 
         elif evId == ID_AllowFloating:
-            event.Check((flags & aui.AUI_MGR_ALLOW_FLOATING) != 0)
+            event.Check((agwFlags & aui.AUI_MGR_ALLOW_FLOATING) != 0)
                 
         elif evId == ID_TransparentDrag:
-            event.Check((flags & aui.AUI_MGR_TRANSPARENT_DRAG) != 0)
+            event.Check((agwFlags & aui.AUI_MGR_TRANSPARENT_DRAG) != 0)
                 
         elif evId == ID_TransparentHint:
-            event.Check((flags & aui.AUI_MGR_TRANSPARENT_HINT) != 0)
+            event.Check((agwFlags & aui.AUI_MGR_TRANSPARENT_HINT) != 0)
                 
         elif evId == ID_LiveUpdate:
             event.Check(aui.AuiManager_HasLiveResize(self._mgr))
                 
         elif evId == ID_VenetianBlindsHint:
-            event.Check((flags & aui.AUI_MGR_VENETIAN_BLINDS_HINT) != 0)
+            event.Check((agwFlags & aui.AUI_MGR_VENETIAN_BLINDS_HINT) != 0)
                 
         elif evId == ID_RectangleHint:
-            event.Check((flags & aui.AUI_MGR_RECTANGLE_HINT) != 0)
+            event.Check((agwFlags & aui.AUI_MGR_RECTANGLE_HINT) != 0)
                 
         elif evId == ID_NoHint:
             event.Check(((aui.AUI_MGR_TRANSPARENT_HINT |
                               aui.AUI_MGR_VENETIAN_BLINDS_HINT |
-                              aui.AUI_MGR_RECTANGLE_HINT) & flags) == 0)
+                              aui.AUI_MGR_RECTANGLE_HINT) & agwFlags) == 0)
                 
         elif evId == ID_HintFade:
-            event.Check((flags & aui.AUI_MGR_HINT_FADE) != 0)
+            event.Check((agwFlags & aui.AUI_MGR_HINT_FADE) != 0)
                 
         elif evId == ID_NoVenetianFade:
-            event.Check((flags & aui.AUI_MGR_NO_VENETIAN_BLINDS_FADE) != 0)
+            event.Check((agwFlags & aui.AUI_MGR_NO_VENETIAN_BLINDS_FADE) != 0)
 
         elif evId == ID_NativeMiniframes:
             event.Check(aui.AuiManager_UseNativeMiniframes(self._mgr))
@@ -1952,10 +1955,10 @@ class AuiFrame(wx.Frame):
             event.Check(self._pane_icons)
 
         elif evId == ID_SmoothDocking:
-            event.Check((flags & aui.AUI_MGR_SMOOTH_DOCKING) != 0)
+            event.Check((agwFlags & aui.AUI_MGR_SMOOTH_DOCKING) != 0)
             
         elif evId == ID_AnimateFrames:
-            event.Check((flags & aui.AUI_MGR_ANIMATE_FRAMES) != 0)
+            event.Check((agwFlags & aui.AUI_MGR_ANIMATE_FRAMES) != 0)
             
         elif evId == ID_DefaultDockArt:
             event.Check(isinstance(self._mgr.GetArtProvider(), aui.AuiDefaultDockArt))
@@ -1971,19 +1974,19 @@ class AuiFrame(wx.Frame):
             event.Check(pane.IsFlyOut())
 
         elif evId == ID_AeroGuides:
-            event.Check(flags & aui.AUI_MGR_AERO_DOCKING_GUIDES != 0)
+            event.Check(agwFlags & aui.AUI_MGR_AERO_DOCKING_GUIDES != 0)
 
         elif evId == ID_WhidbeyGuides:
-            event.Check(flags & aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES != 0)
+            event.Check(agwFlags & aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES != 0)
 
         elif evId == ID_StandardGuides:
-            event.Check((flags & aui.AUI_MGR_AERO_DOCKING_GUIDES == 0) and (flags & aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES == 0))
+            event.Check((agwFlags & aui.AUI_MGR_AERO_DOCKING_GUIDES == 0) and (agwFlags & aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES == 0))
             
         elif evId == ID_CustomPaneButtons:
             event.Check(self._custom_pane_buttons)
 
         elif evId == ID_PreviewMinimized:
-            event.Check(flags & aui.AUI_MGR_PREVIEW_MINIMIZED_PANES)
+            event.Check(agwFlags & aui.AUI_MGR_PREVIEW_MINIMIZED_PANES)
             
         elif evId == ID_NotebookNoCloseButton:
             event.Check((self._notebook_style & (aui.AUI_NB_CLOSE_BUTTON|aui.AUI_NB_CLOSE_ON_ALL_TABS|aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)) != 0)
@@ -2153,19 +2156,19 @@ class AuiFrame(wx.Frame):
 
         useAero = event.GetId() == ID_AeroGuides
         useWhidbey = event.GetId() == ID_WhidbeyGuides
-        flags = self._mgr.GetFlags()
+        agwFlags = self._mgr.GetAGWFlags()
         
         if useAero:
-            flags ^= aui.AUI_MGR_AERO_DOCKING_GUIDES
-            flags &= ~aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES
+            agwFlags ^= aui.AUI_MGR_AERO_DOCKING_GUIDES
+            agwFlags &= ~aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES
         elif useWhidbey:
-            flags ^= aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES
-            flags &= ~aui.AUI_MGR_AERO_DOCKING_GUIDES            
+            agwFlags ^= aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES
+            agwFlags &= ~aui.AUI_MGR_AERO_DOCKING_GUIDES            
         else:
-            flags &= ~aui.AUI_MGR_AERO_DOCKING_GUIDES
-            flags &= ~aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES
+            agwFlags &= ~aui.AUI_MGR_AERO_DOCKING_GUIDES
+            agwFlags &= ~aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES
 
-        self._mgr.SetFlags(flags)            
+        self._mgr.SetAGWFlags(agwFlags)            
             
         
     def OnNotebookPageClose(self, event):
@@ -2324,16 +2327,16 @@ class AuiFrame(wx.Frame):
             if isinstance(pane.window, aui.AuiNotebook):
             
                 nb = pane.window
-                style = nb.GetWindowStyleFlag()
+                style = nb.GetAGWWindowStyleFlag()
 
                 if event.GetId() == ID_NotebookAlignTop:
                     style &= ~aui.AUI_NB_BOTTOM
                     style ^= aui.AUI_NB_TOP
-                    nb.SetWindowStyleFlag(style)
+                    nb.SetAGWWindowStyleFlag(style)
                 elif event.GetId() == ID_NotebookAlignBottom:
                     style &= ~aui.AUI_NB_TOP
                     style ^= aui.AUI_NB_BOTTOM
-                    nb.SetWindowStyleFlag(style)
+                    nb.SetAGWWindowStyleFlag(style)
 
                 self._notebook_style = style
                 nb.Update()
@@ -2508,7 +2511,7 @@ class AuiFrame(wx.Frame):
         # create the notebook off-window to avoid flicker
         client_size = self.GetClientSize()
         ctrl = aui.AuiNotebook(self, -1, wx.Point(client_size.x, client_size.y),
-                              wx.Size(430, 200), self._notebook_style)
+                              wx.Size(430, 200), agwStyle=self._notebook_style)
 
         arts = [aui.AuiDefaultTabArt, aui.AuiSimpleTabArt, aui.VC71TabArt, aui.FF2TabArt,
                 aui.VC8TabArt, aui.ChromeTabArt]
@@ -2627,7 +2630,7 @@ class AuiFrame(wx.Frame):
         # to treat / in the same was as tab (i.e. cycle through the names)
 
         if wx.Platform == "__WXGTK__":
-            dlg.SetExtraNavigationKey(wxT('/'))
+            dlg.SetExtraNavigationKey('/')
 
         if wx.Platform == "__WXMAC__":
             dlg.SetBackgroundColour(wx.WHITE)

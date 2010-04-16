@@ -162,8 +162,6 @@ if wx.Platform == "__WXMSW__":
     if osVersion[1] == 5 and osVersion[2] == 1:
         try:
             import win32api
-            import win32con
-            import winxpgui
             import win32gui
             _libimported = "MH"
         except:

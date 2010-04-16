@@ -4,7 +4,6 @@ L{LabelBook} and L{FlatMenu}.
 """
 
 import wx
-import os
 import cStringIO
 import random
 

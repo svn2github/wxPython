@@ -4,7 +4,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Aug 2007
-# Latest Revision: 24 Nov 2009, 09.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 #
 # TODO List
@@ -88,9 +88,9 @@ License And Version
 
 CubeColourDialog is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 24 Nov 2009, 09.00 GMT
+Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
 
-Version 0.2.
+Version 0.3.
 
 """
 
@@ -2792,17 +2792,17 @@ class CubeColourDialog(wx.Dialog):
     This is the CubeColourDialog main class implementation.
     """
 
-    def __init__(self, parent, colourData=None, style=CCD_SHOW_ALPHA):
+    def __init__(self, parent, colourData=None, agwStyle=CCD_SHOW_ALPHA):
         """
         Default class constructor.
 
         :param `colourData`: a standard `wx.ColourData` (as used in `wx.ColourDialog`;
-        :param `style`: can be either ``None`` or ``CCD_SHOW_ALPHA``, depending if you want
+        :param `agwStyle`: can be either ``None`` or ``CCD_SHOW_ALPHA``, depending if you want
          to hide the alpha channel control or not.
         """
 
         wx.Dialog.__init__(self, parent, id=wx.ID_ANY, title=_("CubeColourDialog: Choose Colour"),
-                           pos=wx.DefaultPosition, size=(900, 900), style=wx.DEFAULT_DIALOG_STYLE|style)
+                           pos=wx.DefaultPosition, size=(900, 900), style=wx.DEFAULT_DIALOG_STYLE)
 
         if colourData:
             self._colourData = colourData
@@ -2816,6 +2816,7 @@ class CubeColourDialog(wx.Dialog):
         self._inMouse = False
         self._initOver = False
         self._inDrawAll = False
+        self._agwStyle = agwStyle
 
         self.mainPanel = wx.Panel(self, -1)
 
@@ -3008,7 +3009,7 @@ class CubeColourDialog(wx.Dialog):
         mainSizer.Fit(self.mainPanel)
         mainSizer.SetSizeHints(self.mainPanel)
 
-        if self.GetWindowStyleFlag() & CCD_SHOW_ALPHA == 0:
+        if self.GetAGWWindowStyleFlag() & CCD_SHOW_ALPHA == 0:
             mainSizer.Hide(self.showAlpha)
             mainSizer.Hide(alphaSizer)
             mainSizer.Hide(alphaValueSizer)
@@ -3250,18 +3251,16 @@ class CubeColourDialog(wx.Dialog):
         return wx.Dialog.ShowModal(self)
 
 
-    def SetWindowStyleFlag(self, style):
+    def SetAGWWindowStyleFlag(self, agwStyle):
         """
         Sets the L{CubeColourDialog} window style flags.
 
-        :param `style`: can only be ``CCD_SHOW_ALPHA``.
-
-        :note: Overridden from `wx.Dialog`.        
+        :param `agwStyle`: can only be ``CCD_SHOW_ALPHA``.
         """
 
-        wx.Dialog.SetWindowStyleFlag(self, style)
-
-        show = self.GetWindowStyleFlag() & CCD_SHOW_ALPHA
+        show = self.GetAGWWindowStyleFlag() & CCD_SHOW_ALPHA
+        self._agwStyle = agwStyle
+        
         self.mainSizer.Show(self.alphaSizers[0], show)
         self.mainSizer.Show(self.alphaSizers[1], show)
 
@@ -3274,6 +3273,14 @@ class CubeColourDialog(wx.Dialog):
 
         self.Refresh()
         self.Update()
+        
+
+    def GetAGWWindowStyleFlag(self):
+        """
+        Returns the L{CubeColourDialog} window style flags.
+        """
+
+        return self._agwStyle        
         
             
     def OnOk(self, event):
@@ -3314,15 +3321,15 @@ class CubeColourDialog(wx.Dialog):
         :param `event`: a `wx.CommandEvent` event to be processed.
         """
 
-        style = self.GetWindowStyleFlag()
+        agwStyle = self.GetAGWWindowStyleFlag()
         show = event.IsChecked()
 
         if show:
-            style |= CCD_SHOW_ALPHA
+            agwStyle |= CCD_SHOW_ALPHA
         else:
-            style &= ~CCD_SHOW_ALPHA
+            agwStyle &= ~CCD_SHOW_ALPHA
 
-        self.SetWindowStyleFlag(style)
+        self.SetAGWWindowStyleFlag(agwStyle)
         
 
     def OnSpinCtrl(self, event):

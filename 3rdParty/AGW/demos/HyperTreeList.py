@@ -1698,10 +1698,11 @@ class HyperTreeList(HTL.HyperTreeList):
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=wx.DefaultSize,
-                 style=wx.SUNKEN_BORDER | wx.TR_HAS_BUTTONS | wx.TR_HAS_VARIABLE_ROW_HEIGHT,
+                 style=wx.SUNKEN_BORDER,
+                 agwStyle=wx.TR_HAS_BUTTONS | wx.TR_HAS_VARIABLE_ROW_HEIGHT,
                  log=None):
 
-        HTL.HyperTreeList.__init__(self, parent, id, pos, size, style)
+        HTL.HyperTreeList.__init__(self, parent, id, pos, size, style, agwStyle)
 
         alldata = dir(HTL)
 
@@ -1755,7 +1756,7 @@ class HyperTreeList(HTL.HyperTreeList):
 
         self.root = self.AddRoot("The Root Item")
 
-        if not(self.GetWindowStyle() & wx.TR_HIDE_ROOT):
+        if not(self.GetAGWWindowStyleFlag() & wx.TR_HIDE_ROOT):
             self.SetPyData(self.root, None)
             self.SetItemImage(self.root, 24, which=wx.TreeItemIcon_Normal)
             self.SetItemImage(self.root, 13, which=wx.TreeItemIcon_Expanded)
@@ -1871,7 +1872,7 @@ class HyperTreeList(HTL.HyperTreeList):
         if hasattr(mainframe, "leftpanel"):
             self.ChangeStyle(mainframe.treestyles)
 
-        if not(self.GetWindowStyle() & wx.TR_HIDE_ROOT):
+        if not(self.GetAGWWindowStyleFlag() & wx.TR_HIDE_ROOT):
             self.SelectItem(self.root)
             self.Expand(self.root)
             
@@ -1953,8 +1954,8 @@ class HyperTreeList(HTL.HyperTreeList):
                     except:
                         style = style | eval("HTL." + combo.GetLabel())
 
-        if self.GetWindowStyle() != style:
-            self.SetWindowStyle(style)
+        if self.GetAGWWindowStyleFlag() != style:
+            self.SetAGWWindowStyleFlag(style)
             
 
     def OnCompareItems(self, item1, item2):
@@ -2295,7 +2296,7 @@ class HyperTreeList(HTL.HyperTreeList):
         pt = event.GetPosition()
         item, flags, column = self.HitTest(pt)
         if item and (flags & wx.TREE_HITTEST_ONITEMLABEL):
-            if self.GetWindowStyle() & wx.TR_EDIT_LABELS:
+            if self.GetAGWWindowStyleFlag() & wx.TR_EDIT_LABELS:
                 self.log.write("OnLeftDClick: %s (manually starting label edit)\n"% self.GetItemText(item))
                 self.EditLabel(item)
             else:

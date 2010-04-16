@@ -4,6 +4,7 @@ import wx
 import random
 import datetime
 import math
+import operator
 
 import wx.lib.mixins.listctrl as listmix
 import wx.lib.colourdb as cdb
@@ -27,14 +28,6 @@ except ImportError: # if it's not there locally, try the wxPython lib.
     from wx.lib.agw import ultimatelistctrl as ULC
 
 #---------------------------------------------------------------------------
-
-_extraStyles = ["ULC_NO_HIGHLIGHT", "ULC_STICKY_HIGHLIGHT", "ULC_STICKY_NOSELEVENT",
-                "ULC_SEND_LEFTCLICK", "ULC_HAS_VARIABLE_ROW_HEIGHT",
-                "ULC_AUTO_CHECK_CHILD", "ULC_AUTO_TOGGLE_CHILD", "ULC_SHOW_TOOLTIPS",
-                "ULC_HOT_TRACKING", "ULC_BORDER_SELECT", "ULC_TRACK_SELECT",
-                "ULC_NO_FULL_ROW_SELECT", "ULC_FOOTER"]
-
-# --------------------------------------------------------------------------
 
 musicdata = {
 1 : ("Bad English", "The Price Of Love", "Rock", ""),
@@ -92,6 +85,18 @@ musicdata = {
 53: ("David Lanz", "Heartsounds", "New Age", ""),
 54: ("David Lanz", "Leaves on the Seine", "New Age", ""),
 }
+
+#---------------------------------------------------------------------------
+
+_ulcStyles = ["ULC_VRULES", "ULC_HRULES", "ULC_ICON", "ULC_SMALL_ICON", "ULC_LIST",
+              "ULC_REPORT", "ULC_TILE", "ULC_ALIGN_TOP", "ULC_ALIGN_LEFT", "ULC_AUTOARRANGE",
+              "ULC_VIRTUAL", "ULC_EDIT_LABELS", "ULC_NO_HEADER", "ULC_NO_SORT_HEADER",
+              "ULC_SINGLE_SEL", "ULC_SORT_ASCENDING", "ULC_SORT_DESCENDING",
+              "ULC_NO_HIGHLIGHT", "ULC_STICKY_HIGHLIGHT", "ULC_STICKY_NOSELEVENT",
+              "ULC_SEND_LEFTCLICK", "ULC_HAS_VARIABLE_ROW_HEIGHT", "ULC_AUTO_CHECK_CHILD",
+              "ULC_AUTO_TOGGLE_CHILD", "ULC_AUTO_CHECK_PARENT", "ULC_SHOW_TOOLTIPS",
+              "ULC_HOT_TRACKING", "ULC_BORDER_SELECT", "ULC_TRACK_SELECT", "ULC_HEADER_IN_ALL_VIEWS",
+              "ULC_NO_FULL_ROW_SELECT", "ULC_FOOTER"]
 
 #---------------------------------------------------------------------------
 
@@ -407,6 +412,7 @@ class UltimateHeaderRenderer(object):
 
         dc.SetBackgroundMode(wx.TRANSPARENT)        
 
+
     def GetForegroundColour(self):
        
         if self._hover:
@@ -418,9 +424,9 @@ class UltimateHeaderRenderer(object):
 
 class TestUltimateListCtrl(ULC.UltimateListCtrl):
     
-    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0, extraStyle=0):
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0, agwStyle=0):
         
-        ULC.UltimateListCtrl.__init__(self, parent, id, pos, size, style, extraStyle)
+        ULC.UltimateListCtrl.__init__(self, parent, id, pos, size, style, agwStyle)
 ##        listmix.TextEditMixin.__init__(self)
 
         
@@ -450,16 +456,16 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.il.Add(coloursBitmap.GetBitmap())
         
         self.list = TestUltimateListCtrl(self, -1,
-                                         style=wx.LC_REPORT
+                                         agwStyle=wx.LC_REPORT
                                          #| wx.BORDER_SUNKEN
                                          | wx.BORDER_NONE
                                          | wx.LC_EDIT_LABELS
                                          #| wx.LC_SORT_ASCENDING
                                          #| wx.LC_NO_HEADER
                                          | wx.LC_VRULES
-                                         | wx.LC_HRULES,
+                                         | wx.LC_HRULES
                                          #| wx.LC_SINGLE_SEL
-                                         extraStyle=ULC.ULC_HAS_VARIABLE_ROW_HEIGHT)
+                                         | ULC.ULC_HAS_VARIABLE_ROW_HEIGHT)
         
         self.list.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
         sizer.Add(self.list, 1, wx.EXPAND)
@@ -549,13 +555,13 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.list.InsertColumnInfo(3, info)
         
         # The custom renderer can also be set for all columns on the header and/or footer
-        #self.list.SetHeaderCustomRenderer(klass)
+        # self.list.SetHeaderCustomRenderer(klass)
         
         # We must first have a footer in order to set its custom renderer: 
-        #extra_style = self.list.GetExtraStyle() | ULC.ULC_FOOTER
-        #if self.list.GetExtraStyle() != extra_style:
-            #self.list.SetExtraStyle(extra_style)
-        #self.list.SetFooterCustomRenderer(klass)
+        # style = self.list.GetAGWWindowStyleFlag() | ULC.ULC_FOOTER
+        # if self.list.GetAGWWindowStyleFlag() != style:
+            # self.list.SetAGWWindowStyleFlag(style)
+        # self.list.SetFooterCustomRenderer(klass)
 
         items = musicdata.items()
         renderers = {}
@@ -708,13 +714,13 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
     def ChangeStyle(self, checks):
 
-        extra_style = 0
+        style = 0
         for check in checks:
             if check.GetValue() == 1:
-                extra_style = extra_style | eval("ULC." + check.GetLabel())
-
-        if self.list.GetExtraStyle() != extra_style:
-            self.list.SetExtraStyle(extra_style)
+                style = style | eval("ULC." + check.GetLabel())
+        
+        if self.list.GetAGWWindowStyleFlag() != style:
+            self.list.SetAGWWindowStyleFlag(style)
             
 
     # Used by the ColumnSorterMixin, see wx/lib/mixins/listctrl.py
@@ -800,17 +806,17 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
     def OnItemActivated(self, event):
         self.currentItem = event.m_itemIndex
-        self.log.write("OnItemActivated: %s\nTopItem: %s" %(self.list.GetItemText(self.currentItem), self.list.GetTopItem()))
+        self.log.write("OnItemActivated: %s\nTopItem: %s\n" %(self.list.GetItemText(self.currentItem), self.list.GetTopItem()))
 
     def OnBeginEdit(self, event):
-        self.log.write("OnBeginEdit")
+        self.log.write("OnBeginEdit\n")
         event.Allow()
 
     def OnItemDelete(self, event):
-        self.log.write("OnItemDelete")
+        self.log.write("OnItemDelete\n")
 
     def OnColClick(self, event):
-        self.log.write("OnColClick: %d" % event.GetColumn())
+        self.log.write("OnColClick: %d\n" % event.GetColumn())
         event.Skip()
 
     def OnColRightClick(self, event):
@@ -819,24 +825,24 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
                                                                         item.GetWidth(), item.GetImage())))
 
     def OnColBeginDrag(self, event):
-        self.log.write("OnColBeginDrag")
+        self.log.write("OnColBeginDrag\n")
         ## Show how to not allow a column to be resized
         #if event.GetColumn() == 0:
         #    event.Veto()
 
 
     def OnColDragging(self, event):
-        self.log.write("OnColDragging")
+        self.log.write("OnColDragging\n")
 
     def OnColEndDrag(self, event):
-        self.log.write("OnColEndDrag")
+        self.log.write("OnColEndDrag\n")
 
     def OnBeginDrag(self, event):        
-        self.log.write("OnBeginDrag")
+        self.log.write("OnBeginDrag\n")
                 
 
     def OnEndDrag(self, event):        
-        self.log.write("OnEndDrag")
+        self.log.write("OnEndDrag\n")
 
     def OnDoubleClick(self, event):
         self.log.write("OnDoubleClick item %s\n" % self.list.GetItemText(self.currentItem))
@@ -928,7 +934,7 @@ class TestFrame(wx.Frame):
         width = self.PopulateLeftPanel()
         
         # add the windows to the splitter and split it.
-        splitter.SplitVertically(self.leftpanel, self.ulc, 300)
+        splitter.SplitVertically(self.leftpanel, self.ulc, width+5)
         splitter.SetMinimumPaneSize(width+5)
         
         sizer = wx.BoxSizer()
@@ -944,30 +950,49 @@ class TestFrame(wx.Frame):
         pnl = wx.Panel(self.leftpanel)
         mainsizer = wx.BoxSizer(wx.VERTICAL)
 
-        staticboxstyles = wx.StaticBox(pnl, -1, "UltimateListCtrl Extra Styles")
+        staticboxstyles = wx.StaticBox(pnl, -1, "UltimateListCtrl Styles")
         stylesizer = wx.StaticBoxSizer(staticboxstyles, wx.VERTICAL)
         staticboxthemes = wx.StaticBox(pnl, -1, "UltimateListCtrl Themes/Gradients")
         themessizer = wx.StaticBoxSizer(staticboxthemes, wx.VERTICAL)
 
         self.ulcstyles = []
-        _extraStyles.sort()
-        
-        for count, style in enumerate(_extraStyles):
+        sorted_styles = []
+
+        for style in _ulcStyles:
+            sorted_styles.append((style, eval("ULC." + style)))
+
+        sorted_styles.sort(key=operator.itemgetter(1))
+
+        count = 0        
+        for styleName, styleVal in sorted_styles:
+
+            if styleName in ["ULC_VIRTUAL", "ULC_TILE", "ULC_LIST", "ULC_ICON",
+                             "ULC_SMALL_ICON", "ULC_AUTOARRANGE"]:
+                continue
+            
+            if "SORT" in styleName or "ALIGN" in styleName or "VIEWS" in styleName:
+                continue
             
             if count == 0:
                 tags = wx.ALL
             else:
                 tags = wx.LEFT|wx.RIGHT|wx.BOTTOM
 
-            check = wx.CheckBox(pnl, -1, style)
+            check = wx.CheckBox(pnl, -1, styleName)
             stylesizer.Add(check, 0, tags, 3)
+            
+            if self.ulc.list.HasAGWFlag(styleVal):
+                check.SetValue(1)
+            else:
+                check.SetValue(0)
                     
-            if style == "ULC_HAS_VARIABLE_ROW_HEIGHT":
+            if styleName in ["ULC_HAS_VARIABLE_ROW_HEIGHT", "ULC_REPORT"]:
                 check.SetValue(1)
                 check.Enable(False)
 
             check.Bind(wx.EVT_CHECKBOX, self.OnCheckStyle)
             self.ulcstyles.append(check)
+            count += 1
 
         sizera = wx.BoxSizer(wx.HORIZONTAL)
         self.checknormal = wx.CheckBox(pnl, -1, "Standard Colours")
@@ -1019,6 +1044,7 @@ class TestFrame(wx.Frame):
         swsizer.Add(pnl, 0, wx.EXPAND)
         self.leftpanel.SetSizer(swsizer)
         swsizer.Layout()
+        swsizer.Fit(self.leftpanel)
 
         self.checknormal.SetValue(1)
         self.radiohorizontal.Enable(False)

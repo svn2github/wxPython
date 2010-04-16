@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 30 Nov 2009, 15.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -112,9 +112,9 @@ License And Version
 
 LabelBook and FlatImageBook are distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 30 Nov 2009, 15.00 GMT
+Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
 
-Version 0.3.
+Version 0.4.
 
 """
 
@@ -389,7 +389,7 @@ class ImageContainerBase(wx.Panel):
     Base class for L{FlatImageBook} image container.
     """
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=0, name="ImageContainerBase"):
+                 style=0, agwStyle=0, name="ImageContainerBase"):
         """
         Default class constructor.
 
@@ -399,7 +399,9 @@ class ImageContainerBase(wx.Panel):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the window style. This can be a combination of the following bits:
+        :param `style`: the underlying `wx.Panel` window style;
+        :param `agwStyle`: the AGW-specific window style. This can be a combination of the
+         following bits:
 
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
@@ -436,7 +438,7 @@ class ImageContainerBase(wx.Panel):
         wx.Panel.__init__(self, parent, id, pos, size, style | wx.NO_BORDER | wx.NO_FULL_REPAINT_ON_RESIZE, name)
 
 
-    def HasFlag(self, flag):
+    def HasAGWFlag(self, flag):
         """
         Tests for existance of flag in the style.
 
@@ -462,7 +464,7 @@ class ImageContainerBase(wx.Panel):
          =========================== =========== ==================================================
         """
         
-        style = self.GetParent().GetWindowStyleFlag()
+        style = self.GetParent().GetAGWWindowStyleFlag()
         res = (style & flag and [True] or [False])[0]
         return res
 
@@ -473,12 +475,13 @@ class ImageContainerBase(wx.Panel):
 
         :param `flag`: a window style flag.
 
-        :see: L{HasFlag} for a list of possible window style flags.        
+        :see: L{HasAGWFlag} for a list of possible window style flags.        
         """
-        
-        style = self.GetParent().GetWindowStyleFlag()
-        style &= ~(flag)
-        wx.Panel.SetWindowStyleFlag(self, style)
+
+        parent = self.GetParent()
+        agwStyle = parent.GetAGWWindowStyleFlag()
+        agwStyle &= ~(flag)
+        parent.SetAGWWindowStyleFlag(agwStyle)
 
 
     def AssignImageList(self, imglist):
@@ -675,7 +678,7 @@ class ImageContainerBase(wx.Panel):
          
         """
         
-        style = self.GetParent().GetWindowStyleFlag()
+        style = self.GetParent().GetAGWWindowStyleFlag()
         
         if style & INB_USE_PIN_BUTTON:
             if self._pinBtnRect.Contains(pt):
@@ -687,7 +690,7 @@ class ImageContainerBase(wx.Panel):
                 break
             
             # For Web Hover style, we test the TextRect
-            if not self.HasFlag(INB_WEB_HILITE):
+            if not self.HasAGWFlag(INB_WEB_HILITE):
                 buttonRect = wx.RectPS(self._pagesInfoVec[i].GetPosition(), self._pagesInfoVec[i].GetSize())
             else:
                 buttonRect = self._pagesInfoVec[i].GetTextRect()
@@ -711,7 +714,7 @@ class ImageContainerBase(wx.Panel):
         # Check if we are on a the sash border
         cltRect = self.GetClientRect()
         
-        if self.HasFlag(INB_LEFT) or self.HasFlag(INB_TOP):
+        if self.HasAGWFlag(INB_LEFT) or self.HasAGWFlag(INB_TOP):
             if pt.x > cltRect.x + cltRect.width - 4:
                 return True
         
@@ -733,7 +736,7 @@ class ImageContainerBase(wx.Panel):
         event.Skip()
 
         # Support for collapse/expand
-        style = self.GetParent().GetWindowStyleFlag()
+        style = self.GetParent().GetAGWWindowStyleFlag()
         if style & INB_USE_PIN_BUTTON:
 
             if self._pinBtnRect.Contains(event.GetPosition()):
@@ -771,7 +774,7 @@ class ImageContainerBase(wx.Panel):
 
         # Make sure the pin button status is NONE
         # incase we were in pin button style
-        style = self.GetParent().GetWindowStyleFlag()
+        style = self.GetParent().GetAGWWindowStyleFlag()
         
         if style & INB_USE_PIN_BUTTON:
         
@@ -793,7 +796,7 @@ class ImageContainerBase(wx.Panel):
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
 
-        style = self.GetParent().GetWindowStyleFlag()
+        style = self.GetParent().GetAGWWindowStyleFlag()
         
         if style & INB_USE_PIN_BUTTON:
         
@@ -846,7 +849,7 @@ class ImageContainerBase(wx.Panel):
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
 
-        style = self.GetParent().GetWindowStyleFlag()
+        style = self.GetParent().GetAGWWindowStyleFlag()
         if style & INB_USE_PIN_BUTTON:
         
             # Check to see if we are in the pin button rect
@@ -864,14 +867,14 @@ class ImageContainerBase(wx.Panel):
             if self._nHoeveredImgIdx >= 0 and self._nHoeveredImgIdx < len(self._pagesInfoVec):
             
                 # Change the cursor to be Hand
-                if self.HasFlag(INB_WEB_HILITE) and self._nHoeveredImgIdx != self._nIndex:
+                if self.HasAGWFlag(INB_WEB_HILITE) and self._nHoeveredImgIdx != self._nIndex:
                     wx.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
             
             else:
             
                 # Restore the cursor only if we have the Web hover style set,
                 # and we are not currently hovering the sash
-                if self.HasFlag(INB_WEB_HILITE) and not self.PointOnSash(event.GetPosition()):
+                if self.HasAGWFlag(INB_WEB_HILITE) and not self.PointOnSash(event.GetPosition()):
                     wx.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
             
         # Dont display hover effect when hoevering the 
@@ -944,7 +947,7 @@ class ImageContainer(ImageContainerBase):
     """
     
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=0, name="ImageContainer"):
+                 style=0, agwStyle=0, name="ImageContainer"):
         """
         Default class constructor.
 
@@ -954,7 +957,9 @@ class ImageContainer(ImageContainerBase):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the window style. This can be a combination of the following bits:
+        :param `style`: the underlying `wx.Panel` window style;
+        :param `agwStyle`: the AGW-specific window style. This can be a combination of the
+         following bits:
 
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
@@ -978,7 +983,7 @@ class ImageContainer(ImageContainerBase):
         :param `name`: the window name.         
         """
 
-        ImageContainerBase.__init__(self, parent, id, pos, size, style, name)
+        ImageContainerBase.__init__(self, parent, id, pos, size, style, agwStyle, name)
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
@@ -1071,7 +1076,7 @@ class ImageContainer(ImageContainerBase):
         """
 
         dc = wx.BufferedPaintDC(self)
-        style = self.GetParent().GetWindowStyleFlag()
+        style = self.GetParent().GetAGWWindowStyleFlag()
 
         backBrush = wx.WHITE_BRUSH
         if style & INB_BORDER:
@@ -1236,7 +1241,7 @@ class ImageContainer(ImageContainerBase):
             
                 style ^= INB_SHOW_ONLY_TEXT
                 style ^= INB_SHOW_ONLY_IMAGES
-                wx.Panel.SetWindowStyleFlag(self, style)
+                self.GetParent().SetAGWWindowStyleFlag(style)
             
             # Draw the caption and text
             imgTopPadding = 10
@@ -1312,7 +1317,7 @@ class LabelContainer(ImageContainerBase):
     """ Base class for L{LabelBook}. """
     
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=0, name="LabelContainer"):
+                 style=0, agwStyle=0, name="LabelContainer"):
         """
         Default class constructor.
 
@@ -1322,7 +1327,9 @@ class LabelContainer(ImageContainerBase):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the window style. This can be a combination of the following bits:
+        :param `style`: the underlying `wx.Panel` window style;
+        :param `agwStyle`: the AGW-specific window style. This can be a combination of the
+         following bits:
 
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
@@ -1346,7 +1353,7 @@ class LabelContainer(ImageContainerBase):
         :param `name`: the window name.         
         """
 
-        ImageContainerBase.__init__(self, parent, id, pos, size, style, name)
+        ImageContainerBase.__init__(self, parent, id, pos, size, style, agwStyle, name)
         self._nTabAreaWidth = 100
         self._oldCursor = wx.NullCursor
         self._coloursMap = {}
@@ -1427,7 +1434,7 @@ class LabelContainer(ImageContainerBase):
 
         dc = wx.BufferedPaintDC(self)
         backBrush = wx.Brush(self._coloursMap[INB_TAB_AREA_BACKGROUND_COLOUR])
-        if self.HasFlag(INB_BORDER):
+        if self.HasAGWFlag(INB_BORDER):
             borderPen = wx.Pen(self._coloursMap[INB_TABS_BORDER_COLOUR])
         else:
             borderPen = wx.TRANSPARENT_PEN
@@ -1438,7 +1445,7 @@ class LabelContainer(ImageContainerBase):
         dc.SetBrush(backBrush)
         dc.SetPen(borderPen)
 
-        if self.HasFlag(INB_GRADIENT_BACKGROUND) and not self._skin.Ok():
+        if self.HasAGWFlag(INB_GRADIENT_BACKGROUND) and not self._skin.Ok():
         
             # Draw graident in the background area
             startColour = self._coloursMap[INB_TAB_AREA_BACKGROUND_COLOUR]
@@ -1457,13 +1464,13 @@ class LabelContainer(ImageContainerBase):
             dc.DrawRectangleRect(wx.Rect(0, 0, size.x, size.y))
         
         # Draw border
-        if self.HasFlag(INB_BORDER) and self.HasFlag(INB_GRADIENT_BACKGROUND):
+        if self.HasAGWFlag(INB_BORDER) and self.HasAGWFlag(INB_GRADIENT_BACKGROUND):
         
             # Just draw the border with transparent brush
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
             dc.DrawRectangleRect(wx.Rect(0, 0, size.x, size.y))
 
-        bUsePin = (self.HasFlag(INB_USE_PIN_BUTTON) and [True] or [False])[0]
+        bUsePin = (self.HasAGWFlag(INB_USE_PIN_BUTTON) and [True] or [False])[0]
 
         if bUsePin:
         
@@ -1505,7 +1512,7 @@ class LabelContainer(ImageContainerBase):
                 bmp = self._ImageList.GetBitmap(indx)
 
             self.DrawLabel(dc, buttonRect, self._pagesInfoVec[i].GetCaption(), bmp,
-                           self._pagesInfoVec[i], self.HasFlag(INB_LEFT) or self.HasFlag(INB_TOP),
+                           self._pagesInfoVec[i], self.HasAGWFlag(INB_LEFT) or self.HasAGWFlag(INB_TOP),
                            i, self._nIndex == i, self._nHoeveredImgIdx == i)
 
             posy += rectHeight
@@ -1567,7 +1574,7 @@ class LabelContainer(ImageContainerBase):
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
 
-        if self.HasFlag(INB_NO_RESIZE):
+        if self.HasAGWFlag(INB_NO_RESIZE):
         
             ImageContainerBase.OnMouseLeftUp(self, event)
             return
@@ -1608,7 +1615,7 @@ class LabelContainer(ImageContainerBase):
         newWidth = self._tabAreaSize.x
         x = event.GetX()
 
-        if self.HasFlag(INB_BOTTOM) or self.HasFlag(INB_RIGHT):
+        if self.HasAGWFlag(INB_BOTTOM) or self.HasAGWFlag(INB_RIGHT):
         
             newWidth -= event.GetX()
         
@@ -1635,7 +1642,7 @@ class LabelContainer(ImageContainerBase):
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
 
-        if self.HasFlag(INB_NO_RESIZE):
+        if self.HasAGWFlag(INB_NO_RESIZE):
         
             ImageContainerBase.OnMouseMove(self, event)
             return
@@ -1688,7 +1695,7 @@ class LabelContainer(ImageContainerBase):
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
 
-        if self.HasFlag(INB_NO_RESIZE):
+        if self.HasAGWFlag(INB_NO_RESIZE):
         
             ImageContainerBase.OnMouseLeftDown(self, event)
             return
@@ -1725,7 +1732,7 @@ class LabelContainer(ImageContainerBase):
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
 
-        if self.HasFlag(INB_NO_RESIZE):
+        if self.HasAGWFlag(INB_NO_RESIZE):
         
             ImageContainerBase.OnMouseLeaveWindow(self, event)
             return
@@ -1748,7 +1755,7 @@ class LabelContainer(ImageContainerBase):
         dc.SetPen(wx.Pen(wx.WHITE))
 
         # We draw CCW
-        if self.HasFlag(INB_RIGHT) or self.HasFlag(INB_TOP):
+        if self.HasAGWFlag(INB_RIGHT) or self.HasAGWFlag(INB_TOP):
         
             # Right images
             # Upper line
@@ -1921,7 +1928,7 @@ class LabelContainer(ImageContainerBase):
             # First we colour the tab
             dc.SetBrush(wx.Brush(self._coloursMap[INB_ACTIVE_TAB_COLOUR]))
 
-            if self.HasFlag(INB_BORDER):
+            if self.HasAGWFlag(INB_BORDER):
                 dc.SetPen(wx.Pen(self._coloursMap[INB_TABS_BORDER_COLOUR]))
             else: 
                 dc.SetPen(wx.Pen(self._coloursMap[INB_ACTIVE_TAB_COLOUR]))
@@ -1936,7 +1943,7 @@ class LabelContainer(ImageContainerBase):
             
             dc.DrawRoundedRectangleRect(labelRect, 3)
 
-            if not orientationLeft and self.HasFlag(INB_DRAW_SHADOW):
+            if not orientationLeft and self.HasAGWFlag(INB_DRAW_SHADOW):
                 dc.SetPen(wx.BLACK_PEN)
                 dc.DrawPoint(labelRect.x + labelRect.width - 1, labelRect.y + labelRect.height - 1)
             
@@ -1959,7 +1966,7 @@ class LabelContainer(ImageContainerBase):
             dc.DrawBitmap(bmp, imgRect.x, imgRect.y, True)
 
         # Drop shadow
-        if self.HasFlag(INB_DRAW_SHADOW) and selected:
+        if self.HasAGWFlag(INB_DRAW_SHADOW) and selected:
         
             sstyle = 0
             if orientationLeft:
@@ -1967,7 +1974,7 @@ class LabelContainer(ImageContainerBase):
             else:
                 sstyle = BottomShadowFull | RightShadow
             
-            if self.HasFlag(INB_WEB_HILITE):
+            if self.HasAGWFlag(INB_WEB_HILITE):
             
                 # Always drop shadow for this style
                 ArtManager.Get().DrawBitmapShadow(dc, rect, sstyle)
@@ -1981,7 +1988,7 @@ class LabelContainer(ImageContainerBase):
         # Draw hover effect 
         if hover:
         
-            if self.HasFlag(INB_WEB_HILITE) and caption != "":   
+            if self.HasAGWFlag(INB_WEB_HILITE) and caption != "":   
                 self.DrawWebHover(dc, caption, textRect.x, textRect.y)
             else:
                 self.DrawRegularHover(dc, rect)
@@ -1999,7 +2006,7 @@ class FlatBookBase(wx.Panel):
     """ Base class for the containing window for L{LabelBook} and L{FlatImageBook}. """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=0, name="FlatBookBase"):
+                 style=0, agwStyle=0, name="FlatBookBase"):
         """
         Default class constructor.
 
@@ -2009,7 +2016,9 @@ class FlatBookBase(wx.Panel):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the window style. This can be a combination of the following bits:
+        :param `style`: the underlying `wx.Panel` window style;
+        :param `agwStyle`: the AGW-specific window style. This can be a combination of the
+         following bits:
 
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
@@ -2040,15 +2049,17 @@ class FlatBookBase(wx.Panel):
         self._windows = []
 
         style |= wx.TAB_TRAVERSAL
+        self._agwStyle = agwStyle
+
         wx.Panel.__init__(self, parent, id, pos, size, style, name)
         self._bInitializing = False
 
 
-    def SetWindowStyleFlag(self, style):
+    def SetAGWWindowStyleFlag(self, agwStyle):
         """
         Sets the window style.
 
-        :param `style`: can be a combination of the following bits:
+        :param `agwStyle`: can be a combination of the following bits:
 
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
@@ -2071,7 +2082,7 @@ class FlatBookBase(wx.Panel):
         
         """
 
-        wx.Panel.SetWindowStyleFlag(self, style)
+        self._agwStyle = agwStyle
         
         # Check that we are not in initialization process
         if self._bInitializing:
@@ -2092,7 +2103,7 @@ class FlatBookBase(wx.Panel):
         if className == "LabelBook":
             self._mainSizer = wx.BoxSizer(wx.HORIZONTAL)
         else:
-            if style & INB_LEFT or style & INB_RIGHT:
+            if agwStyle & INB_LEFT or agwStyle & INB_RIGHT:
                 self._mainSizer = wx.BoxSizer(wx.HORIZONTAL)
             else:
                 self._mainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -2101,10 +2112,10 @@ class FlatBookBase(wx.Panel):
         
         # Add the tab container and the separator
         self._mainSizer.Add(self._pages, 0, wx.EXPAND)
-        
+
         if className == "FlatImageBook":
         
-            if style & INB_LEFT or style & INB_RIGHT:
+            if agwStyle & INB_LEFT or agwStyle & INB_RIGHT:
                 self._pages.SetSizeHints(self._pages._nImgSize * 2, -1)
             else:
                 self._pages.SetSizeHints(-1, self._pages._nImgSize * 2)
@@ -2113,13 +2124,35 @@ class FlatBookBase(wx.Panel):
         if self.GetSelection() >= 0:
             self.DoSetSelection(self._windows[self.GetSelection()])
 
-        if style & INB_FIT_LABELTEXT:
+        if agwStyle & INB_FIT_LABELTEXT:
             self.ResizeTabArea()
             
         self._mainSizer.Layout()
         dummy = wx.SizeEvent()
         wx.PostEvent(self, dummy)
         self._pages.Refresh()
+
+
+    def GetAGWWindowStyleFlag(self):
+        """
+        Returns the L{FlatBookBase} window style.
+        """
+
+        return self._agwStyle
+
+
+    def HasAGWFlag(self, flag):
+        """
+        Returns whether a flag is present in the L{FlatBookBase} style.
+
+        :param `flag`: one of the possible L{FlatBookBase} window styles.
+
+        :see: L{SetAGWWindowStyleFlag} for a list of possible window style flags.
+        """
+
+        agwStyle = self.GetAGWWindowStyleFlag()
+        res = (agwStyle & flag and [True] or [False])[0]
+        return res
 
 
     def AddPage(self, page, text, select=False, imageId=-1):
@@ -2253,12 +2286,12 @@ class FlatBookBase(wx.Panel):
     def ResizeTabArea(self):
         """ Resizes the tab area if the control has the ``INB_FIT_LABELTEXT`` style set. """
 
-        style = self.GetWindowStyleFlag()
+        agwStyle = self.GetAGWWindowStyleFlag()
         
-        if style & INB_FIT_LABELTEXT == 0:
+        if agwStyle & INB_FIT_LABELTEXT == 0:
             return
 
-        if style & INB_LEFT or style & INB_RIGHT:
+        if agwStyle & INB_LEFT or agwStyle & INB_RIGHT:
             dc = wx.MemoryDC()
             dc.SelectObject(wx.EmptyBitmap(1, 1))
             dc.SetFont(self.GetFont())
@@ -2348,7 +2381,7 @@ class FlatBookBase(wx.Panel):
         self._pages.AssignImageList(imglist)
 
         # Force change
-        self.SetWindowStyleFlag(self.GetWindowStyleFlag())
+        self.SetWindowStyleFlag(self.GetAGWWindowStyleFlag())
 
 
     def GetSelection(self):
@@ -2368,12 +2401,12 @@ class FlatBookBase(wx.Panel):
         """
 
         curSel = self.GetSelection()
-        style = self.GetWindowStyleFlag()
+        agwStyle = self.GetAGWWindowStyleFlag()
         # Replace the window in the sizer
         self.Freeze()
 
         # Check if a new selection was made
-        bInsertFirst = (style & INB_BOTTOM or style & INB_RIGHT)
+        bInsertFirst = (agwStyle & INB_BOTTOM or agwStyle & INB_RIGHT)
 
         if curSel >= 0:
         
@@ -2441,7 +2474,7 @@ class FlatImageBook(FlatBookBase):
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=0, name="FlatImageBook"):
+                 style=0, agwStyle=0, name="FlatImageBook"):
         """
         Default class constructor.
 
@@ -2451,7 +2484,9 @@ class FlatImageBook(FlatBookBase):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the window style. This can be a combination of the following bits:
+        :param `style`: the underlying `wx.Panel` window style;
+        :param `agwStyle`: the AGW-specific window style. This can be a combination of the
+         following bits:
 
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
@@ -2475,11 +2510,11 @@ class FlatImageBook(FlatBookBase):
         :param `name`: the window name.         
         """
         
-        FlatBookBase.__init__(self, parent, id, pos, size, style, name)
+        FlatBookBase.__init__(self, parent, id, pos, size, style, agwStyle, name)
         
         self._pages = self.CreateImageContainer()
 
-        if style & INB_LEFT or style & INB_RIGHT:
+        if agwStyle & INB_LEFT or agwStyle & INB_RIGHT:
             self._mainSizer = wx.BoxSizer(wx.HORIZONTAL)
         else:
             self._mainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -2489,7 +2524,7 @@ class FlatImageBook(FlatBookBase):
         # Add the tab container to the sizer
         self._mainSizer.Add(self._pages, 0, wx.EXPAND)
 
-        if style & INB_LEFT or style & INB_RIGHT:
+        if agwStyle & INB_LEFT or agwStyle & INB_RIGHT:
             self._pages.SetSizeHints(self._pages.GetImageSize() * 2, -1)
         else:
             self._pages.SetSizeHints(-1, self._pages.GetImageSize() * 2)
@@ -2500,7 +2535,7 @@ class FlatImageBook(FlatBookBase):
     def CreateImageContainer(self):
         """ Creates the image container class for L{FlatImageBook}. """
 
-        return ImageContainer(self, wx.ID_ANY)
+        return ImageContainer(self, wx.ID_ANY, agwStyle=self.GetAGWWindowStyleFlag())
 
 
 # ---------------------------------------------------------------------------- #
@@ -2514,7 +2549,7 @@ class LabelBook(FlatBookBase):
     """
     
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=0, name="LabelBook"):
+                 style=0, agwStyle=0, name="LabelBook"):
         """
         Default class constructor.
 
@@ -2524,7 +2559,9 @@ class LabelBook(FlatBookBase):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the window style. This can be a combination of the following bits:
+        :param `style`: the underlying `wx.Panel` window style;
+        :param `agwStyle`: the AGW-specific window style. This can be a combination of the
+         following bits:
 
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
@@ -2548,7 +2585,7 @@ class LabelBook(FlatBookBase):
         :param `name`: the window name.         
         """
         
-        FlatBookBase.__init__(self, parent, id, pos, size, style, name)
+        FlatBookBase.__init__(self, parent, id, pos, size, style, agwStyle, name)
         
         self._pages = self.CreateImageContainer()
 
@@ -2569,7 +2606,7 @@ class LabelBook(FlatBookBase):
     def CreateImageContainer(self):
         """ Creates the image container (LabelContainer) class for L{FlatImageBook}. """
 
-        return LabelContainer(self, wx.ID_ANY)
+        return LabelContainer(self, wx.ID_ANY, agwStyle=self.GetAGWWindowStyleFlag())
 
 
     def SetColour(self, which, colour):

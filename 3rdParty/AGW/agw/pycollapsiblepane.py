@@ -3,7 +3,7 @@
 # Generic Implementation Based On wx.CollapsiblePane.
 #
 # Andrea Gavana, @ 09 Aug 2007
-# Latest Revision: 30 Nov 2009, 17.00 GMT
+# Latest Revision: 12 Apr 2010, 12.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -72,7 +72,6 @@ Window Styles        Hex Value   Description
 ``CP_GTK_EXPANDER``          0x4 Uses a GTK expander instead of a button.
 ``CP_USE_STATICBOX``         0x8 Uses a `wx.StaticBox` around `PyCollapsiblePane`.
 ``CP_LINE_ABOVE``           0x10 Draws a line above `PyCollapsiblePane`.
-``CP_DEFAULT_STYLE``    0x280000 The default style. It includes ``wx.TAB_TRAVERSAL`` and ``wx.BORDER_NONE``.
 ==================== =========== ==================================================
 
 
@@ -93,9 +92,9 @@ License And Version
 
 PyCollapsiblePane is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 30 Nov 2009, 17.00 GMT
+Latest Revision: Andrea Gavana @ 12 Apr 2010, 12.00 GMT
 
-Version 0.3
+Version 0.4
 
 """
 
@@ -251,7 +250,7 @@ class PyCollapsiblePane(wx.PyPanel):
     """
 
     def __init__(self, parent, id=wx.ID_ANY, label="", pos=wx.DefaultPosition,
-                 size=wx.DefaultSize, style=wx.CP_DEFAULT_STYLE, 
+                 size=wx.DefaultSize, style=wx.CP_DEFAULT_STYLE, agwStyle=0,
                  validator=wx.DefaultValidator, name="CollapsiblePane"):
         """
         Default class constructor.
@@ -264,7 +263,9 @@ class PyCollapsiblePane(wx.PyPanel):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the control style. This can be a combination of the following bits:
+        :param `style`: the underlying `wx.PyControl` window style;
+        :param `agwStyle`: the AGW-specifi window style. This can be a combination of the
+         following bits:
 
          ==================== =========== ==================================================
          Window Styles        Hex Value   Description
@@ -273,7 +274,6 @@ class PyCollapsiblePane(wx.PyPanel):
          ``CP_GTK_EXPANDER``          0x4 Uses a GTK expander instead of a button.
          ``CP_USE_STATICBOX``         0x8 Uses a `wx.StaticBox` around `PyCollapsiblePane`.
          ``CP_LINE_ABOVE``           0x10 Draws a line above `PyCollapsiblePane`.
-         ``CP_DEFAULT_STYLE``    0x280000 The default style. It includes ``wx.TAB_TRAVERSAL`` and ``wx.BORDER_NONE``.
          ==================== =========== ==================================================
 
         :param `validator`: the validator associated to the L{PyCollapsiblePane};
@@ -286,11 +286,12 @@ class PyCollapsiblePane(wx.PyPanel):
         self._pButton = self._pStaticLine = self._pPane = self._sz = None            
         self._strLabel = label
         self._bCollapsed = True
+        self._agwStyle = agwStyle
 
         self._pPane = wx.Panel(self, style=wx.TAB_TRAVERSAL|wx.NO_BORDER)
         self._pPane.Hide()
 
-        if self.HasFlag(CP_USE_STATICBOX):
+        if self.HasAGWFlag(CP_USE_STATICBOX):
             # Use a StaticBox instead of a StaticLine, and the button's
             # position will be handled separately so don't put it in the sizer
             self._pStaticBox = wx.StaticBox(self)
@@ -302,7 +303,7 @@ class PyCollapsiblePane(wx.PyPanel):
             self._contentSizer.Add(self._pPane, 1, wx.EXPAND)
             self._sz.Add(self._contentSizer, 1, wx.EXPAND)                    
 
-            if self.HasFlag(CP_USE_STATICBOX) and 'wxMSW' in wx.PlatformInfo:
+            if self.HasAGWFlag(CP_USE_STATICBOX) and 'wxMSW' in wx.PlatformInfo:
                 # This hack is needed on Windows because wxMSW clears the
                 # CLIP_SIBLINGS style from all sibling controls that overlap the
                 # static box, so the box ends up overdrawing the button since we
@@ -318,7 +319,7 @@ class PyCollapsiblePane(wx.PyPanel):
                     evt.Skip()
                 self._pStaticBox.Bind(wx.EVT_PAINT, paint)
 
-        elif self.HasFlag(CP_GTK_EXPANDER):
+        elif self.HasAGWFlag(CP_GTK_EXPANDER):
             self._sz = wx.BoxSizer(wx.HORIZONTAL)
             self.SetExpanderDimensions(3, 6)
             self.SetButton(GTKExpander(self, wx.ID_ANY, self.GetLabel()))
@@ -335,7 +336,7 @@ class PyCollapsiblePane(wx.PyPanel):
             self.SetButton(wx.Button(self, wx.ID_ANY, self.GetLabel(), style=wx.BU_EXACTFIT))
             self._pStaticLine = wx.StaticLine(self, wx.ID_ANY)
 
-            if self.HasFlag(CP_LINE_ABOVE): 
+            if self.HasAGWFlag(CP_LINE_ABOVE): 
                 # put the static line above the button
                 self._sz = wx.BoxSizer(wx.VERTICAL)
                 self._sz.Add(self._pStaticLine, 0, wx.ALL|wx.GROW, self.GetBorder())
@@ -347,12 +348,57 @@ class PyCollapsiblePane(wx.PyPanel):
                 self._sz.Add(self._pStaticLine, 1, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, self.GetBorder())
             
         self.Bind(wx.EVT_SIZE, self.OnSize)
-        
+
+
+    def SetAGWWindowStyleFlag(self, agwStyle):
+        """
+        Sets the L{PyCollapsiblePane} window style flags.
+
+        :param `agwStyle`: the AGW-specific window style. This can be a combination of the
+         following bits:
+
+         ==================== =========== ==================================================
+         Window Styles        Hex Value   Description
+         ==================== =========== ==================================================
+         ``CP_NO_TLW_RESIZE``         0x2 By default `PyCollapsiblePane` resizes the top level window containing it when its own size changes. This allows to easily implement dialogs containing an optionally shown part, for example, and so is the default behaviour but can be inconvenient in some specific cases -- use this flag to disable this automatic parent resizing then.
+         ``CP_GTK_EXPANDER``          0x4 Uses a GTK expander instead of a button.
+         ``CP_USE_STATICBOX``         0x8 Uses a `wx.StaticBox` around `PyCollapsiblePane`.
+         ``CP_LINE_ABOVE``           0x10 Draws a line above `PyCollapsiblePane`.
+         ==================== =========== ==================================================
+
+        """
+
+        self._agwStyle = agwStyle
+        self.Layout()
+        self.Refresh()
+
+
+    def GetAGWWindowStyleFlag(self):
+        """
+        Returns the L{PyCollapsiblePane} window style.
+        """
+
+        return self._agwStyle
+
+
+    def HasAGWFlag(self, flag):
+        """
+        Returns whether a flag is present in the L{PyCollapsiblePane} style.
+
+        :param `flag`: one of the possible L{PyCollapsiblePane} window styles.
+
+        :see: L{SetAGWWindowStyleFlag} for a list of possible window style flags.
+        """
+
+        agwStyle = self.GetAGWWindowStyleFlag()
+        res = (agwStyle & flag and [True] or [False])[0]
+        return res
+    
 
     def GetBtnLabel(self):
         """ Returns the button label. """
 
-        if self.GetWindowStyleFlag() & CP_GTK_EXPANDER:
+        if self.GetAGWWindowStyleFlag() & CP_GTK_EXPANDER:
             return self.GetLabel()
         
         return self.GetLabel() + (self.IsCollapsed() and [" >>"] or [" <<"])[0]
@@ -369,7 +415,7 @@ class PyCollapsiblePane(wx.PyPanel):
         self.SetMinSize(sz)
         self.SetSize(sz)
 
-        if self.HasFlag(wx.CP_NO_TLW_RESIZE):
+        if self.HasAGWFlag(wx.CP_NO_TLW_RESIZE):
             # the user asked to explicitely handle the resizing itself...
             return
         
@@ -559,7 +605,7 @@ class PyCollapsiblePane(wx.PyPanel):
         as it would have after a call to `Fit()`.
         """
 
-        if self.HasFlag(CP_USE_STATICBOX):
+        if self.HasAGWFlag(CP_USE_STATICBOX):
             # In this case the button is not in the sizer, and the static box
             # is not shown when not expanded, so use the size of the button as
             # our stating point. But first we'll make sure that it is it's
@@ -603,7 +649,7 @@ class PyCollapsiblePane(wx.PyPanel):
 
         oursz = self.GetSize()
 
-        if self.HasFlag(CP_USE_STATICBOX):
+        if self.HasAGWFlag(CP_USE_STATICBOX):
             bdr = self.GetBorder()
             self._pButton.SetPosition((bdr, bdr))
             
@@ -646,7 +692,7 @@ class PyCollapsiblePane(wx.PyPanel):
         """
         
         if self._pButton:
-            if not self.HasFlag(CP_USE_STATICBOX):
+            if not self.HasAGWFlag(CP_USE_STATICBOX):
                 self._sz.Replace(self._pButton, button)
             self.Unbind(wx.EVT_BUTTON, self._pButton)
             self._pButton.Destroy()

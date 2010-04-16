@@ -222,19 +222,18 @@ class LabelBookDemo(wx.Frame):
         else:
             self.imagelist = self.CreateImageList()
 
+        self.EnableChoices(btype)
         style = self.GetBookStyles()
 
         if btype == 0: # it is a labelbook:
-            self.book = LB.LabelBook(self.mainpanel, -1, style=style)
+            self.book = LB.LabelBook(self.mainpanel, -1, agwStyle=style)
             if self.bookdirection.GetSelection() > 1:
                 self.bookdirection.SetSelection(0)
 
             self.SetUserColours()                
 
         else:
-            self.book = LB.FlatImageBook(self.mainpanel, -1, style=style)
-
-        self.EnableChoices(btype)            
+            self.book = LB.FlatImageBook(self.mainpanel, -1, agwStyle=style)
 
         self.book.AssignImageList(self.imagelist)
 
@@ -253,6 +252,7 @@ class LabelBookDemo(wx.Frame):
             self.Thaw()
 
         self.SendSizeEvent()
+        wx.CallAfter(self.book.SetAGWWindowStyleFlag, style)
 
 
     def EnableChoices(self, btype):
@@ -292,7 +292,7 @@ class LabelBookDemo(wx.Frame):
             style |= INB_GRADIENT_BACKGROUND
         if self.border.GetValue():
             style |= INB_BORDER
-        if self.fittext.GetValue():
+        if self.fittext.IsEnabled() and self.fittext.GetValue():
             style |= INB_FIT_LABELTEXT
 
         return style
@@ -333,7 +333,7 @@ class LabelBookDemo(wx.Frame):
     def OnBookOrientation(self, event):
 
         style = self.GetBookStyles()
-        self.book.SetWindowStyleFlag(style)
+        self.book.SetAGWWindowStyleFlag(style)
 
         event.Skip()
 
@@ -341,7 +341,7 @@ class LabelBookDemo(wx.Frame):
     def OnStyle(self, event):
 
         style = self.GetBookStyles()
-        self.book.SetWindowStyleFlag(style)
+        self.book.SetAGWWindowStyleFlag(style)
 
         event.Skip()
 

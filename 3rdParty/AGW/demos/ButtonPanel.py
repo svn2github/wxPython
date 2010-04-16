@@ -478,10 +478,10 @@ class ButtonPanelDemo(wx.Frame):
         self.alignments = [bp.BP_ALIGN_LEFT, bp.BP_ALIGN_RIGHT, bp.BP_ALIGN_TOP, bp.BP_ALIGN_BOTTOM]
         
         self.alignment = bp.BP_ALIGN_LEFT
-        self.style = bp.BP_USE_GRADIENT
+        self.agwStyle = bp.BP_USE_GRADIENT
         
         self.titleBar = bp.ButtonPanel(self.mainPanel, -1, "A Simple Test & Demo",
-                                       style=self.style, alignment=self.alignment)
+                                       agwStyle=self.agwStyle, alignment=self.alignment)
 
         self.created = False
         self.pngs = [ (images._bp_btn1.GetBitmap(), 'label1'),
@@ -586,7 +586,7 @@ class ButtonPanelDemo(wx.Frame):
             self.titleBar.Hide()
             wx.CallAfter(self.titleBar.Destroy)
             self.titleBar = bp.ButtonPanel(self.mainPanel, -1, "A Simple Test & Demo",
-                                           style=self.style, alignment=self.alignment)
+                                           agwStyle=self.agwStyle, alignment=self.alignment)
             self.SetProperties()
                     
         self.indices = []
@@ -649,7 +649,7 @@ class ButtonPanelDemo(wx.Frame):
             self.titleBar.Hide()
             wx.CallAfter(self.titleBar.Destroy)
             self.titleBar = bp.ButtonPanel(self.mainPanel, -1, "A Simple Test & Demo",
-                                           style=self.style, alignment=self.alignment)
+                                           agwStyle=self.agwStyle, alignment=self.alignment)
             self.SetProperties()
 
         # Buttons are created completely random, with random images, toggle behavior
@@ -718,7 +718,7 @@ class ButtonPanelDemo(wx.Frame):
         # modify the colours and sizes using the Settings Panel
         bpArt = self.titleBar.GetBPArt()
         
-        if self.style & bp.BP_USE_GRADIENT:
+        if self.agwStyle & bp.BP_USE_GRADIENT:
             # set the colour the text is drawn with
             bpArt.SetColour(bp.BP_TEXT_COLOUR, wx.WHITE)
 
@@ -747,7 +747,7 @@ class ButtonPanelDemo(wx.Frame):
             bpArt.SetColour(bp.BP_SELECTION_BRUSH_COLOUR, wx.Colour(242, 242, 235))
             bpArt.SetColour(bp.BP_SELECTION_PEN_COLOUR, wx.Colour(206, 206, 195))
 
-        self.titleBar.SetStyle(self.style)
+        self.titleBar.SetStyle(self.agwStyle)
         
         
     def OnAlignment(self, event):
@@ -768,7 +768,7 @@ class ButtonPanelDemo(wx.Frame):
     def OnDefaultStyle(self, event):
         
         # Restore the ButtonPanel default style (no gradient)
-        self.style = bp.BP_DEFAULT_STYLE
+        self.agwStyle = bp.BP_DEFAULT_STYLE
         self.SetProperties()
 
         event.Skip()        
@@ -777,7 +777,7 @@ class ButtonPanelDemo(wx.Frame):
     def OnGradientStyle(self, event):
 
         # Use gradients to paint ButtonPanel background
-        self.style = bp.BP_USE_GRADIENT
+        self.agwStyle = bp.BP_USE_GRADIENT
         self.SetProperties()
 
         event.Skip()        

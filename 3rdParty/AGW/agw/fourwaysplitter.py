@@ -2,7 +2,7 @@
 # FOURWAYSPLITTER wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 27 Nov 2009, 17.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 #
 # TODO List
@@ -89,9 +89,9 @@ License And Version
 
 FourWaySplitter is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 27 Nov 2009, 17.00 GMT
+Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
 
-Version 0.3
+Version 0.4
 
 """
 
@@ -261,7 +261,7 @@ class FourWaySplitter(wx.PyPanel):
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
-                 size=wx.DefaultSize, style=0, name="FourWaySplitter"):
+                 size=wx.DefaultSize, style=0, agwStyle=0, name="FourWaySplitter"):
         """
         Default class constructor.
         
@@ -271,7 +271,9 @@ class FourWaySplitter(wx.PyPanel):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the window style. It can be a combination of the following bits:
+        :param `style`: the underlying `wx.PyPanel` window style;
+        :param `agwStyle`: the AGW-specific window style. It can be a combination of the
+         following bits:
 
          ================== =========== ==================================================
          Window Styles      Hex Value   Description
@@ -290,6 +292,8 @@ class FourWaySplitter(wx.PyPanel):
         # and turn off any border styles
         style &= ~wx.BORDER_MASK
         style |= wx.BORDER_NONE
+
+        self._agwStyle = agwStyle        
 
         # initialize the base class
         wx.PyPanel.__init__(self, parent, id, pos, size, style, name)
@@ -321,6 +325,34 @@ class FourWaySplitter(wx.PyPanel):
         self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeaveWindow)
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnterWindow)
+
+
+    def SetAGWWindowStyleFlag(self, agwStyle):
+        """
+        Sets the L{FourWaySplitter} window style flags.
+
+        :param `agwStyle`: the AGW-specific window style. This can be a combination of the
+         following bits:
+
+         ================== =========== ==================================================
+         Window Styles      Hex Value   Description
+         ================== =========== ==================================================
+         ``SP_NOSASH``             0x10 No sash will be drawn on `FourWaySplitter`.
+         ``SP_LIVE_UPDATE``        0x80 Don't draw XOR line but resize the child windows immediately.
+         ``SP_3DBORDER``          0x200 Draws a 3D effect border.
+         ================== =========== ==================================================         
+        """
+
+        self._agwStyle = agwStyle
+        self.Refresh()
+        
+
+    def GetAGWWindowStyleFlag(self):
+        """
+        Returns the L{FourWaySplitter} window style.
+        """
+
+        return self._agwStyle
 
 
     def AppendWindow(self, window):
@@ -626,7 +658,7 @@ class FourWaySplitter(wx.PyPanel):
         if self._mode:
             self._offx = pt.x - self._splitx
             self._offy = pt.y - self._splity
-            if not self.GetWindowStyle() & wx.SP_LIVE_UPDATE:
+            if not self.GetAGWWindowStyleFlag() & wx.SP_LIVE_UPDATE:
                 self.DrawSplitter(wx.ClientDC(self))
                 self.DrawTrackSplitter(self._splitx, self._splity)
 
@@ -654,7 +686,7 @@ class FourWaySplitter(wx.PyPanel):
         
         if flgs & FLAG_PRESSED:
             
-            if not self.GetWindowStyle() & wx.SP_LIVE_UPDATE:
+            if not self.GetAGWWindowStyleFlag() & wx.SP_LIVE_UPDATE:
                 self.DrawTrackSplitter(self._splitx, self._splity)
                 self.DrawSplitter(wx.ClientDC(self))
                 self.AdjustLayout()
@@ -739,7 +771,7 @@ class FourWaySplitter(wx.PyPanel):
                 return              
 
             if oldsplitx != self._splitx or oldsplity != self._splity:
-                if not self.GetWindowStyle() & wx.SP_LIVE_UPDATE:
+                if not self.GetAGWWindowStyleFlag() & wx.SP_LIVE_UPDATE:
                     self.DrawTrackSplitter(oldsplitx, oldsplity)
                     self.DrawTrackSplitter(self._splitx, self._splity)
                 else:

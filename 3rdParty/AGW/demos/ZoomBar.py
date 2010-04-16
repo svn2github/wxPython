@@ -8,8 +8,6 @@ import random
 import wx.lib.colourselect as csel
 from  wx.lib import masked
 
-import images
-
 try:
     dirName = os.path.dirname(os.path.abspath(__file__))
 except:

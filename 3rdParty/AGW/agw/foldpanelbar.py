@@ -3,7 +3,7 @@
 # Ported From Jorgen Bodde & Julian Smart (Extended Demo) C++ Code By:
 #
 # Andrea Gavana, @ 23 Mar 2005
-# Latest Revision: 27 Nov 2009, 15.00 GMT
+# Latest Revision: 14 Nov 2010, 12.00 GMT
 #
 #
 # TODO List
@@ -132,9 +132,8 @@ Window Styles              Hex Value   Description
 ``FPB_SINGLE_FOLD``                0x1 Single fold forces other panels to close when they are open, and only opens the current panel. This will allow the open panel to gain the full size left in the client area. This is an extra style.
 ``FPB_COLLAPSE_TO_BOTTOM``         0x2 All panels are stacked to the bottom. When they are expanded again they show up at the top. This is an extra style.
 ``FPB_EXCLUSIVE_FOLD``             0x4 ``FPB_SINGLE_FOLD`` style plus the panels will be stacked at the bottom.  This is an extra style.
-``FPB_HORIZONTAL``                 0x4 `FoldPanelBar` will be horizontal.
-``FPB_VERTICAL``                   0x8 `FoldPanelBar` will be vertical.
-``FPB_DEFAULT_STYLE``         0x280000 Default style for `FoldPanelBar`: ``FPB_DEFAULT_STYLE`` = ``wx.TAB_TRAVERSAL`` | ``wx.NO_BORDER``.
+``FPB_HORIZONTAL``                 0x8 `FoldPanelBar` will be horizontal.
+``FPB_VERTICAL``                  0x10 `FoldPanelBar` will be vertical.
 ========================== =========== ==================================================
 
 
@@ -225,16 +224,10 @@ FPB_EXCLUSIVE_FOLD = 0x0004
 """ This is an extra style. """
 
 # Orientation Flag 
-FPB_HORIZONTAL = wx.HORIZONTAL
+FPB_HORIZONTAL = 0x0008
 """ `FoldPanelBar` will be horizontal. """
-FPB_VERTICAL = wx.VERTICAL  
+FPB_VERTICAL = 0x0010  
 """ `FoldPanelBar` will be vertical. """
-
-# Default Extrastyle of the FoldPanelBar 
-FPB_DEFAULT_EXTRASTYLE = 0
-# Default style of the FoldPanelBar 
-FPB_DEFAULT_STYLE = wx.TAB_TRAVERSAL | wx.NO_BORDER
-""" Default style for `FoldPanelBar`: ``FPB_DEFAULT_STYLE`` = ``wx.TAB_TRAVERSAL`` | ``wx.NO_BORDER``. """
 
 # FoldPanelItem default settings
 FPB_ALIGN_LEFT = 0 
@@ -1153,7 +1146,7 @@ class FoldPanelBar(wx.Panel):
     EmptyCaptionBarStyle = CaptionBarStyle()
     
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=FPB_DEFAULT_STYLE, extraStyle=FPB_DEFAULT_EXTRASTYLE): 
+                 style=wx.TAB_TRAVERSAL|wx.NO_BORDER, agwStyle=0): 
         """
         Default class constructor.
 
@@ -1163,36 +1156,34 @@ class FoldPanelBar(wx.Panel):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the L{FoldPanelBar} window style. It is basically the underlying
-         `wx.Panel` window style, and the default is
-         ``FPB_DEFAULT_STYLE`` = ``wx.TAB_TRAVERSAL`` | ``wx.NO_BORDER``.
-        :param `extraStyle`: the L{FoldPanelBar} window extra style. It can be one of the following
-         bits:
+        :param `style`: the underlying `wx.Panel` window style;
+        :param `agwStyle`: the AGW-specific L{FoldPanelBar} window style. It can be one of the
+         following bits:
          
          ========================== =========== ==================================================
          Window Styles              Hex Value   Description
          ========================== =========== ==================================================
-         ``FPB_SINGLE_FOLD``                0x1 Single fold forces other panels to close when they are open, and only opens the current panel. This will allow the open panel to gain the full size left in the client area. This is an extra style.
-         ``FPB_COLLAPSE_TO_BOTTOM``         0x2 All panels are stacked to the bottom. When they are expanded again they show up at the top. This is an extra style.
-         ``FPB_EXCLUSIVE_FOLD``             0x4 ``FPB_SINGLE_FOLD`` style plus the panels will be stacked at the bottom.  This is an extra style.
+         ``FPB_SINGLE_FOLD``                0x1 Single fold forces other panels to close when they are open, and only opens the current panel. This will allow the open panel to gain the full size left in the client area.
+         ``FPB_COLLAPSE_TO_BOTTOM``         0x2 All panels are stacked to the bottom. When they are expanded again they show up at the top. 
+         ``FPB_EXCLUSIVE_FOLD``             0x4 ``FPB_SINGLE_FOLD`` style plus the panels will be stacked at the bottom. 
          ``FPB_HORIZONTAL``                 0x4 `FoldPanelBar` will be horizontal.
          ``FPB_VERTICAL``                   0x8 `FoldPanelBar` will be vertical.
          ========================== =========== ==================================================
         """
         
         self._controlCreated = False
-        self._extraStyle = extraStyle
         
         # make sure there is any orientation
-        if style & FPB_HORIZONTAL != FPB_HORIZONTAL:
-            style = style | FPB_VERTICAL
+        if agwStyle & FPB_HORIZONTAL != FPB_HORIZONTAL:
+            agwStyle = agwStyle | FPB_VERTICAL
 
-        if style & FPB_HORIZONTAL == 4:
+        if agwStyle & FPB_HORIZONTAL == 4:
             self._isVertical = False
         else:
             self._isVertical = True
 
-        
+        self._agwStyle = agwStyle
+
         # create the panel (duh!). This causes a size event, which we are going
         # to skip when we are not initialised
 
@@ -1286,7 +1277,7 @@ class FoldPanelBar(wx.Panel):
          adds two `wx.Window` derived controls to the FoldPanel::
 
                # Create the FoldPanelBar
-               m_pnl = FoldPanelBar(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, FPB_DEFAULT_STYLE, FPB_COLLAPSE_TO_BOTTOM)
+               m_pnl = FoldPanelBar(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, agwStyle=0x2)
 
                # Add a foldpanel to the control. "Test me" is the caption and it is
                # initially not collapsed.
@@ -1372,7 +1363,7 @@ class FoldPanelBar(wx.Panel):
 
         self._foldPanel.SetSize(foldrect[2:])
         
-        if self._extraStyle & FPB_COLLAPSE_TO_BOTTOM or self._extraStyle & FPB_EXCLUSIVE_FOLD:
+        if self._agwStyle & FPB_COLLAPSE_TO_BOTTOM or self._agwStyle & FPB_EXCLUSIVE_FOLD:
             rect = self.RepositionCollapsedToBottom()
             vertical = self.IsVertical()
             if vertical and rect.GetHeight() > 0 or not vertical and rect.GetWidth() > 0:
@@ -1419,7 +1410,7 @@ class FoldPanelBar(wx.Panel):
         # should be drawn at the bottom. All panels that are expanded
         # are drawn on top. The last expanded panel gets all the extra space
 
-        if self._extraStyle & FPB_COLLAPSE_TO_BOTTOM or self._extraStyle & FPB_EXCLUSIVE_FOLD:
+        if self._agwStyle & FPB_COLLAPSE_TO_BOTTOM or self._agwStyle & FPB_EXCLUSIVE_FOLD:
         
             offset = 0
 
@@ -1566,7 +1557,7 @@ class FoldPanelBar(wx.Panel):
 
         fpbextrastyle = 0
         
-        if self._extraStyle & FPB_SINGLE_FOLD or self._extraStyle & FPB_EXCLUSIVE_FOLD:
+        if self._agwStyle & FPB_SINGLE_FOLD or self._agwStyle & FPB_EXCLUSIVE_FOLD:
             fpbextrastyle = 1
             for panel in self._panels:
                 panel.Collapse()
@@ -1574,7 +1565,7 @@ class FoldPanelBar(wx.Panel):
         foldpanel.Expand()
         
         if fpbextrastyle:
-            if self._extraStyle & FPB_EXCLUSIVE_FOLD:
+            if self._agwStyle & FPB_EXCLUSIVE_FOLD:
                 self.RepositionCollapsedToBottom()
             self.RefreshPanelsFrom(self._panels[0])
         else:

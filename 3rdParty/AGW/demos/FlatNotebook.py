@@ -332,11 +332,11 @@ class FlatNotebookDemo(wx.Frame):
 
         bookStyle = fnb.FNB_NODRAG
 
-        self.book = fnb.FlatNotebook(self, wx.ID_ANY, style=bookStyle)
+        self.book = fnb.FlatNotebook(self, wx.ID_ANY, agwStyle=bookStyle)
 
         bookStyle &= ~(fnb.FNB_NODRAG)
         bookStyle |= fnb.FNB_ALLOW_FOREIGN_DND 
-        self.secondBook = fnb.FlatNotebook(self, wx.ID_ANY, style=bookStyle)
+        self.secondBook = fnb.FlatNotebook(self, wx.ID_ANY, agwStyle=bookStyle)
 
         # Set right click menu to the notebook
         self.book.SetRightClickMenu(self._rmenu)
@@ -369,7 +369,7 @@ class FlatNotebookDemo(wx.Frame):
 
     def OnStyle(self, event):
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
         eventid = event.GetId()
 
         if eventid == MENU_HIDE_NAV_BUTTONS:
@@ -380,7 +380,7 @@ class FlatNotebookDemo(wx.Frame):
                 style &= ~fnb.FNB_NO_NAV_BUTTONS
                 style &= ~fnb.FNB_DROPDOWN_TABS_LIST
 
-            self.book.SetWindowStyleFlag(style)
+            self.book.SetAGWWindowStyleFlag(style)
 
         elif eventid == MENU_HIDE_ON_SINGLE_TAB:
             if event.IsChecked():
@@ -389,7 +389,7 @@ class FlatNotebookDemo(wx.Frame):
             else:
                 style &= ~(fnb.FNB_HIDE_ON_SINGLE_TAB)
 
-            self.book.SetWindowStyleFlag(style)
+            self.book.SetAGWWindowStyleFlag(style)
 
         elif eventid == MENU_HIDE_X:
             if event.IsChecked():
@@ -399,7 +399,7 @@ class FlatNotebookDemo(wx.Frame):
                 if style & fnb.FNB_NO_X_BUTTON:
                     style ^= fnb.FNB_NO_X_BUTTON
 
-            self.book.SetWindowStyleFlag(style)
+            self.book.SetAGWWindowStyleFlag(style)
 
         elif eventid == MENU_DRAW_BORDER:
             if event.IsChecked():
@@ -408,7 +408,7 @@ class FlatNotebookDemo(wx.Frame):
                 if style & fnb.FNB_TABS_BORDER_SIMPLE:
                     style ^= fnb.FNB_TABS_BORDER_SIMPLE
 
-            self.book.SetWindowStyleFlag(style)
+            self.book.SetAGWWindowStyleFlag(style)
 
         elif eventid == MENU_USE_MOUSE_MIDDLE_BTN:
             if event.IsChecked():
@@ -417,7 +417,7 @@ class FlatNotebookDemo(wx.Frame):
                 if style & fnb.FNB_MOUSE_MIDDLE_CLOSES_TABS:
                     style ^= fnb.FNB_MOUSE_MIDDLE_CLOSES_TABS
 
-            self.book.SetWindowStyleFlag(style)
+            self.book.SetAGWWindowStyleFlag(style)
 
         elif eventid == MENU_USE_BOTTOM_TABS:
             if event.IsChecked():
@@ -426,7 +426,7 @@ class FlatNotebookDemo(wx.Frame):
                 if style & fnb.FNB_BOTTOM:
                     style ^= fnb.FNB_BOTTOM
 
-            self.book.SetWindowStyleFlag(style)
+            self.book.SetAGWWindowStyleFlag(style)
             self.book.Refresh()
 
         elif eventid == MENU_NO_TABS_FOCUS:
@@ -436,7 +436,7 @@ class FlatNotebookDemo(wx.Frame):
             else:
                 style &= ~(fnb.FNB_NO_TAB_FOCUS)
 
-            self.book.SetWindowStyleFlag(style)
+            self.book.SetAGWWindowStyleFlag(style)
 
 
     def OnQuit(self, event):
@@ -469,7 +469,7 @@ class FlatNotebookDemo(wx.Frame):
 
     def OnFF2Style(self, event):
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
 
         # remove old tabs style
         mirror = ~(fnb.FNB_VC71 | fnb.FNB_VC8 | fnb.FNB_FANCY_TABS | fnb.FNB_FF2)
@@ -477,12 +477,12 @@ class FlatNotebookDemo(wx.Frame):
 
         style |= fnb.FNB_FF2
 
-        self.book.SetWindowStyleFlag(style)
+        self.book.SetAGWWindowStyleFlag(style)
 
 
     def OnVC71Style(self, event):
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
 
         # remove old tabs style
         mirror = ~(fnb.FNB_VC71 | fnb.FNB_VC8 | fnb.FNB_FANCY_TABS | fnb.FNB_FF2)
@@ -490,12 +490,12 @@ class FlatNotebookDemo(wx.Frame):
 
         style |= fnb.FNB_VC71
 
-        self.book.SetWindowStyleFlag(style)
+        self.book.SetAGWWindowStyleFlag(style)
 
 
     def OnVC8Style(self, event):
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
 
         # remove old tabs style
         mirror = ~(fnb.FNB_VC71 | fnb.FNB_VC8 | fnb.FNB_FANCY_TABS | fnb.FNB_FF2)
@@ -504,30 +504,30 @@ class FlatNotebookDemo(wx.Frame):
         # set new style
         style |= fnb.FNB_VC8
 
-        self.book.SetWindowStyleFlag(style)
+        self.book.SetAGWWindowStyleFlag(style)
 
 
     def OnDefaultStyle(self, event):
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
 
         # remove old tabs style
         mirror = ~(fnb.FNB_VC71 | fnb.FNB_VC8 | fnb.FNB_FANCY_TABS | fnb.FNB_FF2)
         style &= mirror
 
-        self.book.SetWindowStyleFlag(style)
+        self.book.SetAGWWindowStyleFlag(style)
 
 
     def OnFancyStyle(self, event):
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
 
         # remove old tabs style
         mirror = ~(fnb.FNB_VC71 | fnb.FNB_VC8 | fnb.FNB_FANCY_TABS | fnb.FNB_FF2)
         style &= mirror
 
         style |= fnb.FNB_FANCY_TABS
-        self.book.SetWindowStyleFlag(style)
+        self.book.SetAGWWindowStyleFlag(style)
 
 
     def OnSelectColour(self, event):
@@ -619,8 +619,8 @@ class FlatNotebookDemo(wx.Frame):
 
     def OnEnableDrag(self, event):
 
-        style = self.book.GetWindowStyleFlag()
-        style2 = self.secondBook.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
+        style2 = self.secondBook.GetAGWWindowStyleFlag()
 
         if event.IsChecked():        
             if style & fnb.FNB_NODRAG:
@@ -631,19 +631,19 @@ class FlatNotebookDemo(wx.Frame):
             style |= fnb.FNB_NODRAG
             style2 |= fnb.FNB_NODRAG
 
-        self.book.SetWindowStyleFlag(style)
-        self.secondBook.SetWindowStyleFlag(style2)
+        self.book.SetAGWWindowStyleFlag(style)
+        self.secondBook.SetAGWWindowStyleFlag(style2)
 
 
     def OnAllowForeignDnd(self, event): 
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
         if event.IsChecked():
             style |= fnb.FNB_ALLOW_FOREIGN_DND 
         else:
             style &= ~(fnb.FNB_ALLOW_FOREIGN_DND)
 
-        self.book.SetWindowStyleFlag(style)
+        self.book.SetAGWWindowStyleFlag(style)
         self.book.Refresh() 
 
 
@@ -695,66 +695,66 @@ class FlatNotebookDemo(wx.Frame):
 
     def OnDrawTabX(self, event):
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
         if event.IsChecked():
             style |= fnb.FNB_X_ON_TAB
         else:
             if style & fnb.FNB_X_ON_TAB:
                 style ^= fnb.FNB_X_ON_TAB       
 
-        self.book.SetWindowStyleFlag(style)
+        self.book.SetAGWWindowStyleFlag(style)
 
 
     def OnDClickCloseTab(self, event):
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
         if event.IsChecked():       
             style |= fnb.FNB_DCLICK_CLOSES_TABS
         else:
             style &= ~(fnb.FNB_DCLICK_CLOSES_TABS)      
 
-        self.book.SetWindowStyleFlag(style)
+        self.book.SetAGWWindowStyleFlag(style)
 
 
     def OnGradientBack(self, event):
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
         if event.IsChecked():
             style |= fnb.FNB_BACKGROUND_GRADIENT
         else:
             style &= ~(fnb.FNB_BACKGROUND_GRADIENT)
 
-        self.book.SetWindowStyleFlag(style)
+        self.book.SetAGWWindowStyleFlag(style)
         self.book.Refresh()
 
 
     def OnColourfulTabs(self, event):
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
         if event.IsChecked():
             style |= fnb.FNB_COLOURFUL_TABS
         else:
             style &= ~(fnb.FNB_COLOURFUL_TABS)
 
-        self.book.SetWindowStyleFlag(style)
+        self.book.SetAGWWindowStyleFlag(style)
         self.book.Refresh()
 
 
     def OnSmartTabs(self, event):
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
         if event.IsChecked():
             style |= fnb.FNB_SMART_TABS
         else:
             style &= ~fnb.FNB_SMART_TABS
 
-        self.book.SetWindowStyleFlag(style)
+        self.book.SetAGWWindowStyleFlag(style)
         self.book.Refresh()
 
 
     def OnDropDownArrow(self, event):
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
 
         if event.IsChecked():
 
@@ -766,25 +766,25 @@ class FlatNotebookDemo(wx.Frame):
             style &= ~fnb.FNB_DROPDOWN_TABS_LIST
             style &= ~fnb.FNB_NO_NAV_BUTTONS
 
-        self.book.SetWindowStyleFlag(style)
+        self.book.SetAGWWindowStyleFlag(style)
         self.book.Refresh()
 
 
     def OnHideNavigationButtonsUI(self, event):
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
         event.Check((style & fnb.FNB_NO_NAV_BUTTONS and [True] or [False])[0])
 
 
     def OnDropDownArrowUI(self, event):
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
         event.Check((style & fnb.FNB_DROPDOWN_TABS_LIST and [True] or [False])[0])
 
 
     def OnAllowForeignDndUI(self, event): 
 
-        style = self.book.GetWindowStyleFlag()
+        style = self.book.GetAGWWindowStyleFlag()
         event.Enable((style & fnb.FNB_NODRAG and [False] or [True])[0])
 
 

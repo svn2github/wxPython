@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 10 Oct 2005
-# Latest Revision: 23 Nov 2009, 09.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 #
 # TODO List/Caveats
@@ -57,7 +57,7 @@ Usage
 
 Sample usage::
 
-    SplashScreen = AS.AdvancedSplash(parent, bitmap, timeout, extrastyle,
+    SplashScreen = AS.AdvancedSplash(parent, bitmap, timeout, agwStyle,
                                      shadowcolour)
 
 
@@ -106,9 +106,9 @@ License And Version
 
 AdvancedSplash control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 23 Nov 2009, 09.00 GMT
+Latest revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
 
-Version 0.3
+Version 0.4
 
 """
 
@@ -158,7 +158,7 @@ class AdvancedSplash(wx.Frame):
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=wx.FRAME_NO_TASKBAR | wx.FRAME_SHAPED | wx.STAY_ON_TOP,
                  bitmap=None, timeout=5000,
-                 extrastyle=AS_TIMEOUT | AS_CENTER_ON_SCREEN,
+                 agwStyle=AS_TIMEOUT | AS_CENTER_ON_SCREEN,
                  shadowcolour=wx.NullColour):
         """
         Default class constructor.
@@ -175,7 +175,7 @@ class AdvancedSplash(wx.Frame):
         :param `timeout`: if you construct L{AdvancedSplash} using the style ``AS_TIMEOUT``,
          L{AdvancedSplash} will be destroyed after `timeout` milliseconds;
 
-        :param `extrastyle`: this value specifies the L{AdvancedSplash} styles:
+        :param `agwStyle`: this value specifies the L{AdvancedSplash} styles:
         
          - ``AS_TIMEOUT``: L{AdvancedSplash} will be destroyed after `timeout` milliseconds;
          - ``AS_NO_CENTER``: L{AdvancedSplash} can be destroyed by clicking on it,
@@ -197,23 +197,23 @@ class AdvancedSplash(wx.Frame):
         wx.Frame.__init__(self, parent, id, "", pos, size, style)
 
         # Some Error Checking
-        if extrastyle & AS_TIMEOUT and timeout <= 0:
+        if agwStyle & AS_TIMEOUT and timeout <= 0:
             raise Exception('\nERROR: Style "AS_TIMEOUT" Used With Invalid "timeout" Parameter Value (' \
                             + str(timeout) + ')')
 
-        if extrastyle & AS_SHADOW_BITMAP and not shadowcolour.IsOk():
+        if agwStyle & AS_SHADOW_BITMAP and not shadowcolour.IsOk():
             raise Exception('\nERROR: Style "AS_SHADOW_BITMAP" Used With Invalid "shadowcolour" Parameter')
 
         if not bitmap or not bitmap.IsOk():
             raise Exception("\nERROR: Bitmap Passed To AdvancedSplash Is Invalid.")
 
-        if extrastyle & AS_SHADOW_BITMAP:
+        if agwStyle & AS_SHADOW_BITMAP:
             # Our Bitmap Is Masked Accordingly To User Input
             self.bmp = self.ShadowBitmap(bitmap, shadowcolour)
         else:
             self.bmp = bitmap
 
-        self._extrastyle = extrastyle
+        self._agwStyle = agwStyle
 
         # Setting Initial Properties
         self.SetText()
@@ -238,12 +238,12 @@ class AdvancedSplash(wx.Frame):
         # Set The AdvancedSplash Size To The Bitmap Size
         self.SetSize((w, h))
 
-        if extrastyle & AS_CENTER_ON_SCREEN:
+        if agwStyle & AS_CENTER_ON_SCREEN:
             self.CenterOnScreen()
-        elif extrastyle & AS_CENTER_ON_PARENT:
+        elif agwStyle & AS_CENTER_ON_PARENT:
             self.CenterOnParent()
 
-        if extrastyle & AS_TIMEOUT:
+        if agwStyle & AS_TIMEOUT:
             # Starts The Timer. Once Expired, AdvancedSplash Is Destroyed
             self._splashtimer = wx.PyTimer(self.OnNotify)
             self._splashtimer.Start(timeout)
@@ -461,27 +461,27 @@ class AdvancedSplash(wx.Frame):
         stringstyle = []
         integerstyle = []
 
-        if self._extrastyle & AS_TIMEOUT:
+        if self._agwStyle & AS_TIMEOUT:
             stringstyle.append("AS_TIMEOUT")
             integerstyle.append(AS_TIMEOUT)
 
-        if self._extrastyle & AS_NOTIMEOUT:
+        if self._agwStyle & AS_NOTIMEOUT:
             stringstyle.append("AS_NOTIMEOUT")
             integerstyle.append(AS_NOTIMEOUT)
 
-        if self._extrastyle & AS_CENTER_ON_SCREEN:
+        if self._agwStyle & AS_CENTER_ON_SCREEN:
             stringstyle.append("AS_CENTER_ON_SCREEN")
             integerstyle.append(AS_CENTER_ON_SCREEN)
 
-        if self._extrastyle & AS_CENTER_ON_PARENT:
+        if self._agwStyle & AS_CENTER_ON_PARENT:
             stringstyle.append("AS_CENTER_ON_PARENT")
             integerstyle.append(AS_CENTER_ON_PARENT)
 
-        if self._extrastyle & AS_NO_CENTER:
+        if self._agwStyle & AS_NO_CENTER:
             stringstyle.append("AS_NO_CENTER")
             integerstyle.append(AS_NO_CENTER)
 
-        if self._extrastyle & AS_SHADOW_BITMAP:
+        if self._agwStyle & AS_SHADOW_BITMAP:
             stringstyle.append("AS_SHADOW_BITMAP")
             integerstyle.append(AS_SHADOW_BITMAP)
 

@@ -207,7 +207,7 @@ class RibbonButtonBarEvent(wx.PyCommandEvent):
 
 class RibbonButtonBar(RibbonControl):
 
-    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0):
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, agwStyle=0):
         """
         Default class constructor.
 
@@ -220,14 +220,14 @@ class RibbonButtonBar(RibbonControl):
          generate a default size for the window. If no suitable size can be found, the
          window will be sized to 20x20 pixels so that the window is visible but obviously
          not correctly sized;
-        :param `style`: Window style.
+        :param `agwStyle`: the AGW-specific window style.
 
         """
 
         RibbonControl.__init__(self, parent, id, pos, size, style=wx.BORDER_NONE)        
 
         self._layouts_valid = False
-        self.CommonInit(style)
+        self.CommonInit(agwStyle)
 
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnMouseEnter)
@@ -602,7 +602,7 @@ class RibbonButtonBar(RibbonControl):
         self.Refresh()
 
 
-    def CommonInit(self, style):
+    def CommonInit(self, agwStyle):
 
         self._bitmap_size_large = wx.Size(32, 32)
         self._bitmap_size_small = wx.Size(16, 16)

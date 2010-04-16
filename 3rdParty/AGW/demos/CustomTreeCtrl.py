@@ -774,7 +774,8 @@ class CustomTreeCtrlDemo(wx.Panel):
 
         # Create the CustomTreeCtrl, using a derived class defined below
         self.tree = CustomTreeCtrl(splitter, -1, log=self.log, 
-                                   style= wx.SUNKEN_BORDER| CT.TR_HAS_BUTTONS | CT.TR_HAS_VARIABLE_ROW_HEIGHT)           
+                                   style=wx.SUNKEN_BORDER,
+                                   agwStyle=CT.TR_HAS_BUTTONS | CT.TR_HAS_VARIABLE_ROW_HEIGHT)           
 
         self.leftpanel = wx.ScrolledWindow(splitter, -1, style=wx.SUNKEN_BORDER)
         self.leftpanel.SetScrollRate(20,20)
@@ -790,6 +791,7 @@ class CustomTreeCtrlDemo(wx.Panel):
         
 
     def PopulateLeftPanel(self, styles, events):
+        
         pnl = wx.Panel(self.leftpanel)
         mainsizer = wx.BoxSizer(wx.VERTICAL)
         recreatetree = wx.Button(pnl, -1, "Recreate CustomTreeCtrl")
@@ -827,7 +829,6 @@ class CustomTreeCtrlDemo(wx.Panel):
 
                 check.Bind(wx.EVT_CHECKBOX, self.OnCheckStyle)
                 self.treestyles.append(check)
-
 
         for count, event in enumerate(events):
             
@@ -1239,9 +1240,6 @@ class CustomTreeCtrlDemo(wx.Panel):
         event.Skip()
 
 
-
-
-
 #---------------------------------------------------------------------------
 # CustomTreeCtrl Demo Implementation
 #---------------------------------------------------------------------------
@@ -1249,10 +1247,11 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=wx.DefaultSize,
-                 style=wx.SUNKEN_BORDER | CT.TR_HAS_BUTTONS | CT.TR_HAS_VARIABLE_ROW_HEIGHT | wx.WANTS_CHARS,
+                 style=wx.SUNKEN_BORDER|wx.WANTS_CHARS,
+                 agwStyle=CT.TR_HAS_BUTTONS|CT.TR_HAS_VARIABLE_ROW_HEIGHT,
                  log=None):
 
-        CT.CustomTreeCtrl.__init__(self, parent, id, pos, size, style)
+        CT.CustomTreeCtrl.__init__(self, parent, id, pos, size, style, agwStyle)
 
         alldata = dir(CT)
 
@@ -1288,7 +1287,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         self.root = self.AddRoot("The Root Item")
 
-        if not(self.GetTreeStyle() & CT.TR_HIDE_ROOT):
+        if not(self.GetAGWWindowStyleFlag() & CT.TR_HIDE_ROOT):
             self.SetPyData(self.root, None)
             self.SetItemImage(self.root, 24, CT.TreeItemIcon_Normal)
             self.SetItemImage(self.root, 13, CT.TreeItemIcon_Expanded)
@@ -1369,7 +1368,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         if hasattr(mainframe, "leftpanel"):
             self.ChangeStyle(mainframe.treestyles)
 
-        if not(self.GetTreeStyle() & CT.TR_HIDE_ROOT):
+        if not(self.GetAGWWindowStyleFlag() & CT.TR_HIDE_ROOT):
             self.SelectItem(self.root)
             self.Expand(self.root)
 
@@ -1401,8 +1400,8 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
             if combo.GetValue() == 1:
                 style = style | eval("CT." + combo.GetLabel())
 
-        if self.GetTreeStyle() != style:
-            self.SetTreeStyle(style)
+        if self.GetAGWWindowStyleFlag() != style:
+            self.SetAGWWindowStyleFlag(style)
             
 
     def OnCompareItems(self, item1, item2):
@@ -1749,7 +1748,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         pt = event.GetPosition()
         item, flags = self.HitTest(pt)
         if item and (flags & CT.TREE_HITTEST_ONITEMLABEL):
-            if self.GetTreeStyle() & CT.TR_EDIT_LABELS:
+            if self.GetAGWWindowStyleFlag() & CT.TR_EDIT_LABELS:
                 self.log.write("OnLeftDClick: %s (manually starting label edit)"% self.GetItemText(item) + "\n")
                 self.EditLabel(item)
             else:

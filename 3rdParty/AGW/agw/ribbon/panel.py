@@ -54,7 +54,7 @@ class RibbonPanel(RibbonControl):
     """ This is the main implementation of L{RibbonPanel}. """
 
     def __init__(self, parent, id=wx.ID_ANY, label="", minimised_icon=wx.NullBitmap,
-                 pos=wx.DefaultPosition, size=wx.DefaultSize, style=RIBBON_PANEL_DEFAULT_STYLE,
+                 pos=wx.DefaultPosition, size=wx.DefaultSize, agwStyle=RIBBON_PANEL_DEFAULT_STYLE,
                  name="RibbonPanel"):
         """
         Default class constructor.
@@ -71,12 +71,23 @@ class RibbonPanel(RibbonControl):
          generate a default size for the window. If no suitable size can be found, the
          window will be sized to 20x20 pixels so that the window is visible but obviously
          not correctly sized;
-        :param `style`: Window style;
+        :param `agwStyle`: the AGW-specific window style. This can be one of the following
+         bits:
+
+         ================================= =========== =================================
+         Window Styles                     Hex Value   Description
+         ================================= =========== =================================
+         ``RIBBON_PANEL_DEFAULT_STYLE``            0x0 Defined as no other flags set.
+         ``RIBBON_PANEL_NO_AUTO_MINIMISE``         0x1 Prevents the panel from automatically minimising to conserve screen space.
+         ``RIBBON_PANEL_EXT_BUTTON``               0x8 Causes an extension button to be shown in the panel's chrome (if the bar in which it is contained has ``RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS`` set). The behaviour of this button is application controlled, but typically will show an extended drop-down menu relating to the panel.
+         ``RIBBON_PANEL_MINIMISE_BUTTON``         0x10 Causes a (de)minimise button to be shown in the panel's chrome (if the bar in which it is contained has the ``RIBBON_BAR_SHOW_PANEL_MINIMISE_BUTTONS`` style set). This flag is typically combined with ``RIBBON_PANEL_NO_AUTO_MINIMISE`` to make a panel which the user always has manual control over when it minimises.
+         ================================= =========== =================================
+         
         :param `name`: the window name.
         """
 
         RibbonControl.__init__(self, parent, id, pos, size, wx.BORDER_NONE, name=name)
-        self.CommonInit(label, minimised_icon, style)
+        self.CommonInit(label, minimised_icon, agwStyle)
 
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnMouseEnter)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
@@ -117,7 +128,7 @@ class RibbonPanel(RibbonControl):
             self._expanded_panel.SetArtProvider(art)
 
 
-    def CommonInit(self, label, icon, style):
+    def CommonInit(self, label, icon, agwStyle):
 
         self.SetName(label)
         self.SetLabel(label)
@@ -127,7 +138,7 @@ class RibbonPanel(RibbonControl):
         self._preferred_expand_direction = wx.SOUTH
         self._expanded_dummy = None
         self._expanded_panel = None
-        self._flags = style
+        self._flags = agwStyle
         self._minimised_icon = icon
         self._minimised = False
         self._hovered = False

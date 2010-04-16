@@ -13,12 +13,12 @@ this module returns the following information:
                        
 These meta data are merged into the wxPython demo tree at startup.
 
-Last updated: Andrea Gavana @ 10 Dec 2009, 14.00 GMT.
-Version 0.7.0.
+Last updated: Andrea Gavana @ 14 Apr 2010, 12.00 GMT.
+Version 0.8.0.
 
 """
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 
 

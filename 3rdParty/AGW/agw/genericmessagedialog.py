@@ -2,7 +2,7 @@
 # GENERICMESSAGEDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 27 Nov 2009, 17.00 GMT
+# Latest Revision: 14 Apr 2010, 12.00 GMT
 #
 #
 # TODO List
@@ -75,9 +75,9 @@ License And Version
 
 GenericMessageDialog is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 27 Nov 2009, 17.00 GMT
+Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
 
-Version 0.3
+Version 0.4
 
 """
 
@@ -550,7 +550,7 @@ class GenericMessageDialog(wx.Dialog):
     for the standard `wx.MessageDialog`.
     """
 
-    def __init__(self, parent, message, caption, style,
+    def __init__(self, parent, message, caption, agwStyle,
                  pos=wx.DefaultPosition, size=wx.DefaultSize):
         """
         Default class constructor.
@@ -558,7 +558,8 @@ class GenericMessageDialog(wx.Dialog):
         :param `parent`: the L{GenericMessageDialog} parent (if any);
         :param `message`: the message in the main body of the dialog;
         :param `caption`: the dialog title;
-        :param `style`: the dialog style; it can be one of the following bits:
+        :param `agwStyle`: the AGW-specific dialog style; it can be one of the
+         following bits:
 
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
@@ -575,12 +576,12 @@ class GenericMessageDialog(wx.Dialog):
         wx.Dialog.__init__(self, parent, wx.ID_ANY, caption, pos,
                            size, wx.DEFAULT_DIALOG_STYLE|wx.WANTS_CHARS)
 
-        self._dialogStyle = style        
+        self._agwStyle = agwStyle        
 
         topsizer = wx.BoxSizer(wx.VERTICAL)
         icon_text = wx.BoxSizer(wx.HORIZONTAL)
 
-        case = self._dialogStyle & wx.ICON_MASK
+        case = self._agwStyle & wx.ICON_MASK
         
         if case == wx.ICON_ERROR:
             bitmap = _error
@@ -602,10 +603,10 @@ class GenericMessageDialog(wx.Dialog):
         topsizer.Add(icon_text, 1, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, 10)
 
         center_flag = wx.EXPAND
-        if self._dialogStyle & wx.YES_NO:
+        if self._agwStyle & wx.YES_NO:
             center_flag |= wx.ALIGN_CENTRE
 
-        sizerBtn = self.CreateSeparatedButtonSizer(self._dialogStyle & self.ButtonSizerFlags)
+        sizerBtn = self.CreateSeparatedButtonSizer(self._agwStyle & self.ButtonSizerFlags)
         if sizerBtn:
             topsizer.Add(sizerBtn, 0, center_flag | wx.ALL, 10)
 
@@ -664,7 +665,7 @@ class GenericMessageDialog(wx.Dialog):
         # Allow cancellation via ESC/Close button except if
         # only YES and NO are specified.
         
-        if self._dialogStyle & wx.YES_NO != wx.YES_NO or self._dialogStyle & wx.CANCEL:
+        if self._agwStyle & wx.YES_NO != wx.YES_NO or self._agwStyle & wx.CANCEL:
             self.EndModal(wx.ID_CANCEL)
 
 
@@ -805,10 +806,10 @@ class GenericMessageDialog(wx.Dialog):
             flags &= ~(wx.YES | wx.NO | wx.NO_DEFAULT)
 
         size=(-1, 28)
-        if self._dialogStyle & GMD_USE_AQUABUTTONS:
+        if self._agwStyle & GMD_USE_AQUABUTTONS:
             klass = AB.AquaButton
             size=(-1, -1)
-        elif self._dialogStyle & GMD_USE_GRADIENTBUTTONS:
+        elif self._agwStyle & GMD_USE_GRADIENTBUTTONS:
             klass = GB.GradientButton
         else:
             klass = buttons.ThemedGenBitmapTextButton
