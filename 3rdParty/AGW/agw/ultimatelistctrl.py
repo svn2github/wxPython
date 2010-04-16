@@ -10599,6 +10599,8 @@ class UltimateListCtrl(wx.PyControl):
         self.SetSizer(sizer)
 
         self.Bind(wx.EVT_SIZE, self.OnSize)
+        self.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
+        
         self.CreateOrDestroyHeaderWindowAsNeeded()
         self.CreateOrDestroyFooterWindowAsNeeded()
 
@@ -11935,6 +11937,18 @@ class UltimateListCtrl(wx.PyControl):
             
         if self._footerWin:
             self._footerWin.Refresh()
+
+
+    def OnSetFocus(self, event):
+        """
+        Handles the ``wx.EVT_SET_FOCUS`` event for L{UltimateListCtrl}.
+
+        :param `event`: a `wx.FocusEvent` event to be processed.
+        """
+
+        if self._mainWin:
+            self._mainWin.SetFocusIgnoringChildren()
+            self._mainWin.Update()
 
 
     def OnInternalIdle(self):
