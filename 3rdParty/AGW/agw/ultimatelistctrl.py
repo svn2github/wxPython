@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 14 Apr 2010, 12.00 GMT
+# Latest Revision: 16 Apr 2010, 23.00 GMT
 #
 #
 # TODO List
@@ -175,7 +175,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
+Latest Revision: Andrea Gavana @ 16 Apr 2010, 23.00 GMT
 
 Version 0.6
 
@@ -9004,7 +9004,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
          so that the window will be fully visible.
         """
 
-        if not self.InReportView() and not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
+        if not self.InReportView() or not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
             raise Exception("Widgets are only allowed in repotr mode and with the ULC_HAS_VARIABLE_ROW_HEIGHT style.")
         
         item = self.GetItem(item, item._col)
