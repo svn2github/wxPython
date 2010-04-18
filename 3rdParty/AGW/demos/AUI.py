@@ -324,16 +324,17 @@ ID_NotebookHideSingle = ID_CreateTree + 72
 ID_NotebookSmartTab = ID_CreateTree + 73
 ID_NotebookUseImagesDropDown = ID_CreateTree + 74
 ID_NotebookCustomButtons = ID_CreateTree + 75
+ID_NotebookMinMaxWidth = ID_CreateTree + 76
 
-ID_SampleItem = ID_CreateTree + 76
-ID_StandardGuides = ID_CreateTree + 77
-ID_AeroGuides = ID_CreateTree + 78
-ID_WhidbeyGuides = ID_CreateTree + 79
-ID_NotebookPreview = ID_CreateTree + 80
-ID_PreviewMinimized = ID_CreateTree + 81
+ID_SampleItem = ID_CreateTree + 77
+ID_StandardGuides = ID_CreateTree + 78
+ID_AeroGuides = ID_CreateTree + 79
+ID_WhidbeyGuides = ID_CreateTree + 80
+ID_NotebookPreview = ID_CreateTree + 81
+ID_PreviewMinimized = ID_CreateTree + 82
 
-ID_SmoothDocking = ID_CreateTree + 82
-ID_NativeMiniframes = ID_CreateTree + 83
+ID_SmoothDocking = ID_CreateTree + 83
+ID_NativeMiniframes = ID_CreateTree + 84
 
 ID_FirstPerspective = ID_CreatePerspective + 1000
 ID_FirstNBPerspective = ID_CreateNBPerspective + 10000
@@ -1008,6 +1009,7 @@ class AuiFrame(wx.Frame):
         notebook_menu.AppendCheckItem(ID_NotebookUseImagesDropDown, "Use Tab Images In Dropdown Menu")
         notebook_menu.AppendCheckItem(ID_NotebookCustomButtons, "Show Custom Buttons In Tab Area")
         notebook_menu.AppendSeparator()
+        notebook_menu.Append(ID_NotebookMinMaxWidth, "Set Min/Max Tab Widths")        
         notebook_menu.Append(ID_NotebookMultiLine, "Add A Multi-Line Label Tab")
         notebook_menu.AppendSeparator()
         notebook_menu.Append(ID_NotebookPreview, "Preview Of All Notebook Pages")
@@ -1398,6 +1400,7 @@ class AuiFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnTabAlignment, id=ID_NotebookAlignTop)
         self.Bind(wx.EVT_MENU, self.OnTabAlignment, id=ID_NotebookAlignBottom)
         self.Bind(wx.EVT_MENU, self.OnCustomTabButtons, id=ID_NotebookCustomButtons)
+        self.Bind(wx.EVT_MENU, self.OnMinMaxTabWidth, id=ID_NotebookMinMaxWidth)
         self.Bind(wx.EVT_MENU, self.OnPreview, id=ID_NotebookPreview)
         self.Bind(wx.EVT_MENU, self.OnAddMultiLine, id=ID_NotebookMultiLine)
                 
@@ -2363,6 +2366,47 @@ class AuiFrame(wx.Frame):
             else:
                 auibook.RemoveTabAreaButton(ids)
 
+        auibook.Refresh()
+        auibook.Update()
+
+
+    def OnMinMaxTabWidth(self, event):
+
+        auibook = self._mgr.GetPane("notebook_content").window
+        minTabWidth, maxTabWidth = auibook.GetMinMaxTabWidth()
+
+        dlg = wx.TextEntryDialog(self, "Enter the minimum and maximum tab widths, separated by a comma:",
+                                 "AuiNotebook Tab Widths")
+
+        dlg.SetValue("%d,%d"%(minTabWidth, maxTabWidth))
+        if dlg.ShowModal() != wx.ID_OK:
+            return
+
+        value = dlg.GetValue()
+        dlg.Destroy()
+        
+        try:
+            minTabWidth, maxTabWidth = value.split(",")
+            minTabWidth, maxTabWidth = int(minTabWidth), int(maxTabWidth)
+        except:
+            dlg = wx.MessageDialog(self, 'Invalid minimum/maximum tab width. Tab widths should be' \
+                                   ' 2 integers separated by a comma.',
+                                   'Error',
+                                   wx.OK | wx.ICON_ERROR)
+            dlg.ShowModal()
+            dlg.Destroy()
+            return
+
+        if minTabWidth > maxTabWidth:
+            dlg = wx.MessageDialog(self, 'Invalid minimum/maximum tab width. Minimum tab width' \
+                                   ' should be less of equal than maximum tab width.',
+                                   'Error',
+                                   wx.OK | wx.ICON_ERROR)
+            dlg.ShowModal()
+            dlg.Destroy()
+            return
+
+        auibook.SetMinMaxTabWidth(minTabWidth, maxTabWidth)
         auibook.Refresh()
         auibook.Update()
         
