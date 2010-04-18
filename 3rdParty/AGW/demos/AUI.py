@@ -2854,7 +2854,8 @@ def GetIntroText():
     "<li>Possibility to preview all the pages in a <i>AuiNotebook</i> (as thumbnails) by using the <i>NotebookPreview</i> " \
     "method of <i>AuiNotebook</i></li>;" \
     "<li>Tab labels can be edited by calling the <i>SetRenamable</i> method on a <i>AuiNotebook</i> page;</li>" \
-    "<li>Support for multi-lines tab labels in <i>AuiNotebook</i>.</li>" \
+    "<li>Support for multi-lines tab labels in <i>AuiNotebook</i>;</li>" \
+    "<li>Support for setting minimum and maximum tab widths for fixed width tabs.</li>"\
     "</ul><p>" \
     "<li><b>AuiToolBar:</b></li>" \
     "<ul>" \
