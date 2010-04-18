@@ -4160,6 +4160,21 @@ class AuiNotebook(wx.PyPanel):
             # See http://trac.wxwidgets.org/ticket/2942
             return
 
+        if isinstance(win1, wx.ScrollBar):
+            # Hopefully it will work
+            shift = wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X) + 2
+            if part.orientation == wx.HORIZONTAL:
+                pos1.y -= shift
+            else:
+                pos1.x -= shift
+
+        elif isinstance(win2, wx.ScrollBar):
+            shift = wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_Y) + 2
+            if part.orientation == wx.HORIZONTAL:
+                pos2.y += shift
+            else:
+                pos2.x += shift
+            
         tab_frame1, tab_frame2 = self.GetTabFrameFromWindow(win1), self.GetTabFrameFromWindow(win2)
 
         if not tab_frame1 or not tab_frame2:
