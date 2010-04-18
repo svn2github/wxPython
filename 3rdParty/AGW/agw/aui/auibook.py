@@ -4150,6 +4150,27 @@ class AuiNotebook(wx.PyPanel):
         pos1, pos2 = self.ClientToScreen(pos1), self.ClientToScreen(pos2)
         win1, win2 = wx.FindWindowAtPoint(pos1), wx.FindWindowAtPoint(pos2)
 
+        if isinstance(win1, wx.ScrollBar):
+            # Hopefully it will work
+            shift = wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X) + 2
+            if part.orientation == wx.HORIZONTAL:
+                pos1.y -= shift
+            else:
+                pos1.x -= shift
+                
+            pos1 = self.ClientToScreen(pos1)
+            win1 = wx.FindWindowAtPoint(pos1)
+
+        if isinstance(win2, wx.ScrollBar):
+            shift = wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_Y) + 2
+            if part.orientation == wx.HORIZONTAL:
+                pos2.y += shift
+            else:
+                pos2.x += shift
+
+            pos2 = self.ClientToScreen(pos2)
+            win2 = wx.FindWindowAtPoint(pos2)
+
         if not win1 or not win2:
             # How did we get here?
             return
@@ -4160,26 +4181,6 @@ class AuiNotebook(wx.PyPanel):
             # See http://trac.wxwidgets.org/ticket/2942
             return
 
-        shift = None
-        if isinstance(win1, wx.ScrollBar):
-            # Hopefully it will work
-            shift = wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X) + 2
-            if part.orientation == wx.HORIZONTAL:
-                pos1.y -= shift
-            else:
-                pos1.x -= shift
-
-        if isinstance(win2, wx.ScrollBar):
-            shift = wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_Y) + 2
-            if part.orientation == wx.HORIZONTAL:
-                pos2.y += shift
-            else:
-                pos2.x += shift
-
-        if shift is not None:
-            pos1, pos2 = self.ClientToScreen(pos1), self.ClientToScreen(pos2)
-            win1, win2 = wx.FindWindowAtPoint(pos1), wx.FindWindowAtPoint(pos2)
-            
         tab_frame1, tab_frame2 = self.GetTabFrameFromWindow(win1), self.GetTabFrameFromWindow(win2)
 
         if not tab_frame1 or not tab_frame2:
