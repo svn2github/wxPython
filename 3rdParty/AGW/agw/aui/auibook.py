@@ -4164,7 +4164,7 @@ class AuiNotebook(wx.PyPanel):
 
         if isinstance(win2, wx.ScrollBar):
             pos2 = wx.Point(*pos)
-            shift = wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_Y) + 2*(sash_size+1)
+            shift = wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X) + 2*(sash_size+1)
             if part.orientation == wx.HORIZONTAL:
                 pos2.y += shift
             else:
