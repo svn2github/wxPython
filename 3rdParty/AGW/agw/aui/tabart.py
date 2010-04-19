@@ -163,7 +163,7 @@ class AuiDefaultTabArt(object):
     def Clone(self):
         """ Clones the art object. """
 
-        art = AuiDefaultTabArt()
+        art = type(self)()
         art.SetNormalFont(self.GetNormalFont())
         art.SetSelectedFont(self.GetSelectedFont())
         art.SetMeasuringFont(self.GetMeasuringFont())
@@ -989,7 +989,7 @@ class AuiSimpleTabArt(object):
     def Clone(self):
         """ Clones the art object. """
 
-        art = AuiSimpleTabArt()
+        art = type(self)()
         art.SetNormalFont(self.GetNormalFont())
         art.SetSelectedFont(self.GetSelectedFont())
         art.SetMeasuringFont(self.GetMeasuringFont())
@@ -1605,7 +1605,7 @@ class VC71TabArt(AuiDefaultTabArt):
     def Clone(self):
         """ Clones the art object. """
 
-        art = VC71TabArt()
+        art = type(self)()
         art.SetNormalFont(self.GetNormalFont())
         art.SetSelectedFont(self.GetSelectedFont())
         art.SetMeasuringFont(self.GetMeasuringFont())
@@ -1824,7 +1824,7 @@ class FF2TabArt(AuiDefaultTabArt):
     def Clone(self):
         """ Clones the art object. """
 
-        art = FF2TabArt()
+        art = type(self)()
         art.SetNormalFont(self.GetNormalFont())
         art.SetSelectedFont(self.GetSelectedFont())
         art.SetMeasuringFont(self.GetMeasuringFont())
@@ -2118,7 +2118,7 @@ class VC8TabArt(AuiDefaultTabArt):
     def Clone(self):
         """ Clones the art object. """
 
-        art = VC8TabArt()
+        art = type(self)()
         art.SetNormalFont(self.GetNormalFont())
         art.SetSelectedFont(self.GetSelectedFont())
         art.SetMeasuringFont(self.GetMeasuringFont())
@@ -2510,7 +2510,7 @@ class ChromeTabArt(AuiDefaultTabArt):
     def Clone(self):
         """ Clones the art object. """
 
-        art = ChromeTabArt()
+        art = type(self)()
         art.SetNormalFont(self.GetNormalFont())
         art.SetSelectedFont(self.GetSelectedFont())
         art.SetMeasuringFont(self.GetMeasuringFont())

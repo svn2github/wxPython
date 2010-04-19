@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 14 Apr 2010, 12.00 GMT
+# Latest Revision: 19 Apr 2010, 20.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -102,6 +102,7 @@ import auibar
 import auibook
 import tabmdi
 import dockart
+import tabart
 
 from aui_utilities import Clip, PaneCreateStippleBitmap, GetDockingImage, GetSlidingPoints
 
@@ -4056,6 +4057,8 @@ class AuiManager(wx.EvtHandler):
 
         self._preview_timer = wx.Timer(self, wx.ID_ANY)
         self._sliding_frame = None
+
+        self._autoNBTabArt = tabart.AuiDefaultTabArt()
         
         if managed_window:
             self.SetManagedWindow(managed_window)
@@ -5008,10 +5011,32 @@ class AuiManager(wx.EvtHandler):
 
         # This is so we can get the tab-drag event.
         notebook.GetAuiManager().SetMasterManager(self)
+        notebook.SetArtProvider(self._autoNBTabArt.Clone())
         self._notebooks.append(notebook)
 
         return notebook
 
+
+    def SetAutoNotebookTabArt(self, art):
+        """
+        Sets the default tab art provider for automatic notebooks.
+
+        :param `art`: a tab art provider.
+        """
+
+        for nb in self._notebooks:
+            nb.SetArtProvider(art.Clone())
+            nb.Refresh()
+            nb.Update()
+
+        self._autoNBTabArt = art
+
+
+    def GetAutoNotebookTabArt(self):
+        """ Returns the default tab art provider for automatic notebooks. """
+
+        return self._autoNBTabArt        
+        
 
     def SavePaneInfo(self, pane):
         """
