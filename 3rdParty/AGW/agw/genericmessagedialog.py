@@ -551,7 +551,8 @@ class GenericMessageDialog(wx.Dialog):
     """
 
     def __init__(self, parent, message, caption, agwStyle,
-                 pos=wx.DefaultPosition, size=wx.DefaultSize):
+                 pos=wx.DefaultPosition, size=wx.DefaultSize,
+                 style=wx.DEFAULT_DIALOG_STYLE|wx.WANTS_CHARS):
         """
         Default class constructor.
 
@@ -570,11 +571,11 @@ class GenericMessageDialog(wx.Dialog):
          =========================== =========== ==================================================
 
         :param `pos`: the dialog position on screen;
-        :param `size`: the dialog size.
+        :param `size`: the dialog size;
+        :param `style`: the underlying `wx.Dialog` style.
         """
 
-        wx.Dialog.__init__(self, parent, wx.ID_ANY, caption, pos,
-                           size, wx.DEFAULT_DIALOG_STYLE|wx.WANTS_CHARS)
+        wx.Dialog.__init__(self, parent, wx.ID_ANY, caption, pos, size, style)
 
         self._agwStyle = agwStyle        
 
