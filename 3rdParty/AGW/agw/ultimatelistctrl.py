@@ -13118,4 +13118,57 @@ class UltimateListCtrl(wx.PyControl):
         return self._mainWin.IsVirtual()
 
 
+    def GetScrollPos(self):
+        """
+        Returns the scrollbar position.
+
+        :note: This method is forwarded to L{UltimateListMainWindow}.
+        """
+
+        if self._mainWin:
+            return self._mainWin.GetScrollPos()
+
+        return 0
     
+
+    def SetScrollPos(self, orientation, pos, refresh=True):
+        """
+        Sets the scrollbar position.
+
+        :param `orientation`: determines the scrollbar whose position is to be set.
+         May be ``wx.HORIZONTAL`` or ``wx.VERTICAL``;
+        :param `pos`: the scrollbar position in scroll units;
+        :param `refresh`: ``True`` to redraw the scrollbar, ``False`` otherwise.
+
+        :note: This method is forwarded to L{UltimateListMainWindow}.
+        """
+
+        if self._mainWin:
+            self._mainWin.SetScrollPos(orientation, pos, refresh)
+        
+
+    def GetScrollThumb(self):
+        """
+        Returns the scrollbar size in pixels.
+
+        :note: This method is forwarded to L{UltimateListMainWindow}.
+        """
+
+        if self._mainWin:
+            return self._mainWin.GetScrollThumb()
+
+        return 0
+
+
+    def GetScrollRange(self):
+        """
+        Returns the scrollbar range in pixels.
+
+        :note: This method is forwarded to L{UltimateListMainWindow}.
+        """
+
+        if self._mainWin:
+            return self._mainWin.GetScrollRange()
+
+        return 0
+
