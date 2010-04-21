@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 14 Apr 2010, 12.00 GMT
+# Latest Revision: 21 Apr 2010, 21.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -43,7 +43,7 @@ Some features:
 - The scrolling is done for bulks of tabs (so, the scrolling is faster and better);
 - The buttons area is never overdrawn by tabs (unlike many other implementations I saw);
 - It is a generic control;
-- Currently there are 5 different styles - VC8, VC 71, Standard, Fancy and Firefox 2;
+- Currently there are 6 different styles - VC8, VC 71, Standard, Fancy, Firefox 2 and Ribbon;
 - Mouse middle click can be used to close tabs;
 - A function to add right click menu for tabs (simple as L{SetRightClickMenu});
 - All styles has bottom style as well (they can be drawn in the bottom of screen);
@@ -55,6 +55,7 @@ Some features:
 - Colours for active/inactive tabs, and captions;
 - Background of tab area can be painted in gradient (VC8 style only);
 - Colourful tabs - a random gentle colour is generated for each new tab (very cool, VC8 style only);
+- Try setting the tab area color for the Ribbon Style
 
 
 And much more.
@@ -88,6 +89,7 @@ Window Styles                    Hex Value   Description
 ``FNB_DEFAULT_STYLE``                0x10020 FlatNotebook default style.
 ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
 ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
+``FNB_RIBBON_TABS``                  0x80000 Use the Ribbon Tabs style 
 ================================ =========== ==================================================
 
 
@@ -114,9 +116,9 @@ License And Version
 
 FlatNotebook is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
+Latest Revision: Andrea Gavana @ 21 Apr 2010, 21.00 GMT
 
-Version 2.9
+Version 3.0
 """
 
 __docformat__ = "epytext"
@@ -127,6 +129,7 @@ __docformat__ = "epytext"
 #----------------------------------------------------------------------
 
 import wx
+import wx.lib.colourutils as colourutils
 import random
 import math
 import weakref
@@ -211,6 +214,10 @@ FNB_HIDE_ON_SINGLE_TAB = 65536
 
 FNB_NO_TAB_FOCUS = 262144
 """ Does not allow tabs to have focus"""
+
+# Use the Ribbon style for tabs
+FNB_RIBBON_TABS = 0x80000
+"""Use Ribbon style for tabs"""
 
 VERTICAL_BORDER_PADDING = 4
 
@@ -2359,6 +2366,7 @@ class FNBRendererMgr(object):
         self._renderers.update({FNB_VC71: FNBRendererVC71()})
         self._renderers.update({FNB_FANCY_TABS: FNBRendererFancy()})
         self._renderers.update({FNB_VC8: FNBRendererVC8()})
+        self._renderers.update({FNB_RIBBON_TABS: FNBRendererRibbonTabs()})
         self._renderers.update({FNB_FF2: FNBRendererFirefox2()})
 
 
@@ -2376,6 +2384,7 @@ class FNBRendererMgr(object):
          ``FNB_FANCY_TABS``          0x2 Use fancy style - square tabs filled with gradient colouring
          ``FNB_VC8``               0x100 Use Visual Studio 2005 (VC8) style for tabs
          ``FNB_FF2``             0x20000 Use Firefox 2 style for tabs
+         ``FNB_RIBBON_TABS``     0x80000 Use the Ribbon Tabs style to render the tabs
          ===================== ========= ======================
 
         """
@@ -2391,6 +2400,9 @@ class FNBRendererMgr(object):
 
         if style & FNB_FF2:
             return self._renderers[FNB_FF2]
+        
+        if style & FNB_RIBBON_TABS:
+            return self._renderers[FNB_RIBBON_TABS]
 
         # the default is to return the default renderer
         return self._renderers[-1]
@@ -3465,6 +3477,224 @@ class FNBRendererVC8(FNBRenderer):
         
         return vTabInfo
     
+#------------------------------------------------------------------
+# Ribbon Tabs style
+#------------------------------------------------------------------
+class FNBRendererRibbonTabs(FNBRenderer):    
+    """
+    This class handles the drawing of tabs using the 'Ribbon Tabs' renderer.
+    """
+
+    def __init__(self):
+        """ Default class constructor. """
+
+        FNBRenderer.__init__(self)
+        self._first = True
+        self._factor = 1
+        
+    def DrawTab(self, pageContainer, dc, posx, tabIdx, tabWidth, tabHeight, btnStatus):
+        """
+        Draws a tab using the `Standard` style.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`;
+        :param `posx`: the x position of the tab;
+        :param `tabIdx`: the index of the tab;
+        :param `tabWidth`: the tab's width;
+        :param `tabHeight`: the tab's height;
+        :param `btnStatus`: the status of the 'X' button inside this tab.
+        """
+
+        pc = pageContainer 
+        
+        gc = wx.GraphicsContext.Create(dc)
+        gc.SetPen(dc.GetPen())
+        gc.SetBrush(dc.GetBrush())
+
+        spacer = math.ceil(float(FNB_HEIGHT_SPACER)/2/2)
+        gc.DrawRoundedRectangle(posx+1,spacer,tabWidth-1,tabHeight-spacer*2,5)
+        
+        if tabIdx == pc.GetSelection():
+            pass
+        else:
+            if tabIdx != pc.GetSelection() - 1:
+                pass
+
+        # -----------------------------------
+        # Text and image drawing
+        # -----------------------------------
+
+        # Text drawing offset from the left border of the
+        # rectangle
+        
+        # The width of the images are 16 pixels
+        padding = pc.GetParent().GetPadding()
+        hasImage = pc._pagesInfoVec[tabIdx].GetImageIndex() != -1
+        imageYCoord = FNB_HEIGHT_SPACER/2
+
+        if hasImage:
+            textOffset = 2*pc._pParent._nPadding + 16
+        else:
+            textOffset = pc._pParent._nPadding
+
+        textOffset += 2
+
+        if tabIdx != pc.GetSelection():
+        
+            # Set the text background to be like the vertical lines
+            dc.SetTextForeground(pc._pParent.GetNonActiveTabTextColour())
+        
+        if hasImage:
+        
+            imageXOffset = textOffset - 16 - padding
+            pc._ImageList.Draw(pc._pagesInfoVec[tabIdx].GetImageIndex(), dc,
+                                     posx + imageXOffset, imageYCoord,
+                                     wx.IMAGELIST_DRAW_TRANSPARENT, True)
+
+        pageTextColour = pc._pParent.GetPageTextColour(tabIdx)
+        if pageTextColour is not None:
+            dc.SetTextForeground(pageTextColour)
+            
+        dc.DrawText(pc.GetPageText(tabIdx), posx + textOffset, imageYCoord)
+
+        # draw 'x' on tab (if enabled)
+        if pc.HasAGWFlag(FNB_X_ON_TAB) and tabIdx == pc.GetSelection():
+        
+            textWidth, textHeight = dc.GetTextExtent(pc.GetPageText(tabIdx))
+            tabCloseButtonXCoord = posx + textOffset + textWidth + 1
+
+            # take a bitmap from the position of the 'x' button (the x on tab button)
+            # this bitmap will be used later to delete old buttons
+            tabCloseButtonYCoord = imageYCoord
+            x_rect = wx.Rect(tabCloseButtonXCoord, tabCloseButtonYCoord, 16, 16)
+
+            # Draw the tab
+            self.DrawTabX(pc, dc, x_rect, tabIdx, btnStatus)            
+        
+
+    def DrawTabs(self, pageContainer, dc):
+        """
+        Actually draws the tabs in L{FlatNotebook}.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `dc`: an instance of `wx.DC`.
+        """
+
+        pc = pageContainer
+        #style = pc.GetParent().GetWindowStyleFlag()
+        
+        if "__WXMAC__" in wx.PlatformInfo:
+            # Works well on MSW & GTK, however this lines should be skipped on MAC
+            if not pc._pagesInfoVec or pc._nFrom >= len(pc._pagesInfoVec):
+                pc.Hide()
+                return
+            
+        # Get the text height
+        tabHeight = self.CalcTabHeight(pageContainer)
+
+        # Calculate the number of rows required for drawing the tabs
+        rect = pc.GetClientRect()
+        clientWidth = rect.width
+
+        # Set the maximum client size
+        pc.SetSizeHints(self.GetButtonsAreaLength(pc), tabHeight)
+
+        size = pc.GetSize()
+
+        # Background
+        dc.SetTextBackground(pc.GetBackgroundColour())
+        dc.SetTextForeground(pc._activeTextColour)
+
+        borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
+        backBrush = wx.Brush(pc._tabAreaColour)
+
+        # If border style is set, set the pen to be border pen
+        if pc.HasAGWFlag(FNB_TABS_BORDER_SIMPLE):
+            dc.SetPen(borderPen)
+        else:
+            dc.SetPen(wx.Pen(pc._tabAreaColour))
+            
+        dc.SetBrush(backBrush)
+        dc.DrawRectangle(0, 0, size.x, size.y)
+
+        # Draw labels
+        normalFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
+        dc.SetFont(boldFont)
+
+        posx = pc._pParent.GetPadding()
+
+        # Update all the tabs from 0 to 'pc._nFrom' to be non visible
+        for i in xrange(pc._nFrom):
+            pc._pagesInfoVec[i].SetPosition(wx.Point(-1, -1))
+
+        count = pc._nFrom
+        
+        #----------------------------------------------------------
+        # Go over and draw the visible tabs
+        #----------------------------------------------------------
+        selPen = wx.Pen(colourutils.AdjustColour(pc._tabAreaColour,-20))
+        noselPen = wx.Pen(pc._tabAreaColour)
+        noselBrush = wx.Brush(pc._tabAreaColour)
+        selBrush = wx.Brush(LightColour(pc._tabAreaColour,60))
+        
+        for i in xrange(pc._nFrom, len(pc._pagesInfoVec)):
+
+            # This style highlights the selected tab and the tab the mouse is over
+            highlight = (i==pc.GetSelection()) or pc.IsMouseHovering(i)
+            dc.SetPen((highlight and [selPen] or [noselPen])[0])
+            dc.SetBrush((highlight and [selBrush] or [noselBrush])[0])
+
+            # Now set the font to the correct font
+            dc.SetFont((i==pc.GetSelection() and [boldFont] or [normalFont])[0])
+
+            # Add the padding to the tab width
+            # Tab width:
+            # +-----------------------------------------------------------+
+            # | PADDING | IMG | IMG_PADDING | TEXT | PADDING | x |PADDING |
+            # +-----------------------------------------------------------+
+            tabWidth = self.CalcTabWidth(pageContainer, i, tabHeight)
+
+            # Check if we can draw more
+            if posx + tabWidth + self.GetButtonsAreaLength(pc) >= clientWidth:
+                break
+
+            count = count + 1
+            
+            # By default we clean the tab region
+            #pc._pagesInfoVec[i].GetRegion().Clear()
+
+            # Clean the 'x' buttn on the tab.
+            # A 'Clean' rectangle, is a rectangle with width or height
+            # with values lower than or equal to 0
+            pc._pagesInfoVec[i].GetXRect().SetSize(wx.Size(-1, -1))
+
+            # Draw the tab (border, text, image & 'x' on tab)
+            self.DrawTab(pc, dc, posx, i, tabWidth, tabHeight, pc._nTabXButtonStatus)
+
+            # Restore the text forground
+            dc.SetTextForeground(pc._activeTextColour)
+
+            # Update the tab position & size
+            posy = (pc.HasAGWFlag(FNB_BOTTOM) and [0] or [VERTICAL_BORDER_PADDING])[0]
+
+            pc._pagesInfoVec[i].SetPosition(wx.Point(posx, posy))
+            pc._pagesInfoVec[i].SetSize(wx.Size(tabWidth, tabHeight))
+
+            posx += tabWidth
+        
+        # Update all tabs that can not fit into the screen as non-visible
+        for i in xrange(count, len(pc._pagesInfoVec)):
+            pc._pagesInfoVec[i].SetPosition(wx.Point(-1, -1))
+            pc._pagesInfoVec[i].GetRegion().Clear()
+        
+        # Draw the left/right/close buttons
+        # Left arrow
+        self.DrawLeftArrow(pc, dc)
+        self.DrawRightArrow(pc, dc)
+        self.DrawX(pc, dc)
+        self.DrawDropDownArrow(pc, dc)
 
 # ---------------------------------------------------------------------------- #
 # Class FlatNotebook
@@ -3533,7 +3763,7 @@ class FlatNotebook(wx.PyPanel):
         wx.PyPanel.__init__(self, parent, id, pos, size, style)
         
         self._pages = PageContainer(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, style)
-
+        
         self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigationKey)
 
         self.Init()
@@ -4513,6 +4743,9 @@ class PageContainer(wx.Panel):
         self._nRightButtonStatus = FNB_BTN_NONE
         self._nLeftButtonStatus = FNB_BTN_NONE
         self._nTabXButtonStatus = FNB_BTN_NONE
+        
+        self._nHoveringOverTabIndex = -1
+        self._nHoveringOverLastTabIndex = -1
 
         self._setCursor = False        
 
@@ -5056,6 +5289,14 @@ class PageContainer(wx.Panel):
         book.Refresh()
 
 
+    def IsMouseHovering(self, page):
+        """
+        Returns whether or not the mouse is hovering over this page's tab
+
+        :param `page`: an integer specifying the page index.
+        """
+        return page == self._nHoveringOverTabIndex
+    
     def IsTabVisible(self, page):
         """
         Returns whether a tab is visible or not.
@@ -5151,6 +5392,9 @@ class PageContainer(wx.Panel):
             self._nLeftButtonStatus = FNB_BTN_NONE
             self._nTabXButtonStatus = FNB_BTN_NONE
             self._nArrowDownButtonStatus = FNB_BTN_NONE
+            bRedrawTabs = False
+            self._nHoveringOverTabIndex = -1
+                
 
             where, tabIdx = self.HitTest(event.GetPosition())
             
@@ -5208,6 +5452,7 @@ class PageContainer(wx.Panel):
                     wx.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
                     self._setCursor = True
                 else:
+                    self._nHoveringOverTabIndex = tabIdx
                     if self._setCursor:
                         wx.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
                         self._setCursor = False
@@ -5224,6 +5469,10 @@ class PageContainer(wx.Panel):
                     dragSource.SetData(dataobject)
                     dragSource.DoDragDrop(wx.Drag_DefaultMove)
                     
+            if self._nHoveringOverTabIndex != self._nHoveringOverLastTabIndex:
+                self._nHoveringOverLastTabIndex = self._nHoveringOverTabIndex
+                bRedrawTabs = True
+                    
             bRedrawX = self._nXButtonStatus != xButtonStatus
             bRedrawRight = self._nRightButtonStatus != rightButtonStatus
             bRedrawLeft = self._nLeftButtonStatus != leftButtonStatus
@@ -5232,7 +5481,7 @@ class PageContainer(wx.Panel):
 
             render = self._mgr.GetRenderer(agwStyle)
         
-            if (bRedrawX or bRedrawRight or bRedrawLeft or bRedrawTabX or bRedrawDropArrow):
+            if (bRedrawX or bRedrawRight or bRedrawLeft or bRedrawTabX or bRedrawDropArrow or bRedrawTabs):
 
                 dc = wx.ClientDC(self)
                 
@@ -5248,14 +5497,14 @@ class PageContainer(wx.Panel):
                 
                     render.DrawRightArrow(self, dc)
                 
-                if bRedrawTabX:
+                if bRedrawTabX or bRedrawTabs:
                 
                     self.Refresh()
 
                 if bRedrawDropArrow:
 
                     render.DrawDropDownArrow(self, dc)
-
+                    
         event.Skip()
 
 
@@ -5332,6 +5581,8 @@ class PageContainer(wx.Panel):
         self._nRightButtonStatus = FNB_BTN_NONE
         self._nTabXButtonStatus = FNB_BTN_NONE
         self._nArrowDownButtonStatus = FNB_BTN_NONE
+        self._nHoveringOverTabIndex = -1
+        self._nHoveringOverLastTabIndex = -1
 
         agwStyle = self.GetParent().GetAGWWindowStyleFlag()        
         render = self._mgr.GetRenderer(agwStyle)
@@ -5341,6 +5592,7 @@ class PageContainer(wx.Panel):
         render.DrawX(self, dc)
         render.DrawLeftArrow(self, dc)
         render.DrawRightArrow(self, dc)
+        render.DrawTabs(self,dc)
 
         selection = self.GetSelection()
 
@@ -5358,7 +5610,8 @@ class PageContainer(wx.Panel):
                 return
                     
         render.DrawTabX(self, dc, self._pagesInfoVec[selection].GetXRect(), selection, self._nTabXButtonStatus)
-        render.DrawFocusRectangle(dc, self, self._pagesInfoVec[selection])
+        if not agwStyle & FNB_RIBBON_TABS:
+            render.DrawFocusRectangle(dc, self, self._pagesInfoVec[selection])
 
         event.Skip()
 
