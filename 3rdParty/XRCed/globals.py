@@ -20,7 +20,7 @@ logger = logging.getLogger('xrced')
 
 progname = 'xrced'
 ProgName = 'XRCed'
-version = '0.2.0-6'
+version = '0.2.0-7'
 # Minimal wxWidgets version
 MinWxVersion = (2,8,0)
 if wx.VERSION[:3] < MinWxVersion:
@@ -132,7 +132,6 @@ class MyDataObject(wx.PyDataObjectSimple):
 # Test for object elements (!!! move somewhere?)
 def is_object(node):
     return node.nodeType == node.ELEMENT_NODE and \
-           node.tagName in ['object', 'object_ref', 'component']
-#or \
-#           node.nodeType == node.COMMENT_NODE
+        node.tagName in ['object', 'object_ref', 'component'] or \
+        node.nodeType == node.COMMENT_NODE
 

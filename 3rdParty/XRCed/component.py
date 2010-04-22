@@ -103,6 +103,8 @@ class Component(object):
     renameDict = {}
     '''Dictionary of I{old_name}:I{new_name} for renaming some attributes
     in the Attribute Panel.'''
+    hasCode = True
+    '''True if component can generate code.'''
     
     def __init__(self, klass, groups, attributes, **kargs):
         '''
@@ -184,6 +186,8 @@ class Component(object):
             return 0
 
     def getTreeText(self, node):
+        if node.nodeType == node.COMMENT_NODE:
+            return node.data
         if node.tagName == 'object_ref':
             ref = node.getAttribute('ref')
             label = 'ref: %s' % ref
@@ -312,7 +316,7 @@ class Component(object):
                         dstComp.addAttribute(dstNode, a, '|'.join(dstStyles))
                 elif a == 'exstyle':
                     styles = self.getAttribute(srcNode, a).split('|')
-                    allStyles = dstComp.exStyles + params.genericExStyles
+                    allStyles = dstComp.exStyles + self.genericExStyles
                     dstStyles = [s for s in styles if s.strip() in allStyles]
                     if dstStyles:
                         dstComp.addAttribute(dstNode, a, '|'.join(dstStyles))
@@ -424,6 +428,7 @@ class RootComponent(Container):
     windowAttributes = []
     genericStyles = genericExStyles = []
     hasName = False
+    hasCode = False
 
 
 class SmartContainer(Container):
@@ -641,10 +646,11 @@ class _ComponentManager:
         self.panelNames = ['Windows', 'Panels', 'Controls', 'Sizers',  'Menus',
                            'Gizmos', 'Custom']
         self.panelImages = {}
-        self.handlers = []      # registered XmlHandlers
 
     def init(self):
         self.firstId = self.lastId = wx.NewId()
+        self.external = []      # external resources
+        self.handlers = []      # registered XmlHandlers
 
     def register(self, component):
         '''Register component object.'''
@@ -668,11 +674,16 @@ class _ComponentManager:
         # For ref nodes without class name, need to find ref element
         if node is Model.mainNode:
             return self.rootComponent
+        elif node.nodeType == node.COMMENT_NODE:
+            return self.components['comment']
         cls = node.getAttribute('class')
         if node.tagName == 'object_ref':
             if not cls:
                 refNode = Model.findResource(node.getAttribute('ref'))
-                cls = refNode.getAttribute('class')
+                if refNode:
+                    cls = refNode.getAttribute('class')
+                else:
+                    cls = 'unknown'
         if defaultClass and cls not in self.components:
             cls = defaultClass
         return self.components[cls]
@@ -735,8 +746,29 @@ class _ComponentManager:
                 except:
                     logger.exception('error adding XmlHandler "%s"', h)
                     wx.LogError('error adding XmlHandler "%s"' % h)
+
+    def addExternal(self, f):
+        '''Add an external resource file f to the list of preloaded
+        resources.'''
+        self.external.append(f)
+        Model.addExternal(f)
+
+    def preload(self, res):
+        '''Preload external resources.'''
+        for f in self.external:
+            TRACE('Loading external resources: %s', f)
+            res.Load(f)
         
 
 # Singleton object
 Manager = _ComponentManager()
 '''Singleton global object of L{_ComponentManager} class.'''
+
+c = SimpleComponent('comment', ['top_level', 'control'], ['comment'],
+                    specials={'comment': CommentAttribute},
+                    image=images.TreeComment.GetImage())
+c.hasName = False
+c.hasCode = False
+c.setParamClass('comment', params.ParamMultilineText)
+Manager.register(c)
+

@@ -80,7 +80,6 @@ class _Presenter:
     def setModified(self, state=True, setDirty=True):
         '''Set global modified state.'''
         TRACE('setModified %s %s', state, setDirty)
-#        import pdb;pdb.set_trace()
         self.modified = state
         # Set applied flag
         if not state: self.applied = True
@@ -136,7 +135,8 @@ class _Presenter:
             self.panels = view.panel.SetData(self.container, self.comp, Model.mainNode)
         else:
             node = view.tree.GetPyData(item)
-            TRACE('setData: %s', node.getAttribute('class'))
+            if node.nodeType != node.COMMENT_NODE:
+                TRACE('setData: %s', node.getAttribute('class'))
             self.comp = Manager.getNodeComp(node)
             parentItem = view.tree.GetItemParent(item)
             parentNode = view.tree.GetPyData(parentItem)
@@ -242,9 +242,17 @@ class _Presenter:
         if child is None:
             child = Model.createRefNode(ref)
         refNode = Model.findResource(ref)
-        if not refNode: return None
-        comp = Manager.getNodeComp(refNode)
+        if refNode: 
+            comp = Manager.getNodeComp(refNode)
+        else:
+            comp = Manager.getNodeComp(child)
         self.create(comp, child)
+
+    def createComment(self):
+        '''Create comment node.'''
+        node = Model.createCommentNode()
+        comp = Manager.getNodeComp(node)
+        self.create(comp, node)
 
     def replace(self, comp, node=None):
         '''Replace DOM node by new or passed node. Return new item.'''
@@ -290,11 +298,15 @@ class _Presenter:
     def update(self, item):
         '''Update DOM with new attribute values. Update tree if necessary.'''
         node = view.tree.GetPyData(item)
-        subclass = node.getAttribute('subclass')
+        isComment = node.nodeType == node.COMMENT_NODE
+        if isComment:
+            subclass = None
+        else:
+            subclass = node.getAttribute('subclass')
         # Update (sub)class if needed
         cls = view.panel.textClass.GetValue()
         if not subclass:
-            if cls != self.comp.klass:
+            if not isComment and cls != self.comp.klass:
                 if node.tagName == 'object_ref' and not cls:
                     if node.hasAttribute('class'):
                         node.removeAttribute('class')
@@ -463,17 +475,16 @@ class _Presenter:
 
         # XML representation of element or node value string
         data = cPickle.loads(data.GetData()) 
+        implicit = None
         if success:
             if type(data) is list:
                 node = Model.parseString(data[0])
                 implicit = Model.parseString(data[1])
             else:
                 node = Model.parseString(data)
-                implicit = None
-            comp = Manager.getNodeComp(node)
         else:
-            #node = Model.dom.createComment(data)
-            raise NotImplementedError
+            node = Model.dom.createComment(data)
+        comp = Manager.getNodeComp(node)
 
         # Check compatibility
         if not self.checkCompatibility(comp):
@@ -618,6 +629,7 @@ class _Presenter:
         xrc.XmlResource.Set(res)        # set as global
         # Init other handlers
         Manager.addXmlHandlers(res)
+        Manager.preload(res)
         # Same module list
         res.Load('memory:test.xrc')
         object = None
@@ -637,6 +649,7 @@ class _Presenter:
                 pass
             except NotImplementedError:
                 wx.LogError('Test window not implemented for %s' % node.getAttribute('class'))
+                logger.exception('error creating test view')
             except:
                 logger.exception('error creating test view')
                 wx.LogError('Error creating test view')

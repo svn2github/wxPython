@@ -26,6 +26,8 @@ class _Model:
         self.dom = None
 
     def init(self, dom=None):
+        self.external = []
+        self.allowExec = None
         if self.dom: self.dom.unlink()
         if not dom:
             self.dom = MyDocument()
@@ -117,6 +119,10 @@ class _Model:
         node.setAttribute('ref', ref)
         return node
 
+    def createCommentNode(self):
+        node = self.dom.createComment('')
+        return node
+
     def createComponentNode(self, className):
         node = self.dom.createElement('component')
         node.setAttribute('class', className)
@@ -131,9 +137,18 @@ class _Model:
         self.testElem = elem
         oldTestElem.unlink()
 
+    def addExternal(self, path):
+        f = open(path)
+        self.external.append(minidom.parse(f))
+        f.close()
+
     def findResource(self, name, classname='', recursive=True):
         found = DoFindResource(self.mainNode, name, classname, recursive)
         if found: return found
+        # Try to look in external files
+        for dom in self.external:
+            found = DoFindResource(dom.documentElement, name, '', True)
+            if found: return found
         wx.LogError('XRC resource "%s" not found!' % name)
 
 Model = _Model()

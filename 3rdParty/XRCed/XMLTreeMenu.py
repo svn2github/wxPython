@@ -80,7 +80,7 @@ class XMLTreeMenu(wx.Menu):
                 m.Append(component.id + idShift, label, help)
         m.AppendSeparator()
         m.Append(ID.REF, 'reference...', 'Create object_ref node')
-#        m.Append(ID.COMMENT, 'comment', 'Create comment node')        
+        m.Append(ID.COMMENT, 'comment', 'Create comment node')        
         return m
 
     def CreateSubMenus(self, comp, idShift=0):
@@ -103,5 +103,5 @@ class XMLTreeMenu(wx.Menu):
             else:
                 m.Destroy()
         menu.Append(ID.REF, 'reference...', 'Create object_ref node')
-#        menu.Append(ID.COMMENT, 'comment', 'Create comment node')
+        menu.Append(ID.COMMENT, 'comment', 'Create comment node')
         return menu

@@ -15,6 +15,8 @@ class XMLTree(wx.TreeCtrl):
                 wx.TR_HIDE_ROOT | wx.TR_LINES_AT_ROOT
         wx.TreeCtrl.__init__(self, parent, style=style)
 
+        self.locals = {}        # namespace for comment directives
+
         # Color scheme
         self.SetBackgroundColour(wx.Colour(222, 248, 222))
         self.COLOUR_COMMENT  = wx.Colour(0, 0, 255)
@@ -91,14 +93,30 @@ class XMLTree(wx.TreeCtrl):
         if comp.isContainer():
             for n in filter(is_object, node.childNodes):
                 self.AddNode(item, comp.getTreeNode(n))
+        elif node.nodeType == node.COMMENT_NODE:
+            if node.data and node.data[0] == '%' and g.conf.allowExec != 'no':
+                if g.conf.allowExec == 'ask' and Model.allowExec is None:
+                    say = wx.MessageBox('''This file contains executable comment directives. \
+Allow to execute?''', 'Warning', wx.ICON_EXCLAMATION | wx.YES_NO)
+                    if say == wx.YES:
+                        Model.allowExec = True
+                    else:
+                        Model.allowExec = False
+                if g.conf.allowExec == 'yes' or Model.allowExec:
+                    code = node.data[1:] # skip '%'
+                    try:
+                        exec code in globals(), self.locals
+                    except:
+                        wx.LogError('exec error: "%s"' % code)
+                        logger.exception("execution of in-line comment failed")
 
     def SetItemStyle(self, item, node):
         # Different color for comments and references
-        if node.tagName == 'object_ref':
+        if node.nodeType == node.COMMENT_NODE:
+            self.SetItemTextColour(item, self.COLOUR_COMMENT)
+            self.SetItemFont(item, self.fontComment)
+        elif node.tagName == 'object_ref':
             self.SetItemTextColour(item, self.COLOUR_REF)
-#        if className == 'comment':
-#            self.SetItemTextColour(item, self.COLOUR_COMMENT)
-#            self.SetItemFont(item, self.fontComment)
 #        elif treeObj.hasStyle and treeObj.params.get('hidden', False):
 #            self.SetItemTextColour(item, self.COLOUR_HIDDEN)        
 
@@ -107,7 +125,7 @@ class XMLTree(wx.TreeCtrl):
         self.Clear()
         # Update root item
         self.SetPyData(self.root, Model.mainNode)
-        # (first node is test node)
+        # (first node is test node, skip it)
         for n in filter(is_object, Model.mainNode.childNodes[1:]):
             self.AddNode(self.root, n)
 

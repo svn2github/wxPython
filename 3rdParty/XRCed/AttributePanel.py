@@ -140,26 +140,33 @@ class Panel(wx.Panel):
         self.refNode = node
         panels = []
         # Class and name
-        if node.tagName == 'object_ref':
+        if node.nodeType == node.COMMENT_NODE:
+            self.labelRef.Hide()
+            self.textRef.Hide()
+            self.labelClass.Hide()
+            self.textClass.Hide()            
+        elif node.tagName == 'object_ref':
             self.labelRef.Show()
             self.textRef.Show()
             self.textRef.SetValue(node.getAttribute('ref'))
+            self.labelClass.Hide()
+            self.textClass.Hide()
         else:
             self.labelRef.Hide()
             self.textRef.Hide()
-        if comp.klass != 'root':
-            self.labelClass.Show()
-            self.textClass.Show()
-            subclass = node.getAttribute('subclass')
-            if not subclass:
-                self.textClass.SetValue(node.getAttribute('class'))
-            else:
-                self.textClass.SetValue(subclass + '(%s)' % node.getAttribute('class'))
-        else:                   # root node
-            self.labelClass.Hide()
-            self.textClass.Hide()
-            self.labelRef.Hide()
-            self.textRef.Hide()
+            if comp.klass != 'root':
+                self.labelClass.Show()
+                self.textClass.Show()
+                subclass = node.getAttribute('subclass')
+                if not subclass:
+                    self.textClass.SetValue(node.getAttribute('class'))
+                else:
+                    self.textClass.SetValue(subclass + '(%s)' % node.getAttribute('class'))
+            else:                   # root node
+                self.labelClass.Hide()
+                self.textClass.Hide()
+                self.labelRef.Hide()
+                self.textRef.Hide()
         self.labelName.Show(comp.hasName)
         self.textName.Show(comp.hasName)
         if comp.hasName:
@@ -209,13 +216,14 @@ class Panel(wx.Panel):
             self.nb.AddPage(self.pageIA, container.implicitPageName)
             self.SetValues(panel, node.parentNode)
 
-        # Create code page
-        panel = CodePanel(self.pageCode, comp.events)
-        panel.node = node
-        panels.append(panel)
-        self.pageCode.SetPanel(panel)
-        self.nb.AddPage(self.pageCode, 'Code')
-        self.SetCodeValues(panel, comp.getAttribute(node, 'XRCED'))
+        if comp.hasCode:
+            # Create code page
+            panel = CodePanel(self.pageCode, comp.events)
+            panel.node = node
+            panels.append(panel)
+            self.pageCode.SetPanel(panel)
+            self.nb.AddPage(self.pageCode, 'Code')
+            self.SetCodeValues(panel, comp.getAttribute(node, 'XRCED'))
 
         # Select old page if possible and pin is down
         if g.conf.panelPinState:
