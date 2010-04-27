@@ -151,6 +151,8 @@ class Panel(wx.Panel):
             self.textRef.SetValue(node.getAttribute('ref'))
             self.labelClass.Hide()
             self.textClass.Hide()
+            # 'class' can be present for ref?
+            self.textClass.SetValue(node.getAttribute('class'))
         else:
             self.labelRef.Hide()
             self.textRef.Hide()

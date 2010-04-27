@@ -310,6 +310,7 @@ class _Presenter:
                 if node.tagName == 'object_ref' and not cls:
                     if node.hasAttribute('class'):
                         node.removeAttribute('class')
+                        TRACE('removed "class" tag')
                 else:
                     TRACE('update class: %s', cls)
                     node.setAttribute('class', cls)
