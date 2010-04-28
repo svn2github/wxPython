@@ -1896,7 +1896,8 @@ class AuiFrame(wx.Frame):
                     nb.SetArtProvider(aui.ChromeTabArt())
                     self._notebook_theme = 5
 
-                nb.SetAGWWindowStyleFlag(self._notebook_style)
+                if nb.GetAGWWindowStyleFlag() & aui.AUI_NB_BOTTOM == 0:
+                    nb.SetAGWWindowStyleFlag(self._notebook_style)
 
                 if evId == ID_NotebookCloseButtonAll:
                     # Demonstrate how to remove a close button from a tab
