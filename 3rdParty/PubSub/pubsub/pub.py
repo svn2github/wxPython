@@ -18,7 +18,7 @@ TODO: add isMsgReceivable(listener, topicName) to find out if listener is
 
 PUBSUB_VERSION = 3                     # DO NOT CHANGE
 SVN_VERSION = "$Rev: 243 $".split()[1] # DO NOT CHANGE
-VERSION_STR = "3.1.0b1.200912.r" + SVN_VERSION
+VERSION_STR = "3.1.1b1.201005.r" + SVN_VERSION
 
 
 from core.listener import \
@@ -103,7 +103,8 @@ setNotificationFlags      = _publisher.setNotificationFlags
 getNotificationFlags      = _publisher.getNotificationFlags
 
 setTopicUnspecifiedFatal = _publisher.setTopicUnspecifiedFatal
-    
+getMsgProtocol = _publisher.getMsgProtocol
+
 # ---------------------------------------------
 _topicMgr = _publisher.getTopicMgr()
 

@@ -10,7 +10,6 @@ send a message to the topic's listeners via a publish() method.
 
 
 from publisherbase import PublisherBase
-import policies
 
 
 class Publisher(PublisherBase):
@@ -37,4 +36,6 @@ class Publisher(PublisherBase):
 
         topicObj.publish(data)
 
+    def getMsgProtocol(self):
+        return 'arg1'
 

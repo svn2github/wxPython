@@ -70,7 +70,7 @@ def _prependModulePath(extra):
     initpyLoc = corepath[-1]
     import os
     corepath.insert(0, os.path.join(initpyLoc, extra))
-
+    
 
 # default protocol:
 _prependModulePath('kwargs')

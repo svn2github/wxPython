@@ -36,9 +36,6 @@ for message data via keyword arguments, notifications for calls into
 pubsub, exception trapping for listeners, and topic tree documentation.
 
 :Author:      Oliver Schoenborn
-:Since:       Apr 2004
-:Version:     1.1
-
 :Copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
 :License: BSD, see LICENSE.txt for details.
 """
@@ -68,7 +65,7 @@ much cleaner separation of concerns. But time is over, time to move on.
 
 
 PUBSUB_VERSION = 1 # must be copied into Publisher singleton
-VERSION_STR = "1.0.200904.r159"
+VERSION_STR = "1.1.200904.r159"
 
 #---------------------------------------------------------------------------
 

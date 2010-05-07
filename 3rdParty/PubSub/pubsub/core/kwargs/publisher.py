@@ -37,10 +37,13 @@ class PublisherKwargs(PublisherBase):
 
         topicObj.publish(**kwargs)
 
+    def getMsgProtocol(self):
+        return 'kwargs'
+
 
 class PublisherArg1Stage2(PublisherKwargs):
     '''
-    This is used when transitioning from DataMsg to Kwargs
+    This is used when transitioning from arg1 to kwargs
     messaging protocol.
     '''
 
@@ -72,6 +75,9 @@ class PublisherArg1Stage2(PublisherKwargs):
         data = kwarg.get(commonArgName, None)
         kwargs = { commonArgName: self.Msg( _topicName, data) }
         PublisherKwargs.sendMessage( self, _topicName, **kwargs )
+
+    def getMsgProtocol(self):
+        return 'kwarg1'
 
 
 if policies.msgProtocolTransStage is None:
