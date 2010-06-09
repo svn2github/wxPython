@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 14 Apr 2010, 12.00 GMT
+# Latest Revision: 09 Jun 2010, 12.00 GMT
 #
 #
 # TODO List
@@ -213,7 +213,7 @@ License And Version
 
 HyperTreeList is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
+Latest Revision: Andrea Gavana @ 09 Jun 2010, 12.00 GMT
 
 Version 1.2
 
@@ -4062,7 +4062,8 @@ class HyperTreeList(wx.PyControl):
         self.CalculateAndSetHeaderHeight()
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
-        self.SetBuffered(IsBufferingSupported())        
+        self.SetBuffered(IsBufferingSupported())
+        self._main_win.SetAGWWindowStyleFlag(agwStyle)
         
 
     def SetBuffered(self, buffered):
