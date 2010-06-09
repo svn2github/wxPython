@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2005
-# Latest Revision: 14 Apr 2010, 12.00 GMT
+# Latest Revision: 09 Jun 2010, 12.00 GMT
 #
 #
 # TODO List/Caveats
@@ -104,7 +104,7 @@ License And Version
 
 FloatSpin control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
+Latest revision: Andrea Gavana @ 09 Jun 2010, 12.00 GMT
 
 Version 0.9
 
@@ -426,12 +426,10 @@ class FloatSpin(wx.PyControl):
         # Setting the spin buttons's size in the ctor also sets its min size. 
         # Under OS X that results in a rendering artifact because spin buttons
         # are a little shorter than textboxes. 
-        # Setting the min size to the default allows OS X to draw the spin 
-        # button correctly. However, Windows takes the call to SetMinSize() 
-        # as a cue to size the spin button considerably taller than the 
-        # textbox, so we avoid that call under Windows. 
-        # The call to SetMinSize() isn't necessary under GTK, nor does it
-        # do any harm.
+        # Setting the min size to the default allows OS X to draw the spin
+        # button correctly. However, Windows and KDE take the call to
+        # SetMinSize() as a cue to size the spin button taller than the
+        # textbox, so we avoid the call there.
         if "__WXMAC__" in wx.PlatformInfo:
             self._spinbutton.SetMinSize(wx.DefaultSize)
         # end Philip Semanchuk addition
