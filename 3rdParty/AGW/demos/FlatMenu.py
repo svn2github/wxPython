@@ -46,6 +46,7 @@ else:
 # Menu items IDs
 #-------------------------------
 
+MENU_STYLE_DEFAULT = wx.NewId()
 MENU_STYLE_XP = wx.NewId()
 MENU_STYLE_2007 = wx.NewId()
 MENU_STYLE_MY = wx.NewId()
@@ -74,15 +75,24 @@ def switchRGBtoBGR(colour):
 # A custom renderer class for FlatMenu
 #------------------------------------------------------------
 
-class FM_MyRenderer(RendererBase):
+class FM_MyRenderer(FM.FMRenderer):
     """ My custom style. """
     
     def __init__(self):
 
-        RendererBase.__init__(self)
+        FM.FMRenderer.__init__(self)
 
+    def DrawMenuButton(self, dc, rect, state):
+        """Draws the highlight on a FlatMenu"""
+        
+        self.DrawButton(dc, rect, state)
+        
+    def DrawMenuBarButton(self, dc, rect, state):
+        """Draws the highlight on a FlatMenuBar"""
+        
+        self.DrawButton(dc, rect, state)
 
-    def DrawButton(self, dc, rect, state, useLightColours=True):
+    def DrawButton(self, dc, rect, state, colour=None):
 
         if state == ControlFocus:
             penColour = switchRGBtoBGR(ArtManager.Get().FrameColour())
@@ -100,7 +110,7 @@ class FM_MyRenderer(RendererBase):
         dc.DrawRoundedRectangle(rect.x, rect.y, rect.width, rect.height,4)
 
 
-    def DrawMenuBarBg(self, dc, rect):
+    def DrawMenuBarBackground(self, dc, rect):
 
         # For office style, we simple draw a rectangle with a gradient colouring
         vertical = ArtManager.Get().GetMBVerticalGradient()
@@ -108,7 +118,7 @@ class FM_MyRenderer(RendererBase):
         dcsaver = DCSaver(dc)
 
         # fill with gradient
-        startColour = ArtManager.Get().GetMenuBarFaceColour()
+        startColour = self.menuBarFaceColour
         endColour   = ArtManager.Get().LightColour(startColour, 90)
 
         dc.SetPen(wx.Pen(endColour))
@@ -122,7 +132,7 @@ class FM_MyRenderer(RendererBase):
             return
 
         # fill with gradient
-        startColour = ArtManager.Get().GetMenuBarFaceColour()
+        startColour = self.menuBarFaceColour()
         dc.SetPen(wx.Pen(startColour))
         dc.SetBrush(wx.Brush(startColour))
         dc.DrawRectangle(0, 0, rect.GetWidth(), rect.GetHeight())
@@ -253,8 +263,7 @@ class FlatMenuDemo(wx.Frame):
         subMenu1 = FM.FlatMenu()
         subMenuExit = FM.FlatMenu()
 
-        self.newMyTheme = ArtManager.Get().AddMenuTheme(FM_MyRenderer())
-        ArtManager.Get().SetMenuTheme(self.newMyTheme)
+        self.newMyTheme = self._mb.GetRendererManager().AddRenderer(FM_MyRenderer())
 
         # Load toolbar icons (32x32)
         copy_bmp = wx.Bitmap(os.path.join(bitmapDir, "editcopy.png"), wx.BITMAP_TYPE_PNG)
@@ -345,9 +354,12 @@ class FlatMenuDemo(wx.Frame):
         fileMenu.AppendItem(item)
 
         # Second menu
-        item = FM.FlatMenuItem(styleMenu, MENU_STYLE_MY, "Menu style Custom (Default)\tAlt+N", "Menu style Custom (Default)", wx.ITEM_RADIO)
+        item = FM.FlatMenuItem(styleMenu, MENU_STYLE_DEFAULT, "Menu style Default\tAlt+N", "Menu style Default", wx.ITEM_RADIO)
         styleMenu.AppendItem(item)
         item.Check(True)
+        
+        item = FM.FlatMenuItem(styleMenu, MENU_STYLE_MY, "Menu style Custom \tAlt+C", "Menu style Custom", wx.ITEM_RADIO)
+        styleMenu.AppendItem(item)
 
         item = FM.FlatMenuItem(styleMenu, MENU_STYLE_XP, "Menu style XP\tAlt+P", "Menu style XP", wx.ITEM_RADIO)        
         styleMenu.AppendItem(item)
@@ -444,6 +456,7 @@ class FlatMenuDemo(wx.Frame):
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnFlatMenuCmd, id=MENU_NEW_FILE, id2=20013)
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnAbout, id=MENU_HELP)
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnStyle, id=MENU_STYLE_MY)
+        self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnStyle, id=MENU_STYLE_DEFAULT)
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnShowCustom, id=MENU_USE_CUSTOM)
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnLCDMonitor, id=MENU_LCD_MONITOR)
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnTransparency, id=MENU_TRANSPARENCY)
@@ -617,12 +630,18 @@ class FlatMenuDemo(wx.Frame):
 
         eventId = event.GetId()
         
+        if eventId == MENU_STYLE_DEFAULT:
+            self._mb.GetRendererManager().SetTheme(FM.StyleDefault)
+            self._mb.ClearBitmaps()
         if eventId == MENU_STYLE_2007:
-            ArtManager.Get().SetMenuTheme(FM.Style2007)
+            self._mb.GetRendererManager().SetTheme(FM.Style2007)
+            self._mb.ClearBitmaps()
         elif eventId == MENU_STYLE_XP:
-            ArtManager.Get().SetMenuTheme(FM.StyleXP)
+            self._mb.GetRendererManager().SetTheme(FM.StyleXP)
+            self._mb.ClearBitmaps()
         elif eventId == MENU_STYLE_MY:
-            ArtManager.Get().SetMenuTheme(self.newMyTheme)
+            self._mb.GetRendererManager().SetTheme(self.newMyTheme)
+            self._mb.ClearBitmaps()
 
         self._mb.Refresh()
         self._mtb.Refresh()

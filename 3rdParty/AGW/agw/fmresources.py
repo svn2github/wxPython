@@ -1,6 +1,9 @@
+import wx
+
 # Overall menu styles
-StyleXP = 0
-Style2007 = 1
+StyleDefault = 0
+StyleXP      = 1
+Style2007    = 2
 
 # Menu shadows
 RightShadow             = 1 # Right side shadow
@@ -64,7 +67,10 @@ MENU_DEC_LEFT = 2
 MENU_DEC_RIGHT = 3
 
 DROP_DOWN_ARROW_WIDTH = 16
-SPACER = 3
+SPACER = 12 
+MARGIN = 3
+TOOLBAR_SPACER = 4
+TOOLBAR_MARGIN = 4
 SEPARATOR_WIDTH = 12
 SCROLL_BTN_HEIGHT = 20
 
@@ -266,7 +272,6 @@ arrow_down_xpm = ["16 16 3 1",
                   "                ",
                   "                "]
 
-
 #---------------------------------------------
 # Pin images
 #---------------------------------------------
@@ -342,3 +347,54 @@ arrow_down = 'BM\xf6\x00\x00\x00\x00\x00\x00\x00v\x00\x00\x00(\x00\x00\x00\x10\x
 """""\x10\x00\x00\x12""""\x00\x00\x00\x02""""""""""""\x11\x11\x11\x12""""\x00\x00\x00\x02\
 """"""""""""""""""""""""""""""""""'
 
+menu_up_arrow_xpm = ["16 16 2 1",
+                  ". c Black",
+                  "  c White",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "       .        ",
+                  "      ...       ",
+                  "     .....      ",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "                "]
+
+
+menu_down_arrow_xpm = ["16 16 2 1",
+                  ". c Black",
+                  "  c White",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "     .....      ",
+                  "      ...       ",
+                  "       .        ",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "                ",
+                  "                "]
+
+
+def getMenuUpArrowBitmap():
+    bmp = wx.BitmapFromXPMData(menu_up_arrow_xpm)
+    bmp.SetMask(wx.Mask(bmp, wx.WHITE))
+    return bmp
+
+def getMenuDownArrowBitmap():
+    bmp = wx.BitmapFromXPMData(menu_down_arrow_xpm)
+    bmp.SetMask(wx.Mask(bmp, wx.WHITE))
+    return bmp

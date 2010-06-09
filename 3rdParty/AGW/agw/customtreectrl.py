@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 14 Apr 2010, 12.00 GMT
+# Latest Revision: 09 Jun 2010, 12.00 GMT
 #
 #
 # TODO List
@@ -211,7 +211,7 @@ License And Version
 
 CustomTreeCtrl is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
+Latest Revision: Andrea Gavana @ 09 Jun 2010, 12.00 GMT
 
 Version 2.1
 
@@ -3885,8 +3885,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
     def ResetTextControl(self):
         """ Called by L{TreeTextCtrl} when it marks itself for deletion. """
 
-        self._textCtrl.Destroy()
-        self._textCtrl = None
+        if self._textCtrl is not None:
+            self._textCtrl.Destroy()
+            self._textCtrl = None
 
         self.CalculatePositions()
         self.Refresh()
