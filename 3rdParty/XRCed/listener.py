@@ -719,7 +719,7 @@ Homepage: http://xrced.sourceforge.net\
         container = Presenter.container
         comp = Presenter.comp
         treeNode = self.tree.GetPyData(Presenter.item)
-        isComment = treeNode.nodeType == treeNode.COMMENT_NODE
+        isComment = treeNode and treeNode.nodeType == treeNode.COMMENT_NODE
         # Wokraround for wxMSW: view.tree.GetPrevSibling crashes
         if evt.GetId() in [self.frame.ID_MOVEUP, self.frame.ID_MOVERIGHT,
                            self.frame.ID_MOVEDOWN, self.frame.ID_MOVELEFT] and \

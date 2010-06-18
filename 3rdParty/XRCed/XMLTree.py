@@ -75,7 +75,7 @@ class XMLTree(wx.TreeCtrl):
             attributes = []
             isContainer = False
             for n in node.childNodes:
-                if is_object(n):
+                if is_element(n):
                     isContainer = True
                 elif n.nodeType == node.ELEMENT_NODE and not n.tagName in attributes:
                     attributes.append(n.tagName)
@@ -104,11 +104,16 @@ Allow to execute?''', 'Warning', wx.ICON_EXCLAMATION | wx.YES_NO)
                         Model.allowExec = False
                 if g.conf.allowExec == 'yes' or Model.allowExec:
                     code = node.data[1:] # skip '%'
-                    try:
-                        exec code in globals(), self.locals
-                    except:
-                        wx.LogError('exec error: "%s"' % code)
-                        logger.exception("execution of in-line comment failed")
+                    self.ExecCode(code)
+
+    # Maybe this should be moved to presenter?
+    def ExecCode(self, code):
+        logger.debug('executing comment pragma: \n%s', code)
+        try:
+            exec code in globals(), self.locals
+        except:
+            wx.LogError('exec error: "%s"' % code)
+            logger.exception("execution of in-line comment failed")
 
     def SetItemStyle(self, item, node):
         # Different color for comments and references
@@ -197,6 +202,16 @@ Allow to execute?''', 'Warning', wx.ICON_EXCLAMATION | wx.YES_NO)
             for k in range(i): item = self.GetNextSibling(item)
         return item
 
+    # Return item child index in parent (skip non-window items)
+    def ItemIndexWin(self, item):
+        n = 0                           # index of sibling
+        prev = self.GetPrevSibling(item)
+        while prev.IsOk():
+            if self.GetPyData(prev).nodeType != Model.dom.COMMENT_NODE: 
+                n += 1
+            prev = self.GetPrevSibling(prev)
+        return n
+
     # Get expanded state of all items
     def GetFullState(self, item=None):
         if not item: item = self.root
@@ -227,7 +242,7 @@ Allow to execute?''', 'Warning', wx.ICON_EXCLAMATION | wx.YES_NO)
     # Find item with given data (node)
     def Find(self, item, name):
         node = self.GetPyData(item)
-        if is_object(node) and node.getAttribute('name') == name:
+        if is_element(node) and node.getAttribute('name') == name:
             return item
         item,cookie = self.GetFirstChild(item)
         while item:

@@ -443,7 +443,7 @@ class SmartContainer(Container):
         self.implicitParams = kargs.pop('implicit_params', {})
 
     def getTreeNode(self, node):
-        if node.getAttribute('class') == self.implicitKlass:
+        if is_element(node) and node.getAttribute('class') == self.implicitKlass:
             for n in node.childNodes: # find first object
                 if is_object(n): return n
         # Maybe some children are not implicit
@@ -544,7 +544,7 @@ class Sizer(SmartContainer):
         return True
 
     def requireImplicit(self, node):
-        return node.getAttribute('class') != 'spacer'
+        return is_element(node) and node.getAttribute('class') != 'spacer'
 
     def getChildObject(self, node, obj, index):
         obj = obj.GetChildren()[index]
@@ -605,7 +605,8 @@ class BoxSizer(Sizer):
         return rects
 
     def setDefaults(self, node):
-        if node.tagName == 'object_ref': return
+        if node.nodeType == node.COMMENT_NODE or \
+            node.tagName == 'object_ref': return
         if self.requireImplicit(node):
             comp = Manager.getNodeComp(node)
             sizerItem = self.getTreeOrImplicitNode(node)

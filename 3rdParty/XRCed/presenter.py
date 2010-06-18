@@ -154,7 +154,8 @@ class _Presenter:
 
     def highlight(self, item):
         TRACE('highlight')
-        if view.testWin.IsDirty():
+        if view.testWin.IsDirty() or item == view.tree.root or \
+            view.tree.GetPyData(item).nodeType == Model.dom.COMMENT_NODE:
             view.testWin.RemoveHighlight()
             return
         try:
@@ -353,7 +354,7 @@ class _Presenter:
                             comp = self.comp
                         comp.addAttribute(panel.node, a, value)
                     except:
-                        logging.exception('addAttribute error: %s %s', a, value)
+                        logger.exception('addAttribute error: %s %s', a, value)
         if item != view.tree.root:
             view.tree.SetItemImage(item, self.comp.getTreeImageId(node))
             view.tree.SetItemText(item, self.comp.getTreeText(node))
@@ -517,7 +518,7 @@ class _Presenter:
         node = self.container.getTreeOrImplicitNode(treeNode)
         parent = node.parentNode
         prevNode = node.previousSibling
-        while prevNode.nodeType != node.ELEMENT_NODE:
+        while not is_object(prevNode):
             prevNode = prevNode.previousSibling
         parent.removeChild(node)
         parent.insertBefore(node, prevNode)
@@ -534,10 +535,10 @@ class _Presenter:
         node = self.container.getTreeOrImplicitNode(treeNode)
         parent = node.parentNode
         nextNode = node.nextSibling
-        while nextNode.nodeType != node.ELEMENT_NODE:
+        while not is_object(nextNode):
             nextNode = nextNode.nextSibling
         nextNode = nextNode.nextSibling
-        while nextNode and nextNode.nodeType != node.ELEMENT_NODE:
+        while nextNode and not is_object(nextNode):
             nextNode = nextNode.nextSibling
         parent.removeChild(node)
         parent.insertBefore(node, nextNode)
@@ -609,6 +610,17 @@ class _Presenter:
         TRACE('createTestWin')
         # Create a window with this resource
         node = view.tree.GetPyData(item)
+        # Execute "pragma" comment node
+        if node.nodeType == node.COMMENT_NODE:
+            if node.data and node.data[0] == '%' and g.conf.allowExec != 'no':
+                say = wx.NO
+                if g.conf.allowExec == 'ask' and Model.allowExec is None:
+                    say = wx.MessageBox('Execute comment directive?', 'Warning', 
+                                        wx.ICON_EXCLAMATION | wx.YES_NO)
+                if g.conf.allowExec == 'yes' or say == wx.YES:
+                    code = node.data[1:] # skip '%'
+                    view.tree.ExecCode(code)
+            return
         # Close old window, remember where it was
         comp = Manager.getNodeComp(node)
         # Create memory XML file
@@ -674,8 +686,7 @@ class _Presenter:
         '''Refresh test window after some change.'''
         TRACE('refreshTestWin')
         if not view.testWin.IsDirty(): return
-        if not self.applied:
-            self.update(self.item)
+        if not self.applied: self.update(self.item)
         # Dumb refresh
         self.createTestWin(view.testWin.item)
         self.highlight(self.item)
