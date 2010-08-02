@@ -10269,4 +10269,70 @@ class AuiManager(wx.EvtHandler):
         self._sliding_frame = None
         self._sliding_pane = None
         
+
+class AuiManager_DCP(aui.AuiManager):
+    """
+    A class similar to L{AuiManager} but with a Dummy Center Pane (**DCP**).
+    The code for this class is still flickery due to the call to `wx.CallAfter`
+    and the double-update call.
+    """
+    
+    def __init__(self, *args, **keys):
+
+        aui.AuiManager.__init__(self, *args, **keys)
+        self.hasDummyPane = False
         
+
+    def _createDummyPane(self):
+        """ Creates a Dummy Center Pane (**DCP**). """
+
+        if self.hasDummyPane:
+            return
+
+        self.hasDummyPane = True
+        dummy = wx.Panel(self.GetManagedWindow())
+        info = aui.AuiPaneInfo().CenterPane().NotebookDockable(True).Name('dummyCenterPane').DestroyOnClose(True)
+        self.AddPane(dummy, info)
+
+
+    def _destroyDummyPane(self):
+        """ Destroys the Dummy Center Pane (**DCP**). """
+
+        if not self.hasDummyPane:
+            return
+        
+        self.hasDummyPane = False
+        self.ClosePane(self.GetPane('dummyCenterPane'))
+
+        
+    def Update(self):
+        """
+        This method is called after any number of changes are made to any of the
+        managed panes. L{Update} must be invoked after L{AuiManager.AddPane} or L{AuiManager.InsertPane} are
+        called in order to "realize" or "commit" the changes.
+
+        In addition, any number of changes may be made to L{AuiPaneInfo} structures
+        (retrieved with L{AuiManager.GetPane}), but to realize the changes, L{Update}
+        must be called. This construction allows pane flicker to be avoided by updating
+        the whole layout at one time.
+        """
+        
+        aui.AuiManager.Update(self)
+
+        # check if there's already a center pane (except our dummy pane)
+        dummyCenterPane = self.GetPane('dummyCenterPane')
+        haveCenterPane = any((pane != dummyCenterPane) and (pane.dock_direction == aui.AUI_DOCK_CENTER) and
+                             not pane.IsFloating() and pane.IsShown() for pane in self.GetAllPanes())
+        if haveCenterPane:
+            if self.hasDummyPane:
+                # there's our dummy pane and also another center pane, therefor let's remove our dummy
+                def do():
+                    self._destroyDummyPane()
+                    self.Update()
+                wx.CallAfter(do)
+        else:
+            # if we get here, there's no center pane, create our dummy
+            if not self.hasDummyPane:
+                self._createDummyPane()
+
+                
