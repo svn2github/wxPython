@@ -502,6 +502,7 @@ class ImageContainerBase(wx.Panel):
             self._nImgSize = imglist.GetBitmap(0).GetHeight()
 
         self._ImageList = imglist
+        parent = self.GetParent()
         agwStyle = parent.GetAGWWindowStyleFlag()
         parent.SetAGWWindowStyleFlag(agwStyle)
         
