@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 28 Apr 2010, 14.00 GMT
+# Latest Revision: 02 Aug 2010, 09.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -4546,7 +4546,8 @@ class AuiManager(wx.EvtHandler):
         :param `arg1`: a L{AuiPaneInfo} or an integer value (direction);
         :param `arg2`: a L{AuiPaneInfo} or a `wx.Point` (drop position);
         :param `target`: a L{AuiPaneInfo} to be turned into a notebook
-         and new pane added to it as a page.
+         and new pane added to it as a page. (additionally, target can be any pane in 
+         an existing notebook)
          """
  
         if target in self._panes:
@@ -4705,32 +4706,20 @@ class AuiManager(wx.EvtHandler):
                
         paneInfo = self.GetPane(window)
         
-        if not target.IsNotebookDockable():
+        if not paneInfo.IsNotebookDockable():
             return self.AddPane1(window, pane_info)
-        if not paneInfo.IsNotebookDockable() and not paneInfo.IsNotebookControl():
+        if not target.IsNotebookDockable() and not target.IsNotebookControl():
             return self.AddPane1(window, pane_info)
 
-        if not paneInfo.HasNotebook():
-            # Add a new notebook pane ...
-            id = len(self._notebooks)
-            
-            bookBasePaneInfo = AuiPaneInfo()
-            bookBasePaneInfo.SetDockPos(target).NotebookControl(id). \
-                CloseButton(False).SetNameFromNotebookId(). \
-                NotebookDockable(False)
-            bookBasePaneInfo.best_size = paneInfo.best_size
-            self._panes.append(bookBasePaneInfo)
-
-            # add original pane as tab ...
-            paneInfo.NotebookPage(id)
+        if not target.HasNotebook():
+            self.CreateNotebookBase(self._panes, target)
         
         # Add new item to notebook
-        target.NotebookPage(paneInfo.notebook_id)
+        paneInfo.NotebookPage(target.notebook_id)
 
         # we also want to remove our captions sometimes
-        if not self.RemoveAutoNBCaption(target):
-            # Update for position and _notebooks in case we have another target
-            self.Update()
+        self.RemoveAutoNBCaption(paneInfo)
+        self.UpdateNotebook()
         
         return True
 
@@ -7569,18 +7558,8 @@ class AuiManager(wx.EvtHandler):
 
                 if not paneInfo.HasNotebook():
                 
-                    # Add a new notebook pane ...
-                    id = len(self._notebooks)
-
-                    bookBasePaneInfo = AuiPaneInfo()
-                    bookBasePaneInfo.SetDockPos(paneInfo).NotebookControl(id). \
-                        CloseButton(False).SetNameFromNotebookId(). \
-                        NotebookDockable(False).Floatable(paneInfo.IsFloatable())
-                    bookBasePaneInfo.best_size = paneInfo.best_size
-                    panes.append(bookBasePaneInfo)
-
-                    # add original pane as tab ...
-                    paneInfo.NotebookPage(id)
+                    # Add a new notebook pane with the original as a tab...
+                    self.CreateNotebookBase(panes, paneInfo)
                 
                 # Add new item to notebook
                 target.NotebookPage(paneInfo.notebook_id)
@@ -9891,6 +9870,27 @@ class AuiManager(wx.EvtHandler):
         event.Skip()
         self.RemoveAutoNBCaption(event.GetPane())        
     
+
+    def CreateNotebookBase(self, panes, paneInfo):
+        """
+        Creates an auto-notebook base from a pane, and then add that pane as a page.
+
+        :param `panes`: Set of panes to append new notebook base pane to
+        :param `paneInfo`: L{AuiPaneInfo} instance to convert to new notebook.
+        """
+
+        # Create base notebook pane ...
+        nbid = len(self._notebooks)
+
+        baseInfo = AuiPaneInfo()
+        baseInfo.SetDockPos(paneInfo).NotebookControl(nbid). \
+            CloseButton(False).SetNameFromNotebookId(). \
+            NotebookDockable(False).Floatable(paneInfo.IsFloatable())
+        baseInfo.best_size = paneInfo.best_size
+        panes.append(baseInfo)
+
+        # add original pane as tab ...
+        paneInfo.NotebookPage(nbid)
 
     def RemoveAutoNBCaption(self, pane):
         """

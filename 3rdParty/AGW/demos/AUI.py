@@ -1237,6 +1237,10 @@ class AuiFrame(wx.Frame):
                           Name("test10").Caption("Text Pane with Hide Prompt").
                           Bottom().MinimizeButton(True), target=self._mgr.GetPane("autonotebook"))
 
+        self._mgr.AddPane(self.CreateTreeCtrl(), aui.AuiPaneInfo().
+                          Name("thirdauto").Caption("A Third Auto-NB Pane").
+                          Bottom().MinimizeButton(True), target=self._mgr.GetPane("autonotebook"))
+
         self._mgr.AddPane(self.CreateSizeReportCtrl(), aui.AuiPaneInfo().
                           Name("test11").Caption("Fixed Pane").
                           Bottom().Layer(1).Position(2).Fixed().MinimizeButton(True))
@@ -1308,6 +1312,7 @@ class AuiFrame(wx.Frame):
         self._mgr.GetPane("test8").Show().Left().Layer(0).Row(0).Position(0)
         self._mgr.GetPane("__notebook_%d"%self._mgr.GetPane("test10").notebook_id).Show().Bottom().Layer(0).Row(0).Position(0)
         self._mgr.GetPane("autonotebook").Show()
+        self._mgr.GetPane("thirdauto").Show()
         self._mgr.GetPane("test10").Show()
         self._mgr.GetPane("notebook_content").Show()
         perspective_default = self._mgr.SavePerspective()

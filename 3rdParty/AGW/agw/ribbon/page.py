@@ -397,33 +397,15 @@ class RibbonPage(RibbonControl):
     def RemoveChild(self, child):
 
         # Remove all references to the child from the collapse stack
-        count = len(self._collapse_stack)
-        src = dst = 0
 
-        while 1:
-            
-            item = self._collapse_stack[src]
-            
-            if item == child:
-                src += 1
-                if src == count:                
-                    break
-                
-            if src != dst:            
-                self._collapse_stack[dst] = item
+        try:
+            self._collapse_stack.remove(child)
+        except ValueError:
+            pass
 
-            src += 1
-            dst += 1
-            
-            if src == count:
-                break
-                    
-        if src > dst:
-            self._collapse_stack = self._collapse_stack[0:dst] + self._collapse_stack[src:]
-        
         # ... and then proceed as normal
         RibbonControl.RemoveChild(self, child)
-
+        
 
     def Realize(self):
         """

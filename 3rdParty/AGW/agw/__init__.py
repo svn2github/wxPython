@@ -58,6 +58,8 @@ an asterisk were already present in `wx.lib` before:
   it is similar to `wx.BusyInfo`;
 - PyCollapsiblePane: a pure Python implementation of the original wxWidgets
   C++ code of `wx.CollapsiblePane`, with customizable buttons;
+- PyGauge: a generic `wx.Gauge` implementation, it supports the determinate
+  mode functions as `wx.Gauge`;
 - PyProgress: it is similar to `wx.ProgressDialog` in indeterminated mode, but
   with a different gauge appearance and a different spinning behavior;
 - RibbonBar: the RibbonBar library is a set of classes for writing a ribbon
@@ -107,11 +109,11 @@ You can contact me at:
 andrea.gavana@gmail.com
 gavana@kpo.kz
 
-AGW version: 0.8.0
+AGW version: 0.9.0
 
-Last updated: 09 Jun 2010, 12.00 GMT
+Last updated: 02 Aug 2010, 09.00 GMT
 
 """
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"

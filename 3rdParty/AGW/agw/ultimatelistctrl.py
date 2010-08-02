@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 16 Apr 2010, 23.00 GMT
+# Latest Revision: 02 Aug 2010, 09.00 GMT
 #
 #
 # TODO List
@@ -175,9 +175,9 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 16 Apr 2010, 23.00 GMT
+Latest Revision: Andrea Gavana @ 02 Aug 2010, 09.00 GMT
 
-Version 0.6
+Version 0.7
 
 """
 
@@ -191,7 +191,7 @@ import cStringIO
 from wx.lib.expando import ExpandoTextCtrl
 
 # Version Info
-__version__ = "0.6"
+__version__ = "0.7"
 
 
 # ----------------------------------------------------------------------------
@@ -2559,9 +2559,10 @@ class UltimateListItemData(object):
         :param `colour`: an instance of `wx.Colour`.
         """
 
-        if colour == wx.NullColour:
-            self._hasColour = False
-            del self._colour
+        if colour == wx.NullColour or colour == None:
+            if self._hasColour:
+                self._hasColour = False
+                del self._colour
             return
         
         self._hasColour = True
@@ -3844,7 +3845,7 @@ class UltimateListLineData(object):
 
                 self._gi._rectHighlight.width = self._gi._rectIcon.width
                 self._gi._rectHighlight.height = self._gi._rectIcon.height
-
+                
         elif mode == ULC_LIST:
 
             s = item.GetTextForMeasuring()
@@ -3917,11 +3918,11 @@ class UltimateListLineData(object):
 
             if item.HasText():
 
-                if self._gi._rectAll.width > spacing:
+                if self._gi._rectLabel.width > spacing:
                     self._gi._rectLabel.x = self._gi._rectAll.x + 2
                 else:
                     self._gi._rectLabel.x = self._gi._rectAll.x + 2 + (spacing/2) - (self._gi._rectLabel.width/2)
-
+                    
                 self._gi._rectLabel.y = self._gi._rectAll.y + self._gi._rectAll.height + 2 - self._gi._rectLabel.height
                 self._gi._rectHighlight.x = self._gi._rectLabel.x - 2
                 self._gi._rectHighlight.y = self._gi._rectLabel.y - 2
@@ -4396,7 +4397,7 @@ class UltimateListLineData(object):
         boldFont.SetWeight(wx.BOLD)
 
         for col, item in enumerate(self._items):
-
+          
             if not self._owner.IsColumnShown(col):
                 self.HideItemWindow(item)
                 continue
@@ -4462,7 +4463,9 @@ class UltimateListLineData(object):
             if item.HasText():
 
                 coloured = item.HasColour()
-                oldDC = dc.GetTextForeground()
+                
+                c = dc.GetTextForeground()
+                oldTF = wx.Colour(c.Red(),c.Green(),c.Blue())
                 oldFT = dc.GetFont()
 
                 font = item.HasFont()
@@ -4490,7 +4493,7 @@ class UltimateListLineData(object):
                 self.DrawTextFormatted(dc, item.GetText(), line, col, itemRect, overflow)
 
                 if coloured:
-                    dc.SetTextForeground(oldDC)
+                    dc.SetTextForeground(oldTF)
 
                 if font:
                     dc.SetFont(oldFT)
@@ -6323,6 +6326,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         countCol = self.GetColumnCount()
         for col in xrange(countCol):
             ld.SetText(col, listctrl.OnGetItemText(line, col))
+            ld.SetColour(col, listctrl.OnGetItemTextColour(line, col))
             ld.SetImage(col, listctrl.OnGetItemColumnImage(line, col))
             kind = listctrl.OnGetItemColumnKind(line, col)
             ld.SetKind(col, kind)
@@ -7818,7 +7822,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         """
 
         parent = self.GetParent()
-
+        
         # we send a list_key event up        
         if self.HasCurrent():
             le = UltimateListEvent(wxEVT_COMMAND_LIST_KEY_DOWN, self.GetParent().GetId())
@@ -12229,6 +12233,21 @@ class UltimateListCtrl(wx.PyControl):
         # this is a pure virtual function, in fact - which is not really pure
         # because the controls which are not virtual don't need to implement it
         raise Exception("UltimateListCtrl.OnGetItemText not supposed to be called")
+    
+    
+    def OnGetItemTextColour(self, item, col):
+        """
+        This function **must** be overloaded in the derived class for a control with
+        ``ULC_VIRTUAL`` style. It should return a wx.Colour object or None for
+        the default color.
+
+        :param `item`: an integer specifying the item index;
+        :param `col`: the column index to which the item belongs to.
+        """
+
+        # this is a pure virtual function, in fact - which is not really pure
+        # because the controls which are not virtual don't need to implement it
+        raise Exception("UltimateListCtrl.OnGetItemTextColour not supposed to be called")
 
 
     def OnGetItemImage(self, item):

@@ -2,7 +2,7 @@
 # SUPERTOOLTIP wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 01 Dec 2009, 10.00 GMT
+# Latest Revision: 02 Aug 2010, 09.00 GMT
 #
 #
 # TODO List
@@ -77,9 +77,9 @@ License And Version
 
 SuperToolTip is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 01 Dec 2009, 10.00 GMT
+Latest Revision: Andrea Gavana @ 02 Aug 2010, 09.00 GMT
 
-Version 0.3
+Version 0.4
 
 """
 
@@ -881,6 +881,11 @@ class SuperToolTip(object):
         self._endTimer.Stop()
         
         event.Skip()
+
+    def GetTipWindow(self):
+        """ Return the TipWindow, will return None if not yet created """
+ 
+        return self._superToolTip
         
 
     def OnStartTimer(self):
@@ -912,6 +917,31 @@ class SuperToolTip(object):
         
         self._endTimer.Stop()
         
+
+    def DoShowNow(self):
+        """ Create the L{SuperToolTip} immediately. """
+
+        if self._superToolTip:
+            # need to destroy it if already exists, 
+            # otherwise we might end up with many of them
+            self._superToolTip.Destroy()
+
+        tip = ToolTipWindow(self._widget, self)
+        self._superToolTip = tip
+        self._superToolTip.CalculateBestSize()
+        self._superToolTip.SetPosition(wx.GetMousePosition())
+        self._superToolTip.DropShadow(self.GetDropShadow())
+        
+        # need to stop this, otherwise we get into trouble when leaving the window
+        self._startTimer.Stop()
+        
+        if self.GetUseFade():
+            self._superToolTip.StartAlpha(True)
+        else:
+            self._superToolTip.Show()
+        
+        self._endTimer.Start(self._endDelayTime*1000)
+
 
     def OnDestroy(self, event):
         """ Handles the L{SuperToolTip} target destruction. """

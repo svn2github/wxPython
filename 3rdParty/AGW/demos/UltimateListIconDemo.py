@@ -889,7 +889,7 @@ class TestFrame(wx.Frame):
         # create some items for the list
         for x in range(25):
             img = x % (il_max+1)
-            text = "This is item %02d" % x
+            text = "%02d" % x
             self.list.InsertImageStringItem(x, text, img)
 
         self.SetIcon(images.Mondrian.GetIcon())
@@ -904,4 +904,3 @@ if __name__ == '__main__':
     frame.Show(True)
     app.MainLoop()
 
-    

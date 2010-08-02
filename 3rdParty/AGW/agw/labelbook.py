@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 14 Apr 2010, 12.00 GMT
+# Latest Revision: 02 Aug 2010, 09.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -20,6 +20,13 @@
 # gavana@kpo.kz
 #
 # Or, Obviously, To The wxPython Mailing List!!!
+#
+# TODO:
+# LabelBook - Support IMB_SHOW_ONLY_IMAGES
+# LabelBook - An option for the draw border to only draw the border 
+#             between the controls and the pages so the background
+#             colour can flow into the window background
+#
 #
 #
 # End Of Comments
@@ -112,9 +119,9 @@ License And Version
 
 LabelBook and FlatImageBook are distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
+Latest Revision: Andrea Gavana @ 02 Aug 2010, 09.00 GMT
 
-Version 0.4.
+Version 0.5.
 
 """
 
@@ -1431,6 +1438,8 @@ class LabelContainer(ImageContainerBase):
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
+        
+        style = self.GetParent().GetAGWWindowStyleFlag()
 
         dc = wx.BufferedPaintDC(self)
         backBrush = wx.Brush(self._coloursMap[INB_TAB_AREA_BACKGROUND_COLOUR])
@@ -1444,6 +1453,14 @@ class LabelContainer(ImageContainerBase):
         # Set the pen & brush
         dc.SetBrush(backBrush)
         dc.SetPen(borderPen)
+        
+        # Incase user set both flags, we override them to display both
+        # INB_SHOW_ONLY_TEXT and INB_SHOW_ONLY_IMAGES
+        if style & INB_SHOW_ONLY_TEXT and style & INB_SHOW_ONLY_IMAGES:
+        
+            style ^= INB_SHOW_ONLY_TEXT
+            style ^= INB_SHOW_ONLY_IMAGES
+            self.GetParent().SetAGWWindowStyleFlag(style)
 
         if self.HasAGWFlag(INB_GRADIENT_BACKGROUND) and not self._skin.Ok():
         
@@ -1494,7 +1511,17 @@ class LabelContainer(ImageContainerBase):
             # Default values for the surronounding rectangle 
             # around a button
             rectWidth = self._nTabAreaWidth  
-            rectHeight = self._nImgSize * 2
+            
+            if self.HasAGWFlag(INB_SHOW_ONLY_TEXT):
+                font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+                font.SetPointSize(font.GetPointSize() * self.GetParent().GetFontSizeMultiple())
+                if self.GetParent().GetFontBold():
+                    font.SetWeight(wx.FONTWEIGHT_BOLD)
+                dc.SetFont(font)
+                w, h = dc.GetTextExtent(self._pagesInfoVec[i].GetCaption())
+                rectHeight = h * 2
+            else:
+                rectHeight = self._nImgSize * 2
 
             # Check that we have enough space to draw the button
             if posy + rectHeight > size.GetHeight():
@@ -1798,6 +1825,9 @@ class LabelContainer(ImageContainerBase):
 
         # Redraw the text with underlined font
         underLinedFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        underLinedFont.SetPointSize(underLinedFont.GetPointSize() * self.GetParent().GetFontSizeMultiple())
+        if self.GetParent().GetFontBold():
+            underLinedFont.SetWeight(wx.FONTWEIGHT_BOLD)
         underLinedFont.SetUnderlined(True)
         dc.SetFont(underLinedFont)
         dc.DrawText(caption, xCoord, yCoord)
@@ -1890,7 +1920,11 @@ class LabelContainer(ImageContainerBase):
         textRect = wx.Rect(*rect)
         imgRect = wx.Rect(*rect)
         
-        dc.SetFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
+        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font.SetPointSize(font.GetPointSize() * self.GetParent().GetFontSizeMultiple())
+        if self.GetParent().GetFontBold():
+            font.SetWeight(wx.FONTWEIGHT_BOLD)
+        dc.SetFont(font)
 
         # First we define the rectangle for the text
         w, h = dc.GetTextExtent(text)
@@ -1905,7 +1939,7 @@ class LabelContainer(ImageContainerBase):
         textRect.y = rect.y + (rect.height - h)/2
         textRect.width = rect.width - 2 * nPadding
 
-        if bmp.Ok():
+        if bmp.Ok() and not self.HasAGWFlag(INB_SHOW_ONLY_TEXT):
             textRect.x += (bmp.GetWidth() + nPadding)
             textRect.width -= (bmp.GetWidth() + nPadding)
         
@@ -1915,7 +1949,7 @@ class LabelContainer(ImageContainerBase):
         caption = ArtManager.Get().TruncateText(dc, text, textRect.width)
 
         # Image bounding rectangle
-        if bmp.Ok():
+        if bmp.Ok() and not self.HasAGWFlag(INB_SHOW_ONLY_TEXT):
         
             imgRect.x += nPadding
             imgRect.width = bmp.GetWidth()
@@ -1962,7 +1996,7 @@ class LabelContainer(ImageContainerBase):
         
             imgInfo.SetTextRect(wx.Rect())
         
-        if bmp.Ok():
+        if bmp.Ok() and not self.HasAGWFlag(INB_SHOW_ONLY_TEXT):
             dc.DrawBitmap(bmp, imgRect.x, imgRect.y, True)
 
         # Drop shadow
@@ -2047,6 +2081,8 @@ class FlatBookBase(wx.Panel):
         self._pages = None
         self._bForceSelection = False
         self._windows = []
+        self._fontSizeMultiple = 1.0
+        self._fontBold = False
 
         style |= wx.TAB_TRAVERSAL
         self._agwStyle = agwStyle
@@ -2294,15 +2330,23 @@ class FlatBookBase(wx.Panel):
         if agwStyle & INB_LEFT or agwStyle & INB_RIGHT:
             dc = wx.MemoryDC()
             dc.SelectObject(wx.EmptyBitmap(1, 1))
-            dc.SetFont(self.GetFont())
+            font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+            font.SetPointSize(font.GetPointSize()*self._fontSizeMultiple)
+            if self.GetFontBold():
+                font.SetWeight(wx.FONTWEIGHT_BOLD)
+            dc.SetFont(font)
             maxW = 0
             
             for page in xrange(self.GetPageCount()):
                 caption = self._pages.GetPageText(page)
                 w, h = dc.GetTextExtent(caption)
                 maxW = max(maxW, w)
+               
+            maxW += 24 #TODO this is 6*4 6 is nPadding from drawlabel
 
-            maxW += self._pages._nImgSize * 2
+            if not agwStyle & INB_SHOW_ONLY_TEXT:
+                maxW += self._pages._nImgSize * 2
+                
             maxW = max(maxW, 100)
             self._pages.SetSizeHints(maxW, -1)
             self._pages._nTabAreaWidth = maxW
@@ -2434,6 +2478,38 @@ class FlatBookBase(wx.Panel):
         """ Returns the number of pages in the book. """
 
         return len(self._windows)
+    
+    
+    def GetFontBold(self):
+        """ Gets the font bold status. """
+        
+        return self._fontBold
+    
+    
+    def SetFontBold(self, bold):
+        """ 
+        Sets whether the page captions are bold or not.
+        
+        :param `bold`: ``True`` or ``False``.
+        """
+        
+        self._fontBold = bold
+   
+    
+    def GetFontSizeMultiple(self):
+        """ Gets the font size multiple for the page captions. """
+        
+        return self._fontSizeMultiple
+   
+    
+    def SetFontSizeMultiple(self, multiple):
+        """ 
+        Sets the font size multiple for the page captions. 
+        
+        :param `multiple`: The multiple to be applied to the system font to get the our font size.
+        """
+        
+        self._fontSizeMultiple = multiple
     
 
     def SetPageImage(self, page, imageId):
@@ -2632,8 +2708,8 @@ class LabelBook(FlatBookBase):
         """
 
         return self._pages.GetColour(which)
-
-
+    
+    
     def OnSize(self, event):
         """
         Handles the ``wx.EVT_SIZE`` event for L{LabelBook}.

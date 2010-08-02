@@ -63,7 +63,7 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
         self.SetColumnWidth(2, ULC.ULC_AUTOSIZE_FILL)
 
         self.SetItemCount(1000000)
-
+        
         self.attr1 = ULC.UltimateListItemAttr()
         self.attr1.SetBackgroundColour(wx.NamedColour("yellow"))
 
@@ -107,6 +107,16 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
     
     def OnGetItemText(self, item, col):
         return "Item %d, column %d" % (item, col)
+
+    def OnGetItemTextColour(self, item, col):
+        if item == 0 and col == 0:
+            return wx.Colour(255,0,0)
+        elif item == 0 and col == 1:
+            return wx.Colour(0,255,0)
+        elif item == 0 and col == 2:
+            return wx.Colour(0,0,255)
+        else:
+            return None
 
 
     def OnGetItemColumnImage(self, item, column):

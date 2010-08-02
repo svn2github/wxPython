@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 21 Apr 2010, 21.00 GMT
+# Latest Revision: 02 Aug 2010, 09.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -116,9 +116,9 @@ License And Version
 
 FlatNotebook is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 21 Apr 2010, 21.00 GMT
+Latest Revision: Andrea Gavana @ 02 Aug 2010, 09.00 GMT
 
-Version 3.0
+Version 3.1
 """
 
 __docformat__ = "epytext"
@@ -3491,6 +3491,61 @@ class FNBRendererRibbonTabs(FNBRenderer):
         FNBRenderer.__init__(self)
         self._first = True
         self._factor = 1
+       
+    # definte this because we don't want to use the bold font 
+    def CalcTabWidth(self, pageContainer, tabIdx, tabHeight):
+        """
+        Calculates the width of the input tab.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `tabIdx`: the index of the input tab;
+        :param `tabHeight`: the height of the tab.
+        """
+
+        pc = pageContainer
+        dc = wx.MemoryDC()
+        dc.SelectObject(wx.EmptyBitmap(1,1))
+
+        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+
+        if pc.IsDefaultTabs():
+            shapePoints = int(tabHeight*math.tan(float(pc._pagesInfoVec[tabIdx].GetTabAngle())/180.0*math.pi))
+
+        dc.SetFont(font)
+        width, pom = dc.GetTextExtent(pc.GetPageText(tabIdx))
+
+        # Set a minimum size to a tab
+        if width < 20:
+            width = 20
+
+        tabWidth = 2*pc._pParent.GetPadding() + width
+
+        # Style to add a small 'x' button on the top right
+        # of the tab
+        if pc.HasAGWFlag(FNB_X_ON_TAB) and tabIdx == pc.GetSelection():
+            # The xpm image that contains the 'x' button is 9 pixels
+            spacer = 9
+            if pc.HasAGWFlag(FNB_VC8):
+                spacer = 4
+
+            tabWidth += pc._pParent.GetPadding() + spacer
+        
+        if pc.IsDefaultTabs():
+            # Default style
+            tabWidth += 2*shapePoints
+
+        hasImage = pc._ImageList != None and pc._pagesInfoVec[tabIdx].GetImageIndex() != -1
+
+        # For VC71 style, we only add the icon size (16 pixels)
+        if hasImage:
+        
+            if not pc.IsDefaultTabs():
+                tabWidth += 16 + pc._pParent.GetPadding()
+            else:
+                # Default style
+                tabWidth += 16 + pc._pParent.GetPadding() + shapePoints/2
+        
+        return tabWidth
         
     def DrawTab(self, pageContainer, dc, posx, tabIdx, tabWidth, tabHeight, btnStatus):
         """
@@ -3618,10 +3673,8 @@ class FNBRendererRibbonTabs(FNBRenderer):
         dc.DrawRectangle(0, 0, size.x, size.y)
 
         # Draw labels
-        normalFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
-        dc.SetFont(boldFont)
+        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        dc.SetFont(font)
 
         posx = pc._pParent.GetPadding()
 
@@ -3645,9 +3698,6 @@ class FNBRendererRibbonTabs(FNBRenderer):
             highlight = (i==pc.GetSelection()) or pc.IsMouseHovering(i)
             dc.SetPen((highlight and [selPen] or [noselPen])[0])
             dc.SetBrush((highlight and [selBrush] or [noselBrush])[0])
-
-            # Now set the font to the correct font
-            dc.SetFont((i==pc.GetSelection() and [boldFont] or [normalFont])[0])
 
             # Add the padding to the tab width
             # Tab width:

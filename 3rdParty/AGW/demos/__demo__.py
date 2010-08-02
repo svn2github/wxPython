@@ -13,12 +13,12 @@ this module returns the following information:
                        
 These meta data are merged into the wxPython demo tree at startup.
 
-Last updated: Andrea Gavana @ 14 Apr 2010, 12.00 GMT.
-Version 0.8.0.
+Last updated: Andrea Gavana @ 02 Aug 2010, 09.00 GMT.
+Version 0.9.0.
 
 """
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 
 
@@ -85,7 +85,7 @@ def GetRecentAdditions():
                            'SpeedMeter', 'SuperToolTip', 'ThumbnailCtrl', 'ToasterBox',
                            'UltimateListCtrl', 'ZoomBar']
     else:
-        recentAdditions = ['AUI', 'PyBusyInfo', 'RibbonBar', 'UltimateListCtrl',
+        recentAdditions = ['AUI', 'PyBusyInfo', 'PyGauge', 'RibbonBar', 'UltimateListCtrl',
                            'ZoomBar']
 
     # Return the Recent Additions for AGW    
@@ -109,7 +109,7 @@ def GetDemos():
                 'GradientButton', 'HyperLinkCtrl', 'HyperTreeList',
                 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
                 'PeakMeter', 'PieCtrl', 'PyBusyInfo', 'PyCollapsiblePane',
-                'PyProgress', 'RibbonBar', 'RulerCtrl', 'ShapedButton',
+                'PyGauge', 'PyProgress', 'RibbonBar', 'RulerCtrl', 'ShapedButton',
                 'SpeedMeter', 'SuperToolTip', 'ThumbnailCtrl', 'ToasterBox',
                 'UltimateListCtrl', 'ZoomBar']
 
@@ -127,7 +127,7 @@ def GetOverview():
                        "wx.Menu", "wx.ToolBar", "wx.Notebook", "wx.MessageDialog",
                        "wx.gizmos.TreeListCtrl", "wx.DirDialog", "wx.CollapsiblePane",
                        "wx.ProgressDialog", "wx.TipWindow", "wx.lib", "wx.aui", "wx.ListCtrl",
-                       "wx.BusyInfo", "wx.Panel"]
+                       "wx.BusyInfo", "wx.Panel", "wx.Gauge"]
 
     import wx.lib.agw
     _agwDocs = wx.lib.agw.__doc__
