@@ -477,6 +477,20 @@ class RibbonButtonBar(RibbonControl):
                     
                 return
 
+
+    def IsButtonEnabled(self, button_id):
+        """
+        Returns whether a button in the bar is enabled or not.
+
+        :param `button_id`: ID of the button to check.
+        """
+
+        for button in self._buttons:
+            if button.id == button_id:
+                if button.state & RIBBON_BUTTONBAR_BUTTON_DISABLED:
+                    return False
+                return True
+            
             
     def SetArtProvider(self, art):
 
@@ -783,7 +797,7 @@ class RibbonButtonBar(RibbonControl):
             btn_rect.SetTopLeft(self._layout_offset + instance.position)
             btn_rect.SetSize(size.size)
 
-            if btn_rect.Contains(cursor):
+            if btn_rect.Contains(cursor) and self.IsButtonEnabled(instance.base.id):
                 new_hovered = instance
                 new_hovered_state = instance.base.state
                 new_hovered_state &= ~RIBBON_BUTTONBAR_BUTTON_HOVER_MASK
@@ -848,7 +862,7 @@ class RibbonButtonBar(RibbonControl):
             btn_rect.SetTopLeft(self._layout_offset + instance.position)
             btn_rect.SetSize(size.size)
             
-            if btn_rect.Contains(cursor):            
+            if btn_rect.Contains(cursor) and self.IsButtonEnabled(instance.base.id):
                 self._active_button = instance
                 cursor -= btn_rect.GetTopLeft()
                 state = 0
