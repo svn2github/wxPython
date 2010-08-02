@@ -312,7 +312,7 @@ class AuiDefaultTabArt(object):
         w = rect.GetWidth()
 
         if agwFlags & AUI_NB_BOTTOM:
-            dc.SetBrush(wx.Brush(bottom_colour))
+            dc.SetBrush(wx.Brush(self._background_bottom_colour))
             dc.DrawRectangle(-1, 0, w+2, 4)
 
         # TODO: else if (agwFlags & AUI_NB_LEFT) 
