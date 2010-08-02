@@ -502,7 +502,9 @@ class ImageContainerBase(wx.Panel):
             self._nImgSize = imglist.GetBitmap(0).GetHeight()
 
         self._ImageList = imglist
-
+        agwStyle = parent.GetAGWWindowStyleFlag()
+        parent.SetAGWWindowStyleFlag(agwStyle)
+        
 
     def GetImageList(self):
         """ Return the image list for L{ImageContainerBase}. """
@@ -2425,7 +2427,7 @@ class FlatBookBase(wx.Panel):
         self._pages.AssignImageList(imglist)
 
         # Force change
-        self.SetWindowStyleFlag(self.GetAGWWindowStyleFlag())
+        self.SetAGWWindowStyleFlag(self.GetAGWWindowStyleFlag())
 
 
     def GetSelection(self):
