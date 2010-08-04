@@ -10270,7 +10270,7 @@ class AuiManager(wx.EvtHandler):
         self._sliding_pane = None
         
 
-class AuiManager_DCP(aui.AuiManager):
+class AuiManager_DCP(AuiManager):
     """
     A class similar to L{AuiManager} but with a Dummy Center Pane (**DCP**).
     The code for this class is still flickery due to the call to `wx.CallAfter`
