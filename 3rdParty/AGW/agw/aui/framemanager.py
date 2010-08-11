@@ -7988,7 +7988,11 @@ class AuiManager(wx.EvtHandler):
         state = AUI_BUTTON_STATE_NORMAL
 
         if part.rect.Contains(pt):
-            if wx.GetMouseState().LeftDown():
+            if wx.VERSION < (2,9):
+                leftDown = wx.GetMouseState().LeftDown()
+            else:
+                leftDown = wx.GetMouseState().LeftIsDown()
+            if leftDown:
                 state = AUI_BUTTON_STATE_PRESSED
             else:
                 state = AUI_BUTTON_STATE_HOVER
