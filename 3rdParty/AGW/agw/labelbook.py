@@ -523,7 +523,7 @@ class ImageContainerBase(wx.Panel):
         """
         Fixes the text, to fit `maxWidth` value. If the text length exceeds
         `maxWidth` value this function truncates it and appends two dots at
-        the end. ("Long Long Long Text" might become "Long Long...).
+        the end. ("Long Long Long Text" might become "Long Long...").
 
         :param `dc`: an instance of `wx.DC`;
         :param `text`: the text to fix/truncate;
