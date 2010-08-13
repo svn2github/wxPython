@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 09 Jun 2010, 12.00 GMT
+# Latest Revision: 13 Aug 2010, 22.00 GMT
 #
 #
 # TODO List
@@ -213,7 +213,7 @@ License And Version
 
 HyperTreeList is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 09 Jun 2010, 12.00 GMT
+Latest Revision: Andrea Gavana @ 13 Aug 2010, 22.00 GMT
 
 Version 1.2
 
@@ -4134,6 +4134,22 @@ class HyperTreeList(wx.PyControl):
             return self._main_win.SetFont(font)
         else:
             return False
+
+
+    def SetHeaderFont(self, font):
+        """
+        Sets the default font for the header window..
+
+        :param `font`: a valid `wx.Font` object.
+        """
+
+        if not self._header_win:
+            return
+        
+        for column in xrange(self.GetColumnCount()):
+            self._header_win.SetColumn(column, self.GetColumn(column).SetFont(font))
+
+        self._header_win.Refresh()
 
     
     def SetHeaderCustomRenderer(self, renderer=None):
