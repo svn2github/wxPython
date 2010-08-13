@@ -4168,7 +4168,10 @@ class UltimateListLineData(object):
                 else:
                     colText = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT)
             else:
-                colText = listctrl.GetForegroundColour()
+                if attr and attr.HasTextColour():
+                    colText = attr.GetTextColour()
+                else:
+                    colText = listctrl.GetForegroundColour()
         elif attr and attr.HasTextColour():
             colText = attr.GetTextColour()
         else:
