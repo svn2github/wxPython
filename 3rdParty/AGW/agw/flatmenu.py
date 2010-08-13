@@ -2,7 +2,7 @@
 # FLATMENU wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 26 Feb 2010, 21.00 GMT
+# Latest Revision: 13 Aug 2010, 21.00 GMT
 #
 # TODO List
 #
@@ -120,7 +120,7 @@ License And Version
 
 FlatMenu is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 26 Feb 2010, 21.00 GMT
+Latest Revision: Andrea Gavana @ 13 Aug 2010, 21.00 GMT
 
 Version 0.9.5
 
@@ -4842,6 +4842,26 @@ class FlatMenu(FlatMenuBase):
 
         newItem = FlatMenuItem(self, id, item, helpString, kind)
         return self.AppendItem(newItem)
+    
+    
+    def Prepend(self, id, item, helpString="", kind=wx.ITEM_NORMAL):
+        """
+        Prepends an item to this menu.
+
+        :param `id`: the menu item identifier;
+        :param `item`: the string to appear on the menu item;
+        :param `helpString`: an optional help string associated with the item. By default,
+         the handler for the ``EVT_FLAT_MENU_ITEM_MOUSE_OVER`` event displays this string
+         in the status line;
+        :param `kind`: may be ``wx.ITEM_NORMAL`` for a normal button (default),
+         ``wx.ITEM_CHECK`` for a checkable tool (such tool stays pressed after it had been
+         toggled) or ``wx.ITEM_RADIO`` for a checkable tool which makes part of a radio
+         group of tools each of which is automatically unchecked whenever another button
+         in the group is checked;
+        """
+
+        newItem = FlatMenuItem(self, id, item, helpString, kind)
+        return self.PrependItem(newItem)
 
 
     def AppendSubMenu(self, subMenu, item, helpString=""):
@@ -4870,21 +4890,41 @@ class FlatMenu(FlatMenuBase):
         return self.AppendItem(newItem)
 
 
-    # The main Append function
     def AppendItem(self, menuItem):
         """
         Appends an item to this menu.
 
         :param `menuItem`: an instance of L{FlatMenuItem}.
         """
+        
+        self._itemsArr.append(menuItem)
+        return self.AddItem(menuItem)
+   
+        
+    def PrependItem(self, menuItem):
+        """
+        Prepends an item to this menu.
+
+        :param `menuItem`: an instance of L{FlatMenuItem}.
+        """
+        
+        self._itemsArr.insert(0,menuItem)
+        return self.AddItem(menuItem)
+        
+
+    def AddItem(self, menuItem):
+        """
+        Internal function to add the item to this menu. The item must
+        already be in self._itemsArr.
+
+        :param `menuItem`: an instance of L{FlatMenuItem}.
+        """
 
         if not menuItem:
             raise Exception("Adding None item?")
-            return
         
         # Reparent to us
         menuItem.SetMenu(self) 
-        self._itemsArr.append(menuItem)
         menuItem._isAttachedToMenu = True
 
         # Update the menu width if necessary
