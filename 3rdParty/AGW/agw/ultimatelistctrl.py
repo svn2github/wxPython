@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 02 Aug 2010, 09.00 GMT
+# Latest Revision: 13 Aug 2010, 09.00 GMT
 #
 #
 # TODO List
@@ -175,7 +175,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 02 Aug 2010, 09.00 GMT
+Latest Revision: Andrea Gavana @ 13 Aug 2010, 09.00 GMT
 
 Version 0.7
 
@@ -11953,6 +11953,7 @@ class UltimateListCtrl(wx.PyControl):
         if self._mainWin:
             self._mainWin.SetFocusIgnoringChildren()
             self._mainWin.Update()
+            event.Skip()
 
 
     def OnInternalIdle(self):
