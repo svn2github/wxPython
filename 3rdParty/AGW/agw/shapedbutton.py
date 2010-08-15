@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 18 Oct 2005
-# Latest Revision: 01 Dec 2009, 09.00 GMT
+# Latest Revision: 15 Aug 2010, 15.00 GMT
 #
 #
 # TODO List/Caveats
@@ -131,7 +131,7 @@ License And Version
 
 ShapedButton is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 01 Dec 2009, 09.00 GMT
+Latest revision: Andrea Gavana @ 15 Aug 2010, 15.00 GMT
 
 Version 0.4
 
@@ -744,7 +744,10 @@ class SButton(wx.Window):
             return
 
         self._isup = False
-        self.CaptureMouse()
+
+        if not self.HasCapture():
+            self.CaptureMouse()
+
         self.SetFocus()
 
         self.Refresh()
@@ -1278,7 +1281,10 @@ class __SToggleMixin(object):
 
         self._saveup = self._isup
         self._isup = not self._isup
-        self.CaptureMouse()
+
+        if not self.HasCapture():
+            self.CaptureMouse()
+
         self.SetFocus()
         self.Refresh()
 
