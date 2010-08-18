@@ -1108,7 +1108,7 @@ class AuiDefaultToolBarArt(object):
             # it's important to put this code in an else statment after the 
             # hover, otherwise hovers won't draw properly for checked items 
             dc.SetPen(wx.Pen(self._highlight_colour))
-            dc.SetBrush(wxBrush(StepColour(self._highlight_colour, 170)))
+            dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 170)))
             dc.DrawRectangle(button_rect)
             dc.DrawRectangle(dropdown_rect)
             

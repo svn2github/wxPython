@@ -4787,7 +4787,7 @@ class AuiNotebook(wx.PyPanel):
             page_title = frame.GetTitle() 
             page_contents = frame.GetChildren()[-1] 
             page_contents.Reparent(self)
-            self.InsertPage(frame.page_index, page_contents, page_title, select=True, bitmap=frame.bitmap, control=control)
+            self.InsertPage(frame.page_index, page_contents, page_title, select=True, bitmap=frame.bitmap, control=frame.control)
 
             if frame.control:
                 src_tabs, idx = self.FindTab(page_contents)
