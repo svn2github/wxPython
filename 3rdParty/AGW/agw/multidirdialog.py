@@ -463,7 +463,7 @@ class MultiDirDialog(wx.Dialog):
 
 
     def CreateButtons(self):
-        """ Creates the ``OK``, ``Cancel`` and ``New folder`` bitmap buttons. """
+        """ Creates the ``OK``, ``Cancel`` and ``Make New Folder`` bitmap buttons. """
         
         # Build a couple of fancy buttons
         self.newButton = buttons.ThemedGenBitmapTextButton(self, wx.ID_NEW, _new.GetBitmap(),

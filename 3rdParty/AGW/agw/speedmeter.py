@@ -233,7 +233,7 @@ class BufferedWindow(wx.Window):
     """
     A Buffered window class.
 
-    To use it, subclass it and define a `Draw(DC)` method that takes a DC
+    To use it, subclass it and define a `Draw(dc)` method that takes a `dc`
     to draw to. In that method, put the code needed to draw the picture
     you want. The window will automatically be double buffered, and the
     screen will be automatically updated when a Paint event is received.
@@ -353,7 +353,7 @@ class BufferedWindow(wx.Window):
 
 class SpeedMeter(BufferedWindow):
     """
-    `SpeedMeter` tries to reproduce the behavior of some car controls (but not only),
+    SpeedMeter tries to reproduce the behavior of some car controls (but not only),
     by creating an "angular" control (actually, circular).
 
     This is the main class implementation.
@@ -1372,7 +1372,7 @@ class SpeedMeter(BufferedWindow):
 
     def SetDirection(self, direction=None):
         """
-        Sets the direction of advancing SpeedMeter value.
+        Sets the direction of advancing L{SpeedMeter} value.
 
         :param `direction`: specifying "advance" will move the hand in clock-wise direction
          (like normal car speed control), while using "reverse" will move it counterclock-wise
@@ -1512,8 +1512,8 @@ class SpeedMeter(BufferedWindow):
 
         :param `radius`: the L{SpeedMeter} radius;
         :param `angle`: the angular position of the mouse;
-        :param `centerX`: the x position of the L{SpeedMeter} center;
-        :param `centerX`: the y position of the L{SpeedMeter} center.        
+        :param `centerX`: the `x` position of the L{SpeedMeter} center;
+        :param `centerX`: the `y` position of the L{SpeedMeter} center.        
         """
 
         x = radius*cos(angle) + centerX

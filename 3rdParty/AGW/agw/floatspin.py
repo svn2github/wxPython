@@ -57,19 +57,16 @@ FloatSpin catches 3 different types of events:
 
 In addition, there are some other functionalities:
 
-It remembers the initial value as a default value, call L{SetToDefaultValue}, or
-press ``Esc`` to return to it
-
-``Shift`` + arrow = 2 * increment        (or ``Shift`` + mouse wheel)
-``Ctrl``  + arrow = 10 * increment       (or ``Ctrl`` + mouse wheel)
-``Alt``   + arrow = 100 * increment      (or ``Alt`` + mouse wheel)
-
-Combinations of ``Shift``, ``Ctrl``, ``Alt`` increment the FloatSpin value by
-the product of the factors;
-
-``PgUp`` & ``PgDn`` = 10 * increment * the product of the ``Shift``, ``Ctrl``, ``Alt`` factors;
-
-``Space`` sets the control's value to it's last valid state.
+- It remembers the initial value as a default value, call L{SetToDefaultValue}, or
+  press ``Esc`` to return to it;
+- ``Shift`` + arrow = 2 * increment        (or ``Shift`` + mouse wheel);
+- ``Ctrl``  + arrow = 10 * increment       (or ``Ctrl`` + mouse wheel);
+- ``Alt``   + arrow = 100 * increment      (or ``Alt`` + mouse wheel);
+- Combinations of ``Shift``, ``Ctrl``, ``Alt`` increment the FloatSpin value by the
+  product of the factors;
+- ``PgUp`` & ``PgDn`` = 10 * increment * the product of the ``Shift``, ``Ctrl``, ``Alt``
+  factors;
+- ``Space`` sets the control's value to it's last valid state.
 
 
 Window Styles
@@ -119,20 +116,20 @@ Modifications to allow `min_val` or `max_val` to be ``None`` done by:
   march 14, 2007
 
 :note: Note that the changes I made will break backward compatibility,
- because I changed the contructor's parameters from `min`/`max` to
- `min_val`/`max_val` to be consistent with the other functions and to
+ because I changed the contructor's parameters from `min` / `max` to
+ `min_val` / `max_val` to be consistent with the other functions and to
  eliminate any potential confusion with the built in `min` and `max`
  functions.
 
 You specify open ranges like this (you can equally do this in the
-constructor):
+constructor)::
 
-[1, ] => SetRange(min_val=1, max_val=None)
-[ ,0] => SetRange(min_val=None, max_val=0)
+    SetRange(min_val=1, max_val=None)     # [1,  ]
+    SetRange(min_val=None, max_val=0)     # [ , 0]
 
-or no range:
+or no range::
 
-[ , ] => SetRange(min_val=None, max_val=None)
+    SetRange(min_val=None, max_val=None)  # [ , ]
 
 """
 
@@ -739,9 +736,9 @@ class FloatSpin(wx.PyControl):
 
     def ReplaceDoubleZero(self, strs):
         """
-        Replaces the (somewhat) python ugly '+e000' with +e00.
+        Replaces the (somewhat) python ugly `+e000` with `+e00`.
 
-        :param `strs`: a string (possibly) containing a '+e00o' substring.
+        :param `strs`: a string (possibly) containing a `+e00` substring.
         """
 
         if self._textformat not in ["%g", "%e", "%E", "%G"]:
@@ -1155,7 +1152,7 @@ class FloatSpin(wx.PyControl):
 
     def IsFinite(self, value):
         """
-        Tries to determine if a value is finite or infinite/nan.
+        Tries to determine if a value is finite or infinite/NaN.
 
         :param `value`: the value to test.
         """

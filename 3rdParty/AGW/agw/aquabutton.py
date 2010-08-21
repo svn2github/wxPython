@@ -188,7 +188,7 @@ class AquaButton(wx.PyControl):
     def LightColour(self, colour, percent):
         """
         Return light contrast of `colour`. The colour returned is from the scale of
-        `colour` -> white.
+        `colour` ==> white.
 
         :param `colour`: the input colour to be brightened;
         :param `percent`: determines how light the colour will be. `percent` = 100
@@ -522,7 +522,7 @@ class AquaButton(wx.PyControl):
     def GetDefaultAttributes(self):
         """
         Overridden base class virtual. By default we should use
-        the same font/colour attributes as the native Button.
+        the same font/colour attributes as the native `wx.Button`.
         """
         
         return wx.Button.GetClassDefaultAttributes()

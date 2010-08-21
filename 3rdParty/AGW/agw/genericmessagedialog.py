@@ -2,7 +2,7 @@
 # GENERICMESSAGEDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 14 Apr 2010, 12.00 GMT
+# Latest Revision: 19 Aug 2010, 22.00 GMT
 #
 #
 # TODO List
@@ -39,6 +39,7 @@ replacement for the standard `wx.MessageDialog`, with these extra functionalitie
 * More visibility to the button getting the focus;
 * Support for Aqua buttons or Gradient buttons instead of themed ones (see L{AquaButton}
   and L{GradientButton});
+* Possibility to automatically wrap long lines of text;
 * Good old Python code :-D .
 
 And a lot more. Check the demo for an almost complete review of the functionalities.
@@ -75,15 +76,16 @@ License And Version
 
 GenericMessageDialog is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
+Latest Revision: Andrea Gavana @ 19 Aug 2010, 22.00 GMT
 
-Version 0.4
+Version 0.5
 
 """
 
 import wx
-import wx.lib.buttons as buttons
+import wx.lib.wordwrap as wordwrap
 
+import wx.lib.buttons as buttons
 from wx.lib.embeddedimage import PyEmbeddedImage
 
 # To use AquaButtons or GradientButtons instead of wx.lib.buttons
@@ -552,7 +554,8 @@ class GenericMessageDialog(wx.Dialog):
 
     def __init__(self, parent, message, caption, agwStyle,
                  pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=wx.DEFAULT_DIALOG_STYLE|wx.WANTS_CHARS):
+                 style=wx.DEFAULT_DIALOG_STYLE|wx.WANTS_CHARS,
+                 wrap=-1):
         """
         Default class constructor.
 
@@ -572,12 +575,17 @@ class GenericMessageDialog(wx.Dialog):
 
         :param `pos`: the dialog position on screen;
         :param `size`: the dialog size;
-        :param `style`: the underlying `wx.Dialog` style.
+        :param `style`: the underlying `wx.Dialog` style;
+        :param `wrap`: if set greater than zero, wraps the string in `message` so that
+         every line is at most `wrap` pixels long.
         """
 
         wx.Dialog.__init__(self, parent, wx.ID_ANY, caption, pos, size, style)
 
-        self._agwStyle = agwStyle        
+        self._agwStyle = agwStyle
+
+        if wrap > 0:
+            message = self.WrapMessage(message, wrap)
 
         topsizer = wx.BoxSizer(wx.VERTICAL)
         icon_text = wx.BoxSizer(wx.HORIZONTAL)
@@ -855,4 +863,28 @@ class GenericMessageDialog(wx.Dialog):
         sizer.Realize()
 
         return sizer
+
+
+    def WrapMessage(self, message, wrap):
+        """
+        Wraps the input message to multi lines so that the resulting new message
+        is at most `wrap` pixels wide.
+
+        :param `message`: the original input message;
+        :param `wrap`: wraps the string in `message` so that every line is at most
+         `wrap` pixels long.
+
+        :return: a new message wrapped at maximum `wrap` pixels wide.
+        
+        :todo: Estabilish if wrapping all messages by default is a better idea than
+         provide a keyword parameter to L{GenericMessageDialog}. A default maximum
+         line width might be the wxMac one, at 360 pixels.
+        """
+        
+        dc = wx.ClientDC(self)
+        dc.SetFont(self.GetFont())
+        message = wordwrap.wrap(message, wrap, dc, False)
+        newMessage = "\n".join(message)
+
+        return newMessage        
 

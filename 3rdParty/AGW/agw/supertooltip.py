@@ -450,7 +450,7 @@ class ToolTipWindowBase(object):
         :param `isShow`: whether L{SuperToolTip} is being shown or deleted.
 
         :note: This method is available only on Windows and requires Mark Hammond's
-         win32all modules.
+         pywin32 package.
         """
 
         if self._alphaTimer.IsRunning():
@@ -493,7 +493,7 @@ class ToolTipWindowBase(object):
         :param `drop`: whether to drop a shadow or not.
 
         :note: This method is available only on Windows and requires Mark Hammond's
-         win32all modules.
+         pywin32 package.
         """
 
         if not _libimported:
@@ -568,7 +568,7 @@ class ToolTipWindowBase(object):
         :param `amount`: the alpha channel value.
 
         :note: This method is available only on Windows and requires Mark Hammond's
-         win32all modules.
+         pywin32 package.
         """
 
         if not _libimported:
@@ -1280,7 +1280,7 @@ class SuperToolTip(object):
         :param `drop`: ``True`` to drop a shadow below the control, ``False`` otherwise.
         
         :note: This method is available only on Windows and requires Mark Hammond's
-         win32all modules.
+         pywin32 package.
         """
 
         self._dropShadow = drop
@@ -1293,7 +1293,7 @@ class SuperToolTip(object):
         Returns whether a shadow below L{SuperToolTip} is drawn or not.
 
         :note: This method is available only on Windows and requires Mark Hammond's
-         win32all modules.
+         pywin32 package.
         """
 
         return self._dropShadow
@@ -1306,7 +1306,7 @@ class SuperToolTip(object):
         :param `fade`: ``True`` to use a fade in/fade out effect, ``False`` otherwise.
         
         :note: This method is available only on Windows and requires Mark Hammond's
-         win32all modules.
+         pywin32 package.
         """
         
         self._useFade = fade
@@ -1317,7 +1317,7 @@ class SuperToolTip(object):
         Returns whether a fade in/fade out effect is used or not.
 
         :note: This method is available only on Windows and requires Mark Hammond's
-         win32all modules.
+         pywin32 package.
         """
 
         return self._useFade

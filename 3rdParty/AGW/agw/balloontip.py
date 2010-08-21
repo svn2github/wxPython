@@ -544,7 +544,7 @@ class BalloonTip(object):
 
     def SetTarget(self, widget):
         """
-        Sets the target control/window for the BalloonTip.
+        Sets the target control/window for the L{BalloonTip}.
 
         :param `widget`: an instance of `wx.Window`.
         """

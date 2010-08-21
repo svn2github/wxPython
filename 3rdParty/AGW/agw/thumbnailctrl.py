@@ -146,6 +146,7 @@ from math import pi
 #----------------------------------------------------------------------
 
 def GetMondrianData():
+    """ Returns a default image placeholder as a decompressed stream of characters. """
     return \
 '\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00 \x00\x00\x00 \x08\x06\x00\
 \x00\x00szz\xf4\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\x00\x00qID\
@@ -155,15 +156,23 @@ o\xda\x84pB2\x1f\x81Fa\x8c\x9c\x08\x04Z{\xcf\xa72\xbcv\xfa\xc5\x08 \x80r\x80\
 \x86\x01\x04\x10\x00\\(Dk\x1b-\x04\xdc\x1d\x07\x14\x98;\x0bS\x7f\x7f\xf9\x13\
 \x04\x10@\xf9X\xbe\x00\xc9 \x14K\xc1<={\x00\x00\x00\x00IEND\xaeB`\x82' 
 
+
 def GetMondrianBitmap():
+    """ Returns a default image placeholder as a `wx.Bitmap`. """
+
     return wx.BitmapFromImage(GetMondrianImage())
 
+
 def GetMondrianImage():
+    """ Returns a default image placeholder as a `wx.Image`. """
+
     stream = cStringIO.StringIO(GetMondrianData())
     return wx.ImageFromStream(stream)
 
 
 def getDataSH():
+    """ Return the first part of the shadow dropped behind thumbnails. """
+    
     return zlib.decompress(
 'x\xda\xeb\x0c\xf0s\xe7\xe5\x92\xe2b``\xe0\xf5\xf4p\t\x02\xd2_A\x98\x83\rHvl\
 \xdc\x9c\n\xa4X\x8a\x9d<C8\x80\xa0\x86#\xa5\x83\x81\x81y\x96\xa7\x8bcH\xc5\
@@ -182,7 +191,10 @@ Y\xcb\xbd\x8b\xdfs\xe3[\xd6\xed\xe5\x9b}\x99\xe6=:\xbd\xed\xfc\xedu|\xfcq\
 \xdf\x95Y\x15\xc6\xe7\xee\xfe\xcbz7Y\xbd\xde[\xf3y\x1f0\xd72x\xba\xfa\xb9\
 \xacsJh\x02\x00\xc4i\x8dN' )
 
+
 def getDataBL():
+    """ Return the second part of the shadow dropped behind thumbnails. """
+
     return zlib.decompress(
 "x\xda\xeb\x0c\xf0s\xe7\xe5\x92\xe2b``\xe0\xf5\xf4p\t\x02\xd2\xac \xcc\xc1\
 \x06${\xf3\xd5\x9e\x02)\x96b'\xcf\x10\x0e \xa8\xe1H\xe9\x00\xf2\xed=]\x1cC8f\
@@ -191,7 +203,10 @@ def getDataBL():
 \xc4\xd1\xb4GG{\xb5\x15\x8f_|t\x8a[a\x1fWzG\xa9\xc4,\xa0Q\x0c\x9e\xae~.\xeb\
 \x9c\x12\x9a\x00\x7f1,7" )
 
+
 def getDataTR():
+    """ Return the third part of the shadow dropped behind thumbnails. """
+
     return zlib.decompress(
 'x\xda\xeb\x0c\xf0s\xe7\xe5\x92\xe2b``\xe0\xf5\xf4p\t\x02\xd2\xac \xcc\xc1\
 \x06${\xf3\xd5\x9e\x02)\x96b\'\xcf\x10\x0e \xa8\xe1H\xe9\x00\xf2m=]\x1cC8f\
@@ -200,7 +215,10 @@ def getDataTR():
 \x8dFo\xf5\xee\xc8\x1fOaw\xc9\x88\x0c\x16\x05\x1a\xc4\xe0\xe9\xea\xe7\xb2\
 \xce)\xa1\t\x00"\xf9$\x83' )
 
+
 def getShadow():
+    """ Creates a shadow behind every thumbnail. """
+    
     sh_tr = wx.ImageFromStream(cStringIO.StringIO(getDataTR())).ConvertToBitmap()
     sh_bl = wx.ImageFromStream(cStringIO.StringIO(getDataBL())).ConvertToBitmap()
     sh_sh = wx.ImageFromStream(cStringIO.StringIO(getDataSH())).Rescale(500, 500, wx.IMAGE_QUALITY_HIGH)
@@ -327,7 +345,8 @@ class PILImageHandler(object):
         """
         Default class constructor.
         
-        Check if the PIL is installed, if not throw an exception.
+        :note: If PIL is not installed, this will raise an exception. PIL
+         can be downloaded from http://www.pythonware.com/products/pil/ .
         """
 
         try:
@@ -751,7 +770,7 @@ class Thumb(object):
 
 class ThumbnailCtrl(wx.Panel):
     """
-    Thumbnailctrl is a widget that can be used to display a series of images in
+    ThumbnailCtrl is a widget that can be used to display a series of images in
     a "thumbnail" format.
     """
 
@@ -1069,7 +1088,11 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
 
     def GetThumbOutline(self):
-        """ Returns the thumbnail outline style on selection. """
+        """
+        Returns the thumbnail outline style on selection.
+
+        :see: L{SetThumbOutline} for a list of possible return values.
+        """
         
         return self._tOutline
     
@@ -1612,8 +1635,8 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         """
         Returns the thumbnail index at position (x, y).
 
-        :param `x`: the mouse x position;
-        :param `y`: the mouse y position.
+        :param `x`: the mouse `x` position;
+        :param `y`: the mouse `y` position.
         """
         
         col = (x - self._tBorder)/(self._tWidth + self._tBorder)

@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 09 Jun 2010, 12.00 GMT
+# Latest Revision: 19 Aug 2010, 22.00 GMT
 #
 #
 # TODO List
@@ -84,6 +84,7 @@ to the standard `wx.TreeCtrl` behaviour this class supports:
 * Setting the CustomTreeCtrl check/radio item icons to a personalized imagelist;
 * Changing the style of the lines that connect the items (in terms of `wx.Pen` styles);
 * Using an image as a CustomTreeCtrl background (currently only in "tile" mode);
+* Adding images to any item in the leftmost area of the CustomTreeCtrl client window.
 
 And a lot more. Check the demo for an almost complete review of the functionalities.
 
@@ -211,14 +212,14 @@ License And Version
 
 CustomTreeCtrl is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 09 Jun 2010, 12.00 GMT
+Latest Revision: Andrea Gavana @ 19 Aug 2010, 22.00 GMT
 
-Version 2.1
+Version 2.3
 
 """
 
 # Version Info
-__version__ = "2.1"
+__version__ = "2.3"
 
 import wx
 from wx.lib.expando import ExpandoTextCtrl
@@ -493,8 +494,8 @@ def EventFlagsToSelType(style, shiftDown=False, ctrlDown=False):
     are dealing with.
 
     :param `style`: the main L{CustomTreeCtrl} window style flag;
-    :param `shiftDown`: ``True`` if the ``Shift`` has is pressed, ``False`` otherwise;
-    :param `ctrlDown`: ``True`` if the ``Ctrl`` has is pressed, ``False`` otherwise;
+    :param `shiftDown`: ``True`` if the ``Shift`` key is pressed, ``False`` otherwise;
+    :param `ctrlDown`: ``True`` if the ``Ctrl`` key is pressed, ``False`` otherwise;
     """
 
     is_multiple = (style & TR_MULTIPLE) != 0
@@ -861,14 +862,14 @@ class CommandTreeEvent(wx.PyCommandEvent):
         return self._evtKey.GetKeyCode()
 
     
-    def SetKeyEvent(self, evt):
+    def SetKeyEvent(self, event):
         """
         Sets the keyboard data (for ``EVT_TREE_KEY_DOWN`` event only).
 
         :param `event`: a L{TreeEvent} event to be processed.
         """
 
-        self._evtKey = evt
+        self._evtKey = event
         
 
     def GetLabel(self):
@@ -1339,6 +1340,7 @@ class GenericTreeItem(object):
         self._images[TreeItemIcon_SelectedExpanded] = _NO_IMAGE
 
         self._checkedimages = [None, None, None, None]
+        self._leftimage = _NO_IMAGE
 
         self._x = 0             # (virtual) offset from top
         self._y = 0             # (virtual) offset from left
@@ -1380,7 +1382,7 @@ class GenericTreeItem(object):
         """
         Returns whether the item is ok or not.
 
-        :note: This method simply returns ``True``, it has been added for
+        :note: This method always returns ``True``, it has been added for
          backward compatibility with the wxWidgets C++ implementation.
         """
         
@@ -1438,7 +1440,16 @@ class GenericTreeItem(object):
         """
 
         return self._checkedimages[which]
-        
+
+
+    def GetLeftImage(self):
+        """
+        Returns the leftmost image associated to this item, i.e. the image on the
+        leftmost part of the client area of L{CustomTreeCtrl}.
+        """
+
+        return self._leftimage
+    
 
     def GetData(self):
         """Returns the data associated to this item."""
@@ -1457,6 +1468,18 @@ class GenericTreeItem(object):
         """
 
         self._images[which] = image
+
+
+    def SetLeftImage(self, image):
+        """
+        Sets the item leftmost image, i.e. the image associated to the item on the leftmost
+        part of the L{CustomTreeCtrl} client area.
+
+        :param `image`: an index within the left image list specifying the image to
+         use for the item in the leftmost part of the client area.
+        """
+
+        self._leftimage = image
 
         
     def SetData(self, data):
@@ -1500,20 +1523,20 @@ class GenericTreeItem(object):
         
 
     def GetX(self):
-        """Returns the x position on an item. """
+        """Returns the `x` position on an item, in logical coordinates. """
 
         return self._x 
 
 
     def GetY(self):
-        """Returns the y position on an item. """
+        """Returns the `y` position on an item, in logical coordinates. """
 
         return self._y 
 
 
     def SetX(self, x):
         """
-        Sets the x position on an item.
+        Sets the `x` position on an item, in logical coordinates.
 
         :param `x`: an integer specifying the x position of the item.
         """
@@ -1523,7 +1546,7 @@ class GenericTreeItem(object):
 
     def SetY(self, y):
         """
-        Sets the y position on an item.
+        Sets the `y` position on an item, in logical coordinates.
 
         :param `y`: an integer specifying the y position of the item.
         """
@@ -2194,8 +2217,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         self._hilightUnfocusedBrush2 = wx.Brush(backcolour)
 
         # image list for icons
-        self._imageListNormal = self._imageListButtons = self._imageListState = self._imageListCheck = None
-        self._ownsImageListNormal = self._ownsImageListButtons = self._ownsImageListState = False
+        self._imageListNormal = self._imageListButtons = self._imageListState = self._imageListCheck = self._imageListLeft = None
+        self._ownsImageListNormal = self._ownsImageListButtons = self._ownsImageListState = self._ownsImageListLeft = False
 
         # Drag and drop initial settings
         self._dragCount = 0
@@ -2890,7 +2913,11 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
 
     def GetAGWWindowStyleFlag(self):
-        """Returns the L{CustomTreeCtrl} style."""
+        """
+        Returns the L{CustomTreeCtrl} style.
+
+        :see: The L{__init__} method for a list of possible style flags.
+        """
 
         return self._agwStyle
     
@@ -2933,6 +2960,17 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         """
 
         return item.GetImage(which)
+
+
+    def GetItemLeftImage(self, item):
+        """
+        Returns the item leftmost image, i.e. the image associated to the item on the leftmost
+        part of the L{CustomTreeCtrl} client area.
+
+        :param `item`: an instance of L{GenericTreeItem}.
+        """
+
+        return item.GetLeftImage()
 
 
     def GetPyData(self, item):
@@ -3018,6 +3056,23 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         """
 
         item.SetImage(image, which)
+
+        dc = wx.ClientDC(self)
+        self.CalculateSize(item, dc)
+        self.RefreshLine(item)
+
+
+    def SetItemLeftImage(self, item, image):
+        """
+        Sets the item leftmost image, i.e. the image associated to the item on the leftmost
+        part of the L{CustomTreeCtrl} client area.
+
+        :param `item`: an instance of L{GenericTreeItem};
+        :param `image`: an index within the left image list specifying the image to
+         use for the item in the leftmost part of the client area.
+        """
+
+        item.SetLeftImage(image)
 
         dc = wx.ClientDC(self)
         self.CalculateSize(item, dc)
@@ -4103,13 +4158,13 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         return self.DoInsertItem(parentId, index+1, text, ct_type, wnd, image, selImage, data)
 
 
-    def InsertItemByIndex(self, parentId, before, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
+    def InsertItemByIndex(self, parentId, idPrevious, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
         """
         Inserts an item after the given previous.
 
         :param `parentId`: an instance of L{GenericTreeItem} representing the
          item's parent;
-        :param `before`: the index at which we should insert the new item;
+        :param `idPrevious`: the index at which we should insert the new item;
         :param `text`: the item text label;
         :param `ct_type`: the item type (see L{SetItemType} for a list of valid
          item types);
@@ -4128,7 +4183,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             # should we give a warning here?
             return self.AddRoot(text, ct_type, wnd, image, selImage, data)
         
-        return self.DoInsertItem(parentId, before, text, ct_type, wnd, image, selImage, data)
+        return self.DoInsertItem(parentId, idPrevious, text, ct_type, wnd, image, selImage, data)
 
 
     def InsertItem(self, parentId, input, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
@@ -4503,6 +4558,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         Selects all the children of the given item.
 
         :param `item`: an instance of L{GenericTreeItem}.
+
+        :note: This method can be used only if L{CustomTreeCtrl} has the ``TR_MULTIPLE`` or ``TR_EXTENDED``
+         style set.        
         """
 
         if not self.HasAGWFlag(TR_MULTIPLE) and not self.HasAGWFlag(TR_EXTENDED):
@@ -4530,7 +4588,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
 
     def SelectAll(self):
-        """ Selects all the item in the tree. """
+        """
+        Selects all the item in the tree.
+
+        :note: This method can be used only if L{CustomTreeCtrl} has the ``TR_MULTIPLE`` or ``TR_EXTENDED``
+         style set.
+        """
 
         if not self.HasAGWFlag(TR_MULTIPLE) and not self.HasAGWFlag(TR_EXTENDED):
             raise Exception("SelectAll can be used only with multiple selection enabled.")
@@ -4593,8 +4656,14 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param `item1`: an instance of L{GenericTreeItem}, representing the first
          item in the range to select;
         :param `item2`: an instance of L{GenericTreeItem}, representing the last
-         item in the range to select.        
+         item in the range to select.
+
+        :note: This method can be used only if L{CustomTreeCtrl} has the ``TR_MULTIPLE`` or ``TR_EXTENDED``
+         style set.         
         """
+
+        if not self.HasAGWFlag(TR_MULTIPLE) and not self.HasAGWFlag(TR_EXTENDED):
+            raise Exception("SelectItemRange can be used only with multiple selection enabled.")
         
         self._select_me = None
 
@@ -4740,7 +4809,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         """
         Returns a list of selected items.
 
-        :note: This method can be used only if L{CustomTreeCtrl} has the ``TR_MULTIPLE``
+        :note: This method can be used only if L{CustomTreeCtrl} has the ``TR_MULTIPLE`` or ``TR_EXTENDED``
          style set.
         """
 
@@ -4904,6 +4973,16 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         return self._imageListCheck        
 
 
+    def GetLeftImageList(self):
+        """
+        Returns the image list for L{CustomTreeCtrl} filled with images to be used on
+        the leftmost part of the client area. Any item can have a leftmost image associated
+        with it.
+        """
+
+        return self._imageListLeft
+
+
     def CalculateLineHeight(self):
         """ Calculates the height of a line. """
 
@@ -4951,6 +5030,20 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
                 if height > self._lineHeight:
                     self._lineHeight = height
+
+        if self._imageListLeft:
+        
+            # Calculate a self._lineHeight value from the leftmost image sizes.
+            # May be toggle off. Then CustomTreeCtrl will spread when
+            # necessary (which might look ugly).
+            n = self._imageListLeft.GetImageCount()
+
+            for i in xrange(n):
+            
+                width, height = self._imageListLeft.GetSize(i)
+
+                if height > self._lineHeight:
+                    self._lineHeight = height
         
         if self._lineHeight < 30:
             self._lineHeight += 2                 # at least 2 pixels
@@ -4985,6 +5078,34 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 bmp = imageList.GetBitmap(ii)
                 newbmp = MakeDisabledBitmap(bmp)
                 self._grayedImageList.Add(newbmp)
+
+
+    def SetLeftImageList(self, imageList):
+        """
+        Sets the image list for L{CustomTreeCtrl} filled with images to be used on
+        the leftmost part of the client area. Any item can have a leftmost image associated
+        with it.
+
+        :param `imageList`: an instance of `wx.ImageList`.
+        """
+
+        self._imageListLeft = imageList
+        self._ownsImageListLeft = False
+        self._dirty = True
+        
+        # Don't do any drawing if we're setting the list to NULL,
+        # since we may be in the process of deleting the tree control.
+        if imageList:
+            self.CalculateLineHeight()
+
+            # We gray out the image list to use the grayed icons with disabled items
+            sz = imageList.GetSize(0)
+            self._grayedImageListLeft = wx.ImageList(sz[0], sz[1], True, 0)
+
+            for ii in xrange(imageList.GetImageCount()):
+                bmp = imageList.GetBitmap(ii)
+                newbmp = MakeDisabledBitmap(bmp)
+                self._grayedImageListLeft.Add(newbmp)
         
 
     def SetStateImageList(self, imageList):
@@ -5122,6 +5243,19 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         self.SetButtonsImageList(imageList)
         self._ownsImageListButtons = True
+
+
+    def AssignLeftImageList(self, imageList):
+        """
+        Assigns the image list for L{CustomTreeCtrl} filled with images to be used on
+        the leftmost part of the client area. Any item can have a leftmost image associated
+        with it.
+
+        :param `imageList`: an instance of `wx.ImageList`.
+        """
+
+        self.SetLeftImageList(imageList)
+        self._ownsImageListLeft = True
 
 
 # -----------------------------------------------------------------------------
@@ -5348,6 +5482,11 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         image = item.GetCurrentImage()
         checkimage = item.GetCurrentCheckedImage()
+        leftimage = _NO_IMAGE
+        
+        if self._imageListLeft:
+            leftimage = item.GetLeftImage()
+            
         image_w, image_h = 0, 0
 
         if image != _NO_IMAGE:
@@ -5367,6 +5506,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         else:
             wcheck, hcheck = 0, 0
 
+        if leftimage != _NO_IMAGE:
+            l_image_w, l_image_h = self._imageListLeft.GetSize(leftimage)
+            
         total_h = self.GetLineHeight(item)
         drawItemBackground = False
             
@@ -5502,6 +5644,17 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                          item.GetY() + ((total_h > hcheck) and [(total_h-hcheck)/2] or [0])[0],
                          wx.IMAGELIST_DRAW_TRANSPARENT)
 
+        if leftimage != _NO_IMAGE:
+            if item.IsEnabled():
+                imglist = self._imageListLeft
+            else:
+                imglist = self._grayedImageListLeft
+
+            imglist.Draw(leftimage, dc,
+                         4,
+                         item.GetY() + ((total_h > l_image_h) and [(total_h-l_image_h)/2] or [0])[0],
+                         wx.IMAGELIST_DRAW_TRANSPARENT)
+
         dc.SetBackgroundMode(wx.TRANSPARENT)
         extraH = ((total_h > text_h) and [(total_h - text_h)/2] or [0])[0]
 
@@ -5551,6 +5704,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         """
 
         x = level*self._indent
+
+        left_image_list = 0
+        if self._imageListLeft:
+            left_image_list += self._imageListLeft.GetBitmap(0).GetWidth()
+            
+        x += left_image_list
         
         if not self.HasAGWFlag(TR_HIDE_ROOT):
         
@@ -5642,7 +5801,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 # draw the horizontal line here
                 dc.SetPen(self._dottedPen)
                 x_start = x
-                if x > self._indent:
+                if x > self._indent+left_image_list:
                     x_start -= self._indent
                 elif self.HasAGWFlag(TR_LINES_AT_ROOT):
                     x_start = 3

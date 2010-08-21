@@ -2,7 +2,7 @@
 # FLATMENU wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 13 Aug 2010, 21.00 GMT
+# Latest Revision: 19 Aug 2010, 22.00 GMT
 #
 # TODO List
 #
@@ -120,14 +120,14 @@ License And Version
 
 FlatMenu is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 13 Aug 2010, 21.00 GMT
+Latest Revision: Andrea Gavana @ 19 Aug 2010, 22.00 GMT
 
-Version 0.9.5
+Version 0.9.6
 
 """
 
 __docformat__ = "epytext"
-__version__ = "0.9.5"
+__version__ = "0.9.6"
 
 import wx
 import math
@@ -138,7 +138,6 @@ import wx.lib.colourutils as colourutils
 from fmcustomizedlg import FMCustomizeDlg
 from artmanager import ArtManager, DCSaver
 from fmresources import *
-import fmresources
             
 # FlatMenu styles
 FM_OPT_IS_LCD = 1
@@ -224,8 +223,8 @@ EVT_FLAT_MENU_ITEM_MOUSE_OVER = wx.PyEventBinder(wxEVT_FLAT_MENU_ITEM_MOUSE_OVER
 
 def GetAccelIndex(label):
     """
-    Returns the mnemonic index of the label.
-    (e.g. 'lab&el' --> will result in 3 and labelOnly = label)
+    Returns the mnemonic index of the label and the label stripped of the ampersand mnemonic
+    (e.g. 'lab&el' ==> will result in 3 and labelOnly = label).
 
     :param `label`: a string containining an ampersand.        
     """
@@ -240,6 +239,7 @@ def GetAccelIndex(label):
     labelOnly = label[0:indexAccel] + label[indexAccel+1:]
 
     return indexAccel, labelOnly
+
 
 def ConvertToMonochrome(bmp):
     """
@@ -274,6 +274,8 @@ def ConvertToMonochrome(bmp):
     shadow.SetMask(wx.Mask(shadow, wx.WHITE)) 
 
     return shadow
+
+
 # ---------------------------------------------------------------------------- #
 # Class FMRendererMgr
 # ---------------------------------------------------------------------------- #
@@ -282,28 +284,33 @@ class FMRendererMgr(object):
     """
     This class represents a manager that handles all the renderers defined. 
     Every instance of this class will share the same state, so everyone can
-    instantiate their own and a call to SetTheme anywhere will affect everyone. 
+    instantiate their own and a call to L{FMRendererMgr.SetTheme} anywhere will affect everyone. 
     """
+
     def __new__(cls, *p, **k):
         if not '_instance' in cls.__dict__:
             cls._instance = object.__new__(cls)
         return cls._instance    
+
 
     def __init__(self):
         """ Default class constructor. """
    
         # If we have already initialized don't do it again. There is only one 
         # FMRendererMgr process-wide.
+
         if hasattr(self, '_alreadyInitialized'):
             return
+
         self._alreadyInitialized = True
        
-        
         self._currentTheme = StyleDefault
         self._renderers = []
         self._renderers.append(FMRenderer())
         self._renderers.append(FMRendererXP())
         self._renderers.append(FMRendererMSOffice2007())
+        self._renderers.append(FMRendererVista())        
+        
         
     def GetRenderer(self):
         """ Returns the current theme's renderer. """
@@ -312,20 +319,30 @@ class FMRendererMgr(object):
     
     
     def AddRenderer(self, renderer):
-        """ Adds a user defined custom renderer. """
+        """
+        Adds a user defined custom renderer.
+
+        :param `renderer`: a class derived from L{FMRenderer}.
+        """
         
         lastRenderer = len(self._renderers)
-        self._renderers.append( renderer )
+        self._renderers.append(renderer)
         
         return lastRenderer
+
     
-    def SetTheme(self,theme):
-        """ Sets the current theme. """
+    def SetTheme(self, theme):
+        """
+        Sets the current theme.
+
+        :param `theme`: an integer specifying the theme to use.
+        """
         
         if theme < 0 or theme > len(self._renderers):
             raise ValueError("Error invalid theme specified.")
         
         self._currentTheme = theme
+
 
 # ---------------------------------------------------------------------------- #
 # Class FMRenderer
@@ -333,11 +350,13 @@ class FMRendererMgr(object):
 
 class FMRenderer(object):
     """
-    Base class for the FlatMenu renderers. This class implements the common 
+    Base class for the L{FlatMenu} renderers. This class implements the common 
     methods of all the renderers.
-    """ 
+    """
+    
     def __init__(self):
-        
+        """ Default class constructor. """
+
         self.separatorHeight = 5
         self.drawLeftMargin = False
         self.highlightCheckAndRadio = False
@@ -367,7 +386,6 @@ class FMRenderer(object):
         self.buttonPressedFaceColour   = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
         self.buttonPressedBorderColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
         
-        
         # create wxBitmaps from the xpm's
         self._rightBottomCorner = self.ConvertToBitmap(shadow_center_xpm, shadow_center_alpha)
         self._bottom = self.ConvertToBitmap(shadow_bottom_xpm, shadow_bottom_alpha)
@@ -386,22 +404,33 @@ class FMRenderer(object):
         
         self._toolbarSeparatorBitmap = wx.NullBitmap
         self.raiseToolbar = False
+
         
-    def SetMenuBarHighlightColour(self,colour):
-        """ Set the colour to highlight focus on the menu bar. """
+    def SetMenuBarHighlightColour(self, colour):
+        """
+        Set the colour to highlight focus on the menu bar.
+
+        :param `colour`: a valid instance of `wx.Colour`.
+        """
         
         self.menuBarFocusFaceColour    = colour
         self.menuBarFocusBorderColour  = colour
         self.menuBarPressedFaceColour  = colour
         self.menuBarPressedBorderColour= colour
+
         
     def SetMenuHighlightColour(self,colour):
-        """ Set the colour to highlight focus on the menu. """
+        """
+        Set the colour to highlight focus on the menu.
+
+        :param `colour`: a valid instance of `wx.Colour`.
+        """
         
         self.menuFocusFaceColour    = colour
         self.menuFocusBorderColour  = colour
         self.menuPressedFaceColour     = colour
         self.menuPressedBorderColour   = colour
+
         
     def GetColoursAccordingToState(self, state):
         """
@@ -455,6 +484,7 @@ class FMRenderer(object):
 
         return upperBoxTopPercent, upperBoxBottomPercent, lowerBoxTopPercent, lowerBoxBottomPercent, \
                concaveUpperBox, concaveLowerBox
+
         
     def ConvertToBitmap(self, xpm, alpha=None):
         """
@@ -492,8 +522,16 @@ class FMRenderer(object):
         """
 
         raise Exception("This style doesn't support Drawing a Left Margin")
+
     
     def DrawToolbarSeparator(self, dc, rect):
+        """
+        Draws a separator inside the toolbar in L{FlatMenuBar}.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `rect`: the bitmap's client rectangle.
+        """
+        
         # Place a separator bitmap
         bmp = wx.EmptyBitmap(rect.width, rect.height)
         mem_dc = wx.MemoryDC()
@@ -577,6 +615,7 @@ class FMRenderer(object):
                 xx -= shadowSize
             
             dc.DrawBitmap(self._bottom, xx, yy, True)
+            
 
     def DrawToolBarBg(self, dc, rect):
         """
@@ -599,12 +638,30 @@ class FMRenderer(object):
     
         dc.DrawRectangleRect(rect)
         self.DrawBitmapShadow(dc, rect)
-        
-    def DrawSeparator(self, dc, rect):
 
+        
+    def DrawSeparator(self, dc, xCoord, yCoord, textX, sepWidth):
+        """
+        Draws a separator inside a L{FlatMenu}.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `xCoord`: the current x position where to draw the separator;
+        :param `yCoord`: the current y position where to draw the separator;
+        :param `textX`: the menu item label x position;
+        :param `sepWidth`: the width of the separator, in pixels.
+        """
+        
         dcsaver = DCSaver(dc)
-        dc.SetPen(wx.Pen(wx.BLACK))
-        dc.DrawLine(rect.x,rect.y,rect.x+rect.width,rect.y)
+        sepRect1 = wx.Rect(xCoord + textX, yCoord + 1, sepWidth/2, 1)
+        sepRect2 = wx.Rect(xCoord + textX + sepWidth/2, yCoord + 1, sepWidth/2-1, 1)
+
+        artMgr = ArtManager.Get()
+        backColour = artMgr.GetMenuFaceColour()
+        lightColour = wx.NamedColour("LIGHT GREY")
+        
+        artMgr.PaintStraightGradientBox(dc, sepRect1, backColour, lightColour, False)
+        artMgr.PaintStraightGradientBox(dc, sepRect2, lightColour, backColour, False) 
+        
 
     def DrawMenuItem(self, item, dc, xCoord, yCoord, imageMarginX, markerMarginX, textX, rightMarginX, selected=False):
         """
@@ -644,18 +701,15 @@ class FMRenderer(object):
         dc.SetBrush(backBrush)
         dc.DrawRectangleRect(rect)
 
-        # Draw the left margin gradient 
+        # Draw the left margin gradient
         if self.drawLeftMargin:
             self.DrawLeftMargin(item, dc, itemRect)
 
         # check if separator
         if item.IsSeparator():
-        
             # Separator is a small grey line separating between menu items. 
-
-            sepWidth = menuWidth - 6
-            sepHeight = self.separatorHeight
-            self.DrawSeparator(dc,wx.Rect(3, yCoord+sepHeight/2, sepWidth, 1))
+            sepWidth = xCoord + menuWidth - textX - 1
+            self.DrawSeparator(dc, xCoord, yCoord, textX, sepWidth)
             return
         
         # Keep the item rect
@@ -785,6 +839,7 @@ class FMRenderer(object):
             xx = xCoord + rightMarginX + borderXSize 
             rr = wx.Rect(xx, rect.y + 1, rect.height-2, rect.height-2)
             dc.DrawBitmap(rightArrowBmp, rr.x + 4, rr.y +(rr.height-16)/2, True)
+
         
     def DrawMenuBarButton(self, dc, rect, state):
         """
@@ -807,6 +862,7 @@ class FMRenderer(object):
         dc.SetPen(wx.Pen(penColour))
         dc.SetBrush(wx.Brush(brushColour))
         dc.DrawRectangleRect(rect)
+
 
     def DrawMenuButton(self, dc, rect, state):
         """
@@ -885,6 +941,7 @@ class FMRenderer(object):
         dc.SetPen(wx.Pen(wc))
         rr.Deflate(1, 1)
         dc.DrawRectangleRect(rr)
+
         
     def DrawButton(self, dc, rect, state, colour=None):
         """
@@ -923,6 +980,7 @@ class FMRenderer(object):
         dc.SetPen(wx.Pen(penColour))
         dc.SetBrush(wx.Brush(brushColour))
         dc.DrawRectangleRect(rect)
+
 
     def DrawMenuBarBackground(self, dc, rect):
         """
@@ -1141,13 +1199,10 @@ class FMRenderer(object):
         """
         Draws the menu.
 
+        :param `flatmenu`: the L{FlatMenu} instance we need to paint;
         :param `dc`: an instance of `wx.DC`.
         """
         
-        #scrollBarButtons = self.scrollBarButtons#DELME
-        #scrollBarMenuItems = not scrollBarButtons
-
-        #menuRect = self.GetMenuRect()
         menuRect = flatmenu.GetClientRect()
         menuBmp = wx.EmptyBitmap(menuRect.width, menuRect.height)
 
@@ -1184,10 +1239,6 @@ class FMRenderer(object):
         # If we have to scroll and are not using the scroll bar buttons we need to draw
         # the scroll up menu item at the top.
         if not self.scrollBarButtons and flatmenu._showScrollButtons:
-            #up = getSmallUpArrowBitmap()
-            #center_x = menuRect.width/2 - up.GetWidth()/2
-            #center_y = posy + (flatmenu.GetItemHeight()/2 - up.GetHeight()/2)
-            #mem_dc.DrawBitmap(up, center_x, center_y, True)
             posy += flatmenu.GetItemHeight()
             
         for nCount in xrange(flatmenu._first, nItems):
@@ -1221,25 +1272,20 @@ class FMRenderer(object):
                 break
 
         if flatmenu._showScrollButtons:
-            #if self.scrollBarButtons:
             if flatmenu._upButton:
                 flatmenu._upButton.Draw(mem_dc)
             if flatmenu._downButton:
                 flatmenu._downButton.Draw(mem_dc)
-            #else:
-                #down = getSmallDnArrowBitmap()
-                #center_x = menuRect.width/2 - down.GetWidth()/2
-                #center_y = posy + (flatmenu.GetItemHeight()/2 - down.GetHeight()/2)
-                #mem_dc.DrawBitmap(down, center_x, center_y, True)
 
         dc.Blit(0, 0, menuBmp.GetWidth(), menuBmp.GetHeight(), mem_dc, 0, 0)
+
                 
 # ---------------------------------------------------------------------------- #
-# Class FMRendererMSOffice2007 - Vista
+# Class FMRendererMSOffice2007
 # ---------------------------------------------------------------------------- #
 
 class FMRendererMSOffice2007(FMRenderer):
-    """ Windows Vista style. """
+    """ Windows Office 2007 style. """
     
     def __init__(self):
         """ Default class constructor. """
@@ -1270,6 +1316,7 @@ class FMRendererMSOffice2007(FMRenderer):
         self.menuBarPressedBorderColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.menuBarPressedFaceColour   = ArtManager.Get().LightColour(self.buttonPressedBorderColour, 60)
 
+
     def DrawLeftMargin(self, item, dc, menuRect):
         """
         Draws the menu left margin.
@@ -1299,25 +1346,38 @@ class FMRendererMSOffice2007(FMRenderer):
         dc.DrawLine(marginRect.x + marginRect.width-1, marginRect.y, marginRect.x + marginRect.width-1, marginRect.y + marginRect.height)
 
 
-
     def DrawMenuButton(self, dc, rect, state):
-        """Draws the highlight on a FlatMenu"""
+        """
+        Draws the highlight on a L{FlatMenu}.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `rect`: the button's client rectangle;
+        :param `state`: the button state.
+        """
         
         self.DrawButton(dc, rect, state)
+
         
     def DrawMenuBarButton(self, dc, rect, state):
-        """Draws the highlight on a FlatMenuBar"""
+        """
+        Draws the highlight on a L{FlatMenuBar}.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `rect`: the button's client rectangle;
+        :param `state`: the button state.
+        """
         
         self.DrawButton(dc, rect, state)
+
         
     def DrawButton(self, dc, rect, state, colour=None):
         """
-        Draws a button using the Vista theme.
+        Draws a button using the Office 2007 theme.
 
         :param `dc`: an instance of `wx.DC`;
         :param `rect`: the button's client rectangle;
         :param `state`: the button state;
-        :param `useLightColours`: ``True`` to use light colours, ``False`` otherwise.
+        :param `colour`: a valid `wx.Colour` instance.
         """
 
         colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
@@ -1327,7 +1387,7 @@ class FMRendererMSOffice2007(FMRenderer):
 
     def DrawButtonColour(self, dc, rect, state, colour):
         """
-        Draws a button using the Vista theme.
+        Draws a button using the Office 2007 theme.
 
         :param `dc`: an instance of `wx.DC`;
         :param `rect`: the button's client rectangle;
@@ -1529,7 +1589,56 @@ class FMRendererMSOffice2007(FMRenderer):
 
         return wx.NamedColour("MIDNIGHT BLUE")
     
+
+# ---------------------------------------------------------------------------- #
+# Class FMRendererVista
+# ---------------------------------------------------------------------------- #
+
+class FMRendererVista(FMRendererMSOffice2007):
+    """ Windows Vista-like style. """
     
+    def __init__(self):
+        """ Default class constructor. """
+
+        FMRendererMSOffice2007.__init__(self)
+
+
+    def DrawButtonColour(self, dc, rect, state, colour):
+        """
+        Draws a button using the Vista theme.
+
+        :param `dc`: an instance of `wx.DC`;
+        :param `rect`: the button's client rectangle;
+        :param `state`: the button state;
+        :param `colour`: a valid `wx.Colour` instance.
+        """
+
+        artMgr = ArtManager.Get()
+        
+        # Keep old pen and brush
+        dcsaver = DCSaver(dc)
+
+        outer = rgbSelectOuter
+        inner = rgbSelectInner
+        top = rgbSelectTop
+        bottom = rgbSelectBottom
+
+        bdrRect = wx.Rect(*rect)
+        filRect = wx.Rect(*rect)
+        filRect.Deflate(1,1)
+        
+        r1, g1, b1 = int(top.Red()), int(top.Green()), int(top.Blue())
+        r2, g2, b2 = int(bottom.Red()), int(bottom.Green()), int(bottom.Blue())
+        dc.GradientFillLinear(filRect, top, bottom, wx.SOUTH)
+        
+        dc.SetBrush(wx.TRANSPARENT_BRUSH)
+        dc.SetPen(wx.Pen(outer))
+        dc.DrawRoundedRectangleRect(bdrRect, 3)
+        bdrRect.Deflate(1, 1)
+        dc.SetPen(wx.Pen(inner))
+        dc.DrawRoundedRectangleRect(bdrRect, 2)
+
+        
 # ---------------------------------------------------------------------------- #
 # Class FMRendererXP
 # ---------------------------------------------------------------------------- #
@@ -1564,6 +1673,7 @@ class FMRendererXP(FMRenderer):
         self.menuBarPressedBorderColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.menuBarPressedFaceColour   = ArtManager.Get().LightColour(self.buttonPressedBorderColour, 60)
 
+
     def DrawLeftMargin(self, item, dc, menuRect):
         """
         Draws the menu left margin.
@@ -1582,6 +1692,7 @@ class FMRendererXP(FMRenderer):
         startColour = artMgr.DarkColour(faceColour, 20)
         endColour   = faceColour
         artMgr.PaintStraightGradientBox(dc, marginRect, startColour, endColour, False)
+
 
     def DrawMenuBarBackground(self, dc, rect):
         """
@@ -1648,13 +1759,14 @@ class FMRendererXP(FMRenderer):
 
         return wx.BLACK
 
+
 # ---------------------------------------------------------------------------- #
 # Class FlatMenuEvent
 # ---------------------------------------------------------------------------- #
 
 class FlatMenuEvent(wx.PyCommandEvent):
     """
-    Event class that supports the FlatMenu-compatible event called
+    Event class that supports the L{FlatMenu}-compatible event called
     ``EVT_FLAT_MENU_SELECTED``.
     """
         
@@ -2055,20 +2167,24 @@ class FlatMenuBar(wx.Panel):
     def GetOptions(self):
         """
         Returns the L{FlatMenuBar} options, whether to show a toolbar, to use LCD screen settings etc...
+
+        :see: L{SetOptions} for a list of valid options.        
         """
 
         return self._options
+
     
     def GetRendererManager(self):
         """
-        Returns the flatmenu renderer manager
+        Returns the L{FlatMenuBar} renderer manager.
         """
         
         return self._rendererMgr
+
         
     def GetRenderer(self):
         """
-        Returns the renderer associated with this instance
+        Returns the renderer associated with this instance.
         """
         
         return self._rendererMgr.GetRenderer()
@@ -2338,7 +2454,7 @@ class FlatMenuBar(wx.Panel):
 
     def FindMenuItem(self, id):
         """
-        Returns a L{FlatMenuItem} according to its id.
+        Returns a L{FlatMenuItem} according to its `id`.
 
         :param `id`: the identifier for the sought L{FlatMenuItem}.
         """
@@ -2386,6 +2502,7 @@ class FlatMenuBar(wx.Panel):
         self._showCustomize = show
         self.Refresh()
 
+
     def SetMargin(self, margin):
         """
         Sets the margin above and below the menu bar text
@@ -2393,12 +2510,13 @@ class FlatMenuBar(wx.Panel):
         :param `margin`: Height in pixels of the margin 
         """
         self._margin = margin
+
         
     def SetSpacing(self, spacer):
         """
         Sets the spacing between the menubar items
         
-        :param `spacer`: Number of pixels between each menu item
+        :param `spacer`: number of pixels between each menu item
         """
         self._spacer = spacer
         
@@ -2407,17 +2525,19 @@ class FlatMenuBar(wx.Panel):
         """
         Sets the margin around the toolbar
         
-        :param `margin`: Width in pixels of the margin around the tools in the toolbar
+        :param `margin`: width in pixels of the margin around the tools in the toolbar
         """
         self._toolbarMargin = margin
+
         
     def SetToolbarSpacing(self, spacer):
         """
         Sets the spacing between the toolbar tools
         
-        :param `spacer`: Number of pixels between each tool in the toolbar
+        :param `spacer`: number of pixels between each tool in the toolbar
         """
         self._toolbarSpacer = spacer
+
         
     def SetLCDMonitor(self, lcd=True):
         """
@@ -2576,7 +2696,11 @@ class FlatMenuBar(wx.Panel):
         return self.GetRenderer().menuBarFaceColour
     
     def SetBackgroundColour(self, colour):
-        """ Sets the menu bar background colour. """
+        """
+        Sets the menu bar background colour.
+
+        :param `colour`: a valid `wx.Colour`.
+        """
         
         self.GetRenderer().menuBarFaceColour = colour
 
@@ -3124,6 +3248,7 @@ class FlatMenuBar(wx.Panel):
         
         :param `toolId`: an integer by which the tool may be identified in subsequent
          operations;
+        :param `label`: the tool label string;
         :param `kind`: may be ``wx.ITEM_NORMAL`` for a normal button (default),
          ``wx.ITEM_CHECK`` for a checkable tool (such tool stays pressed after it had been
          toggled) or ``wx.ITEM_RADIO`` for a checkable tool which makes part of a radio
@@ -3170,7 +3295,9 @@ class FlatMenuBar(wx.Panel):
         
     def AddRadioTool(self, toolId, label= "", bitmap1=wx.NullBitmap, bitmap2=wx.NullBitmap, shortHelp="", longHelp=""):
         """
-        Adds a new radio tool to the toolbar. Consecutive radio tools form a radio group
+        Adds a new radio tool to the toolbar.
+
+        Consecutive radio tools form a radio group
         such that exactly one button in the group is pressed at any moment, in other
         words whenever a button in the group is pressed the previously pressed button
         is automatically released.
@@ -3205,7 +3332,7 @@ class FlatMenuBar(wx.Panel):
 
     def PositionAUI(self, mgr, fixToolbar=True):
         """
-        Positions the control inside a wxAUI/PyAUI frame manager.
+        Positions the control inside a wxAUI / PyAUI frame manager.
 
         :param `mgr`: an instance of `wx.aui.AuiManager` or L{AuiManager};
         :param `fixToolbar`: ``True`` if L{FlatMenuBar} can not be floated.
@@ -3526,7 +3653,14 @@ class FlatMenuButton(object):
 
 
     def Move(self, input1, input2=None):
-        """ Moves L{FlatMenuButton} to the specified position. """
+        """
+        Moves L{FlatMenuButton} to the specified position.
+
+        :param `input1`: if it is an instance of `wx.Point`, it represents the L{FlatMenuButton}
+         position and the `input2` parameter is not used. Otherwise it is an integer representing
+         the button `x` position;
+        :param `input2`: if not ``None``, it is an integer representing the button `y` position.
+        """
 
         if type(input) == type(1):
             self._pos = wx.Point(input1, input2)
@@ -3749,10 +3883,10 @@ class FlatMenuBase(ShadowPopupWindow):
                 self._downButton.Move((sz.x - SCROLL_BTN_HEIGHT - 4, scrHeight - pos.y - 2 - SCROLL_BTN_HEIGHT))
             else:
                 if not self._upButton:
-                    self._upButton = FlatMenuButton(self, True, fmresources.getMenuUpArrowBitmap(), scrollOnHover=True)
+                    self._upButton = FlatMenuButton(self, True, getMenuUpArrowBitmap(), scrollOnHover=True)
 
                 if not self._downButton:
-                    self._downButton = FlatMenuButton(self, False, fmresources.getMenuDownArrowBitmap(), scrollOnHover=True)
+                    self._downButton = FlatMenuButton(self, False, getMenuDownArrowBitmap(), scrollOnHover=True)
                     
                 self._upButton.SetSize((sz.x-2, self.GetItemHeight()))
                 self._downButton.SetSize((sz.x-2, self.GetItemHeight()))
@@ -3764,7 +3898,9 @@ class FlatMenuBase(ShadowPopupWindow):
         self.Show()
 
         # Capture mouse event and direct them to us
-        self.CaptureMouse()
+        if not self.HasCapture():
+            self.CaptureMouse()
+            
         self._is_dismiss = False
         
 
@@ -4234,7 +4370,7 @@ class FlatMenuItem(object):
     A class that represents an item in a menu.
     """
 
-    def __init__(self, parent, id=wx.ID_SEPARATOR, text="", helpString="",
+    def __init__(self, parent, id=wx.ID_SEPARATOR, label="", helpString="",
                  kind=wx.ITEM_NORMAL, subMenu=None, normalBmp=wx.NullBitmap,
                  disabledBmp=wx.NullBitmap,
                  hotBmp=wx.NullBitmap):
@@ -4242,12 +4378,14 @@ class FlatMenuItem(object):
         Default class constructor.
 
         :param `parent`: menu that the menu item belongs to;
+        :param `id`: the menu item identifier;
         :param `label`: text for the menu item, as shown on the menu. An accelerator
          key can be specified using the ampersand '&' character. In order to embed
          an ampersand character in the menu item text, the ampersand must be doubled;
-        :param kind: may be ``wx.ITEM_SEPARATOR``, ``wx.ITEM_NORMAL``, ``wx.ITEM_CHECK``
-         or ``wx.ITEM_RADIO``;
         :param `helpString`: optional help string that will be shown on the status bar;
+        :param `kind`: may be ``wx.ITEM_SEPARATOR``, ``wx.ITEM_NORMAL``, ``wx.ITEM_CHECK``
+         or ``wx.ITEM_RADIO``;
+        :param `subMenu`: if not ``None``, the subMenu this item belongs to;
         :param `normalBmp`: normal bitmap to draw to the side of the text, this bitmap
          is used when the menu is enabled;
         :param `disabledBmp`: 'greyed' bitmap to draw to the side of the text, this
@@ -4256,7 +4394,7 @@ class FlatMenuItem(object):
          used when the menu is hovered, if non supplied, normal is used.
         """
 
-        self._text = text
+        self._text = label
         self._kind = kind
         self._helpString = helpString
 
@@ -4866,9 +5004,11 @@ class FlatMenu(FlatMenuBase):
 
     def AppendSubMenu(self, subMenu, item, helpString=""):
         """
-        Adds a pull-right submenu to the end of the menu. See AppendMenu()
+        Adds a pull-right submenu to the end of the menu.
         
-        This function is added to duplicate the API of wx.Menu
+        This function is added to duplicate the API of `wx.Menu`.
+
+        :see: L{AppendMenu} for an explanation of the input parameters.        
         """
         
         return self.AppendMenu(wx.ID_ANY, item, subMenu, helpString)
@@ -4949,7 +5089,7 @@ class FlatMenu(FlatMenuBase):
             else:
                 menuHeight += self._itemHeight
                     
-        self.SetSize(wx.Size(self._menuWidth*self._numCols, menuHeight+6))
+        self.SetSize(wx.Size(self._menuWidth*self._numCols, menuHeight+4))
 
         # Add accelerator entry to the menu if needed
         accel = menuItem.GetAcceleratorEntry()

@@ -1,8 +1,13 @@
 import wx
-
-
 import os
 import sys
+
+try:
+    dirName = os.path.dirname(os.path.abspath(__file__))
+except:
+    dirName = os.path.dirname(os.path.abspath(sys.argv[0]))
+
+sys.path.append(os.path.split(dirName)[0])
 
 try:
     from agw import pygauge as PG
@@ -88,7 +93,7 @@ class PyGaugeDemo(wx.Panel):
         colourSizer.Add(self.gaugeRange, 0, wx.EXPAND)
         colourSizer.Add(self.gaugePadding, 0, wx.EXPAND)
 
-        mainSizer.Add(colourSizer, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL)
+        mainSizer.Add(colourSizer, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 10)
         
 
         boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)

@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 13 Aug 2010, 09.00 GMT
+# Latest Revision: 19 Aug 2010, 22.00 GMT
 #
 #
 # TODO List
@@ -175,7 +175,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 13 Aug 2010, 09.00 GMT
+Latest Revision: Andrea Gavana @ 19 Aug 2010, 22.00 GMT
 
 Version 0.7
 
@@ -519,7 +519,7 @@ def to_list(input):
 
 def CheckVariableRowHeight(listCtrl, text):
     """
-    Checks whether a text contains multiline strings and if the `listCtrl` window
+    Checks whether a `text` contains multiline strings and if the `listCtrl` window
     style is compatible with multiline strings.
 
     :param `listCtrl`: an instance of L{UltimateListCtrl};
@@ -566,6 +566,8 @@ def MakeDisabledBitmap(original):
 
 #----------------------------------------------------------------------
 def GetdragcursorData():
+    """ Returns the drag and drop cursor image as a decompressed stream of characters. """
+
     return zlib.decompress(
 "x\xda\xeb\x0c\xf0s\xe7\xe5\x92\xe2b``\xe0\xf5\xf4p\t\x02\xd2\xa2@,\xcf\xc1\
 \x06$9z\xda>\x00)\xce\x02\x8f\xc8b\x06\x06na\x10fd\x985G\x02(\xd8W\xe2\x1aQ\
@@ -583,10 +585,16 @@ D\x90\x1d\xef19_\xf5\xde5y\xb6+\xa7\xdeZ\xfbA\x9bu\x9f`\xffD\xafYn\xf6\x9eW\
 \xfdf\x97Z\xcb\xcc\xc0\xf0\xff?3\xc3\x92\xabN\x8arB\xc7\x8f\x03\x1d\xcc\xe0\
 \xe9\xea\xe7\xb2\xce)\xa1\t\x00B7|\x00" )
 
+
 def GetdragcursorBitmap():
+    """ Returns the drag and drop cursor image as a `wx.Bitmap`. """
+
     return wx.BitmapFromImage(GetdragcursorImage())
 
+
 def GetdragcursorImage():
+    """ Returns the drag and drop cursor image as a `wx.Image`. """
+
     stream = cStringIO.StringIO(GetdragcursorData())
     return wx.ImageFromStream(stream)
 
@@ -618,7 +626,7 @@ class PyImageList(object):
         :param `height`: the height of the images in the image list, in pixels (unused
          if you specify the ``IL_VARIABLE_SIZE`` style;
         :param `mask`: ``True`` if masks should be created for all images (unused in
-         L{PyImageList};
+         L{PyImageList});
         :param `initialCount`: the initial size of the list (unused in L{PyImageList});
         :param `style`: can be one of the following bits:
 
@@ -989,12 +997,15 @@ class SelectionStore(object):
                 start = bisect.bisect_right(self._itemsSel, itemFrom)
                 end = bisect.bisect_right(self._itemsSel, itemTo)
 
+                if itemFrom < start:
+                    start = itemFrom
+
                 if start == count or self._itemsSel[start] < itemFrom:
                     start += 1
                 
                 if end == count or self._itemsSel[end] > itemTo:
                     end -= 1
-                    
+
                 if start <= end:
                 
                     # delete all of them (from end to avoid changing indices)
@@ -2463,7 +2474,7 @@ class ColWidthInfo(object):
 class UltimateListItemData(object):
     """
     A simple class which holds information about L{UltimateListItem} visual
-    attributes (client ractangles, positions, etc...).
+    attributes (client rectangles, positions, etc...).
     """
 
     def __init__(self, owner):
@@ -2975,8 +2986,8 @@ class UltimateListItemData(object):
         """
         Sets the item position.
 
-        :param `x`: the item x position;
-        :param `y`: the item y position.
+        :param `x`: the item `x` position;
+        :param `y`: the item `y` position.
         """
 
         self._rect.x = x
@@ -2987,8 +2998,8 @@ class UltimateListItemData(object):
         """
         Sets the item size.
 
-        :param `width`: the item width;
-        :param `height`: the item height.
+        :param `width`: the item width, in pixels;
+        :param `height`: the item height, in pixels.
         """
 
         if width != -1:
@@ -3001,33 +3012,33 @@ class UltimateListItemData(object):
         """
         Returns ``True`` if the input position is inside the item client rectangle.
 
-        :param `x`: the x mouse position;
-        :param `y`: the y mouse position.
+        :param `x`: the `x` mouse position;
+        :param `y`: the `y` mouse position.
         """
 
         return wx.Rect(self.GetX(), self.GetY(), self.GetWidth(), self.GetHeight()).Contains((x, y))
 
 
     def GetX(self):
-        """ Returns the item x position. """
+        """ Returns the item `x` position. """
         
         return self._rect.x
 
 
     def GetY(self):
-        """ Returns the item y position. """
+        """ Returns the item `y` position. """
 
         return self._rect.y
 
 
     def GetWidth(self):
-        """ Returns the item width. """
+        """ Returns the item width, in pixels. """
 
         return self._rect.width
 
 
     def GetHeight(self):
-        """ Returns the item height. """
+        """ Returns the item height, in pixels. """
 
         return self._rect.height
 
@@ -3111,7 +3122,7 @@ class UltimateListItemData(object):
 class UltimateListHeaderData(object):
     """
     A simple class which holds information about L{UltimateListItem} visual
-    attributes for the header/footer items (client ractangles, positions, etc...).
+    attributes for the header/footer items (client rectangles, positions, etc...).
     """
 
     def __init__(self, item=None):
@@ -3242,6 +3253,7 @@ class UltimateListHeaderData(object):
         if self._mask & ULC_MASK_RENDERER:
             self._customRenderer = item._customRenderer
 
+
     def SetState(self, flag):
         """
         Sets the item state flags.
@@ -3272,8 +3284,8 @@ class UltimateListHeaderData(object):
         """
         Sets the header/footer item position.
 
-        :param `x`: the item x position;
-        :param `y`: the item y position.
+        :param `x`: the item `x` position;
+        :param `y`: the item `y` position.
         """
 
         self._xpos = x
@@ -3282,7 +3294,7 @@ class UltimateListHeaderData(object):
 
     def SetHeight(self, h):
         """
-        Sets the header/footer item height.
+        Sets the header/footer item height, in pixels.
 
         :param `h`: an integer value representing the header/footer height.
         """
@@ -3292,7 +3304,7 @@ class UltimateListHeaderData(object):
 
     def SetWidth(self, w):
         """
-        Sets the header/footer item width.
+        Sets the header/footer item width, in pixels.
 
         :param `w`: an integer value representing the header/footer width.
         """
@@ -3347,8 +3359,8 @@ class UltimateListHeaderData(object):
         """
         Returns ``True`` if the input position is inside the item client rectangle.
 
-        :param `x`: the x mouse position;
-        :param `y`: the y mouse position.
+        :param `x`: the `x` mouse position;
+        :param `y`: the `y` mouse position.
         """
 
         return ((x >= self._xpos) and (x <= self._xpos+self._width) and (y >= self._ypos) and (y <= self._ypos+self._height))
@@ -3415,7 +3427,7 @@ class UltimateListHeaderData(object):
     
 
     def GetWidth(self):
-        """ Returns the header/footer item width. """
+        """ Returns the header/footer item width, in pixels. """
         
         return self._width
 
@@ -3663,7 +3675,7 @@ class UltimateListLineData(object):
 
 
     def GetHeight(self):
-        """ Returns the line height. """
+        """ Returns the line height, in pixels. """
 
         return self._height
 
@@ -3695,32 +3707,32 @@ class UltimateListLineData(object):
 
 
     def GetX(self):
-        """ Returns the line x position. """
+        """ Returns the line `x` position. """
 
         return self._x
 
 
     def SetX(self, x):
         """
-        Sets the line x position.
+        Sets the line `x` position.
 
-        :param `x`: the new line x position.
+        :param `x`: the new line `x` position.
         """
 
         self._x = x       
 
 
     def GetY(self):
-        """ Returns the line y position. """
+        """ Returns the line `y` position. """
 
         return self._y        
 
 
     def SetY(self, y):
         """
-        Sets the line y position.
+        Sets the line `y` position.
 
-        :param `y`: the new line y position.
+        :param `y`: the new line `y` position.
         """
 
         self._y = y
@@ -3898,8 +3910,8 @@ class UltimateListLineData(object):
         """
         Sets the line position.
 
-        :param `x`: the current x coordinate;
-        :param `y`: the current y coordinate;
+        :param `x`: the current `x` coordinate;
+        :param `y`: the current `y` coordinate;
         :param `spacing`: the spacing between items, in pixels.
         """
 
@@ -4238,17 +4250,14 @@ class UltimateListLineData(object):
                     # Vista selection style
                     self.DrawVistaRectangle(dc, self._gi._rectAll, hasFocus)
                 else:
-                    if wx.Platform not in ["__WXMAC__", "__WXGTK__"]:
-                        dc.DrawRectangleRect(self._gi._rectHighlight)
-                    else:
-                        if highlighted:
-                            flags = wx.CONTROL_SELECTED
-                            if self._owner.HasFocus() and wx.Platform == "__WXMAC__":
-                                flags |= wx.CONTROL_FOCUSED
+                    if highlighted:
+                        flags = wx.CONTROL_SELECTED
+                        if self._owner.HasFocus() and wx.Platform == "__WXMAC__":
+                            flags |= wx.CONTROL_FOCUSED
 
-                            wx.RendererNative.Get().DrawItemSelectionRect(self._owner, dc, self._gi._rectHighlight, flags)
-                        else:
-                            dc.DrawRectangleRect(self._gi._rectHighlight)
+                        wx.RendererNative.Get().DrawItemSelectionRect(self._owner, dc, self._gi._rectHighlight, flags)
+                    else:
+                        dc.DrawRectangleRect(self._gi._rectHighlight)
 
         else:
 
@@ -4370,20 +4379,16 @@ class UltimateListLineData(object):
                     # Vista selection style
                     self.DrawVistaRectangle(dc, paintRect, hasFocus)
                 else:
-                    # Normal selection style
-                    if wx.Platform not in ["__WXGTK__", "__WXMAC__"]:
-                        dc.DrawRectangleRect(paintRect)
+                    if highlighted:
+                        flags = wx.CONTROL_SELECTED
+                        if hasFocus:
+                            flags |= wx.CONTROL_FOCUSED
+                        if current:
+                            flags |= wx.CONTROL_CURRENT
+                           
+                        wx.RendererNative.Get().DrawItemSelectionRect(self._owner, dc, paintRect, flags)                        
                     else:
-                        if highlighted:
-                            flags = wx.CONTROL_SELECTED
-                            if hasFocus:
-                                flags |= wx.CONTROL_FOCUSED
-                            if current:
-                                flags |= wx.CONTROL_CURRENT
-                               
-                            wx.RendererNative.Get().DrawItemSelectionRect(self._owner, dc, paintRect, flags)                        
-                        else:
-                            dc.DrawRectangleRect(paintRect)
+                        dc.DrawRectangleRect(paintRect)
 
         else:
     
@@ -4891,7 +4896,7 @@ class UltimateListHeaderWindow(wx.PyControl):
 
         :param `renderer`: a class able to correctly render header buttons
 
-        :note: the renderer class **must** implement the methods `DrawHeaderButton`,
+        :note: the renderer class **must** implement the methods `DrawHeaderButton`
           and `GetForegroundColor`. 
         """
 
@@ -5102,8 +5107,9 @@ class UltimateListHeaderWindow(wx.PyControl):
                 imageList = self._owner._small_image_list
                 if imageList:
                     for img in image:
-                        ix, iy = imageList.GetSize(img)
-                        wLabel += ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE
+                        if img >= 0:
+                            ix, iy = imageList.GetSize(img)
+                            wLabel += ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE
 
             else:
 
@@ -5125,12 +5131,13 @@ class UltimateListHeaderWindow(wx.PyControl):
             # if we have an image, draw it on the right of the label
             if imageList:
                 for indx, img in enumerate(image):
-                    imageList.Draw(img, dc,
-                                   xAligned + wLabel - (ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE)*(indx+1),
-                                   HEADER_OFFSET_Y + (h - 4 - iy)/2,
-                                   wx.IMAGELIST_DRAW_TRANSPARENT)
+                    if img >= 0:
+                        imageList.Draw(img, dc,
+                                       xAligned + wLabel - (ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE)*(indx+1),
+                                       HEADER_OFFSET_Y + (h - 4 - iy)/2,
+                                       wx.IMAGELIST_DRAW_TRANSPARENT)
 
-                    cw -= ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE
+                        cw -= ix + HEADER_IMAGE_MARGIN_IN_REPORT_MODE
 
             # draw the text clipping it so that it doesn't overwrite the column
             # boundary
@@ -5506,8 +5513,8 @@ class UltimateListHeaderWindow(wx.PyControl):
         """
         HitTest method for column headers.
 
-        :param `x`: the mouse x position;
-        :param `y`: the mouse y position.
+        :param `x`: the mouse `x` position;
+        :param `y`: the mouse `y` position.
 
         :return: The column index if any column client rectangle contains the mouse
          position, ``wx.NOT_FOUND`` otherwise.
@@ -6437,7 +6444,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
     def GetLineY(self, line):
         """
-        Returns the line y position.
+        Returns the line `y` position.
 
         :param `line`: an instance of L{UltimateListLineData}.
         """
@@ -6547,8 +6554,8 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         HitTest method for a L{UltimateListCtrl} line.
 
         :param `line`: an instance of L{UltimateListLineData};
-        :param `x`: the mouse x position;
-        :param `y`: the mouse y position.
+        :param `x`: the mouse `x` position;
+        :param `y`: the mouse `y` position.
 
         :return: a tuple of values, representing the item hit and a hit flag. The
          hit flag can be one of the following bits:
@@ -7233,7 +7240,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             self.SetFocusIgnoringChildren()
 
         event.SetEventObject(self.GetParent())
-        if self.GetParent().GetEventHandler().ProcessEvent(event) :
+        if self.GetParent().GetEventHandler().ProcessEvent(event):
             return
 
         if event.GetEventType() == wx.wxEVT_MOUSEWHEEL:
@@ -7242,7 +7249,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             event.Skip()
             return
 
-        if not self.HasCurrent() or self.IsEmpty():
+        if self.IsEmpty():
             if event.RightDown():
                 self.SendNotify(-1, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition())
 
@@ -7520,12 +7527,22 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                 elif event.ShiftDown():
                     self.ChangeCurrent(current)
                     lineFrom, lineTo = oldCurrent, current
+                    shift = 0
 
                     if lineTo < lineFrom:
                         lineTo = lineFrom
                         lineFrom = self._current
 
-                    self.HighlightLines(lineFrom, lineTo)
+                        if not self.IsHighlighted(lineFrom):
+                            shift = 1
+                        
+                        for i in xrange(lineFrom+1, lineTo+1):
+                            if self.IsHighlighted(i):
+                                self.HighlightLine(i, False)
+                                self.RefreshLine(i)
+                                lineTo -= 1
+                                
+                    self.HighlightLines(lineFrom, lineTo+shift)
 
                 else: # !ctrl, !shift
 
@@ -8248,8 +8265,8 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
          one;
         :param `checked`: ``True`` if the control is marked, ``False`` if it is not;
         :param `enabled`: ``True`` if the control is enabled, ``False`` if it is not;
-        :param `x`: the width of the bitmap;
-        :param `y`: the height of the bitmap.        
+        :param `x`: the width of the bitmap, in pixels;
+        :param `y`: the height of the bitmap, in pixels.        
         """
 
         bmp = wx.EmptyBitmap(x, y)
@@ -8728,7 +8745,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     def CheckItem(self, item, checked=True, sendEvent=True):
         """
         Actually checks/uncheks an item, sending (eventually) the two
-        events ``EVT_LIST_ITEM_CHECKING``/``EVT_LIST_ITEM_CHECKED``.
+        events ``EVT_LIST_ITEM_CHECKING`` / ``EVT_LIST_ITEM_CHECKED``.
 
         :param `item`: an instance of L{UltimateListItem};
         :param `checked`: ``True`` to check an item, ``False`` to uncheck it;
@@ -9082,7 +9099,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         :param `col`: the column index.
         :param `renderer`: a class able to correctly render the input item.
 
-        :note: the renderer class **must** implement the methods `DrawHeaderButton`,
+        :note: the renderer class **must** implement the methods `DrawHeaderButton`
          and `GetForegroundColor`. 
         """
 
@@ -9531,7 +9548,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
 
     def RefreshAll(self):
-        """ Refreshes the entire l{UltimateListCtrl}. """
+        """ Refreshes the entire L{UltimateListCtrl}. """
 
         self._dirty = False
         self.Refresh()
@@ -9586,7 +9603,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
          ============================ ========= ==============================
 
 
-        :return: The first item with given state following item or -1 if no such item found.
+        :return: The first item with given `state` following `item` or -1 if no such item found.
 
         :note: This function may be used to find all selected items in the
          control like this::
@@ -9883,8 +9900,8 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         """
         HitTest method for a L{UltimateListCtrl}.
 
-        :param `x`: the mouse x position;
-        :param `y`: the mouse y position.
+        :param `x`: the mouse `x` position;
+        :param `y`: the mouse `y` position.
 
         :see: L{HitTestLine} for a list of return flags.        
         """
@@ -10787,9 +10804,9 @@ class UltimateListCtrl(wx.PyControl):
 
     def GetAGWWindowStyleFlag(self):
         """
-        Gets the L{UltimateListCtrl} AGW-specific style flag.
+        Returns the L{UltimateListCtrl} AGW-specific style flag.
         
-        See L{SetAGWWindowStyleFlag} for possible style flags.
+        :see: L{SetAGWWindowStyleFlag} for a list of possible style flags.
         """
         
         return self._agwStyle
@@ -11130,7 +11147,7 @@ class UltimateListCtrl(wx.PyControl):
         :param `item`: an integer specifying the item index;
         :param `data`: the data to be associated with the input item.
 
-        :note: Tthis function cannot be used to associate pointers with
+        :note: This function cannot be used to associate pointers with
          the control items, use L{SetItemPyData} instead.
         """
 
@@ -11435,7 +11452,7 @@ class UltimateListCtrl(wx.PyControl):
          ============================ ========= ==============================
 
 
-        :return: The first item with given state following item or -1 if no such item found.
+        :return: The first item with given `state` following `item` or -1 if no such item found.
 
         :note: This function may be used to find all selected items in the
          control like this::
@@ -11464,6 +11481,10 @@ class UltimateListCtrl(wx.PyControl):
 
         :param `which`: one of ``wx.IMAGE_LIST_NORMAL``, ``wx.IMAGE_LIST_SMALL``,
          ``wx.IMAGE_LIST_STATE`` (the last is unimplemented).
+
+        :note: As L{UltimateListCtrl} allows you to use a standard `wx.ImageList` or
+         L{PyImageList}, the returned object depends on which kind of image list you
+         chose.
         """
 
         if which == wx.IMAGE_LIST_NORMAL:
@@ -11661,7 +11682,7 @@ class UltimateListCtrl(wx.PyControl):
         return self._mainWin.FindItemData(start, data)
 
 
-    def FindItemAtPos(self, start, pt, direction):
+    def FindItemAtPos(self, start, pt):
         """
         Find an item nearest this position.
 
@@ -11676,7 +11697,7 @@ class UltimateListCtrl(wx.PyControl):
         HitTest method for a L{UltimateListCtrl}.
 
         :param `pointOrTuple`: an instance of `wx.Point` or a tuple representing
-         the mouse x, y position.
+         the mouse `x`, `y` position.
 
         :see: L{UltimateListMainWindow.HitTestLine} for a list of return flags.        
         """
@@ -11812,10 +11833,12 @@ class UltimateListCtrl(wx.PyControl):
          ============================ ========= ==============================
 
         :param `width`: can be a width in pixels or ``wx.LIST_AUTOSIZE`` (-1) or
-         ``wx.LIST_AUTOSIZE_USEHEADER`` (-2). ``wx.LIST_AUTOSIZE`` will resize the
-         column to the length of its longest item. ``wx.LIST_AUTOSIZE_USEHEADER``
-         will resize the column to the length of the header (Win32) or 80 pixels
-         (other platforms).
+         ``wx.LIST_AUTOSIZE_USEHEADER`` (-2) or ``LIST_AUTOSIZE_FILL`` (-3). 
+         ``wx.LIST_AUTOSIZE`` will resize the column to the length of its longest
+         item. ``wx.LIST_AUTOSIZE_USEHEADER`` will resize the column to the
+         length of the header (Win32) or 80 pixels (other platforms). 
+         ``LIST_AUTOSIZE_FILL`` will resize the column fill the remaining width
+         of the window.
 
         """
         
@@ -12153,7 +12176,7 @@ class UltimateListCtrl(wx.PyControl):
 
     def PopupMenu(self, menu, pos=wx.DefaultPosition):
         """
-        Pops up the given menu at the specified coordinates, relative to this window,
+        Pops up the given `menu` at the specified coordinates, relative to this window,
         and returns control when the user has dismissed the menu. If a menu item is
         selected, the corresponding menu event is generated and will be processed as
         usual. If the coordinates are not specified, the current mouse cursor position
@@ -12172,8 +12195,8 @@ class UltimateListCtrl(wx.PyControl):
         """
         Converts to screen coordinates from coordinates relative to this window.
 
-        :param `x`: an integer specifying the x client coordinate;        
-        :param `y`: an integer specifying the y client coordinate.
+        :param `x`: an integer specifying the `x` client coordinate;        
+        :param `y`: an integer specifying the `y` client coordinate.
 
         :return: the coordinates relative to the screen.
         
@@ -12187,8 +12210,8 @@ class UltimateListCtrl(wx.PyControl):
         """
         Converts from screen to client window coordinates.
 
-        :param `x`: an integer specifying the x screen coordinate;        
-        :param `y`: an integer specifying the y screen coordinate.
+        :param `x`: an integer specifying the `x` screen coordinate;        
+        :param `y`: an integer specifying the `y` screen coordinate.
 
         :return: the coordinates relative to this window.
         
@@ -12242,7 +12265,7 @@ class UltimateListCtrl(wx.PyControl):
     def OnGetItemTextColour(self, item, col):
         """
         This function **must** be overloaded in the derived class for a control with
-        ``ULC_VIRTUAL`` style. It should return a wx.Colour object or None for
+        ``ULC_VIRTUAL`` style. It should return a `wx.Colour` object or ``None`` for
         the default color.
 
         :param `item`: an integer specifying the item index;
@@ -12550,7 +12573,7 @@ class UltimateListCtrl(wx.PyControl):
         return self.GetNextItem(-1, ULC_NEXT_ALL, ULC_STATE_FOCUSED)
 
 
-    def GetFirstSelected(self, *args):
+    def GetFirstSelected(self):
         """ Return first selected item, or -1 when none is selected. """
         
         return self.GetNextSelected(-1)
@@ -13039,7 +13062,7 @@ class UltimateListCtrl(wx.PyControl):
 
         :param `renderer`: a class able to correctly render header buttons
 
-        :note: the renderer class **must** implement the methods `DrawHeaderButton`,
+        :note: the renderer class **must** implement the methods `DrawHeaderButton`
          and `GetForegroundColor`. 
         """
 
@@ -13055,7 +13078,7 @@ class UltimateListCtrl(wx.PyControl):
 
         :param `renderer`: a class able to correctly render header buttons
 
-        :note: the renderer class **must** implement the methods `DrawHeaderButton`,
+        :note: the renderer class **must** implement the methods `DrawHeaderButton`
          and `GetForegroundColor`. 
         """
 
@@ -13072,7 +13095,7 @@ class UltimateListCtrl(wx.PyControl):
         :param `col`: the column index.
         :param `renderer`: a class able to correctly render the input item.
 
-        :note: the renderer class **must** implement the methods `DrawHeaderButton`,
+        :note: the renderer class **must** implement the methods `DrawHeaderButton`
          and `GetForegroundColor`. 
         """
 

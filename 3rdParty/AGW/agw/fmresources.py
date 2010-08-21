@@ -4,6 +4,7 @@ import wx
 StyleDefault = 0
 StyleXP      = 1
 Style2007    = 2
+StyleVista   = 3
 
 # Menu shadows
 RightShadow             = 1 # Right side shadow
@@ -113,6 +114,11 @@ INB_PIN_NONE = 0
 INB_PIN_HOVER = 200
 INB_PIN_PRESSED = 201
 
+# Windows Vista Colours
+rgbSelectOuter = wx.Colour(170, 200, 245)
+rgbSelectInner = wx.Colour(230, 250, 250)
+rgbSelectTop = wx.Colour(210, 240, 250)
+rgbSelectBottom = wx.Colour(185, 215, 250)
 
 check_mark_xpm = ["    16    16       16            1",
                   "` c #000000",

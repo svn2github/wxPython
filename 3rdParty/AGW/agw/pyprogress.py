@@ -67,7 +67,7 @@ This class supports the following window styles:
 =================== =========== ==================================================
 Window Styles       Hex Value   Description
 =================== =========== ==================================================
-``PD_CAN_ABORT``            0x1 This flag tells the dialog that it should have a ``Cancel`` button which the user may press. If this happens, the next call to `Update()` will return ``False``.
+``PD_CAN_ABORT``            0x1 This flag tells the dialog that it should have a ``Cancel`` button which the user may press. If this happens, the next call to `Update` will return ``False``.
 ``PD_APP_MODAL``            0x2 Make the progress dialog modal. If this flag is not given, it is only 'locally' modal - that is the input to the parent window is disabled, but not to the other ones.
 ``PD_AUTO_HIDE``            0x4 Causes the progress dialog to disappear from screen as soon as the maximum value of the progress meter has been reached.
 ``PD_ELAPSED_TIME``         0x8 This flag tells the dialog that it should show elapsed time (since creating the dialog).
@@ -376,7 +376,7 @@ class PyProgress(wx.Dialog):
          =================== =========== ==================================================
          Window Styles       Hex Value   Description
          =================== =========== ==================================================
-         ``PD_CAN_ABORT``            0x1 This flag tells the dialog that it should have a ``Cancel`` button which the user may press. If this happens, the next call to `Update()` will return ``False``.
+         ``PD_CAN_ABORT``            0x1 This flag tells the dialog that it should have a ``Cancel`` button which the user may press. If this happens, the next call to `UpdatePulse` will return ``False``.
          ``PD_APP_MODAL``            0x2 Make the progress dialog modal. If this flag is not given, it is only 'locally' modal - that is the input to the parent window is disabled, but not to the other ones.
          ``PD_AUTO_HIDE``            0x4 Causes the progress dialog to disappear from screen as soon as the maximum value of the progress meter has been reached.
          ``PD_ELAPSED_TIME``         0x8 This flag tells the dialog that it should show elapsed time (since creating the dialog).

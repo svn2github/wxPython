@@ -179,7 +179,7 @@ class BufferedWindow(wx.Window):
     """
     A Buffered window class.
 
-    To use it, subclass it and define a `Draw(DC)` method that takes a DC
+    To use it, subclass it and define a `Draw(dc)` method that takes a `dc`
     to draw to. In that method, put the code needed to draw the picture
     you want. The window will automatically be double buffered, and the
     screen will be automatically updated when a Paint event is received.
@@ -519,8 +519,8 @@ class KnobCtrl(BufferedWindow):
 
     def GetAngularRange(self):
         """
-        Returns the angular range for L{KnobCtrl}. The `start` and `end` angle are given
-        in degrees, clockwise.
+        Returns the angular range for L{KnobCtrl} as a tuple. The `start` and `end`
+        angles in the returned tuple are given in degrees, clockwise.
         """
 
         return self._anglestart, self._angleend        
@@ -736,12 +736,12 @@ class KnobCtrl(BufferedWindow):
     
     def CircleCoords(self, radius, angle, centerX, centerY):
         """
-        Converts the input values into logical x, y coordinates.
+        Converts the input values into logical `x` and `y` coordinates.
 
         :param `radius`: the L{KnobCtrl} radius;
         :param `angle`: the angular position of the mouse;
-        :param `centerX`: the x position of the L{KnobCtrl} center;
-        :param `centerX`: the y position of the L{KnobCtrl} center.        
+        :param `centerX`: the `x` position of the L{KnobCtrl} center;
+        :param `centerX`: the `y` position of the L{KnobCtrl} center.        
         """
         
         x = radius*math.cos(angle) + centerX
@@ -793,9 +793,11 @@ class KnobCtrl(BufferedWindow):
 
     def SetValue(self, val):
         """
-        Sets programmatically the value of L{KnobCtrl}, without sending events.
+        Sets programmatically the value of L{KnobCtrl}.
 
         :param `val`: an integer specifying the new L{KnobCtrl} value.
+
+        :note: This method does not send a L{KnobCtrlEvent}.        
         """
 
         if val < self._minvalue or val > self._maxvalue:
@@ -834,8 +836,8 @@ class KnobCtrl(BufferedWindow):
         Returns the angular position based on the input logical coordinates.
         Used internally.
 
-        :param `cx`: the x position;
-        :param `cy`: the y position.
+        :param `cx`: the `x` logical position;
+        :param `cy`: the `y` logical position.
         """
 
         width, height = self.GetSize()

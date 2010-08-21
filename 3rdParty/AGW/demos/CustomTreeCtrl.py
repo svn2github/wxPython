@@ -2,6 +2,8 @@ import wx
 import string
 import os
 import sys
+import random
+
 import wx.lib.colourselect as csel
 
 try:
@@ -788,6 +790,11 @@ class CustomTreeCtrlDemo(wx.Panel):
         sizer = wx.BoxSizer()
         sizer.Add(splitter, 1, wx.EXPAND)
         self.SetSizer(sizer)
+
+        self.leftimagelist = wx.ImageList(12, 12)
+        for ids in xrange(1, len(ArtIDs)-1):
+            bmp = wx.ArtProvider_GetBitmap(eval(ArtIDs[ids]), wx.ART_OTHER, (12, 12))
+            self.leftimagelist.Add(bmp)
         
 
     def PopulateLeftPanel(self, styles, events):
@@ -911,12 +918,16 @@ class CustomTreeCtrlDemo(wx.Panel):
         sizer6.Add((1,0), 1, wx.EXPAND)
         sizer6.Add(self.backbutton, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)        
 
+        leftimagelist = wx.CheckBox(pnl, -1, "Use Left ImageList")
+        leftimagelist.Bind(wx.EVT_CHECKBOX, self.OnLeftImageList)
+        
         colourssizer.Add(sizer1, 0, wx.EXPAND)
         colourssizer.Add(sizer2, 0, wx.EXPAND)
         colourssizer.Add(sizer3, 0, wx.EXPAND)
         colourssizer.Add(sizer4, 0, wx.EXPAND)
         colourssizer.Add(sizer5, 0, wx.EXPAND)
         colourssizer.Add(sizer6, 0, wx.EXPAND)
+        colourssizer.Add(leftimagelist, 0, wx.ALL, 5)
 
         sizera = wx.BoxSizer(wx.HORIZONTAL)
         self.checknormal = wx.CheckBox(pnl, -1, "Standard Colours")
@@ -1152,6 +1163,18 @@ class CustomTreeCtrlDemo(wx.Panel):
         event.Skip()
 
 
+    def OnLeftImageList(self, event):
+
+        checked = event.IsChecked()
+        if checked:
+            self.tree.SetLeftImageList(self.leftimagelist)
+        else:
+            self.tree.SetLeftImageList(None)
+
+        self.tree.CalculateLineHeight()
+        self.tree.Refresh()
+        
+
     def OnCheckNormal(self, event):
 
         self.radiohorizontal.Enable(False)
@@ -1299,6 +1322,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         textctrl.Bind(wx.EVT_CHAR, self.OnTextCtrl)
         combobox.Bind(wx.EVT_COMBOBOX, self.OnComboBox)
+        lenArtIds = len(ArtIDs) - 2
 
         for x in range(15):
             if x == 1:
@@ -1309,6 +1333,9 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
             self.SetPyData(child, None)
             self.SetItemImage(child, 24, CT.TreeItemIcon_Normal)
             self.SetItemImage(child, 13, CT.TreeItemIcon_Expanded)
+
+            if random.randint(0, 3) == 0:
+                self.SetItemLeftImage(child, random.randint(0, lenArtIds))
 
             for y in range(5):
                 if y == 0 and x == 1:
@@ -1325,6 +1352,9 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                 self.SetPyData(last, None)
                 self.SetItemImage(last, 24, CT.TreeItemIcon_Normal)
                 self.SetItemImage(last, 13, CT.TreeItemIcon_Expanded)
+
+                if random.randint(0, 3) == 0:
+                    self.SetItemLeftImage(last, random.randint(0, lenArtIds))
                     
                 for z in range(5):
                     if z > 2:
@@ -1337,6 +1367,9 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                     self.SetPyData(item, None)
                     self.SetItemImage(item, 28, CT.TreeItemIcon_Normal)
                     self.SetItemImage(item, numicons-1, CT.TreeItemIcon_Selected)
+
+                    if random.randint(0, 3) == 0:
+                        self.SetItemLeftImage(item, random.randint(0, lenArtIds))
 
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
         self.Bind(wx.EVT_IDLE, self.OnIdle)

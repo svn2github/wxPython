@@ -312,11 +312,11 @@ class RendererXP(RendererBase):
 
     
 # ---------------------------------------------------------------------------- #
-# Class RendererMSOffice2007 - Vista
+# Class RendererMSOffice2007
 # ---------------------------------------------------------------------------- #
 
 class RendererMSOffice2007(RendererBase):
-    """ Windows Vista style. """
+    """ Windows MS Office 2007 style. """
     
     def __init__(self):
         """ Default class constructor. """
@@ -380,7 +380,7 @@ class RendererMSOffice2007(RendererBase):
         
     def DrawButton(self, dc, rect, state, useLightColours):
         """
-        Draws a button using the Vista theme.
+        Draws a button using the MS Office 2007 theme.
 
         :param `dc`: an instance of `wx.DC`;
         :param `rect`: the button's client rectangle;
@@ -393,7 +393,7 @@ class RendererMSOffice2007(RendererBase):
 
     def DrawButtonColour(self, dc, rect, state, colour):
         """
-        Draws a button using the Vista theme.
+        Draws a button using the MS Office 2007 theme.
 
         :param `dc`: an instance of `wx.DC`;
         :param `rect`: the button's client rectangle;
@@ -765,7 +765,7 @@ class ArtManager(wx.EvtHandler):
     def LightColour(self, colour, percent):
         """
         Return light contrast of `colour`. The colour returned is from the scale of
-        `colour` -> white.
+        `colour` ==> white.
 
         :param `colour`: the input colour to be brightened;
         :param `percent`: determines how light the colour will be. `percent` = 100
@@ -1383,7 +1383,7 @@ class ArtManager(wx.EvtHandler):
 
     def GetBitmapStartLocation(self, dc, rect, bitmap, text="", style=0):
         """
-        Returns the top left x & y cordinates of the bitmap drawing.
+        Returns the top left `x` and `y` cordinates of the bitmap drawing.
 
         :param `dc`: an instance of `wx.DC`;
         :param `rect`: the bitmap's client rectangle;
@@ -1395,7 +1395,7 @@ class ArtManager(wx.EvtHandler):
          Button style                    Value  Description
          ============================== ======= ================================
          ``BU_EXT_XP_STYLE``               1    A button with a XP style
-         ``BU_EXT_2007_STYLE``             2    A button with a Vista style
+         ``BU_EXT_2007_STYLE``             2    A button with a MS Office 2007 style
          ``BU_EXT_LEFT_ALIGN_STYLE``       4    A left-aligned button
          ``BU_EXT_CENTER_ALIGN_STYLE``     8    A center-aligned button
          ``BU_EXT_RIGHT_ALIGN_STYLE``      16   A right-aligned button
@@ -1470,7 +1470,7 @@ class ArtManager(wx.EvtHandler):
 
     def GetTextStartLocation(self, dc, rect, bitmap, text, style=0):
         """
-        Returns the top left x & y cordinates of the text drawing.
+        Returns the top left `x` and `y` cordinates of the text drawing.
         In case the text is too long, the text is being fixed (the text is cut and
         a '...' mark is added in the end).
 
@@ -1692,8 +1692,8 @@ class ArtManager(wx.EvtHandler):
 
     def GetAccelIndex(self, label):
         """
-        Returns the mnemonic index of the label.
-        (e.g. 'lab&el' --> will result in 3 and labelOnly = label)
+        Returns the mnemonic index of the label and the label stripped of the ampersand mnemonic
+        (e.g. 'lab&el' ==> will result in 3 and labelOnly = label).
 
         :param `label`: a string containining an ampersand.        
         """
@@ -1732,9 +1732,9 @@ class ArtManager(wx.EvtHandler):
 
     def SetMenuTheme(self, theme):
         """
-        Set the menu theme, possible values (Style2007, StyleXP).
+        Set the menu theme, possible values (Style2007, StyleXP, StyleVista).
 
-        :param `theme`: a rendering theme class, either `StyleXP` or `Style2007`.
+        :param `theme`: a rendering theme class, either `StyleXP`, `Style2007` or `StyleVista`.
         """
         
         self._menuTheme = theme
@@ -1784,7 +1784,7 @@ class ArtManager(wx.EvtHandler):
 
 
     def SetMBVerticalGradient(self, v):
-        """ #
+        """
         Sets the menu bar gradient style.
 
         :param `v`: ``True`` for a vertical shaded gradient, ``False`` otherwise.

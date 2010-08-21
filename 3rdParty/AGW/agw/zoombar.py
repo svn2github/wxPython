@@ -542,13 +542,13 @@ class ImageBar(object):
 
 
     def GetPosition(self):
-        """ Returns the position of L{ImageBar}. """
+        """ Returns the position of L{ImageBar}, as a `wx.Point`. """
 
         return wx.Point(self._left, self._top)
 
 
     def GetSize(self):
-        """ Returns the size of L{ImageBar}. """
+        """ Returns the size of L{ImageBar}, as a `wx.Size`. """
 
         return wx.Size(self._bitmap.GetWidth(), self._bitmap.GetHeight())
     
@@ -563,8 +563,8 @@ class ImageBar(object):
         """
         Sets the position of L{ImageBar}.
 
-        :param `xpos`: the x position of the bar;
-        :param `ypos`: the y position of the bar.
+        :param `xpos`: the `x` position of the bar;
+        :param `ypos`: the `y` position of the bar.
         """
 
         self._left = xpos
@@ -575,8 +575,8 @@ class ImageBar(object):
         """
         Sets the size of L{ImageBar}.
 
-        :param `xSize`: the width of the bar;
-        :param `ySize`: the height of the bar.
+        :param `xSize`: the width of the bar, in pixels;
+        :param `ySize`: the height of the bar, in pixels.
         """
 
         self.SetBarColour(self._startColour, xSize, ySize)

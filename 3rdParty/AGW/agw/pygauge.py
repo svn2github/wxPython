@@ -60,7 +60,7 @@ import copy
 class PyGauge(wx.PyWindow):
     """ 
     This class provides a visual alternative for `wx.Gauge`. It currently 
-    only support determinant mode (see L{SetValue} and L{SetRange})
+    only support determinate mode (see L{PyGauge.SetValue} and L{PyGauge.SetRange})
     """
     
     def __init__(self, parent, id=wx.ID_ANY, range=100, pos=wx.DefaultPosition,
@@ -161,9 +161,11 @@ class PyGauge(wx.PyWindow):
     
     def SetBarGradient(self, gradient):
         """ 
-        Sets the bar gradient. This overrides the BarColour. 
+        Sets the bar gradient. 
        
         :param `gradient`: a tuple containing the gradient start and end colours.
+
+        :note: This overrides the bar colour previously set with L{SetBarColour}.        
         """
         
         if type(gradient) != type([]):
@@ -318,7 +320,7 @@ class PyGauge(wx.PyWindow):
             self.Refresh()
                 
         
-    def Update(self, value, time=0, index=0):
+    def Update(self, value, time=0):
         """
         Update the gauge by adding `value` to it over `time` milliseconds. The `time` parameter
         **must** be a multiple of 50 milliseconds.

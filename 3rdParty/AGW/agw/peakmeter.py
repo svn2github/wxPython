@@ -218,8 +218,8 @@ class PeakMeterCtrl(wx.PyControl):
          ================= =========== ==================================================
          Window Styles     Hex Value   Description
          ================= =========== ==================================================
-         ``PM_HORIZONTAL``         0x0 Shows horizontal bands in `PeakMeterCtrl`.
-         ``PM_VERTICAL``           0x1 Shows vertical bands in `PeakMeterCtrl`.
+         ``PM_HORIZONTAL``         0x0 Shows horizontal bands in L{PeakMeterCtrl}.
+         ``PM_VERTICAL``           0x1 Shows vertical bands in L{PeakMeterCtrl}.
          ================= =========== ==================================================
         
         """
@@ -273,8 +273,8 @@ class PeakMeterCtrl(wx.PyControl):
          ================= =========== ==================================================
          Window Styles     Hex Value   Description
          ================= =========== ==================================================
-         ``PM_HORIZONTAL``         0x0 Shows horizontal bands in `PeakMeterCtrl`.
-         ``PM_VERTICAL``           0x1 Shows vertical bands in `PeakMeterCtrl`.
+         ``PM_HORIZONTAL``         0x0 Shows horizontal bands in L{PeakMeterCtrl}.
+         ``PM_VERTICAL``           0x1 Shows vertical bands in L{PeakMeterCtrl}.
          ================= =========== ==================================================
 
         """
@@ -286,6 +286,8 @@ class PeakMeterCtrl(wx.PyControl):
     def GetAGWWindowStyleFlag(self):
         """
         Returns the L{PeakMeterCtrl} window style.
+
+        :see: L{SetAGWWindowStyleFlag} for a list of possible window style flags.        
         """
 
         return self._agwStyle
@@ -391,7 +393,11 @@ class PeakMeterCtrl(wx.PyControl):
 
 
     def SetFalloffDelay(self, speed):
-        """ Set Peak value speed before falling off. """
+        """
+        Set peak value speed before falling off.
+
+        :param `speed`: the speed at which the falloff happens.
+        """
 
         self._speed = speed
 

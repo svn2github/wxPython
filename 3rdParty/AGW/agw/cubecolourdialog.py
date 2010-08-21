@@ -2796,7 +2796,7 @@ class CubeColourDialog(wx.Dialog):
         """
         Default class constructor.
 
-        :param `colourData`: a standard `wx.ColourData` (as used in `wx.ColourDialog`;
+        :param `colourData`: a standard `wx.ColourData` (as used in `wx.ColourDialog`);
         :param `agwStyle`: can be either ``None`` or ``CCD_SHOW_ALPHA``, depending if you want
          to hide the alpha channel control or not.
         """
@@ -3255,7 +3255,7 @@ class CubeColourDialog(wx.Dialog):
         """
         Sets the L{CubeColourDialog} window style flags.
 
-        :param `agwStyle`: can only be ``CCD_SHOW_ALPHA``.
+        :param `agwStyle`: can only be ``CCD_SHOW_ALPHA`` or ``None``.
         """
 
         show = self.GetAGWWindowStyleFlag() & CCD_SHOW_ALPHA
@@ -3278,6 +3278,8 @@ class CubeColourDialog(wx.Dialog):
     def GetAGWWindowStyleFlag(self):
         """
         Returns the L{CubeColourDialog} window style flags.
+
+        :see: L{SetAGWWindowStyleFlag} for a list of possible flags.        
         """
 
         return self._agwStyle        

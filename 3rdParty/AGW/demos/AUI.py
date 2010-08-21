@@ -1148,8 +1148,7 @@ class AuiFrame(wx.Frame):
         tb3.Realize()
 
         tb4 = aui.AuiToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
-                             agwStyle=aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW |
-                             aui.AUI_TB_TEXT | aui.AUI_TB_HORZ_TEXT)
+                             agwStyle=aui.AUI_TB_OVERFLOW | aui.AUI_TB_TEXT | aui.AUI_TB_HORZ_TEXT)
         tb4.SetToolBitmapSize(wx.Size(16, 16))
         tb4_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, wx.Size(16, 16))
         tb4.AddSimpleTool(ID_DropDownToolbarItem, "Item 1", tb4_bmp1)
@@ -1169,7 +1168,8 @@ class AuiFrame(wx.Frame):
         tb4.Realize()
 
         tb5 = aui.AuiToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
-                             agwStyle=aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW | aui.AUI_TB_VERTICAL)
+                             agwStyle=aui.AUI_TB_OVERFLOW | aui.AUI_TB_VERTICAL)
+        
         tb5.SetToolBitmapSize(wx.Size(48, 48))
         tb5.AddSimpleTool(ID_SampleItem+30, "Test", wx.ArtProvider.GetBitmap(wx.ART_ERROR))
         tb5.AddSeparator()
@@ -1181,7 +1181,7 @@ class AuiFrame(wx.Frame):
         tb5.Realize()
 
         tb6 = aui.AuiToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
-                             agwStyle=aui.AUI_TB_DEFAULT_STYLE | aui.AUI_TB_OVERFLOW | aui.AUI_TB_VERT_TEXT)
+                             agwStyle=aui.AUI_TB_OVERFLOW | aui.AUI_TB_VERT_TEXT)
         tb6.SetToolBitmapSize(wx.Size(48, 48))
         tb6.AddSimpleTool(ID_SampleItem+35, "Clockwise 1", wx.ArtProvider.GetBitmap(wx.ART_ERROR, wx.ART_OTHER, wx.Size(16, 16)))
         tb6.AddSeparator()
@@ -1309,6 +1309,7 @@ class AuiFrame(wx.Frame):
                 
         self._mgr.GetPane("tb1").Hide()
         self._mgr.GetPane("tb7").Hide()
+                
         self._mgr.GetPane("test8").Show().Left().Layer(0).Row(0).Position(0)
         self._mgr.GetPane("__notebook_%d"%self._mgr.GetPane("test10").notebook_id).Show().Bottom().Layer(0).Row(0).Position(0)
         self._mgr.GetPane("autonotebook").Show()

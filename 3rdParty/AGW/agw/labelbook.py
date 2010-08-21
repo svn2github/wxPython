@@ -293,7 +293,7 @@ class ImageInfo(object):
     """
     def __init__(self, strCaption="", imageIndex=-1):    
         """
-        Default Class Constructor.
+        Default class constructor.
 
         :param `strCaption`: the tab caption;
         :param `imageIndex`: the tab image index based on the assigned (set)
@@ -373,7 +373,7 @@ class ImageInfo(object):
 
     def SetTextRect(self, rect):
         """
-        Sets the rect available for the tab text.
+        Sets the client rectangle available for the tab text.
 
         :param `rect`: the tab text client rectangle, an instance of `wx.Rect`.
         """
@@ -382,7 +382,7 @@ class ImageInfo(object):
 
 
     def GetTextRect(self):
-        """ Returns the rect available for the tab text. """
+        """ Returns the client rectangle available for the tab text. """
 
         return self._captionRect
 
@@ -413,18 +413,18 @@ class ImageContainerBase(wx.Panel):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for `FlatImageBook`.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for `FlatImageBook`.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around `LabelBook` or `FlatImageBook`.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for `LabelBook`.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for `LabelBook`.
+         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for `LabelBook`.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for `LabelBook`.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for `LabelBook`.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          =========================== =========== ==================================================
@@ -454,18 +454,18 @@ class ImageContainerBase(wx.Panel):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for `FlatImageBook`.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for `FlatImageBook`.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around `LabelBook` or `FlatImageBook`.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for `LabelBook`.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for `LabelBook`.
+         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for `LabelBook`.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for `LabelBook`.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for `LabelBook`.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          =========================== =========== ==================================================
@@ -670,7 +670,7 @@ class ImageContainerBase(wx.Panel):
     def HitTest(self, pt):
         """
         Returns the index of the tab at the specified position or ``wx.NOT_FOUND``
-        if ``None``, plus the flag style of HitTest.
+        if ``None``, plus the flag style of L{HitTest}.
 
         :param `pt`: an instance of `wx.Point`, to test for hits.
 
@@ -974,18 +974,18 @@ class ImageContainer(ImageContainerBase):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for `FlatImageBook`.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for `FlatImageBook`.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around `LabelBook` or `FlatImageBook`.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for `LabelBook`.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for `LabelBook`.
+         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for `LabelBook`.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for `LabelBook`.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for `LabelBook`.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          =========================== =========== ==================================================
@@ -1344,18 +1344,18 @@ class LabelContainer(ImageContainerBase):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for `FlatImageBook`.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for `FlatImageBook`.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around `LabelBook` or `FlatImageBook`.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for `LabelBook`.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for `LabelBook`.
+         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for `LabelBook`.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for `LabelBook`.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for `LabelBook`.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          =========================== =========== ==================================================
@@ -2060,18 +2060,18 @@ class FlatBookBase(wx.Panel):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for `FlatImageBook`.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for `FlatImageBook`.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around `LabelBook` or `FlatImageBook`.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for `LabelBook`.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for `LabelBook`.
+         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for `LabelBook`.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for `LabelBook`.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for `LabelBook`.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          =========================== =========== ==================================================
@@ -2103,18 +2103,18 @@ class FlatBookBase(wx.Panel):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for `FlatImageBook`.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for `FlatImageBook`.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around `LabelBook` or `FlatImageBook`.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for `LabelBook`.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for `LabelBook`.
+         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for `LabelBook`.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for `LabelBook`.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for `LabelBook`.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          =========================== =========== ==================================================
@@ -2175,6 +2175,8 @@ class FlatBookBase(wx.Panel):
     def GetAGWWindowStyleFlag(self):
         """
         Returns the L{FlatBookBase} window style.
+
+        :see: L{SetAGWWindowStyleFlag} for a list of possible window style flags.
         """
 
         return self._agwStyle
@@ -2570,18 +2572,18 @@ class FlatImageBook(FlatBookBase):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for `FlatImageBook`.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for `FlatImageBook`.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around `LabelBook` or `FlatImageBook`.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for `LabelBook`.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for `LabelBook`.
+         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for `LabelBook`.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for `LabelBook`.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for `LabelBook`.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          =========================== =========== ==================================================
@@ -2645,18 +2647,18 @@ class LabelBook(FlatBookBase):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for `FlatImageBook`.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for `FlatImageBook`.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around `LabelBook` or `FlatImageBook`.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for `LabelBook`.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for `LabelBook`.
+         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for `LabelBook`.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for `LabelBook`.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for `LabelBook`.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          =========================== =========== ==================================================

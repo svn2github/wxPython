@@ -142,6 +142,8 @@ EVT_INDICATOR_CHANGED = wx.PyEventBinder(wxEVT_INDICATOR_CHANGED, 2)
 #----------------------------------------------------------------------
 
 def GetIndicatorData():
+    """ Returns the image indicator as a decompressed stream of characters. """
+    
     return zlib.decompress(
 'x\xda\x01x\x01\x87\xfe\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\n\x00\
 \x00\x00\n\x08\x06\x00\x00\x00\x8d2\xcf\xbd\x00\x00\x00\x04sBIT\x08\x08\x08\
@@ -160,10 +162,16 @@ def GetIndicatorData():
 +\xa0\x17\xff\x9f\xbf\x01{\xb5t\x9e\x99]a\x97\x00\x00\x00\x00IEND\xaeB`\x82G\
 \xbf\xa8>' )
 
+
 def GetIndicatorBitmap():
+    """ Returns the image indicator as a `wx.Bitmap`. """
+
     return wx.BitmapFromImage(GetIndicatorImage())
 
+
 def GetIndicatorImage():
+    """ Returns the image indicator as a `wx.Image`. """
+    
     stream = cStringIO.StringIO(GetIndicatorData())
     return wx.ImageFromStream(stream)
 
@@ -188,7 +196,10 @@ def ConvertWXToPIL(bmp):
     """
     Converts a `wx.Image` into a PIL image.
 
-    :param `bmp`: an instance of `wx.Image`.    
+    :param `bmp`: an instance of `wx.Image`.
+
+    :note: Requires PIL (Python Imaging Library), which can be downloaded from
+     http://www.pythonware.com/products/pil/
     """
     
     width = bmp.GetWidth()
@@ -205,6 +216,9 @@ def ConvertPILToWX(pil, alpha=True):
     :param `pil`: a PIL image;
     :param `alpha`: ``True`` if the image contains alpha transparency, ``False``
      otherwise.
+
+    :note: Requires PIL (Python Imaging Library), which can be downloaded from
+     http://www.pythonware.com/products/pil/
     """
     
     if alpha:
@@ -285,8 +299,8 @@ class Label(object):
         Default class constructor.
 
         :param `pos`: the indicator position;
-        :param `lx`: the indicator x coordinate;
-        :param `ly`: the indicator y coordinate;
+        :param `lx`: the indicator `x` coordinate;
+        :param `ly`: the indicator `y` coordinate;
         :param `text`: the label text.
         """
 
@@ -303,8 +317,13 @@ class Label(object):
 class Indicator(object):
     """
     This class holds all the information about a single indicator inside L{RulerCtrl}.
-    You should not call this class directly. Use `ruler.AddIndicator(id, value)` to
-    add an indicator to your L{RulerCtrl}.
+    
+    You should not call this class directly. Use::
+
+        ruler.AddIndicator(id, value)
+
+
+    to add an indicator to your L{RulerCtrl}.
     """
     
     def __init__(self, parent, id=wx.ID_ANY, value=0):
@@ -448,7 +467,8 @@ class Indicator(object):
 
         :param `colour`: the new indicator colour, an instance of `wx.Colour`.
         
-        :note: This method requires PIL.
+        :note: Requires PIL (Python Imaging Library), which can be downloaded from
+         http://www.pythonware.com/products/pil/
         """
 
         if not _hasPIL:
@@ -877,6 +897,16 @@ class RulerCtrl(wx.PyPanel):
             self.Invalidate()
     
 
+    def GetFormat(self):
+        """
+        Returns the format used to display values in L{RulerCtrl}.
+
+        :see: L{SetFormat} for a list of possible formats.
+        """
+
+        return self._format
+    
+
     def SetLog(self, log=True):
         """
         Sets whether L{RulerCtrl} should have a logarithmic scale or not.
@@ -1100,8 +1130,8 @@ class RulerCtrl(wx.PyPanel):
 
     def AddIndicator(self, id, value):
         """
-        Adds an indicator to L{RulerCtrl}. You should pass a unique id and a starting
-        value for the indicator.
+        Adds an indicator to L{RulerCtrl}. You should pass a unique `id` and a starting
+        `value` for the indicator.
 
         :param `id`: the indicator identifier;
         :param `value`: the indicator initial value.
@@ -1724,6 +1754,8 @@ class RulerCtrl(wx.PyPanel):
         Actually draws the thin line over the drawing parent window.
 
         :param `indicator`: the current indicator, an instance of L{Indicator}.
+
+        :note: This method is currently not available on wxMac as it uses `wx.ScreenDC`.        
         """
 
         if not self._drawingparent:

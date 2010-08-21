@@ -104,7 +104,7 @@ class GradientButtonEvent(wx.PyCommandEvent):
         """
         Sets the event object for the event.
 
-        :param `btn`: the button object.
+        :param `btn`: the button object, an instance of L{GradientButton}.
         """
         
         self.theButton = btn
@@ -183,7 +183,7 @@ class GradientButton(wx.PyControl):
     def LightColour(self, colour, percent):
         """
         Return light contrast of `colour`. The colour returned is from the scale of
-        `colour` -> white.
+        `colour` ==> white.
 
         :param `colour`: the input colour to be brightened;
         :param `percent`: determines how light the colour will be. `percent` = 100
@@ -475,7 +475,7 @@ class GradientButton(wx.PyControl):
     def GetDefaultAttributes(self):
         """
         Overridden base class virtual. By default we should use
-        the same font/colour attributes as the native Button.
+        the same font/colour attributes as the native `wx.Button`.
         """
         
         return wx.Button.GetClassDefaultAttributes()

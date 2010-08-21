@@ -278,7 +278,7 @@ class FourWaySplitter(wx.PyPanel):
          ================== =========== ==================================================
          Window Styles      Hex Value   Description
          ================== =========== ==================================================
-         ``SP_NOSASH``             0x10 No sash will be drawn on `FourWaySplitter`.
+         ``SP_NOSASH``             0x10 No sash will be drawn on L{FourWaySplitter}.
          ``SP_LIVE_UPDATE``        0x80 Don't draw XOR line but resize the child windows immediately.
          ``SP_3DBORDER``          0x200 Draws a 3D effect border.
          ================== =========== ==================================================
@@ -337,7 +337,7 @@ class FourWaySplitter(wx.PyPanel):
          ================== =========== ==================================================
          Window Styles      Hex Value   Description
          ================== =========== ==================================================
-         ``SP_NOSASH``             0x10 No sash will be drawn on `FourWaySplitter`.
+         ``SP_NOSASH``             0x10 No sash will be drawn on L{FourWaySplitter}.
          ``SP_LIVE_UPDATE``        0x80 Don't draw XOR line but resize the child windows immediately.
          ``SP_3DBORDER``          0x200 Draws a 3D effect border.
          ================== =========== ==================================================         
@@ -350,6 +350,8 @@ class FourWaySplitter(wx.PyPanel):
     def GetAGWWindowStyleFlag(self):
         """
         Returns the L{FourWaySplitter} window style.
+
+        :see: L{SetAGWWindowStyleFlag} for a list of possible window styles.        
         """
 
         return self._agwStyle
@@ -486,6 +488,8 @@ class FourWaySplitter(wx.PyPanel):
         Gets the size which best suits the window: for a control, it would be the
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
+
+        :note: Overridden from `wx.PyPanel`.        
         """
 
         if not self._windows:
@@ -565,18 +569,21 @@ class FourWaySplitter(wx.PyPanel):
     # Determine split mode
     def GetMode(self, pt):
         """
-        Determines the split mode for L{FourWaySplitter}. There are 3 possibilities:
-
-        ================= ==============================
-        Split Mode        Description
-        ================= ==============================
-        ``wx.HORIZONTAL`` the user has clicked on the horizontal sash
-        ``wx.VERTICAL``   The user has clicked on the vertical sash
-        ``wx.BOTH``       The user has clicked at the intersection between the 2 sashes
-        ================= ==============================
+        Determines the split mode for L{FourWaySplitter}.
 
         :param `pt`: the point at which the mouse has been clicked, an instance of
          `wx.Point`.
+
+        :return: One of the following 3 split modes:
+
+         ================= ==============================
+         Split Mode        Description
+         ================= ==============================
+         ``wx.HORIZONTAL`` the user has clicked on the horizontal sash
+         ``wx.VERTICAL``   The user has clicked on the vertical sash
+         ``wx.BOTH``       The user has clicked at the intersection between the 2 sashes
+         ================= ==============================
+
         """
 
         barSize = self._GetSashSize()        
@@ -602,8 +609,8 @@ class FourWaySplitter(wx.PyPanel):
         """
         Moves the split accordingly to user action.
 
-        :param `x`: the new splitter x coordinate;
-        :param `y`: the new splitter y coordinate.
+        :param `x`: the new splitter `x` coordinate;
+        :param `y`: the new splitter `y` coordinate.
         """
 
         width, height = self.GetSize()
@@ -915,8 +922,8 @@ class FourWaySplitter(wx.PyPanel):
         """
         Draws a fake sash in case we don't have ``wx.SP_LIVE_UPDATE`` style.
 
-        :param `x`: the x position of the sash;
-        :param `y`: the y position of the sash.
+        :param `x`: the `x` position of the sash;
+        :param `y`: the `y` position of the sash.
 
         :note: This method relies on `wx.ScreenDC` which is currently unavailable on wxMac.        
         """
@@ -1035,8 +1042,8 @@ class FourWaySplitter(wx.PyPanel):
     def SetExpanded(self, expanded):
         """
         This method is used to expand one of the four window to fill the
-        whole client size (when expanded >= 0) or to return to the four-window
-        view (when expanded < 0).
+        whole client size (when `expanded` >= 0) or to return to the four-window
+        view (when `expanded` < 0).
 
         :param `expanded`: an integer >= 0 to expand a window to fill the whole
          client size, or an integer < 0 to return to the four-window view.

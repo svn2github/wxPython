@@ -49,6 +49,7 @@ else:
 MENU_STYLE_DEFAULT = wx.NewId()
 MENU_STYLE_XP = wx.NewId()
 MENU_STYLE_2007 = wx.NewId()
+MENU_STYLE_VISTA = wx.NewId()
 MENU_STYLE_MY = wx.NewId()
 MENU_USE_CUSTOM = wx.NewId()
 MENU_LCD_MONITOR = wx.NewId()
@@ -82,15 +83,18 @@ class FM_MyRenderer(FM.FMRenderer):
 
         FM.FMRenderer.__init__(self)
 
+
     def DrawMenuButton(self, dc, rect, state):
         """Draws the highlight on a FlatMenu"""
         
         self.DrawButton(dc, rect, state)
         
+        
     def DrawMenuBarButton(self, dc, rect, state):
         """Draws the highlight on a FlatMenuBar"""
         
         self.DrawButton(dc, rect, state)
+
 
     def DrawButton(self, dc, rect, state, colour=None):
 
@@ -364,7 +368,10 @@ class FlatMenuDemo(wx.Frame):
         item = FM.FlatMenuItem(styleMenu, MENU_STYLE_XP, "Menu style XP\tAlt+P", "Menu style XP", wx.ITEM_RADIO)        
         styleMenu.AppendItem(item)
 
-        item = FM.FlatMenuItem(styleMenu, MENU_STYLE_2007, "Menu style 2007\tAlt+V", "Menu style 2007", wx.ITEM_RADIO)
+        item = FM.FlatMenuItem(styleMenu, MENU_STYLE_2007, "Menu style 2007\tAlt+O", "Menu style 2007", wx.ITEM_RADIO)
+        styleMenu.AppendItem(item)
+
+        item = FM.FlatMenuItem(styleMenu, MENU_STYLE_VISTA, "Menu style Vista\tAlt+V", "Menu style Vista", wx.ITEM_RADIO)
         styleMenu.AppendItem(item)
 
         styleMenu.AppendSeparator()
@@ -452,7 +459,7 @@ class FlatMenuDemo(wx.Frame):
         # Attach menu events to some handlers
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnQuit, id=wx.ID_EXIT)
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnEdit, id=MENU_DISABLE_MENU_ITEM, id2=MENU_REMOVE_MENU)
-        self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnStyle, id=MENU_STYLE_XP, id2=MENU_STYLE_2007)
+        self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnStyle, id=MENU_STYLE_XP, id2=MENU_STYLE_VISTA)
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnFlatMenuCmd, id=MENU_NEW_FILE, id2=20013)
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnAbout, id=MENU_HELP)
         self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnStyle, id=MENU_STYLE_MY)
@@ -632,16 +639,16 @@ class FlatMenuDemo(wx.Frame):
         
         if eventId == MENU_STYLE_DEFAULT:
             self._mb.GetRendererManager().SetTheme(FM.StyleDefault)
-            self._mb.ClearBitmaps()
-        if eventId == MENU_STYLE_2007:
+        elif eventId == MENU_STYLE_2007:
             self._mb.GetRendererManager().SetTheme(FM.Style2007)
-            self._mb.ClearBitmaps()
         elif eventId == MENU_STYLE_XP:
             self._mb.GetRendererManager().SetTheme(FM.StyleXP)
-            self._mb.ClearBitmaps()
+        elif eventId == MENU_STYLE_VISTA:
+            self._mb.GetRendererManager().SetTheme(FM.StyleVista)
         elif eventId == MENU_STYLE_MY:
             self._mb.GetRendererManager().SetTheme(self.newMyTheme)
-            self._mb.ClearBitmaps()
+
+        self._mb.ClearBitmaps()
 
         self._mb.Refresh()
         self._mtb.Refresh()

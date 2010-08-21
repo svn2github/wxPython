@@ -355,7 +355,7 @@ class BPArt(object):
 
     def GetMetric(self, id):
         """
-        Returns the option value for the specified size id.
+        Returns the option value for the specified size `id`.
 
         :param `id`: the identification bit for the size value. This can be one of the
          following bits:
@@ -364,7 +364,7 @@ class BPArt(object):
          Size Id                         Value  Description
          ============================== ======= =====================================
          ``BP_SEPARATOR_SIZE``               14 Separator size. Note: This is not the line width, but the sum of the space before and after the separator line plus the width of the line
-         ``BP_MARGINS_SIZE``                 15 Size of the left/right margins in ButtonPanel (top/bottom for vertically aligned ButtonPanels)
+         ``BP_MARGINS_SIZE``                 15 Size of the left/right margins in L{ButtonPanel} (top/bottom for vertically aligned ButtonPanels)
          ``BP_BORDER_SIZE``                  16 Size of the border
          ``BP_PADDING_SIZE``                 17 Inter-tool separator size
          ============================== ======= =====================================
@@ -385,7 +385,7 @@ class BPArt(object):
 
     def SetMetric(self, id, new_val):
         """
-        Sets the option value for the specified size id.
+        Sets the option value for the specified size `id`.
 
         :param `id`: the identification bit for the size value;
         :param `new_val`: the new value for the size.
@@ -408,7 +408,7 @@ class BPArt(object):
 
     def GetColour(self, id):
         """
-        Returns the option value for the specified colour id.
+        Returns the option value for the specified colour `id`.
 
         :param `id`: the identification bit for the colour value. This can be one of the
          following bits:
@@ -419,7 +419,7 @@ class BPArt(object):
          ``BP_BACKGROUND_COLOUR``                 0 Background brush colour when no gradient shading exists
          ``BP_GRADIENT_COLOUR_FROM``              1 Starting gradient colour, used only when ``BP_USE_GRADIENT`` style is applied
          ``BP_GRADIENT_COLOUR_TO``                2 Ending gradient colour, used only when ``BP_USE_GRADIENT`` style is applied
-         ``BP_BORDER_COLOUR``                     3 Pen colour to paint the border of ButtonPanel
+         ``BP_BORDER_COLOUR``                     3 Pen colour to paint the border of L{ButtonPanel}
          ``BP_TEXT_COLOUR``                       4 Main ButtonPanel caption colour
          ``BP_BUTTONTEXT_COLOUR``                 5 Text colour for buttons with text
          ``BP_BUTTONTEXT_INACTIVE_COLOUR``        6 Text colour for inactive buttons with text
@@ -456,7 +456,7 @@ class BPArt(object):
 
     def SetColour(self, id, colour):
         """
-        Sets the option value for the specified colour id.
+        Sets the option value for the specified colour `id`.
 
         :param `id`: the identification bit for the colour value;
         :param `colour`: the new value for the colour (a valid `wx.Colour` instance).
@@ -494,7 +494,7 @@ class BPArt(object):
 
     def GetFont(self, id):
         """
-        Returns the option value for the specified font id.
+        Returns the option value for the specified font `id`.
 
         :param `id`: the identification bit for the font value. This can be one of the
          following bits:
@@ -502,7 +502,7 @@ class BPArt(object):
          ============================== ======= =====================================
          Size Id                         Value  Description
          ============================== ======= =====================================
-         ``BP_TEXT_FONT``                    10 Font of the ButtonPanel main caption
+         ``BP_TEXT_FONT``                    10 Font of the L{ButtonPanel} main caption
          ``BP_BUTTONTEXT_FONT``              11 Text font for the buttons with text
          ============================== ======= =====================================
          
@@ -518,7 +518,7 @@ class BPArt(object):
 
     def SetFont(self, id, font):
         """
-        Sets the option value for the specified font id.
+        Sets the option value for the specified font `id`.
 
         :param `id`: the identification bit for the font value;
         :param `colour`: the new value for the font (a valid `wx.Font` instance).
@@ -997,7 +997,79 @@ class BoxSizer(Sizer, wx.BoxSizer):
     # no support for user data if it's a pseudocontrol
     # since that is already used
     def Add(self, item, proportion=0, flag=0, border=0, userData=None):
-        """ Appends a child item to the sizer. """
+        """
+        Appends a child item to the sizer.
+
+        :param `item`: the item to be added to L{BoxSizer}. Can be an instance of `wx.Window`,
+         `wx.Sizer` or a spacer;
+        :param `proportion`: this parameter is used in L{BoxSizer} to indicate if a child of
+         a sizer can change its size in the main orientation of the L{BoxSizer} - where 0
+         stands for not changeable and a value of more than zero is interpreted relative
+         to the value of other children of the same L{BoxSizer}. For example, you might have
+         a horizontal L{BoxSizer} with three children, two of which are supposed to change their
+         size with the sizer. Then the two stretchable windows would get a value of 1 each to
+         make them grow and shrink equally with the sizer's horizontal dimension.
+        :param `flag`: this parameter can be used to set a number of flags which can be combined using the binary OR operator ``|``. 
+         Two main behaviours are defined using these flags. One is the border around a window: the border parameter determines the border 
+         width whereas the flags given here determine which side(s) of the item that the border will be added. The other flags determine 
+         how the sizer item behaves when the space allotted to the sizer changes, and is somewhat dependent on the specific kind of sizer used:
+
+         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+         | Sizer Flag                                                          | Description                                                                 |
+         +=====================================================================+=============================================================================+
+         | ``wx.TOP``                                                          | These flags are used to specify which side(s) of the sizer                  |
+         +---------------------------------------------------------------------+ item the border width will apply to.                                        | 
+         | ``wx.BOTTOM``                                                       |                                                                             |
+         +---------------------------------------------------------------------+                                                                             |
+         | ``wx.LEFT``                                                         |                                                                             |
+         +---------------------------------------------------------------------+                                                                             |
+         | ``wx.RIGHT``                                                        |                                                                             |
+         +---------------------------------------------------------------------+                                                                             |
+         | ``wx.ALL``                                                          |                                                                             |
+         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+         | ``wx.EXPAND``                                                       | The item will be expanded to fill the space assigned to                     |
+         |                                                                     | the item.                                                                   |
+         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+         | ``wx.SHAPED``                                                       | The item will be expanded as much as possible while also                    |
+         |                                                                     | maintaining its aspect ratio                                                |
+         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+         | ``wx.FIXED_MINSIZE``                                                | Normally `wx.Sizers` will use                                               |
+         |                                                                     | `wx.Window.GetAdjustedBestSize` to                                          |
+         |                                                                     | determine what the minimal size of window items should be, and will use that| 
+         |                                                                     | size to calculate the layout. This allows layouts to adjust when an item    |
+         |                                                                     | changes and its best size becomes different. If you would rather have a     |
+         |                                                                     | window item stay the size it started with then use ``wx.FIXED_MINSIZE``.    |
+         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+         | ``wx.RESERVE_SPACE_EVEN_IF_HIDDEN``                                 | Normally `wx.Sizers` don't allocate space for hidden windows or other items.| 
+         |                                                                     | This flag overrides this behavior so that sufficient space is allocated for |
+         |                                                                     | the window even if it isn't visible. This makes it possible to dynamically  |
+         |                                                                     | show and hide controls without resizing parent dialog, for example. This    |
+         |                                                                     | function is new since wxWidgets version 2.8.8                               |
+         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+         | ``wx.ALIGN_CENTER`` **or** ``wx.ALIGN_CENTRE``                      | The ``wx.ALIGN*`` flags allow you to specify the alignment of the item      |
+         +---------------------------------------------------------------------+ within the space allotted to it by the sizer, adjusted for the border if    |
+         | ``wx.ALIGN_LEFT``                                                   | any.                                                                        |
+         +---------------------------------------------------------------------+                                                                             | 
+         | ``wx.ALIGN_RIGHT``                                                  |                                                                             |
+         +---------------------------------------------------------------------+                                                                             | 
+         | ``wx.ALIGN_TOP``                                                    |                                                                             |
+         +---------------------------------------------------------------------+                                                                             | 
+         | ``wx.ALIGN_BOTTOM``                                                 |                                                                             |
+         +---------------------------------------------------------------------+                                                                             | 
+         | ``wx.ALIGN_CENTER_VERTICAL`` **or** ``wx.ALIGN_CENTRE_VERTICAL``    |                                                                             |
+         +---------------------------------------------------------------------+                                                                             | 
+         | ``wx.ALIGN_CENTER_HORIZONTAL`` **or** ``wx.ALIGN_CENTRE_HORIZONTAL``|                                                                             |
+         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+
+        :param `border`: determines the border width, if the flag parameter is set
+         to include any border flag.
+        :param `userData`: Allows an extra object to be attached to the sizer item,
+         for use in derived classes when sizing information is more complex than the
+         proportion and flag will allow for.
+
+        :note: there is no support for `userData` parameter if `item` is a pseudocontrol,
+         since that is already used.
+        """
 
         # check to see if it's a pseudo object or sizer
         if isinstance(item, Sizer):
@@ -1011,8 +1083,13 @@ class BoxSizer(Sizer, wx.BoxSizer):
         else:
             wx.BoxSizer.Add(self, item, proportion, flag, border, userData)
 
+
     def Prepend(self, item, proportion=0, flag=0, border=0, userData=None):
-        """ Prepends a child item to the sizer. """
+        """
+        Prepends a child item to the sizer.
+
+        :see: L{Add} method for an explanation of the input parameters.
+        """
 
         # check to see if it's a pseudo object or sizer
         if isinstance(item, Sizer):
@@ -1026,8 +1103,13 @@ class BoxSizer(Sizer, wx.BoxSizer):
         else:
             wx.BoxSizer.Prepend(self, item, proportion, flag, border, userData)
 
+
     def Insert(self, before, item, proportion=0, flag=0, border=0, userData=None, realIndex=None):
-        """ Inserts a child item into the sizer. """
+        """
+        Inserts a child item into the sizer.
+
+        :see: L{Add} method for an explanation of the input parameters.
+        """
 
         # check to see if it's a pseudo object or sizer
         if isinstance(item, Sizer):
@@ -1051,7 +1133,7 @@ class BoxSizer(Sizer, wx.BoxSizer):
         Removes an item from the sizer and destroys it.
 
         This method does not cause any layout or resizing to take place, call
-        `Layout` to update the layout on screen after removing a child from
+        L{BoxSizer.Layout} to update the layout on screen after removing a child from
         the sizer.
 
         :param `indx`: the zero-based index of an item to remove;
@@ -1479,11 +1561,12 @@ class ButtonInfo(Control):
     def AddStatus(self, name="Custom", bmp=wx.NullBitmap):
         """
         Add a programmer-defined status in addition to the 5 default status:
-        - Normal;
-        - Disabled;
-        - Hover;
-        - Pressed;
-        - Toggled.
+
+         - Normal;
+         - Disabled;
+         - Hover;
+         - Pressed;
+         - Toggled.
 
         :param `name`: the new status name;
         :param `bmp`: the bitmap associated with the new status.
@@ -1980,6 +2063,8 @@ class ButtonPanel(wx.PyPanel):
         Gets the size which best suits L{ButtonPanel}: for a control, it would be
         the minimal size which doesn't truncate the control, for a panel - the
         same size as it would have after a call to `Fit()`.
+
+        :note: Overridden from `wx.PyPanel`.        
         """
 
         w = h = btnWidth = btnHeight = 0
@@ -2066,7 +2151,7 @@ class ButtonPanel(wx.PyPanel):
 
         :param `event`: a `wx.SizeEvent` event to be processed.
 
-        :todo: Improve the chain of methods L{OnSize} -> L{DoLayout} -> L{LayoutItems}
+        :todo: Improve the chain of methods L{OnSize} ==> L{DoLayout} ==> L{LayoutItems}
          to avoid multiple calls to L{LayoutItems}.
         """
 
@@ -2123,7 +2208,7 @@ class ButtonPanel(wx.PyPanel):
 
     def GetItemSize(self, item, isVertical):
         """
-        Returns the size of an item in the main ButtonPanel sizer.
+        Returns the size of an item in the main L{ButtonPanel} sizer.
 
         :param `item`: an instance of L{ButtonInfo};
         :param `isVertical`: ``True`` if L{ButtonPanel} is in vertical orientation,
@@ -2141,7 +2226,7 @@ class ButtonPanel(wx.PyPanel):
         Layout the items when the main caption exists.
 
         :param `nonspacers`: a list of items which are not spacers;
-        :param `children`: a list of all the children of L{ButtonPanel}.
+        :param `allchildren`: a list of all the children of L{ButtonPanel}.
         """
 
         if len(nonspacers) < 2:
@@ -2220,8 +2305,8 @@ class ButtonPanel(wx.PyPanel):
          ==================== =========== ==================================================
          Window Styles        Hex Value   Description
          ==================== =========== ==================================================
-         ``BP_DEFAULT_STYLE``         0x1 `ButtonPanel` has a plain solid background.
-         ``BP_USE_GRADIENT``          0x2 `ButtonPanel` has a gradient shading background.
+         ``BP_DEFAULT_STYLE``         0x1 L{ButtonPanel} has a plain solid background.
+         ``BP_USE_GRADIENT``          0x2 L{ButtonPanel} has a gradient shading background.
          ==================== =========== ==================================================
 
         """

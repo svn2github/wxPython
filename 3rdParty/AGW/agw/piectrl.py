@@ -625,8 +625,8 @@ class PieCtrl(wx.Window):
         Draws the L{PieCtrl} external edges.
 
         :param `dc`: an instance of `wx.DC`;
-        :param `cx`: the part x coordinate;
-        :param `cy`: the part y coordinate;
+        :param `cx`: the part `x` coordinate;
+        :param `cy`: the part `y` coordinate;
         :param `w`: the control's width;
         :param `h`: the control's height.
         """

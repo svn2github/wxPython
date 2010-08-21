@@ -270,10 +270,10 @@ class PyCollapsiblePane(wx.PyPanel):
          ==================== =========== ==================================================
          Window Styles        Hex Value   Description
          ==================== =========== ==================================================
-         ``CP_NO_TLW_RESIZE``         0x2 By default `PyCollapsiblePane` resizes the top level window containing it when its own size changes. This allows to easily implement dialogs containing an optionally shown part, for example, and so is the default behaviour but can be inconvenient in some specific cases -- use this flag to disable this automatic parent resizing then.
+         ``CP_NO_TLW_RESIZE``         0x2 By default L{PyCollapsiblePane} resizes the top level window containing it when its own size changes. This allows to easily implement dialogs containing an optionally shown part, for example, and so is the default behaviour but can be inconvenient in some specific cases -- use this flag to disable this automatic parent resizing then.
          ``CP_GTK_EXPANDER``          0x4 Uses a GTK expander instead of a button.
-         ``CP_USE_STATICBOX``         0x8 Uses a `wx.StaticBox` around `PyCollapsiblePane`.
-         ``CP_LINE_ABOVE``           0x10 Draws a line above `PyCollapsiblePane`.
+         ``CP_USE_STATICBOX``         0x8 Uses a `wx.StaticBox` around L{PyCollapsiblePane}.
+         ``CP_LINE_ABOVE``           0x10 Draws a line above L{PyCollapsiblePane}.
          ==================== =========== ==================================================
 
         :param `validator`: the validator associated to the L{PyCollapsiblePane};
@@ -360,10 +360,10 @@ class PyCollapsiblePane(wx.PyPanel):
          ==================== =========== ==================================================
          Window Styles        Hex Value   Description
          ==================== =========== ==================================================
-         ``CP_NO_TLW_RESIZE``         0x2 By default `PyCollapsiblePane` resizes the top level window containing it when its own size changes. This allows to easily implement dialogs containing an optionally shown part, for example, and so is the default behaviour but can be inconvenient in some specific cases -- use this flag to disable this automatic parent resizing then.
+         ``CP_NO_TLW_RESIZE``         0x2 By default L{PyCollapsiblePane} resizes the top level window containing it when its own size changes. This allows to easily implement dialogs containing an optionally shown part, for example, and so is the default behaviour but can be inconvenient in some specific cases -- use this flag to disable this automatic parent resizing then.
          ``CP_GTK_EXPANDER``          0x4 Uses a GTK expander instead of a button.
-         ``CP_USE_STATICBOX``         0x8 Uses a `wx.StaticBox` around `PyCollapsiblePane`.
-         ``CP_LINE_ABOVE``           0x10 Draws a line above `PyCollapsiblePane`.
+         ``CP_USE_STATICBOX``         0x8 Uses a `wx.StaticBox` around L{PyCollapsiblePane}.
+         ``CP_LINE_ABOVE``           0x10 Draws a line above L{PyCollapsiblePane}.
          ==================== =========== ==================================================
 
         """
@@ -376,6 +376,8 @@ class PyCollapsiblePane(wx.PyPanel):
     def GetAGWWindowStyleFlag(self):
         """
         Returns the L{PyCollapsiblePane} window style.
+
+        :see: L{SetAGWWindowStyleFlag} for a list of possible window style flags.        
         """
 
         return self._agwStyle
@@ -593,7 +595,10 @@ class PyCollapsiblePane(wx.PyPanel):
 
 
     def GetExpanderDimensions(self):
-        """ Returns the expander dimensions. """
+        """
+        Returns the expander dimensions, a tuple of integers representing the
+        width and height of the expander, in pixels.
+        """
 
         return self._expanderDimensions
     

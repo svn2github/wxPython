@@ -875,7 +875,7 @@ class TreeListHeaderWindow(wx.Window):
         """
         Returns the column that corresponds to the logical input `x` coordinate.
 
-        :param `x`: the x position to evaluate.
+        :param `x`: the `x` position to evaluate.
 
         :return: The column that corresponds to the logical input `x` coordinate,
          or ``wx.NOT_FOUND`` if there is no column at the `x` position.
@@ -1550,16 +1550,16 @@ class TreeListItem(GenericTreeItem):
         
     
     def GetTextX(self):
-        """ Returns the x position of the item text. """
+        """ Returns the `x` position of the item text. """
 
         return self._text_x
 
     
     def SetTextX(self, text_x):
         """
-        Sets the x position of the item text.
+        Sets the `x` position of the item text.
 
-        :param `text_x`: the x position of the item text.
+        :param `text_x`: the `x` position of the item text.
         """
 
         self._text_x = text_x 
@@ -1969,6 +1969,8 @@ class TreeListMainWindow(CustomTreeCtrl):
          ``TR_AUTO_TOGGLE_CHILD``            0x8000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly.
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
+         ``TR_NO_HEADER``                   0x40000 Use this style to hide the columns header.
+         ``TR_VIRTUAL``                     0x80000 L{HyperTreeList} will have virtual behaviour.
          ============================== =========== ==================================================
 
         :param `validator`: window validator;
@@ -3205,7 +3207,7 @@ class TreeListMainWindow(CustomTreeCtrl):
          ``TREE_HITTEST_ONITEMCHECKICON``            0x2000 On the check/radio icon, if present
          ================================== =============== =================================
 
-        :note: the item (if any, ``None`` otherwise), the `flags` and the column are always
+        :return: the item (if any, ``None`` otherwise), the `flags` and the column are always
          returned as a tuple.
         """
 
@@ -3841,12 +3843,12 @@ class TreeListMainWindow(CustomTreeCtrl):
             return item.GetText(column)
    
 
-    def GetItemWidth(self, column, item):
+    def GetItemWidth(self, item, column):
         """
         Returns the item width.
 
-        :param `column`: an integer specifying the column index;
-        :param `item`: an instance of L{TreeListItem}.
+        :param `item`: an instance of L{TreeListItem};
+        :param `column`: an integer specifying the column index.
         """
         
         if not item:
@@ -3915,7 +3917,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         # add root width
         if not self.HasAGWFlag(wx.TR_HIDE_ROOT):
-            w = self.GetItemWidth(column, parent)
+            w = self.GetItemWidth(parent, column)
             if width < w:
                 width = w
             if width > maxWidth:
@@ -3923,7 +3925,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         item, cookie = self.GetFirstChild(parent)
         while item:
-            w = self.GetItemWidth(column, item)
+            w = self.GetItemWidth(item, column)
             if width < w:
                 width = w
             if width > maxWidth:
@@ -4033,7 +4035,7 @@ class HyperTreeList(wx.PyControl):
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
          ``TR_NO_HEADER``                   0x40000 Use this style to hide the columns header.
-         ``TR_VIRTUAL``                     0x80000 `HyperTreeList` will have virtual behaviour.
+         ``TR_VIRTUAL``                     0x80000 L{HyperTreeList} will have virtual behaviour.
          ============================== =========== ==================================================
 
         :param `validator`: window validator;
@@ -4193,7 +4195,7 @@ class HyperTreeList(wx.PyControl):
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
          ``TR_NO_HEADER``                   0x40000 Use this style to hide the columns header.
-         ``TR_VIRTUAL``                     0x80000 `HyperTreeList` will have virtual behaviour.
+         ``TR_VIRTUAL``                     0x80000 L{HyperTreeList} will have virtual behaviour.
          ============================== =========== ==================================================
          
         :note: Please note that some styles cannot be changed after the window creation
@@ -4700,7 +4702,7 @@ class HyperTreeList(wx.PyControl):
 
 def create_delegator_for(method):
     """
-    Creates a method that forwards calls to `self._main_win`.
+    Creates a method that forwards calls to `self._main_win` (an instance of L{TreeListMainWindow}).
 
     :param `method`: one method inside the L{TreeListMainWindow} local scope.
     """

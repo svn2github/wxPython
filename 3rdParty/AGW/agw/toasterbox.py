@@ -67,9 +67,9 @@ This class supports the following window styles:
 ==================== =========== ==================================================
 Window Styles        Hex Value   Description
 ==================== =========== ==================================================
-``TB_SIMPLE``                0x1 A simple ToasterBox, with background image and text customization can be created.
+``TB_SIMPLE``                0x1 A simple `ToasterBox`, with background image and text customization can be created.
 ``TB_ONTIME``                0x1 `ToasterBox` will close after a specified amount of time.
-``TB_COMPLEX``               0x2 ToasterBoxes with different degree of complexity can be created. You can add as  many controls as you want, provided that you call the AddPanel() method and pass  to it a dummy frame and a wx.Panel. See the demo for details.
+``TB_COMPLEX``               0x2 ToasterBoxes with different degree of complexity can be created. You can add as  many controls as you want, provided that you call the L{AddPanel} method and pass  to it a dummy frame and a `wx.Panel`. See the demo for details.
 ``TB_ONCLICK``               0x2 `ToasterBox` can be closed by clicking anywhere on the `ToasterBox` frame.
 ``TB_DEFAULT_STYLE``   0x2008002 Default window style for `ToasterBox`, with no caption nor close box.
 ``TB_CAPTION``        0x22009806 `ToasterBox` will have a caption, with the possibility to set a title for the `ToasterBox` frame, and a close box.
@@ -146,7 +146,7 @@ class ToasterBox(wx.Timer):
          ====================== ======= ================================
          `ToasterBox` Style      Value  Description
          ====================== ======= ================================
-         ``TB_SIMPLE``              0x1 A simple `ToasterBox`, with background image and text customization can be created
+         ``TB_SIMPLE``              0x1 A simple L{ToasterBox}, with background image and text customization can be created
          ``TB_COMPLEX``             0x2 `ToasterBoxes` with different degree of complexity can be created. You can add as many controls as you want, provided that you call the L{AddPanel} method and pass to it a dummy frame and a `wx.Panel`.
          ====================== ======= ================================
 
@@ -156,8 +156,8 @@ class ToasterBox(wx.Timer):
          ====================== ========== ================================
          Window Style           Hex Value  Description
          ====================== ========== ================================
-         ``TB_DEFAULT_STYLE``   0x2008002  Default window style for `ToasterBox`, with no caption nor close box.
-         ``TB_CAPTION``         0x22009806 `ToasterBox` will have a caption, with the possibility to set a title for the `ToasterBox` frame, and a close box.
+         ``TB_DEFAULT_STYLE``   0x2008002  Default window style for L{ToasterBox}, with no caption nor close box.
+         ``TB_CAPTION``         0x22009806 L{ToasterBox} will have a caption, with the possibility to set a title for the L{ToasterBox} frame, and a close box.
          ====================== ========== ================================
        
         :param `closingstyle`: the closing style for L{ToasterBox}. Can be one of the
@@ -166,8 +166,8 @@ class ToasterBox(wx.Timer):
          ==================== =========== ==================================================
          Closing Styles       Hex Value   Description
          ==================== =========== ==================================================
-         ``TB_ONTIME``                0x1 `ToasterBox` will close after a specified amount of time.
-         ``TB_ONCLICK``               0x2 `ToasterBox` can be closed by clicking anywhere on the `ToasterBox` frame.
+         ``TB_ONTIME``                0x1 L{ToasterBox} will close after a specified amount of time.
+         ``TB_ONCLICK``               0x2 L{ToasterBox} can be closed by clicking anywhere on the L{ToasterBox} frame.
          ==================== =========== ==================================================
 
         :param `scrollType`: the scrolling direction for L{ToasterBox}. Can be one of the
@@ -176,8 +176,8 @@ class ToasterBox(wx.Timer):
          ==================== =========== ==================================================
          Scroll Styles        Hex Value   Description
          ==================== =========== ==================================================
-         ``TB_SCR_TYPE_UD``           0x1 `ToasterBox` will scroll from up to down
-         ``TB_SCR_TYPE_DU``           0x2 `ToasterBox` will scroll from down to up
+         ``TB_SCR_TYPE_UD``           0x1 L{ToasterBox} will scroll from up to down
+         ``TB_SCR_TYPE_DU``           0x2 L{ToasterBox} will scroll from down to up
          ==================== =========== ==================================================
          
         """
@@ -543,7 +543,7 @@ class ToasterBoxWindow(wx.Frame):
          ====================== ======= ================================
          `ToasterBox` Style      Value  Description
          ====================== ======= ================================
-         ``TB_SIMPLE``              0x1 A simple `ToasterBox`, with background image and text customization can be created
+         ``TB_SIMPLE``              0x1 A simple L{ToasterBox}, with background image and text customization can be created
          ``TB_COMPLEX``             0x2 `ToasterBoxes` with different degree of complexity can be created. You can add as many controls as you want, provided that you call the L{AddPanel} method and pass to it a dummy frame and a `wx.Panel`.
          ====================== ======= ================================
 
@@ -553,8 +553,8 @@ class ToasterBoxWindow(wx.Frame):
          ====================== ========== ================================
          Window Style           Hex Value  Description
          ====================== ========== ================================
-         ``TB_DEFAULT_STYLE``   0x2008002  Default window style for `ToasterBox`, with no caption nor close box.
-         ``TB_CAPTION``         0x22009806 `ToasterBox` will have a caption, with the possibility to set a title for the `ToasterBox` frame, and a close box.
+         ``TB_DEFAULT_STYLE``   0x2008002  Default window style for L{ToasterBox}, with no caption nor close box.
+         ``TB_CAPTION``         0x22009806 L{ToasterBox} will have a caption, with the possibility to set a title for the L{ToasterBox} frame, and a close box.
          ====================== ========== ================================
        
         :param `closingstyle`: the closing style for L{ToasterBoxWindow}. Can be one of the
@@ -563,8 +563,8 @@ class ToasterBoxWindow(wx.Frame):
          ==================== =========== ==================================================
          Closing Styles       Hex Value   Description
          ==================== =========== ==================================================
-         ``TB_ONTIME``                0x1 `ToasterBox` will close after a specified amount of time.
-         ``TB_ONCLICK``               0x2 `ToasterBox` can be closed by clicking anywhere on the `ToasterBox` frame.
+         ``TB_ONTIME``                0x1 L{ToasterBox} will close after a specified amount of time.
+         ``TB_ONCLICK``               0x2 L{ToasterBox} can be closed by clicking anywhere on the L{ToasterBox} frame.
          ==================== =========== ==================================================
 
         :param `scrollType`: the scrolling direction for L{ToasterBoxWindow}. Can be one of the
@@ -573,8 +573,8 @@ class ToasterBoxWindow(wx.Frame):
          ==================== =========== ==================================================
          Scroll Styles        Hex Value   Description
          ==================== =========== ==================================================
-         ``TB_SCR_TYPE_UD``           0x1 `ToasterBox` will scroll from up to down
-         ``TB_SCR_TYPE_DU``           0x2 `ToasterBox` will scroll from down to up
+         ``TB_SCR_TYPE_UD``           0x1 L{ToasterBox} will scroll from up to down
+         ``TB_SCR_TYPE_DU``           0x2 L{ToasterBox} will scroll from down to up
          ==================== =========== ==================================================
 
         """

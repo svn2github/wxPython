@@ -105,7 +105,8 @@ With ShapedButton you can:
 - Change ShapedButton shape and text orientation in runtime.
 
 
-:note: ShapedButton **requires** PIL (Python Imaging Library) library to be installed.
+:note: ShapedButton **requires** PIL (Python Imaging Library) library to be installed,
+ which can be downloaded from http://www.pythonware.com/products/pil/ .
 
 
 Window Styles
@@ -215,7 +216,7 @@ class SButtonEvent(wx.PyCommandEvent):
         """
         Sets the button event as pressed.
 
-        :param `isDown`: ``True`` to set the event as "pressed"", ``False`` otherwise.
+        :param `isDown`: ``True`` to set the event as "pressed", ``False`` otherwise.
         """
         
         self.isDown = isDown
