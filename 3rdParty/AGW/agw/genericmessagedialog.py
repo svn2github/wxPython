@@ -98,6 +98,9 @@ GMD_USE_AQUABUTTONS = 32
 GMD_USE_GRADIENTBUTTONS = 64
 """ Uses `wx.lib.agw.gradientbutton` buttons instead of generic buttons. """
 
+# Avoid 2.9 errors
+BUTTON_SIZER_FLAGS = wx.OK | wx.CANCEL | wx.YES | wx.NO | wx.HELP | wx.NO_DEFAULT
+
 _ = wx.GetTranslation
 
 _cancel = PyEmbeddedImage(
@@ -615,7 +618,7 @@ class GenericMessageDialog(wx.Dialog):
         if self._agwStyle & wx.YES_NO:
             center_flag |= wx.ALIGN_CENTRE
 
-        sizerBtn = self.CreateSeparatedButtonSizer(self._agwStyle & self.ButtonSizerFlags)
+        sizerBtn = self.CreateSeparatedButtonSizer(self._agwStyle & BUTTON_SIZER_FLAGS)
         if sizerBtn:
             topsizer.Add(sizerBtn, 0, center_flag | wx.ALL, 10)
 

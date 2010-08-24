@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana And Peter Damoc, @ 12 Dec 2005
-# Latest Revision: 01 Dec 2009, 10.00 GMT
+# Latest Revision: 24 Aug 2010, 14.00 GMT
 #
 #
 # TODO List/Caveats
@@ -120,7 +120,7 @@ License And Version
 
 ThumbnailCtrl is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 01 Dec 2009, 10.00 GMT
+Latest revision: Andrea Gavana @ 24 Aug 2010, 10.00 GMT
 
 Version 0.9
 
@@ -680,6 +680,22 @@ class Thumb(object):
         return self._lastmod        
 
 
+    def GetOriginalSize(self):
+        """ Returns a tuple containing the original image width and height, in pixels. """
+
+        if hasattr(self, "_threadedimage"):
+            img = self._threadedimage                
+        else:
+            img = GetMondrianImage()
+                
+        if hasattr(self, "_originalsize"):
+            imgwidth, imgheight = self._originalsize
+        else:
+            imgwidth, imgheight = (img.GetWidth(), img.GetHeight())
+
+        return imgwidth, imgheight
+    
+
     def GetCaptionLinesCount(self, width):
         """
         Returns the number of lines for the caption.
@@ -832,7 +848,7 @@ class ThumbnailCtrl(wx.Panel):
                    "GetShowDir", "SetSelection", "GetSelection", "SetZoomFactor",
                    "GetZoomFactor", "SetCaptionFont", "GetCaptionFont", "GetItemIndex",
                    "InsertItem", "RemoveItemAt", "IsSelected", "Rotate", "ZoomIn", "ZoomOut",
-                   "EnableToolTips", "GetThumbInfo", "GetOriginalImage"]
+                   "EnableToolTips", "GetThumbInfo", "GetOriginalImage", "SetDropShadow", "GetDropShadow"]
 
         for method in methods:
             setattr(self, method, getattr(self._scrolled, method))
@@ -980,6 +996,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         self._dragging = False
         self._checktext = False
         self._orient = THUMB_VERTICAL
+        self._dropShadow = True
 
         self._tCaptionHeight = []
         self._selectedarray = []
@@ -1095,6 +1112,25 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         """
         
         return self._tOutline
+
+
+    def SetDropShadow(self, drop):
+        """
+        Sets whether to drop a shadow behind thumbnails or not.
+
+        :param `drop`: ``True`` to drop a shadow behind each thumbnail, ``False`` otheriwise.
+        """
+
+        self._dropShadow = drop
+        self.Refresh()
+        
+
+    def GetDropShadow(self):
+        """
+        Returns whether to drop a shadow behind thumbnails or not.
+        """
+
+        return self._dropShadow
     
 
     def GetPointedItem(self):
@@ -1270,6 +1306,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             thumbinfo = "Name: " + self._items[thumb].GetFileName() + "\n" \
                         "Size: " + self._items[thumb].GetFileSize() + "\n" \
                         "Modified: " + self._items[thumb].GetCreationDate() + "\n" \
+                        "Dimensions: " + str(self._items[thumb].GetOriginalSize()) + "\n" \
                         "Thumb: " + str(self.GetThumbSize()[0:2])
 
         return thumbinfo
@@ -1866,7 +1903,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
                           y + (self._tHeight - img.GetHeight())/2,
                           img.GetWidth(), img.GetHeight())
 
-        if not thumb._alpha:
+        if not thumb._alpha and self._dropShadow:
             dc.Blit(imgRect.x+5, imgRect.y+5, imgRect.width, imgRect.height, self.shadow, 500-ww, 500-hh)        
         dc.DrawBitmap(img, imgRect.x, imgRect.y, True)
 
