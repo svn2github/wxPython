@@ -319,7 +319,7 @@ class FloatSpin(wx.PyControl):
          =============== =========== ==================================================
          Window Styles   Hex Value   Description
          =============== =========== ==================================================
-         ``FS_READONLY``         0x1 Sets `FloatSpin` as read-only control.
+         ``FS_READONLY``         0x1 Sets L{FloatSpin} as read-only control.
          ``FS_LEFT``             0x2 Horizontally align the underlying `wx.TextCtrl` on the left.
          ``FS_CENTRE``           0x4 Horizontally align the underlying `wx.TextCtrl` on center.
          ``FS_RIGHT``            0x8 Horizontally align the underlying `wx.TextCtrl` on the right.
