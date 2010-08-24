@@ -761,12 +761,12 @@ class GenericMessageDialog(wx.Dialog):
          ================= ========= ==========================
          Flags             Hex Value Description
          ================= ========= ==========================
-         ``wx.YES``              0x2 Show a Yes button
-         ``wx.OK``               0x4 Show an OK button
-         ``wx.NO``               0x8 Show a No button
-         ``wx.CANCEL``          0x10 Show a Cancel button
-         ``wx.NO_DEFAULT``      0x80 Used with ``wx.YES`` and ``wx.NO``, makes No button the default
-         ``wx.HELP``          0x8000 Show a Help button
+         ``wx.YES``              0x2 Show a ``Yes`` button
+         ``wx.OK``               0x4 Show an ``OK`` button
+         ``wx.NO``               0x8 Show a ``No`` button
+         ``wx.CANCEL``          0x10 Show a ``Cancel`` button
+         ``wx.NO_DEFAULT``      0x80 Used with ``wx.YES`` and ``wx.NO``, makes ``No`` button the default
+         ``wx.HELP``          0x8000 Show a ``Help`` button
          ================= ========= ==========================
         
         :note: The sizer lays out the buttons in a manner appropriate to the platform.
