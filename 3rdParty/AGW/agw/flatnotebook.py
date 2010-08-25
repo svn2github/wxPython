@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 02 Aug 2010, 09.00 GMT
+# Latest Revision: 25 Aug 2010, 10.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -116,7 +116,7 @@ License And Version
 
 FlatNotebook is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 02 Aug 2010, 09.00 GMT
+Latest Revision: Andrea Gavana @ 25 Aug 2010, 10.00 GMT
 
 Version 3.1
 """
@@ -5525,7 +5525,8 @@ class PageContainer(wx.Panel):
                     
             if self._nHoveringOverTabIndex != self._nHoveringOverLastTabIndex:
                 self._nHoveringOverLastTabIndex = self._nHoveringOverTabIndex
-                bRedrawTabs = True
+                if self._nHoveringOverTabIndex >= 0:
+                    bRedrawTabs = True
                     
             bRedrawX = self._nXButtonStatus != xButtonStatus
             bRedrawRight = self._nRightButtonStatus != rightButtonStatus
@@ -5638,16 +5639,7 @@ class PageContainer(wx.Panel):
         self._nHoveringOverTabIndex = -1
         self._nHoveringOverLastTabIndex = -1
 
-        agwStyle = self.GetParent().GetAGWWindowStyleFlag()        
-        render = self._mgr.GetRenderer(agwStyle)
-        
-        dc = wx.ClientDC(self)
-
-        render.DrawX(self, dc)
-        render.DrawLeftArrow(self, dc)
-        render.DrawRightArrow(self, dc)
-        render.DrawTabs(self,dc)
-
+        self.Refresh()
         selection = self.GetSelection()
 
         if selection == -1:
@@ -5663,6 +5655,9 @@ class PageContainer(wx.Panel):
                 event.Skip()
                 return
                     
+        agwStyle = self.GetParent().GetAGWWindowStyleFlag()        
+        render = self._mgr.GetRenderer(agwStyle)
+        dc = wx.ClientDC(self)                    
         render.DrawTabX(self, dc, self._pagesInfoVec[selection].GetXRect(), selection, self._nTabXButtonStatus)
         if not agwStyle & FNB_RIBBON_TABS:
             render.DrawFocusRectangle(dc, self, self._pagesInfoVec[selection])

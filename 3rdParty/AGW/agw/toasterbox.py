@@ -3,7 +3,7 @@
 # Ported And Enhanced From wxWidgets Contribution (Aj Bommarito) By:
 #
 # Andrea Gavana, @ 16 September 2005
-# Latest Revision: 01 Dec 2009, 14.00 GMT
+# Latest Revision: 25 Aug 2010, 10.00 GMT
 #
 #
 # TODO/Caveats List
@@ -87,7 +87,7 @@ License And Version
 
 ToasterBox is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 01 Dec 2009, 14.00 GMT
+Latest revision: Andrea Gavana @ 25 Aug 2010, 10.00 GMT
 
 Version 0.3
 
@@ -954,6 +954,7 @@ class ToasterBoxWindow(wx.Frame):
 
             wx.Usleep(self._sleeptime)
             self.Refresh()
+            wx.SafeYield()
 
         self.Hide()
         if self._parent2:
