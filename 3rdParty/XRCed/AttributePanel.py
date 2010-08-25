@@ -70,7 +70,7 @@ class Panel(wx.Panel):
 
         topSizer = wx.BoxSizer(wx.VERTICAL)
         pinSizer = wx.BoxSizer(wx.HORIZONTAL)
-        sizer = wx.FlexGridSizer(2, 2, 1, 5)
+        sizer = wx.FlexGridSizer(cols=2, vgap=1, hgap=5)
         self.labelRef = wx.StaticText(self, -1, 'ref:')
         self.textRef = params.ParamText(self, 'ref', textWidth=200)
         sizer.AddMany([ (self.labelRef, 0, wx.ALIGN_CENTER_VERTICAL),
@@ -343,7 +343,7 @@ class CodePanel(wx.Panel):
         topSizer = wx.BoxSizer(wx.HORIZONTAL)
         # Events on the left
         leftSizer = wx.BoxSizer(wx.VERTICAL)
-        sizer = wx.GridSizer(len(events), 1, 0, 5)
+        sizer = wx.GridSizer(cols=1, vgap=0, hgap=5)
         label = wx.StaticText(self, label='Events')
         label.SetFont(g.labelFont())
         sizer.Add(label, 0, wx.LEFT, 20)
@@ -354,7 +354,7 @@ class CodePanel(wx.Panel):
         leftSizer.Add(sizer)
         # Additional comboboxes
         self.extra = []
-        self.eventSizer = wx.FlexGridSizer(1, 2, 0, 0)
+        self.eventSizer = wx.FlexGridSizer(cols=2)
         leftSizer.Add(self.eventSizer)
         topSizer.Add(leftSizer)
         # Right sizer

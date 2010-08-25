@@ -913,7 +913,7 @@ class StylePanel(wx.Panel):
         topSizer = wx.BoxSizer(wx.HORIZONTAL)
         if genericStyles:
             # Generic styles
-            sizer = wx.GridSizer(len(genericStyles), 1, 1, 5)
+            sizer = wx.GridSizer(cols=1, vgap=1, hgap=5)
             label = wx.StaticText(self, label='Generic')
             label.SetFont(g.labelFont())
             sizer.Add(label, 0, wx.LEFT, 20)
@@ -926,7 +926,7 @@ class StylePanel(wx.Panel):
             topSizer.Add(sizer)
         if styles:
             # Specific styles
-            sizer = wx.GridSizer(len(styles), 1, 1, 5)
+            sizer = wx.GridSizer(cols=1, vgap=1, hgap=5)
             if genericStyles:
                 label = wx.StaticText(self, label='Specific')
                 label.SetFont(g.labelFont())

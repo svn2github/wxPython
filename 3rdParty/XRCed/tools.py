@@ -42,7 +42,7 @@ class ToolPanel(wx.PyPanel):
             self.tp.AssignImageList(il)
         elif g.conf.toolPanelType == 'FPB':
             self.tp = fpb.FoldPanelBar(self, -1, wx.DefaultPosition, wx.DefaultSize, 
-                                       fpb.FPB_DEFAULT_STYLE | fpb.FPB_VERTICAL)
+                                       agwStyle=fpb.FPB_VERTICAL)
             sizer.Add(self.tp, 1, wx.EXPAND)
         self.panels = []
         for name in Manager.panelNames:
