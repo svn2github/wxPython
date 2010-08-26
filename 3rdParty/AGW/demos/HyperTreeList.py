@@ -1797,6 +1797,8 @@ class HyperTreeList(HTL.HyperTreeList):
                     last = self.AppendItem(child, txt, ct_type=2, wnd=self.gauge)
                 elif y == 1 and x == 2:
                     last = self.AppendItem(child, txt, ct_type=1, wnd=textctrl)
+                    if random.randint(0, 3) == 1:
+                        self.SetItem3State(last, True)
                 elif 2 < y < 4:
                     last = self.AppendItem(child, txt)
                 elif y == 4 and x == 1:
@@ -1818,6 +1820,8 @@ class HyperTreeList(HTL.HyperTreeList):
                     txt = "item %d-%s-%d" % (x, chr(ord("a")+y), z)
                     if z > 2:
                         item = self.AppendItem(last, txt, ct_type=1)
+                        if random.randint(0, 3) == 1:
+                            self.SetItem3State(item, True)
                     elif 0 < z <= 2:
                         item = self.AppendItem(last, txt, ct_type=2)
                     elif z == 0:

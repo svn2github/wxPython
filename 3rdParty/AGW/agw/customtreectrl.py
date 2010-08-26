@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 19 Aug 2010, 22.00 GMT
+# Latest Revision: 26 Aug 2010, 10.00 GMT
 #
 #
 # TODO List
@@ -58,6 +58,7 @@ to the standard `wx.TreeCtrl` behaviour this class supports:
 
 * CheckBox-type items: checkboxes are easy to handle, just selected or unselected
   state with no particular issues in handling the item's children;
+* Added support for 3-state value checkbox items;
 * RadioButton-type items: since I elected to put radiobuttons in CustomTreeCtrl, I
   needed some way to handle them, that made sense. So, I used the following approach:
   
@@ -212,7 +213,7 @@ License And Version
 
 CustomTreeCtrl is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 19 Aug 2010, 22.00 GMT
+Latest Revision: Andrea Gavana @ 26 Aug 2010, 10.00 GMT
 
 Version 2.3
 
@@ -247,8 +248,9 @@ TreeItemIcon_SelectedExpanded = 3    #     selected,     expanded
 
 TreeItemIcon_Checked = 0             # check button,     checked
 TreeItemIcon_NotChecked = 1          # check button, not checked
-TreeItemIcon_Flagged = 2             # radio button,     selected
-TreeItemIcon_NotFlagged = 3          # radio button, not selected
+TreeItemIcon_Undetermined = 2        # check button, undetermined
+TreeItemIcon_Flagged = 3             # radio button,     selected
+TreeItemIcon_NotFlagged = 4          # radio button, not selected
 
 # ----------------------------------------------------------------------------
 # CustomTreeCtrl flags
@@ -1339,7 +1341,7 @@ class GenericTreeItem(object):
         self._images[TreeItemIcon_Expanded] = _NO_IMAGE
         self._images[TreeItemIcon_SelectedExpanded] = _NO_IMAGE
 
-        self._checkedimages = [None, None, None, None]
+        self._checkedimages = [None, None, None, None, None]
         self._leftimage = _NO_IMAGE
 
         self._x = 0             # (virtual) offset from top
@@ -1355,7 +1357,8 @@ class GenericTreeItem(object):
         self._isItalic = False      # render the label in italic font
         self._ownsAttr = False      # delete attribute when done
         self._type = ct_type        # item type: 0=normal, 1=check, 2=radio
-        self._checked = False       # only meaningful for check and radio
+        self._is3State = False      # true for 3-state checkbox items
+        self._checked = 0           # only meaningful for check and radio items
         self._enabled = True        # flag to enable/disable an item
         self._hypertext = False     # indicates if the item is hypertext
         self._visited = False       # visited state for an hypertext item
@@ -1364,8 +1367,9 @@ class GenericTreeItem(object):
             # do not construct the array for normal items
             self._checkedimages[TreeItemIcon_Checked] = 0
             self._checkedimages[TreeItemIcon_NotChecked] = 1
-            self._checkedimages[TreeItemIcon_Flagged] = 2
-            self._checkedimages[TreeItemIcon_NotFlagged] = 3
+            self._checkedimages[TreeItemIcon_Undetermined] = 2
+            self._checkedimages[TreeItemIcon_Flagged] = 3
+            self._checkedimages[TreeItemIcon_NotFlagged] = 4
         
         if parent:
             if parent.GetType() == 2 and not parent.IsChecked():
@@ -1432,6 +1436,7 @@ class GenericTreeItem(object):
          ================================= ========================
          ``TreeItemIcon_Checked``          To get the checkbox checked item image
          ``TreeItemIcon_NotChecked``       To get the checkbox unchecked item image
+         ``TreeItemIcon_Undetermined``     To get the checkbox undetermined state item image
          ``TreeItemIcon_Flagged``          To get the radiobutton checked image
          ``TreeItemIcon_NotFlagged``       To get the radiobutton unchecked image
          ================================= ========================
@@ -1812,14 +1817,99 @@ class GenericTreeItem(object):
         return not self._isCollapsed 
 
 
-    def IsChecked(self):
+    def GetValue(self):
         """
         Returns whether the item is checked or not.
 
         :note: This is meaningful only for checkbox-like and radiobutton-like items.
         """
 
-        return self._checked
+        if self.Is3State():
+            return self.Get3StateValue()
+        
+        return self._checked        
+
+
+    def Get3StateValue(self):
+        """
+        Gets the state of a 3-state checkbox item.
+
+        :return: ``wx.CHK_UNCHECKED`` when the checkbox is unchecked, ``wx.CHK_CHECKED``
+         when it is checked and ``wx.CHK_UNDETERMINED`` when it's in the undetermined
+         state. 
+
+        :note: This method raises an exception when the function is used with a 2-state
+         checkbox item.
+
+        :note: This method is meaningful only for checkbox-like items.
+        """
+
+        if not self.Is3State():
+            raise Exception("Get3StateValue can only be used with 3-state checkbox items.")
+
+        return self._checked        
+
+
+    def Is3State(self):
+        """
+        Returns whether or not the checkbox item is a 3-state checkbox.
+
+        :return: ``True`` if this checkbox is a 3-state checkbox, ``False`` if it's a
+         2-state checkbox item.
+
+        :note: This method is meaningful only for checkbox-like items.
+        """
+
+        return self._is3State
+    
+
+    def Set3StateValue(self, state):
+        """
+        Sets the checkbox item to the given `state`.
+
+        :param `state`: can be one of: ``wx.CHK_UNCHECKED`` (check is off), ``wx.CHK_CHECKED``
+         (check is on) or ``wx.CHK_UNDETERMINED`` (check is mixed).
+
+        :note: This method raises an exception when the checkbox item is a 2-state checkbox
+         and setting the state to ``wx.CHK_UNDETERMINED``.
+
+        :note: This method is meaningful only for checkbox-like items.
+        """
+
+        if not self._is3State and state == wx.CHK_UNDETERMINED:
+            raise Exception("Set3StateValue can only be used with 3-state checkbox items.")
+
+        self._checked = state
+
+
+    def Set3State(self, allow):
+        """
+        Sets whether the item has a 3-state value checkbox assigned to it or not.
+
+        :param `allow`: ``True`` to set an item as a 3-state checkbox, ``False`` to set it
+         to a 2-state checkbox.
+
+        :return: ``True`` if the change was successful, ``False`` otherwise.
+
+        :note: This method is meaningful only for checkbox-like items.
+        """
+
+        if self._type != 1:
+            return False
+
+        self._is3State = allow
+        return True
+            
+
+    def IsChecked(self):
+        """
+        This is just a maybe more readable synonym for L{GetValue}.
+        Returns whether the item is checked or not.
+
+        :note: This is meaningful only for checkbox-like and radiobutton-like items.
+        """
+
+        return self.GetValue()
 
 
     def Check(self, checked=True):
@@ -2127,9 +2217,14 @@ class GenericTreeItem(object):
         if self._type == 0:
             return None
 
-        if self.IsChecked():
+        checked = self.IsChecked()
+        
+        if checked > 0:
             if self._type == 1:     # Checkbox
-                return self._checkedimages[TreeItemIcon_Checked]
+                if checked == wx.CHK_CHECKED:
+                    return self._checkedimages[TreeItemIcon_Checked]
+                else:
+                    return self._checkedimages[TreeItemIcon_Undetermined]                    
             else:                   # Radiobutton
                 return self._checkedimages[TreeItemIcon_Flagged]
         else:
@@ -2415,8 +2510,10 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         
         render = wx.RendererNative.Get()
 
-        if checked:
+        if checked == wx.CHK_CHECKED:
             flag = wx.CONTROL_CHECKED
+        elif checked == wx.CHK_UNDETERMINED:
+            flag = wx.CONTROL_UNDETERMINED
         else:
             flag = 0
 
@@ -2585,6 +2682,73 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         return item.IsChecked()
 
 
+    def GetItem3StateValue(self, item):
+        """
+        Gets the state of a 3-state checkbox item.
+
+        :param `item`: an instance of L{GenericTreeItem}.
+
+        :return: ``wx.CHK_UNCHECKED`` when the checkbox is unchecked, ``wx.CHK_CHECKED``
+         when it is checked and ``wx.CHK_UNDETERMINED`` when it's in the undetermined
+         state. 
+
+        :note: This method raises an exception when the function is used with a 2-state
+         checkbox item.
+
+        :note: This method is meaningful only for checkbox-like items.
+        """
+
+        return item.Get3StateValue()
+
+
+    def IsItem3State(self, item):
+        """
+        Returns whether or not the checkbox item is a 3-state checkbox.
+
+        :param `item`: an instance of L{GenericTreeItem}.
+
+        :return: ``True`` if this checkbox is a 3-state checkbox, ``False`` if it's a
+         2-state checkbox item.
+
+        :note: This method is meaningful only for checkbox-like items.
+        """
+
+        return item.Is3State()
+    
+
+    def SetItem3StateValue(self, item, state):
+        """
+        Sets the checkbox item to the given `state`.
+
+        :param `item`: an instance of L{GenericTreeItem};
+        :param `state`: can be one of: ``wx.CHK_UNCHECKED`` (check is off), ``wx.CHK_CHECKED``
+         (check is on) or ``wx.CHK_UNDETERMINED`` (check is mixed).
+
+        :note: This method raises an exception when the checkbox item is a 2-state checkbox
+         and setting the state to ``wx.CHK_UNDETERMINED``.
+
+        :note: This method is meaningful only for checkbox-like items.
+        """
+
+        item.Set3StateValue(state)
+
+
+    def SetItem3State(self, item, allow):
+        """
+        Sets whether the item has a 3-state value checkbox assigned to it or not.
+
+        :param `item`: an instance of L{GenericTreeItem};
+        :param `allow`: ``True`` to set an item as a 3-state checkbox, ``False`` to set it
+         to a 2-state checkbox.
+
+        :return: ``True`` if the change was successful, ``False`` otherwise.
+
+        :note: This method is meaningful only for checkbox-like items.
+        """
+
+        return item.Set3State(allow)
+    
+
     def CheckItem2(self, item, checked=True, torefresh=False):
         """
         Used internally to avoid ``EVT_TREE_ITEM_CHECKED`` events.
@@ -2637,7 +2801,10 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         events ``EVT_TREE_ITEM_CHECKING`` and ``EVT_TREE_ITEM_CHECKED``.
 
         :param `item`: an instance of L{GenericTreeItem};
-        :param `checked`: ``True`` to check an item, ``False`` to uncheck it.
+        :param `checked`: for a radiobutton-type item, ``True`` to check it, ``False``
+         to uncheck it. For a checkbox-type item, it can be one of ``wx.CHK_UNCHECKED``
+         when the checkbox is unchecked, ``wx.CHK_CHECKED`` when it is checked and
+         ``wx.CHK_UNDETERMINED`` when it's in the undetermined state.
         """
 
         # Should we raise an error here?!?        
@@ -2662,8 +2829,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         if self.GetEventHandler().ProcessEvent(e):
             # Blocked by user
             return 
-        
-        item.Check(checked)
+
+        if item.Is3State():
+            item.Set3StateValue(checked)
+        else:
+            item.Check(checked)
+            
         dc = wx.ClientDC(self)
         self.RefreshLine(item)
 
@@ -5175,6 +5346,14 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                                                          enabled=False,
                                                          x=sizex, y=sizey))
 
+            self._imageListCheck.Add(self.GetControlBmp(checkbox=True,
+                                                        checked=2,
+                                                        enabled=True,
+                                                        x=sizex, y=sizey))
+            self._grayedCheckList.Add(self.GetControlBmp(checkbox=True,
+                                                         checked=2,
+                                                         enabled=False,
+                                                         x=sizex, y=sizey))
 
             # Get the Radio Buttons
             self._imageListCheck.Add(self.GetControlBmp(checkbox=False,
@@ -6098,7 +6277,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 self.GetEventHandler().ProcessEvent(event)
 
                 if keyCode == wx.WXK_SPACE and self.GetItemType(self._current) > 0:
-                    checked = not self.IsItemChecked(self._current)
+                    if self.IsItem3State(self._current):
+                        checked = self.GetItem3StateValue(self._current)
+                        checked = (checked+1)%3
+                    else:
+                        checked = not self.IsItemChecked(self._current)
+                        
                     self.CheckItem(self._current, checked)
         
             # in any case, also generate the normal key event for this key,
@@ -6778,7 +6962,14 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                     if event.LeftDown():
                         if flags & TREE_HITTEST_ONITEM and self.HasAGWFlag(TR_FULL_ROW_HIGHLIGHT):
                             self.DoSelectItem(item, not self.HasAGWFlag(TR_MULTIPLE))
-                        self.CheckItem(item, not self.IsItemChecked(item))
+
+                        if self.IsItem3State(item):
+                            checked = self.GetItem3StateValue(item)
+                            checked = (checked+1)%3
+                        else:
+                            checked = not self.IsItemChecked(item)
+                            
+                        self.CheckItem(item, checked)
                         
                     return                                            
 

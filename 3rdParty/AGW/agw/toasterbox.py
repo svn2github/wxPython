@@ -3,7 +3,7 @@
 # Ported And Enhanced From wxWidgets Contribution (Aj Bommarito) By:
 #
 # Andrea Gavana, @ 16 September 2005
-# Latest Revision: 25 Aug 2010, 10.00 GMT
+# Latest Revision: 26 Aug 2010, 10.00 GMT
 #
 #
 # TODO/Caveats List
@@ -87,7 +87,7 @@ License And Version
 
 ToasterBox is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 25 Aug 2010, 10.00 GMT
+Latest revision: Andrea Gavana @ 26 Aug 2010, 10.00 GMT
 
 Version 0.3
 
@@ -97,6 +97,19 @@ import textwrap
 import wx
 
 from wx.lib.statbmp import GenStaticBitmap as StaticBitmap
+
+# Let's see if we can add few nice shadows to our tooltips (Windows only)
+_libimported = None
+
+if wx.Platform == "__WXMSW__":
+    try:
+        # Try Mark Hammond's win32all extensions
+        import win32api
+        import win32con
+        import winxpgui
+        _libimported = "MH"
+    except ImportError:
+        _libimported = None
 
 # Define Window List, We Use It Globally
 winlist = []
@@ -121,6 +134,9 @@ TB_ONCLICK = 2
 TB_SCR_TYPE_UD = 1
 # scroll from down to up
 TB_SCR_TYPE_DU = 2
+# fade in/out (requires Mark Hammond's pywin32 package)
+TB_SCR_TYPE_FADE = 4
+
 
 # ------------------------------------------------------------------------------ #
 # Class ToasterBox
@@ -178,9 +194,13 @@ class ToasterBox(wx.Timer):
          ==================== =========== ==================================================
          ``TB_SCR_TYPE_UD``           0x1 L{ToasterBox} will scroll from up to down
          ``TB_SCR_TYPE_DU``           0x2 L{ToasterBox} will scroll from down to up
+         ``TB_SCR_TYPE_FADE``         0x4 L{ToasterBox} will fade in/out (without scrolling). Windows only, requires Mark Hammond's pywin32 package.
          ==================== =========== ==================================================
          
         """
+
+        if scrollType == TB_SCR_TYPE_FADE and not _libimported:
+            raise Exception("The style ``TB_SCR_TYPE_FADE`` cabn be used only with Mark Hammond's pywin32 library")
 
         self._parent = parent
         self._sleeptime = 10
@@ -189,6 +209,8 @@ class ToasterBox(wx.Timer):
         self._popupposition = wx.Point(100,100)
         self._popuptop = wx.Point(0,0)
         self._popupsize = wx.Size(150, 170)
+        self._usefocus = True
+        self._originalfocus = wx.Window.FindFocus()
 
         self._backgroundcolour = wx.WHITE
         self._foregroundcolour = wx.BLACK
@@ -392,6 +414,7 @@ class ToasterBox(wx.Timer):
         self._tb.SetPopupPosition((self._popupposition[0], self._popupposition[1]))
         self._tb.SetPopupPauseTime(self._pausetime)
         self._tb.SetPopupScrollSpeed(self._sleeptime)
+        self._tb.SetUseFocus(self._usefocus, self._originalfocus)
 
         if self._tbstyle == TB_SIMPLE:
             self._tb.SetPopupTextColour(self._foregroundcolour)
@@ -456,6 +479,24 @@ class ToasterBox(wx.Timer):
 
         self._tb.SetTitle(title)
 
+
+    def SetUseFocus(self, focus):
+        """
+        If `focus` is ``True``, Instructs L{ToasterBox} to steal the focus from the
+        parent application, otherwise it returns the focus to the original owner.
+
+        :param `focus`: ``True`` to set the focus on L{ToasterBox}, ``False`` to
+         return it to the original owner.
+        """
+
+        self._usefocus = focus
+
+
+    def GetUseFocus(self):
+        """ Returns whether L{ToasterBox} will steal the focus from the parent application. """
+
+        return self._usefocus
+    
 
     def Notify(self):
         """ It's time to hide a L{ToasterBox}. """
@@ -575,6 +616,7 @@ class ToasterBoxWindow(wx.Frame):
          ==================== =========== ==================================================
          ``TB_SCR_TYPE_UD``           0x1 L{ToasterBox} will scroll from up to down
          ``TB_SCR_TYPE_DU``           0x2 L{ToasterBox} will scroll from down to up
+         ``TB_SCR_TYPE_FADE``         0x4 L{ToasterBox} will fade in/out (without scrolling). Windows only, requires Mark Hammond's pywin32 package.
          ==================== =========== ==================================================
 
         """
@@ -615,6 +657,12 @@ class ToasterBoxWindow(wx.Frame):
 
         self.SetDimensions(self._bottomright.x, self._bottomright.y,
                            framesize.GetWidth(), framesize.GetHeight())
+
+        self._scrollTimer = wx.Timer(self, -1)
+        self._alphaTimer = wx.Timer(self, -1)
+        
+        self.Bind(wx.EVT_TIMER, self.OnScrollTimer, self._scrollTimer)
+        self.Bind(wx.EVT_TIMER, self.AlphaCycle, self._alphaTimer)
 
 
     def OnClose(self, event):
@@ -809,6 +857,8 @@ class ToasterBoxWindow(wx.Frame):
             # when you try to make the window too small.
             return False
 
+        self._direction = wx.UP
+        self.SetupPositions()
         self.ScrollUp()
         timerid = wx.NewId()
         self.showtime = wx.Timer(self, timerid)
@@ -823,6 +873,10 @@ class ToasterBoxWindow(wx.Frame):
 
         self.showtime.Stop()
         del self.showtime
+
+        self._direction = wx.DOWN
+        self.SetupPositions()
+
         self.ScrollDown()
 
 
@@ -852,113 +906,166 @@ class ToasterBoxWindow(wx.Frame):
         self._textcolour = colour
 
 
-    def ScrollUp(self):
+    def SetUseFocus(self, focus, originalfocus):
+        """
+        If `focus` is ``True``, Instructs L{ToasterBoxWindow} to steal the focus from the
+        parent application, otherwise it returns the focus to the original owner.
+
+        :param `focus`: ``True`` to set the focus on L{ToasterBoxWindow}, ``False`` to
+         return it to the original owner;
+        :param `originalfocus`: an instance of `wx.Window`, representing a pointer to
+         the window which originally had the focus
+        """
+
+        self._usefocus = focus
+        self._originalfocus = originalfocus
+
+
+    def OnScrollTimer(self, event):
+        """
+        Handles the ``wx.EVT_TIMER`` event for L{ToasterBoxWindow} scrolling up/down.
+
+        :param `event`: a `wx.TimerEvent` event to be processed.
+        """
+
+        if self._direction == wx.UP:
+            self.TearUp()
+        else:
+            self.TearDown()
+            
+        
+    def TearUp(self):
         """ Scrolls the L{ToasterBox} up, which means gradually showing it. """
 
-        self.Show(True)
+        self._windowsize = self._windowsize + self._step
+        step = self._currentStep
 
-        # walk the Y value up in a raise motion
-        xpos = self.GetPosition().x
-        ypos = self._bottomright[1]
-        windowsize = 0
+        if step < self._dialogtop[1]:
+            step = self._dialogtop[1]
 
-        # checking the type of the scroll (from up to down or from down to up)
+         # checking the type of the scroll (from up to down or from down to up)
         if self._scrollType == TB_SCR_TYPE_UD:
-            start = self._dialogtop[1]
-            stop = ypos
-            step = self._step
+            dimY = self._dialogtop[1]
         elif self._scrollType == TB_SCR_TYPE_DU:
-            start = ypos
-            stop = self._dialogtop[1]
-            step = -self._step
-        else:
-            errMsg = ("scrollType not supported (in ToasterBoxWindow.ScrollUp): %s" %
-                      self._scrollType)
-            raise ValueError(errMsg)
+            dimY = step
 
-        for i in xrange(start, stop, step):
-            if i < self._dialogtop[1]:
-                i = self._dialogtop[1]
-
-            windowsize = windowsize + self._step
-
-            # checking the type of the scroll (from up to down or from down to up)
-            if self._scrollType == TB_SCR_TYPE_UD:
-                dimY = self._dialogtop[1]
-            elif self._scrollType == TB_SCR_TYPE_DU:
-                dimY = i
-            else:
-                errMsg = ("scrollType not supported (in ToasterBoxWindow.ScrollUp): %s" %
-                          self._scrollType)
-                raise ValueError(errMsg)
-
-            self.SetDimensions(self._dialogtop[0], dimY, self.GetSize().GetWidth(),
-                               windowsize)
-
-            if self._tbstyle == TB_SIMPLE:
-                self.DrawText()
-
-            wx.Usleep(self._sleeptime)
-            self.Update()
-            self.Refresh()
-
-        self.Update()
+        self.SetDimensions(self._dialogtop[0], dimY, self.GetSize().GetWidth(), self._windowsize)
 
         if self._tbstyle == TB_SIMPLE:
             self.DrawText()
 
-        self.SetFocus()
+        self.Update()
+        self.Refresh()
 
+        self._currentStep += self._scrollStep
 
-    def ScrollDown(self):
+        if self._currentStep not in range(self._start, self._stop, self._scrollStep):
+            self._scrollTimer.Stop()
+            self.Update()
+
+            if self._tbstyle == TB_SIMPLE:
+                self.DrawText()
+
+            if self._usefocus:
+                self.SetFocus()
+            else:
+                self._originalfocus.SetFocus()
+
+        
+    def TearDown(self):
         """ Scrolls the L{ToasterBox} down, which means gradually hiding it. """
 
-        # walk down the Y value
-        windowsize = self.GetSize().GetHeight()
+        self._windowsize = self._windowsize - self._step
+        step = self._currentStep
 
-        # checking the type of the scroll (from up to down or from down to up)
-        if self._scrollType == TB_SCR_TYPE_UD:
-            start = self._bottomright.y
-            stop = self._dialogtop[1]
-            step = -self._step
-        elif self._scrollType == TB_SCR_TYPE_DU:
-            start = self._dialogtop[1]
-            stop = self._bottomright.y
-            step = self._step
-        else:
-            errMsg = ("scrollType not supported (in ToasterBoxWindow.ScrollUp): %s" %
-                      self._scrollType)
-            raise ValueError(errMsg)
-
-        for i in xrange(start, stop, step):
-            if i > self._bottomright.y:
-                i = self._bottomright.y
-
-            windowsize = windowsize - self._step
-
-            if windowsize <= 0:
-               break
-            
+        if step > self._bottomright.y:
+            step = self._bottomright.y
+        
+        if self._windowsize > 0:            
             # checking the type of the scroll (from up to down or from down to up)
             if self._scrollType == TB_SCR_TYPE_UD:
                 dimY = self._dialogtop[1]
             elif self._scrollType == TB_SCR_TYPE_DU:
-                dimY = i
-            else:
-                errMsg = ("scrollType not supported (in ToasterBoxWindow.ScrollUp): %s" %
-                          self._scrollType)
-                raise ValueError(errMsg)
+                dimY = step
 
             self.SetDimensions(self._dialogtop[0], dimY,
-                               self.GetSize().GetWidth(), windowsize)
+                               self.GetSize().GetWidth(), self._windowsize)
 
-            wx.Usleep(self._sleeptime)
+            self.Update()
             self.Refresh()
-            wx.SafeYield()
 
-        self.Hide()
-        if self._parent2:
-            self._parent2.Notify()
+            self._currentStep += self._scrollStep
+            
+        else:            
+            self._scrollTimer.Stop()
+            self.Hide()
+            if self._parent2:
+                self._parent2.Notify()
+
+
+    def SetupPositions(self):
+        """ Sets up the position, size and scrolling step for L{ToasterBoxWindow}. """
+
+        if self._scrollType == TB_SCR_TYPE_FADE:
+            self.SetPosition(wx.Point(*self._dialogtop))
+            return
+
+        if self._direction == wx.UP:
+            # walk the Y value up in a raise motion
+            self._xpos = self.GetPosition().x
+            self._ypos = self._bottomright[1]
+            self._windowsize = 0
+
+            # checking the type of the scroll (from up to down or from down to up)
+            if self._scrollType == TB_SCR_TYPE_UD:
+                self._start = self._dialogtop[1]
+                self._stop = self._ypos
+                self._scrollStep = self._step
+            elif self._scrollType == TB_SCR_TYPE_DU:
+                self._start = self._ypos
+                self._stop = self._dialogtop[1]
+                self._scrollStep = -self._step
+
+        else:
+
+            # walk down the Y value
+            self._windowsize = self.GetSize().GetHeight()
+
+            # checking the type of the scroll (from up to down or from down to up)
+            if self._scrollType == TB_SCR_TYPE_UD:
+                self._start = self._bottomright.y
+                self._stop = self._dialogtop[1]
+                self._scrollStep = -self._step
+            elif self._scrollType == TB_SCR_TYPE_DU:
+                self._start = self._dialogtop[1]
+                self._stop = self._bottomright.y
+                self._scrollStep = self._step
+
+        self._currentStep = self._start
+
+
+    def ScrollUp(self):
+        """ Scrolls the L{ToasterBox} up, which means gradually showing it. """
+
+        if self._scrollType == TB_SCR_TYPE_FADE:
+            self._amount = 0
+            self._delta = 5
+            self.SetSize(self.GetSize())
+            self._alphaTimer.Start(self._sleeptime)
+        else:
+            self.Show(True)
+            self._scrollTimer.Start(self._sleeptime)
+    
+
+    def ScrollDown(self):
+        """ Scrolls the L{ToasterBox} down, which means gradually hiding it. """
+
+        if self._scrollType == TB_SCR_TYPE_FADE:
+            self._amount = 255
+            self._delta = -5
+            self._alphaTimer.Start(self._sleeptime)
+        else:
+            self._scrollTimer.Start(self._sleeptime)
 
 
     def DrawText(self):
@@ -978,6 +1085,82 @@ class ToasterBoxWindow(wx.Frame):
         dc.SetTextForeground(self._textcolour)
         dc.DrawTextList(*self.text_coords)
         dc.SetTextForeground(fg)
+
+
+    def AlphaCycle(self, event):
+        """
+        Handles the ``wx.EVT_TIMER`` event for L{ToasterBoxWindow}.
+
+        :param `event`: a `wx.TimerEvent` event to be processed.
+
+        :note: This method is used only on wxMSW, when the style ``TB_SCR_TYPE_FADE`` is set
+         and Mark Hammond's pywin32 library is installed.
+        """
+
+        # Increase (or decrease) the alpha channel
+        self._amount += self._delta
+
+        if self._tbstyle == TB_SIMPLE:
+            self.DrawText()
+        
+        if self._amount > 255 or self._amount < 0:
+            # We're done, stop the timer
+            self._alphaTimer.Stop()
+
+            if self._amount < 0:
+                self.Hide()
+                if self._parent2:
+                    self._parent2.Notify()
+
+            elif self._amount > 255:
+                if self._usefocus:
+                    self.SetFocus()
+                else:
+                    self._originalfocus.SetFocus()
+
+            return
+
+        # Make the ToasterBoxWindow more or less transparent
+        self.MakeWindowTransparent(self._amount)
+        if not self.IsShown():
+            self.Show()
+            
+
+    def MakeWindowTransparent(self, amount):
+        """
+        Makes the L{ToasterBoxWindow} window transparent.
+
+        :param `amount`: the alpha channel value.
+
+        :note: This method is available only on Windows and requires Mark Hammond's
+         pywin32 package.
+        """
+
+        if not _libimported:
+            # No way, only Windows XP with Mark Hammond's win32all
+            return
+        
+        # this API call is not in all SDKs, only the newer ones, so
+        # we will runtime bind this
+        if wx.Platform != "__WXMSW__":
+            return
+        
+        hwnd = self.GetHandle()
+
+        if not hasattr(self, "_winlib"):                
+            self._winlib = win32api.LoadLibrary("user32")
+                
+        pSetLayeredWindowAttributes = win32api.GetProcAddress(self._winlib,
+                                                              "SetLayeredWindowAttributes")
+        
+        if pSetLayeredWindowAttributes == None:
+            return
+            
+        exstyle = win32api.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
+        if 0 == (exstyle & 0x80000):
+            win32api.SetWindowLong(hwnd, win32con.GWL_EXSTYLE, exstyle | 0x80000)  
+                 
+        winxpgui.SetLayeredWindowAttributes(hwnd, 0, amount, 2)
 
 
     def _getTextCoords(self, dc):

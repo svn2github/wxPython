@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 13 Aug 2010, 22.00 GMT
+# Latest Revision: 26 Aug 2010, 10.00 GMT
 #
 #
 # TODO List
@@ -58,6 +58,7 @@ In addition to the standard `wx.gizmos.TreeListCtrl` behaviour this class suppor
 
 * CheckBox-type items: checkboxes are easy to handle, just selected or unselected
   state with no particular issues in handling the item's children;
+* Added support for 3-state value checkbox items;
 * RadioButton-type items: since I elected to put radiobuttons in CustomTreeCtrl, I
   needed some way to handle them, that made sense. So, I used the following approach:
   
@@ -213,7 +214,7 @@ License And Version
 
 HyperTreeList is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 13 Aug 2010, 22.00 GMT
+Latest Revision: Andrea Gavana @ 26 Aug 2010, 10.00 GMT
 
 Version 1.2
 
@@ -3608,7 +3609,13 @@ class TreeListMainWindow(CustomTreeCtrl):
 
             if flags & TREE_HITTEST_ONITEMCHECKICON and event.LeftDown():
                 if item.GetType() > 0:
-                    self.CheckItem(item, not self.IsItemChecked(item))                        
+                    if self.IsItem3State(item):
+                        checked = self.GetItem3StateValue(item)
+                        checked = (checked+1)%3
+                    else:
+                        checked = not self.IsItemChecked(item)
+
+                    self.CheckItem(item, checked)
                     return
                 
             # determine the selection if the current item is not selected
@@ -3986,7 +3993,8 @@ _methods = ["GetIndent", "SetIndent", "GetSpacing", "SetSpacing", "GetImageList"
             "CheckChilds", "CheckSameLevel", "GetItemWindowEnabled", "SetItemWindowEnabled", "GetItemType",
             "IsDescendantOf", "SetItemHyperText", "IsItemHyperText", "SetItemBold", "SetItemDropHighlight", "SetItemItalic",
             "GetEditControl", "ShouldInheritColours", "GetItemWindow", "SetItemWindow", "SetItemTextColour", "HideItem",
-            "DeleteAllItems", "ItemHasChildren", "ToggleItemSelection", "SetItemType", "GetCurrentItem"]
+            "DeleteAllItems", "ItemHasChildren", "ToggleItemSelection", "SetItemType", "GetCurrentItem",
+            "SetItem3State", "SetItem3StateValue", "GetItem3StateValue", "IsItem3State"]
 
 
 class HyperTreeList(wx.PyControl):

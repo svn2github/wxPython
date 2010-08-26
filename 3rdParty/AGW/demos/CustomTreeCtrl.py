@@ -1342,6 +1342,9 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                     last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), ct_type=2, wnd=self.gauge)
                 elif y == 1 and x == 2:
                     last = self.AppendItem(child, "Item %d-%s" % (x, chr(ord("a")+y)), ct_type=1, wnd=textctrl)
+                    if random.randint(0, 3) == 1:
+                        self.SetItem3State(last, True)
+                        
                 elif 2 < y < 4:
                     last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)))
                 elif y == 4 and x == 1:
@@ -1359,6 +1362,8 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                 for z in range(5):
                     if z > 2:
                         item = self.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z), ct_type=1)
+                        if random.randint(0, 3) == 1:
+                            self.SetItem3State(item, True)
                     elif 0 < z <= 2:
                         item = self.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z), ct_type=2)
                     elif z == 0:
