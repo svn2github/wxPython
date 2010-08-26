@@ -12,20 +12,16 @@
 # No Limit In What Could Be Added To This Class. The First Things That Comes
 # To My Mind Are:
 #
-# 1. Implement The Style TR_EXTENDED (I Have Never Used It, But It May Be Useful).
-#
-# 2. Add Support For 3-State CheckBoxes (Is That Really Useful?).
-#
-# 3. Try To Implement A More Flicker-Free Background Image In Cases Like
+# 1. Try To Implement A More Flicker-Free Background Image In Cases Like
 #    Centered Or Stretched Image (Now CustomTreeCtrl Supports Only Tiled
 #    Background Images).
 #
-# 4. Try To Mimic Windows wx.TreeCtrl Expanding/Collapsing behaviour: CustomTreeCtrl
+# 2. Try To Mimic Windows wx.TreeCtrl Expanding/Collapsing behaviour: CustomTreeCtrl
 #    Suddenly Expands/Collapses The Nodes On Mouse Click While The Native Control
 #    Has Some Kind Of "Smooth" Expanding/Collapsing, Like A Wave. I Don't Even
 #    Know Where To Start To Do That.
 #
-# 5. Speed Up General OnPaint Things? I Have No Idea, Here CustomTreeCtrl Is Quite
+# 3. Speed Up General OnPaint Things? I Have No Idea, Here CustomTreeCtrl Is Quite
 #    Fast, But We Should See On Slower Machines.
 #
 #
