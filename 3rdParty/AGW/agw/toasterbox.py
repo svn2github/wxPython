@@ -284,6 +284,9 @@ class ToasterBox(wx.Timer):
         if colour is None:
             colour = wx.WHITE
 
+        if isinstance(colour, basestring):
+            colour = wx.NamedColour(colour)
+            
         self._backgroundcolour = colour
         self._tb.SetPopupBackgroundColour(self._backgroundcolour)
 
@@ -301,6 +304,9 @@ class ToasterBox(wx.Timer):
         if colour is None:
             colour = wx.BLACK
 
+        if isinstance(colour, basestring):
+            colour = wx.NamedColour(colour)
+            
         self._foregroundcolour = colour
 
 
