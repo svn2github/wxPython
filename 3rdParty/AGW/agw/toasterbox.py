@@ -643,6 +643,7 @@ class ToasterBoxWindow(wx.Frame):
         self._tbstyle = tbstyle
         self._windowstyle = windowstyle
         self._closingstyle = closingstyle
+        self._backgroundcolour = wx.WHITE
 
         if tbstyle == TB_COMPLEX:
             self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -1103,7 +1104,7 @@ class ToasterBoxWindow(wx.Frame):
         if dc is None:
             dc = wx.ClientDC(self)
            
-        dc.SetBrush(wx.Brush(self.GetBackgroundColour()))
+        dc.SetBrush(wx.Brush(self._backgroundcolour))
         dc.Clear()
         if self._staticbitmap:
             dc.DrawBitmap(self._staticbitmap, 0, 0)
