@@ -96,20 +96,6 @@ Version 0.3
 import textwrap
 import wx
 
-from wx.lib.statbmp import GenStaticBitmap as StaticBitmap
-
-# Let's see if we can add few nice shadows to our tooltips (Windows only)
-_libimported = None
-
-if wx.Platform == "__WXMSW__":
-    try:
-        # Try Mark Hammond's win32all extensions
-        import win32api
-        import win32con
-        import winxpgui
-        _libimported = "MH"
-    except ImportError:
-        _libimported = None
 
 # Define Window List, We Use It Globally
 winlist = []
@@ -134,7 +120,7 @@ TB_ONCLICK = 2
 TB_SCR_TYPE_UD = 1
 # scroll from down to up
 TB_SCR_TYPE_DU = 2
-# fade in/out (requires Mark Hammond's pywin32 package)
+# fade in/out 
 TB_SCR_TYPE_FADE = 4
 
 
@@ -194,13 +180,10 @@ class ToasterBox(wx.Timer):
          ==================== =========== ==================================================
          ``TB_SCR_TYPE_UD``           0x1 L{ToasterBox} will scroll from up to down
          ``TB_SCR_TYPE_DU``           0x2 L{ToasterBox} will scroll from down to up
-         ``TB_SCR_TYPE_FADE``         0x4 L{ToasterBox} will fade in/out (without scrolling). Windows only, requires Mark Hammond's pywin32 package.
+         ``TB_SCR_TYPE_FADE``         0x4 L{ToasterBox} will fade in/out (without scrolling). 
          ==================== =========== ==================================================
          
         """
-
-        if scrollType == TB_SCR_TYPE_FADE and not _libimported:
-            raise Exception("The style ``TB_SCR_TYPE_FADE`` cabn be used only with Mark Hammond's pywin32 library")
 
         self._parent = parent
         self._sleeptime = 10
@@ -221,19 +204,23 @@ class ToasterBox(wx.Timer):
         self._tbstyle = tbstyle
         self._windowstyle = windowstyle
         self._closingstyle = closingstyle
-
+        self._scrollType = scrollType
+        
         self._panel = None
 
         self._bottomright = wx.Point(wx.GetDisplaySize().GetWidth(),
-                                    wx.GetDisplaySize().GetHeight())
+                                     wx.GetDisplaySize().GetHeight())
 
         if parent is not None:
             parent.Bind(wx.EVT_ICONIZE, lambda evt: [w.Hide() for w in winlist])
+            self._moveTimer = wx.Timer(parent, -1)
+            parent.Bind(wx.EVT_TIMER, self.OnMoveTimer, self._moveTimer)
  
         self._tb = ToasterBoxWindow(self._parent, self, self._tbstyle, self._windowstyle,
-                                    self._closingstyle, scrollType=scrollType)
+                                    self._closingstyle, scrollType=self._scrollType)
 
 
+        
     def SetPopupPosition(self, pos):
         """
         Sets the L{ToasterBox} position on screen.
@@ -356,14 +343,15 @@ class ToasterBox(wx.Timer):
         """
         Sets the L{ToasterBox} background image.
 
-        :param `bitmap`: a valid `wx.Bitmap` object. If defaulted to ``None``, then
-         no background bitmap is used.
+        :param `bitmap`: a valid `wx.Bitmap` object or filename. If defaulted
+         to ``None``, then no background bitmap is used.
          
         :note: Use this method only for a L{ToasterBox} created with the ``TB_SIMPLE`` style.
         """
 
         if bitmap is not None:
-            bitmap = wx.Bitmap(bitmap, wx.BITMAP_TYPE_BMP)
+            if isinstance(bitmap, basestring):
+                bitmap = wx.Bitmap(bitmap)
 
         self._bitmap = bitmap
 
@@ -516,23 +504,39 @@ class ToasterBox(wx.Timer):
         if not node:
             return
 
+        self._startPos = node.GetPosition()[1]
+        self._moveTimer.Start(self._sleeptime)
+
+
+    def OnMoveTimer(self, event):
+        """
+        Handles the ``wx.EVT_TIMER`` event for L{ToasterBox}, moving the new window
+        on top of the last one created.
+
+        :param `event`: a `wx.TimerEvent` event to be processed.
+        """
+
+        current = self._startPos
+        if current >= self._popupposition[1]:
+            self._moveTimer.Stop()
+
         # move windows to fill in blank space
-        for i in xrange(node.GetPosition()[1], self._popupposition[1], 4):
-            if i > self._popupposition[1]:
-                i = self._popupposition[1]
+        
+        if current > self._popupposition[1]:
+            current = self._popupposition[1]
 
-            # loop through all the windows
-            for j in xrange(0, len(winlist)):
-                ourNewHeight = i - (j*self._popupsize[1] - 8)
-                tmpTb = winlist[j]
-                # reset where the object THINKS its supposed to be
-                tmpTb.SetPopupPosition((self._popupposition[0], ourNewHeight))
-                # actually move it
-                tmpTb.SetDimensions(self._popupposition[0], ourNewHeight, tmpTb.GetSize().GetWidth(),
-                                    tmpTb.GetSize().GetHeight())
+        # loop through all the windows
+        for j in xrange(0, len(winlist)):
+            ourNewHeight = current - (j*self._popupsize[1] - 8)
+            tmpTb = winlist[j]
+            # reset where the object THINKS its supposed to be
+            tmpTb.SetPopupPosition((self._popupposition[0], ourNewHeight))
+            # actually move it
+            tmpTb.SetDimensions(self._popupposition[0], ourNewHeight, tmpTb.GetSize().GetWidth(),
+                                tmpTb.GetSize().GetHeight())
 
-            wx.Usleep(self._sleeptime)
-
+        self._startPos += 4
+        
 
     def CleanList(self):
         """ Cleans the window list, erasing the stack of L{ToasterBox} objects. """
@@ -544,6 +548,7 @@ class ToasterBox(wx.Timer):
         while node:
             if not node.IsShown():
                 winlist.remove(node)
+                node.Close()
                 try:
                     node = winlist[0]
                 except:
@@ -616,7 +621,7 @@ class ToasterBoxWindow(wx.Frame):
          ==================== =========== ==================================================
          ``TB_SCR_TYPE_UD``           0x1 L{ToasterBox} will scroll from up to down
          ``TB_SCR_TYPE_DU``           0x2 L{ToasterBox} will scroll from down to up
-         ``TB_SCR_TYPE_FADE``         0x4 L{ToasterBox} will fade in/out (without scrolling). Windows only, requires Mark Hammond's pywin32 package.
+         ``TB_SCR_TYPE_FADE``         0x4 L{ToasterBox} will fade in/out (without scrolling).
          ==================== =========== ==================================================
 
         """
@@ -638,7 +643,6 @@ class ToasterBoxWindow(wx.Frame):
         self._tbstyle = tbstyle
         self._windowstyle = windowstyle
         self._closingstyle = closingstyle
-        self._scrollType = scrollType
 
         if tbstyle == TB_COMPLEX:
             self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -648,6 +652,13 @@ class ToasterBoxWindow(wx.Frame):
         if self._windowstyle == TB_CAPTION:
             self.Bind(wx.EVT_CLOSE, self.OnClose)
             self.SetTitle("")
+
+        if scrollType == TB_SCR_TYPE_FADE and not self.CanSetTransparent():
+            import warnings
+            warnings.warn("The style ``TB_SCR_TYPE_FADE`` is not supported on this platform.")
+            scrollType = TB_SCR_TYPE_DU
+            
+        self._scrollType = scrollType
 
         if self._closingstyle & TB_ONCLICK and self._windowstyle != TB_CAPTION:
             self.Bind(wx.EVT_LEFT_DOWN, self.OnMouseDown)
@@ -664,6 +675,10 @@ class ToasterBoxWindow(wx.Frame):
         self.Bind(wx.EVT_TIMER, self.OnScrollTimer, self._scrollTimer)
         self.Bind(wx.EVT_TIMER, self.AlphaCycle, self._alphaTimer)
 
+        if not self._tbstyle & TB_COMPLEX:
+            self.Bind(wx.EVT_PAINT, self.OnPaint)
+            self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+        
 
     def OnClose(self, event):
         """
@@ -687,7 +702,7 @@ class ToasterBoxWindow(wx.Frame):
         event.Skip()
 
 
-    def SetPopupBitmap(self, bitmap):
+    def SetPopupBitmap(self, bitmap=None):
         """
         Sets the L{ToasterBox} background image.
 
@@ -697,14 +712,13 @@ class ToasterBoxWindow(wx.Frame):
         :note: Use this method only for a L{ToasterBox} created with the ``TB_SIMPLE`` style.
         """
 
-        bitmap = bitmap.ConvertToImage()
-        xsize, ysize = self.GetSize()
-        bitmap = bitmap.Scale(xsize, ysize)
-        bitmap = bitmap.ConvertToBitmap()
-        self._staticbitmap = StaticBitmap(self, -1, bitmap, pos=(0,0))
-
-        if self._closingstyle & TB_ONCLICK and self._windowstyle != TB_CAPTION:
-            self._staticbitmap.Bind(wx.EVT_LEFT_DOWN, self.OnMouseDown)
+        if bitmap is None:
+            self._staticbitmap = None
+        else:
+            bitmap = bitmap.ConvertToImage()
+            xsize, ysize = self.GetSize()
+            bitmap = bitmap.Scale(xsize, ysize)
+            self._staticbitmap = bitmap.ConvertToBitmap()
 
 
     def SetPopupSize(self, size):
@@ -803,9 +817,9 @@ class ToasterBoxWindow(wx.Frame):
             raise Exception("\nERROR: Panel Can Not Be Added When Using TB_SIMPLE ToasterBox Style")
 
         self.sizer.Add(panel, 1, wx.EXPAND)
-        self.sizer.Layout()
         self.SetSizer(self.sizer)
-
+        self.Layout()
+        
         if self._closingstyle & TB_ONCLICK and self._windowstyle != TB_CAPTION:
             panel.Bind(wx.EVT_LEFT_DOWN, self.OnMouseDown)
 
@@ -951,11 +965,7 @@ class ToasterBoxWindow(wx.Frame):
 
         self.SetDimensions(self._dialogtop[0], dimY, self.GetSize().GetWidth(), self._windowsize)
 
-        if self._tbstyle == TB_SIMPLE:
-            self.DrawText()
-
-        self.Update()
-        self.Refresh()
+        self.Refresh(False)
 
         self._currentStep += self._scrollStep
 
@@ -1068,23 +1078,41 @@ class ToasterBoxWindow(wx.Frame):
             self._scrollTimer.Start(self._sleeptime)
 
 
-    def DrawText(self):
-        """ Draws the text label for a L{ToasterBox} with ``TB_SIMPLE`` style set. """
+    def OnPaint(self, event):
+        """
+        Handles the ``wx.EVT_PAINT`` event for L{ToasterBoxWindow}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+
+        :note: This event is handled and processed only if the style ``TB_SIMPLE`` is
+         given to L{ToasterBox}.
+        """
+        
+        dc = wx.AutoBufferedPaintDC(self)
+        self.DrawText(dc)
+        
+            
+    def DrawText(self, dc=None):
+        """
+        Draws the text label for a L{ToasterBox} with ``TB_SIMPLE`` style set.
+
+        :param `dc`: an instance of `wx.DC`. If defaulted to ``None``, a `wx.ClientDC`
+         will be created on the fly.
+        """
       
-        if self._staticbitmap is not None:
-            dc = wx.ClientDC(self._staticbitmap)
-        else:
+        if dc is None:
             dc = wx.ClientDC(self)
            
+        dc.SetBrush(wx.Brush(self.GetBackgroundColour()))
+        dc.Clear()
+        if self._staticbitmap:
+            dc.DrawBitmap(self._staticbitmap, 0, 0)
         dc.SetFont(self._textfont)
-
+        dc.SetTextForeground(self._textcolour)
+        
         if not hasattr(self, "text_coords"):
             self._getTextCoords(dc)
-
-        fg = dc.GetTextForeground()
-        dc.SetTextForeground(self._textcolour)
         dc.DrawTextList(*self.text_coords)
-        dc.SetTextForeground(fg)
 
 
     def AlphaCycle(self, event):
@@ -1092,17 +1120,14 @@ class ToasterBoxWindow(wx.Frame):
         Handles the ``wx.EVT_TIMER`` event for L{ToasterBoxWindow}.
 
         :param `event`: a `wx.TimerEvent` event to be processed.
-
-        :note: This method is used only on wxMSW, when the style ``TB_SCR_TYPE_FADE`` is set
-         and Mark Hammond's pywin32 library is installed.
         """
 
         # Increase (or decrease) the alpha channel
         self._amount += self._delta
 
         if self._tbstyle == TB_SIMPLE:
-            self.DrawText()
-        
+            self.Refresh(False)
+            
         if self._amount > 255 or self._amount < 0:
             # We're done, stop the timer
             self._alphaTimer.Stop()
@@ -1131,37 +1156,13 @@ class ToasterBoxWindow(wx.Frame):
         Makes the L{ToasterBoxWindow} window transparent.
 
         :param `amount`: the alpha channel value.
-
-        :note: This method is available only on Windows and requires Mark Hammond's
-         pywin32 package.
         """
 
-        if not _libimported:
-            # No way, only Windows XP with Mark Hammond's win32all
+        if not self.CanSetTransparent():
             return
         
-        # this API call is not in all SDKs, only the newer ones, so
-        # we will runtime bind this
-        if wx.Platform != "__WXMSW__":
-            return
+        self.SetTransparent(amount)
         
-        hwnd = self.GetHandle()
-
-        if not hasattr(self, "_winlib"):                
-            self._winlib = win32api.LoadLibrary("user32")
-                
-        pSetLayeredWindowAttributes = win32api.GetProcAddress(self._winlib,
-                                                              "SetLayeredWindowAttributes")
-        
-        if pSetLayeredWindowAttributes == None:
-            return
-            
-        exstyle = win32api.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
-        if 0 == (exstyle & 0x80000):
-            win32api.SetWindowLong(hwnd, win32con.GWL_EXSTYLE, exstyle | 0x80000)  
-                 
-        winxpgui.SetLayeredWindowAttributes(hwnd, 0, amount, 2)
-
 
     def _getTextCoords(self, dc):
         """

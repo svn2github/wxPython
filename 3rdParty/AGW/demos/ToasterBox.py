@@ -288,7 +288,9 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         else:
             closingstyle = TB.TB_ONTIME
             
-        tb = TB.ToasterBox(self, tbstyle, windowstyle, closingstyle)
+        tb = TB.ToasterBox(self, tbstyle, windowstyle, closingstyle,
+                           scrollType=TB.TB_SCR_TYPE_FADE
+                           )
 
         if windowstyle == TB.TB_CAPTION:
             tb.SetTitle(txts)
@@ -323,7 +325,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         dummybmp = wx.NullBitmap
         
         if os.path.isfile(bmp):
-            dummybmp = wx.Bitmap(bmp, wx.BITMAP_TYPE_BMP)
+            dummybmp = wx.Bitmap(bmp)
 
         if dummybmp.Ok():
             tb.SetPopupBitmap(bmp)
@@ -384,8 +386,8 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         horsizer3.Add((5,0))
         sizer.Add(horsizer3, 0, wx.EXPAND)
         
-        sizer.Layout()
         panel.SetSizer(sizer)
+        panel.Layout()
         
         tb.AddPanel(panel)
         
