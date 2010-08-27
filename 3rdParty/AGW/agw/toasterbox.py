@@ -285,6 +285,7 @@ class ToasterBox(wx.Timer):
             colour = wx.WHITE
 
         self._backgroundcolour = colour
+        self._tb.SetPopupBackgroundColour(self._backgroundcolour)
 
 
     def SetPopupTextColour(self, colour=None):
@@ -906,6 +907,7 @@ class ToasterBoxWindow(wx.Frame):
         """
 
         self.SetBackgroundColour(colour)
+        self._backgroundcolour = colour
 
 
     def SetPopupTextColour(self, colour):
@@ -1104,8 +1106,9 @@ class ToasterBoxWindow(wx.Frame):
         if dc is None:
             dc = wx.ClientDC(self)
            
-        dc.SetBrush(wx.Brush(self._backgroundcolour))
+        dc.SetBackground(wx.Brush(self._backgroundcolour))
         dc.Clear()
+        
         if self._staticbitmap:
             dc.DrawBitmap(self._staticbitmap, 0, 0)
         dc.SetFont(self._textfont)
