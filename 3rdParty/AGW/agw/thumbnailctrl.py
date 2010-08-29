@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana And Peter Damoc, @ 12 Dec 2005
-# Latest Revision: 24 Aug 2010, 14.00 GMT
+# Latest Revision: 29 Aug 2010, 16.00 GMT
 #
 #
 # TODO List/Caveats
@@ -120,7 +120,7 @@ License And Version
 
 ThumbnailCtrl is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 24 Aug 2010, 10.00 GMT
+Latest revision: Andrea Gavana @ 29 Aug 2010, 16.00 GMT
 
 Version 0.9
 
@@ -140,6 +140,7 @@ import zlib
 import thread
 from math import pi
 
+from wx.lib.embeddedimage import PyEmbeddedImage
 
 #----------------------------------------------------------------------
 # Get Default Icon/Data
@@ -168,6 +169,75 @@ def GetMondrianImage():
 
     stream = cStringIO.StringIO(GetMondrianData())
     return wx.ImageFromStream(stream)
+
+
+#----------------------------------------------------------------------
+file_broken = PyEmbeddedImage(
+    "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"
+    "nA3/D+/OyD/Ur3BPAAAAAElFTkSuQmCC")
 
 
 def getDataSH():
@@ -428,7 +498,14 @@ class NativeImageHandler(object):
         """
 
         img = wx.Image(filename)
-        originalsize = (img.GetWidth(), img.GetHeight())
+
+        # Don't stop when a corrupt file is to be loaded, show Mondrian instead
+        try:
+            originalsize = (img.GetWidth(), img.GetHeight())
+        except:
+            img = file_broken.GetImage()
+            originalsize = (img.GetWidth(), img.GetHeight())
+            
         img.Rescale(min(thumbnailsize[0], originalsize[0]), min(thumbnailsize[1], originalsize[1]), wx.IMAGE_QUALITY_NORMAL)
         alpha = img.HasAlpha()
         
