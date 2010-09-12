@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana And Peter Damoc, @ 12 Dec 2005
-# Latest Revision: 29 Aug 2010, 16.00 GMT
+# Latest Revision: 12 Sep 2010, 10.00 GMT
 #
 #
 # TODO List/Caveats
@@ -120,7 +120,7 @@ License And Version
 
 ThumbnailCtrl is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 29 Aug 2010, 16.00 GMT
+Latest revision: Andrea Gavana @ 12 Sep 2010, 10.00 GMT
 
 Version 0.9
 
@@ -706,7 +706,13 @@ class Thumb(object):
             if scale > float(height)/imgheight:
                 scale = float(height)/imgheight
 
-            img = img.Scale(int(imgwidth*scale), int(imgheight*scale))
+            newW, newH = int(imgwidth*scale), int(imgheight*scale)
+            if newW < 1:
+                newW = 1
+            if newH < 1:
+                newH = 1
+                
+            img = img.Scale(newW, newH)
             
         bmp = img.ConvertToBitmap()
                         
