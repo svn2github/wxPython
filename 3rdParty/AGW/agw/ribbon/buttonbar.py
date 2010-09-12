@@ -160,11 +160,6 @@ class RibbonButtonBarEvent(wx.PyCommandEvent):
         self._bar = bar
 
 
-    def Clone(self):
-
-        return RibbonButtonBarEvent(self)
-
-
     def GetBar(self):
         """
         Returns the bar which contains the button which the event relates to.

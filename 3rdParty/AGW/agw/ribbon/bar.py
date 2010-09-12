@@ -9,7 +9,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 15 Oct 2009
-# Latest Revision: 02 Aug 2010, 22.00 GMT
+# Latest Revision: 12 Sep 2010, 10.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -145,11 +145,6 @@ class RibbonBarEvent(wx.NotifyEvent):
 
         self._isAllowed = True        
 
-
-    def Clone(self):
-
-        return RibbonBarEvent(self)
-    
 
     def GetPage(self):
         """

@@ -2,7 +2,7 @@
 # MULTIDIRDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 14 Apr 2010, 12.00 GMT
+# Latest Revision: 12 Sep 2010, 10.00 GMT
 #
 #
 # TODO List
@@ -77,7 +77,7 @@ License And Version
 
 MultiDirDialog is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
+Latest Revision: Andrea Gavana @ 12 Sep 2010, 10.00 GMT
 
 Version 0.3
 
@@ -267,7 +267,7 @@ class MultiDirDialog(wx.Dialog):
     folders to be selected at once.
     """
 
-    def __init__(self, parent, message=_("Choose a directory"), title=_("Browse For Folders"),
+    def __init__(self, parent, message=_("Choose one or more folders:"), title=_("Browse For Folders"),
                  defaultPath="", style=wx.DD_DEFAULT_STYLE, agwStyle=DD_MULTIPLE, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, name="multidirdialog"):
         """
@@ -305,7 +305,7 @@ class MultiDirDialog(wx.Dialog):
         self.SetProperties(title)           
         # Setup the layout and frame properties        
         self.SetupDirCtrl(defaultPath)
-        self.LayoutItems()
+        self.LayoutItems(message)
         self.BindEvents()
     
         if parent and pos == wx.DefaultPosition:
@@ -378,14 +378,14 @@ class MultiDirDialog(wx.Dialog):
             self.newButton.Enable(False)
 
 
-    def LayoutItems(self):
+    def LayoutItems(self, message):
         """ Layout the widgets using sizers. """
 
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         textSizer = wx.BoxSizer(wx.HORIZONTAL)
         bottomSizer = wx.BoxSizer(wx.HORIZONTAL)
         
-        staticText = wx.StaticText(self, -1, _("Choose one or more folders:"))
+        staticText = wx.StaticText(self, -1, message)
         f = staticText.GetFont()
         f.SetWeight(wx.BOLD)
         staticText.SetFont(f)

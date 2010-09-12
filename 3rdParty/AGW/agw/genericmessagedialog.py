@@ -2,7 +2,7 @@
 # GENERICMESSAGEDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 19 Aug 2010, 22.00 GMT
+# Latest Revision: 12 Sep 2010, 10.00 GMT
 #
 #
 # TODO List
@@ -76,7 +76,7 @@ License And Version
 
 GenericMessageDialog is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 19 Aug 2010, 22.00 GMT
+Latest Revision: Andrea Gavana @ 12 Sep 2010, 10.00 GMT
 
 Version 0.5
 
@@ -886,8 +886,7 @@ class GenericMessageDialog(wx.Dialog):
         
         dc = wx.ClientDC(self)
         dc.SetFont(self.GetFont())
-        message = wordwrap.wrap(message, wrap, dc, False)
-        newMessage = "\n".join(message)
 
-        return newMessage        
-
+        newMessage = wordwrap.wordwrap(message, wrap, dc, False)
+        return newMessage
+    

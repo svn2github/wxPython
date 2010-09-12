@@ -50,6 +50,7 @@ MENU_DCLICK_CLOSES_TAB = wx.NewId()
 MENU_USE_VC8_STYLE = wx.NewId()
 MENU_USE_FF2_STYLE = wx.NewId()
 MENU_HIDE_ON_SINGLE_TAB = wx.NewId()
+MENU_HIDE_TABS = wx.NewId()
 MENU_NO_TABS_FOCUS = wx.NewId()
 
 MENU_SET_ACTIVE_TEXT_COLOUR = wx.NewId()
@@ -202,6 +203,11 @@ class FlatNotebookDemo(wx.Frame):
 
         item = wx.MenuItem(self._editMenu, MENU_HIDE_ON_SINGLE_TAB, "Hide Page Container when only one Tab",
                            "Hide Page Container when only one Tab", wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnStyle, item)
+        self._editMenu.AppendItem(item)
+        
+        item = wx.MenuItem(self._editMenu, MENU_HIDE_TABS, "Hide Tabs",
+                           "Hide Page Container allowing only keyboard navigation", wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnStyle, item)
         self._editMenu.AppendItem(item)
 
@@ -393,6 +399,15 @@ class FlatNotebookDemo(wx.Frame):
                 style |= fnb.FNB_HIDE_ON_SINGLE_TAB
             else:
                 style &= ~(fnb.FNB_HIDE_ON_SINGLE_TAB)
+                
+            self.book.SetAGWWindowStyleFlag(style)
+                
+        elif eventid == MENU_HIDE_TABS:
+            if event.IsChecked():
+                # Hide the tabs
+                style |= fnb.FNB_HIDE_TABS
+            else:
+                style &= ~(fnb.FNB_HIDE_TABS)
 
             self.book.SetAGWWindowStyleFlag(style)
 

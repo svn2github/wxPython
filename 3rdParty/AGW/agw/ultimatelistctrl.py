@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 19 Aug 2010, 22.00 GMT
+# Latest Revision: 12 Sep 2010, 10.00 GMT
 #
 #
 # TODO List
@@ -175,7 +175,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 19 Aug 2010, 22.00 GMT
+Latest Revision: Andrea Gavana @ 12 Sep 2010, 10.00 GMT
 
 Version 0.7
 
@@ -2346,31 +2346,6 @@ class CommandListEvent(wx.PyCommandEvent):
         """
 
         self.m_editCancelled = editCancelled
-
-
-    def Clone(self):
-        """
-        Returns a copy of the event.
-
-        Any event that is posted to the wxPython event system for later action
-        (via `wx.EvtHandler.AddPendingEvent` or `wx.PostEvent`) must implement this
-        method.
-
-        All wxPython events fully implement this method, but any derived events
-        implemented by the user should also implement this method just in case they
-        (or some event derived from them) are ever posted.
-
-        All wxPython events implement a copy constructor, so the easiest way of
-        implementing the L{Clone} function is to implement a copy constructor for
-        a new event (call it `MyEvent`) and then define the L{Clone} function like
-        this::
-
-            def Clone(self):
-                return MyEvent(self)
-
-        """
-        
-        return UltimateListEvent(self)
 
 
 
@@ -9766,8 +9741,8 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                 self._aColWidths[i]._bNeedsUpdate = True
 
         for item in self._itemWithWindow:
-            wnd = item.GetWindow()
-            wnd.Destroy()
+            if item.GetWindow():
+                self.DeleteItemWindow(item)
 
         self._lines = []
         self._itemWithWindow = []
@@ -11943,7 +11918,6 @@ class UltimateListCtrl(wx.PyControl):
             # use CallAfter to resize the columns on the first display
             if self._mainWin:
                 wx.CallAfter(self._mainWin.ResizeColumns)
-            return
         
         if not self._mainWin:
             return

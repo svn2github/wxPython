@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 19 Aug 2010, 22.00 GMT
+# Latest Revision: 12 Sep 2010, 10.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -359,28 +359,6 @@ class AuiManagerEvent(wx.PyCommandEvent):
         self.veto_flag = False
         self.canveto_flag = True
         self.dc = None
-
-
-    def Clone(self):
-        """
-        Returns a copy of the event.
-
-        Any event that is posted to the wxPython event system for later action (via
-        `wx.EvtHandler.AddPendingEvent` or `wx.PostEvent`) must implement this method.
-        All wxPython events fully implement this method, but any derived events
-        implemented by the user should also implement this method just in case they
-        (or some event derived from them) are ever posted.
-
-        All wxPython events implement a copy constructor, so the easiest way of
-        implementing the L{Clone} function is to implement a copy constructor for a new
-        event (call it `MyEvent`) and then define the L{Clone} function like this::
-
-            def Clone(self):
-                return MyEvent(self)
-
-        """
-
-        return AuiManagerEvent(self)
 
 
     def SetManager(self, mgr):

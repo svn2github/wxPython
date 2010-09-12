@@ -51,11 +51,6 @@ class RibbonGalleryEvent(wx.PyCommandEvent):
         self._item = item
 
 
-    def Clone(self):
-
-        return RibbonGalleryEvent(self)
-
-
     def GetGallery(self):
 
         return self._gallery

@@ -57,11 +57,6 @@ class RibbonToolBarEvent(wx.PyCommandEvent):
         self._bar = bar
 
 
-    def Clone(self):
-
-        return RibbonToolBarEvent(self)
-
-
     def GetBar(self):
 
         return self._bar
