@@ -58,7 +58,7 @@ class _Model:
     def saveXML(self, path):
         if self.dom.encoding:
             import codecs
-            f = codecs.open(path, 'wt', self.dom.encoding)
+            f = codecs.open(path, 'w', self.dom.encoding)
         else:
             f = open(path, 'wt')
         # Make temporary copy for formatting it
