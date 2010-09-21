@@ -1698,13 +1698,17 @@ class ArtManager(wx.EvtHandler):
         :param `label`: a string containining an ampersand.        
         """
 
-        indexAccel = -1
-        labelOnly = ""
+        indexAccel = 0
+        while True:
+            indexAccel = label.find("&", indexAccel)
+            if indexAccel == -1:
+                return indexAccel, label
+            if label[indexAccel:indexAccel+2] == "&&":
+                label = label[0:indexAccel] + label[indexAccel+1:]
+                indexAccel += 1
+            else:
+                break
 
-        if label.find("&") < 0:
-            return indexAccel, label
-
-        indexAccel = label.index("&")
         labelOnly = label[0:indexAccel] + label[indexAccel+1:]
 
         return indexAccel, labelOnly

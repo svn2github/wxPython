@@ -2,7 +2,7 @@
 # FLATMENU wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 19 Aug 2010, 22.00 GMT
+# Latest Revision: 21 Sep 2010, 23.00 GMT
 #
 # TODO List
 #
@@ -120,7 +120,7 @@ License And Version
 
 FlatMenu is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 19 Aug 2010, 22.00 GMT
+Latest Revision: Andrea Gavana @ 21 Sep 2010, 23.00 GMT
 
 Version 0.9.6
 
@@ -229,13 +229,17 @@ def GetAccelIndex(label):
     :param `label`: a string containining an ampersand.        
     """
 
-    indexAccel = -1
-    labelOnly = ""
+    indexAccel = 0
+    while True:
+        indexAccel = label.find("&", indexAccel)
+        if indexAccel == -1:
+            return indexAccel, label
+        if label[indexAccel:indexAccel+2] == "&&":
+            label = label[0:indexAccel] + label[indexAccel+1:]
+            indexAccel += 1
+        else:
+            break
 
-    if label.find("&") < 0:
-        return indexAccel, label
-
-    indexAccel = label.index("&")
     labelOnly = label[0:indexAccel] + label[indexAccel+1:]
 
     return indexAccel, labelOnly

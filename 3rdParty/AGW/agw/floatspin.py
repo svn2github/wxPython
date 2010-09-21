@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2005
-# Latest Revision: 09 Jun 2010, 12.00 GMT
+# Latest Revision: 21 Sep 2010, 23.00 GMT
 #
 #
 # TODO List/Caveats
@@ -101,7 +101,7 @@ License And Version
 
 FloatSpin control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 09 Jun 2010, 12.00 GMT
+Latest revision: Andrea Gavana @ 21 Sep 2010, 23.00 GMT
 
 Version 0.9
 
@@ -389,7 +389,7 @@ class FloatSpin(wx.PyControl):
         if height == -1:
             height = best_size.GetHeight()
 
-        self._validkeycode = [43, 45, 46, 69, 101, 127, 314]
+        self._validkeycode = [43, 44, 45, 46, 69, 101, 127, 314]
         self._validkeycode.extend(range(48, 58))
         self._validkeycode.extend([wx.WXK_RETURN, wx.WXK_TAB, wx.WXK_BACK,
                                    wx.WXK_LEFT, wx.WXK_RIGHT])
@@ -1050,6 +1050,8 @@ class FloatSpin(wx.PyControl):
 
         curr = self._textctrl.GetValue()
         curr = curr.strip()
+        decimal = locale.localeconv()["decimal_point"]
+        curr = curr.replace(decimal, ".")
 
         if curr:
             try:
