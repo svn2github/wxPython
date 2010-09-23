@@ -156,6 +156,7 @@ class GTKExpander(wx.PyControl):
         """
 
         wx.PyControl.__init__(self, parent, id, pos, size, style)
+        self.SetLabel(label)
         
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
         self._parent = parent
