@@ -161,7 +161,7 @@ class LabelBookDemo(wx.Frame):
         leftsizer = wx.BoxSizer(wx.VERTICAL)
         sizer_3 = wx.StaticBoxSizer(self.sizer_3_staticbox, wx.VERTICAL)
         sizer_4 = wx.StaticBoxSizer(self.sizer_4_staticbox, wx.VERTICAL)
-        gridsizer = wx.FlexGridSizer(6, 2, 5, 5)
+        gridsizer = wx.FlexGridSizer(cols=2, hgap=5, vgap=5)
 
         sizer_2 = wx.BoxSizer(wx.VERTICAL)
         sizer_1 = wx.BoxSizer(wx.VERTICAL)

@@ -732,7 +732,7 @@ class TreeIcons(wx.Dialog):
 
         mainsizer = wx.BoxSizer(wx.VERTICAL)
         sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
-        gridsizer = wx.FlexGridSizer(4, 3, 5, 5)
+        gridsizer = wx.FlexGridSizer(cols=3, hgap=5, vgap=5)
         label_1 = wx.StaticText(self, -1, "Please Choose The Icons For This Item (All Are Optional):")
         label_1.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
         mainsizer.Add(label_1, 0, wx.ALL|wx.ADJUST_MINSIZE, 10)
@@ -1154,7 +1154,7 @@ class HyperTreeListDemo(wx.Frame):
                 check.Bind(wx.EVT_CHECKBOX, self.OnCheckStyle)
                 self.treestyles.append(check)
 
-        flexgridcolumn = wx.FlexGridSizer(5, 2, 5, 5)
+        flexgridcolumn = wx.FlexGridSizer(cols=2, hgap=5, vgap=5)
         flexgridcolumn.AddGrowableCol(0)
         label = wx.StaticText(self.leftpanel, -1, "Text Font")
         label.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
