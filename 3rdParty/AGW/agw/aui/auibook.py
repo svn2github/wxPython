@@ -666,22 +666,22 @@ class TabNavigatorWindow(wx.Dialog):
 
         :param `book`: the actual L{AuiNotebook}.
         """
-        #Index of currently selected page
+        # Index of currently selected page
         selection = book.GetSelection()
-        #Total number of pages
+        # Total number of pages
         count = book.GetPageCount()
-        #List of (index, AuiNotebookPage)
+        # List of (index, AuiNotebookPage)
         pages = list(enumerate(book.GetTabContainer().GetPages()))
         if book.GetAGWWindowStyleFlag() & AUI_NB_ORDER_BY_ACCESS:
-            #Sort pages using last access time. Most recently used is the 
-            #first in line
+            # Sort pages using last access time. Most recently used is the 
+            # first in line
             pages.sort(
                 key = lambda element: element[1].access_time, 
                 reverse = True
             )
         else:
-            #Manually add the current selection as first item
-            #Remaining ones are added in the next loop
+            # Manually add the current selection as first item
+            # Remaining ones are added in the next loop
             del pages[selection]
             self._listBox.Append(book.GetPageText(selection))
             self._indexMap.append(selection)

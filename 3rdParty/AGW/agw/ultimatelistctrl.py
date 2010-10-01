@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 12 Sep 2010, 10.00 GMT
+# Latest Revision: 01 Oct 2010, 23.00 GMT
 #
 #
 # TODO List
@@ -193,6 +193,8 @@ from wx.lib.expando import ExpandoTextCtrl
 # Version Info
 __version__ = "0.7"
 
+# wxPython version string
+_VERSION_STRING = wx.VERSION_STRING
 
 # ----------------------------------------------------------------------------
 # UltimateListCtrl constants
@@ -5378,8 +5380,14 @@ class UltimateListHeaderWindow(wx.PyControl):
                 else:
                     column = self.HitTestColumn(columnX, columnY)
                     self._enter = True
-                    self._currentColumn = column                    
-                    self._leftDown = wx.GetMouseState().LeftDown()
+                    self._currentColumn = column
+
+                    if _VERSION_STRING < "2.9":
+                        leftDown = wx.GetMouseState().LeftDown()
+                    else:
+                        leftDown = wx.GetMouseState().LeftIsDown()
+
+                    self._leftDown = leftDown
 
                     self.Refresh()                                            
 
@@ -5464,7 +5472,12 @@ class UltimateListHeaderWindow(wx.PyControl):
         x, y = self._owner.CalcUnscrolledPosition(*self.ScreenToClient(wx.GetMousePosition()))
         column = self.HitTestColumn(x, y)
 
-        self._leftDown = wx.GetMouseState().LeftDown()
+        if _VERSION_STRING < "2.9":
+            leftDown = wx.GetMouseState().LeftDown()
+        else:
+            leftDown = wx.GetMouseState().LeftIsDown()
+
+        self._leftDown = leftDown
         self._enter = column >= 0 and column < self._owner.GetColumnCount()
         self._currentColumn = column
         self.Refresh()
@@ -8257,10 +8270,14 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         if not enabled:
             flag |= wx.CONTROL_DISABLED
 
+
         if checkbox:
             render.DrawCheckBox(self, mdc, (0, 0, x, y), flag)
         else:
-            render.DrawRadioButton(self, mdc, (0, 0, x, y), flag)
+            if _VERSION_STRING < "2.9":
+                render.DrawRadioButton(self, mdc, (0, 0, x, y), flag)
+            else:
+                render.DrawRadioBitmap(self, mdc, (0, 0, x, y), flag)
 
         mdc.SelectObject(wx.NullBitmap)
         return bmp
@@ -11970,7 +11987,7 @@ class UltimateListCtrl(wx.PyControl):
         wx.PyControl.OnInternalIdle(self)
 
         # do it only if needed
-        if self._mainWin._dirty:
+        if self._mainWin and self._mainWin._dirty:
             self._mainWin._shortItems = []
             self._mainWin.RecalculatePositions()
 
