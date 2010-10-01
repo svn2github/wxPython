@@ -6444,10 +6444,10 @@ class AuiManager(wx.EvtHandler):
                 # Correct page ordering. The original wxPython code
                 # for this did not work properly, and would misplace 
                 # windows causing errors.
+                notebook.Freeze()
                 self._notebooks[nb_idx] = notebook
                 pages = notebook.GetPageCount()
                 selected = notebook.GetPage(notebook.GetSelection())
-                reordered = False
 
                 # Take each page out of the notebook, group it with
                 # its current pane, and sort the list by pane.dock_pos
@@ -6471,12 +6471,9 @@ class AuiManager(wx.EvtHandler):
                     self.SetAttributes(pane, attrs)
                     notebook.AddPage(pane.window, pane.caption)
 
-                reordered = True
-                    
-                if reordered:
-                    notebook.SetSelection(notebook.GetPageIndex(selected), True)
-
+                notebook.SetSelection(notebook.GetPageIndex(selected), True)
                 notebook.DoSizing()
+                notebook.Thaw()
 
                 # It's a keeper.
                 remap_ids[nb] = nb_idx
