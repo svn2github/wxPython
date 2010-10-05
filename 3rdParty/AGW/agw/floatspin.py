@@ -432,7 +432,9 @@ class FloatSpin(wx.PyControl):
         # end Philip Semanchuk addition
 
         self._mainsizer = wx.BoxSizer(wx.HORIZONTAL)
-        self._mainsizer.Add(self._textctrl, 0)
+        # Ensure the spin button is shown, and the text widget takes
+        # all remaining free space
+        self._mainsizer.Add(self._textctrl, 1)
         self._mainsizer.Add(self._spinbutton, 0)
         self.SetSizer(self._mainsizer)
         self._mainsizer.Layout()
