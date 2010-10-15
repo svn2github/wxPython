@@ -9021,7 +9021,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         """
 
         if not self.InReportView() or not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
-            raise Exception("Widgets are only allowed in repotr mode and with the ULC_HAS_VARIABLE_ROW_HEIGHT style.")
+            raise Exception("Widgets are only allowed in report mode and with the ULC_HAS_VARIABLE_ROW_HEIGHT style.")
         
         item = self.GetItem(item, item._col)
 
