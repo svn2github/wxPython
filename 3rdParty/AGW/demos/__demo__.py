@@ -84,9 +84,11 @@ def GetRecentAdditions():
                            'PyProgress', 'RibbonBar', 'RulerCtrl', 'ShapedButton',
                            'SpeedMeter', 'SuperToolTip', 'ThumbnailCtrl', 'ToasterBox',
                            'UltimateListCtrl', 'ZoomBar']
-    else:
+    elif wx.VERSION < (2,9,2):
         recentAdditions = ['AUI', 'PyBusyInfo', 'PyGauge', 'RibbonBar', 'UltimateListCtrl',
                            'ZoomBar']
+    else:
+        recentAdditions = []
 
     # Return the Recent Additions for AGW    
     return recentAdditions
