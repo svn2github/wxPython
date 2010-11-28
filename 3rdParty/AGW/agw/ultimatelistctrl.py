@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 01 Oct 2010, 23.00 GMT
+# Latest Revision: 28 Nov 2010, 16.00 GMT
 #
 #
 # TODO List
@@ -175,7 +175,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 12 Sep 2010, 10.00 GMT
+Latest Revision: Andrea Gavana @ 28 Nov 2010, 16.00 GMT
 
 Version 0.7
 
@@ -285,6 +285,7 @@ ULC_MASK_FOOTER_FORMAT =      0x200000
 ULC_MASK_FOOTER_FONT   =      0x400000
 ULC_MASK_FOOTER_CHECK  =      0x800000
 ULC_MASK_FOOTER_KIND   =      0x1000000
+ULC_MASK_TOOLTIP       =      0x2000000
 
 # State flags for indicating the state of an item
 ULC_STATE_DONTCARE    =   wx.LIST_STATE_DONTCARE
@@ -1301,6 +1302,7 @@ class UltimateListItem(wx.Object):
             self._state = item._state            # The state of the item
             self._stateMask = item._stateMask    # Which flags of self._state are valid (uses same flags)
             self._text = item._text              # The label/header text
+            self._tooltip = item._tooltip        # The label/header tooltip text
             self._image = item._image[:]         # The zero-based indexes into an image list
             self._data = item._data              # App-defined data
             self._pyData = item._pyData          # Python-specific data
@@ -1463,6 +1465,16 @@ class UltimateListItem(wx.Object):
         
         self._mask |= ULC_MASK_TEXT
         self._text = text
+        
+        
+    def SetToolTip(self, text):
+        """
+        Sets the tooltip text for the item.
+
+        :param `text`: the tooltip text for the item.
+        """
+        self._mask |= ULC_MASK_TOOLTIP
+        self._tooltip = text
 
 
     def SetImage(self, image):
@@ -1659,6 +1671,12 @@ class UltimateListItem(wx.Object):
         """ Returns the label/header text. """
 
         return self._text
+
+    
+    def GetToolTip(self):
+        """ Returns the label/header tooltip. """
+
+        return self._tooltip
 
 
     def GetImage(self):
@@ -2006,6 +2024,7 @@ class UltimateListItem(wx.Object):
         self._data = 0
         self._pyData = None
         self._text = ""
+        self._tooltip = ""
 
         self._format = ULC_FORMAT_CENTRE
         self._width = 0
@@ -2510,6 +2529,12 @@ class UltimateListItemData(object):
         """ Returns the item text. """
 
         return self._text
+    
+    
+    def GetToolTip(self):
+        """ Returns the item tooltip. """
+
+        return self._tooltip
 
 
     def GetBackgroundColour(self):
@@ -2538,6 +2563,16 @@ class UltimateListItemData(object):
         """
 
         self._text = text
+
+
+    def SetToolTip(self, tooltip):
+        """
+        Sets the tooltip for the item
+
+        :param `tooltip`: the tooltip text
+        """
+
+        self._tooltip = tooltip
 
 
     def SetColour(self, colour):
@@ -2862,7 +2897,8 @@ class UltimateListItemData(object):
         self._hasFont = False
         self._hasBackColour = False
         self._text = ""
-
+        self._tooltip = ""
+        
         # kind = 0: normal item
         # kind = 1: checkbox-type item
         self._kind = 0
@@ -2895,6 +2931,9 @@ class UltimateListItemData(object):
         if info._mask & ULC_MASK_TEXT:
             CheckVariableRowHeight(self._owner, info._text)
             self.SetText(info._text)
+            
+        if info._mask & ULC_MASK_TOOLTIP:
+            self.SetToolTip(info._tooltip)
 
         if info._mask & ULC_MASK_KIND:
             self._kind = info._kind
@@ -3034,6 +3073,8 @@ class UltimateListItemData(object):
 
         if mask & ULC_MASK_TEXT:
             info._text = self._text
+        if mask & ULC_MASK_TOOLTIP:
+            info._tooltip = self._tooltip
         if mask & ULC_MASK_IMAGE:
             info._image = self._image[:]
         if mask & ULC_MASK_DATA:
@@ -3125,6 +3166,12 @@ class UltimateListHeaderData(object):
         """ Returns the header/footer item text. """
 
         return self._text
+   
+    
+    def GetToolTip(self):
+        """ Returns the header/footer item tooltip. """
+
+        return self._tooltip
 
 
     def SetText(self, text):
@@ -3135,6 +3182,16 @@ class UltimateListHeaderData(object):
         """
 
         self._text = text
+        
+        
+    def SetToolTip(self, tip):
+        """
+        Sets the header/footer item tooltip.
+
+        :param `tip`: the new header/footer tooltip.
+        """
+
+        self._tip = tip
 
         
     def GetFont(self):
@@ -3154,6 +3211,7 @@ class UltimateListHeaderData(object):
         self._ypos = 0
         self._height = 0
         self._text = ""
+        self._tooltip = ""
         self._kind = 0
         self._checked = False
         self._font = wx.NullFont
@@ -3180,6 +3238,9 @@ class UltimateListHeaderData(object):
 
         if self._mask & ULC_MASK_TEXT:
             self._text = item._text
+            
+        if self._mask & ULC_MASK_TOOLTIP:
+            self._tooltip = item._tooltip
 
         if self._mask & ULC_MASK_FOOTER_TEXT:
             self._footerText = item._footerText
@@ -3352,6 +3413,7 @@ class UltimateListHeaderData(object):
 
         item._mask = self._mask
         item._text = self._text
+        item._tooltip = self._tooltip
         item._image = self._image[:]
         item._format = self._format
         item._width = self._width
@@ -3721,13 +3783,13 @@ class UltimateListLineData(object):
         self._height = self._width = self._x = self._y = -1        
 
     
-    def HasImage(self):
+    def HasImage(self, col=0):
         """
         Returns ``True`` if the first item in the line has at least one image
         associated with it.
         """
 
-        return self.GetImage() != []
+        return self.GetImage(col) != []
 
 
     def HasText(self):
@@ -4011,6 +4073,29 @@ class UltimateListLineData(object):
 
         item = self._items[index]
         item.SetText(s)
+
+
+    def GetToolTip(self, index):
+        """
+        Returns the item tooltip at the position `index`.
+
+        :param `index`: the index of the item.
+        """
+        
+        item = self._items[index]
+        return item.GetToolTip()
+
+
+    def SetToolTip(self, index, s):
+        """
+        Sets the item tooltip at the position `index`.
+
+        :param `index`: the index of the item;
+        :param `s`: the new item tooltip.
+        """
+
+        item = self._items[index]
+        item.SetToolTip(s)
 
 
     def SetImage(self, index, image):
@@ -4494,8 +4579,8 @@ class UltimateListLineData(object):
                         wRect = wx.Rect(*itemRect)
                         wRect.x += 2
                         wRect.width = width - 8
-                        wRect.y += 2
-                        wRect.height -= 4
+                        wRect.y += ya
+                        wRect.height -= 6
                         wnd.SetRect(wRect)
                 else:
                     if wnd.GetPosition() != (wndx, ya):
@@ -5303,7 +5388,14 @@ class UltimateListHeaderWindow(wx.PyControl):
 
             if not broken:
                 self._column = -1
-
+            
+            # First check to see if we have a tooltip to display    
+            colItem = self._owner.GetColumn(col)
+            if colItem.GetToolTip() != "":
+                self.SetToolTipString(colItem.GetToolTip())
+            else:
+                self.SetToolTipString("")
+                
             if event.LeftUp():
                 self._leftDown = False
                 self.Refresh()
@@ -6251,9 +6343,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         Called by L{UltimateListCtrl.OnSize} when the window is resized.
         """
 
-        if self._resizeColumn == -1:
+        if not self: # Avoid PyDeadObjectError's on Mac
             return
         
+        if self._resizeColumn == -1:
+            return
+            
+            
         numCols = self.GetColumnCount()
         if numCols == 0: return # Nothing to resize.
         
@@ -6324,6 +6420,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         countCol = self.GetColumnCount()
         for col in xrange(countCol):
             ld.SetText(col, listctrl.OnGetItemText(line, col))
+            ld.SetToolTip(col, listctrl.OnGetItemToolTip(line, col))
             ld.SetColour(col, listctrl.OnGetItemTextColour(line, col))
             ld.SetImage(col, listctrl.OnGetItemColumnImage(line, col))
             kind = listctrl.OnGetItemColumnKind(line, col)
@@ -6467,9 +6564,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         return rect
 
 
-    def GetLineLabelRect(self, line):
+    def GetLineLabelRect(self, line, col=0):
         """
         Returns the line client rectangle for the item text only.
+        Note this is the full column width unless an image or 
+        checkbox exists. It is not the width of the text itself
 
         :param `line`: an instance of L{UltimateListLineData}.
         """
@@ -6478,15 +6577,22 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             return self.GetLine(line)._gi._rectLabel
 
         image_x = 0
+        image_width = 0
+       
+        for c in range(col):
+            image_x += self.GetColumnWidth(c)
+        
         item = self.GetLine(line)
-        if item.HasImage():
-            ix, iy = self.GetImageSize(item.GetImage())
-            image_x = ix
+        if item.HasImage(col):
+            ix, iy = self.GetImageSize(item.GetImage(col))
+            image_x     += ix
+            image_width  = ix
 
-        if item.GetKind() in [1, 2]:
-            image_x += self.GetCheckboxImageSize()[0]
+        if item.GetKind(col) in [1, 2]:
+            image_x     += self.GetCheckboxImageSize()[0]
+            image_width += self.GetCheckboxImageSize()[0]
             
-        rect = wx.Rect(image_x + HEADER_OFFSET_X, self.GetLineY(line), self.GetColumnWidth(0) - image_x, self.GetLineHeight(line))
+        rect = wx.Rect(image_x + HEADER_OFFSET_X, self.GetLineY(line), self.GetColumnWidth(col) - image_width, self.GetLineHeight(line))
         return rect
     
 
@@ -6568,24 +6674,28 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         ld = self.GetLine(line)
 
-        if self.InReportView() and not self.IsVirtual():
+        if self.InReportView():# and not self.IsVirtual():
 
             lineY = self.GetLineY(line)
             xstart = HEADER_OFFSET_X
             
             for col, item in enumerate(ld._items):
 
+                if not self.IsColumnShown(col):
+                    continue
+                
                 width = self.GetColumnWidth(col)
                 xOld = xstart
                 xstart += width
                 ix = 0
 
-                if (line, col) in self._shortItems:
-                    rect = wx.Rect(xOld, lineY, width, self.GetLineHeight(line))
-                    if rect.Contains((x, y)):
-                        newItem = self.GetParent().GetItem(line, col)
-                        return newItem, ULC_HITTEST_ONITEM
-                
+                #if (line, col) in self._shortItems:
+                    #rect = wx.Rect(xOld, lineY, width, self.GetLineHeight(line))
+                rect = self.GetLineLabelRect(line,col)
+                if rect.Contains((x, y)):
+                    newItem = self.GetParent().GetItem(line, col)
+                    return newItem, ULC_HITTEST_ONITEMLABEL
+               
                 if item.GetKind() in [1, 2]:
                     # We got a checkbox-type item
                     ix, iy = self.GetCheckboxImageSize()
@@ -7311,13 +7421,19 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                     self.ReverseHighlight(self._current)
 
             if self.HasAGWFlag(ULC_SHOW_TOOLTIPS):
-                if newItem and hitResult & ULC_HITTEST_ONITEM:                
-                    if (newItem._itemId, newItem._col) in self._shortItems:
+                if newItem and hitResult & ULC_HITTEST_ONITEMLABEL:
+                    r,c = (newItem._itemId, newItem._col)
+                    line = self.GetLine(r)
+                    tt = line.GetToolTip(c)
+                    if tt and not tt == "":
+                        if self.GetToolTip() and self.GetToolTip().GetTip() != tt:  
+                            self.SetToolTipString(tt)
+                    elif (r,c) in self._shortItems: # if the text didn't fit in the column
                         text = newItem.GetText()
                         if self.GetToolTip() and self.GetToolTip().GetTip() != text:                            
                             self.SetToolTipString(text)
                     else:
-                        self.SetToolTipString("")    
+                        self.SetToolTipString("")
                 else:
                     self.SetToolTipString("")
 
@@ -7798,6 +7914,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         ke.SetEventObject(parent)
         if parent.GetEventHandler().ProcessEvent(ke):
+            event.Skip()
             return
 
         event.Skip()
@@ -12268,6 +12385,21 @@ class UltimateListCtrl(wx.PyControl):
         raise Exception("UltimateListCtrl.OnGetItemTextColour not supposed to be called")
 
 
+    def OnGetItemToolTip(self, item, col):
+        """
+        This function **must** be overloaded in the derived class for a control with
+        ``ULC_VIRTUAL`` style. It should return the string containing the text of
+        the tooltip for the specified item.
+
+        :param `item`: an integer specifying the item index;
+        :param `col`: the column index to which the item belongs to.
+        """
+
+        # this is a pure virtual function, in fact - which is not really pure
+        # because the controls which are not virtual don't need to implement it
+        raise Exception("UltimateListCtrl.OnGetItemToolTip not supposed to be called")
+    
+
     def OnGetItemImage(self, item):
         """
         This function **must** be overloaded in the derived class for a control with
@@ -12687,6 +12819,18 @@ class UltimateListCtrl(wx.PyControl):
         item = CreateListItem(itemOrId, col)
         return self._mainWin.SetItemHyperText(item, hyper)
 
+    def SetColumnToolTip(self, col, tip):
+        """
+        Sets the tooltip for the column header
+
+        :param `col`: the column index;
+        :param `tip`: the tooltip text
+        """
+       
+        item = self.GetColumn(col)
+        item.SetToolTip(tip)
+        self.SetColumn(col, item)
+        
 
     def SetColumnImage(self, col, image):
         """

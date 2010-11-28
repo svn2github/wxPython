@@ -37,7 +37,7 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
     def __init__(self, parent, log):
 
         ULC.UltimateListCtrl.__init__(self, parent, -1,
-                                      agwStyle=wx.LC_REPORT|wx.LC_VIRTUAL|wx.LC_HRULES|wx.LC_VRULES)
+                                      agwStyle=wx.LC_REPORT|wx.LC_VIRTUAL|wx.LC_HRULES|wx.LC_VRULES|ULC.ULC_SHOW_TOOLTIPS)
 
         self.log = log
         
@@ -56,6 +56,9 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
         self.SetColumnWidth(0, 175)
         self.SetColumnWidth(1, 175)
         self.SetColumnWidth(2, 175)
+        self.SetColumnToolTip(0,"First Column Tooltip!")
+        self.SetColumnToolTip(1,"Second Column Tooltip!")
+        self.SetColumnToolTip(2,"Third Column Tooltip!")
 
         # After setting the column width you can specify that 
         # this column expands to fill the window. Only one
@@ -107,6 +110,11 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
     
     def OnGetItemText(self, item, col):
         return "Item %d, column %d" % (item, col)
+    
+    def OnGetItemToolTip(self, item, col):
+        if item == 0:
+            return "Tooltip: Item %d, column %d" % (item, col)
+        return None
 
     def OnGetItemTextColour(self, item, col):
         if item == 0 and col == 0:

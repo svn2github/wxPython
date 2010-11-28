@@ -3,7 +3,7 @@
 # Ported And Enhanced From wxWidgets Contribution (Aj Bommarito) By:
 #
 # Andrea Gavana, @ 16 September 2005
-# Latest Revision: 26 Aug 2010, 10.00 GMT
+# Latest Revision: 28 Nov 2010, 16.00 GMT
 #
 #
 # TODO/Caveats List
@@ -87,7 +87,7 @@ License And Version
 
 ToasterBox is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 26 Aug 2010, 10.00 GMT
+Latest revision: Andrea Gavana @ 28 Nov 2010, 16.00 GMT
 
 Version 0.3
 
@@ -271,6 +271,70 @@ class ToasterBox(wx.Timer):
         self._popupposition = popupposition
 
 
+    def CenterOnParent(self, direction=wx.BOTH):
+        """
+        Centres the window on its parent (if any). If the L{ToasterBox} parent is ``None``,
+        it calls L{CenterOnScreen}.
+
+        :param `direction`: specifies the direction for the centering. May be ``wx.HORIZONTAL``,
+         ``wx.VERTICAL`` or ``wx.BOTH``.
+
+        :note: This methods provides for a way to center L{ToasterBox} over their parents instead of the
+         entire screen. If there is no parent, then behaviour is the same as L{CenterOnScreen}.
+
+        :see: L{CenterOnScreen}.
+        """
+
+        if not self._parent:
+            self.CenterOnScreen(direction)
+            return
+
+        parent = self._parent
+        screenrect = parent.GetScreenRect()
+        toast_width, toast_height = self._popupsize
+        x, y = screenrect.GetX(), screenrect.GetY()
+        width, height = screenrect.GetWidth(), screenrect.GetHeight()
+        
+        if direction == wx.VERTICAL:
+            pos = wx.Point(x, (y + (height/2) - (toast_height/2)))
+        elif direction == wx.HORIZONTAL:
+            pos = wx.Point((x + (width/2) - (toast_width/2)), y)
+        else:
+            pos = wx.Point((x + (width/2) - (toast_width/2)), (y + (height/2) - (toast_height/2)))
+
+        tb.SetPopupPosition(pos)        
+                
+
+    CentreOnParent = CenterOnParent
+
+
+    def CenterOnScreen(self, direction=wx.BOTH):
+        """
+        Centres the L{ToasterBox} on screen.
+
+        :param `direction`: specifies the direction for the centering. May be ``wx.HORIZONTAL``,
+         ``wx.VERTICAL`` or ``wx.BOTH``.
+
+        :see: L{CenterOnParent}.
+        """
+
+        screenSize = wx.GetDisplaySize()
+        toast_width, toast_height = self._popupsize
+        width, height = screenSize.GetWidth(), screenSize.GetHeight()
+        
+        if direction == wx.VERTICAL:
+            pos = wx.Point(0, (height/2) - (toast_height/2))
+        elif direction == wx.HORIZONTAL:
+            pos = wx.Point((width/2) - (toast_width/2), 0)
+        else:
+            pos = wx.Point((width/2) - (toast_width/2), (height/2) - (toast_height/2))
+
+        tb.SetPopupPosition(pos)
+
+
+    CentreOnScreen = CentreOnScreen        
+
+    
     def SetPopupBackgroundColour(self, colour=None):
         """
         Sets the L{ToasterBox} background colour.

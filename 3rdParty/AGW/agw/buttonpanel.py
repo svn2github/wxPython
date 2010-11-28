@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 14 Apr 2010, 12.00 GMT
+# Latest Revision: 28 Nov 2010, 16.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -168,7 +168,7 @@ License And Version
 
 ButtonPanel is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
+Latest Revision: Andrea Gavana @ 28 Nov 2010, 16.00 GMT
 
 Version 0.6.
 
@@ -802,7 +802,7 @@ class Control(wx.EvtHandler):
     L{ButtonPanel}.
     """
 
-    def __init__(self, parent, size=wx.Size(-1, -1)):
+    def __init__(self, parent, size=wx.Size(-1, -1), id=wx.ID_ANY):
         """
         Default class constructor.
         
@@ -816,7 +816,12 @@ class Control(wx.EvtHandler):
         wx.EvtHandler.__init__(self)
 
         self._parent = parent
-        self._id = wx.NewId()
+
+        if id == wx.ID_ANY:
+            self._id = wx.NewId()
+        else:
+            self._id = id
+        
         self._size = size
         self._isshown = True
         self._focus = False
@@ -1354,7 +1359,7 @@ class ButtonInfo(Control):
         self._bitmaps = {"Normal": bmp, "Toggled": None, "Disabled": disabledbmp,
                          "Hover": None, "Pressed": None}        
 
-        Control.__init__(self, parent)
+        Control.__init__(self, parent, id=id)
         
 
     def GetBestSize(self):
