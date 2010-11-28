@@ -4579,7 +4579,7 @@ class UltimateListLineData(object):
                         wRect = wx.Rect(*itemRect)
                         wRect.x += 2
                         wRect.width = width - 8
-                        wRect.y += ya
+                        wRect.y = ya
                         wRect.height -= 6
                         wnd.SetRect(wRect)
                 else:
