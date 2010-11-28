@@ -332,7 +332,7 @@ class ToasterBox(wx.Timer):
         tb.SetPopupPosition(pos)
 
 
-    CentreOnScreen = CentreOnScreen        
+    CentreOnScreen = CenterOnScreen        
 
     
     def SetPopupBackgroundColour(self, colour=None):
