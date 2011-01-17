@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 02 Aug 2010, 09.00 GMT
+# Latest Revision: 17 Jan 2011, 15.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -119,7 +119,7 @@ License And Version
 
 LabelBook and FlatImageBook are distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 02 Aug 2010, 09.00 GMT
+Latest Revision: Andrea Gavana @ 17 Jan 2011, 15.00 GMT
 
 Version 0.5.
 
@@ -552,6 +552,23 @@ class ImageContainerBase(wx.Panel):
         """
         
         self._pagesInfoVec.append(ImageInfo(caption, imgIdx))
+        if selected or len(self._pagesInfoVec) == 1:
+            self._nIndex = len(self._pagesInfoVec)-1
+
+        self.Refresh()
+
+
+    def InsertPage(self, page_idx, caption, selected=False, imgIdx=-1):
+        """
+        Inserts a page into the container at the specified position.
+
+        :param `page_idx`: specifies the position for the new tab;
+        :param `caption`: specifies the text for the new tab;
+        :param `selected`: specifies whether the page should be selected;
+        :param `imgIdx`: specifies the optional image index for the new tab.
+        """
+        
+        self._pagesInfoVec.insert(page_idx, ImageInfo(caption, imgIdx))
         if selected or len(self._pagesInfoVec) == 1:
             self._nIndex = len(self._pagesInfoVec)-1
 
@@ -2225,6 +2242,36 @@ class FlatBookBase(wx.Panel):
         self.Refresh()
 
 
+    def InsertPage(self, page_idx, page, text, select=False, imageId=-1):
+        """
+        Inserts a page into the book at the specified position.
+
+        :param `page_idx`: specifies the position for the new page;
+        :param `page`: specifies the new page;
+        :param `text`: specifies the text for the new page;
+        :param `select`: specifies whether the page should be selected;
+        :param `imageId`: specifies the optional image index for the new page.
+        
+        :note: The call to this function generates the page changing events.
+        """
+
+        if not page:
+            return
+
+        page.Reparent(self)
+
+        self._windows.insert(page_idx, page)
+        
+        if select or len(self._windows) == 1:
+            self.DoSetSelection(page)
+        else:
+            page.Hide()
+
+        self._pages.InsertPage(page_idx, text, select, imageId)
+        self.ResizeTabArea()
+        self.Refresh()
+
+
     def DeletePage(self, page):
         """
         Deletes the specified page, and the associated window.
@@ -2541,6 +2588,98 @@ class FlatBookBase(wx.Panel):
         self._pages.Refresh()
 
 
+    def GetPageText(self, page):
+        """
+        Returns the text for the given page.
+
+        :param `page`: an integer specifying the page index.
+        """
+
+        return self._pages.GetPageText(page)
+
+
+    def GetPageImage(self, page):
+        """
+        Returns the image index for the given page.
+
+        :param `page`: an integer specifying the page index.
+        """
+
+        return self._pages.GetPageImage(page)
+
+
+    def GetPage(self, page):
+        """
+        Returns the window at the given page position.
+
+        :param `page`: an integer specifying the page to be returned.
+        """
+
+        if page >= len(self._windows):
+            return
+
+        return self._windows[page]
+
+
+    def GetCurrentPage(self):
+        """ Returns the currently selected notebook page or ``None``. """
+
+        if self.GetSelection() < 0:
+            return
+
+        return self.GetPage(self.GetSelection())
+
+
+    def AdvanceSelection(self, forward=True):
+        """
+        Cycles through the tabs.
+
+        :param `forward`: if ``True``, the selection is advanced in ascending order
+         (to the right), otherwise the selection is advanced in descending order.
+         
+        :note: The call to this function generates the page changing events.
+        """
+
+        nSel = self.GetSelection()
+
+        if nSel < 0:
+            return
+
+        nMax = self.GetPageCount() - 1
+        
+        if forward:
+            newSelection = (nSel == nMax and [0] or [nSel + 1])[0]
+        else:
+            newSelection = (nSel == 0 and [nMax] or [nSel - 1])[0]
+
+        self.SetSelection(newSelection)
+
+
+    def ChangeSelection(self, page):
+        """
+        Changes the selection for the given page, returning the previous selection.
+
+        :param `page`: an integer specifying the page to be selected.
+
+        :note: The call to this function does not generate the page changing events.
+        """
+
+        if page < 0 or page >= self.GetPageCount():
+            return
+
+        oldPage = self.GetSelection()
+        self.DoSetSelection(page)
+
+        return oldPage
+
+    CurrentPage = property(GetCurrentPage, doc="See `GetCurrentPage`")
+    Page = property(GetPage, doc="See `GetPage`") 
+    PageCount = property(GetPageCount, doc="See `GetPageCount`") 
+    PageImage = property(GetPageImage, SetPageImage, doc="See `GetPageImage, SetPageImage`") 
+    PageText = property(GetPageText, SetPageText, doc="See `GetPageText, SetPageText`") 
+    Selection = property(GetSelection, SetSelection, doc="See `GetSelection, SetSelection`") 
+    
+    
 # ---------------------------------------------------------------------------- #
 # Class FlatImageBook
 # ---------------------------------------------------------------------------- #

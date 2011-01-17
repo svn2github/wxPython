@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 12 Jan 2011, 18.00 GMT
+# Latest Revision: 17 Jan 2011, 15.00 GMT
 #
 #
 # TODO List
@@ -214,7 +214,7 @@ License And Version
 
 HyperTreeList is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 12 Jan 2011, 18.00 GMT
+Latest Revision: Andrea Gavana @ 17 Jan 2011, 15.00 GMT
 
 Version 1.2
 
