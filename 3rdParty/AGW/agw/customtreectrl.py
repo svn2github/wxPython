@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 28 Nov 2010, 16.00 GMT
+# Latest Revision: 23 Jan 2011, 10.00 GMT
 #
 #
 # TODO List
@@ -209,7 +209,7 @@ License And Version
 
 CustomTreeCtrl is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 28 Nov 2010, 16.00 GMT
+Latest Revision: Andrea Gavana @ 23 Jan 2011, 10.00 GMT
 
 Version 2.3
 
@@ -6222,8 +6222,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         if self._current is None or self._key_current is None:
         
-            event.Skip()
-            return
+            self._current = self._key_current = self.GetFirstVisibleItem()
         
         # how should the selection work for this event?
         is_multiple, extended_select, unselect_others = EventFlagsToSelType(self.GetAGWWindowStyleFlag(),

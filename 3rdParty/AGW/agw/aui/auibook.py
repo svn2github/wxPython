@@ -1227,7 +1227,7 @@ class AuiTabContainer(object):
 
         self._tab_offset = offset
 
-        
+
     def MinimizeTabOffset(self, dc, wnd, max_width):
         """
         Minimize `self._tab_offset` to fit as many tabs as possible in the available space.
@@ -1238,7 +1238,7 @@ class AuiTabContainer(object):
         """
 
         total_width = 0
-        
+
         for i, page in reversed(list(enumerate(self._pages))):
 
             tab_button = self._tab_close_buttons[i]
@@ -1426,7 +1426,7 @@ class AuiTabContainer(object):
                 if self._pages[i].control.IsShown():
                     self._pages[i].control.Hide()
 
-        self.MinimizeTabOffset(dc, wnd, self._rect.GetWidth())
+        self.MinimizeTabOffset(dc, wnd, self._rect.GetWidth() - right_buttons_width - offset - 2)
 
         # draw the tabs
         active = 999
@@ -1907,7 +1907,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
             return
 
         self.GetParent()._mgr.HideHint()
-        
+
         if self.HasCapture():
             self.ReleaseMouse()
 
@@ -1936,7 +1936,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
                 evt.SetInt(self._pressed_button.id)
                 evt.SetEventObject(self)
                 eventHandler = self.GetEventHandler()
-                
+
                 if eventHandler is not None:
                     eventHandler.ProcessEvent(evt)
 
@@ -3525,7 +3525,7 @@ class AuiNotebook(wx.PyPanel):
         if page_idx >= self._tabs.GetPageCount():
             return wx.NullBitmap
 
-        # update our own tab catalog            
+        # update our own tab catalog
         page_info = self._tabs.GetPage(page_idx)
         return page_info.bitmap
 
@@ -4638,7 +4638,7 @@ class AuiNotebook(wx.PyPanel):
                     e3.SetOldSelection(insert_idx)
                     e3.SetEventObject(nb)
                     nb.GetEventHandler().ProcessEvent(e3)
-                    
+
                     return
 
         if self._agwFlags & AUI_NB_TAB_FLOAT:
