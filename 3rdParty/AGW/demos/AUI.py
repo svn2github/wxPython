@@ -2862,7 +2862,11 @@ def GetIntroText():
     "method of <i>AuiNotebook</i></li>;" \
     "<li>Tab labels can be edited by calling the <i>SetRenamable</i> method on a <i>AuiNotebook</i> page;</li>" \
     "<li>Support for multi-lines tab labels in <i>AuiNotebook</i>;</li>" \
-    "<li>Support for setting minimum and maximum tab widths for fixed width tabs.</li>"\
+    "<li>Support for setting minimum and maximum tab widths for fixed width tabs;</li>"\
+    "<li>Implementation of the style <tt>AUI_NB_ORDER_BY_ACCESS</tt>, which orders the tabs by last access time inside the "\
+    "<i>Tab Navigator</i> dialog</li>;" \
+    "<li>Implementation of the style <tt>AUI_NB_NO_TAB_FOCUS</tt>, allowing the developer not to draw the tab " \
+    "focus rectangle on tne <i>AuiNotebook</i> tabs.</li>"\
     "</ul><p>" \
     "<li><b>AuiToolBar:</b></li>" \
     "<ul>" \
