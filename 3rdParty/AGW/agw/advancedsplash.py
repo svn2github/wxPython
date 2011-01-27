@@ -177,16 +177,16 @@ class AdvancedSplash(wx.Frame):
 
         :param `agwStyle`: this value specifies the L{AdvancedSplash} styles:
         
-         - ``AS_TIMEOUT``: L{AdvancedSplash} will be destroyed after `timeout` milliseconds;
-         - ``AS_NO_CENTER``: L{AdvancedSplash} can be destroyed by clicking on it,
-           pressing a key or by explicitly call the `Close()` method;
-         - ``AS_CENTER_ON_SCREEN``: L{AdvancedSplash} will be centered on screen;
-         - ``AS_CENTER_ON_PARENT``: L{AdvancedSplash} will be centered on parent;
-         - ``AS_NO_CENTER``: L{AdvancedSplash} will not be centered;
-         - ``AS_SHADOW_BITMAP``: if the bitmap you pass as input has no transparency,
-           you can choose one colour that will be masked in your bitmap. the
-           final shape of L{AdvancedSplash} will be defined only by non-transparent
-           (non-masked) pixels.
+         ======================= =========== ==================================================
+         Window Styles           Hex Value   Description
+         ======================= =========== ==================================================
+         ``AS_TIMEOUT``                  0x1 L{AdvancedSplash} will be destroyed after `timeout` milliseconds.
+         ``AS_NOTIMEOUT``                0x2 L{AdvancedSplash} can be destroyed by clicking on it, pressing a key or by explicitly call the `Close()` method.
+         ``AS_CENTER_ON_SCREEN``         0x4 L{AdvancedSplash} will be centered on screen.
+         ``AS_CENTER_ON_PARENT``         0x8 L{AdvancedSplash} will be centered on parent.
+         ``AS_NO_CENTER``               0x10 L{AdvancedSplash} will not be centered.
+         ``AS_SHADOW_BITMAP``           0x20 If the bitmap you pass as input has no transparency, you can choose one colour that will be masked in your bitmap. the final shape of L{AdvancedSplash} will be defined only by non-transparent (non-masked) pixels.
+         ======================= =========== ==================================================
 
         :param `shadowcolour`: if you construct L{AdvancedSplash} using the style
          ``AS_SHADOW_BITMAP``, here you can specify the colour that will be masked on
