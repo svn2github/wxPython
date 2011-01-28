@@ -152,7 +152,7 @@ class BookHandler(AbstractHandler):
     - `wx.Treebook` (except for opened tree branches, see L{TreebookHandler} for this);
     - `wx.Notebook`;
     - `wx.aui.AuiNotebook`;
-    - L{aui.AuiNotebook};
+    - L{auibook.AuiNotebook};
     - L{flatnotebook.FlatNotebook};
     - L{labelbook.LabelBook};
     - L{labelbook.FlatImageBook}.
@@ -267,7 +267,7 @@ class TreebookHandler(BookHandler):
 
 class AUIHandler(AbstractHandler):
     """
-    Supports saving/restoring `wx.aui.AuiManager` and L{aui.AuiManager}
+    Supports saving/restoring `wx.aui.AuiManager` and L{framemanager.AuiManager}
     perspectives.
     """
     
@@ -344,7 +344,7 @@ class TLWHandler(AUIHandler):
     - All `wx.Dialog` derived classes.
 
     In addition, if the toplevel window has an associated AuiManager (whether it is 
-    `wx.aui.AuiManager` or L{aui.AuiManager} and L{PersistenceManager}
+    `wx.aui.AuiManager` or L{framemanager.AuiManager} and L{PersistenceManager}
     has the ``PM_SAVE_RESTORE_AUI_PERSPECTIVES`` style set (the default), this class
     will also save and restore AUI perspectives using the underlying L{AUIHandler}
     class.
@@ -2093,13 +2093,13 @@ class MenuBarHandler(AbstractHandler):
 
 class ToolBarHandler(AbstractHandler):
     """
-    Supports saving/restoring the L{aui.AuiToolBar} items state.
+    Supports saving/restoring the L{auibar.AuiToolBar} items state.
 
     This class handles the following wxPython widgets:
 
-    - L{aui.AuiToolBar}.
+    - L{auibar.AuiToolBar}.
 
-    :todo: Find a way to handle `wx.ToolBar` UI settings as it has been done for L{aui.AuiToolBar}:
+    :todo: Find a way to handle `wx.ToolBar` UI settings as it has been done for L{auibar.AuiToolBar}:
      currently `wx.ToolBar` doesn't seem to have easy access to the underlying toolbar tools.
     """
     

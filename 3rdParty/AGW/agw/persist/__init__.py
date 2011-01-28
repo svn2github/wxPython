@@ -1,6 +1,6 @@
 """
 Introduction
-------------
+============
 
 Persistent objects are simply the objects which automatically save their state
 when they are destroyed and restore it when they are recreated, even during
@@ -8,7 +8,7 @@ another program invocation.
 
 
 Persistent Object Overview
---------------------------
+==========================
 
 Most often, persistent objects are, in fact, persistent windows as it is especially
 convenient to automatically restore the UI state when the program is restarted but
@@ -29,16 +29,16 @@ The persistence framework involves:
   
 
 Using Persistent Windows
-------------------------
+========================
 
 wxPython has built-in support for a (constantly growing) number of controls. Currently the
 following classes are supported:
 
 * wx.TopLevelWindow (and hence wx.Frame and wx.Dialog, together with their own AUI perspectives);
 * wx.MenuBar, L{flatmenu.FlatMenuBar};
-* L{aui.AuiToolBar};
+* L{auibar.AuiToolBar};
 * wx.Notebook, wx.Toolbook, wx.Treebook, wx.Choicebook, wx.aui.AuiNotebook,
-  L{aui.AuiNotebook} (together with its own AUI perspective),
+  L{auibook.AuiNotebook} (together with its own AUI perspective),
   L{flatnotebook.FlatNotebook}, L{labelbook.LabelBook},
   L{labelbook.FlatImageBook};
 * wx.CheckBox;
@@ -49,7 +49,7 @@ following classes are supported:
 * wx.RadioBox;
 * wx.RadioButton;
 * wx.ScrolledWindow, wx.lib.scrolledpanel.ScrolledPanel;
-* wx.Slider, L{knowbctrl.KnobCtrl};
+* wx.Slider, L{knobctrl.KnobCtrl};
 * wx.SpinButton, wx.SpinCtrl, L{floatspin.FloatSpin};
 * wx.SplitterWindow;
 * wx.TextCtrl, wx.SearchCtrl, wx.lib.expando.ExpandoTextCtrl, wx.lib.masked.Ctrl;
@@ -90,8 +90,8 @@ above you need to:
   `PersistenceManager.SaveAndUnregister(window)` with no arguments.
 
 
-Sample Usage
-------------
+Usage
+=====
 
 Example of using a notebook control which automatically remembers the last open page::
 
@@ -107,7 +107,7 @@ Example of using a notebook control which automatically remembers the last open 
 
     
 Defining Custom Persistent Windows
-----------------------------------
+==================================
 
 User-defined classes can be easily integrated with PersistenceManager. To add support
 for your custom class MyWidget you just need to:
@@ -126,9 +126,9 @@ can be only done automatically for windows.
 
 
 TODOs
------
+=====
 
-* Find a way to handle `wx.ToolBar` UI settings as it has been done for L{aui.AuiToolBar}:
+* Find a way to handle `wx.ToolBar` UI settings as it has been done for L{auibar.AuiToolBar}:
   current `wx.ToolBar` doesn't seem to have easy access to the underlying toolbar tools;
 * Implement handler(s) for `wx.grid.Grid` for row/columns sizes (possibly adding another style
   to `PersistenceManager` as `wx.grid.Grid` sets up arrays to store individual row and column
@@ -139,7 +139,7 @@ TODOs
 
 
 License And Version
--------------------
+===================
 
 PersistentObjects library is distributed under the wxPython license. 
 
