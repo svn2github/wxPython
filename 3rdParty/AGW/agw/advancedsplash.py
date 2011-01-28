@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 10 Oct 2005
-# Latest Revision: 14 Apr 2010, 12.00 GMT
+# Latest Revision: 27 Jan 2011, 15.00 GMT
 #
 #
 # TODO List/Caveats
@@ -106,7 +106,7 @@ License And Version
 
 AdvancedSplash control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
+Latest revision: Andrea Gavana @ 27 Jan 2011, 15.00 GMT
 
 Version 0.4
 

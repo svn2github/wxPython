@@ -2,7 +2,7 @@
 # AQUABUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 14 Apr 2010, 12.00 GMT
+# Latest Revision: 27 Jan 2011, 15.00 GMT
 #
 #
 # TODO List
@@ -72,7 +72,7 @@ License And Version
 
 AquaButton control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
+Latest Revision: Andrea Gavana @ 27 Jan 2011, 15.00 GMT
 
 Version 0.3
 
@@ -317,7 +317,7 @@ class AquaButton(wx.PyControl):
 
         :param `gc`: an instance of `wx.GraphicsContext`;
         :param `rc`: a client rectangle;
-        :param `r`: the radious of the rounded part of the rectangle.
+        :param `r`: the radius of the rounded part of the rectangle.
         """
     
         x, y, w, h = rc

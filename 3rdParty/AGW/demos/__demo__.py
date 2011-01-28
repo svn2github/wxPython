@@ -13,12 +13,12 @@ this module returns the following information:
                        
 These meta data are merged into the wxPython demo tree at startup.
 
-Last updated: Andrea Gavana @ 21 Sep 2010, 23.00 GMT.
-Version 0.9.0.
+Last updated: Andrea Gavana @ 28 Jan 2011, 15.00 GMT.
+Version 0.9.1.
 
 """
 
-__version__ = "0.9.0"
+__version__ = "0.9.1"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 
 
@@ -80,15 +80,15 @@ def GetRecentAdditions():
                            'FoldPanelBar', 'FourWaySplitter', 'GenericMessageDialog',
                            'GradientButton', 'HyperLinkCtrl', 'HyperTreeList',
                            'KnobCtrl', 'LabelBook', 'MultiDirDialog',
-                           'PeakMeter', 'PieCtrl', 'PyBusyInfo', 'PyCollapsiblePane',
-                           'PyProgress', 'RibbonBar', 'RulerCtrl', 'ShapedButton',
-                           'SpeedMeter', 'SuperToolTip', 'ThumbnailCtrl', 'ToasterBox',
-                           'UltimateListCtrl', 'ZoomBar']
+                           'PeakMeter', 'PersistentControls', 'PieCtrl', 'PyBusyInfo',
+                           'PyCollapsiblePane', 'PyProgress', 'RibbonBar', 'RulerCtrl',
+                           'ShapedButton', 'SpeedMeter', 'SuperToolTip', 'ThumbnailCtrl',
+                           'ToasterBox', 'UltimateListCtrl', 'ZoomBar']
     elif wx.VERSION < (2,9,2):
-        recentAdditions = ['AUI', 'PyBusyInfo', 'PyGauge', 'RibbonBar', 'UltimateListCtrl',
-                           'ZoomBar']
+        recentAdditions = ['AUI', 'PersistentControls', 'PyBusyInfo', 'PyGauge',
+                           'RibbonBar', 'UltimateListCtrl', 'ZoomBar']
     else:
-        recentAdditions = []
+        recentAdditions = ['PersistentControls']
 
     # Return the Recent Additions for AGW    
     return recentAdditions
@@ -110,10 +110,10 @@ def GetDemos():
                 'FoldPanelBar', 'FourWaySplitter', 'GenericMessageDialog',
                 'GradientButton', 'HyperLinkCtrl', 'HyperTreeList',
                 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
-                'PeakMeter', 'PieCtrl', 'PyBusyInfo', 'PyCollapsiblePane',
-                'PyGauge', 'PyProgress', 'RibbonBar', 'RulerCtrl', 'ShapedButton',
-                'SpeedMeter', 'SuperToolTip', 'ThumbnailCtrl', 'ToasterBox',
-                'UltimateListCtrl', 'ZoomBar']
+                'PeakMeter', 'PersistentControls', 'PieCtrl', 'PyBusyInfo',
+                'PyCollapsiblePane', 'PyGauge', 'PyProgress', 'RibbonBar',
+                'RulerCtrl', 'ShapedButton', 'SpeedMeter', 'SuperToolTip',
+                'ThumbnailCtrl', 'ToasterBox', 'UltimateListCtrl', 'ZoomBar']
 
     return AGWTreeItem, AGWDemos
 

@@ -52,6 +52,9 @@ an asterisk were already present in `wx.lib` before:
   fancier look;
 - PeakMeter: this widget mimics the behaviour of LED equalizers that are
   usually found in stereos and MP3 players;
+- PersistentControls: widgets which automatically save their state
+  when they are destroyed and restore it when they are recreated, even during
+  another program invocation;
 - PieCtrl and ProgressPie: these are simple classes that reproduce the
   behavior of a pie chart, in a static or progress-gauge-like way;
 - PyBusyInfo: constructs a busy info window and displays a message in it:
@@ -109,11 +112,11 @@ You can contact me at:
 andrea.gavana@gmail.com
 gavana@kpo.kz
 
-AGW version: 0.9.0
+AGW version: 0.9.1
 
-Last updated: 26 Jan 2011, 15.00 GMT
+Last updated: 28 Jan 2011, 15.00 GMT
 
 """
 
-__version__ = "0.9.0"
+__version__ = "0.9.1"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
