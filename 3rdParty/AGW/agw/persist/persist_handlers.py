@@ -90,7 +90,8 @@ class AbstractHandler(object):
 
     :note: This is an abstract class. If you wish to add another (custom) handler
            for your widgets, you should derive from L{AbstractHandler} and override
-           the L{Save}, L{Restore} and L{GetKind} methods.
+           the L{AbstractHandler.Save}, L{AbstractHandler.Restore} and L{AbstractHandler.GetKind}
+           methods.
     """
     
     def __init__(self, pObject):
@@ -343,6 +344,8 @@ class TLWHandler(AUIHandler):
     - All `wx.Frame` derived classes;
     - All `wx.Dialog` derived classes.
 
+    |
+    
     In addition, if the toplevel window has an associated AuiManager (whether it is 
     `wx.aui.AuiManager` or L{framemanager.AuiManager} and L{PersistenceManager}
     has the ``PM_SAVE_RESTORE_AUI_PERSPECTIVES`` style set (the default), this class
@@ -1272,7 +1275,7 @@ class TreeCtrlHandler(AbstractHandler):
     def GetExpansionState(self):
         """
         Returns list of expanded items. Expanded items are coded as determined by
-        the result of L{GetItemIdentity(item)}.
+        the result of L{TreeCtrlHandler.GetItemIdentity}.
         """
         
         root = self._window.GetRootItem()
@@ -1286,7 +1289,7 @@ class TreeCtrlHandler(AbstractHandler):
 
     def SetExpansionState(self, listOfExpandedItems):
         """
-        Expands all tree items whose identity, as determined by L{GetItemIdentity(item)},
+        Expands all tree items whose identity, as determined by L{TreeCtrlHandler.GetItemIdentity},
         is present in the list and collapses all other tree items.
 
         :param `listOfExpandedItems`: a list of expanded `wx.TreeCtrl` or
@@ -1305,7 +1308,7 @@ class TreeCtrlHandler(AbstractHandler):
     def GetSelectionState(self):
         """
         Returns a list of selected items. Selected items are coded as determined by
-        the result of L{GetItemIdentity(item)}.
+        the result of L{TreeCtrlHandler.GetItemIdentity}.
         """
         
         root = self._window.GetRootItem()
@@ -1319,7 +1322,7 @@ class TreeCtrlHandler(AbstractHandler):
 
     def SetSelectionState(self, listOfSelectedItems):
         """
-        Selects all tree items whose identity, as determined by L{GetItemIdentity(item)},
+        Selects all tree items whose identity, as determined by L{TreeCtrlHandler.GetItemIdentity},
         is present in the list and unselects all other tree items.
 
         :param `listOfSelectedItems`: a list of selected `wx.TreeCtrl` or
@@ -1338,7 +1341,7 @@ class TreeCtrlHandler(AbstractHandler):
     def GetCheckedState(self):
         """
         Returns a list of checked items. Checked items are coded as determined by
-        the result of L{GetItemIdentity(item)}.
+        the result of L{TreeCtrlHandler.GetItemIdentity}.
         
         :note: This is meaningful only for L{customtreectrl.CustomTreeCtrl} and
          L{hypertreelist.HyperTreeList}.
@@ -1355,7 +1358,7 @@ class TreeCtrlHandler(AbstractHandler):
 
     def SetCheckedState(self, listOfCheckedItems):
         """
-        Checks all tree items whose identity, as determined by L{GetItemIdentity(item)}, is present
+        Checks all tree items whose identity, as determined by L{TreeCtrlHandler.GetItemIdentity}, is present
         in the list and unchecks all other tree items.
         
         :param `listOfCheckedItems`: a list of checked L{customtreectrl.CustomTreeCtrl} items.
@@ -2099,8 +2102,7 @@ class ToolBarHandler(AbstractHandler):
 
     - L{auibar.AuiToolBar}.
 
-    :todo: Find a way to handle `wx.ToolBar` UI settings as it has been done for L{auibar.AuiToolBar}:
-     currently `wx.ToolBar` doesn't seem to have easy access to the underlying toolbar tools.
+    :todo: Find a way to handle `wx.ToolBar` UI settings as it has been done for L{auibar.AuiToolBar}: currently `wx.ToolBar` doesn't seem to have easy access to the underlying toolbar tools.
     """
     
     def __init__(self, pObject):

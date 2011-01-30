@@ -51,7 +51,7 @@ class PersistentObject(object):
     the object properties and implements them using the concrete class methods.
 
     You may derive your own classes from L{PersistentObject} to implement persistence
-    support for your common classes, see `Defining Custom Persistent Windows` in the
+    support for your common classes, see :ref:`persistent-windows` in the
     `__init__.py` file.
     """
     
@@ -174,9 +174,9 @@ class PersistenceManager(object):
     to persistent storage.
 
     This class is the central element of wxPython persistence framework, see
-    the `Persistent Objects Overview` in the `__init__.py` file for its overview.
+    the :ref:`persistent-overview` in the `__init__.py` file for its overview.
 
-    This is a singleton class and its unique instance can be retrieved using L{Get}
+    This is a singleton class and its unique instance can be retrieved using L{PersistenceManager.Get}
     method.
     """
     

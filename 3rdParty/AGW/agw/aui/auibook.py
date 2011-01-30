@@ -2886,7 +2886,8 @@ class AuiNotebook(wx.PyPanel):
 
                 tab_idx = int(tab)
                 if tab_idx >= self.GetPageCount():
-                    continue
+                    to_break1 = True
+                    break
 
                 # Move tab to pane
                 page = self._tabs.GetPage(tab_idx)

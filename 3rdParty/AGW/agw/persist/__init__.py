@@ -6,6 +6,7 @@ Persistent objects are simply the objects which automatically save their state
 when they are destroyed and restore it when they are recreated, even during
 another program invocation.
 
+.. _persistent-overview:
 
 Persistent Object Overview
 ==========================
@@ -70,6 +71,7 @@ following classes are supported:
 * wx.FindReplaceDialog;
 * wx.FontDialog;
 * wx.ColourDialog, L{cubecolourdialog.CubeColourDialog};
+* L{foldpanelbar.FoldPanelBar};
 * wx.SingleChoiceDialog, wx.MultiChoiceDialog;
 * wx.TextEntryDialog, wx.PasswordEntryDialog.
 
@@ -105,6 +107,8 @@ Example of using a notebook control which automatically remembers the last open 
         # Nothing was restored, so choose the default page ourselves
         book.SetSelection(0)
 
+
+.. _persistent-windows:
     
 Defining Custom Persistent Windows
 ==================================
