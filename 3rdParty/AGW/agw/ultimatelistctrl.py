@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 28 Nov 2010, 16.00 GMT
+# Latest Revision: 10 Mar 2011, 15.00 GMT
 #
 #
 # TODO List
@@ -118,6 +118,7 @@ Window Styles                    Hex Value   Description
 ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
 ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
 ``ULC_FOOTER``                    0x80000000 Show a footer too (only when header is present).
+``ULC_USER_ROW_HEIGHT``          0x100000000 Allows to set a custom row height (one value for all the items, only in report mode).
 ===============================  =========== ====================================================================================================
 
 
@@ -175,9 +176,9 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 28 Nov 2010, 16.00 GMT
+Latest Revision: Andrea Gavana @ 10 Mar 2011, 15.00 GMT
 
-Version 0.7
+Version 0.8
 
 """
 
@@ -191,7 +192,7 @@ import cStringIO
 from wx.lib.expando import ExpandoTextCtrl
 
 # Version Info
-__version__ = "0.7"
+__version__ = "0.8"
 
 # wxPython version string
 _VERSION_STRING = wx.VERSION_STRING
@@ -241,6 +242,7 @@ ULC_TRACK_SELECT        = 0x10000000   # Enables hot-track selection in a list c
 ULC_HEADER_IN_ALL_VIEWS = 0x20000000   # Show column headers in all view modes
 ULC_NO_FULL_ROW_SELECT  = 0x40000000   # When an item is selected, the only the item in the first column is highlighted
 ULC_FOOTER              = 0x80000000   # Show a footer too (only when header is present)
+ULC_USER_ROW_HEIGHT     = 0x100000000  # Allows to set a custom row height (one value for all the items, only in report mode).
 
 ULC_MASK_TYPE  = ULC_ICON | ULC_SMALL_ICON | ULC_LIST | ULC_REPORT | ULC_TILE
 ULC_MASK_ALIGN = ULC_ALIGN_TOP | ULC_ALIGN_LEFT
@@ -4514,7 +4516,7 @@ class UltimateListLineData(object):
                 wndx = xOld - HEADER_OFFSET_X + width - xSize - 3
                 xa, ya = self._owner.CalcScrolledPosition((0, rect.y))
                 wndx += xa
-                if rect.height > ySize:
+                if rect.height > ySize and not item._expandWin:
                     ya += (rect.height - ySize)/2
 
             itemRect = wx.Rect(xOld-2*HEADER_OFFSET_X, rect.y, width-xSize-HEADER_OFFSET_X, rect.height)
@@ -4578,8 +4580,8 @@ class UltimateListLineData(object):
                     if wnd.GetRect() != itemRect:
                         wRect = wx.Rect(*itemRect)
                         wRect.x += 2
-                        wRect.width = width - 8
-                        wRect.y = ya
+                        wRect.width = width - 4
+                        wRect.y = ya + 2
                         wRect.height -= 6
                         wnd.SetRect(wRect)
                 else:
@@ -4951,6 +4953,7 @@ class UltimateListHeaderWindow(wx.PyControl):
 
             if not self._hasFont:
                 self.SetOwnFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
+
 
     def SetCustomRenderer(self, renderer=None):
         """
@@ -5914,6 +5917,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
          ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
          ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
          ``ULC_FOOTER``                    0x80000000 Show a footer too (only when header is present).
+         ``ULC_USER_ROW_HEIGHT``          0x100000000 Allows to set a custom row height (one value for all the items, only in report mode).
          ===============================  =========== ====================================================================================================
 
         :param `name`: the window name.
@@ -5990,7 +5994,8 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         self._headerWidth = 0
         self._lineHeight = 0
-
+        self._userLineHeight = None
+        
         self._small_image_list = None
         self._normal_image_list = None
 
@@ -6179,6 +6184,36 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         
         self.HighlightLine(line, not self.IsHighlighted(line))
         self.RefreshLine(line)
+
+
+    def SetUserLineHeight(self, height):
+        """
+        Sets a custom value for the L{UltimateListMainWindow} item height.
+
+        :param `height`: the custom height for all the items, in pixels.
+
+        :note: This method can be used only with ``ULC_REPORT`` and ``ULC_USER_ROW_HEIGHT`` styles set.
+        """
+
+        if self.HasAGWFlag(ULC_REPORT) and self.HasAGWFlag(ULC_USER_ROW_HEIGHT):
+            self._userLineHeight = height
+            return
+
+        raise Exception("SetUserLineHeight can only be used with styles ULC_REPORT and ULC_USER_ROW_HEIGHT set.")        
+        
+
+    def GetUserLineHeight(self):
+        """
+        Returns the custom value for the L{UltimateListMainWindow} item height, if previously set with
+        L{SetUserLineHeight}.
+
+        :note: This method can be used only with ``ULC_REPORT`` and ``ULC_USER_ROW_HEIGHT`` styles set.
+        """
+
+        if self.HasAGWFlag(ULC_REPORT) and self.HasAGWFlag(ULC_USER_ROW_HEIGHT):
+            return self._userLineHeight
+
+        raise Exception("GetUserLineHeight can only be used with styles ULC_REPORT and ULC_USER_ROW_HEIGHT set.")        
 
 
     # get the size of the total line rect
@@ -6471,6 +6506,10 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         # we cache the line height as calling GetTextExtent() is slow
 
+        if self.HasAGWFlag(ULC_REPORT) and self.HasAGWFlag(ULC_USER_ROW_HEIGHT):
+            if self._userLineHeight is not None:
+                return self._userLineHeight
+            
         if item is None or not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
             
             if not self._lineHeight:
@@ -10683,6 +10722,7 @@ class UltimateListCtrl(wx.PyControl):
          ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
          ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
          ``ULC_FOOTER``                    0x80000000 Show a footer too (only when header is present).
+         ``ULC_USER_ROW_HEIGHT``          0x100000000 Allows to set a custom row height (one value for all the items, only in report mode).
          ===============================  =========== ====================================================================================================
 
         :param `validator`: the window validator;         
@@ -10705,6 +10745,9 @@ class UltimateListCtrl(wx.PyControl):
         if agwStyle & ULC_NO_HEADER and agwStyle & ULC_HEADER_IN_ALL_VIEWS:
             raise Exception("Styles ULC_NO_HEADER and ULC_HEADER_IN_ALL_VIEWS can not be combined")
 
+        if agwStyle & ULC_USER_ROW_HEIGHT and (agwStyle & ULC_REPORT) == 0:
+            raise Exception("Style ULC_USER_ROW_HEIGHT can be used only with ULC_REPORT")
+        
         wx.PyControl.__init__(self, parent, id, pos, size, style|wx.CLIP_CHILDREN, validator, name)
 
         self._mainWin = None
@@ -10725,7 +10768,7 @@ class UltimateListCtrl(wx.PyControl):
         if style & wx.SUNKEN_BORDER:
             style -= wx.SUNKEN_BORDER
             
-        self._mainWin = UltimateListMainWindow(self, wx.ID_ANY, wx.Point(0, 0), size, style, agwStyle)
+        self._mainWin = UltimateListMainWindow(self, wx.ID_ANY, wx.Point(0, 0), wx.DefaultSize, style, agwStyle)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self._mainWin, 1, wx.GROW)
@@ -10963,6 +11006,7 @@ class UltimateListCtrl(wx.PyControl):
          ``ULC_HEADER_IN_ALL_VIEWS``       0x20000000 Show column headers in all view modes.
          ``ULC_NO_FULL_ROW_SELECT``        0x40000000 When an item is selected, the only the item in the first column is highlighted.
          ``ULC_FOOTER``                    0x80000000 Show a footer too (only when header is present).
+         ``ULC_USER_ROW_HEIGHT``          0x100000000 Allows to set a custom row height (one value for all the items, only in report mode).
          ===============================  =========== ====================================================================================================
          """        
 
@@ -11003,6 +11047,31 @@ class UltimateListCtrl(wx.PyControl):
         
         return self._agwStyle & flag
             
+
+    def SetUserLineHeight(self, height):
+        """
+        Sets a custom value for the L{UltimateListCtrl} item height.
+
+        :param `height`: the custom height for all the items, in pixels.
+
+        :note: This method can be used only with ``ULC_REPORT`` and ``ULC_USER_ROW_HEIGHT`` styles set.
+        """
+
+        if self._mainWin:
+            self._mainWin.SetUserLineHeight(height)
+        
+
+    def GetUserLineHeight(self):
+        """
+        Returns the custom value for the L{UltimateListCtrl} item height, if previously set with
+        L{SetUserLineHeight}.
+
+        :note: This method can be used only with ``ULC_REPORT`` and ``ULC_USER_ROW_HEIGHT`` styles set.
+        """
+
+        if self._mainWin:
+            return self._mainWin.GetUserLineHeight()
+
 
     def GetColumn(self, col):
         """
