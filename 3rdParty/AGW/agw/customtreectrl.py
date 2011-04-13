@@ -102,7 +102,7 @@ Plus it has 3 more styles to handle checkbox-type items:
 And a style you can use to force the horizontal alignment of all the widgets
 attached to the tree items:
 
-- ``TR_ALIGN_WINDOWS``: aligns horizontally the windows belongiing to the item on the
+- ``TR_ALIGN_WINDOWS``: aligns horizontally the windows belonging to the item on the
   same tree level.
 
     
