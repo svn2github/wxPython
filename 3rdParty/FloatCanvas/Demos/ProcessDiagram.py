@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.5
+#!/usr/bin/env python
 """
 
 This is a demo, showing how to work with a "tree" structure
@@ -372,7 +372,6 @@ class DrawFrame(wx.Frame):
                 dxy = event.GetPosition() - self.StartPoint
                 dxy = self.Canvas.ScalePixelToWorld(dxy)
                 self.MovingObject.Move(dxy) 
-                self.MoveTri = None
             self.Canvas.Draw(True)
 
 app = wx.PySimpleApp(0)

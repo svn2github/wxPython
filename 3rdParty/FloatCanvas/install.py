@@ -20,7 +20,7 @@ import wx
 InstallDir = os.path.join(wx.__path__[0],"lib","floatcanvas")
 
 # The Demo Directory (Please Set correctly or leave blank.)
-Demodir = ''
+DemoDir = ''
 
 # ##########################################################################
 
@@ -42,7 +42,7 @@ except:
 
 
 # Install the demo if the path is specified.
-if Demodir:
+if DemoDir:
     print "Copying the demo to:", DemoDir
     shutil.copyfile(".%sFloatCanvasDemo.py"%(os.path.sep), os.path.join(DemoDir,"FloatCanvas.py") )
 

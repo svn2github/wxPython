@@ -363,7 +363,7 @@ class Group(DrawObject):
             
     def CalcBoundingBox(self):
         if self.ObjectList:
-            BB = BBox.asBBox(self.ObjectList[0].BoundingBox)
+            BB = BBox.BBox(self.ObjectList[0].BoundingBox).copy()
             for obj in self.ObjectList[1:]:
                 BB.Merge(obj.BoundingBox)
         else:
@@ -2461,7 +2461,7 @@ class FloatCanvas(wx.Panel):
 
     def SetMode(self, Mode):
             '''
-            Set the GUImode to any of the availble mode.
+            Set the GUImode to any of the available mode.
             '''
             # Set mode
             if self.GUIMode is not None:

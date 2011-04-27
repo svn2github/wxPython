@@ -38,7 +38,7 @@ class DrawFrame(wx.Frame):
         Pts = ((45,40), (20, 15), (10, 40), (30,30))
         
         Points = Canvas.AddPointSet(Pts, Diameter=3, Color="Red")
-        Points.HitLineWidth = 20
+        Points.HitLineWidth = 10
         
         Points.Bind(FloatCanvas.EVT_FC_ENTER_OBJECT, self.OnOverPoints)
         Points.Bind(FloatCanvas.EVT_FC_LEAVE_OBJECT, self.OnLeavePoints)

@@ -4,7 +4,7 @@
 """
 This is a very small app using the FloatCanvas
 
-It tests the Spline object, includinghow you can put points together to
+It tests the Spline object, including how you can put points together to
 create an object with curves and square corners.
 
 
@@ -12,12 +12,13 @@ create an object with curves and square corners.
 import wx
 
 #### import local version:
-import sys
-sys.path.append("../")
-from floatcanvas import NavCanvas
-from floatcanvas import FloatCanvas as FC
+#import sys
+#sys.path.append("../")
+#from floatcanvas import NavCanvas
+#from floatcanvas import FloatCanvas as FC
 
-##from wx.lib.floatcanvas import FloatCanvas, NavCanvas
+from wx.lib.floatcanvas import FloatCanvas as FC
+from wx.lib.floatcanvas import NavCanvas
 
 class Spline(FC.Line):
     def __init__(self, *args, **kwargs):
