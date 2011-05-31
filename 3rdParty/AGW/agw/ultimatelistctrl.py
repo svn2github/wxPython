@@ -5062,7 +5062,6 @@ class UltimateListHeaderWindow(wx.PyControl):
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.DrawRectangle(0, -1, w, h+2)
         
-        self.PrepareDC(dc)
         self.AdjustDC(dc)
 
         dc.SetBackgroundMode(wx.TRANSPARENT)
