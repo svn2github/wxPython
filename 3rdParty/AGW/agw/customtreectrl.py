@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 23 Jan 2011, 10.00 GMT
+# Latest Revision: 21 Jun 2011, 22.00 GMT
 #
 #
 # TODO List
@@ -74,6 +74,7 @@ to the standard `wx.TreeCtrl` behaviour this class supports:
 * Whatever non-toplevel widget can be attached next to an item;
 * Possibility to horizontally align the widgets attached to tree items on the
   same tree level.
+* Possibility to align the widgets attached to tree items to the rightmost edge of CustomTreeCtrl;
 * Default selection style, gradient (horizontal/vertical) selection style and Windows
   Vista selection style;
 * Customized drag and drop images built on the fly;
@@ -99,12 +100,13 @@ Plus it has 3 more styles to handle checkbox-type items:
 - ``TR_AUTO_CHECK_PARENT``: automatically checks/unchecks the item parent;
 - ``TR_AUTO_TOGGLE_CHILD``: automatically toggles the item children.
 
-And a style you can use to force the horizontal alignment of all the widgets
+And two styles you can use to force the horizontal alignment of all the widgets
 attached to the tree items:
 
 - ``TR_ALIGN_WINDOWS``: aligns horizontally the windows belonging to the item on the
   same tree level.
-
+- ``TR_ALIGN_WINDOWS_RIGHT``: aligns to the rightmost position the windows belonging
+  to the item on the same tree level.
     
 All the methods available in `wx.TreeCtrl` are also available in CustomTreeCtrl.
 
@@ -166,6 +168,7 @@ Window Styles                  Hex Value   Description
 ``TR_AUTO_TOGGLE_CHILD``            0x8000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly.
 ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
 ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
+``TR_ALIGN_WINDOWS_RIGHT``         0x40000 Flag used to align windows (in items with windows) to the rightmost edge of `CustomTreeCtrl`.
 ============================== =========== ==================================================
 
 
@@ -209,14 +212,14 @@ License And Version
 
 CustomTreeCtrl is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 23 Jan 2011, 10.00 GMT
+Latest Revision: Andrea Gavana @ 21 Jun 2011, 22.00 GMT
 
-Version 2.3
+Version 2.4
 
 """
 
 # Version Info
-__version__ = "2.3"
+__version__ = "2.4"
 
 import wx
 from wx.lib.expando import ExpandoTextCtrl
@@ -300,6 +303,8 @@ TR_AUTO_CHECK_PARENT = 0x10000                                 # only meaningful
 """ its parent item is checked/unchecked as well. """
 TR_ALIGN_WINDOWS = 0x20000                                     # to align windows horizontally for items at the same level
 """ Flag used to align windows (in items with windows) at the same horizontal position. """
+TR_ALIGN_WINDOWS_RIGHT = 0x40000                               # to align windows to the rightmost edge of CustomTreeCtrl
+""" Flag used to align windows (in items with windows) to the rightmost edge of `CustomTreeCtrl`."""
 
 TR_DEFAULT_STYLE = wx.TR_DEFAULT_STYLE                         # default style for the tree control
 """ The set of flags that are closest to the defaults for the native control for a""" \
@@ -999,10 +1004,10 @@ class TreeEvent(CommandTreeEvent):
         
     
 # -----------------------------------------------------------------------------
-# Auxiliary Classes: TreeRenameTimer
+# Auxiliary Classes: TreeEditTimer
 # -----------------------------------------------------------------------------
 
-class TreeRenameTimer(wx.Timer):
+class TreeEditTimer(wx.Timer):
     """ Timer used for enabling in-place edit."""
 
     def __init__(self, owner):
@@ -1020,7 +1025,7 @@ class TreeRenameTimer(wx.Timer):
     def Notify(self):
         """ The timer has expired. """
 
-        self._owner.OnRenameTimer()
+        self._owner.OnEditTimer()
 
 
 # -----------------------------------------------------------------------------
@@ -1130,10 +1135,10 @@ class TreeTextCtrl(ExpandoTextCtrl):
             # needs to be notified that the user decided
             # not to change the tree item label, and that
             # the edit has been cancelled
-            self._owner.OnRenameCancelled(self._itemEdited)
+            self._owner.OnCancelEdit(self._itemEdited)
             return True
 
-        if not self._owner.OnRenameAccept(self._itemEdited, value):
+        if not self._owner.OnAcceptEdit(self._itemEdited, value):
             # vetoed by the user
             return False
 
@@ -1149,7 +1154,7 @@ class TreeTextCtrl(ExpandoTextCtrl):
         if not self._finished:        
             self._finished = True
             self._owner.SetFocusIgnoringChildren()
-            self._owner.ResetTextControl()
+            self._owner.ResetEditControl()
         
 
     def OnChar(self, event):
@@ -1221,7 +1226,7 @@ class TreeTextCtrl(ExpandoTextCtrl):
             # focus problems:
             
             if not self.AcceptChanges():
-                self._owner.OnRenameCancelled(self._itemEdited)
+                self._owner.OnCancelEdit(self._itemEdited)
         
         # We must let the native text control handle focus, too, otherwise
         # it could have problems with the cursor (e.g., in wxGTK).
@@ -1231,7 +1236,7 @@ class TreeTextCtrl(ExpandoTextCtrl):
     def StopEditing(self):
         """Suddenly stops the editing."""
 
-        self._owner.OnRenameCancelled(self._itemEdited)
+        self._owner.OnCancelEdit(self._itemEdited)
         self.Finish()
         
     
@@ -2282,6 +2287,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
          ``TR_AUTO_TOGGLE_CHILD``            0x8000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly.
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
+         ``TR_ALIGN_WINDOWS_RIGHT``         0x40000 Flag used to align windows (in items with windows) to the rightmost edge of `CustomTreeCtrl`.
          ============================== =========== ==================================================
 
         :param `validator`: window validator;
@@ -2322,9 +2328,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         self._dragImage = None
         self._underMouse = None
 
-        # TextCtrl initial settings for editable items        
-        self._textCtrl = None
-        self._renameTimer = None
+        # EditCtrl initial settings for editable items        
+        self._editCtrl = None
+        self._editTimer = None
 
         # This one allows us to handle Freeze() and Thaw() calls        
         self._freezeCount = 0
@@ -2477,10 +2483,10 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         # Here there may be something I miss... do I have to destroy
         # something else?
-        if self._renameTimer and self._renameTimer.IsRunning():
-            self._renameTimer.Stop()
-            del self._renameTimer
-            self._renameTimer = None
+        if self._editTimer and self._editTimer.IsRunning():
+            self._editTimer.Stop()
+            del self._editTimer
+            self._editTimer = None
 
         if self._findTimer and self._findTimer.IsRunning():
             self._findTimer.Stop()
@@ -3063,7 +3069,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         
         :see: The L{__init__} method for the `agwStyle` parameter description.
         """
-
+        
         # Do not try to expand the root node if it hasn't been created yet
         if self._anchor and not self.HasAGWFlag(TR_HIDE_ROOT) and agwStyle & TR_HIDE_ROOT:
         
@@ -4110,12 +4116,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         return lastGoodItem
 
 
-    def ResetTextControl(self):
-        """ Called by L{TreeTextCtrl} when it marks itself for deletion. """
+    def ResetEditControl(self):
+        """ Called by L{EditCtrl} when it marks itself for deletion. """
 
-        if self._textCtrl is not None:
-            self._textCtrl.Destroy()
-            self._textCtrl = None
+        if self._editCtrl is not None:
+            self._editCtrl.Destroy()
+            self._editCtrl = None
 
         self.CalculatePositions()
         self.Refresh()
@@ -4442,8 +4448,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param `item`: an instance of L{GenericTreeItem}.
         """
 
-        if self._textCtrl != None and item != self._textCtrl.item() and self.IsDescendantOf(item, self._textCtrl.item()):
-            self._textCtrl.StopEditing()
+        if self._editCtrl != None and item != self._editCtrl.item() and self.IsDescendantOf(item, self._editCtrl.item()):
+            self._editCtrl.StopEditing()
         
         if item != self._key_current and self.IsDescendantOf(item, self._key_current):
             self._key_current = None
@@ -4479,9 +4485,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         self._dirty = True     # do this first so stuff below doesn't cause flicker
 
-        if self._textCtrl != None and self.IsDescendantOf(item, self._textCtrl.item()):
+        if self._editCtrl != None and self.IsDescendantOf(item, self._editCtrl.item()):
             # can't delete the item being edited, cancel editing it first
-            self._textCtrl.StopEditing()
+            self._editCtrl.StopEditing()
         
         parent = item.GetParent()
 
@@ -5859,8 +5865,14 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             if item.GetHeight() > item.GetWindowSize()[1]:
                 ya += (item.GetHeight() - item.GetWindowSize()[1])/2
 
-            if align and level in self.absoluteWindows:
-                wndx = self.absoluteWindows[level] + item.GetX() + 2
+            if align == 1:
+                # Horizontal alignment of windows
+                if level in self.absoluteWindows:
+                    wndx = self.absoluteWindows[level] + item.GetX() + 2
+                    
+            elif align == 2:
+                # Rightmost alignment of windows
+                wndx = self.GetClientSize().x - item.GetWindowSize().x - 2
                 
             if not wnd.IsShown():
                 wnd.Show()
@@ -5880,8 +5892,16 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param `dc`: an instance of `wx.DC`;
         :param `level`: the item level in the tree hierarchy;
         :param `y`: the current vertical position in the `wx.PyScrolledWindow`;
-        :param `align`: ``True`` if we want to align windows (in items with windows)
-         at the same horizontal position.
+        :param `align`: an integer specifying the alignment type:
+
+         =============== =========================================
+         `align` Value   Description
+         =============== =========================================
+                0        No horizontal alignment of windows (in items with windows).
+                1        Windows (in items with windows) are aligned at the same horizontal position.
+                2        Windows (in items with windows) are aligned at the rightmost edge of L{CustomTreeCtrl}.
+         =============== =========================================
+
         """
 
         x = level*self._indent
@@ -6113,7 +6133,13 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         dc.SetFont(self._normalFont)
         dc.SetPen(self._dottedPen)
 
-        align = self.HasAGWFlag(TR_ALIGN_WINDOWS)            
+        align = 0
+        
+        if self.HasAGWFlag(TR_ALIGN_WINDOWS):
+            align = 1
+        elif self.HasAGWFlag(TR_ALIGN_WINDOWS_RIGHT):
+            align = 2
+            
         y = 2
         self.PaintLevel(self._anchor, dc, 0, y, align)
 
@@ -6125,7 +6151,11 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
 
-        self.RefreshSelected()
+        if self.HasAGWFlag(TR_ALIGN_WINDOWS_RIGHT) and self._itemWithWindow:
+            self.RefreshItemWithWindows()
+        else:
+            self.RefreshSelected()
+            
         event.Skip()
         
 
@@ -6608,11 +6638,11 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             else:
                 wx.YieldIfNeeded()
 
-        if self._textCtrl != None and item != self._textCtrl.item():
-            self._textCtrl.StopEditing()
+        if self._editCtrl != None and item != self._editCtrl.item():
+            self._editCtrl.StopEditing()
 
-        self._textCtrl = TreeTextCtrl(self, item=item)
-        self._textCtrl.SetFocus()
+        self._editCtrl = TreeTextCtrl(self, item=item)
+        self._editCtrl.SetFocus()
 
  
     def GetEditControl(self):
@@ -6622,12 +6652,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         simultaneously).
         """
         
-        return self._textCtrl
+        return self._editCtrl
 
 
-    def OnRenameAccept(self, item, value):
+    def OnAcceptEdit(self, item, value):
         """
-        Called by L{TreeTextCtrl}, to accept the changes and to send the
+        Called by L{EditCtrl}, to accept the changes and to send the
         ``EVT_TREE_END_LABEL_EDIT`` event.
 
         :param `item`: an instance of L{GenericTreeItem};
@@ -6643,9 +6673,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         return not self.GetEventHandler().ProcessEvent(le) or le.IsAllowed()
     
 
-    def OnRenameCancelled(self, item):
+    def OnCancelEdit(self, item):
         """
-        Called by L{TreeTextCtrl}, to cancel the changes and to send the
+        Called by L{EditCtrl}, to cancel the changes and to send the
         ``EVT_TREE_END_LABEL_EDIT`` event.
 
         :param `item`: an instance of L{GenericTreeItem}.        
@@ -6661,8 +6691,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         self.GetEventHandler().ProcessEvent(le)
 
 
-    def OnRenameTimer(self):
-        """ The timer for renaming has expired. Start editing. """
+    def OnEditTimer(self):
+        """ The timer for editing has expired. Start editing. """
         
         self.Edit(self._current)
 
@@ -6686,7 +6716,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         underMouseChanged = underMouse != self._underMouse
 
         if underMouse and (flags & TREE_HITTEST_ONITEM) and not event.LeftIsDown() and \
-           not self._isDragging and (not self._renameTimer or not self._renameTimer.IsRunning()):
+           not self._isDragging and (not self._editTimer or not self._editTimer.IsRunning()):
             underMouse = underMouse
         else:
             underMouse = None
@@ -6701,8 +6731,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         # Determines what item we are hovering over and need a tooltip for
         hoverItem = thisItem
 
-        # We do not want a tooltip if we are dragging, or if the rename timer is running
-        if underMouseChanged and not self._isDragging and (not self._renameTimer or not self._renameTimer.IsRunning()):
+        # We do not want a tooltip if we are dragging, or if the edit timer is running
+        if underMouseChanged and not self._isDragging and (not self._editTimer or not self._editTimer.IsRunning()):
             
             if hoverItem is not None:
                 # Ask the tree control what tooltip (if any) should be shown
@@ -6867,14 +6897,14 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             self._dragCount = 0
 
             if item == None:
-                if self._textCtrl != None and item != self._textCtrl.item():
-                    self._textCtrl.StopEditing()
+                if self._editCtrl != None and item != self._editCtrl.item():
+                    self._editCtrl.StopEditing()
                 return  # we hit the blank area
 
             if event.RightDown():
                 
-                if self._textCtrl != None and item != self._textCtrl.item():
-                    self._textCtrl.StopEditing()
+                if self._editCtrl != None and item != self._editCtrl.item():
+                    self._editCtrl.StopEditing()
 
                 self._hasFocus = True
                 self.SetFocusIgnoringChildren()
@@ -6915,17 +6945,17 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 
                     if item == self._current and (flags & TREE_HITTEST_ONITEMLABEL) and self.HasAGWFlag(TR_EDIT_LABELS):
                     
-                        if self._renameTimer:
+                        if self._editTimer:
                         
-                            if self._renameTimer.IsRunning():
+                            if self._editTimer.IsRunning():
                                 
-                                self._renameTimer.Stop()
+                                self._editTimer.Stop()
                         
                         else:
                         
-                            self._renameTimer = TreeRenameTimer(self)
+                            self._editTimer = TreeEditTimer(self)
                         
-                        self._renameTimer.Start(_DELAY, True)
+                        self._editTimer.Start(_DELAY, True)
                     
                     self._lastOnSame = False
                 
@@ -6933,12 +6963,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             else: # !RightDown() && !LeftUp() ==> LeftDown() || LeftDClick()
 
                 if not item or not item.IsEnabled():
-                    if self._textCtrl != None and item != self._textCtrl.item():
-                        self._textCtrl.StopEditing()
+                    if self._editCtrl != None and item != self._editCtrl.item():
+                        self._editCtrl.StopEditing()
                     return
 
-                if self._textCtrl != None and item != self._textCtrl.item():
-                    self._textCtrl.StopEditing()
+                if self._editCtrl != None and item != self._editCtrl.item():
+                    self._editCtrl.StopEditing()
 
                 self._hasFocus = True
                 self.SetFocusIgnoringChildren()
@@ -7001,8 +7031,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 if event.LeftDClick():
                 
                     # double clicking should not start editing the item label
-                    if self._renameTimer:
-                        self._renameTimer.Stop()
+                    if self._editTimer:
+                        self._editTimer.Stop()
 
                     self._lastOnSame = False
 
@@ -7059,15 +7089,23 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 #        event.Skip()        
 
 
-    def CalculateSize(self, item, dc, level=-1, align=False):
+    def CalculateSize(self, item, dc, level=-1, align=0):
         """
         Calculates overall position and size of an item.
 
         :param `item`: an instance of L{GenericTreeItem};
         :param `dc`: an instance of `wx.DC`;
         :param `level`: the item level in the tree hierarchy;
-        :param `align`: ``True`` if we want to align windows (in items with windows)
-         at the same horizontal position.
+        :param `align`: an integer specifying the alignment type:
+
+         =============== =========================================
+         `align` Value   Description
+         =============== =========================================
+                0        No horizontal alignment of windows (in items with windows).
+                1        Windows (in items with windows) are aligned at the same horizontal position.
+                2        Windows (in items with windows) are aligned at the rightmost edge of L{CustomTreeCtrl}.
+         =============== =========================================
+
         """
 
         attr = item.GetAttributes()
@@ -7124,19 +7162,19 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             totalHeight = max(total_h, item.GetWindowSize()[1])
 
         if level >= 0 and wnd:
-            if not align:
+            if align == 0:
                 if level in self.absoluteWindows:
                     self.absoluteWindows[level] = max(self.absoluteWindows[level], image_w+text_w+wcheck+2)
                 else:
                     self.absoluteWindows[level] = image_w+text_w+wcheck+2
-            else:
+            elif align == 1:
                 self.absoluteWindows[level] = max(self.absoluteWindows[level], image_w+text_w+wcheck+2)
                                         
         item.SetWidth(totalWidth)
         item.SetHeight(totalHeight)
 
 
-    def CalculateLevel(self, item, dc, level, y, align=False):
+    def CalculateLevel(self, item, dc, level, y, align=0):
         """
         Calculates the level of an item inside the tree hierarchy.
 
@@ -7144,8 +7182,16 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param `dc`: an instance of `wx.DC`;
         :param `level`: the item level in the tree hierarchy;
         :param `y`: the current vertical position inside the `wx.PyScrolledWindow`;
-        :param `align`: ``True`` if we want to align windows (in items with windows)
-         at the same horizontal position.
+        :param `align`: an integer specifying the alignment type:
+
+         =============== =========================================
+         `align` Value   Description
+         =============== =========================================
+                0        No horizontal alignment of windows (in items with windows).
+                1        Windows (in items with windows) are aligned at the same horizontal position.
+                2        Windows (in items with windows) are aligned at the rightmost edge of L{CustomTreeCtrl}.
+         =============== =========================================
+
         """
 
         x = level*self._indent
@@ -7202,9 +7248,10 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         y = 2
         y = self.CalculateLevel(self._anchor, dc, 0, y) # start recursion
         
-        if self.HasAGWFlag(TR_ALIGN_WINDOWS):
+        if self.HasAGWFlag(TR_ALIGN_WINDOWS) or self.HasAGWFlag(TR_ALIGN_WINDOWS_RIGHT):
+            align = (self.HasAGWFlag(TR_ALIGN_WINDOWS) and [1] or [2])[0]
             y = 2
-            y = self.CalculateLevel(self._anchor, dc, 0, y, align=True) # start recursion
+            y = self.CalculateLevel(self._anchor, dc, 0, y, align) # start recursion
 
 
     def RefreshSubtree(self, item):
@@ -7279,6 +7326,33 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         for child in children:
             self.RefreshSelectedUnder(child)
     
+
+    def RefreshItemWithWindows(self, item=None):
+        """
+        Refreshes the items with which a window is associated.
+
+        :param `item`: an instance of L{GenericTreeItem}. If `item` is ``None``, then the
+         recursive refresh starts from the root node.
+         
+        :note: This method is called only if the style ``TR_ALIGN_WINDOWS_RIGHT`` is used.
+        """
+
+        if self._freezeCount:
+            return
+
+        if item is None:
+            if self._anchor:
+                self.RefreshItemWithWindows(self._anchor)
+                return
+
+        wnd = item.GetWindow()            
+        if wnd and wnd.IsShown():
+            self.RefreshLine(item)
+
+        children = item.GetChildren()
+        for child in children:
+            self.RefreshItemWithWindows(child)
+
 
     def Freeze(self):
         """

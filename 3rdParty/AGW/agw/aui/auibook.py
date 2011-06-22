@@ -2682,6 +2682,7 @@ class AuiNotebook(wx.PyPanel):
         self._requested_tabctrl_height = -1
         self._textCtrl = None
         self._tabBounds = (-1, -1)
+        self._click_tab = None
 
         wx.PyPanel.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE|wx.TAB_TRAVERSAL)
         self._mgr = framemanager.AuiManager()

@@ -3664,8 +3664,8 @@ class AuiToolBar(wx.PyControl):
         if self._overflow_sizer_item:
         
             dropdown_size = self._art.GetElementSize(AUI_TBART_OVERFLOW_SIZE)
-            if dropdown_size > 0 and event.m_x > cli_rect.width - dropdown_size and \
-               event.m_y >= 0 and event.m_y < cli_rect.height and self._art:
+            if dropdown_size > 0 and event.GetX() > cli_rect.width - dropdown_size and \
+               event.GetY() >= 0 and event.GetY() < cli_rect.height and self._art:
                 return
             
         self._action_pos = wx.Point(*event.GetPosition())
@@ -3730,8 +3730,8 @@ class AuiToolBar(wx.PyControl):
         if self._overflow_sizer_item:
         
             dropdown_size = self._art.GetElementSize(AUI_TBART_OVERFLOW_SIZE)
-            if dropdown_size > 0 and event.m_x > cli_rect.width - dropdown_size and \
-               event.m_y >= 0 and event.m_y < cli_rect.height and self._art:            
+            if dropdown_size > 0 and event.GetX() > cli_rect.width - dropdown_size and \
+               event.GetY() >= 0 and event.GetY() < cli_rect.height and self._art:            
                 return
             
         self._action_pos = wx.Point(*event.GetPosition())
@@ -3778,7 +3778,7 @@ class AuiToolBar(wx.PyControl):
         
         # start a drag event
         if not self._dragging and self._action_item != None and self._action_pos != wx.Point(-1, -1) and \
-           abs(event.m_x - self._action_pos.x) + abs(event.m_y - self._action_pos.y) > 5:
+           abs(event.GetX() - self._action_pos.x) + abs(event.GetY() - self._action_pos.y) > 5:
         
             self.SetToolTipString("")
             self._dragging = True
