@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 10 Mar 2011, 15.00 GMT
+# Latest Revision: 22 Jul 2011, 21.00 GMT
 #
 #
 # TODO List
@@ -176,7 +176,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 10 Mar 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 22 Jul 2011, 21.00 GMT
 
 Version 0.8
 
@@ -12099,7 +12099,7 @@ class UltimateListCtrl(wx.PyControl):
         """
 
         self._mainWin.SortItems(func)
-        wx.CallAfter(self.Update)
+        wx.CallAfter(self.Refresh)
         
         return True
         
