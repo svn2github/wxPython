@@ -2,7 +2,7 @@
 # GENERICMESSAGEDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 12 Sep 2010, 10.00 GMT
+# Latest Revision: 22 Jul 2011, 21.00 GMT
 #
 #
 # TODO List
@@ -76,9 +76,9 @@ License And Version
 
 GenericMessageDialog is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 12 Sep 2010, 10.00 GMT
+Latest Revision: Andrea Gavana @ 22 Jul 2011, 21.00 GMT
 
-Version 0.5
+Version 0.6
 
 """
 
@@ -652,23 +652,39 @@ class GenericMessageDialog(wx.Dialog):
         self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigation)
         self.SwitchFocus()
         
+
+    def EndDialog(self, rc):
+        """
+        Ends the L{GenericMessageDialog} life. This will be done differently depending on
+        the dialog modal/non-modal behaviour.
+
+        :param `rc`: one of the ``wx.ID_YES``, ``wx.ID_NO``, ``wx.ID_OK``, ``wx.ID_CANCEL`` constants.
+
+        :note: the `rc` parameter is unused if the dialog is not modal.        
+        """
+
+        if self.IsModal():
+            self.EndModal(rc)
+        else:
+            self.Hide()
+                    
         
     def OnYes(self, event):
         """ L{GenericMessageDialog} had received a ``wx.ID_YES`` answer. """
 
-        self.EndModal(wx.ID_YES)
+        self.EndDialog(wx.ID_YES)
 
 
     def OnOk(self, event):
         """ L{GenericMessageDialog} had received a ``wx.ID_OK`` answer. """
 
-        self.EndModal(wx.ID_OK)
+        self.EndDialog(wx.ID_OK)
 
 
     def OnNo(self, event):
         """ L{GenericMessageDialog} had received a ``wx.ID_NO`` answer. """
 
-        self.EndModal(wx.ID_NO)
+        self.EndDialog(wx.ID_NO)
 
 
     def OnCancel(self, event):
@@ -678,7 +694,7 @@ class GenericMessageDialog(wx.Dialog):
         # only YES and NO are specified.
         
         if self._agwStyle & wx.YES_NO != wx.YES_NO or self._agwStyle & wx.CANCEL:
-            self.EndModal(wx.ID_CANCEL)
+            self.EndDialog(wx.ID_CANCEL)
 
 
     def OnKeyDown(self, event):
@@ -729,7 +745,7 @@ class GenericMessageDialog(wx.Dialog):
 
         button = wx.Window.FindFocus()
         buttonId = button.GetId()
-        self.EndModal(buttonId)
+        self.EndDialog(buttonId)
             
 
     def SwitchFocus(self):
