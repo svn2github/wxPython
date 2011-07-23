@@ -2,7 +2,7 @@
 # AQUABUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 27 Jan 2011, 15.00 GMT
+# Latest Revision: 22 Jul 2011, 21.00 GMT
 #
 #
 # TODO List
@@ -63,7 +63,7 @@ This class processes the following events:
 ================= ==================================================
 Event Name        Description
 ================= ==================================================
-``wx.EVT_BUTTON`` Process a `wx.wxEVT_COMMAND_BUTTON_CLICKED` event, when the button is clicked. 
+``wx.EVT_BUTTON`` Process a `wx.wxEVT_COMMAND_BUTTON_CLICKED` event, when the button is clicked.
 ================= ==================================================
 
 
@@ -72,9 +72,9 @@ License And Version
 
 AquaButton control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 27 Jan 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 22 Jul 2011, 21.00 GMT
 
-Version 0.3
+Version 0.4
 
 """
 
@@ -87,7 +87,7 @@ CLICK = 2
 
 class AquaButtonEvent(wx.PyCommandEvent):
     """ Event sent from the Aqua buttons when the button is activated. """
-    
+
     def __init__(self, eventType, eventId):
         """
         Default class constructor.
@@ -95,7 +95,7 @@ class AquaButtonEvent(wx.PyCommandEvent):
         :param `eventType`: the event type;
         :param `eventId`: the event identifier.
         """
-        
+
         wx.PyCommandEvent.__init__(self, eventType, eventId)
         self.isDown = False
         self.theButton = None
@@ -107,16 +107,16 @@ class AquaButtonEvent(wx.PyCommandEvent):
 
         :param `btn`: the button object.
         """
-        
+
         self.theButton = btn
 
 
     def GetButtonObj(self):
         """ Returns the object associated with this event. """
-        
+
         return self.theButton
 
-    
+
 class AquaButton(wx.PyControl):
     """ This is the main class implementation of L{AquaButton}. """
 
@@ -142,7 +142,7 @@ class AquaButton(wx.PyControl):
         wx.PyControl.__init__(self, parent, id, pos, size, style, validator, name)
 
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
-        
+
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ERASE_BACKGROUND, lambda event: None)
         self.Bind(wx.EVT_SIZE, self.OnSize)
@@ -160,30 +160,33 @@ class AquaButton(wx.PyControl):
             self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDown)
 
         self._mouseAction = None
-        self._bitmap = bitmap
+        self.SetBitmapLabel(bitmap)
         self._hasFocus = False
         self._saveBitmap = True
         self._storedBitmap = wx.NullBitmap
         self._pulseOnFocus = False
         self._gammaFactor = 1.0
         self._gammaIncrement = 0.1
-        
+
         self._timer = wx.Timer(self, wx.ID_ANY)
-        
+
         self.SetLabel(label)
         self.InheritAttributes()
         self.SetInitialSize(size)
 
         # The following defaults are better suited to draw the text outline
         if "__WXMAC__" in wx.PlatformInfo:
-            self._backColour = wx.Colour(147, 202, 255) 
+            self._backColour = wx.Colour(147, 202, 255)
             self._hoverColour = self.LightColour(self._backColour, 30)
             self._textColour = wx.BLACK
         else:
             self._backColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
             self._hoverColour = self.LightColour(self._backColour, 30)
             self._textColour = wx.WHITE
-        
+
+    def SetBitmapLabel(self, bitmap):
+        self._bitmap=bitmap
+        self.Refresh()
 
     def LightColour(self, colour, percent):
         """
@@ -209,7 +212,7 @@ class AquaButton(wx.PyControl):
 
         return wx.Colour(r, g, b)
 
-    
+
     def OnPaint(self, event):
         """
         Handles the ``wx.EVT_PAINT`` event for L{AquaButton}.
@@ -221,15 +224,15 @@ class AquaButton(wx.PyControl):
         gc = wx.GraphicsContext.Create(dc)
 
         xpos, ypos, width, height = self.GetClientRect()
-        
-        dc.SetBackground(wx.Brush(self.GetParent().GetBackgroundColour()))        
+
+        dc.SetBackground(wx.Brush(self.GetParent().GetBackgroundColour()))
         dc.Clear()
         gc.SetBrush(wx.WHITE_BRUSH)
 
         shadowOffset = 5
         btnOffset = 0
         clr = self._backColour
-        
+
         if self._mouseAction == CLICK:
             shadowOffset = 3
             clr = self._hoverColour
@@ -237,15 +240,15 @@ class AquaButton(wx.PyControl):
 
         elif self._mouseAction == HOVER:
             clr = self._hoverColour
-        
+
         rc1 = wx.Rect(btnOffset, btnOffset, width-8-btnOffset, height-8-btnOffset)
         path1 = self.GetPath(gc, rc1, 10)
         br1 = gc.CreateLinearGradientBrush(0, 0, 0, rc1.height+6, clr, wx.WHITE)
-        
+
         # Create shadow
         rc2 = wx.Rect(*rc1)
         rc2.Offset((shadowOffset, shadowOffset))
-        path2 = self.GetPath(gc, rc2, 10)        
+        path2 = self.GetPath(gc, rc2, 10)
         br2 = gc.CreateRadialGradientBrush(rc2.x, rc2.y,
                                            rc2.x+rc2.width, rc2.y+rc2.height,
                                            rc2.width, wx.NamedColour("grey"), wx.WHITE)
@@ -255,7 +258,7 @@ class AquaButton(wx.PyControl):
         rc3.Inflate(-5, -5)
         rc3.height = 15
         path3 = self.GetPath(gc, rc3, 10)
-        
+
         br3 = gc.CreateLinearGradientBrush(rc3.x, rc3.y, rc3.x, rc3.y+rc3.height,
                                            wx.Colour(255, 255, 255, 255), wx.Colour(255, 255, 255, 0))
 
@@ -268,7 +271,7 @@ class AquaButton(wx.PyControl):
         gc.FillPath(path3) #draw top bubble
 
         font = gc.CreateFont(self.GetFont(), self._textColour)
-        
+
         gc.SetFont(font)
         label = self.GetLabel()
         tw, th = gc.GetTextExtent(label)
@@ -277,8 +280,8 @@ class AquaButton(wx.PyControl):
             bw, bh = self._bitmap.GetWidth(), self._bitmap.GetHeight()
         else:
             bw = bh = 0
-            
-        pos_x = (width-bw-tw)/2+btnOffset-shadowOffset      # adjust for bitmap and text to centre        
+
+        pos_x = (width-bw-tw)/2+btnOffset-shadowOffset      # adjust for bitmap and text to centre
         if self._bitmap:
             pos_y =  (height-bh-shadowOffset)/2+btnOffset
             gc.DrawBitmap(self._bitmap, pos_x, pos_y, bw, bh) # draw bitmap if available
@@ -293,7 +296,7 @@ class AquaButton(wx.PyControl):
             memory = wx.MemoryDC()
             self._storedBitmap = wx.EmptyBitmapRGBA(width, height)
             memory.SelectObject(self._storedBitmap)
-            
+
             gcMemory = wx.GraphicsContext.Create(memory)
 
             gcMemory.SetBrush(br1)
@@ -310,7 +313,7 @@ class AquaButton(wx.PyControl):
             memory.SelectObject(wx.NullBitmap)
             self._storedBitmap = self._storedBitmap.ConvertToImage()
 
-    
+
     def GetPath(self, gc, rc, r):
         """
         Returns a rounded `wx.GraphicsPath` rectangle.
@@ -319,13 +322,13 @@ class AquaButton(wx.PyControl):
         :param `rc`: a client rectangle;
         :param `r`: the radius of the rounded part of the rectangle.
         """
-    
+
         x, y, w, h = rc
         path = gc.CreatePath()
         path.AddRoundedRectangle(x, y, w, h, r)
         path.CloseSubpath()
         return path
-    
+
 
     def OnSize(self, event):
         """
@@ -346,7 +349,7 @@ class AquaButton(wx.PyControl):
 
         if not self.IsEnabled():
             return
-        
+
         self._mouseAction = CLICK
         self.CaptureMouse()
         self.Refresh()
@@ -362,13 +365,13 @@ class AquaButton(wx.PyControl):
 
         if not self.IsEnabled() or not self.HasCapture():
             return
-        
+
         pos = event.GetPosition()
         rect = self.GetClientRect()
 
         if self.HasCapture():
             self.ReleaseMouse()
-            
+
         if rect.Contains(pos):
             self._mouseAction = HOVER
             self.Notify()
@@ -388,7 +391,7 @@ class AquaButton(wx.PyControl):
 
         if not self.IsEnabled():
             return
-        
+
         self._mouseAction = HOVER
         self.Refresh()
         event.Skip()
@@ -412,7 +415,7 @@ class AquaButton(wx.PyControl):
 
         :param `event`: a `wx.FocusEvent` event to be processed.
         """
-        
+
         self._hasFocus = True
         self.Refresh()
         self.Update()
@@ -432,7 +435,7 @@ class AquaButton(wx.PyControl):
         if self._pulseOnFocus:
             self._gammaFactor = 1.0
             self._timer.Stop()
-        
+
         self._hasFocus = False
         self.Refresh()
         self.Update()
@@ -444,7 +447,7 @@ class AquaButton(wx.PyControl):
 
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
-        
+
         if self._hasFocus and event.GetKeyCode() == ord(" "):
             self._mouseAction = HOVER
             self.Refresh()
@@ -477,8 +480,8 @@ class AquaButton(wx.PyControl):
         if not self._storedBitmap.IsOk():
             self._timer.Stop()
             return
-        
-        xpos, ypos, width, height = self.GetClientRect()        
+
+        xpos, ypos, width, height = self.GetClientRect()
         gamma = self._gammaFactor
 
         if gamma >= 1.3:
@@ -487,27 +490,27 @@ class AquaButton(wx.PyControl):
             self._gammaIncrement = abs(self._gammaIncrement)
 
         self._gammaFactor += self._gammaIncrement
-        
+
         image = self._storedBitmap.AdjustChannels(gamma, gamma, gamma, 1.0)
         dc = wx.ClientDC(self)
         dc.SetClippingRect(wx.Rect(xpos, ypos, width-8, height-8))
         dc.DrawBitmap(image.ConvertToBitmap(), xpos, ypos, True)
 
-        
+
     def SetInitialSize(self, size=None):
         """
         Given the current font and bezel width settings, calculate
         and set a good size.
 
-        :param `size`: an instance of `wx.Size`.        
+        :param `size`: an instance of `wx.Size`.
         """
-        
+
         if size is None:
-            size = wx.DefaultSize            
+            size = wx.DefaultSize
         wx.PyControl.SetInitialSize(self, size)
 
     SetBestSize = SetInitialSize
-    
+
 
     def AcceptsFocus(self):
         """
@@ -515,7 +518,7 @@ class AquaButton(wx.PyControl):
 
         :note: Overridden from `wx.PyControl`.
         """
-        
+
         return self.IsShown() and self.IsEnabled()
 
 
@@ -524,7 +527,7 @@ class AquaButton(wx.PyControl):
         Overridden base class virtual. By default we should use
         the same font/colour attributes as the native `wx.Button`.
         """
-        
+
         return wx.Button.GetClassDefaultAttributes()
 
 
@@ -535,19 +538,19 @@ class AquaButton(wx.PyControl):
 
         :note: Overridden from `wx.PyControl`.
         """
-        
+
         return False
-    
+
 
     def Enable(self, enable=True):
         """
         Enables/disables the button.
 
         :param `enable`: ``True`` to enable the button, ``False`` to disable it.
-        
+
         :note: Overridden from `wx.PyControl`.
         """
-        
+
         wx.PyControl.Enable(self, enable)
         self.Refresh()
 
@@ -562,7 +565,7 @@ class AquaButton(wx.PyControl):
 
         if pulse == self._pulseOnFocus:
             return
-        
+
         self._pulseOnFocus = pulse
         self.Invalidate()
 
@@ -571,8 +574,8 @@ class AquaButton(wx.PyControl):
         """ Returns whether the pulsing effect is active. """
 
         return self._pulseOnFocus
-    
-        
+
+
     def DoGetBestSize(self):
         """
         Overridden base class virtual. Determines the best size of the
@@ -582,11 +585,11 @@ class AquaButton(wx.PyControl):
         label = self.GetLabel()
         if not label:
             return wx.Size(112, 48)
-        
+
         dc = wx.ClientDC(self)
         dc.SetFont(self.GetFont())
         retWidth, retHeight = dc.GetTextExtent(label)
-        
+
         bmpWidth = bmpHeight = 0
         constant = 30
         if self._bitmap:
@@ -595,7 +598,7 @@ class AquaButton(wx.PyControl):
             retHeight = max(bmpHeight, retHeight)
             constant = 24
 
-        return wx.Size(retWidth+constant, retHeight+constant) 
+        return wx.Size(retWidth+constant, retHeight+constant)
 
 
     def SetBackgroundColour(self, colour):
@@ -620,7 +623,7 @@ class AquaButton(wx.PyControl):
         """
 
         return self._backColour
-    
+
 
     def SetHoverColour(self, colour):
         """
@@ -637,12 +640,12 @@ class AquaButton(wx.PyControl):
         """ Returns the button colour when the mouse is hovering on the button. """
 
         return self._hoverColour
-    
+
 
     SetBackgroundColor = SetBackgroundColour
     SetHoverColor = SetHoverColour
     GetHoverColor = GetHoverColour
-    
+
 
     def SetForegroundColour(self, colour):
         """
@@ -666,31 +669,243 @@ class AquaButton(wx.PyControl):
         """
 
         return self._textColour
-    
+
 
     def Invalidate(self):
         """ Invalidate the saved bitmap and refresh the button. """
 
         self._saveBitmap = True
         self._storedBitmap = wx.NullBitmap
-        
-        self.Refresh()        
+
+        self.Refresh()
 
 
     def SetDefault(self):
         """ Sets the default button. """
-        
+
         tlw = wx.GetTopLevelParent(self)
         if hasattr(tlw, 'SetDefaultItem'):
             tlw.SetDefaultItem(self)
-        
+
 
     def Notify(self):
         """ Actually sends a ``wx.EVT_BUTTON`` event to the listener (if any). """
-        
+
         evt = AquaButtonEvent(wx.wxEVT_COMMAND_BUTTON_CLICKED, self.GetId())
         evt.SetButtonObj(self)
         evt.SetEventObject(self)
         self.GetEventHandler().ProcessEvent(evt)
 
-        
+
+class __ToggleMixin(object):
+    """
+    A mixin that allows to transform L{AquaButton} in the corresponding toggle button.
+    """
+
+    def SetToggle(self, flag):
+        """
+        Sets the button as toggled/not toggled.
+
+        :param `flag`: ``True`` to set the button as toggled, ``False`` otherwise.
+        """
+
+        self.up = not flag
+        self.Refresh()
+
+    SetValue = SetToggle
+
+
+    def GetToggle(self):
+        """ Returns the toggled state of a button. """
+
+        return not self.up
+
+    GetValue = GetToggle
+
+
+    def OnLeftDown(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_DOWN`` event for L{AquaButton} when used as toggle button.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
+
+        if not self.IsEnabled():
+            return
+
+        self.saveUp = self.up
+        self.up = not self.up
+        self.CaptureMouse()
+        self.SetFocus()
+        self.Refresh()
+
+
+    def OnLeftUp(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_UP`` event for L{AquaButton} when used as toggle button.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
+
+        if not self.IsEnabled() or not self.HasCapture():
+            return
+        if self.HasCapture():
+            self.ReleaseMouse()
+            self.Refresh()
+            if self.up != self.saveUp:
+                self.Notify()
+
+
+    def OnKeyDown(self, event):
+        """
+        Handles the ``wx.EVT_KEY_DOWN`` event for L{AquaButton} when used as toggle button.
+
+        :param `event`: a `wx.KeyEvent` event to be processed.
+        """
+
+        event.Skip()
+
+
+    def OnMotion(self, event):
+        """
+        Handles the ``wx.EVT_MOTION`` event for L{AquaButton} when used as toggle button.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
+
+        if not self.IsEnabled():
+            return
+        if event.LeftIsDown() and self.HasCapture():
+            x,y = event.GetPositionTuple()
+            w,h = self.GetClientSizeTuple()
+            if x<w and x>=0 and y<h and y>=0:
+                self.up = not self.saveUp
+                self.Refresh()
+                return
+            if (x<0 or y<0 or x>=w or y>=h):
+                self.up = self.saveUp
+                self.Refresh()
+                return
+        event.Skip()
+
+
+    def OnKeyUp(self, event):
+        """
+        Handles the ``wx.EVT_KEY_UP`` event for L{AquaButton} when used as toggle button.
+
+        :param `event`: a `wx.KeyEvent` event to be processed.
+        """
+
+        if self.hasFocus and event.GetKeyCode() == ord(" "):
+            self.up = not self.up
+            self.Notify()
+            self.Refresh()
+
+        event.Skip()
+
+
+    def OnPaint(self, event):
+        """
+        Handles the ``wx.EVT_PAINT`` event for L{AquaButton} when used as toggle button.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
+
+        dc = wx.BufferedPaintDC(self)
+        gc = wx.GraphicsContext.Create(dc)
+
+        xpos, ypos, width, height = self.GetClientRect()
+
+        dc.SetBackground(wx.Brush(self.GetParent().GetBackgroundColour()))
+        dc.Clear()
+        gc.SetBrush(wx.WHITE_BRUSH)
+
+        shadowOffset = 5
+        btnOffset = 0
+        clr = self._backColour
+
+        if not self.up:
+            shadowOffset = 3
+            clr = self._hoverColour
+            btnOffset = 2
+
+        if self._mouseAction == HOVER:
+            clr = self._hoverColour
+
+        rc1 = wx.Rect(btnOffset, btnOffset, width-8-btnOffset, height-8-btnOffset)
+        path1 = self.GetPath(gc, rc1, 10)
+        br1 = gc.CreateLinearGradientBrush(0, 0, 0, rc1.height+6, clr, wx.WHITE)
+
+        # Create shadow
+        rc2 = wx.Rect(*rc1)
+        rc2.Offset((shadowOffset, shadowOffset))
+        path2 = self.GetPath(gc, rc2, 10)
+        br2 = gc.CreateRadialGradientBrush(rc2.x, rc2.y,
+                                           rc2.x+rc2.width, rc2.y+rc2.height,
+                                           rc2.width, wx.NamedColour("grey"), wx.WHITE)
+
+        # Create top water colour to give "aqua" effect
+        rc3 = wx.Rect(*rc1)
+        rc3.Inflate(-5, -5)
+        rc3.height = 15
+        path3 = self.GetPath(gc, rc3, 10)
+
+        br3 = gc.CreateLinearGradientBrush(rc3.x, rc3.y, rc3.x, rc3.y+rc3.height,
+                                           wx.Colour(255, 255, 255, 255), wx.Colour(255, 255, 255, 0))
+
+        # draw shapes
+        gc.SetBrush(br2)
+        gc.FillPath(path2)  #draw shadow
+        gc.SetBrush(br1)
+        gc.FillPath(path1) #draw main
+        gc.SetBrush(br3)
+        gc.FillPath(path3) #draw top bubble
+
+        font = gc.CreateFont(self.GetFont(), self._textColour)
+
+        gc.SetFont(font)
+        label = self.GetLabel()
+        tw, th = gc.GetTextExtent(label)
+
+        if self._bitmap:
+            bw, bh = self._bitmap.GetWidth(), self._bitmap.GetHeight()
+        else:
+            bw = bh = 0
+
+        pos_x = (width-bw-tw)/2+btnOffset-shadowOffset      # adjust for bitmap and text to centre
+        if self._bitmap:
+            pos_y =  (height-bh-shadowOffset)/2+btnOffset
+            gc.DrawBitmap(self._bitmap, pos_x, pos_y, bw, bh) # draw bitmap if available
+            pos_x = pos_x + 2   # extra spacing from bitmap
+
+        # Create a Path to draw the text
+        gc.DrawText(label, pos_x + bw + btnOffset, (height-th-shadowOffset)/2+btnOffset)      # draw the text
+
+        if self._saveBitmap:
+            # Save the bitmap using wx.MemoryDC for later use
+            self._saveBitmap = False
+            memory = wx.MemoryDC()
+            self._storedBitmap = wx.EmptyBitmapRGBA(width, height)
+            memory.SelectObject(self._storedBitmap)
+
+            gcMemory = wx.GraphicsContext.Create(memory)
+
+            gcMemory.SetBrush(br1)
+            gcMemory.FillPath(path1) #draw main
+            gcMemory.SetBrush(br3)
+            gcMemory.FillPath(path3) #draw top bubble
+
+            if self._bitmap:
+                gcMemory.DrawBitmap(self._bitmap, pos_x - 2, pos_y, bw, bh)
+
+            gcMemory.SetFont(font)
+            gcMemory.DrawText(label, pos_x + bw + btnOffset, (height-th-shadowOffset)/2+btnOffset)
+
+            memory.SelectObject(wx.NullBitmap)
+            self._storedBitmap = self._storedBitmap.ConvertToImage()
+
+
+class AquaToggleButton(__ToggleMixin, AquaButton):
+    """ An L{AquaButton} toggle button"""
+    pass
+
