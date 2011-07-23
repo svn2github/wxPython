@@ -108,7 +108,7 @@ TB_COMPLEX = 2
 """ to it a dummy frame and a wx.Panel. See the demo for details. """
 TB_DEFAULT_STYLE = wx.SIMPLE_BORDER | wx.STAY_ON_TOP | wx.FRAME_NO_TASKBAR
 """ Default window style for `ToasterBox`, with no caption nor close box. """
-TB_CAPTION = TB_DEFAULT_STYLE | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.FRAME_TOOL_WINDOW
+TB_CAPTION = TB_DEFAULT_STYLE | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.FRAME_NO_TASKBAR
 """ `ToasterBox` will have a caption, with the possibility to set a title """ \
 """ for the `ToasterBox` frame, and a close box. """
 TB_ONTIME = 1
@@ -957,8 +957,9 @@ class ToasterBoxWindow(wx.Frame):
     def NotifyTimer(self, event):
         """ Hides gradually the L{ToasterBoxWindow}. """
 
-        self.showtime.Stop()
-        del self.showtime
+        if self._scrollType != TB_SCR_TYPE_FADE:
+            self.showtime.Stop()
+            del self.showtime
 
         self._direction = wx.DOWN
         self.SetupPositions()

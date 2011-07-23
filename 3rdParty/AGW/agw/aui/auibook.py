@@ -3618,12 +3618,15 @@ class AuiNotebook(wx.PyPanel):
         """
 
         if page >= self._tabs.GetPageCount():
-            return False
+            return wx.NOT_FOUND
 
         bitmap = self.GetPageBitmap(page)
+        bmpData1 = bitmap.ConvertToImage().GetData()
+        
         for indx in xrange(self._imageList.GetImageCount()):
             imgListBmp = self._imageList.GetBitmap(indx)
-            if imgListBmp == bitmap:
+            bmpData2 = imgListBmp.ConvertToImage().GetData()
+            if bmpData1 == bmpData2:
                 return indx
 
         return wx.NOT_FOUND

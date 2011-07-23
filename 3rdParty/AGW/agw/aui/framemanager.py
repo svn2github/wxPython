@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 10 Mar 2011, 15.00 GMT
+# Latest Revision: 22 Jul 2011, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -1044,8 +1044,10 @@ class AuiPaneInfo(object):
             ret = self.MinSize1(arg1)
         elif isinstance(arg1, types.TupleType):
             ret = self.MinSize1(wx.Size(*arg1))
-        else:
+        elif isinstance(arg1, types.IntType) and arg2 is not None:
             ret = self.MinSize2(arg1, arg2)
+        else:
+            raise Exception("Invalid argument passed to `MinSize`: arg1=%s, arg2=%s"%(repr(arg1), repr(arg2)))
 
         return ret
 
@@ -1086,8 +1088,10 @@ class AuiPaneInfo(object):
             ret = self.MaxSize1(arg1)
         elif isinstance(arg1, types.TupleType):
             ret = self.MaxSize1(wx.Size(*arg1))
-        else:
+        elif isinstance(arg1, types.IntType) and arg2 is not None:
             ret = self.MaxSize2(arg1, arg2)
+        else:
+            raise Exception("Invalid argument passed to `MaxSize`: arg1=%s, arg2=%s"%(repr(arg1), repr(arg2)))
 
         return ret
     
@@ -1130,8 +1134,10 @@ class AuiPaneInfo(object):
             ret = self.BestSize1(arg1)
         elif isinstance(arg1, types.TupleType):
             ret = self.BestSize1(wx.Size(*arg1))
-        else:
+        elif isinstance(arg1, types.IntType) and arg2 is not None:
             ret = self.BestSize2(arg1, arg2)
+        else:
+            raise Exception("Invalid argument passed to `BestSize`: arg1=%s, arg2=%s"%(repr(arg1), repr(arg2)))
 
         return ret
     
