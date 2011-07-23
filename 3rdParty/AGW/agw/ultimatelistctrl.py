@@ -13440,6 +13440,9 @@ class UltimateListCtrl(wx.PyControl):
 
         if not self._headerWin:
             return
+
+        if height is not None and height < 1:
+            raise Exception("Invalid height passed to SetHeaderHeight: %s"%repr(height))
         
         self._headerWin._headerHeight = height
         self.DoLayout()
@@ -13466,6 +13469,9 @@ class UltimateListCtrl(wx.PyControl):
 
         if not self._footerWin:
             return
+
+        if height is not None and height < 1:
+            raise Exception("Invalid height passed to SetFooterHeight: %s"%repr(height))
         
         self._footerWin._footerHeight = height
         self.DoLayout()
