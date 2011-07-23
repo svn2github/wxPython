@@ -4907,6 +4907,8 @@ class UltimateListHeaderWindow(wx.PyControl):
         self._currentCursor = wx.NullCursor
         self._resizeCursor = wx.StockCursor(wx.CURSOR_SIZEWE)
         self._isDragging = False
+        self._headerHeight = None
+        self._footerHeight = None
        
         # Custom renderer for every column
         self._headerCustomRenderer = None
@@ -4978,6 +4980,15 @@ class UltimateListHeaderWindow(wx.PyControl):
         as it would have after a call to `Fit()`.
         """
 
+        if not self._isFooter:
+            if self._headerHeight is not None:
+                self.GetParent()._headerHeight = self._headerHeight
+                return wx.Size(200, self._headerHeight)
+        else:
+            if self._footerHeight is not None:
+                self.GetParent()._footerHeight = self._footerHeight
+                return wx.Size(200, self._footerHeight)
+        
         w, h, d, dummy = self.GetFullTextExtent("Hg")
         maxH = self.GetTextHeight()
         nativeH = wx.RendererNative.Get().GetHeaderButtonHeight(self.GetParent())
@@ -4993,6 +5004,12 @@ class UltimateListHeaderWindow(wx.PyControl):
             
         return wx.Size(200, maxH)
 
+
+    def GetWindowHeight(self):
+        """ Returns the L{UltimateListHeaderWindow} height, in pixels. """
+
+        return self.DoGetBestSize()
+    
 
     def IsColumnShown(self, column):
         """
@@ -12131,19 +12148,8 @@ class UltimateListCtrl(wx.PyControl):
         # the scrollable area as set that ourselves by
         # calling SetScrollbar() further down.
 
-        self.Layout()
+        self.DoLayout()
         
-        self._mainWin.ResizeColumns()
-        self._mainWin.ResetVisibleLinesRange(True)
-        self._mainWin.RecalculatePositions()
-        self._mainWin.AdjustScrollbars()
-
-        if self._headerWin:
-            self._headerWin.Refresh()
-            
-        if self._footerWin:
-            self._footerWin.Refresh()
-
 
     def OnSetFocus(self, event):
         """
@@ -13420,4 +13426,76 @@ class UltimateListCtrl(wx.PyControl):
             return self._mainWin.GetScrollRange()
 
         return 0
+
+
+    def SetHeaderHeight(self, height):
+        """
+        Sets the L{UltimateListHeaderWindow} height, in pixels. This overrides the default
+        header window size derived from `wx.RendererNative`. If `height` is ``None``, the
+        default behaviour is restored.
+
+        :param `height`: the header window height, in pixels (if it is ``None``, the default
+         height obtained using `wx.RendererNative` is used).
+        """
+
+        if not self._headerWin:
+            return
+        
+        self._headerWin._headerHeight = height
+        self.DoLayout()
+
+
+    def GetHeaderHeight(self):
+        """ Returns the L{UltimateListHeaderWindow} height, in pixels. """
+
+        if not self._headerWin:
+            return -1
+
+        return self._headerWin.GetWindowHeight()
+    
+
+    def SetFooterHeight(self, height):
+        """
+        Sets the L{UltimateListHeaderWindow} height, in pixels. This overrides the default
+        footer window size derived from `wx.RendererNative`. If `height` is ``None``, the
+        default behaviour is restored.
+
+        :param `height`: the footer window height, in pixels (if it is ``None``, the default
+         height obtained using `wx.RendererNative` is used).
+        """
+
+        if not self._footerWin:
+            return
+        
+        self._footerWin._footerHeight = height
+        self.DoLayout()
+
+
+    def GetFooterHeight(self):
+        """ Returns the L{UltimateListHeaderWindow} height, in pixels. """
+
+        if not self._footerWin:
+            return -1
+
+        return self._headerWin.GetWindowHeight()
+
+
+    def DoLayout(self):
+        """
+        Layouts the header, main and footer windows. This is an auxiliary method to avoid code
+        duplication.
+        """
+
+        self.Layout()
+        
+        self._mainWin.ResizeColumns()
+        self._mainWin.ResetVisibleLinesRange(True)
+        self._mainWin.RecalculatePositions()
+        self._mainWin.AdjustScrollbars()
+
+        if self._headerWin:
+            self._headerWin.Refresh()
+            
+        if self._footerWin:
+            self._footerWin.Refresh()
 
