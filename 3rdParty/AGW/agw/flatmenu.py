@@ -71,6 +71,7 @@ FlatMenu supports the following features:
 - Tooltips for menus and toolbar items on a `wx.StatusBar` (if present);
 - Transparency (alpha channel) for menu windows (for platforms supporting it);
 - FileHistory support through a pure-Python `wx.FileHistory` implementation;
+- Possibility to set a background bitmap for a `FlatMenu`;
 - First attempt in adding controls to FlatToolbar;
 - Added a MiniBar (thanks to Vladiuz);
 - Added `wx.ToolBar` methods AddCheckTool/AddRadioTool (thanks to Vladiuz).
@@ -671,7 +672,7 @@ class FMRenderer(object):
         artMgr.PaintStraightGradientBox(dc, sepRect2, lightColour, backColour, False) 
         
 
-    def DrawMenuItem(self, item, dc, xCoord, yCoord, imageMarginX, markerMarginX, textX, rightMarginX, selected=False):
+    def DrawMenuItem(self, item, dc, xCoord, yCoord, imageMarginX, markerMarginX, textX, rightMarginX, selected=False, backgroundImage=None):
         """
         Draws the menu item.
 
@@ -686,6 +687,8 @@ class FMRenderer(object):
         :param `rightMarginX`: the right margin between the text and the menu border;
         :param `selected`: ``True`` if this menu item is currentl hovered by the mouse,
          ``False`` otherwise.
+        :param `backgroundImage`: if not ``None``, an instance of `wx.Bitmap` which will
+         become the background image for this L{FlatMenu}.
         """
  
         borderXSize = item._parentMenu.GetBorderXWidth()
@@ -703,11 +706,12 @@ class FMRenderer(object):
         penColour  = backColour
         backBrush = wx.Brush(backColour)
         leftMarginWidth = item._parentMenu.GetLeftMarginWidth()
-        
-        pen = wx.Pen(penColour)
-        dc.SetPen(pen)
-        dc.SetBrush(backBrush)
-        dc.DrawRectangleRect(rect)
+
+        if backgroundImage is None:
+            pen = wx.Pen(penColour)
+            dc.SetPen(pen)
+            dc.SetBrush(backBrush)
+            dc.DrawRectangleRect(rect)
 
         # Draw the left margin gradient
         if self.drawLeftMargin:
@@ -1169,7 +1173,7 @@ class FMRenderer(object):
                     
             posx += rect.width + padding # + menubar._spacer
 
-        # Get a backgroud image of the more menu button
+        # Get a background image of the more menu button
         moreMenubtnBgBmpRect = wx.Rect(*menubar.GetMoreMenuButtonRect())
         if not menubar._moreMenuBgBmp:
             menubar._moreMenuBgBmp = wx.EmptyBitmap(moreMenubtnBgBmpRect.width, moreMenubtnBgBmpRect.height)
@@ -1227,7 +1231,12 @@ class FMRenderer(object):
         mem_dc.SetPen(pen)
         mem_dc.SetBrush(backBrush)
         mem_dc.DrawRectangleRect(menuRect)
+
+        backgroundImage = flatmenu._backgroundImage
         
+        if backgroundImage:
+            mem_dc.DrawBitmap(backgroundImage, flatmenu._leftMarginWidth, 0, True)
+
         # draw items
         posy = 3
         nItems = len(flatmenu._itemsArr)
@@ -1253,15 +1262,11 @@ class FMRenderer(object):
 
             visibleItems += 1
             item = flatmenu._itemsArr[nCount]
-            self.DrawMenuItem(item, mem_dc,
-                          posx,
-                          posy,     
-                          flatmenu._imgMarginX,
-                          flatmenu._markerMarginX,
-                          flatmenu._textX, 
-                          flatmenu._rightMarginPosX,
-                          nCount == flatmenu._selectedItem 
-                          )
+            self.DrawMenuItem(item, mem_dc, posx, posy,
+                              flatmenu._imgMarginX, flatmenu._markerMarginX,
+                              flatmenu._textX, flatmenu._rightMarginPosX,
+                              nCount == flatmenu._selectedItem,
+                              backgroundImage=backgroundImage)
             posy += item.GetHeight()
             item.Show()
             
@@ -3007,11 +3012,13 @@ class FlatMenuBar(wx.Panel):
                 return self._tbButtons.index(but)
         
         return wx.NOT_FOUND
+
     
     def GetBackgroundColour(self):
         """ Returns the menu bar background colour. """
         
         return self.GetRenderer().menuBarFaceColour
+
     
     def SetBackgroundColour(self, colour):
         """
@@ -5171,6 +5178,8 @@ class FlatMenu(FlatMenuBase):
         self._mb_submenu = 0
         self._is_dismiss = False
         self._numCols = 1
+        self._backgroundImage = None
+        self._originalBackgroundImage = None
 
         FlatMenuBase.__init__(self, parent)        
 
@@ -5409,6 +5418,11 @@ class FlatMenu(FlatMenuBase):
                 menuHeight += self._itemHeight
                     
         self.SetSize(wx.Size(self._menuWidth*self._numCols, menuHeight+4))
+
+        if self._originalBackgroundImage:
+            img = wx.ImageFromBitmap(self._originalBackgroundImage)
+            img = img.Scale(self._menuWidth*self._numCols-2-self._leftMarginWidth, menuHeight, wx.IMAGE_QUALITY_HIGH)
+            self._backgroundImage = img.ConvertToBitmap()
 
         # Add accelerator entry to the menu if needed
         accel = menuItem.GetAcceleratorEntry()
@@ -6850,6 +6864,30 @@ class FlatMenu(FlatMenuBase):
                 return i
         
         return wx.NOT_FOUND
+
+
+    def SetBackgroundBitmap(self, bitmap=None):
+        """
+        Sets a background bitmap for this particular L{FlatMenu}.
+
+        :param `bitmap`: an instance of `wx.Bitmap`. Set `bitmap` to ``None`` if you
+         wish to remove the background bitmap altogether.
+
+        :note: the bitmap is rescaled to fit the menu width and height.
+        """
+
+        self._originalBackgroundImage = bitmap
+        # Now we can resize the menu
+        self._resizeMenu = True
+        self.ResizeMenu()
+        
+
+    def GetBackgroundBitmap(self):
+        """
+        Returns the background bitmap for this particular L{FlatMenu}, if any.
+        """
+
+        return self._originalBackgroundImage
 
 
     def GetAllItems(self, menu=None, items=[]):

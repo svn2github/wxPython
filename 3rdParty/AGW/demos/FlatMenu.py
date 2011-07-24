@@ -17,12 +17,12 @@ try:
     from agw import flatmenu as FM
     from agw.artmanager import ArtManager, RendererBase, DCSaver
     from agw.fmresources import ControlFocus, ControlPressed
-    from agw.fmresources import FM_OPT_SHOW_CUSTOMIZE, FM_OPT_SHOW_TOOLBAR, FM_OPT_MINIBAR, FM_OPT_IS_LCD
+    from agw.fmresources import FM_OPT_SHOW_CUSTOMIZE, FM_OPT_SHOW_TOOLBAR, FM_OPT_MINIBAR
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.flatmenu as FM
     from wx.lib.agw.artmanager import ArtManager, RendererBase, DCSaver
     from wx.lib.agw.fmresources import ControlFocus, ControlPressed
-    from wx.lib.agw.fmresources import FM_OPT_SHOW_CUSTOMIZE, FM_OPT_SHOW_TOOLBAR, FM_OPT_MINIBAR, FM_OPT_IS_LCD
+    from wx.lib.agw.fmresources import FM_OPT_SHOW_CUSTOMIZE, FM_OPT_SHOW_TOOLBAR, FM_OPT_MINIBAR
 
 import images
 
@@ -71,6 +71,24 @@ MENU_PASTE = 10011
 def switchRGBtoBGR(colour):
 
     return wx.Colour(colour.Blue(), colour.Green(), colour.Red())
+
+
+def CreateBackgroundBitmap():
+
+    mem_dc = wx.MemoryDC()
+    bmp = wx.EmptyBitmap(200, 300)
+    mem_dc.SelectObject(bmp)
+
+    mem_dc.Clear()
+    
+    # colour the menu face with background colour
+    top = wx.NamedColour("blue")
+    bottom = wx.NamedColour("light blue")
+    filRect = wx.Rect(0, 0, 200, 300)
+    mem_dc.GradientFillConcentric(filRect, top, bottom, wx.Point(100, 150))
+
+    mem_dc.SelectObject(wx.NullBitmap)
+    return bmp
 
 #------------------------------------------------------------
 # A custom renderer class for FlatMenu
@@ -236,7 +254,7 @@ class FlatMenuDemo(wx.Frame):
         
     def CreateMinibar(self, parent):
         # create mini toolbar
-        self._mtb = FM.FlatMenuBar(parent, wx.ID_ANY, 16, 6, options = FM_OPT_SHOW_TOOLBAR|FM_OPT_MINIBAR|FM_OPT_IS_LCD)
+        self._mtb = FM.FlatMenuBar(parent, wx.ID_ANY, 16, 6, options = FM_OPT_SHOW_TOOLBAR|FM_OPT_MINIBAR)
 
         checkCancelBmp = wx.Bitmap(os.path.join(bitmapDir, "ok-16.png"), wx.BITMAP_TYPE_PNG)
         viewMagBmp = wx.Bitmap(os.path.join(bitmapDir, "viewmag-16.png"), wx.BITMAP_TYPE_PNG)
@@ -256,7 +274,7 @@ class FlatMenuDemo(wx.Frame):
     def CreateMenu(self):
 
         # Create the menubar
-        self._mb = FM.FlatMenuBar(self, wx.ID_ANY, 32, 5, options = FM_OPT_SHOW_TOOLBAR | FM_OPT_SHOW_CUSTOMIZE | FM_OPT_IS_LCD)
+        self._mb = FM.FlatMenuBar(self, wx.ID_ANY, 32, 5, options = FM_OPT_SHOW_TOOLBAR | FM_OPT_SHOW_CUSTOMIZE)
 
         fileMenu  = FM.FlatMenu()
         styleMenu = FM.FlatMenu()
@@ -454,6 +472,8 @@ class FlatMenuDemo(wx.Frame):
         item = FM.FlatMenuItem(helpMenu, MENU_HELP, "&About\tCtrl+A", "About...", wx.ITEM_NORMAL, None, helpImg)
         helpMenu.AppendItem(item)
 
+        fileMenu.SetBackgroundBitmap(CreateBackgroundBitmap())
+        
         # Add menu to the menu bar
         self._mb.Append(fileMenu, "&File")
         self._mb.Append(styleMenu, "&Style")

@@ -3,7 +3,7 @@
 # Ported And Enhanced From wxWidgets Contribution (Aj Bommarito) By:
 #
 # Andrea Gavana, @ 16 September 2005
-# Latest Revision: 28 Nov 2010, 16.00 GMT
+# Latest Revision: 22 Jul 2011, 21.00 GMT
 #
 #
 # TODO/Caveats List
@@ -87,7 +87,7 @@ License And Version
 
 ToasterBox is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 28 Nov 2010, 16.00 GMT
+Latest revision: Andrea Gavana @ 22 Jul 2011, 21.00 GMT
 
 Version 0.3
 
