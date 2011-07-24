@@ -17,12 +17,12 @@ try:
     from agw import flatmenu as FM
     from agw.artmanager import ArtManager, RendererBase, DCSaver
     from agw.fmresources import ControlFocus, ControlPressed
-    from agw.fmresources import FM_OPT_SHOW_CUSTOMIZE, FM_OPT_SHOW_TOOLBAR, FM_OPT_MINIBAR
+    from agw.fmresources import FM_OPT_SHOW_CUSTOMIZE, FM_OPT_SHOW_TOOLBAR, FM_OPT_MINIBAR, FM_OPT_IS_LCD
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.flatmenu as FM
     from wx.lib.agw.artmanager import ArtManager, RendererBase, DCSaver
     from wx.lib.agw.fmresources import ControlFocus, ControlPressed
-    from wx.lib.agw.fmresources import FM_OPT_SHOW_CUSTOMIZE, FM_OPT_SHOW_TOOLBAR, FM_OPT_MINIBAR
+    from wx.lib.agw.fmresources import FM_OPT_SHOW_CUSTOMIZE, FM_OPT_SHOW_TOOLBAR, FM_OPT_MINIBAR, FM_OPT_IS_LCD
 
 import images
 
@@ -150,7 +150,7 @@ class FlatMenuDemo(wx.Frame):
 
     def __init__(self, parent, log):
 
-        wx.Frame.__init__(self, parent, size=(700, -1), style=wx.DEFAULT_FRAME_STYLE |
+        wx.Frame.__init__(self, parent, size=(700, 500), style=wx.DEFAULT_FRAME_STYLE |
                           wx.NO_FULL_REPAINT_ON_RESIZE)
 
         self.SetIcon(images.Mondrian.GetIcon())
@@ -236,7 +236,7 @@ class FlatMenuDemo(wx.Frame):
         
     def CreateMinibar(self, parent):
         # create mini toolbar
-        self._mtb = FM.FlatMenuBar(parent, wx.ID_ANY, 16, 6, options = FM_OPT_SHOW_TOOLBAR|FM_OPT_MINIBAR)
+        self._mtb = FM.FlatMenuBar(parent, wx.ID_ANY, 16, 6, options = FM_OPT_SHOW_TOOLBAR|FM_OPT_MINIBAR|FM_OPT_IS_LCD)
 
         checkCancelBmp = wx.Bitmap(os.path.join(bitmapDir, "ok-16.png"), wx.BITMAP_TYPE_PNG)
         viewMagBmp = wx.Bitmap(os.path.join(bitmapDir, "viewmag-16.png"), wx.BITMAP_TYPE_PNG)
@@ -256,12 +256,13 @@ class FlatMenuDemo(wx.Frame):
     def CreateMenu(self):
 
         # Create the menubar
-        self._mb = FM.FlatMenuBar(self, wx.ID_ANY, 32, 5, options = FM_OPT_SHOW_TOOLBAR | FM_OPT_SHOW_CUSTOMIZE)
+        self._mb = FM.FlatMenuBar(self, wx.ID_ANY, 32, 5, options = FM_OPT_SHOW_TOOLBAR | FM_OPT_SHOW_CUSTOMIZE | FM_OPT_IS_LCD)
 
         fileMenu  = FM.FlatMenu()
         styleMenu = FM.FlatMenu()
         editMenu  = FM.FlatMenu()
         multipleMenu = FM.FlatMenu()
+        historyMenu = FM.FlatMenu()
         subMenu = FM.FlatMenu()
         helpMenu = FM.FlatMenu()
         subMenu1 = FM.FlatMenu()
@@ -443,6 +444,13 @@ class FlatMenuDemo(wx.Frame):
 
         multipleMenu.SetNumberColumns(2)
 
+        historyMenu.Append(wx.ID_OPEN, "&Open...")
+        self.historyMenu = historyMenu
+        self.filehistory = FM.FileHistory()
+        self.filehistory.UseMenu(self.historyMenu)
+
+        self.Bind(FM.EVT_FLAT_MENU_SELECTED, self.OnFileOpenDialog, id=wx.ID_OPEN)
+
         item = FM.FlatMenuItem(helpMenu, MENU_HELP, "&About\tCtrl+A", "About...", wx.ITEM_NORMAL, None, helpImg)
         helpMenu.AppendItem(item)
 
@@ -451,6 +459,7 @@ class FlatMenuDemo(wx.Frame):
         self._mb.Append(styleMenu, "&Style")
         self._mb.Append(editMenu, "&Edit")
         self._mb.Append(multipleMenu, "&Multiple Columns")
+        self._mb.Append(historyMenu, "File Histor&y")
         self._mb.Append(helpMenu, "&Help")
 
 
@@ -475,6 +484,8 @@ class FlatMenuDemo(wx.Frame):
         if "__WXMAC__" in wx.Platform:
             self.Bind(wx.EVT_SIZE, self.OnSize)
 
+        self.Bind(FM.EVT_FLAT_MENU_RANGE, self.OnFileHistory, id=wx.ID_FILE1, id2=wx.ID_FILE9+1)
+        
         
     def OnSize(self, event):
         
@@ -726,6 +737,30 @@ class FlatMenuDemo(wx.Frame):
         dlg.Destroy()
         
         return userString
+
+
+    def OnFileOpenDialog(self, evt):
+        dlg = wx.FileDialog(self, defaultDir = os.getcwd(),
+                            wildcard = "All Files|*", style = wx.OPEN | wx.CHANGE_DIR)
+
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            self.log.write("You selected %s\n" % path)
+
+            # add it to the history
+            self.filehistory.AddFileToHistory(path)
+
+        dlg.Destroy()
+
+
+    def OnFileHistory(self, evt):
+        # get the file based on the menu ID
+        fileNum = evt.GetId() - wx.ID_FILE1
+        path = self.filehistory.GetHistoryFile(fileNum)
+        self.log.write("You selected %s\n" % path)
+
+        # add it back to the history so it will be moved up the list
+        self.filehistory.AddFileToHistory(path)
 
 
     def OnEdit(self, event):

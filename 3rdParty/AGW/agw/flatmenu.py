@@ -2,7 +2,7 @@
 # FLATMENU wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 21 Sep 2010, 23.00 GMT
+# Latest Revision: 23 Jul 2011, 15.00 GMT
 #
 # TODO List
 #
@@ -70,6 +70,7 @@ FlatMenu supports the following features:
 - Multiple columns menu window;
 - Tooltips for menus and toolbar items on a `wx.StatusBar` (if present);
 - Transparency (alpha channel) for menu windows (for platforms supporting it);
+- FileHistory support through a pure-Python `wx.FileHistory` implementation;
 - First attempt in adding controls to FlatToolbar;
 - Added a MiniBar (thanks to Vladiuz);
 - Added `wx.ToolBar` methods AddCheckTool/AddRadioTool (thanks to Vladiuz).
@@ -120,16 +121,17 @@ License And Version
 
 FlatMenu is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 21 Sep 2010, 23.00 GMT
+Latest Revision: Andrea Gavana @ 23 Jul 2011, 15.00 GMT
 
-Version 0.9.6
+Version 1.0
 
 """
 
 __docformat__ = "epytext"
-__version__ = "0.9.6"
+__version__ = "1.0"
 
 import wx
+import os
 import math
 import cStringIO
 
@@ -215,6 +217,8 @@ EVT_FLAT_MENU_DISMISSED = wx.PyEventBinder(wxEVT_FLAT_MENU_DISMISSED, 1)
 """ Used internally. """
 EVT_FLAT_MENU_SELECTED = wx.PyEventBinder(wxEVT_FLAT_MENU_SELECTED, 2)
 """ Fires the wx.EVT_MENU event for `FlatMenu`. """
+EVT_FLAT_MENU_RANGE = wx.PyEventBinder(wxEVT_FLAT_MENU_SELECTED, 2)
+""" Fires the wx.EVT_MENU event for a series of `FlatMenu`. """
 EVT_FLAT_MENU_ITEM_MOUSE_OUT = wx.PyEventBinder(wxEVT_FLAT_MENU_ITEM_MOUSE_OUT, 1)
 """ Fires an event when the mouse leaves a `FlatMenuItem`. """
 EVT_FLAT_MENU_ITEM_MOUSE_OVER = wx.PyEventBinder(wxEVT_FLAT_MENU_ITEM_MOUSE_OVER, 1)
@@ -1763,6 +1767,316 @@ class FMRendererXP(FMRenderer):
 
         return wx.BLACK
 
+
+# ----------------------------------------------------------------------------
+# File history (a.k.a. MRU, most recently used, files list)
+# ----------------------------------------------------------------------------
+
+def GetMRUEntryLabel(n, path):
+    """
+    Returns the string used for the MRU list items in the menu.
+
+    :param `n`: the index of the file name in the MRU list;
+    :param `path`: the full path of the file name.
+
+    :note: The index `n` is 0-based, as usual, but the strings start from 1.
+    """
+
+    # we need to quote '&' characters which are used for mnemonics
+    pathInMenu = path.replace("&", "&&")
+    return "&%d %s"%(n + 1, pathInMenu)
+
+
+# ----------------------------------------------------------------------------
+# File history management
+# ----------------------------------------------------------------------------
+
+class FileHistory(object):
+    """
+    The L{FileHistory} encapsulates a user interface convenience, the list of most
+    recently visited files as shown on a menu (usually the File menu).
+
+    L{FileHistory} can manage one or more file menus. More than one menu may be
+    required in an MDI application, where the file history should appear on each MDI
+    child menu as well as the MDI parent frame.
+    """
+
+    def __init__(self, maxFiles=9, idBase=wx.ID_FILE1):
+        """
+        Default class constructor.
+
+        :param `maxFiles`: the maximum number of files that should be stored and displayed;
+        :param `idBase`: defaults to ``wx.ID_FILE1`` and represents the id given to the first
+         history menu item.
+
+        :note: Since menu items can't share the same ID you should change `idBase` to one of
+         your own defined IDs when using more than one L{FileHistory} in your application.
+         """
+
+        # The ID of the first history menu item (Doesn't have to be wxID_FILE1)
+        self._idBase = idBase
+
+        # Last n files
+        self._fileHistory = []
+
+        # Menus to maintain (may need several for an MDI app)
+        self._fileMenus = []
+
+        # Max files to maintain
+        self._fileMaxFiles = maxFiles
+        
+
+    def GetMaxFiles(self):
+        """ Returns the maximum number of files that can be stored. """
+
+        return self._fileMaxFiles
+    
+
+    # Accessors
+    def GetHistoryFile(self, index):
+        """
+        Returns the file at this index (zero-based).
+
+        :param `index`: the index at which the file is stored in the file list (zero-based).
+        """
+
+        return self._fileHistory[index]
+
+    
+    def GetCount(self):
+        """ Returns the number of files currently stored in the file history. """
+
+        return len(self._fileHistory)
+    
+
+    def GetMenus(self):
+        """
+        Returns the list of menus that are managed by this file history object.
+
+        :see: L{UseMenu}.
+        """
+
+        return self._fileMenus
+
+
+    # Set/get base id
+    def SetBaseId(self, baseId):
+        """
+        Sets the base identifier for the range used for appending items.
+
+        :param `baseId`: the base identifier for the range used for appending items.
+        """
+
+        self._idBase = baseId
+
+
+    def GetBaseId(self):
+        """ Returns the base identifier for the range used for appending items. """
+
+        return self._idBase
+        
+
+    def GetNoHistoryFiles(self):
+        """ Returns the number of files currently stored in the file history. """
+
+        return self.GetCount()
+    
+
+    def AddFileToHistory(self, fnNew):
+        """
+        Adds a file to the file history list, if the object has a pointer to an
+        appropriate file menu.
+
+        :param `fnNew`: the file name to add to the history list.
+        """
+
+        # check if we don't already have this file
+        numFiles = len(self._fileHistory)
+
+        for index, fileH in enumerate(self._fileHistory):
+            if fnNew == fileH: 
+                # we do have it, move it to the top of the history
+                self.RemoveFileFromHistory(index)
+                numFiles -= 1
+                break        
+
+        # if we already have a full history, delete the one at the end
+        if numFiles == self._fileMaxFiles:        
+            self.RemoveFileFromHistory(numFiles-1)
+
+        # add a new menu item to all file menus (they will be updated below)
+        for menu in self._fileMenus:
+            if numFiles == 0 and menu.GetMenuItemCount() > 0:
+                menu.AppendSeparator()
+
+            # label doesn't matter, it will be set below anyhow, but it can't
+            # be empty (this is supposed to indicate a stock item)
+            menu.Append(self._idBase + numFiles, " ")
+        
+        # insert the new file in the beginning of the file history
+        self._fileHistory.insert(0, fnNew)
+        numFiles += 1
+
+        # update the labels in all menus
+        for index in xrange(numFiles):
+        
+            # if in same directory just show the filename otherwise the full path
+            fnOld = self._fileHistory[index]
+            oldPath, newPath = os.path.split(fnOld)[0], os.path.split(fnNew)[0]
+            
+            if oldPath == newPath:            
+                pathInMenu = os.path.split(fnOld)[1]
+            
+            else:
+                # file in different directory
+                # absolute path could also set relative path
+                pathInMenu = self._fileHistory[index]
+            
+            for menu in self._fileMenus:
+                menu.SetLabel(self._idBase + index, GetMRUEntryLabel(index, pathInMenu))
+            
+
+    def RemoveFileFromHistory(self, index):
+        """
+        Removes the specified file from the history.
+
+        :param `index`: the zero-based index indicating the file name position in
+         the file list.
+        """
+
+        numFiles = len(self._fileHistory)
+        if index >= numFiles:
+            raise Exception("Invalid index in RemoveFileFromHistory: %d (only %d files)"%(index, numFiles))
+
+        # delete the element from the array
+        self._fileHistory.pop(index)
+        numFiles -= 1
+
+        for menu in self._fileMenus:
+            # shift filenames up
+            for j in xrange(numFiles):            
+                menu.SetLabel(self._idBase + j, GetMRUEntryLabel(j, self._fileHistory[j]))
+            
+            # delete the last menu item which is unused now
+            lastItemId = self._idBase + numFiles
+            if menu.FindItem(lastItemId):
+                menu.Delete(lastItemId)
+
+            if not self._fileHistory:
+                lastMenuItem = menu.GetMenuItems()[-1]
+                if lastMenuItem.IsSeparator():
+                    menu.Delete(lastMenuItem)
+                
+                #else: menu is empty somehow
+            
+
+    def UseMenu(self, menu):
+        """
+        Adds this menu to the list of those menus that are managed by this file history
+        object.
+
+        :param `menu`: an instance of L{FlatMenu}.        
+
+        :see: L{AddFilesToMenu} for initializing the menu with filenames that are already
+         in the history when this function is called, as this is not done automatically.
+        """
+        
+        if menu not in self._fileMenus:
+            self._fileMenus.append(menu)
+
+
+    def RemoveMenu(self, menu):
+        """
+        Removes this menu from the list of those managed by this object.
+
+        :param `menu`: an instance of L{FlatMenu}.        
+        """
+        
+        self._fileMenus.remove(menu)
+
+
+    def Load(self, config):
+        """
+        Loads the file history from the given `config` object.
+
+        :param `config`: an instance of `wx.Config`.
+        
+        :note: This function should be called explicitly by the application.
+
+        :see: L{Save}.
+        """
+
+        self._fileHistory = []
+        buffer = "file%d"
+        count = 1
+
+        while 1:
+            historyFile = config.Read(buffer%count)
+            if not historyFile or len(self._fileHistory) >= self._fileMaxFiles:
+                break
+    
+            self._fileHistory.append(historyFile)
+            count += 1
+
+        self.AddFilesToMenu()
+
+
+    def Save(self, config):
+        """
+        Saves the file history to the given `config` object.
+
+        :param `config`: an instance of `wx.Config`.
+        
+        :note: This function should be called explicitly by the application.
+
+        :see: L{Load}.
+        """
+
+        buffer = "file%d"
+
+        for index in xrange(self._fileMaxFiles):
+        
+            if index < len(self._fileHistory):
+                config.Write(buffer%(index+1), self._fileHistory[i])
+            else:
+                config.Write(buffer%(index+1), "")
+    
+
+    def AddFilesToMenu(self, menu=None):
+        """
+        Appends the files in the history list, to all menus managed by the file history object
+        if `menu` is ``None``. Otherwise it calls the auxiliary method L{AddFilesToMenu2}.
+
+        :param `menu`: if not ``None``, an instance of L{FlatMenu}.        
+        """        
+
+        if not self._fileHistory:
+            return
+
+        if menu is not None:
+            self.AddFilesToMenu2(menu)
+            return
+        
+        for menu in self._fileMenus:
+            self.AddFilesToMenu2(menu)
+    
+
+    def AddFilesToMenu2(self, menu):
+        """
+        Appends the files in the history list, to the given menu only.
+
+        :param `menu`: an instance of L{FlatMenu}.        
+        """
+        
+        if not self._fileHistory:
+            return
+
+        if menu.GetMenuItemCount():
+            menu.AppendSeparator()
+
+        for index in xrange(len(self._fileHistory)):        
+            menu.Append(self._idBase + index, GetMRUEntryLabel(index, self._fileHistory[i]))
+        
 
 # ---------------------------------------------------------------------------- #
 # Class FlatMenuEvent
@@ -4172,6 +4486,7 @@ class FlatToolbarItem(object):
         self._shortHelp = shortHelp
         self._longHelp = longHelp
 
+
     def GetLabel(self):
         """ Returns the tool label. """
 
@@ -4728,7 +5043,7 @@ class FlatMenuItem(object):
 
         :param `text`: the new item label (excluding the accelerator).
         """
- 
+
         if text:
 
             indx = text.find("\t")
@@ -6144,6 +6459,8 @@ class FlatMenu(FlatMenuBase):
             
         return self._RemoveById(item)
 
+    Delete = Remove
+    
 
     def _DestroyById(self, id):
         """ Used internally. """
@@ -6321,6 +6638,36 @@ class FlatMenu(FlatMenuBase):
                 return None
             
 
+    def SetLabel(self, itemId, label):
+        """
+        Sets the label of a L{FlatMenuItem}.
+
+        :param `id`: The menu item identifier;
+        :param `label`: The menu item label to set.
+
+        :see: L{GetLabel}.
+        """
+
+        item = self.FindItem(itemId)
+        item.SetLabel(label)
+        item.SetText(label)
+
+        self.ResizeMenu()
+        
+
+    def GetLabel(self, itemId):
+        """
+        Returns the label of a L{FlatMenuItem}.
+
+        :param `id`: The menu item identifier;
+
+        :see: L{SetLabel}.
+        """        
+
+        item = self.FindItem(itemId)
+        return item.GetText()
+    
+
     def FindMenuItemPos(self, itemId, menu=None):
         """
         Finds an item and its position inside the menu based on its id.
@@ -6375,6 +6722,11 @@ class FlatMenu(FlatMenuBase):
 
         return table
 
+
+    def GetMenuItemCount(self):
+
+        return len(self._itemsArr)
+    
 
     def GetAccelArray(self):
         """ Returns an array filled with the accelerator entries for the menu. """
