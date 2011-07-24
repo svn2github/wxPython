@@ -395,6 +395,11 @@ class FlatMenuDemo(wx.Frame):
 
         styleMenu.AppendSeparator()
         item = FM.FlatMenuItem(styleMenu, MENU_USE_CUSTOM, "Show Customize DropDown", "Shows the customize drop down arrow", wx.ITEM_CHECK)
+
+        # Demonstrate how to set custom font and text colour to a FlatMenuItem
+        item.SetFont(wx.Font(10, wx.SWISS, wx.ITALIC, wx.BOLD, False, "Courier New"))
+        item.SetTextColour(wx.RED)
+        
         item.Check(True)
         styleMenu.AppendItem(item)
         
@@ -453,11 +458,20 @@ class FlatMenuDemo(wx.Frame):
         maxItems = 17
         numCols = 2
         switch = int(math.ceil(maxItems/float(numCols)))
-        
+
+        fnt = wx.Font(9, wx.SWISS, wx.ITALIC, wx.BOLD, False, "Courier New")
+        colours = [wx.RED, wx.GREEN, wx.BLUE]
         for i in xrange(17):
             row, col = i%switch, i/switch
-            bmp = (random.randint(0, 1) == 1 and [colBmp] or [wx.NullBitmap])[0]
+            result = random.randint(0, 1) == 1
+            bmp = (result and [colBmp] or [wx.NullBitmap])[0]
             item = FM.FlatMenuItem(multipleMenu, wx.ID_ANY, "Row %d, Col %d"%((row+1, col+1)), "", wx.ITEM_NORMAL, None, bmp)
+            if result == 0:
+                # Demonstrate how to set custom font and text colour to a FlatMenuItem
+                col = random.randint(0, 2)
+                item.SetFont(fnt)
+                item.SetTextColour(colours[col])
+                
             multipleMenu.AppendItem(item)
 
         multipleMenu.SetNumberColumns(2)

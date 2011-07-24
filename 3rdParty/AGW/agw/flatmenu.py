@@ -784,13 +784,19 @@ class FMRenderer(object):
         
         if text:
 
-            font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+            font = item.GetFont()
+            if font is None:
+                font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+                
             if selected:
                 enabledTxtColour = colourutils.BestLabelColour(self.menuFocusFaceColour, bw=True)
             else:
                 enabledTxtColour = colourutils.BestLabelColour(self.menuFaceColour, bw=True)
             disabledTxtColour = self.itemTextColourDisabled
             textColour = (item.IsEnabled() and [enabledTxtColour] or [disabledTxtColour])[0]
+
+            if item.IsEnabled() and item.GetTextColour():
+                textColour = item.GetTextColour()
 
             dc.SetFont(font)
             w, h = dc.GetTextExtent(text)
@@ -4742,6 +4748,8 @@ class FlatMenuItem(object):
         self._groupPtr = None
         self._visible = False
         self._contextMenu = None
+        self._font = None
+        self._textColour = None
 
         self.SetLabel(self._text)
         self.SetMenuBar()
@@ -5015,6 +5023,7 @@ class FlatMenuItem(object):
 
         self._visible = show
 
+
     def GetHeight(self):
         """ Returns the menu item height. """
 
@@ -5131,6 +5140,29 @@ class FlatMenuItem(object):
         # Our parent menu might want to do something with this change
         if self._parentMenu:
             self._parentMenu.UpdateItem(self)
+
+
+    def SetFont(self, font=None):
+
+        self._font = font
+
+        if self._parentMenu:
+            self._parentMenu.UpdateItem(self)
+
+
+    def GetFont(self):
+
+        return self._font
+    
+
+    def SetTextColour(self, colour=None):
+
+        self._textColour = colour
+
+
+    def GetTextColour(self):
+
+        return self._textColour        
 
 
 #--------------------------------------------------------
@@ -5455,7 +5487,10 @@ class FlatMenu(FlatMenuBase):
 
         dc = wx.ClientDC(self)
 
-        font = ArtManager.Get().GetFont()
+        font = menuItem.GetFont()
+        if font is None:
+            font = ArtManager.Get().GetFont()
+
         dc.SetFont(font)
 
         accelFiller = "XXXX"     # 4 spaces betweem text and accel column
@@ -6650,7 +6685,31 @@ class FlatMenu(FlatMenuBase):
                 return parentMenu._itemsArr[idx]
             else:
                 return None
-            
+
+
+    def SetItemFont(self, itemId, font=None):
+        
+        item = self.FindItem(itemId)
+        item.SetFont(font)
+
+
+    def GetItemFont(self, itemId):
+
+        item = self.FindItem(itemId)
+        return item.GetFont()
+        
+
+    def SetItemTextColour(self, itemId, colour=None):
+        
+        item = self.FindItem(itemId)
+        item.SetTextColour(colour)
+
+
+    def GetItemTextColour(self, itemId):
+
+        item = self.FindItem(itemId)
+        return item.GetTextColour()
+
 
     def SetLabel(self, itemId, label):
         """
@@ -6738,6 +6797,7 @@ class FlatMenu(FlatMenuBase):
 
 
     def GetMenuItemCount(self):
+        """ Returns the number of items in the L{FlatMenu}. """
 
         return len(self._itemsArr)
     
