@@ -824,7 +824,7 @@ class FlatMenuDemo(wx.Frame):
               "Author: Andrea Gavana @ 03 Nov 2006\n\n" + \
               "Please report any bug/requests or improvements\n" + \
               "to Andrea Gavana at the following email addresses:\n\n" + \
-              "andrea.gavana@gmail.com\ngavana@kpo.kz\n\n" + \
+              "andrea.gavana@gmail.com\nandrea.gavana@maerskoil.com\n\n" + \
               "Welcome to wxPython " + wx.VERSION_STRING + "!!"
               
         dlg = wx.MessageDialog(self, msg, "FlatMenu wxPython Demo",

@@ -13,7 +13,7 @@
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
 #
-# gavana@kpo.kz
+# andrea.gavana@maerskoil.com
 # andrea.gavana@gmail.com
 #
 # Or, Obviously, To The wxPython Mailing List!!!

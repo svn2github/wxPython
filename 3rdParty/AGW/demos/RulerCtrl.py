@@ -409,7 +409,7 @@ class RulerCtrlDemo(wx.Frame):
             "Author: Andrea Gavana @ 03 Nov 2006\n\n" + \
             "Please Report Any Bug/Requests Of Improvements\n" + \
             "To Me At The Following Adresses:\n\n" + \
-            "andrea.gavana@gmail.com\n" + "gavana@kpo.kz\n\n" + \
+            "andrea.gavana@gmail.com\n" + "andrea.gavana@maerskoil.com\n\n" + \
             "Welcome To wxPython " + wx.VERSION_STRING + "!!"
 
         dlg = wx.MessageDialog(self, msg, "RulerCtrl wxPython Demo",

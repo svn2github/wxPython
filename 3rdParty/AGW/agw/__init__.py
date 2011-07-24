@@ -110,13 +110,13 @@ Please let me know if you are using AGW!
 You can contact me at:
 
 andrea.gavana@gmail.com
-gavana@kpo.kz
+andrea.gavana@maerskoil.com
 
-AGW version: 0.9.1
+AGW version: 0.9.2
 
-Last updated: 22 Jul 2011, 21.00 GMT
+Last updated: 23 Jul 2011, 22.00 GMT
 
 """
 
-__version__ = "0.9.1"
+__version__ = "0.9.2"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"

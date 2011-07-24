@@ -2477,7 +2477,7 @@ class AuiFrame(wx.Frame):
               "Author: Andrea Gavana @ 23 Dec 2005\n\n" + \
               "Please Report Any Bug/Requests Of Improvements\n" + \
               "To Me At The Following Adresses:\n\n" + \
-              "gavana@kpo.kz\n" + "andrea.gavana@gmail.com\n\n" + \
+              "andrea.gavana@maerskoil.com\n" + "andrea.gavana@gmail.com\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
               
         dlg = wx.MessageDialog(self, msg, "AUI Demo",
