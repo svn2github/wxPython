@@ -3231,11 +3231,10 @@ class FlatMenuBar(wx.Panel):
         """
         
         # we handle only button clicks
-        if self._tbButtons[idx]._tbItem.IsRegularItem() or \
-            self._tbButtons[idx]._tbItem.IsCheckItem():
-
+        tbItem = self._tbButtons[idx]._tbItem
+        if tbItem.IsRegularItem() or tbItem.IsCheckItem() or tbItem.IsRadioItem():
             # Create the event
-            event = wx.CommandEvent(wxEVT_FLAT_MENU_SELECTED, self._tbButtons[idx]._tbItem.GetId())
+            event = wx.CommandEvent(wxEVT_FLAT_MENU_SELECTED, tbItem.GetId())
             event.SetEventObject(self)
 
             # all events are handled by this control and its parents
