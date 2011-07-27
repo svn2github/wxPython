@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 21 Jun 2011, 22.00 GMT
+# Latest Revision: 27 Jul 2011, 19.00 GMT
 #
 #
 # TODO List
@@ -212,7 +212,7 @@ License And Version
 
 CustomTreeCtrl is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 21 Jun 2011, 22.00 GMT
+Latest Revision: Andrea Gavana @ 27 Jul 2011, 19.00 GMT
 
 Version 2.4
 
@@ -7513,8 +7513,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         """
         
         child, cookie = self.GetFirstChild(item)
+        lastheight = 0
 
-        while child.IsOk():
+        while child:
 
             rect = self.GetBoundingRect(child, True)
             
