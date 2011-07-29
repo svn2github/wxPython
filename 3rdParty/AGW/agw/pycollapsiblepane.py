@@ -314,8 +314,9 @@ class PyCollapsiblePane(wx.PyPanel):
                 # others.
                 def paint(evt):
                     def updateBtn():
-                        self._pButton.Refresh()
-                        self._pButton.Update()
+                        if self and self._pButton:
+                            self._pButton.Refresh()
+                            self._pButton.Update()
                     wx.CallAfter(updateBtn)
                     evt.Skip()
                 self._pStaticBox.Bind(wx.EVT_PAINT, paint)
