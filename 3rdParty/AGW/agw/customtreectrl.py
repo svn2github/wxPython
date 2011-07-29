@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 27 Jul 2011, 19.00 GMT
+# Latest Revision: 29 Jul 2011, 21.00 GMT
 #
 #
 # TODO List
@@ -212,7 +212,7 @@ License And Version
 
 CustomTreeCtrl is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 27 Jul 2011, 19.00 GMT
+Latest Revision: Andrea Gavana @ 29 Jul 2011, 21.00 GMT
 
 Version 2.4
 
@@ -4666,6 +4666,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         if self._hasWindows:
             self.HideWindows()
+
+        self.AdjustMyScrollbars()            
             
         event.SetEventType(wxEVT_TREE_ITEM_COLLAPSED)
         self.GetEventHandler().ProcessEvent(event)
