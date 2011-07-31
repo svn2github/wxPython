@@ -1236,7 +1236,10 @@ class AuiPaneInfo(object):
         ``AUI_MINIMIZE_CAPT_SMART``         0x08 Displays the caption in the best rotation (horizontal in the top and in the bottom tool bar or clockwise in the right and in the left tool bar)
         ``AUI_MINIMIZE_CAPT_HORZ``          0x10 Displays the caption horizontally
         ============================== ========= ==============================
-        
+
+        :note: In order to use the ``AUI_MINIMIZE_POS_TOOLBAR`` flag, the instance of L{AuiPaneInfo}
+         you pass as an input for L{MinimizeTarget} **must** have a real name and not the randomly
+         generated one. Remember to set the L{Name} property of the toolbar pane before calling this method.
         """
         
         self.minimize_mode = mode
