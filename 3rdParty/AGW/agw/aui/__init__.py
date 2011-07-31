@@ -232,7 +232,11 @@ Plus the following features:
   (g) Ability of creating `AuiToolBar` tools with [counter]clockwise rotation. This allows to propose a
       variant of the minimizing functionality with a rotated button which keeps the caption of the pane
       as label;
-  (h) Allow setting the alignment of all tools in a toolbar that is expanded.
+  (h) Allow setting the alignment of all tools in a toolbar that is expanded;
+  (i) Implementation of the ``AUI_MINIMIZE_POS_TOOLBAR`` flag, which allows to minimize a pane inside
+      an existing toolbar. Limitation: if the minimized icon in the toolbar ends up in the overflowing
+      items (i.e., a menu is needed to show the icon), this style will not work.
+
 
 
 TODOs
@@ -270,7 +274,7 @@ License And Version
 
 AUI library is distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 22 Jul 2011, 21.00 GMT
+Latest revision: Andrea Gavana @ 31 Jul 2011, 22.00 GMT
 
 Version 1.3. 
 

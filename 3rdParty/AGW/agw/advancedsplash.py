@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 10 Oct 2005
-# Latest Revision: 27 Jan 2011, 15.00 GMT
+# Latest Revision: 26 Jul 2011, 22.00 GMT
 #
 #
 # TODO List/Caveats
@@ -35,21 +35,21 @@
 
 
 """
-AdvancedSplash tries to reproduce the behavior of `wx.SplashScreen`, with
+L{AdvancedSplash} tries to reproduce the behavior of `wx.SplashScreen`, with
 some enhancements.
 
 
 Description
 ===========
 
-AdvancedSplash tries to reproduce the behavior of `wx.SplashScreen`, but with
+L{AdvancedSplash} tries to reproduce the behavior of `wx.SplashScreen`, but with
 some enhancements (in my opinion).
 
-AdvancedSplash starts its construction from a simple frame. Then, depending on
-the options passed to AdvancedSplash, it sets the frame shape accordingly to
-the image passed as input. AdvancedSplash behaves somewhat like `wx.SplashScreen`,
-and almost all the methods available in `wx.SplashScreen` are available also In
-AdvancedSplash.
+L{AdvancedSplash} starts its construction from a simple frame. Then, depending on
+the options passed to it, it sets the frame shape accordingly to the image passed
+as input. L{AdvancedSplash} behaves somewhat like `wx.SplashScreen`, and almost
+all the methods available in `wx.SplashScreen` are available also in
+this module.
 
 
 Usage
@@ -57,23 +57,39 @@ Usage
 
 Sample usage::
 
-    SplashScreen = AS.AdvancedSplash(parent, bitmap, timeout, agwStyle,
-                                     shadowcolour)
+    import wx
+    import wx.lib.agw.advancedsplash as AS
 
+    app = wx.App(0)
+
+    frame = wx.Frame(None, -1, "AdvancedSplash Test")
+    
+    imagePath = "my_splash_image.png"
+    bitmap = wx.Bitmap(imagePath, wx.BITMAP_TYPE_PNG)
+    shadow = wx.WHITE
+    
+    splash = AS.AdvancedSplash(frame, bitmap=bitmap, timeout=5000,
+                               agwStyle=AS.AS_TIMEOUT |
+                               AS.AS_CENTER_ON_PARENT |
+                               AS.AS_SHADOW_BITMAP,
+                               shadowcolour=shadow)
+
+    app.MainLoop()
+    
 
 None of the options are strictly required (a part of the `bitmap` parameter).
-If you use the defaults you get a very simple AdvancedSplash.
+If you use the defaults you get a very simple L{AdvancedSplash}.
 
 
 Methods and Settings
 ====================
 
-AdvancedSplash is customizable, and in particular you can set:
+L{AdvancedSplash} is customizable, and in particular you can set:
 
 - Whether you want to mask a colour or not in your input bitmap;
 - Where to center the splash screen (on screen, on parent or nowhere);
 - Whether it is a "timeout" splashscreen or not;
-- The time after which AdvancedSplash is destroyed (if it is a timeout splashscreen);
+- The time after which L{AdvancedSplash} is destroyed (if it is a timeout splashscreen);
 - The (optional) text you wish to display;
 - The font, colour and position of the displayed text (optional).
 
@@ -86,12 +102,12 @@ This class supports the following window styles:
 ======================= =========== ==================================================
 Window Styles           Hex Value   Description
 ======================= =========== ==================================================
-``AS_TIMEOUT``                  0x1 `AdvancedSplash` will be destroyed after `timeout` milliseconds.
-``AS_NOTIMEOUT``                0x2 `AdvancedSplash` can be destroyed by clicking on it, pressing a key or by explicitly call the `Close()` method.
-``AS_CENTER_ON_SCREEN``         0x4 `AdvancedSplash` will be centered on screen.
-``AS_CENTER_ON_PARENT``         0x8 `AdvancedSplash` will be centered on parent.
-``AS_NO_CENTER``               0x10 `AdvancedSplash` will not be centered.
-``AS_SHADOW_BITMAP``           0x20 If the bitmap you pass as input has no transparency, you can choose one colour that will be masked in your bitmap. the final shape of `AdvancedSplash` will be defined only by non-transparent (non-masked) pixels.
+``AS_TIMEOUT``                  0x1 L{AdvancedSplash} will be destroyed after `timeout` milliseconds.
+``AS_NOTIMEOUT``                0x2 L{AdvancedSplash} can be destroyed by clicking on it, pressing a key or by explicitly call the `Close()` method.
+``AS_CENTER_ON_SCREEN``         0x4 L{AdvancedSplash` will be centered on screen.
+``AS_CENTER_ON_PARENT``         0x8 L{AdvancedSplash} will be centered on parent.
+``AS_NO_CENTER``               0x10 L{AdvancedSplash} will not be centered.
+``AS_SHADOW_BITMAP``           0x20 If the bitmap you pass as input has no transparency, you can choose one colour that will be masked in your bitmap. the final shape of L{AdvancedSplash} will be defined only by non-transparent (non-masked) pixels.
 ======================= =========== ==================================================
 
 
@@ -104,9 +120,9 @@ Events Processing
 License And Version
 ===================
 
-AdvancedSplash control is distributed under the wxPython license.
+L{AdvancedSplash} control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 27 Jan 2011, 15.00 GMT
+Latest revision: Andrea Gavana @ 26 Jul 2011, 22.00 GMT
 
 Version 0.4
 
@@ -123,23 +139,23 @@ import wx
 # Timeout Or Not
                         
 AS_TIMEOUT = 1
-""" `AdvancedSplash` will be destroyed after `timeout` milliseconds. """
+""" L{AdvancedSplash} will be destroyed after `timeout` milliseconds. """
 AS_NOTIMEOUT = 2
-""" `AdvancedSplash` can be destroyed by clicking on it, pressing a key or by""" \
+""" L{AdvancedSplash} can be destroyed by clicking on it, pressing a key or by""" \
 """ explicitly call the Close() method. """
 
 # These Flags Are Used To Position AdvancedSplash Correctly On Screen
 AS_CENTER_ON_SCREEN = 4
-""" `AdvancedSplash` will be centered on screen. """
+""" L{AdvancedSplash} will be centered on screen. """
 AS_CENTER_ON_PARENT = 8
-""" `AdvancedSplash` will be centered on parent. """
+""" L{AdvancedSplash} will be centered on parent. """
 AS_NO_CENTER = 16
-""" `AdvancedSplash` will not be centered. """
+""" L{AdvancedSplash} will not be centered. """
 
 # This Option Allow To Mask A Colour In The Input Bitmap
 AS_SHADOW_BITMAP = 32
 """ If the bitmap you pass as input has no transparency, you can choose one colour""" \
-""" that will be masked in your bitmap. the final shape of `AdvancedSplash` will be""" \
+""" that will be masked in your bitmap. the final shape of L{AdvancedSplash} will be""" \
 """ defined only by non-transparent (non-masked) pixels. """
 
 #----------------------------------------------------------------------
@@ -150,7 +166,7 @@ AS_SHADOW_BITMAP = 32
 
 class AdvancedSplash(wx.Frame):
     """
-    AdvancedSplash tries to reproduce the behavior of `wx.SplashScreen`, with
+    L{AdvancedSplash} tries to reproduce the behavior of `wx.SplashScreen`, with
     some enhancements.
 
     This is the main class implementation.    

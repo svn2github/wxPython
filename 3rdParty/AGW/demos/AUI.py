@@ -1316,6 +1316,7 @@ class AuiFrame(wx.Frame):
         self._mgr.GetPane("thirdauto").Show()
         self._mgr.GetPane("test10").Show()
         self._mgr.GetPane("notebook_content").Show()
+
         perspective_default = self._mgr.SavePerspective()
 
         self._perspectives = []
@@ -1328,6 +1329,13 @@ class AuiFrame(wx.Frame):
         self._nb_perspectives.append(nb_perspective_default)
         
         self._mgr.LoadPerspective(perspective_default)
+
+        # Show how to get a custom minimizing behaviour, i.e., to minimize a pane
+        # inside an existing AuiToolBar
+        tree = self._mgr.GetPane("test8")
+        tree.MinimizeMode(aui.AUI_MINIMIZE_POS_TOOLBAR)
+        toolbarPane = self._mgr.GetPane(tb4)
+        tree.MinimizeTarget(toolbarPane)
     
         # "commit" all changes made to AuiManager
         self._mgr.Update()
@@ -1795,7 +1803,8 @@ class AuiFrame(wx.Frame):
             
         all_panes = self._mgr.GetAllPanes()
         for pane in all_panes:
-            pane.MinimizeMode(minize_mode | (pane.GetMinimizeMode() & aui.AUI_MINIMIZE_CAPT_MASK))
+            if pane.name != "test8":
+                pane.MinimizeMode(minize_mode | (pane.GetMinimizeMode() & aui.AUI_MINIMIZE_CAPT_MASK))
 
 
     def OnMinimizeCaption(self, event):
@@ -2888,6 +2897,9 @@ def GetIntroText():
     "<li>Ability of creating <i>AuiToolBar</i> tools with [counter]clockwise rotation. This allows to propose a " \
     "variant of the minimizing functionality with a rotated button which keeps the caption of the pane as label;</li>" \
     "<li>Allow setting the alignment of all tools in a toolbar that is expanded.</li>" \
+    "<li>Implementation of the <tt>AUI_MINIMIZE_POS_TOOLBAR</tt> flag, which allows to minimize a pane inside " \
+     "an existing toolbar. Limitation: if the minimized icon in the toolbar ends up in the overflowing " \
+     "items (i.e., a menu is needed to show the icon), this style will not work.</li>" \
     "</ul>" \
     "</ul><p>" \
     "<p>" \

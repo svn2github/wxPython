@@ -299,6 +299,7 @@ class AuiToolBarItem(object):
         self.hover_bitmap = wx.NullBitmap
         self.short_help = ""
         self.long_help = ""
+        self.target = None
         self.min_size = wx.Size(-1, -1)
         self.alignment = wx.ALIGN_CENTER
         self.orientation = AUI_TBTOOL_HORIZONTAL
@@ -331,6 +332,7 @@ class AuiToolBarItem(object):
         self.user_data = c.user_data
         self.alignment = c.alignment
         self.orientation = c.orientation
+        self.target = c.target
 
 
     def SetWindow(self, w):
@@ -1694,7 +1696,7 @@ class AuiToolBar(wx.PyControl):
         return self._art
 
 
-    def AddSimpleTool(self, tool_id, label, bitmap, short_help_string="", kind=ITEM_NORMAL):
+    def AddSimpleTool(self, tool_id, label, bitmap, short_help_string="", kind=ITEM_NORMAL, target=None):
         """
         Adds a tool to the toolbar. This is the simplest method you can use to
         ass an item to the L{AuiToolBar}.
@@ -1716,9 +1718,12 @@ class AuiToolBar(wx.PyControl):
          ``ITEM_NORMAL``           The item in the `AuiToolBar` is a standard toolbar item
          ``ITEM_RADIO``            The item in the `AuiToolBar` is a toolbar radio item
          ========================  =============================
+
+        :param `target`: a custom string indicating that an instance of L{framemanager.AuiPaneInfo}
+         has been minimized into this toolbar.
         """
         
-        return self.AddTool(tool_id, label, bitmap, wx.NullBitmap, kind, short_help_string, "", None)
+        return self.AddTool(tool_id, label, bitmap, wx.NullBitmap, kind, short_help_string, "", None, target)
 
 
     def AddToggleTool(self, tool_id, bitmap, disabled_bitmap, toggle=False, client_data=None, short_help_string="", long_help_string=""):
@@ -1739,7 +1744,7 @@ class AuiToolBar(wx.PyControl):
         return self.AddTool(tool_id, "", bitmap, disabled_bitmap, kind, short_help_string, long_help_string, client_data)
 
 
-    def AddTool(self, tool_id, label, bitmap, disabled_bitmap, kind, short_help_string, long_help_string, client_data):
+    def AddTool(self, tool_id, label, bitmap, disabled_bitmap, kind, short_help_string, long_help_string, client_data, target):
         """
         Adds a tool to the toolbar. This is the full feature version of L{AddTool}.
 
@@ -1766,6 +1771,8 @@ class AuiToolBar(wx.PyControl):
         :param `long_help_string`: this string is shown in the statusbar (if any) of the parent
          frame when the mouse pointer is inside the tool.
         :param `client_data`: whatever Python object to associate with the toolbar item.
+        :param `target`: a custom string indicating that an instance of L{framemanager.AuiPaneInfo}
+         has been minimized into this toolbar.
         """
         
         item = AuiToolBarItem()
@@ -1775,6 +1782,7 @@ class AuiToolBar(wx.PyControl):
         item.disabled_bitmap = disabled_bitmap
         item.short_help = short_help_string
         item.long_help = long_help_string
+        item.target = target
         item.active = True
         item.dropdown = False
         item.spacer_pixels = 0
@@ -2058,6 +2066,20 @@ class AuiToolBar(wx.PyControl):
         
         for item in self._items:
             if item.id == tool_id:
+                return item
+    
+        return None
+
+
+    def FindToolByLabel(self, label):
+        """
+        Finds a tool for the given label.
+
+        :param `tool_id`: the L{AuiToolBarItem} label.
+        """
+        
+        for item in self._items:
+            if item.label == label:
                 return item
     
         return None
@@ -3625,7 +3647,11 @@ class AuiToolBar(wx.PyControl):
                         if not manager:
                             return
 
-                        pane = manager.GetPane(self)
+                        if self._action_item.target:
+                            pane = manager.GetPane(self._action_item.target)
+                        else:
+                            pane = manager.GetPane(self)
+                            
                         e = framemanager.AuiManagerEvent(framemanager.wxEVT_AUI_PANE_MIN_RESTORE)
 
                         e.SetManager(manager)

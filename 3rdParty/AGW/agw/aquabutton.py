@@ -2,7 +2,7 @@
 # AQUABUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 22 Jul 2011, 21.00 GMT
+# Latest Revision: 26 Jul 2011, 22.00 GMT
 #
 #
 # TODO List
@@ -23,14 +23,14 @@
 # --------------------------------------------------------------------------------- #
 
 """
-AquaButton is another custom-drawn button class which *approximatively* mimics
+L{AquaButton} is another custom-drawn button class which *approximatively* mimics
 the behaviour of Aqua buttons on the Mac.
 
 
 Description
 ===========
 
-AquaButton is another custom-drawn button class which *approximatively* mimics
+L{AquaButton} is another custom-drawn button class which *approximatively* mimics
 the behaviour of Aqua buttons on the Mac. At the moment this class supports:
 
 * Bubble and shadow effects;
@@ -42,11 +42,39 @@ the behaviour of Aqua buttons on the Mac. At the moment this class supports:
 And a lot more. Check the demo for an almost complete review of the functionalities.
 
 
+Usage
+=====
+
+Sample usage::
+
+    import wx
+    import wx.lib.agw.aquabutton as AB
+
+    app = wx.App(0)
+
+    frame = wx.Frame(None, -1, "AquaButton Test")
+    
+    mainPanel = wx.Panel(frame)
+    mainPanel.SetBackgroundColour(wx.WHITE)
+    
+    # Initialize AquaButton 1 (with image)
+    bitmap = wx.Bitmap("my_button_bitmap.png", wx.BITMAP_TYPE_PNG)
+    btn1 = AB.AquaButton(mainPanel, -1, bitmap, "AquaButton")
+    
+    # Initialize AquaButton 2 (no image)
+    btn2 = AB.AquaButton(mainPanel, -1, None, "Hello World!")
+
+    frame.Show()
+    
+    app.MainLoop()
+
+
 Supported Platforms
 ===================
 
 AquaButton has been tested on the following platforms:
-  * Windows (Windows XP).
+  * Windows (Windows XP);
+  * Linux Ubuntu (10.10).
 
 
 Window Styles
@@ -70,9 +98,9 @@ Event Name        Description
 License And Version
 ===================
 
-AquaButton control is distributed under the wxPython license.
+L{AquaButton} control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 22 Jul 2011, 21.00 GMT
+Latest Revision: Andrea Gavana @ 26 Jul 2011, 22.00 GMT
 
 Version 0.4
 
@@ -86,7 +114,7 @@ CLICK = 2
 
 
 class AquaButtonEvent(wx.PyCommandEvent):
-    """ Event sent from the Aqua buttons when the button is activated. """
+    """ Event sent from the L{AquaButton} buttons when the button is activated. """
 
     def __init__(self, eventType, eventId):
         """
@@ -184,9 +212,17 @@ class AquaButton(wx.PyControl):
             self._hoverColour = self.LightColour(self._backColour, 30)
             self._textColour = wx.WHITE
 
+
     def SetBitmapLabel(self, bitmap):
-        self._bitmap=bitmap
+        """
+        Sets the bitmap label for the button.
+
+        :param `bitmap`: the bitmap label to set, an instance of `wx.Bitmap`.
+        """
+        
+        self._bitmap = bitmap
         self.Refresh()
+
 
     def LightColour(self, colour, percent):
         """
@@ -204,7 +240,7 @@ class AquaButton(wx.PyControl):
         bd = end_colour.Blue() - colour.Blue()
         high = 100
 
-        # We take the percent way of the colour from colour -. white
+        # We take the percent way of the colour from colour ==> white
         i = percent
         r = colour.Red() + ((i*rd*100)/high)/100
         g = colour.Green() + ((i*gd*100)/high)/100
@@ -526,6 +562,8 @@ class AquaButton(wx.PyControl):
         """
         Overridden base class virtual. By default we should use
         the same font/colour attributes as the native `wx.Button`.
+
+        :note: Overridden from `wx.PyControl`.
         """
 
         return wx.Button.GetClassDefaultAttributes()
@@ -580,6 +618,8 @@ class AquaButton(wx.PyControl):
         """
         Overridden base class virtual. Determines the best size of the
         button based on the label and bezel size.
+
+        :note: Overridden from `wx.PyControl`.
         """
 
         label = self.GetLabel()
@@ -681,7 +721,20 @@ class AquaButton(wx.PyControl):
 
 
     def SetDefault(self):
-        """ Sets the default button. """
+        """
+        This sets the L{AquaButton} to be the default item for the panel or dialog box.
+
+        :note: Under Windows, only dialog box buttons respond to this function. As normal
+         under Windows and Motif, pressing return causes the default button to be depressed
+         when the return key is pressed. See also `wx.Window.SetFocus` which sets the
+         keyboard focus for windows and text panel items, and `wx.TopLevelWindow.SetDefaultItem`.
+
+        :note: Note that under Motif, calling this function immediately after creation of a button
+         and before the creation of other buttons will cause misalignment of the row of buttons,
+         since default buttons are larger. To get around this, call L{SetDefault} after you
+         have created a row of buttons: wxPython will then set the size of all buttons currently
+         on the panel to the same size.
+        """
 
         tlw = wx.GetTopLevelParent(self)
         if hasattr(tlw, 'SetDefaultItem'):
@@ -775,17 +828,21 @@ class __ToggleMixin(object):
 
         if not self.IsEnabled():
             return
+        
         if event.LeftIsDown() and self.HasCapture():
-            x,y = event.GetPositionTuple()
-            w,h = self.GetClientSizeTuple()
-            if x<w and x>=0 and y<h and y>=0:
+            x, y = event.GetPositionTuple()
+            w, h = self.GetClientSizeTuple()
+            
+            if x < w and x >= 0 and y < h and y >= 0:
                 self.up = not self.saveUp
                 self.Refresh()
                 return
-            if (x<0 or y<0 or x>=w or y>=h):
+            
+            if x < 0 or y < 0 or x >= w or y >= h:
                 self.up = self.saveUp
                 self.Refresh()
                 return
+            
         event.Skip()
 
 
