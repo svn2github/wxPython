@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 29 Jul 2011, 21.00 GMT
+# Latest Revision: 01 Aug 2011, 20.00 GMT
 #
 #
 # TODO List
@@ -212,7 +212,7 @@ License And Version
 
 CustomTreeCtrl is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 29 Jul 2011, 21.00 GMT
+Latest Revision: Andrea Gavana @ 01 Aug 2011, 20.00 GMT
 
 Version 2.4
 
@@ -5476,9 +5476,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         """
 
         if self.GetAGWWindowStyleFlag() & TR_HAS_VARIABLE_ROW_HEIGHT:
-            return item.GetHeight()
+            return int(item.GetHeight())
         else:
-            return self._lineHeight
+            return int(self._lineHeight)
 
 
     def DrawVerticalGradient(self, dc, rect, hasfocus):
