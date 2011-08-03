@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 12 Sep 2010, 10.00 GMT
+# Latest Revision: 03 Aug 2011, 08.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -117,7 +117,7 @@ License And Version
 
 FlatNotebook is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 12 Sep 2010, 10.00 GMT
+Latest Revision: Andrea Gavana @ 03 Aug 2011, 08.00 GMT
 
 Version 3.1
 """
@@ -5045,7 +5045,7 @@ class PageContainer(wx.Panel):
 
         rotation = event.GetWheelRotation()
         delta = event.GetWheelDelta()
-        steps = rotation/delta
+        steps = int(rotation/delta)
 
         for tab in xrange(abs(steps)):
             if steps > 0:
