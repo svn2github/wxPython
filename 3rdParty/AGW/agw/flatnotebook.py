@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 03 Aug 2011, 08.00 GMT
+# Latest Revision: 03 Aug 2011, 22.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -117,7 +117,7 @@ License And Version
 
 FlatNotebook is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 03 Aug 2011, 08.00 GMT
+Latest Revision: Andrea Gavana @ 03 Aug 2011, 22.00 GMT
 
 Version 3.1
 """
@@ -3844,6 +3844,9 @@ class FlatNotebook(wx.PyPanel):
         self._agwStyle = agwStyle
 
         wx.PyPanel.__init__(self, parent, id, pos, size, style)
+        attr = self.GetDefaultAttributes()
+        self.SetOwnForegroundColour(attr.colFg)
+        self.SetOwnBackgroundColour(attr.colBg)
         
         self._pages = PageContainer(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, style)
         

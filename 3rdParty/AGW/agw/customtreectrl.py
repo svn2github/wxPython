@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 01 Aug 2011, 20.00 GMT
+# Latest Revision: 03 Aug 2011, 22.00 GMT
 #
 #
 # TODO List
@@ -212,7 +212,7 @@ License And Version
 
 CustomTreeCtrl is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 01 Aug 2011, 20.00 GMT
+Latest Revision: Andrea Gavana @ 03 Aug 2011, 22.00 GMT
 
 Version 2.4
 
@@ -2435,7 +2435,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         attr = self.GetDefaultAttributes()
         self.SetOwnForegroundColour(attr.colFg)
-        self.SetOwnBackgroundColour(wx.WHITE)
+        self.SetOwnBackgroundColour(attr.colBg)
         
         if not self._hasFont:
             self.SetOwnFont(attr.font)
