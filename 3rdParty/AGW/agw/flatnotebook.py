@@ -4821,7 +4821,7 @@ class FlatNotebook(wx.PyPanel):
 # Acts as a container for the pages you add to FlatNotebook
 # ---------------------------------------------------------------------------- #
 
-class PageContainer(wx.Panel):
+class PageContainer(wx.PyPanel):
     """
     This class acts as a container for the pages you add to L{FlatNotebook}.
     """
@@ -4885,8 +4885,12 @@ class PageContainer(wx.Panel):
         height = memDc.GetCharHeight()
         tabHeight = height + FNB_HEIGHT_SPACER # We use 10 pixels as padding
 
-        wx.Panel.__init__(self, parent, id, pos, wx.Size(size.x, tabHeight),
-                          style|wx.NO_BORDER|wx.NO_FULL_REPAINT_ON_RESIZE|wx.WANTS_CHARS)
+        wx.PyPanel.__init__(self, parent, id, pos, wx.Size(size.x, tabHeight),
+                            style|wx.NO_BORDER|wx.NO_FULL_REPAINT_ON_RESIZE|wx.WANTS_CHARS)
+
+        attr = self.GetDefaultAttributes()
+        self.SetOwnForegroundColour(attr.colFg)
+        self.SetOwnBackgroundColour(attr.colBg)
 
         self._pDropTarget = FNBDropTarget(self)
         self.SetDropTarget(self._pDropTarget)
