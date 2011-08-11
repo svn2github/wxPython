@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 03 Aug 2011, 22.00 GMT
+# Latest Revision: 11 Aug 2011, 15.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -55,6 +55,10 @@ Some features:
 - Colours for active/inactive tabs, and captions;
 - Background of tab area can be painted in gradient (VC8 style only);
 - Colourful tabs - a random gentle colour is generated for each new tab (very cool, VC8 style only);
+- Support for showing pages in "column/row mode", which means that all the pages will be
+  shown in "tile" mode while the tabs are hidden;
+- Possibility to add a custom panel to show a logo or HTML documentation or
+  whatever you like when there are no pages left in L{FlatNotebook};
 - Try setting the tab area colour for the Ribbon Style.
 
 
@@ -117,9 +121,9 @@ License And Version
 
 FlatNotebook is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 03 Aug 2011, 22.00 GMT
+Latest Revision: Andrea Gavana @ 11 Aug 2011, 15.00 GMT
 
-Version 3.1
+Version 3.2
 """
 
 __docformat__ = "epytext"
@@ -2245,7 +2249,7 @@ class FNBRenderer(object):
             # | PADDING | IMG | IMG_PADDING | TEXT | PADDING | x |PADDING |
             # +-----------------------------------------------------------+
             tabWidth = self.CalcTabWidth(pageContainer, i, tabHeight)
-
+            
             # Check if we can draw more
             if posx + tabWidth + self.GetButtonsAreaLength(pc) >= clientWidth:
                 break
@@ -3842,6 +3846,8 @@ class FlatNotebook(wx.PyPanel):
         self._popupWin = None
         self._naviIcon = None
         self._agwStyle = agwStyle
+        self._orientation = None
+        self._customPanel = None
 
         wx.PyPanel.__init__(self, parent, id, pos, size, style)
         attr = self.GetDefaultAttributes()
@@ -3916,8 +3922,137 @@ class FlatNotebook(wx.PyPanel):
             maxWidth, maxHeight = max(maxWidth, width), max(maxHeight, height)
 
         return wx.Size(maxWidth, maxHeight+tabHeight)
-    
 
+
+    def Tile(self, orient=None):
+        """
+        Shows pages in column/row mode (one panel after the other in columns/rows).
+
+        :param `orient`: this parameter represents the orientation of the stacked
+         panels. Pass ``wx.VERTICAL`` to get vertically stacked panels, ``wx.HORIZONTAL``
+         to get horizontally stacked panels or ``None`` to return to the default
+         L{FlatNotebook} behaviour with tabs.
+        """
+        
+        self.Freeze()
+        self._orientation = orient
+
+        self._mainSizer.Detach(self._pages)
+        for win in self._windows:
+            self._mainSizer.Detach(win)
+
+        self._mainSizer.Destroy()
+
+        if orient is not None:
+            self._mainSizer = wx.BoxSizer(orient)
+            self._mainSizer.Add(self._pages)
+            
+            for win in self._windows:
+                self._mainSizer.Add(win, 1, wx.EXPAND | wx.ALL, 2)
+                win.Show()
+
+        else:
+
+            self._mainSizer = wx.BoxSizer(wx.VERTICAL)
+            # Add the tab container to the sizer
+            self._mainSizer.Insert(0, self._pages, 0, wx.EXPAND)
+            
+            curr = self._pages.GetSelection()            
+            for indx, win in enumerate(self._windows):
+                if indx == curr:
+                    if self.GetAGWWindowStyleFlag() & FNB_BOTTOM:                    
+                        self._mainSizer.Insert(0, win, 1, wx.EXPAND)
+                    else:
+                        # We leave a space of 1 pixel around the window
+                        self._mainSizer.Add(win, 1, wx.EXPAND)
+                    win.Show()
+
+                else:
+                    win.Hide()
+                    
+        self.SetSizer(self._mainSizer)
+                
+        self._mainSizer.Layout()
+        self.Layout()
+
+        if orient is None:
+            self.SetSelection(self._pages._iActivePage)
+            self._pages._ReShow()
+
+        self.Thaw() 
+            
+
+    def GetTileOrientation(self):
+        """
+        Returns the orientation when on tiling mode. This method can return
+        ``wx.VERTICAL`` when the panels are vertically stacked, ``wx.HORIZONTAL``
+        when they are horizontally stacked panels or ``None`` when there is no
+        stacking and L{FlatNotebook} behaves like a normal notebook.
+        """
+
+        return self._orientation
+
+
+    def SetCustomPage(self, panel):
+        """
+        Sets a custom panel to show when there are no pages left in L{FlatNotebook}.
+
+        :param `panel`: any subclass of `wx.Window` will do, as long as it is suitable
+         to be used as a notebook page. Examples include `wx.Panel`, wx.ScrolledWindow`,
+         and so on.
+        """
+        
+        self.Freeze()
+        
+        if panel is None:
+            if self._customPanel is not None:
+                self._mainSizer.Detach(self._customPanel)
+                self._customPanel.Show(False)
+                
+        else:
+            if self.GetPageCount() == 0:
+                if self._customPanel is not None:
+                    self._mainSizer.Detach(self._customPanel)
+                    self._customPanel.Show(False)
+                    self._customPanel.Destroy()
+                    
+                self._mainSizer.Add(panel, 1, wx.EXPAND | wx.ALL, 2)
+                panel.Show(True)
+            else:
+                panel.Show(False)
+
+        self._customPanel = panel
+        self._pages._ReShow()
+        self._mainSizer.Layout()
+        self.Thaw()
+            
+
+    def GetCustomPage(self):
+        """ Returns a custom panel to show when there are no pages left in L{FlatNotebook}. """
+        
+        return self._customPanel
+
+
+    def ShowCustomPage(self, show=True):
+        """ Hides the custom panel which is shown when there are no pages left in L{FlatNotebook}. """
+
+        if self._customPanel is None:
+            return
+        
+        if self.GetPageCount() == 0:
+
+            self.Freeze()
+            
+            if show:
+                self._mainSizer.Add(self._customPanel, 1, wx.EXPAND | wx.ALL, 2)
+            else:                
+                self._mainSizer.Detach(self._customPanel)
+                
+            self._customPanel.Show(show)
+            self._mainSizer.Layout()
+            self.Thaw()
+        
+        
     def SetActiveTabTextColour(self, textColour):
         """
         Sets the text colour for the active tab.
@@ -3964,6 +4099,8 @@ class FlatNotebook(wx.PyPanel):
         if not page:
             return False
 
+        self.ShowCustomPage(False)
+        
         # reparent the window to us
         page.Reparent(self)
 
@@ -4024,7 +4161,8 @@ class FlatNotebook(wx.PyPanel):
             # Hide the page
             page.Hide()
 
-        self.Thaw()        
+        self.Tile(self._orientation)
+        self.Thaw() 
         self._mainSizer.Layout()
         self.Refresh()
 
@@ -4073,6 +4211,8 @@ class FlatNotebook(wx.PyPanel):
         # sanity check
         if not page:
             return False
+
+        self.ShowCustomPage(False)
 
         # reparent the window to us
         page.Reparent(self)
@@ -4139,6 +4279,7 @@ class FlatNotebook(wx.PyPanel):
             # Hide the page
             page.Hide()
 
+        self.Tile(self._orientation)
         self.Thaw()
         self._mainSizer.Layout()        
         self.Refresh()
@@ -4160,6 +4301,9 @@ class FlatNotebook(wx.PyPanel):
 
         # Support for disabed tabs
         if not self._pages.GetEnabled(page) and len(self._windows) > 1 and not self._bForceSelection:
+            return
+
+        if self._orientation is not None:
             return
 
         curSel = self._pages.GetSelection()
@@ -4235,6 +4379,10 @@ class FlatNotebook(wx.PyPanel):
         self.Thaw()
 
         self._pages.DoDeletePage(page)
+
+        self.ShowCustomPage(True)
+        self.Tile(self._orientation)
+        
         self.Refresh()
         self.Update()  
 
@@ -4261,6 +4409,8 @@ class FlatNotebook(wx.PyPanel):
 
         # Clear the container of the tabs as well
         self._pages.DeleteAllPages()
+        self.ShowCustomPage(True)
+        
         return True
 
 
@@ -4546,7 +4696,7 @@ class FlatNotebook(wx.PyPanel):
         
         agwStyle = self.GetAGWWindowStyleFlag()
         agwStyle |= FNB_HIDE_TABS
-        self.SetAGWWindowStyleFlag( agwStyle )
+        self.SetAGWWindowStyleFlag(agwStyle)
 
         
     def ShowTabs(self):
@@ -4554,7 +4704,7 @@ class FlatNotebook(wx.PyPanel):
         
         agwStyle = self.GetAGWWindowStyleFlag()
         agwStyle &= ~FNB_HIDE_TABS
-        self.SetAGWWindowStyleFlag( agwStyle )
+        self.SetAGWWindowStyleFlag(agwStyle)
 
 
     def RemovePage(self, page):
@@ -4943,11 +5093,14 @@ class PageContainer(wx.PyPanel):
         """
 
         dc = wx.BufferedPaintDC(self)
-        renderer = self._mgr.GetRenderer(self.GetParent().GetAGWWindowStyleFlag())
+        parent = self.GetParent()
+        
+        renderer = self._mgr.GetRenderer(parent.GetAGWWindowStyleFlag())
         renderer.DrawTabs(self, dc)
-
-        if self.HasAGWFlag(FNB_HIDE_ON_SINGLE_TAB) and len(self._pagesInfoVec) <= 1 or\
-           self.HasAGWFlag(FNB_HIDE_TABS):
+        
+        if self.HasAGWFlag(FNB_HIDE_ON_SINGLE_TAB) and len(self._pagesInfoVec) <= 1 or \
+           self.HasAGWFlag(FNB_HIDE_TABS) or parent._orientation or \
+           (parent._customPanel and len(self._pagesInfoVec) == 0):
             self.Hide()
             self.GetParent()._mainSizer.Layout()
             self.Refresh()
@@ -5413,6 +5566,7 @@ class PageContainer(wx.PyPanel):
         :param `page`: an integer specifying the page index.
         """
         return page == self._nHoveringOverTabIndex
+
     
     def IsTabVisible(self, page):
         """
@@ -5512,7 +5666,6 @@ class PageContainer(wx.PyPanel):
             bRedrawTabs = False
             self._nHoveringOverTabIndex = -1
                 
-
             where, tabIdx = self.HitTest(event.GetPosition())
             
             if where == FNB_X:
