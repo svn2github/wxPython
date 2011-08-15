@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 11 Aug 2011, 15.00 GMT
+# Latest Revision: 15 Aug 2011, 20.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -121,7 +121,7 @@ License And Version
 
 FlatNotebook is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 11 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 15 Aug 2011, 20.00 GMT
 
 Version 3.2
 """
@@ -4010,18 +4010,14 @@ class FlatNotebook(wx.PyPanel):
                 self._customPanel.Show(False)
                 
         else:
-            if self.GetPageCount() == 0:
-                if self._customPanel is not None:
-                    self._mainSizer.Detach(self._customPanel)
-                    self._customPanel.Show(False)
-                    self._customPanel.Destroy()
+            if self._customPanel is not None:
+                self._mainSizer.Detach(self._customPanel)
+                self._customPanel.Show(False)
+                self._customPanel.Destroy()
                     
-                self._mainSizer.Add(panel, 1, wx.EXPAND | wx.ALL, 2)
-                panel.Show(True)
-            else:
-                panel.Show(False)
-
         self._customPanel = panel
+        self.ShowCustomPage(True)
+        
         self._pages._ReShow()
         self._mainSizer.Layout()
         self.Thaw()
@@ -4039,18 +4035,18 @@ class FlatNotebook(wx.PyPanel):
         if self._customPanel is None:
             return
         
-        if self.GetPageCount() == 0:
-
-            self.Freeze()
-            
-            if show:
+        self.Freeze()
+        self._customPanel.Show(False)
+        
+        if show:
+            if self.GetPageCount() == 0:
                 self._mainSizer.Add(self._customPanel, 1, wx.EXPAND | wx.ALL, 2)
-            else:                
-                self._mainSizer.Detach(self._customPanel)
-                
-            self._customPanel.Show(show)
-            self._mainSizer.Layout()
-            self.Thaw()
+                self._customPanel.Show(True)
+        else:                
+            self._mainSizer.Detach(self._customPanel)
+            
+        self._mainSizer.Layout()
+        self.Thaw()
         
         
     def SetActiveTabTextColour(self, textColour):
@@ -4099,6 +4095,10 @@ class FlatNotebook(wx.PyPanel):
         if not page:
             return False
 
+        min_size = page.GetMinSize()
+        if not min_size.IsFullySpecified():
+            page.SetMinSize((1, 1))
+            
         self.ShowCustomPage(False)
         
         # reparent the window to us
@@ -4380,8 +4380,8 @@ class FlatNotebook(wx.PyPanel):
 
         self._pages.DoDeletePage(page)
 
-        self.ShowCustomPage(True)
         self.Tile(self._orientation)
+        self.ShowCustomPage(True)
         
         self.Refresh()
         self.Update()  
@@ -4739,6 +4739,10 @@ class FlatNotebook(wx.PyPanel):
         
         # Remove it from the array as well
         self._windows.pop(page)
+
+        self.Tile(self._orientation)
+        self.ShowCustomPage(True)
+
         self.Thaw()
 
         self._pages.DoDeletePage(page)
@@ -6548,7 +6552,7 @@ class FlatNotebookCompatible(FlatNotebook):
         if not self._pages.GetEnabled(page) and len(self._windows) > 1 and not self._bForceSelection:
             return
         
-        self.FireEvent(page)
+        self._pages.FireEvent(page)
 
 
     def ChangeSelection(self, page):
