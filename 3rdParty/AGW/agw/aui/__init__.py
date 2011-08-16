@@ -40,6 +40,9 @@ Usage
 The following example shows a simple implementation that uses L{AuiManager} to manage
 three text controls in a frame window::
 
+    import wx
+    import wx.lib.agw.aui as aui
+
     class MyFrame(wx.Frame):
 
         def __init__(self, parent, id=-1, title="AUI Test", pos=wx.DefaultPosition,
@@ -99,7 +102,7 @@ three text controls in a frame window::
 What's New
 ==========
 
-Current wxAUI Version Tracked: wxWidgets 2.9.0 (SVN HEAD)
+Current wxAUI Version Tracked: wxWidgets 2.9.2 (SVN HEAD)
 
 The wxPython AUI version fixes the following bugs or implement the following
 missing features (the list is not exhaustive):
@@ -274,7 +277,7 @@ License And Version
 
 AUI library is distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 31 Jul 2011, 22.00 GMT
+Latest revision: Andrea Gavana @ 16 Aug 2011, 18.00 GMT
 
 Version 1.3. 
 

@@ -2736,7 +2736,7 @@ def GetIntroText():
     "<li>Splittable notebook control</li>" \
     "</ul>" \
     "<p><b>What's new in AUI?</b></p>" \
-    "<p>Current wxAUI Version Tracked: wxWidgets 2.9.0 (SVN HEAD)" \
+    "<p>Current wxAUI Version Tracked: wxWidgets 2.9.2 (SVN HEAD)" \
     "<p>The wxPython AUI version fixes the following bugs or implement the following" \
     " missing features (the list is not exhaustive): " \
     "<p><ul>" \

@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 28 Nov 2010, 16.00 GMT
+# Latest Revision: 11 Aug 2011, 23.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -34,7 +34,7 @@ add buttons and controls still respecting the gradient background.
 Description
 ===========
 
-With `ButtonPanel` class you have a panel with gradient colouring
+With L{ButtonPanel} class you have a panel with gradient colouring
 on it and with the possibility to place some buttons on it. Using a
 standard panel with normal `wx.Buttons` leads to an ugly result: the
 buttons are placed correctly on the panel - but with grey area around
@@ -60,23 +60,23 @@ ButtonPanel supports 4 alignments: left, right, top, bottom, which have a
 different meaning and behavior with respect to `wx.Toolbar`. The easiest
 thing is to try the demo to understand, but I'll try to explain how it works.
 
-**CASE 1**: `ButtonPanel` has a main caption text.
+**CASE 1**: L{ButtonPanel} has a main caption text.
 
-- Left alignment means `ButtonPanel` is horizontal, with the text aligned to the
+- Left alignment means L{ButtonPanel} is horizontal, with the text aligned to the
   left. When you shrink the demo frame, if there is not enough room for all
   the controls to be shown, the controls closest to the text are hidden;
 
-- Right alignment means `ButtonPanel` is horizontal, with the text aligned to the
+- Right alignment means L{ButtonPanel} is horizontal, with the text aligned to the
   right. Item layout as above;
 
-- Top alignment means `ButtonPanel` is vertical, with the text aligned to the top.
+- Top alignment means L{ButtonPanel} is vertical, with the text aligned to the top.
   Item layout as above;
 
-- Bottom alignment means `ButtonPanel` is vertical, with the text aligned to the
+- Bottom alignment means L{ButtonPanel} is vertical, with the text aligned to the
   bottom. Item layout as above.
 
 
-**CASE 2**: `ButtonPanel` has **no** main caption text.
+**CASE 2**: L{ButtonPanel} has **no** main caption text.
 
 - In this case, left and right alignment are the same (as top and bottom are the same),
   but the layout strategy changes: now if there is not enough room for all the controls
@@ -84,9 +84,12 @@ thing is to try the demo to understand, but I'll try to explain how it works.
   horizontal ButtonPanels and far bottom for vertical ButtonPanels).
 
 
-The following example shows a simple implementation that uses `ButtonPanel`
+The following example shows a simple implementation that uses L{ButtonPanel}
 inside a very simple frame::
 
+  import wx
+  import wx.lib.agw.buttonpanel as BP
+  
   class MyFrame(wx.Frame):
 
       def __init__(self, parent, id=-1, title="ButtonPanel", pos=wx.DefaultPosition,
@@ -102,21 +105,21 @@ inside a very simple frame::
 
           alignment = BP_ALIGN_RIGHT 
 
-          titleBar = ButtonPanel(mainPanel, -1, "A Simple Test & Demo")
+          titleBar = BP.ButtonPanel(mainPanel, -1, "A Simple Test & Demo")
 
-          btn1 = ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png4.png", wx.BITMAP_TYPE_PNG))
+          btn1 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png4.png", wx.BITMAP_TYPE_PNG))
           titleBar.AddButton(btn1)
           self.Bind(wx.EVT_BUTTON, self.OnButton, btn1)
 
-          btn2 = ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png3.png", wx.BITMAP_TYPE_PNG))
+          btn2 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png3.png", wx.BITMAP_TYPE_PNG))
           titleBar.AddButton(btn2)
           self.Bind(wx.EVT_BUTTON, self.OnButton, btn2)
 
-          btn3 = ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png2.png", wx.BITMAP_TYPE_PNG))
+          btn3 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png2.png", wx.BITMAP_TYPE_PNG))
           titleBar.AddButton(btn3)
           self.Bind(wx.EVT_BUTTON, self.OnButton, btn3)
 
-          btn4 = ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png1.png", wx.BITMAP_TYPE_PNG))
+          btn4 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png1.png", wx.BITMAP_TYPE_PNG))
           titleBar.AddButton(btn4)
           self.Bind(wx.EVT_BUTTON, self.OnButton, btn4)
 
@@ -146,8 +149,8 @@ This class supports the following window styles:
 ==================== =========== ==================================================
 Window Styles        Hex Value   Description
 ==================== =========== ==================================================
-``BP_DEFAULT_STYLE``         0x1 `ButtonPanel` has a plain solid background.
-``BP_USE_GRADIENT``          0x2 `ButtonPanel` has a gradient shading background.
+``BP_DEFAULT_STYLE``         0x1 L{ButtonPanel} has a plain solid background.
+``BP_USE_GRADIENT``          0x2 L{ButtonPanel} has a gradient shading background.
 ==================== =========== ==================================================
 
 
@@ -168,7 +171,7 @@ License And Version
 
 ButtonPanel is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 28 Nov 2010, 16.00 GMT
+Latest Revision: Andrea Gavana @ 11 Aug 2011, 23.00 GMT
 
 Version 0.6.
 
@@ -243,9 +246,9 @@ BP_ALIGN_BOTTOM = 8
 
 # ButtonPanel styles
 BP_DEFAULT_STYLE = 1
-""" `ButtonPanel` has a plain solid background. """
+""" L{ButtonPanel} has a plain solid background. """
 BP_USE_GRADIENT = 2
-""" `ButtonPanel` has a gradient shading background. """
+""" L{ButtonPanel} has a gradient shading background. """
 
 # Delay used to cancel the longHelp in the statusbar field
 _DELAY = 3000

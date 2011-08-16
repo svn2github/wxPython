@@ -4,7 +4,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Aug 2007
-# Latest Revision: 14 Apr 2010, 12.00 GMT
+# Latest Revision: 15 Aug 2011, 20.00 GMT
 #
 #
 # TODO List
@@ -88,7 +88,7 @@ License And Version
 
 CubeColourDialog is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 14 Apr 2010, 12.00 GMT
+Latest Revision: Andrea Gavana @ 15 Aug 2011, 20.00 GMT
 
 Version 0.3.
 
@@ -1175,6 +1175,7 @@ def rad2deg(x):
     
     return 180.0*x/pi
 
+
 def deg2rad(x):
     """
     Transforms degrees into radians.
@@ -1183,6 +1184,7 @@ def deg2rad(x):
     """
 
     return x*pi/180.0
+
 
 def toscale(x):
     """
@@ -1193,6 +1195,7 @@ def toscale(x):
 
     return x*RADIUS/255.0
 
+
 def scaletomax(x):
     """
     Normalize a value as a function of the radius.
@@ -1201,6 +1204,7 @@ def scaletomax(x):
     """ 
 
     return x*255.0/RADIUS
+
 
 def rgb2html(colour):
     """

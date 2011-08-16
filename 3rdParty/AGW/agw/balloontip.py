@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 29 May 2005
-# Latest Revision: 23 Nov 2009, 09.00 GMT
+# Latest Revision: 11 Aug 2011, 23.00 GMT
 #
 #
 # TODO List/Caveats
@@ -82,33 +82,52 @@ Usage
 
 Usage example::
 
-    # let's suppose that in your application you have a wx.TextCtrl defined as:
+    import wx
+    import wx.lib.agw.balloontip as BT
 
-    mytextctrl = wx.TextCtrl(panel, -1, "i am a textctrl")
+    class MyFrame(wx.Frame):
 
-    # you can define your BalloonTip as follows:
+        def __init__(self, parent):
 
-    tipballoon = BalloonTip(topicon=None, toptitle="textctrl",
-                            message="this is a textctrl",
-                            shape=BT_ROUNDED,
-                            tipstyle=BT_LEAVE)
+            wx.Frame.__init(self, parent, -1, "BalloonTip Demo")        
 
-    # set the BalloonTip target
-    tipballoon.SetTarget(mytextctrl)
-    # set the BalloonTip background colour
-    tipballoon.SetBalloonColour(wx.white)
-    # set the font for the balloon title
-    tipballoon.SetTitleFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, False))
-    # set the colour for the balloon title
-    tipballoon.SetTitleColour(wx.BLACK)
-    # leave the message font as default
-    tipballoon.SetMessageFont()
-    # set the message (tip) foreground colour
-    tipballoon.SetMessageColour(wx.LIGHT_GREY)
-    # set the start delay for the BalloonTip
-    tipballoon.SetStartDelay(1000)
-    # set the time after which the BalloonTip is destroyed
-    tipballoon.SetEndDelay(3000)
+            panel = wx.Panel(self)
+            
+            # Let's suppose that in your application you have a wx.TextCtrl defined as:
+            mytextctrl = wx.TextCtrl(panel, -1, "I am a textctrl", pos=(100, 100))
+
+            # You can define your BalloonTip as follows:
+            tipballoon = BalloonTip(topicon=None, toptitle="textctrl",
+                                    message="this is a textctrl",
+                                    shape=BT.BT_ROUNDED,
+                                    tipstyle=BT.BT_LEAVE)
+
+            # Set the BalloonTip target
+            tipballoon.SetTarget(mytextctrl)
+            # Set the BalloonTip background colour
+            tipballoon.SetBalloonColour(wx.WHITE)
+            # Set the font for the balloon title
+            tipballoon.SetTitleFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+            # Set the colour for the balloon title
+            tipballoon.SetTitleColour(wx.BLACK)
+            # Leave the message font as default
+            tipballoon.SetMessageFont()
+            # Set the message (tip) foreground colour
+            tipballoon.SetMessageColour(wx.LIGHT_GREY)
+            # Set the start delay for the BalloonTip
+            tipballoon.SetStartDelay(1000)
+            # Set the time after which the BalloonTip is destroyed
+            tipballoon.SetEndDelay(3000)
+
+    # our normal wxApp-derived class, as usual
+
+    app = wx.PySimpleApp()
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
 
 
 Window Styles
@@ -138,7 +157,7 @@ License And Version
 
 BalloonTip is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 23 Nov 2009, 09.00 GMT
+Latest revision: Andrea Gavana @ 11 Aug 2011, 23.00 GMT
 
 Version 0.2
 
