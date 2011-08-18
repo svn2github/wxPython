@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 17 Jan 2011, 15.00 GMT
+# Latest Revision: 17 Aug 2011, 15.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -23,7 +23,7 @@
 #
 # TODO:
 # LabelBook - Support IMB_SHOW_ONLY_IMAGES
-# LabelBook - An option for the draw border to only draw the border 
+# LabelBook - An option to only draw the border 
 #             between the controls and the pages so the background
 #             colour can flow into the window background
 #
@@ -33,17 +33,17 @@
 # --------------------------------------------------------------------------- #
 
 """
-LabelBook and FlatImageBook are a quasi-full generic and owner-drawn
+L{LabelBook} and L{FlatImageBook} are a quasi-full generic and owner-drawn
 implementations of `wx.Notebook`.
 
 
 Description
 ===========
 
-LabelBook and FlatImageBook are a quasi-full implementations of the `wx.Notebook`,
+L{LabelBook} and L{FlatImageBook} are quasi-full implementations of the `wx.Notebook`,
 and designed to be a drop-in replacement for `wx.Notebook`. The API functions are
 similar so one can expect the function to behave in the same way.
-LabelBook anf FlatImageBook share their appearance with `wx.Toolbook` and
+L{LabelBook} anf L{FlatImageBook} share their appearance with `wx.Toolbook` and
 `wx.Listbook`, while having more options for custom drawings, label positioning,
 mouse pointing and so on. Moreover, they retain also some visual characteristics
 of the Outlook address book.
@@ -51,25 +51,68 @@ of the Outlook address book.
 Some features:
 
 - They are generic controls;
-- Supports for left, right, top (FlatImageBook only), bottom (FlatImageBook
+- Supports for left, right, top (L{FlatImageBook} only), bottom (L{FlatImageBook}
   only) book styles;
-- Possibility to draw images only, text only or both (FlatImageBook only);
+- Possibility to draw images only, text only or both (L{FlatImageBook} only);
 - Support for a "pin-button", that allows the user to shrink/expand the book
   tab area;
-- Shadows behind tabs (LabelBook only);
-- Gradient shading of the tab area (LabelBook only);
-- Web-like mouse pointing on tabs style (LabelBook only);
+- Shadows behind tabs (L{LabelBook} only);
+- Gradient shading of the tab area (L{LabelBook} only);
+- Web-like mouse pointing on tabs style (L{LabelBook} only);
 - Many customizable colours (tab area, active tab text, tab borders, active
-  tab, highlight) - LabelBook only.
+  tab, highlight) - L{LabelBook} only.
   
 And much more. See the demo for a quasi-complete review of all the functionalities
-of LabelBook and FlatImageBook.
+of L{LabelBook} and L{FlatImageBook}.
+
+
+Usage
+=====
+
+Usage example::
+
+    import wx
+    import wx.lib.agw.labelbook as LB
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent):
+
+            wx.Frame.__init__(self, parent)
+            
+            # Possible values for Tab placement are INB_TOP, INB_BOTTOM, INB_RIGHT, INB_LEFT
+
+            notebook = LB.LabelBook(self, -1, agwStyle=LB.INB_FIT_LABELTEXT|LB.INB_LEFT| \
+                                                       LB.INB_DRAW_SHADOW| \
+                                                       LB.INB_GRADIENT_BACKGROUND|LB.INB_BORDER)
+
+            pane1 = wx.Panel(notebook)
+            pane2 = wx.Panel(notebook)
+
+            imagelist = wx.ImageList(32, 32)
+            imagelist.Add(wx.Bitmap("my_bitmap.png", wx.BITMAP_TYPE_PNG))
+            notebook.AssignImageList(imagelist)
+
+            notebook.AddPage(pane_1, "Tab1", 1, 0)
+            notebook.AddPage(pane_2, "Tab2", 0, 0)
+
+
+    # our normal wxApp-derived class, as usual
+
+    app = wx.PySimpleApp()
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
+
 
 
 Supported Platforms
 ===================
 
-LabelBook and FlatImageBook have been tested on the following platforms:
+L{LabelBook} and L{FlatImageBook} have been tested on the following platforms:
   * Windows (Windows XP);
   * Linux Ubuntu (Dapper 6.06)
 
@@ -82,18 +125,18 @@ This class supports the following window styles:
 =========================== =========== ==================================================
 Window Styles               Hex Value   Description
 =========================== =========== ==================================================
-``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for `FlatImageBook`.
-``INB_LEFT``                        0x2 Place labels on the left side. Available only for `FlatImageBook`.
+``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
+``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
 ``INB_RIGHT``                       0x4 Place labels on the right side.
 ``INB_TOP``                         0x8 Place labels above the page area.
-``INB_BORDER``                     0x10 Draws a border around `LabelBook` or `FlatImageBook`.
-``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for `LabelBook`.
-``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for `LabelBook`.
+``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
+``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
+``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
 ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for `LabelBook`.
+``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
 ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for `LabelBook`.
-``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for `LabelBook`.
+``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
+``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
 ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
 ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
 =========================== =========== ==================================================
@@ -107,19 +150,19 @@ This class processes the following events:
 =================================== ==================================================
 Event Name                          Description
 =================================== ==================================================
-``EVT_IMAGENOTEBOOK_PAGE_CHANGED``  Notify client objects when the active page in `ImageNotebook` has changed.
-``EVT_IMAGENOTEBOOK_PAGE_CHANGING`` Notify client objects when the active page in `ImageNotebook` is about to change.
-``EVT_IMAGENOTEBOOK_PAGE_CLOSED``   Notify client objects when a page in `ImageNotebook` has been closed.
-``EVT_IMAGENOTEBOOK_PAGE_CLOSING``  Notify client objects when a page in `ImageNotebook` is closing.
+``EVT_IMAGENOTEBOOK_PAGE_CHANGED``  Notify client objects when the active page in L{FlatImageBook} or L{LabelBook} has changed.
+``EVT_IMAGENOTEBOOK_PAGE_CHANGING`` Notify client objects when the active page in L{FlatImageBook} or L{LabelBook} is about to change.
+``EVT_IMAGENOTEBOOK_PAGE_CLOSED``   Notify client objects when a page in L{FlatImageBook} or L{LabelBook} has been closed.
+``EVT_IMAGENOTEBOOK_PAGE_CLOSING``  Notify client objects when a page in L{FlatImageBook} or L{LabelBook} is closing.
 =================================== ==================================================
 
 
 License And Version
 ===================
 
-LabelBook and FlatImageBook are distributed under the wxPython license. 
+L{LabelBook} and L{FlatImageBook} are distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 17 Jan 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
 Version 0.5.
 
@@ -143,29 +186,29 @@ if wx.VERSION_STRING < "2.7":
 
 # FlatImageBook and LabelBook styles
 INB_BOTTOM = 1
-""" Place labels below the page area. Available only for `FlatImageBook`."""
+""" Place labels below the page area. Available only for L{FlatImageBook}."""
 INB_LEFT = 2
-""" Place labels on the left side. Available only for `FlatImageBook`."""
+""" Place labels on the left side. Available only for L{FlatImageBook}."""
 INB_RIGHT = 4
 """ Place labels on the right side. """
 INB_TOP = 8
 """ Place labels above the page area. """
 INB_BORDER = 16
-""" Draws a border around `LabelBook` or `FlatImageBook`. """
+""" Draws a border around L{LabelBook} or L{FlatImageBook}. """
 INB_SHOW_ONLY_TEXT = 32
-""" Shows only text labels and no images. Available only for `LabelBook`."""
+""" Shows only text labels and no images. Available only for L{LabelBook}."""
 INB_SHOW_ONLY_IMAGES = 64
-""" Shows only tab images and no label texts. Available only for `LabelBook`."""
+""" Shows only tab images and no label texts. Available only for L{LabelBook}."""
 INB_FIT_BUTTON = 128
 """ Displays a pin button to show/hide the book control. """
 INB_DRAW_SHADOW = 256
-""" Draw shadows below the book tabs. Available only for `LabelBook`."""
+""" Draw shadows below the book tabs. Available only for L{LabelBook}."""
 INB_USE_PIN_BUTTON = 512
 """ Displays a pin button to show/hide the book control. """
 INB_GRADIENT_BACKGROUND = 1024
-""" Draws a gradient shading on the tabs background. Available only for `LabelBook`."""
+""" Draws a gradient shading on the tabs background. Available only for L{LabelBook}."""
 INB_WEB_HILITE = 2048
-""" On mouse hovering, tabs behave like html hyperlinks. Available only for `LabelBook`."""
+""" On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}."""
 INB_NO_RESIZE = 4096
 """ Don't allow resizing of the tab area. """
 INB_FIT_LABELTEXT = 8192
@@ -181,13 +224,13 @@ wxEVT_IMAGENOTEBOOK_PAGE_CLOSED = wx.NewEventType()
 #-----------------------------------#
 
 EVT_IMAGENOTEBOOK_PAGE_CHANGED = wx.EVT_NOTEBOOK_PAGE_CHANGED
-""" Notify client objects when the active page in `ImageNotebook` has changed. """
+""" Notify client objects when the active page in L{FlatImageBook} or L{LabelBook} has changed. """
 EVT_IMAGENOTEBOOK_PAGE_CHANGING = wx.EVT_NOTEBOOK_PAGE_CHANGING
-""" Notify client objects when the active page in `ImageNotebook` is about to change. """
+""" Notify client objects when the active page in L{FlatImageBook} or L{LabelBook} is about to change. """
 EVT_IMAGENOTEBOOK_PAGE_CLOSING = wx.PyEventBinder(wxEVT_IMAGENOTEBOOK_PAGE_CLOSING, 1)
-""" Notify client objects when a page in `ImageNotebook` is closing. """
+""" Notify client objects when a page in L{FlatImageBook} or L{LabelBook} is closing. """
 EVT_IMAGENOTEBOOK_PAGE_CLOSED = wx.PyEventBinder(wxEVT_IMAGENOTEBOOK_PAGE_CLOSED, 1)
-""" Notify client objects when a page in `ImageNotebook` has been closed. """
+""" Notify client objects when a page in L{FlatImageBook} or L{LabelBook} has been closed. """
 
 
 # ---------------------------------------------------------------------------- #
@@ -2153,10 +2196,7 @@ class FlatBookBase(wx.Panel):
 
         self._mainSizer.Detach(self._pages)
         
-        # Create new sizer with the requested orientaion
-        className = self.GetName()
-
-        if className == "LabelBook":
+        if isinstance(self, LabelBook):
             self._mainSizer = wx.BoxSizer(wx.HORIZONTAL)
         else:
             if agwStyle & INB_LEFT or agwStyle & INB_RIGHT:
@@ -2169,8 +2209,7 @@ class FlatBookBase(wx.Panel):
         # Add the tab container and the separator
         self._mainSizer.Add(self._pages, 0, wx.EXPAND)
 
-        if className == "FlatImageBook":
-        
+        if isinstance(self, FlatImageBook):
             if agwStyle & INB_LEFT or agwStyle & INB_RIGHT:
                 self._pages.SetSizeHints(self._pages._nImgSize * 2, -1)
             else:
