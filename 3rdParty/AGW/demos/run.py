@@ -25,7 +25,7 @@ import sys, os
 # stuff for debugging
 print "wx.version:", wx.version()
 print "pid:", os.getpid()
-raw_input("Press Enter...")
+##raw_input("Press Enter...")
 
 assertMode = wx.PYAPP_ASSERT_DIALOG
 ##assertMode = wx.PYAPP_ASSERT_EXCEPTION
