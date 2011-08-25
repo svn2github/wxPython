@@ -139,6 +139,7 @@ Sample usage::
 
     import wx
     import xlrd
+    import os
 
     import xlsgrid as XG
     
