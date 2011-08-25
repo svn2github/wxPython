@@ -2,7 +2,7 @@
 # SUPERTOOLTIP wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 22 Jul 2011, 21.00 GMT
+# Latest Revision: 17 Aug 2011, 15.00 GMT
 #
 #
 # TODO List
@@ -26,14 +26,14 @@
 # --------------------------------------------------------------------------------- #
 
 """
-SuperToolTip is a class that mimics the behaviour of `wx.TipWindow` and generic tooltip
+L{SuperToolTip} is a class that mimics the behaviour of `wx.TipWindow` and generic tooltip
 windows, although it is a custom-drawn widget.
 
 
 Description
 ===========
 
-SuperToolTip is a class that mimics the behaviour of `wx.TipWindow` and generic tooltip
+L{SuperToolTip} is a class that mimics the behaviour of `wx.TipWindow` and generic tooltip
 windows, although it is a custom-drawn widget.
 
 This class supports:
@@ -53,10 +53,50 @@ This class supports:
 And a lot more. Check the demo for an almost complete review of the functionalities.
 
 
+Usage
+=====
+
+Usage example::
+
+    import wx
+    import wx.lib.agw.supertooltip as STT
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent):
+        
+            wx.Frame.__init__(self, parent, -1, "SuperToolTip Demo")
+
+            panel = wx.Panel(self)
+            button = wx.Button(panel, -1, "I am the SuperToolTip target", pos=(100, 50))
+            
+            tip = STT.SuperToolTip("A nice tooltip message")
+
+            tip.SetHeader("Hello World")
+            tip.SetTarget(button)
+            tip.SetDrawHeaderLine(True)
+
+            tip.ApplyStyle("Office 2007 Blue")
+            
+            tip.SetDropShadow(True)
+        
+        
+    # our normal wxApp-derived class, as usual
+
+    app = wx.PySimpleApp()
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
+
+
+
 Supported Platforms
 ===================
 
-SuperToolTip has been tested on the following platforms:
+L{SuperToolTip} has been tested on the following platforms:
   * Windows (Windows XP).
 
 
@@ -75,9 +115,9 @@ Events Processing
 License And Version
 ===================
 
-SuperToolTip is distributed under the wxPython license.
+L{SuperToolTip} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 22 Jul 2011, 21.00 GMT
+Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
 Version 0.4
 

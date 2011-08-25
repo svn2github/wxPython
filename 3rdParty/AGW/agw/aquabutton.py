@@ -2,7 +2,7 @@
 # AQUABUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 26 Jul 2011, 22.00 GMT
+# Latest Revision: 17 Aug 2011, 15.00 GMT
 #
 #
 # TODO List
@@ -100,7 +100,7 @@ License And Version
 
 L{AquaButton} control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 26 Jul 2011, 22.00 GMT
+Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
 Version 0.4
 
@@ -110,7 +110,9 @@ import wx
 
 # Constants for the hovering and clicking effects
 HOVER = 1
+""" Indicates that the mouse is hovering over L{AquaButton} """
 CLICK = 2
+""" Indicates that L{AquaButton} has been clicked """
 
 
 class AquaButtonEvent(wx.PyCommandEvent):

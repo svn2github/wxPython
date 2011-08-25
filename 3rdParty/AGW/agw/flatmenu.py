@@ -2,7 +2,7 @@
 # FLATMENU wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 23 Jul 2011, 15.00 GMT
+# Latest Revision: 17 Aug 2011, 15.00 GMT
 #
 # TODO List
 #
@@ -23,17 +23,17 @@
 # --------------------------------------------------------------------------------- #
 
 """
-FlatMenu is a generic menu implementation.
+L{FlatMenu} is a generic menu implementation.
 
 
 Description
 ===========
 
-FlatMenu, like the name implies, it is a generic menu implementation. 
+L{FlatMenu}, like the name implies, it is a generic menu implementation. 
 I tried to provide a full functionality for menus, menubar and toolbar.
 
 
-FlatMenu supports the following features:
+L{FlatMenu} supports the following features:
 
 - Fires all the events (UI & Cmd);
 - Check items;
@@ -66,26 +66,89 @@ FlatMenu supports the following features:
 - 4 different colour schemes for the menu bar (more can easily added);
 - Scrolling is available if the menu height is greater than the screen height;
 - Context menus for menu items;
-- Show/hide the drop down arrow which allows the customization of FlatMenu;
+- Show/hide the drop down arrow which allows the customization of L{FlatMenu};
 - Multiple columns menu window;
 - Tooltips for menus and toolbar items on a `wx.StatusBar` (if present);
 - Transparency (alpha channel) for menu windows (for platforms supporting it);
 - FileHistory support through a pure-Python `wx.FileHistory` implementation;
-- Possibility to set a background bitmap for a `FlatMenu`;
+- Possibility to set a background bitmap for a L{FlatMenu};
 - First attempt in adding controls to FlatToolbar;
 - Added a MiniBar (thanks to Vladiuz);
 - Added `wx.ToolBar` methods AddCheckTool/AddRadioTool (thanks to Vladiuz).
   
 
+Usage
+=====
+
+Usage example::
+
+    import wx
+    import wx.lib.agw.flatmenu as FM
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent):
+        
+            wx.Frame.__init__(self, parent, -1, "FlatMenu Demo")
+
+            self.CreateMenu()
+
+            panel = wx.Panel(self, -1)
+            btn = wx.Button(panel, -1, "Hello", (15, 12), (100, 120))
+
+            main_sizer = wx.BoxSizer(wx.VERTICAL)
+            main_sizer.Add(self.menubar, 0, wx.EXPAND)
+            main_sizer.Add(panel, 1, wx.EXPAND)
+
+            self.SetSizer(main_sizer)
+            main_sizer.Layout()
+
+
+        def CreateMenu(self):
+
+            self.menubar = FM.FlatMenuBar(self, -1)
+
+            f_menu = FM.FlatMenu()
+            e_menu = FM.FlatMenu()
+            v_menu = FM.FlatMenu()
+            t_menu = FM.FlatMenu()
+            w_menu = FM.FlatMenu()
+
+            # Append the menu items to the menus
+            f_menu.Append(-1, "Simple\tCtrl+N", "Text", None)
+            e_menu.Append(-1, "FlatMenu", "Text", None)
+            v_menu.Append(-1, "Example", "Text", None)
+            t_menu.Append(-1, "Hello", "Text", None)
+            w_menu.Append(-1, "World", "Text", None)
+
+            # Append menus to the menubar
+            self.menubar.Append(f_menu, "&File")
+            self.menubar.Append(e_menu, "&Edit")
+            self.menubar.Append(v_menu, "&View")
+            self.menubar.Append(t_menu, "&Options")
+            self.menubar.Append(w_menu, "&Help")
+
+
+    # our normal wxApp-derived class, as usual
+
+    app = wx.PySimpleApp()
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
+
+
+
 Supported Platforms
 ===================
 
-FlatMenu v0.8 has been tested on the following platforms:
-  * Windows (Windows XP);
-  * Linux Ubuntu (Dapper 6.06)
-v0.9.* has been tested on
+L{FlatMenu} has been tested on the following platforms:
   * Windows (Windows XP, Vista);
+  * Linux Ubuntu (Dapper 6.06)
 
+  
 
 Window Styles
 =============
@@ -111,18 +174,18 @@ This class processes the following events:
 Event Name                        Description
 ================================= ==================================================
 ``EVT_FLAT_MENU_DISMISSED``       Used internally.
-``EVT_FLAT_MENU_ITEM_MOUSE_OUT``  Fires an event when the mouse leaves a `FlatMenuItem`.
-``EVT_FLAT_MENU_ITEM_MOUSE_OVER`` Fires an event when the mouse enters a `FlatMenuItem`.
-``EVT_FLAT_MENU_SELECTED``        Fires the `wx.EVT_MENU` event for `FlatMenu`.
+``EVT_FLAT_MENU_ITEM_MOUSE_OUT``  Fires an event when the mouse leaves a L{FlatMenuItem}.
+``EVT_FLAT_MENU_ITEM_MOUSE_OVER`` Fires an event when the mouse enters a L{FlatMenuItem}.
+``EVT_FLAT_MENU_SELECTED``        Fires the `wx.EVT_MENU` event for L{FlatMenu}.
 ================================= ==================================================
 
 
 License And Version
 ===================
 
-FlatMenu is distributed under the wxPython license.
+L{FlatMenu} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 23 Jul 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
 Version 1.0
 
@@ -217,13 +280,13 @@ wxEVT_FLAT_MENU_ITEM_MOUSE_OUT = wx.NewEventType()
 EVT_FLAT_MENU_DISMISSED = wx.PyEventBinder(wxEVT_FLAT_MENU_DISMISSED, 1)
 """ Used internally. """
 EVT_FLAT_MENU_SELECTED = wx.PyEventBinder(wxEVT_FLAT_MENU_SELECTED, 2)
-""" Fires the wx.EVT_MENU event for `FlatMenu`. """
+""" Fires the wx.EVT_MENU event for L{FlatMenu}. """
 EVT_FLAT_MENU_RANGE = wx.PyEventBinder(wxEVT_FLAT_MENU_SELECTED, 2)
-""" Fires the wx.EVT_MENU event for a series of `FlatMenu`. """
+""" Fires the wx.EVT_MENU event for a series of L{FlatMenu}. """
 EVT_FLAT_MENU_ITEM_MOUSE_OUT = wx.PyEventBinder(wxEVT_FLAT_MENU_ITEM_MOUSE_OUT, 1)
-""" Fires an event when the mouse leaves a `FlatMenuItem`. """
+""" Fires an event when the mouse leaves a L{FlatMenuItem}. """
 EVT_FLAT_MENU_ITEM_MOUSE_OVER = wx.PyEventBinder(wxEVT_FLAT_MENU_ITEM_MOUSE_OVER, 1)
-""" Fires an event when the mouse enters a `FlatMenuItem`. """
+""" Fires an event when the mouse enters a L{FlatMenuItem}. """
 
 
 def GetAccelIndex(label):
@@ -676,7 +739,7 @@ class FMRenderer(object):
         """
         Draws the menu item.
 
-        :param `item`: `FlatMenuItem` instance;
+        :param `item`: a L{FlatMenuItem} instance;
         :param `dc`: an instance of `wx.DC`;
         :param `xCoord`: the current x position where to draw the menu;
         :param `yCoord`: the current y position where to draw the menu;
@@ -792,6 +855,7 @@ class FMRenderer(object):
                 enabledTxtColour = colourutils.BestLabelColour(self.menuFocusFaceColour, bw=True)
             else:
                 enabledTxtColour = colourutils.BestLabelColour(self.menuFaceColour, bw=True)
+                
             disabledTxtColour = self.itemTextColourDisabled
             textColour = (item.IsEnabled() and [enabledTxtColour] or [disabledTxtColour])[0]
 

@@ -1,5 +1,5 @@
 # --------------------------------------------------------------------------- #
-# FANCYBUTTONPANEL Widget wxPython IMPLEMENTATION
+# BUTTONPANEL Widget wxPython IMPLEMENTATION
 #
 # Original C++ Code From Eran. You Can Find It At:
 #
@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 11 Aug 2011, 23.00 GMT
+# Latest Revision: 17 Aug 2011, 15.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -56,7 +56,7 @@ classic look).
 Usage
 =====
 
-ButtonPanel supports 4 alignments: left, right, top, bottom, which have a
+L{ButtonPanel} supports 4 alignments: left, right, top, bottom, which have a
 different meaning and behavior with respect to `wx.Toolbar`. The easiest
 thing is to try the demo to understand, but I'll try to explain how it works.
 
@@ -80,12 +80,11 @@ thing is to try the demo to understand, but I'll try to explain how it works.
 
 - In this case, left and right alignment are the same (as top and bottom are the same),
   but the layout strategy changes: now if there is not enough room for all the controls
-  to be shown, the last added items are hidden ("last" means on the far right for
-  horizontal ButtonPanels and far bottom for vertical ButtonPanels).
+  to be shown, the last added items are hidden ("last" means on the far right for an
+  horizontal L{ButtonPanel} and far bottom for a vertical L{ButtonPanel}).
 
 
-The following example shows a simple implementation that uses L{ButtonPanel}
-inside a very simple frame::
+Usage example::
 
   import wx
   import wx.lib.agw.buttonpanel as BP
@@ -102,8 +101,6 @@ inside a very simple frame::
 
           vSizer = wx.BoxSizer(wx.VERTICAL) 
           mainPanel.SetSizer(vSizer) 
-
-          alignment = BP_ALIGN_RIGHT 
 
           titleBar = BP.ButtonPanel(mainPanel, -1, "A Simple Test & Demo")
 
@@ -129,6 +126,16 @@ inside a very simple frame::
 
           titleBar.DoLayout()
           vSizer.Layout()
+
+
+      def OnButton(self, event):
+          ''' Handler for the ``wx.EVT_BUTTON`` event. '''
+
+          obj = event.GetEventObject()
+
+          # This will print the button label
+          print obj.GetText()
+
   
   # our normal wxApp-derived class, as usual
 
@@ -169,9 +176,9 @@ Event Name        Description
 License And Version
 ===================
 
-ButtonPanel is distributed under the wxPython license. 
+L{ButtonPanel} is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 11 Aug 2011, 23.00 GMT
+Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
 Version 0.6.
 
@@ -184,13 +191,13 @@ import wx
 BP_BACKGROUND_COLOUR = 0
 """ Background brush colour when no gradient shading exists. """
 BP_GRADIENT_COLOUR_FROM = 1
-""" Starting gradient colour, used only when BP_USE_GRADIENT style is applied. """
+""" Starting gradient colour, used only when ``BP_USE_GRADIENT`` style is applied. """
 BP_GRADIENT_COLOUR_TO = 2
-""" Ending gradient colour, used only when BP_USE_GRADIENT style is applied. """
+""" Ending gradient colour, used only when ``BP_USE_GRADIENT`` style is applied. """
 BP_BORDER_COLOUR = 3
-""" Pen colour to paint the border of ButtonPanel. """
+""" Pen colour to paint the border of L{ButtonPanel}. """
 BP_TEXT_COLOUR = 4
-""" Main ButtonPanel caption colour. """
+""" Main L{ButtonPanel} caption colour. """
 BP_BUTTONTEXT_COLOUR = 5
 """ Text colour for buttons with text. """
 BP_BUTTONTEXT_INACTIVE_COLOUR = 6
@@ -202,7 +209,7 @@ BP_SELECTION_PEN_COLOUR = 8
 BP_SEPARATOR_COLOUR = 9
 """ Pen colour used to paint the separators. """
 BP_TEXT_FONT = 10
-""" Font of the ButtonPanel main caption. """
+""" Font of the L{ButtonPanel} main caption. """
 BP_BUTTONTEXT_FONT = 11
 """ Text font for the buttons with text. """
 
@@ -212,15 +219,9 @@ BP_BUTTONTEXT_ALIGN_RIGHT = 13
 """ Flag that indicates the text is shown alongside the image in buttons with text. """
 
 BP_SEPARATOR_SIZE = 14
-"""
-Separator size. NB: This is not the line width, but the sum of the space before
-and after the separator line plus the width of the line.
-"""
+""" Separator size. NB: This is not the line width, but the sum of the space before and after the separator line plus the width of the line. """
 BP_MARGINS_SIZE = 15
-"""
-Size of the left/right margins in ButtonPanel (top/bottom for vertically
-aligned ButtonPanels).
-"""
+""" Size of the left/right margins in L{ButtonPanel} (top/bottom for vertically aligned L{ButtonPanel})."""
 BP_BORDER_SIZE = 16
 """ Size of the border. """
 BP_PADDING_SIZE = 17
@@ -236,13 +237,19 @@ BP_GRADIENT_HORIZONTAL = 2
 
 # Flags for HitTest() method
 BP_HT_BUTTON = 200
+""" This flag indicates that the user has hit a button inside L{ButtonPanel}. """
 BP_HT_NONE = 201
+""" This flag indicates that no buttons were hit inside L{ButtonPanel}. """
 
 # Alignment of buttons in the panel
 BP_ALIGN_RIGHT = 1
+""" Aligns the buttons to the right (for an horizontal L{ButtonPanel}). """
 BP_ALIGN_LEFT = 2
+""" Aligns the buttons to the left (for an horizontal L{ButtonPanel}). """
 BP_ALIGN_TOP = 4
+""" Aligns the buttons at the top (for a vertical L{ButtonPanel}). """
 BP_ALIGN_BOTTOM = 8
+""" Aligns the buttons at the bottom (for a vertical L{ButtonPanel}). """
 
 # ButtonPanel styles
 BP_DEFAULT_STYLE = 1
@@ -367,7 +374,7 @@ class BPArt(object):
          Size Id                         Value  Description
          ============================== ======= =====================================
          ``BP_SEPARATOR_SIZE``               14 Separator size. Note: This is not the line width, but the sum of the space before and after the separator line plus the width of the line
-         ``BP_MARGINS_SIZE``                 15 Size of the left/right margins in L{ButtonPanel} (top/bottom for vertically aligned ButtonPanels)
+         ``BP_MARGINS_SIZE``                 15 Size of the left/right margins in L{ButtonPanel} (top/bottom for vertically aligned L{ButtonPanel})
          ``BP_BORDER_SIZE``                  16 Size of the border
          ``BP_PADDING_SIZE``                 17 Inter-tool separator size
          ============================== ======= =====================================
@@ -423,7 +430,7 @@ class BPArt(object):
          ``BP_GRADIENT_COLOUR_FROM``              1 Starting gradient colour, used only when ``BP_USE_GRADIENT`` style is applied
          ``BP_GRADIENT_COLOUR_TO``                2 Ending gradient colour, used only when ``BP_USE_GRADIENT`` style is applied
          ``BP_BORDER_COLOUR``                     3 Pen colour to paint the border of L{ButtonPanel}
-         ``BP_TEXT_COLOUR``                       4 Main ButtonPanel caption colour
+         ``BP_TEXT_COLOUR``                       4 Main L{ButtonPanel} caption colour
          ``BP_BUTTONTEXT_COLOUR``                 5 Text colour for buttons with text
          ``BP_BUTTONTEXT_INACTIVE_COLOUR``        6 Text colour for inactive buttons with text
          ``BP_SELECTION_BRUSH_COLOUR``            7 Brush colour to be used when hovering or selecting a button

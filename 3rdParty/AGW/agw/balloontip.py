@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 29 May 2005
-# Latest Revision: 11 Aug 2011, 23.00 GMT
+# Latest Revision: 17 Aug 2011, 15.00 GMT
 #
 #
 # TODO List/Caveats
@@ -40,41 +40,41 @@
 # --------------------------------------------------------------------------- #
 
 """
-BalloonTip is a class that allows you to display tooltips in a balloon style
+L{BalloonTip} is a class that allows you to display tooltips in a balloon style
 window.
 
 
 Description
 ===========
 
-BalloonTip is a class that allows you to display tooltips in a balloon style
+L{BalloonTip} is a class that allows you to display tooltips in a balloon style
 window (actually a frame), similarly to the windows XP balloon help. There is
 also an arrow that points to the center of the control designed as a "target"
-for the BalloonTip.
+for the L{BalloonTip}.
 
 What it can do:
 
 - Set the balloon shape as a rectangle or a rounded rectangle;
-- Set an icon to the top-left of the BalloonTip frame;
-- Set a title at the top of the BalloonTip frame;
-- Automatic "best" placement of BalloonTip frame depending on the target
+- Set an icon to the top-left of the L{BalloonTip} frame;
+- Set a title at the top of the L{BalloonTip} frame;
+- Automatic "best" placement of L{BalloonTip} frame depending on the target
   control/window position;
 - Runtime customization of title/tip fonts and foreground colours;
-- Runtime change of BalloonTip frame shape;
+- Runtime change of L{BalloonTip} frame shape;
 - Set the balloon background colour;
-- Possibility to set the delay after which the BalloonTip is displayed;
-- Possibility to set the delay after which the BalloonTip is destroyed;
-- Three different behaviors for the BalloonTip window (regardless the delay
+- Possibility to set the delay after which the L{BalloonTip} is displayed;
+- Possibility to set the delay after which the L{BalloonTip} is destroyed;
+- Three different behaviors for the L{BalloonTip} window (regardless the delay
   destruction time set):
   
-  a) Destroy by leave: the BalloonTip is destroyed when the mouse leaves the
+  a) Destroy by leave: the L{BalloonTip} is destroyed when the mouse leaves the
      target control/window;
-  b) Destroy by click: the BalloonTip is destroyed when you click on any area
+  b) Destroy by click: the L{BalloonTip} is destroyed when you click on any area
      of the target control/window;
-  c) Destroy by button: the BalloonTip is destroyed when you click on the
+  c) Destroy by button: the L{BalloonTip} is destroyed when you click on the
      top-right close button;
-- Possibility to enable/disable globally the BalloonTip on you application;
-- Set the BalloonTip also for the taskbar icon.
+- Possibility to enable/disable globally the L{BalloonTip} on you application;
+- Set the L{BalloonTip} also for the taskbar icon.
 
 
 Usage
@@ -97,10 +97,10 @@ Usage example::
             mytextctrl = wx.TextCtrl(panel, -1, "I am a textctrl", pos=(100, 100))
 
             # You can define your BalloonTip as follows:
-            tipballoon = BalloonTip(topicon=None, toptitle="textctrl",
-                                    message="this is a textctrl",
-                                    shape=BT.BT_ROUNDED,
-                                    tipstyle=BT.BT_LEAVE)
+            tipballoon = BT.BalloonTip(topicon=None, toptitle="textctrl",
+                                       message="this is a textctrl",
+                                       shape=BT.BT_ROUNDED,
+                                       tipstyle=BT.BT_LEAVE)
 
             # Set the BalloonTip target
             tipballoon.SetTarget(mytextctrl)
@@ -138,11 +138,11 @@ This class supports the following window styles:
 ================ =========== ==================================================
 Window Styles    Hex Value   Description
 ================ =========== ==================================================
-``BT_ROUNDED``           0x1 `BalloonTip` will have a rounded rectangular shape.
-``BT_RECTANGLE``         0x2 `BalloonTip` will have a rectangular shape.
-``BT_LEAVE``             0x3 `BalloonTip` will be destroyed when the user moves the mouse outside the target window.
-``BT_CLICK``             0x4 `BalloonTip` will be destroyed when the user click on `BalloonTip`.
-``BT_BUTTON``            0x5 `BalloonTip` will be destroyed when the user click on the close button.
+``BT_ROUNDED``           0x1 L{BalloonTip} will have a rounded rectangular shape.
+``BT_RECTANGLE``         0x2 L{BalloonTip} will have a rectangular shape.
+``BT_LEAVE``             0x3 L{BalloonTip} will be destroyed when the user moves the mouse outside the target window.
+``BT_CLICK``             0x4 L{BalloonTip} will be destroyed when the user click on L{BalloonTip}.
+``BT_BUTTON``            0x5 L{BalloonTip} will be destroyed when the user click on the close button.
 ================ =========== ==================================================
 
 
@@ -157,7 +157,7 @@ License And Version
 
 BalloonTip is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 11 Aug 2011, 23.00 GMT
+Latest revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
 Version 0.2
 
@@ -170,17 +170,17 @@ from wx.lib.buttons import GenButton
 
 # Define The Values For The BalloonTip Frame Shape
 BT_ROUNDED = 1
-""" `BalloonTip` will have a rounded rectangular shape. """
+""" L{BalloonTip} will have a rounded rectangular shape. """
 BT_RECTANGLE = 2
-""" `BalloonTip` will have a rectangular shape. """
+""" L{BalloonTip} will have a rectangular shape. """
 
 # Define The Value For The BalloonTip Destruction Behavior
 BT_LEAVE = 3
-""" `BalloonTip` will be destroyed when the user moves the mouse outside the target window. """
+""" L{BalloonTip} will be destroyed when the user moves the mouse outside the target window. """
 BT_CLICK = 4
-""" `BalloonTip` will be destroyed when the user click on `BalloonTip`. """
+""" L{BalloonTip} will be destroyed when the user click on L{BalloonTip}. """
 BT_BUTTON = 5
-""" `BalloonTip` will be destroyed when the user click on the close button. """
+""" L{BalloonTip} will be destroyed when the user click on the close button. """
 
 
 # ---------------------------------------------------------------
@@ -510,8 +510,8 @@ class BalloonTip(object):
          ======================= ========= ====================================
          Shape Flag              Hex Value  Description
          ======================= ========= ====================================
-         ``BT_ROUNDED``           0x1      `BalloonTip` will have a rounded rectangular shape.
-         ``BT_RECTANGLE``         0x2      `BalloonTip` will have a rectangular shape.
+         ``BT_ROUNDED``           0x1      L{BalloonTip} will have a rounded rectangular shape.
+         ``BT_RECTANGLE``         0x2      L{BalloonTip} will have a rectangular shape.
          ======================= ========= ====================================
          
         :param `tipstyle`: the L{BalloonTip} destruction behavior. It can be one of:
@@ -519,9 +519,9 @@ class BalloonTip(object):
          ======================= ========= ====================================
          Tip Flag                Hex Value  Description
          ======================= ========= ====================================
-         ``BT_LEAVE``                  0x3 `BalloonTip` will be destroyed when the user moves the mouse outside the target window.
-         ``BT_CLICK``                  0x4 `BalloonTip` will be destroyed when the user click on `BalloonTip`.
-         ``BT_BUTTON``                 0x5 `BalloonTip` will be destroyed when the user click on the close button.
+         ``BT_LEAVE``                  0x3 L{BalloonTip} will be destroyed when the user moves the mouse outside the target window.
+         ``BT_CLICK``                  0x4 L{BalloonTip} will be destroyed when the user click on L{BalloonTip}.
+         ``BT_BUTTON``                 0x5 L{BalloonTip} will be destroyed when the user click on the close button.
          ======================= ========= ====================================
 
         """
@@ -860,9 +860,9 @@ class BalloonTip(object):
          ============== ========== =====================================
          Tip Style      Hex Value  Description
          ============== ========== =====================================
-         ``BT_LEAVE``          0x3 `BalloonTip` will be destroyed when the user moves the mouse outside the target window.
-         ``BT_CLICK``          0x4 `BalloonTip` will be destroyed when the user click on `BalloonTip`.
-         ``BT_BUTTON``         0x5 `BalloonTip` will be destroyed when the user click on the close button.
+         ``BT_LEAVE``          0x3 L{BalloonTip} will be destroyed when the user moves the mouse outside the target window.
+         ``BT_CLICK``          0x4 L{BalloonTip} will be destroyed when the user click on L{BalloonTip}.
+         ``BT_BUTTON``         0x5 L{BalloonTip} will be destroyed when the user click on the close button.
          ============== ========== =====================================
         """
 

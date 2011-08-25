@@ -411,9 +411,10 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
         if self._flags & RIBBON_BAR_SHOW_PAGE_ICONS:        
             icon = tab.page.GetIcon()
-            if self._flags & RIBBON_BAR_SHOW_PAGE_LABELS == 0:            
-                x = tab.rect.x + (tab.rect.width - icon.GetWidth()) / 2
-                dc.DrawBitmap(icon, x, tab.rect.y + 1 + (tab.rect.height - 1 - icon.GetHeight()) / 2, True)
+            if self._flags & RIBBON_BAR_SHOW_PAGE_LABELS == 0:
+                if icon.IsOk():
+                    x = tab.rect.x + (tab.rect.width - icon.GetWidth()) / 2
+                    dc.DrawBitmap(icon, x, tab.rect.y + 1 + (tab.rect.height - 1 - icon.GetHeight()) / 2, True)
             
         if self._flags & RIBBON_BAR_SHOW_PAGE_LABELS:
             label = tab.page.GetLabel()
@@ -688,7 +689,12 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             size.DecBy(6, label_height + 4)
             if client_offset is not None:
                 client_offset = wx.Point(3, label_height + 2)
-        
+
+        if size.x < 0:
+            size.x = 0
+        if size.y < 0:
+            size.y = 0
+            
         return size, client_offset
 
 
@@ -1034,6 +1040,11 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
         """
 
+        if kind == RIBBON_BUTTON_TOGGLE:
+            kind = RIBBON_BUTTON_NORMAL
+            if state & RIBBON_BUTTONBAR_BUTTON_TOGGLED:
+                state ^= RIBBON_BUTTONBAR_BUTTON_ACTIVE_MASK
+    
         if state & (RIBBON_BUTTONBAR_BUTTON_HOVER_MASK | RIBBON_BUTTONBAR_BUTTON_ACTIVE_MASK):
             dc.SetPen(self._button_bar_hover_border_pen)
             bg_rect = wx.Rect(*rect)

@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 10 Oct 2005
-# Latest Revision: 26 Jul 2011, 22.00 GMT
+# Latest Revision: 17 Aug 2011, 15.00 GMT
 #
 #
 # TODO List/Caveats
@@ -122,7 +122,7 @@ License And Version
 
 L{AdvancedSplash} control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 26 Jul 2011, 22.00 GMT
+Latest revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
 Version 0.4
 
@@ -141,8 +141,7 @@ import wx
 AS_TIMEOUT = 1
 """ L{AdvancedSplash} will be destroyed after `timeout` milliseconds. """
 AS_NOTIMEOUT = 2
-""" L{AdvancedSplash} can be destroyed by clicking on it, pressing a key or by""" \
-""" explicitly call the Close() method. """
+""" L{AdvancedSplash} can be destroyed by clicking on it, pressing a key or by explicitly call the `Close()` method. """
 
 # These Flags Are Used To Position AdvancedSplash Correctly On Screen
 AS_CENTER_ON_SCREEN = 4
@@ -154,9 +153,7 @@ AS_NO_CENTER = 16
 
 # This Option Allow To Mask A Colour In The Input Bitmap
 AS_SHADOW_BITMAP = 32
-""" If the bitmap you pass as input has no transparency, you can choose one colour""" \
-""" that will be masked in your bitmap. the final shape of L{AdvancedSplash} will be""" \
-""" defined only by non-transparent (non-masked) pixels. """
+""" If the bitmap you pass as input has no transparency, you can choose one colour that will be masked in your bitmap. the final shape of L{AdvancedSplash} will be defined only by non-transparent (non-masked) pixels. """
 
 #----------------------------------------------------------------------
 # ADVANCEDSPLASH Class

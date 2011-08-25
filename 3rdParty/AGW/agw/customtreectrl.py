@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 03 Aug 2011, 22.00 GMT
+# Latest Revision: 17 Aug 2011, 15.00 GMT
 #
 #
 # TODO List
@@ -39,23 +39,23 @@
 
 
 """
-CustomTreeCtrl is a class that mimics the behaviour of `wx.TreeCtrl`, with some more
+L{CustomTreeCtrl} is a class that mimics the behaviour of `wx.TreeCtrl`, with some more
 enhancements.
 
 
 Description
 ===========
 
-CustomTreeCtrl is a class that mimics the behaviour of `wx.TreeCtrl`, with almost the
+L{CustomTreeCtrl} is a class that mimics the behaviour of `wx.TreeCtrl`, with almost the
 same base functionalities plus some more enhancements. This class does not rely on
 the native control, as it is a full owner-drawn tree control.
-Apart of the base functionalities of CustomTreeCtrl (described below), in addition
+Apart of the base functionalities of L{CustomTreeCtrl} (described below), in addition
 to the standard `wx.TreeCtrl` behaviour this class supports:
 
 * CheckBox-type items: checkboxes are easy to handle, just selected or unselected
   state with no particular issues in handling the item's children;
 * Added support for 3-state value checkbox items;
-* RadioButton-type items: since I elected to put radiobuttons in CustomTreeCtrl, I
+* RadioButton-type items: since I elected to put radiobuttons in L{CustomTreeCtrl}, I
   needed some way to handle them, that made sense. So, I used the following approach:
   
   - All peer-nodes that are radiobuttons will be mutually exclusive. In other words,
@@ -68,21 +68,21 @@ to the standard `wx.TreeCtrl` behaviour this class supports:
 * Hyperlink-type items: they look like an hyperlink, with the proper mouse cursor on
   hovering;
 * Multiline text items (**note**: to add a newline character in a multiline item, press
-  ``Shift`` + ``Enter`` as the ``Enter`` key alone is consumed by CustomTreeCtrl to finish
+  ``Shift`` + ``Enter`` as the ``Enter`` key alone is consumed by L{CustomTreeCtrl} to finish
   the editing and ``Ctrl`` + ``Enter`` is consumed by the platform for tab navigation);
 * Enabling/disabling items (together with their plain or grayed out icons);
 * Whatever non-toplevel widget can be attached next to an item;
 * Possibility to horizontally align the widgets attached to tree items on the
   same tree level.
-* Possibility to align the widgets attached to tree items to the rightmost edge of CustomTreeCtrl;
+* Possibility to align the widgets attached to tree items to the rightmost edge of L{CustomTreeCtrl};
 * Default selection style, gradient (horizontal/vertical) selection style and Windows
   Vista selection style;
 * Customized drag and drop images built on the fly;
-* Setting the CustomTreeCtrl item buttons to a personalized imagelist;
-* Setting the CustomTreeCtrl check/radio item icons to a personalized imagelist;
+* Setting the L{CustomTreeCtrl} item buttons to a personalized imagelist;
+* Setting the L{CustomTreeCtrl} check/radio item icons to a personalized imagelist;
 * Changing the style of the lines that connect the items (in terms of `wx.Pen` styles);
-* Using an image as a CustomTreeCtrl background (currently only in "tile" mode);
-* Adding images to any item in the leftmost area of the CustomTreeCtrl client window.
+* Using an image as a L{CustomTreeCtrl} background (currently only in "tile" mode);
+* Adding images to any item in the leftmost area of the L{CustomTreeCtrl} client window.
 
 And a lot more. Check the demo for an almost complete review of the functionalities.
 
@@ -90,7 +90,7 @@ And a lot more. Check the demo for an almost complete review of the functionalit
 Base Functionalities
 ====================
 
-CustomTreeCtrl supports all the wx.TreeCtrl styles, except:
+L{CustomTreeCtrl} supports all the `wx.TreeCtrl` styles, except:
 
 - ``TR_EXTENDED``: supports for this style is on the todo list (am I sure of this?).
 
@@ -108,13 +108,74 @@ attached to the tree items:
 - ``TR_ALIGN_WINDOWS_RIGHT``: aligns to the rightmost position the windows belonging
   to the item on the same tree level.
     
-All the methods available in `wx.TreeCtrl` are also available in CustomTreeCtrl.
+All the methods available in `wx.TreeCtrl` are also available in L{CustomTreeCtrl}.
 
 
+Usage
+=====
+
+Usage example::
+
+    import wx
+    import wx.lib.agw.customtreectrl as CT
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent):
+
+            wx.Frame.__init(self, parent, -1, "CustomTreeCtrl Demo")        
+
+            # Create a CustomTreeCtrl instance
+            custom_tree = CT.CustomTreeCtrl(self, agwStyle=wx.TR_DEFAULT_STYLE)
+            
+            # Add a root node to it
+            root = custom_tree.AddRoot("The Root Item")            
+
+            # Create an image list to add icons next to an item
+            il = wx.ImageList(16, 16)
+            fldridx     = il.Add(wx.ArtProvider_GetBitmap(wx.ART_FOLDER,      wx.ART_OTHER, 16))
+            fldropenidx = il.Add(wx.ArtProvider_GetBitmap(wx.ART_FILE_OPEN,   wx.ART_OTHER, 16))
+            fileidx     = il.Add(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, 16))
+
+            custom_tree.SetImageList(il)
+            
+            custom_tree.SetItemImage(root, fldridx, wx.TreeItemIcon_Normal)
+            custom_tree.SetItemImage(root, fldropenidx, wx.TreeItemIcon_Expanded)
+
+            for x in range(15):
+                child = custom_tree.AppendItem(root, "Item %d" % x)
+                custom_tree.SetItemImage(child, fldridx, wx.TreeItemIcon_Normal)
+                custom_tree.SetItemImage(child, fldropenidx, wx.TreeItemIcon_Expanded)
+
+                for y in range(5):
+                    last = custom_tree.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)))
+                    custom_tree.SetItemImage(last, fldridx, wx.TreeItemIcon_Normal)
+                    custom_tree.SetItemImage(last, fldropenidx, wx.TreeItemIcon_Expanded)
+
+                    for z in range(5):
+                        item = custom_tree.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z))
+                        custom_tree.SetItemImage(item, fileidx, wx.TreeItemIcon_Normal)
+                        custom_tree.SetItemImage(item, smileidx, wx.TreeItemIcon_Selected)
+
+            custom_tree.Expand(self.root)
+
+
+    # our normal wxApp-derived class, as usual
+
+    app = wx.PySimpleApp()
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
+
+
+        
 Events
 ======
 
-All the events supported by `wx.TreeCtrl` are also available in CustomTreeCtrl, with
+All the events supported by `wx.TreeCtrl` are also available in L{CustomTreeCtrl}, with
 a few exceptions:
 
 - ``EVT_TREE_GET_INFO`` (don't know what this means);
@@ -122,7 +183,7 @@ a few exceptions:
 - ``EVT_TREE_ITEM_MIDDLE_CLICK`` (not implemented, but easy to add);
 - ``EVT_TREE_STATE_IMAGE_CLICK`` (no need for that, look at the checking events below).
 
-Plus, CustomTreeCtrl supports the events related to the checkbutton-type items:
+Plus, L{CustomTreeCtrl} supports the events related to the checkbutton-type items:
 
 - ``EVT_TREE_ITEM_CHECKING``: an item is being checked;
 - ``EVT_TREE_ITEM_CHECKED``: an item has been checked.
@@ -136,7 +197,7 @@ And to hyperlink-type items:
 Supported Platforms
 ===================
 
-CustomTreeCtrl has been tested on the following platforms:
+L{CustomTreeCtrl} has been tested on the following platforms:
   * Windows (Windows XP);
   * GTK (Thanks to Michele Petrazzo);
   * Mac OS (Thanks to John Jackson).
@@ -168,7 +229,7 @@ Window Styles                  Hex Value   Description
 ``TR_AUTO_TOGGLE_CHILD``            0x8000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly.
 ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
 ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
-``TR_ALIGN_WINDOWS_RIGHT``         0x40000 Flag used to align windows (in items with windows) to the rightmost edge of `CustomTreeCtrl`.
+``TR_ALIGN_WINDOWS_RIGHT``         0x40000 Flag used to align windows (in items with windows) to the rightmost edge of L{CustomTreeCtrl}.
 ============================== =========== ==================================================
 
 
@@ -181,29 +242,29 @@ This class processes the following events:
 Event Name                     Description
 ============================== ==================================================
 ``EVT_TREE_BEGIN_DRAG``        Begin dragging with the left mouse button.
-``EVT_TREE_BEGIN_LABEL_EDIT``  Begin editing a label. This can be prevented by calling `Veto()`.
+``EVT_TREE_BEGIN_LABEL_EDIT``  Begin editing a label. This can be prevented by calling L{Veto}.
 ``EVT_TREE_BEGIN_RDRAG``       Begin dragging with the right mouse button.
 ``EVT_TREE_DELETE_ITEM``       Delete an item.
 ``EVT_TREE_END_DRAG``          End dragging with the left or right mouse button.
-``EVT_TREE_END_LABEL_EDIT``    End editing a label. This can be prevented by calling `Veto()`.
-``EVT_TREE_GET_INFO``          Request information from the application (not implemented in `CustomTreeCtrl`).
+``EVT_TREE_END_LABEL_EDIT``    End editing a label. This can be prevented by calling L{Veto}.
+``EVT_TREE_GET_INFO``          Request information from the application (not implemented in L{CustomTreeCtrl}).
 ``EVT_TREE_ITEM_ACTIVATED``    The item has been activated, i.e. chosen by double clicking it with mouse or from keyboard.
 ``EVT_TREE_ITEM_CHECKED``      A checkbox or radiobox type item has been checked.
 ``EVT_TREE_ITEM_CHECKING``     A checkbox or radiobox type item is being checked.
 ``EVT_TREE_ITEM_COLLAPSED``    The item has been collapsed.
-``EVT_TREE_ITEM_COLLAPSING``   The item is being collapsed. This can be prevented by calling `Veto()`.
+``EVT_TREE_ITEM_COLLAPSING``   The item is being collapsed. This can be prevented by calling L{Veto}.
 ``EVT_TREE_ITEM_EXPANDED``     The item has been expanded.
-``EVT_TREE_ITEM_EXPANDING``    The item is being expanded. This can be prevented by calling `Veto()`.
+``EVT_TREE_ITEM_EXPANDING``    The item is being expanded. This can be prevented by calling L{Veto}.
 ``EVT_TREE_ITEM_GETTOOLTIP``   The opportunity to set the item tooltip is being given to the application (call `TreeEvent.SetToolTip`).
 ``EVT_TREE_ITEM_HYPERLINK``    An hyperlink type item has been clicked.
 ``EVT_TREE_ITEM_MENU``         The context menu for the selected item has been requested, either by a right click or by using the menu key.
-``EVT_TREE_ITEM_MIDDLE_CLICK`` The user has clicked the item with the middle mouse button (not implemented in `CustomTreeCtrl`).
+``EVT_TREE_ITEM_MIDDLE_CLICK`` The user has clicked the item with the middle mouse button (not implemented in L{CustomTreeCtrl}).
 ``EVT_TREE_ITEM_RIGHT_CLICK``  The user has clicked the item with the right mouse button.
 ``EVT_TREE_KEY_DOWN``          A key has been pressed.
 ``EVT_TREE_SEL_CHANGED``       Selection has changed.
-``EVT_TREE_SEL_CHANGING``      Selection is changing. This can be prevented by calling `Veto()`.
-``EVT_TREE_SET_INFO``          Information is being supplied to the application (not implemented in `CustomTreeCtrl`).
-``EVT_TREE_STATE_IMAGE_CLICK`` The state image has been clicked (not implemented in `CustomTreeCtrl`).
+``EVT_TREE_SEL_CHANGING``      Selection is changing. This can be prevented by calling L{Veto}.
+``EVT_TREE_SET_INFO``          Information is being supplied to the application (not implemented in L{CustomTreeCtrl}).
+``EVT_TREE_STATE_IMAGE_CLICK`` The state image has been clicked (not implemented in L{CustomTreeCtrl}).
 ============================== ==================================================
 
 
@@ -212,7 +273,7 @@ License And Version
 
 CustomTreeCtrl is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 03 Aug 2011, 22.00 GMT
+Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
 Version 2.4
 
@@ -244,15 +305,23 @@ _VERSION_STRING = wx.VERSION_STRING
 
 # Enum for different images associated with a treectrl item
 TreeItemIcon_Normal = 0              # not selected, not expanded
+""" The tree item is not selected and not expanded. """
 TreeItemIcon_Selected = 1            #     selected, not expanded
+""" The tree item is selected and not expanded. """
 TreeItemIcon_Expanded = 2            # not selected,     expanded
+""" The tree item is not selected but expanded. """
 TreeItemIcon_SelectedExpanded = 3    #     selected,     expanded
-
+""" The tree item is selected and expanded. """
 TreeItemIcon_Checked = 0             # check button,     checked
+""" The item's check button is checked. """
 TreeItemIcon_NotChecked = 1          # check button, not checked
+""" The item's check button is not checked. """
 TreeItemIcon_Undetermined = 2        # check button, undetermined
+""" The item's check button is in undetermined state (used only for a 3-state check button). """
 TreeItemIcon_Flagged = 3             # radio button,     selected
+""" The item's radio button is checked. """
 TreeItemIcon_NotFlagged = 4          # radio button, not selected
+""" The item's radio button is not checked. """
 
 # ----------------------------------------------------------------------------
 # CustomTreeCtrl flags
@@ -304,7 +373,7 @@ TR_AUTO_CHECK_PARENT = 0x10000                                 # only meaningful
 TR_ALIGN_WINDOWS = 0x20000                                     # to align windows horizontally for items at the same level
 """ Flag used to align windows (in items with windows) at the same horizontal position. """
 TR_ALIGN_WINDOWS_RIGHT = 0x40000                               # to align windows to the rightmost edge of CustomTreeCtrl
-""" Flag used to align windows (in items with windows) to the rightmost edge of `CustomTreeCtrl`."""
+""" Flag used to align windows (in items with windows) to the rightmost edge of L{CustomTreeCtrl}."""
 
 TR_DEFAULT_STYLE = wx.TR_DEFAULT_STYLE                         # default style for the tree control
 """ The set of flags that are closest to the defaults for the native control for a""" \
@@ -398,27 +467,27 @@ EVT_TREE_BEGIN_DRAG = wx.EVT_TREE_BEGIN_DRAG
 EVT_TREE_BEGIN_RDRAG = wx.EVT_TREE_BEGIN_RDRAG
 """ Begin dragging with the right mouse button. """
 EVT_TREE_BEGIN_LABEL_EDIT = wx.EVT_TREE_BEGIN_LABEL_EDIT
-""" Begin editing a label. This can be prevented by calling `Veto()`. """
+""" Begin editing a label. This can be prevented by calling L{Veto}. """
 EVT_TREE_END_LABEL_EDIT = wx.EVT_TREE_END_LABEL_EDIT
-""" End editing a label. This can be prevented by calling `Veto()`. """
+""" End editing a label. This can be prevented by calling L{Veto}. """
 EVT_TREE_DELETE_ITEM = wx.EVT_TREE_DELETE_ITEM
 """ Delete an item. """
 EVT_TREE_GET_INFO = wx.EVT_TREE_GET_INFO
-""" Request information from the application (not implemented in `CustomTreeCtrl`). """
+""" Request information from the application (not implemented in L{CustomTreeCtrl}). """
 EVT_TREE_SET_INFO = wx.EVT_TREE_SET_INFO
-""" Information is being supplied to the application (not implemented in `CustomTreeCtrl`). """
+""" Information is being supplied to the application (not implemented in L{CustomTreeCtrl}). """
 EVT_TREE_ITEM_EXPANDED = wx.EVT_TREE_ITEM_EXPANDED
 """ The item has been expanded. """
 EVT_TREE_ITEM_EXPANDING = wx.EVT_TREE_ITEM_EXPANDING
-""" The item is being expanded. This can be prevented by calling `Veto()`. """
+""" The item is being expanded. This can be prevented by calling L{Veto}. """
 EVT_TREE_ITEM_COLLAPSED = wx.EVT_TREE_ITEM_COLLAPSED
 """ The item has been collapsed. """
 EVT_TREE_ITEM_COLLAPSING = wx.EVT_TREE_ITEM_COLLAPSING
-""" The item is being collapsed. This can be prevented by calling `Veto()`. """
+""" The item is being collapsed. This can be prevented by calling L{Veto}. """
 EVT_TREE_SEL_CHANGED = wx.EVT_TREE_SEL_CHANGED
 """ Selection has changed. """
 EVT_TREE_SEL_CHANGING = wx.EVT_TREE_SEL_CHANGING
-""" Selection is changing. This can be prevented by calling `Veto()`. """
+""" Selection is changing. This can be prevented by calling L{Veto}. """
 EVT_TREE_KEY_DOWN = wx.EVT_TREE_KEY_DOWN
 """ A key has been pressed. """
 EVT_TREE_ITEM_ACTIVATED = wx.EVT_TREE_ITEM_ACTIVATED
@@ -426,11 +495,11 @@ EVT_TREE_ITEM_ACTIVATED = wx.EVT_TREE_ITEM_ACTIVATED
 EVT_TREE_ITEM_RIGHT_CLICK = wx.EVT_TREE_ITEM_RIGHT_CLICK
 """ The user has clicked the item with the right mouse button. """
 EVT_TREE_ITEM_MIDDLE_CLICK = wx.EVT_TREE_ITEM_MIDDLE_CLICK
-""" The user has clicked the item with the middle mouse button (not implemented in `CustomTreeCtrl`). """
+""" The user has clicked the item with the middle mouse button (not implemented in L{CustomTreeCtrl}). """
 EVT_TREE_END_DRAG = wx.EVT_TREE_END_DRAG
 """ End dragging with the left or right mouse button. """
 EVT_TREE_STATE_IMAGE_CLICK = wx.EVT_TREE_STATE_IMAGE_CLICK
-""" The state image has been clicked (not implemented in `CustomTreeCtrl`). """
+""" The state image has been clicked (not implemented in L{CustomTreeCtrl}). """
 EVT_TREE_ITEM_GETTOOLTIP = wx.EVT_TREE_ITEM_GETTOOLTIP
 """ The opportunity to set the item tooltip is being given to the application (call `TreeEvent.SetToolTip`). """
 EVT_TREE_ITEM_MENU = wx.EVT_TREE_ITEM_MENU
@@ -1040,7 +1109,9 @@ class TreeTextCtrl(ExpandoTextCtrl):
     This is a subclass of `ExpandoTextCtrl` as L{CustomTreeCtrl} supports multiline
     text items.
 
-    :note: To add a newline character in a multiline item, press ``Shift`` + ``Enter`` as the ``Enter`` key alone is consumed by L{CustomTreeCtrl} to finish the editing and ``Ctrl`` + ``Enter`` is consumed by the platform for tab navigation.
+    :note: To add a newline character in a multiline item, press ``Shift`` + ``Enter`` as the ``Enter``
+     key alone is consumed by L{CustomTreeCtrl} to finish the editing and ``Ctrl`` + ``Enter`` is
+     consumed by the platform for tab navigation.
     """
 
     def __init__(self, owner, item=None):
@@ -2287,7 +2358,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
          ``TR_AUTO_TOGGLE_CHILD``            0x8000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly.
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
-         ``TR_ALIGN_WINDOWS_RIGHT``         0x40000 Flag used to align windows (in items with windows) to the rightmost edge of `CustomTreeCtrl`.
+         ``TR_ALIGN_WINDOWS_RIGHT``         0x40000 Flag used to align windows (in items with windows) to the rightmost edge of L{CustomTreeCtrl}.
          ============================== =========== ==================================================
 
         :param `validator`: window validator;
@@ -7460,8 +7531,10 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         Gets the size which best suits the window: for a control, it would be the
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
+
+        :note: Overridden from `wx.PyScrolledWindow`.
         """
-        
+                
         # something is better than nothing...
         # 100x80 is what the MSW version will get from the default
         # wxControl::DoGetBestSize

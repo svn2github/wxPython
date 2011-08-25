@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 16 Aug 2011, 18.00 GMT
+# Latest Revision: 17 Aug 2011, 15.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -27,13 +27,13 @@
 # --------------------------------------------------------------------------- #
 
 """
-FlatNotebook is a full, generic and owner-drawn implementation of `wx.Notebook`.
+L{FlatNotebook} is a full, generic and owner-drawn implementation of `wx.Notebook`.
 
 
 Description
 ===========
 
-The FlatNotebook is a full implementation of the `wx.Notebook`, and designed to be
+L{FlatNotebook} is a full implementation of the `wx.Notebook`, and designed to be
 a drop-in replacement for `wx.Notebook`. The API functions are similar so one can
 expect the function to behave in the same way.
 
@@ -65,6 +65,59 @@ Some features:
 And much more.
 
 
+Usage
+=====
+
+Usage example::
+
+    import wx
+    import wx.lib.agw.flatnotebook as fnb
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent):
+
+            wx.Frame.__init(self, parent, -1, "FlatNotebook Demo")        
+
+            panel = wx.Panel(self)
+            
+            notebook = fnb.FlatNotebook(panel, -1)
+            
+            for i in xrange(3):
+                caption = "Page %d"%(i+1)
+                notebook.AddPage(self.CreatePage(notebook, caption), caption)
+                
+            sizer = wx.BoxSizer(wx.VERTICAL)
+            sizer.Add(notebook, 1, wx.ALL|wx.EXPAND, 5)
+            panel.SetSizer(sizer)
+
+
+        def CreatePage(self, notebook, caption):
+            '''
+            Creates a simple `wx.Panel` containing a `wx.TextCtrl`.
+
+            :param `notebook`: an instance of `FlatNotebook`;
+            :param `caption`: a simple label.
+            '''
+
+            p = wx.Panel(notebook)
+            wx.StaticText(p, -1, caption, (20,20))
+            wx.TextCtrl(p, -1, "", (20,40), (150,-1))
+            return p
+        
+        
+    # our normal wxApp-derived class, as usual
+
+    app = wx.PySimpleApp()
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
+
+
+
 Window Styles
 =============
 
@@ -88,13 +141,14 @@ Window Styles                    Hex Value   Description
 ``FNB_DCLICK_CLOSES_TABS``            0x1000 Style to close tab using double click.
 ``FNB_SMART_TABS``                    0x2000 Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows.
 ``FNB_DROPDOWN_TABS_LIST``            0x4000 Use a dropdown menu on the left in place of the arrows.
-``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different FlatNotebooks.
+``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different L{FlatNotebook}.
 ``FNB_HIDE_ON_SINGLE_TAB``           0x10000 Hides the Page Container when there is one or fewer tabs.
-``FNB_DEFAULT_STYLE``                0x10020 FlatNotebook default style.
+``FNB_DEFAULT_STYLE``                0x10020 L{FlatNotebook} default style.
 ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
 ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
 ``FNB_RIBBON_TABS``                  0x80000 Use the Ribbon Tabs style
 ``FNB_HIDE_TABS``                   0x100000 Hides the Page Container allowing only keyboard navigation
+``FNB_NAV_BUTTONS_WHEN_NEEDED``     0x200000 Hides the navigation left/right arrows if all tabs fit
 ================================ =========== ==================================================
 
 
@@ -106,10 +160,10 @@ This class processes the following events:
 ========================================= ==================================================
 Event Name                                Description
 ========================================= ==================================================
-``EVT_FLATNOTEBOOK_PAGE_CHANGED``         Notify client objects when the active page in `FlatNotebook` has changed.
-``EVT_FLATNOTEBOOK_PAGE_CHANGING``        Notify client objects when the active page in `FlatNotebook` is about to change.
-``EVT_FLATNOTEBOOK_PAGE_CLOSED``          Notify client objects when a page in `FlatNotebook` has been closed.
-``EVT_FLATNOTEBOOK_PAGE_CLOSING``         Notify client objects when a page in `FlatNotebook` is closing.
+``EVT_FLATNOTEBOOK_PAGE_CHANGED``         Notify client objects when the active page in L{FlatNotebook} has changed.
+``EVT_FLATNOTEBOOK_PAGE_CHANGING``        Notify client objects when the active page in L{FlatNotebook} is about to change.
+``EVT_FLATNOTEBOOK_PAGE_CLOSED``          Notify client objects when a page in L{FlatNotebook} has been closed.
+``EVT_FLATNOTEBOOK_PAGE_CLOSING``         Notify client objects when a page in L{FlatNotebook} is closing.
 ``EVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU``    Notify client objects when a pop-up menu should appear next to a tab.
 ``EVT_FLATNOTEBOOK_PAGE_DROPPED``         Notify client objects when a tab has been dropped and re-arranged (on the *same* notebook)
 ``EVT_FLATNOTEBOOK_PAGE_DROPPED_FOREIGN`` Notify client objects when a tab has been dropped and re-arranged (from a foreign notebook)
@@ -119,9 +173,9 @@ Event Name                                Description
 License And Version
 ===================
 
-FlatNotebook is distributed under the wxPython license.
+L{FlatNotebook} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 16 Aug 2011, 18.00 GMT
+Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
 Version 3.2
 """
@@ -211,7 +265,7 @@ FNB_DROPDOWN_TABS_LIST = 16384
 """Use a dropdown menu on the left in place of the arrows"""
 
 FNB_ALLOW_FOREIGN_DND = 32768
-"""Allows drag 'n' drop operations between different L{FlatNotebook}s"""
+"""Allows drag and drop operations between different L{FlatNotebook}"""
 
 FNB_HIDE_ON_SINGLE_TAB = 65536
 """Hides the Page Container when there is one or fewer tabs"""
@@ -224,6 +278,9 @@ FNB_RIBBON_TABS = 0x80000
 
 FNB_HIDE_TABS = 0x100000
 """Hides the tabs allowing only keyboard navigation between pages"""
+
+FNB_NAV_BUTTONS_WHEN_NEEDED = 0x200000
+""" Hides the navigation left/right arrows if all tabs fit. """
 
 VERTICAL_BORDER_PADDING = 4
 
@@ -288,13 +345,13 @@ wxEVT_FLATNOTEBOOK_PAGE_DROPPED_FOREIGN = wx.NewEventType()
 #-----------------------------------#
 
 EVT_FLATNOTEBOOK_PAGE_CHANGED = wx.EVT_NOTEBOOK_PAGE_CHANGED
-""" Notify client objects when the active page in `FlatNotebook` has changed."""
+""" Notify client objects when the active page in L{FlatNotebook} has changed."""
 EVT_FLATNOTEBOOK_PAGE_CHANGING = wx.EVT_NOTEBOOK_PAGE_CHANGING
-""" Notify client objects when the active page in `FlatNotebook` is about to change."""
+""" Notify client objects when the active page in L{FlatNotebook} is about to change."""
 EVT_FLATNOTEBOOK_PAGE_CLOSING = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_CLOSING, 1)
-""" Notify client objects when a page in `FlatNotebook` is closing."""
+""" Notify client objects when a page in L{FlatNotebook} is closing."""
 EVT_FLATNOTEBOOK_PAGE_CLOSED = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_CLOSED, 1)
-""" Notify client objects when a page in `FlatNotebook` has been closed."""
+""" Notify client objects when a page in L{FlatNotebook} has been closed."""
 EVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU, 1)
 """ Notify client objects when a pop-up menu should appear next to a tab."""
 EVT_FLATNOTEBOOK_PAGE_DROPPED = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_DROPPED, 1)
@@ -1777,6 +1834,10 @@ class FNBRenderer(object):
         if not pc._pagesInfoVec:
             return
 
+        if agwStyle & FNB_NAV_BUTTONS_WHEN_NEEDED:
+            if pc._pagesInfoVec[-1].GetPosition() != wx.Point(-1, -1) and pc._nFrom == 0:
+                return
+
         # Set the bitmap according to the button status
         if pc._nLeftButtonStatus == FNB_BTN_HOVER:
             arrowBmp = wx.BitmapFromXPMData(left_arrow_hilite_xpm)
@@ -1817,6 +1878,10 @@ class FNBRenderer(object):
         if not pc._pagesInfoVec:
             return
 
+        if agwStyle & FNB_NAV_BUTTONS_WHEN_NEEDED:
+            if pc._pagesInfoVec[-1].GetPosition() != wx.Point(-1, -1) and pc._nFrom == 0:
+                return
+            
         # Set the bitmap according to the button status
         if pc._nRightButtonStatus == FNB_BTN_HOVER:
             arrowBmp = wx.BitmapFromXPMData(right_arrow_hilite_xpm)
@@ -3826,12 +3891,14 @@ class FlatNotebook(wx.PyPanel):
          ``FNB_DCLICK_CLOSES_TABS``            0x1000 Style to close tab using double click.
          ``FNB_SMART_TABS``                    0x2000 Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows.
          ``FNB_DROPDOWN_TABS_LIST``            0x4000 Use a dropdown menu on the left in place of the arrows.
-         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different FlatNotebooks.
+         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different L{FlatNotebook}.
          ``FNB_HIDE_ON_SINGLE_TAB``           0x10000 Hides the Page Container when there is one or fewer tabs.
-         ``FNB_DEFAULT_STYLE``                0x10020 FlatNotebook default style.
+         ``FNB_DEFAULT_STYLE``                0x10020 L{FlatNotebook} default style.
          ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
          ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
          ``FNB_RIBBON_TABS``                  0x80000 Use the Ribbon Tabs style.
+         ``FNB_HIDE_TABS``                   0x100000 Hides the Page Container allowing only keyboard navigation
+         ``FNB_NAV_BUTTONS_WHEN_NEEDED``     0x200000 Hides the navigation left/right arrows if all tabs fit
          ================================ =========== ==================================================
 
         :param `name`: the window name.
@@ -4637,12 +4704,14 @@ class FlatNotebook(wx.PyPanel):
          ``FNB_DCLICK_CLOSES_TABS``            0x1000 Style to close tab using double click.
          ``FNB_SMART_TABS``                    0x2000 Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows.
          ``FNB_DROPDOWN_TABS_LIST``            0x4000 Use a dropdown menu on the left in place of the arrows.
-         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different FlatNotebooks.
+         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different L{FlatNotebook}.
          ``FNB_HIDE_ON_SINGLE_TAB``           0x10000 Hides the Page Container when there is one or fewer tabs.
-         ``FNB_DEFAULT_STYLE``                0x10020 FlatNotebook default style.
+         ``FNB_DEFAULT_STYLE``                0x10020 L{FlatNotebook} default style.
          ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
          ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
          ``FNB_RIBBON_TABS``                  0x80000 Use the Ribbon Tabs style.
+         ``FNB_HIDE_TABS``                   0x100000 Hides the Page Container allowing only keyboard navigation
+         ``FNB_NAV_BUTTONS_WHEN_NEEDED``     0x200000 Hides the navigation left/right arrows if all tabs fit
          ================================ =========== ==================================================
 
         """
@@ -6524,12 +6593,14 @@ class FlatNotebookCompatible(FlatNotebook):
          ``FNB_DCLICK_CLOSES_TABS``            0x1000 Style to close tab using double click.
          ``FNB_SMART_TABS``                    0x2000 Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows.
          ``FNB_DROPDOWN_TABS_LIST``            0x4000 Use a dropdown menu on the left in place of the arrows.
-         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different FlatNotebooks.
+         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different L{FlatNotebook}.
          ``FNB_HIDE_ON_SINGLE_TAB``           0x10000 Hides the Page Container when there is one or fewer tabs.
-         ``FNB_DEFAULT_STYLE``                0x10020 FlatNotebook default style.
+         ``FNB_DEFAULT_STYLE``                0x10020 L{FlatNotebook} default style.
          ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
          ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
          ``FNB_RIBBON_TABS``                  0x80000 Use the Ribbon Tabs style.
+         ``FNB_HIDE_TABS``                   0x100000 Hides the Page Container allowing only keyboard navigation
+         ``FNB_NAV_BUTTONS_WHEN_NEEDED``     0x200000 Hides the navigation left/right arrows if all tabs fit
          ================================ =========== ==================================================
 
         :param `name`: the window name.

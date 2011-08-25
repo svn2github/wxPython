@@ -149,7 +149,7 @@ class RulerCtrlDemo(wx.Frame):
 
         self.SetSize((3*sizex/4, 3*sizey/4))
         self.SendSizeEvent()
-        self.CenterOnParent()
+        self.CenterOnScreen()
 
 
     def LayoutItems(self):
