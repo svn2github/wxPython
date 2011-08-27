@@ -86,66 +86,67 @@ thing is to try the demo to understand, but I'll try to explain how it works.
 
 Usage example::
 
-  import wx
-  import wx.lib.agw.buttonpanel as BP
-  
-  class MyFrame(wx.Frame):
+    import wx
+    import wx.lib.agw.buttonpanel as BP
 
-      def __init__(self, parent, id=-1, title="ButtonPanel", pos=wx.DefaultPosition,
-                   size=(800, 600), style=wx.DEFAULT_FRAME_STYLE):
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent, id=-1, title="ButtonPanel", pos=wx.DefaultPosition,
+                     size=(800, 600), style=wx.DEFAULT_FRAME_STYLE):
                  
-          wx.Frame.__init__(self, parent, id, title, pos, size, style)
+            wx.Frame.__init__(self, parent, id, title, pos, size, style)
 
-          mainPanel = wx.Panel(self, -1)
-          self.logtext = wx.TextCtrl(mainPanel, -1, "", style=wx.TE_MULTILINE)
+            mainPanel = wx.Panel(self, -1)
+            self.logtext = wx.TextCtrl(mainPanel, -1, "", style=wx.TE_MULTILINE)
 
-          vSizer = wx.BoxSizer(wx.VERTICAL) 
-          mainPanel.SetSizer(vSizer) 
+            vSizer = wx.BoxSizer(wx.VERTICAL) 
+            mainPanel.SetSizer(vSizer) 
 
-          titleBar = BP.ButtonPanel(mainPanel, -1, "A Simple Test & Demo")
+            titleBar = BP.ButtonPanel(mainPanel, -1, "A Simple Test & Demo")
 
-          btn1 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png4.png", wx.BITMAP_TYPE_PNG))
-          titleBar.AddButton(btn1)
-          self.Bind(wx.EVT_BUTTON, self.OnButton, btn1)
+            btn1 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png4.png", wx.BITMAP_TYPE_PNG))
+            titleBar.AddButton(btn1)
+            self.Bind(wx.EVT_BUTTON, self.OnButton, btn1)
 
-          btn2 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png3.png", wx.BITMAP_TYPE_PNG))
-          titleBar.AddButton(btn2)
-          self.Bind(wx.EVT_BUTTON, self.OnButton, btn2)
+            btn2 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png3.png", wx.BITMAP_TYPE_PNG))
+            titleBar.AddButton(btn2)
+            self.Bind(wx.EVT_BUTTON, self.OnButton, btn2)
 
-          btn3 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png2.png", wx.BITMAP_TYPE_PNG))
-          titleBar.AddButton(btn3)
-          self.Bind(wx.EVT_BUTTON, self.OnButton, btn3)
+            btn3 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png2.png", wx.BITMAP_TYPE_PNG))
+            titleBar.AddButton(btn3)
+            self.Bind(wx.EVT_BUTTON, self.OnButton, btn3)
 
-          btn4 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png1.png", wx.BITMAP_TYPE_PNG))
-          titleBar.AddButton(btn4)
-          self.Bind(wx.EVT_BUTTON, self.OnButton, btn4)
+            btn4 = BP.ButtonInfo(titleBar, wx.NewId(), wx.Bitmap("png1.png", wx.BITMAP_TYPE_PNG))
+            titleBar.AddButton(btn4)
+            self.Bind(wx.EVT_BUTTON, self.OnButton, btn4)
 
-          vSizer.Add(titleBar, 0, wx.EXPAND)
-          vSizer.Add((20, 20))
-          vSizer.Add(self.logtext, 1, wx.EXPAND|wx.ALL, 5)
+            vSizer.Add(titleBar, 0, wx.EXPAND)
+            vSizer.Add((20, 20))
+            vSizer.Add(self.logtext, 1, wx.EXPAND|wx.ALL, 5)
 
-          titleBar.DoLayout()
-          vSizer.Layout()
+            titleBar.DoLayout()
+            vSizer.Layout()
 
 
-      def OnButton(self, event):
-          ''' Handler for the ``wx.EVT_BUTTON`` event. '''
+        def OnButton(self, event):
+            ''' Handler for the ``wx.EVT_BUTTON`` event. '''
 
-          obj = event.GetEventObject()
+            obj = event.GetEventObject()
 
-          # This will print the button label
-          print obj.GetText()
+            # This will print the button label
+            print obj.GetText()
 
-  
-  # our normal wxApp-derived class, as usual
 
-  app = wx.PySimpleApp()
-  
-  frame = MyFrame(None)
-  app.SetTopWindow(frame)
-  frame.Show()
-  
-  app.MainLoop()
+    # our normal wxApp-derived class, as usual
+
+    app = wx.PySimpleApp()
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
+
 
 
 Window Styles

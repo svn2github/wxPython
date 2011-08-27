@@ -601,7 +601,7 @@ class XLSText(object):
          of the width of the zero character, using default Excel font (first FONT
          record in the Excel file).
 
-        :note: If you are using version 0.7.1 or lower for `xlrd`, the `hyperlink`
+        :note: If you are using version 0.7.1 or lower for `xlrd`, the *hyperlink*
          parameter will always be ``None`` as this feature is available only in
          `xlrd` 0.7.2 (SVN).
         """
@@ -839,7 +839,7 @@ class XLSText(object):
 
         :param `hyperlink`: an instance of `xlrd.sheet.hyperlink`.
 
-        :note: If you are using version 0.7.1 or lower for `xlrd`, the `hyperlink`
+        :note: If you are using version 0.7.1 or lower for `xlrd`, the *hyperlink*
          parameter will always be ``None`` as this feature is available only in
          `xlrd` 0.7.2 (SVN).        
         """
@@ -975,7 +975,7 @@ class XLSRichText(XLSText):
          of the width of the zero character, using default Excel font (first FONT
          record in the Excel file).
 
-        :note: If you are using version 0.7.1 or lower for `xlrd`, the `hyperlink`
+        :note: If you are using version 0.7.1 or lower for `xlrd`, the *hyperlink*
          parameter will always be ``None`` as this feature is available only in
          `xlrd` 0.7.2 (SVN).
 
@@ -1484,7 +1484,7 @@ class XLSCell(object):
         :param `default_colour`: the "magic" colour used by Excel to draw non-custom
          border lines.
 
-        :note: If you are using version 0.7.1 or lower for `xlrd`, the `hyperlink`
+        :note: If you are using version 0.7.1 or lower for `xlrd`, the *hyperlink*
          parameter will always be ``None`` as this feature is available only in
          `xlrd` 0.7.2 (SVN).
 
@@ -1493,7 +1493,7 @@ class XLSCell(object):
          `xlrd` 0.7.2 (SVN).
 
         :note: if Mark Hammonds' `pywin32` package is not available, the `xls_text`
-         parameter will almost surely not be thw WYSIWYG representation of the cell
+         parameter will almost surely not be the WYSIWYG representation of the cell
          text.
 
         :note: If Mark Hammonds' `pywin32` package is not available, the `xls_comment`
@@ -1528,7 +1528,7 @@ class XLSCell(object):
         :param `default_colour`: the "magic" colour used by Excel to draw non-custom
          border lines.
 
-        :note: If you are using version 0.7.1 or lower for `xlrd`, the `hyperlink`
+        :note: If you are using version 0.7.1 or lower for `xlrd`, the *hyperlink*
          parameter will always be ``None`` as this feature is available only in
          `xlrd` 0.7.2 (SVN).
 
@@ -1537,7 +1537,7 @@ class XLSCell(object):
          `xlrd` 0.7.2 (SVN).
 
         :note: if Mark Hammonds' `pywin32` package is not available, the `xls_text`
-         parameter will almost surely not be thw WYSIWYG representation of the cell
+         parameter will almost surely not be the WYSIWYG representation of the cell
          text.
 
         :note: If Mark Hammonds' `pywin32` package is not available, the `xls_comment`
@@ -1986,7 +1986,7 @@ class XLSGrid(gridlib.Grid):
         :param `default_colour`: the "magic" colour used by Excel to draw non-custom
          border lines.
 
-        :note: If you are using version 0.7.1 or lower for `xlrd`, the `hyperlink`
+        :note: If you are using version 0.7.1 or lower for `xlrd`, the *hyperlink*
          parameter will always be ``None`` as this feature is available only in
          `xlrd` 0.7.2 (SVN).
 

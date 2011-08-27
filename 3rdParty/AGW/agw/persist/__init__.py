@@ -97,15 +97,38 @@ Usage
 
 Example of using a notebook control which automatically remembers the last open page::
 
-    book = wx.Notebook(parent, wx.ID_ANY)
-    book.SetName("MyBook") # Do not use the default name!!
-    book.AddPage(page1)
-    book.AddPage(page2)
-    book.AddPage(page3)
-    
-    if not PersistenceManager.RegisterAndRestore(book):
-        # Nothing was restored, so choose the default page ourselves
-        book.SetSelection(0)
+
+    import wx
+    import wx.lib.agw.persist as PM
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent):
+
+            wx.Frame.__init(self, parent, -1, "Persistent Controls Demo")        
+
+            book = wx.Notebook(self, wx.ID_ANY)
+
+            # Very important step!!            
+            book.SetName("MyBook") # Do not use the default name!!
+            
+            book.AddPage(wx.Panel(book), "Hello")
+            book.AddPage(wx.Panel(book), "World")
+            
+            if not PM.PersistenceManager.RegisterAndRestore(book):
+                # Nothing was restored, so choose the default page ourselves
+                book.SetSelection(0)
+
+
+    # our normal wxApp-derived class, as usual
+
+    app = wx.PySimpleApp()
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
 
 
 .. _persistent-windows:
@@ -147,7 +170,7 @@ License And Version
 
 PersistentObjects library is distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 28 Jan 2011, 15.00 GMT
+Latest revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 Version 0.2. 
 
 """

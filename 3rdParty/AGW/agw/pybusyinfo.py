@@ -95,7 +95,7 @@ License And Version
 
 L{PyBusyInfo} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 03 Dec 2009, 09.00 GMT
+Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
 Version 0.1
 
