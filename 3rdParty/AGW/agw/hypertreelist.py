@@ -2299,7 +2299,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `item`: an instance of L{TreeListItem}.
         """                
 
-        return self.GetNext(item, False)
+        return CustomTreeCtrl.GetNextExpanded(self, item)
 
 
     def GetPrevExpanded(self, item):
@@ -2309,7 +2309,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `item`: an instance of L{TreeListItem}.
         """                
 
-        return self.GetPrev(item, False)
+        return CustomTreeCtrl.GetPrevExpanded(self, item)
 
 
     def GetFirstVisibleItem(self):
@@ -2325,7 +2325,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `item`: an instance of L{TreeListItem}.
         """                
 
-        i = self.GetNext(item, False)
+        i = self.GetPrev(item)
         while i:
             if self.IsItemVisible(i):
                 return i
@@ -4750,6 +4750,7 @@ class HyperTreeList(wx.PyControl):
         :param `item`: an instance of L{TreeListItem};
         :param `column`: an integer specifying the column index.
         """
+
         return EditTextCtrl(self.GetMainWindow(), -1, item, column,
                             self.GetMainWindow(), item.GetText(column),
                             style=self.GetTextCtrlStyle(column))
@@ -4761,10 +4762,11 @@ class HyperTreeList(wx.PyControl):
         labels of items. 
         
         Override this function in the derived class to support a different
-        style, e.g. wx.TE_MULTILINE.
+        style, e.g. ``wx.TE_MULTILINE``.
         
         :param `column`: an integer specifying the column index.
         """
+        
         return self.GetTextCtrlAlignmentStyle(column) | wx.TE_PROCESS_ENTER
 
         
@@ -4776,6 +4778,7 @@ class HyperTreeList(wx.PyControl):
         
         :param `column`: an integer specifying the column index.
         """
+
         header_win = self.GetHeaderWindow()
         alignment = header_win.GetColumnAlignment(column)
         return {wx.ALIGN_LEFT: wx.TE_LEFT, 
