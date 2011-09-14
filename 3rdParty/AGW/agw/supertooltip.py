@@ -2,7 +2,7 @@
 # SUPERTOOLTIP wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 14 Sep 2011, 21.00 GMT
 #
 #
 # TODO List
@@ -117,7 +117,7 @@ License And Version
 
 L{SuperToolTip} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 14 Sep 2011, 21.00 GMT
 
 Version 0.4
 
@@ -726,6 +726,21 @@ class ToolTipWindowBase(object):
         maxHeight += toAdd
         self.SetSize((maxWidth, maxHeight))
 
+    def CalculateBestPosition(self,widget):
+        screen = wx.ClientDisplayRect()[2:]
+        left,top = widget.ClientToScreenXY(0,0)
+        right,bottom = widget.ClientToScreenXY(*widget.GetClientRect()[2:])
+        size = self.GetSize()
+        if right+size[0]>screen[0]:
+            xpos = left-size[0]
+        else:
+            xpos = right
+        if bottom+size[1]>screen[1]:
+            ypos = top-size[1]
+        else:
+            ypos = bottom
+        self.SetPosition((xpos,ypos))
+
 
 # Handle Mac and Windows/GTK differences...
 
@@ -939,7 +954,7 @@ class SuperToolTip(object):
         tip = ToolTipWindow(self._widget, self)
         self._superToolTip = tip
         self._superToolTip.CalculateBestSize()
-        self._superToolTip.SetPosition(wx.GetMousePosition())
+        self._superToolTip.CalculateBestPosition(self._widget)
         self._superToolTip.DropShadow(self.GetDropShadow())
 
         if self.GetUseFade():
@@ -974,7 +989,7 @@ class SuperToolTip(object):
         tip = ToolTipWindow(self._widget, self)
         self._superToolTip = tip
         self._superToolTip.CalculateBestSize()
-        self._superToolTip.SetPosition(wx.GetMousePosition())
+        self._superToolTip.CalculateBestPosition(self._widget)
         self._superToolTip.DropShadow(self.GetDropShadow())
 
         # need to stop this, otherwise we get into trouble when leaving the window

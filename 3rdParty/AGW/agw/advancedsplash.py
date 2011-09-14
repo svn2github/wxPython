@@ -176,7 +176,14 @@ class AdvancedSplash(wx.Frame):
         """
         Default class constructor.
 
-        :param `bitmap`: this must be a valid `wx.Bitmap`, that you may construct using
+        :param `parent`: parent window;
+        :param integer `id`: window identifier. A value of -1 indicates a default value;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param integer `style`: the underlying `wx.Frame` style;
+        :param `bitmap`: this must be a valid bitmap, that you may construct using
          whatever image file format supported by wxPython. If the file you load
          already supports mask/transparency (like png), the transparent areas
          will not be drawn on screen, and the L{AdvancedSplash} frame will have
@@ -184,11 +191,9 @@ class AdvancedSplash(wx.Frame):
          If you use other file formats that does not supports transparency, you
          can obtain the same effect as above by masking a specific colour in
          your `wx.Bitmap`.
-
-        :param `timeout`: if you construct L{AdvancedSplash} using the style ``AS_TIMEOUT``,
+        :param integer `timeout`: if you construct L{AdvancedSplash} using the style ``AS_TIMEOUT``,
          L{AdvancedSplash} will be destroyed after `timeout` milliseconds;
-
-        :param `agwStyle`: this value specifies the L{AdvancedSplash} styles:
+        :param integer `agwStyle`: this value specifies the L{AdvancedSplash} styles:
         
          ======================= =========== ==================================================
          Window Styles           Hex Value   Description
@@ -205,6 +210,18 @@ class AdvancedSplash(wx.Frame):
          ``AS_SHADOW_BITMAP``, here you can specify the colour that will be masked on
          your input bitmap. This has to be a valid wxPython colour.
 
+        :type parent: `wx.Window`
+        :type pos: tuple or `wx.Point`
+        :type size: tuple or `wx.Size`
+        :type bitmap: `wx.Bitmap`
+        :type shadowcolour: `wx.Colour`
+
+        :raise: `Exception` in the following cases:
+
+         - The ``AS_TIMEOUT`` style is set but `timeout` is not a positive integer;
+         - The ``AS_SHADOW_BITMAP`` style is set but `shadowcolour` is not a valid wxPython colour;
+         - The L{AdvancedSplash} bitmap is an invalid `wx.Bitmap`.
+         
         """
 
         wx.Frame.__init__(self, parent, id, "", pos, size, style)
@@ -290,6 +307,10 @@ class AdvancedSplash(wx.Frame):
 
         :param `bmp`: the bitmap to which we want to apply the mask colour `shadowcolour`;
         :param `shadowcolour`: the mask colour for our bitmap.
+        :type bmp: `wx.Bitmap`
+        :type shadowcolour: `wx.Colour`
+
+        :return: A masked version of the input bitmap, an instance of `wx.Bitmap`.        
         """
 
         mask = wx.Mask(bmp, shadowcolour)
@@ -380,6 +401,7 @@ class AdvancedSplash(wx.Frame):
 
         :param `text`: the text we want to display on top of the bitmap. If `text` is
          set to ``None``, nothing will be drawn on top of the bitmap.
+        :type text: string or ``None``
         """
 
         if text is None:
@@ -392,7 +414,11 @@ class AdvancedSplash(wx.Frame):
 
 
     def GetText(self):
-        """ Returns the text displayed on L{AdvancedSplash}."""
+        """
+        Returns the text displayed on L{AdvancedSplash}.
+
+        :return: A string representing the text drawn on top of the L{AdvancedSplash} bitmap.
+        """
 
         return self._text
 
@@ -403,6 +429,7 @@ class AdvancedSplash(wx.Frame):
 
         :param `font`: the font to use while drawing the text on top of our bitmap. If `font`
          is ``None``, a simple generic font is generated.
+        :type font: `wx.Font` or ``None``         
         """
 
         if font is None:
@@ -419,7 +446,12 @@ class AdvancedSplash(wx.Frame):
 
 
     def GetTextFont(self):
-        """ Gets the font for the text in L{AdvancedSplash}."""
+        """
+        Gets the font for the text in L{AdvancedSplash}.
+
+        :return: An instance of `wx.Font` to draw the text and a `wx.Size` object containing
+         the text width an height, in pixels.
+        """
 
         return self._textfont, self._textsize
 
@@ -430,6 +462,7 @@ class AdvancedSplash(wx.Frame):
 
         :param `colour`: the text colour to use while drawing the text on top of our
          bitmap. If `colour` is ``None``, then ``wx.BLACK`` is used.
+        :type colour: `wx.Colour` or ``None``
         """
 
         if colour is None:
@@ -441,7 +474,11 @@ class AdvancedSplash(wx.Frame):
 
 
     def GetTextColour(self):
-        """ Gets the colour for the text in L{AdvancedSplash}."""
+        """
+        Gets the colour for the text in L{AdvancedSplash}.
+
+        :return: An instance of `wx.Colour`.
+        """
 
         return self._textcolour
 
@@ -452,10 +489,11 @@ class AdvancedSplash(wx.Frame):
 
         :param `position`: the text position inside our bitmap. If `position` is ``None``,
          the text will be placed at the top-left corner.
+        :type position: tuple or ``None``
         """
 
         if position is None:
-            position = (0,0)
+            position = (0, 0)
 
         self._textpos = position
         self.Refresh()
@@ -463,13 +501,21 @@ class AdvancedSplash(wx.Frame):
 
 
     def GetTextPosition(self):
-        """ Returns the text position inside L{AdvancedSplash} frame."""
+        """
+        Returns the text position inside L{AdvancedSplash} frame.
+
+        :return: A tuple containing the text `x` and `y` position inside the L{AdvancedSplash} frame.
+        """
 
         return self._textpos
 
 
     def GetSplashStyle(self):
-        """ Returns a list of strings and a list of integers containing the styles. """
+        """
+        Returns a list of strings and a list of integers containing the styles.
+
+        :return: Two Python lists containing the style name and style values for L{AdvancedSplash}.
+        """
 
         stringstyle = []
         integerstyle = []
@@ -499,5 +545,4 @@ class AdvancedSplash(wx.Frame):
             integerstyle.append(AS_SHADOW_BITMAP)
 
         return stringstyle, integerstyle
-
 

@@ -462,8 +462,8 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
         :param `dc`: A device context to use when one is required for size calculations;
         :param `wnd`: The window onto which the tab will eventually be drawn;
-        :param `label`: The tab's label (or wx.EmptyString if it has none);
-        :param `bitmap`: The tab's icon (or wx.NullBitmap if it has none);
+        :param `label`: The tab's label (or an empty string if it has none);
+        :param `bitmap`: The tab's icon (or `wx.NullBitmap` if it has none);
         :param `ideal`: The ideal width (in pixels) of the tab;
         :param `small_begin_need_separator`: A size less than the size, at which a tab
          separator should begin to be drawn (i.e. drawn, but still fairly transparent);
@@ -1152,7 +1152,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
          hybrid or dropdown tool, then the foreground should also contain a standard
          dropdown button;
         :param `kind`: The kind of tool to draw (normal, dropdown, or hybrid);
-        :param `state`: A combination of wx.RibbonToolBarToolState flags giving the
+        :param `state`: A combination of `RibbonToolBarToolState` flags giving the
          state of the tool and it's relative position within a tool group.
 
         """

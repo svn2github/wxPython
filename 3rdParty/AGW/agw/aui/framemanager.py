@@ -4469,7 +4469,7 @@ class AuiManager(wx.EvtHandler):
     def UnInit(self):
         """
         Uninitializes the framework and should be called before a managed frame or
-        window is destroyed. L{UnInit} is usually called in the managed `wx.Frame`/`wx.Window`
+        window is destroyed. L{UnInit} is usually called in the managed `wx.Frame` / `wx.Window`
         destructor.
 
         It is necessary to call this function before the managed frame or window is

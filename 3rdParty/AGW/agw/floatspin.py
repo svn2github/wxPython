@@ -30,7 +30,7 @@ L{FloatSpin} implements a floating point `wx.SpinCtrl`.
 Description
 ===========
 
-L{FloatSpin} implements a floating point `wx.Spinctrl`. It is built using a custom
+L{FloatSpin} implements a floating point `wx.SpinCtrl`. It is built using a custom
 `wx.PyControl`, composed by a `wx.TextCtrl` and a `wx.SpinButton`. In order to
 correctly handle floating points numbers without rounding errors or non-exact
 floating point representations, L{FloatSpin} uses the great L{FixedPoint} class
@@ -322,7 +322,7 @@ class FloatTextCtrl(wx.TextCtrl):
 
 class FloatSpin(wx.PyControl):
     """
-    L{FloatSpin} implements a floating point `wx.Spinctrl`. It is built using a custom
+    L{FloatSpin} implements a floating point `wx.SpinCtrl`. It is built using a custom
     `wx.PyControl`, composed by a `wx.TextCtrl` and a `wx.SpinButton`. In order to
     correctly handle floating points numbers without rounding errors or non-exact
     floating point representations, L{FloatSpin} uses the great L{FixedPoint} class

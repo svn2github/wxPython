@@ -1235,7 +1235,7 @@ class PageInfo(object):
         """
         Sets the tab region.
 
-        :param `points`: a Python list of `wx.Points`
+        :param `points`: a Python list of `wx.Point`
         """
 
         self._region = wx.RegionFromPoints(points)
@@ -2366,7 +2366,7 @@ class FNBRenderer(object):
 
     def DrawFocusRectangle(self, dc, pageContainer, page):
         """
-        Draws a focus rectangle like the native `wx.Notebooks`.
+        Draws a focus rectangle like the native `wx.Notebook`.
 
         :param `dc`: an instance of `wx.DC`;
         :param `pageContainer`: an instance of L{FlatNotebook};
@@ -3323,7 +3323,7 @@ class FNBRendererVC8(FNBRenderer):
 
         :param `pageContainer`: an instance of L{FlatNotebook};
         :param `dc`: an instance of `wx.DC`;
-        :param `tabPoints`: a Python list of `wx.Points` representing the tab outline;
+        :param `tabPoints`: a Python list of `wx.Point` representing the tab outline;
         :param `bSelectedTab`: ``True`` if the tab is selected, ``False`` otherwise;
         :param `tabIdx`: the index of the tab;
         """
@@ -3414,7 +3414,7 @@ class FNBRendererVC8(FNBRenderer):
         """
         Returns the `x` start position of a tab.
 
-        :param `tabPoints`: a Python list of `wx.Points` representing the tab outline;
+        :param `tabPoints`: a Python list of `wx.Point` representing the tab outline;
         :param `y`: the y start position of the tab;
         :param `style`: can be ``FNB_BOTTOM`` or the default (tabs at top).
         """
@@ -3479,7 +3479,7 @@ class FNBRendererVC8(FNBRenderer):
         """
         Returns the `x` end position of a tab.
 
-        :param `tabPoints`: a Python list of `wx.Points` representing the tab outline;
+        :param `tabPoints`: a Python list of `wx.Point` representing the tab outline;
         :param `y`: the y end position of the tab;
         :param `style`: can be ``FNB_BOTTOM`` or the default (tabs at top).
         """
@@ -4065,7 +4065,7 @@ class FlatNotebook(wx.PyPanel):
         Sets a custom panel to show when there are no pages left in L{FlatNotebook}.
 
         :param `panel`: any subclass of `wx.Window` will do, as long as it is suitable
-         to be used as a notebook page. Examples include `wx.Panel`, wx.ScrolledWindow`,
+         to be used as a notebook page. Examples include `wx.Panel`, `wx.ScrolledWindow`,
          and so on.
         """
 

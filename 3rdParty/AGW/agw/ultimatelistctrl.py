@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 14 Sep 2011, 21.00 GMT
 #
 #
 # TODO List
@@ -7455,7 +7455,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             if event.RightDown():
                 self.SendNotify(-1, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition())
 
-                evtCtx = wx.ContextMenuEvent(wx.EVT_CONTEXT_MENU, self.GetParent().GetId(),
+                evtCtx = wx.ContextMenuEvent(wx.wxEVT_CONTEXT_MENU, self.GetParent().GetId(),
                                              self.ClientToScreen(event.GetPosition()))
                 evtCtx.SetEventObject(self.GetParent())
                 self.GetParent().GetEventHandler().ProcessEvent(evtCtx)
@@ -7626,7 +7626,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             # outside of any item
             if event.RightDown():
                 self.SendNotify(-1, wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, event.GetPosition())
-                evtCtx = wx.ContextMenuEvent(wx.EVT_CONTEXT_MENU, self.GetParent().GetId(),
+                evtCtx = wx.ContextMenuEvent(wx.wxEVT_CONTEXT_MENU, self.GetParent().GetId(),
                                              self.ClientToScreen(event.GetPosition()))
                 evtCtx.SetEventObject(self.GetParent())
                 self.GetParent().GetEventHandler().ProcessEvent(evtCtx)

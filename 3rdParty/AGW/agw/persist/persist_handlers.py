@@ -1927,7 +1927,7 @@ class FileDirPickerHandler(AbstractHandler):
 
 class FontPickerHandler(AbstractHandler):
     """
-    Supports saving/restoring a `wx.FontPicker` font.
+    Supports saving/restoring a `wx.FontPickerCtrl` font.
 
     This class handles the following wxPython widgets:
 
@@ -2210,7 +2210,7 @@ class FindReplaceHandler(TLWHandler):
 
     This class handles the following wxPython widgets:
 
-    - L`wx.FindReplaceDialog`.
+    - `wx.FindReplaceDialog`.
 
     :todo: Find a way to properly save and restore dialog data (`wx.ColourDialog`, `wx.FontDialog` etc...).
 

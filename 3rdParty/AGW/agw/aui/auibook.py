@@ -700,7 +700,7 @@ class TabNavigatorWindow(wx.Dialog):
 
     def OnItemSelected(self, event):
         """
-        Handles the ``wx.EVT_LISTBOX_DCLICK`` event for the wx.ListBox inside L{TabNavigatorWindow}.
+        Handles the ``wx.EVT_LISTBOX_DCLICK`` event for the `wx.ListBox` inside L{TabNavigatorWindow}.
 
         :param `event`: a `wx.ListEvent` event to be processed.
         """
@@ -786,7 +786,7 @@ class AuiTabContainer(object):
     the L{AuiManager}, where it is disadvantageous to have separate
     windows for each tab control in the case of "docked tabs".
 
-    A derived class, L{AuiTabCtrl}, is an actual `wx.Window`-derived window
+    A derived class, L{AuiTabCtrl}, is an actual `wx.Window` - derived window
     which can be used as a tab control in the normal sense.
     """
 
@@ -1730,7 +1730,7 @@ class AuiTabContainer(object):
 
 class AuiTabCtrl(wx.PyControl, AuiTabContainer):
     """
-    This is an actual `wx.Window`-derived window which can be used as a tab
+    This is an actual `wx.Window` - derived window which can be used as a tab
     control in the normal sense.
     """
 

@@ -5,7 +5,7 @@ A ribbon button bar is similar to a traditional toolbar.
 Description
 ===========
 
-It contains one or more buttons (button bar buttons, not wx.Buttons), each of which
+It contains one or more buttons (button bar buttons, not `wx.Button`), each of which
 has a label and an icon. It differs from a L{RibbonToolBar} in several ways:
 
 - Individual buttons can grow and contract.
