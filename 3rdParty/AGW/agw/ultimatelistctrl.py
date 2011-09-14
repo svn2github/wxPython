@@ -4626,12 +4626,12 @@ class UltimateListLineData(object):
                     wnd.Show()
                     
                 if item._expandWin:
-                    if wnd.GetRect() != itemRect:
-                        wRect = wx.Rect(*itemRect)
-                        wRect.x += 2
-                        wRect.width = width - 4
-                        wRect.y = ya + 2
-                        wRect.height -= 6
+                    wRect = wx.Rect(*itemRect)
+                    wRect.x += xa + 2
+                    wRect.width = width - 8
+                    wRect.y = ya + 2
+                    wRect.height -= 4
+                    if wnd.GetRect() != wRect: 
                         wnd.SetRect(wRect)
                 else:
                     if wnd.GetPosition() != (wndx, ya):
