@@ -936,7 +936,12 @@ class AuiDefaultToolBarArt(object):
         """
         
         dc.SetFont(self._font)
-        dc.SetTextForeground(wx.BLACK)
+
+        if item.state & AUI_BUTTON_STATE_DISABLED:
+            dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
+        else:
+            dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT))
+            
         orient = item.GetOrientation()
 
         horizontal = orient == AUI_TBTOOL_HORIZONTAL
