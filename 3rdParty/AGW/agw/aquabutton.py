@@ -2,7 +2,7 @@
 # AQUABUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 17 Sep 2011, 23.00 GMT
 #
 #
 # TODO List
@@ -100,7 +100,7 @@ License And Version
 
 L{AquaButton} control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 17 Sep 2011, 17.00 GMT
 
 Version 0.4
 
@@ -214,10 +214,12 @@ class AquaButton(wx.PyControl):
         if "__WXMAC__" in wx.PlatformInfo:
             self._backColour = wx.Colour(147, 202, 255)
             self._hoverColour = self.LightColour(self._backColour, 30)
+            self._disableColour = self.LightColour(self._backColour, 70)
             self._textColour = wx.BLACK
         else:
             self._backColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
             self._hoverColour = self.LightColour(self._backColour, 30)
+            self._disableColour = self.LightColour(self._backColour, 70)
             self._textColour = wx.WHITE
 
 
@@ -286,6 +288,9 @@ class AquaButton(wx.PyControl):
 
         elif self._mouseAction == HOVER:
             clr = self._hoverColour
+            
+        elif not self.IsEnabled():
+            clr = self._disableColour
 
         rc1 = wx.Rect(btnOffset, btnOffset, width-8-btnOffset, height-8-btnOffset)
         path1 = self.GetPath(gc, rc1, 10)
@@ -709,9 +714,31 @@ class AquaButton(wx.PyControl):
         return self._hoverColour
 
 
+    def SetDisabledColour(self, colour):
+        """
+        Sets the button colour when it is disabled.
+
+        :param `colour`: a valid `wx.Colour` object.
+        """
+
+        self._disableColour = colour
+        self.Invalidate()
+
+
+    def GetDisabledColour(self):
+        """
+        Returns the button colour when it is disabled.
+
+        :return: An instance of `wx.Colour`.
+        """
+
+        return self._disableColour
+
     SetBackgroundColor = SetBackgroundColour
     SetHoverColor = SetHoverColour
     GetHoverColor = GetHoverColour
+    SetDisabledColor = SetDisabledColour
+    GetDisabledColor = GetDisabledColour
 
 
     def SetForegroundColour(self, colour):

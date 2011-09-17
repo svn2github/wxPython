@@ -3,7 +3,7 @@
 # Ported From Jorgen Bodde & Julian Smart (Extended Demo) C++ Code By:
 #
 # Andrea Gavana, @ 23 Mar 2005
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 17 Sep 2011, 23.00 GMT
 #
 #
 # TODO List
@@ -195,7 +195,7 @@ License And Version
 
 L{FoldPanelBar} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 17 Sep 2011, 23.00 GMT
 
 Version 0.5
 
@@ -1218,10 +1218,10 @@ class FoldPanelBar(wx.Panel):
         self._controlCreated = False
         
         # make sure there is any orientation
-        if agwStyle & FPB_HORIZONTAL != FPB_HORIZONTAL:
+        if not agwStyle & (FPB_HORIZONTAL | FPB_VERTICAL):
             agwStyle = agwStyle | FPB_VERTICAL
 
-        if agwStyle & FPB_HORIZONTAL == 4:
+        if agwStyle & FPB_HORIZONTAL:
             self._isVertical = False
         else:
             self._isVertical = True
