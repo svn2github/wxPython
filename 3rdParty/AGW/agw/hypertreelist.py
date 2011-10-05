@@ -2329,7 +2329,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         while i:
             if self.IsItemVisible(i):
                 return i
-            i = self.GetPrev(i, False)
+            i = self.GetPrev(i)
         
         return None
 
@@ -4052,7 +4052,7 @@ _methods = ["GetIndent", "SetIndent", "GetSpacing", "SetSpacing", "GetImageList"
             "IsDescendantOf", "SetItemHyperText", "IsItemHyperText", "SetItemBold", "SetItemDropHighlight", "SetItemItalic",
             "GetEditControl", "ShouldInheritColours", "GetItemWindow", "SetItemWindow", "SetItemTextColour", "HideItem",
             "DeleteAllItems", "ItemHasChildren", "ToggleItemSelection", "SetItemType", "GetCurrentItem",
-            "SetItem3State", "SetItem3StateValue", "GetItem3StateValue", "IsItem3State"]
+            "SetItem3State", "SetItem3StateValue", "GetItem3StateValue", "IsItem3State", "GetPrev"]
 
 
 class HyperTreeList(wx.PyControl):
