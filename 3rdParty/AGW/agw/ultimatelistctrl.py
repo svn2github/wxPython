@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 14 Sep 2011, 21.00 GMT
+# Latest Revision: 09 Oct 2011, 21.00 GMT
 #
 #
 # TODO List
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 09 Oct 2011, 21.00 GMT
 
 Version 0.8
 
@@ -6443,7 +6443,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         Called by L{UltimateListCtrl.OnSize} when the window is resized.
         """
 
-        if not self: # Avoid PyDeadObjectError's on Mac
+        if not self: # Avoid PyDeadObjectErrors on Mac
             return
         
         if self._resizeColumn == -1:
@@ -6469,7 +6469,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         totColWidth = 0 # Width of all columns except last one.
         for col in range(numCols):
-            if col != (resizeCol):
+            if col != (resizeCol) and self.IsColumnShown(col):
                 totColWidth = totColWidth + self.GetColumnWidth(col)
 
         resizeColWidth = self.GetColumnWidth(resizeCol)
