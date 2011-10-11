@@ -3260,7 +3260,8 @@ class AuiNotebook(wx.PyPanel):
 
         if bitmap.IsOk() and not disabled_bitmap.IsOk():
             disabled_bitmap = MakeDisabledBitmap(bitmap)
-            info.dis_bitmap = disabled_bitmap
+
+        info.dis_bitmap = disabled_bitmap
 
         # if there are currently no tabs, the first added
         # tab must be active
