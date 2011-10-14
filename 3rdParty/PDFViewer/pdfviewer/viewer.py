@@ -9,9 +9,14 @@
 
 # History:      Created 17 Jun 2009
 #
+#               08 Oct 2011, Michael Hipp    michael@redmule.com
+#               Added prompt, printer_name, orientation options to
+#               pdfViewer.Print(). Added option to pdfViewer.LoadFile() to
+#               accept a file-like object as well as a path string
+#
 #----------------------------------------------------------------------------
 
-import sys, os, time
+import sys, os, time, types
 import copy, shutil, cStringIO
 
 USE_CAIRO = True
@@ -140,10 +145,21 @@ class pdfViewer(wx.ScrolledWindow):
 
     "The externally callable methods are: LoadFile, Save, Print, SetZoom, and GoPage" 
         
-    def LoadFile(self, pdfpathname):
-        " Read pdf file using pypdf. Assume all pages are same size, for now."
-        self.pdfpathname = pdfpathname
-        f = file(pdfpathname, 'rb')
+    def LoadFile(self, pdf_file):
+        """
+        Read pdf file using pypdf. Assume all pages are same size, for now.
+        
+        :param `pdf_file`: can be either a string holding a filename path or
+         a file-like object.
+        """
+        if isinstance(pdf_file, types.StringTypes):
+            # it must be a filename/path string, open it as a file
+            f = file(pdf_file, 'rb')
+            self.pdfpathname = pdf_file
+        else:
+            # assume it is a file-like object
+            f = pdf_file
+            self.pdfpathname = ''  # empty default file name
         self.pdfdoc = PdfFileReader(f)
         self.numpages = self.pdfdoc.getNumPages()
         page1 = self.pdfdoc.getPage(0)
@@ -171,16 +187,31 @@ class pdfViewer(wx.ScrolledWindow):
             shutil.copy(self.pdfpathname, pathname)
         dlg.Destroy()    
 
-    def Print(self):
-        "Print pdf"
+    def Print(self, prompt=True, printer_name=None, orientation=None):
+        """
+        Print the pdf.
+        
+        :param boolean `prompt`: show the print dialog to the user (True/False). If
+         False, the print dialog will not be shown and the pdf will be printed
+         immediately. Default: True.
+        :param string `printer_name`: the name of the printer that is to
+         receive the printout. Default: as set by the O/S.
+        :param `orientation`: select the orientation (wx.PORTRAIT or
+         wx.LANDSCAPE) for the printout. Default: as set by the O/S.
+        """
         pdd = wx.PrintDialogData()
         pdd.SetMinPage(1)
         pdd.SetFromPage(1)
         pdd.SetMaxPage(self.numpages)
         pdd.SetToPage(self.numpages)
+        pdata = pdd.GetPrintData()
+        if printer_name:
+            pdata.SetPrinterName(printer_name)
+        if orientation:
+            pdata.SetOrientation(orientation)
         printer = wx.Printer(pdd)
         printout = pdfPrintout('', self)
-        if (not printer.Print(self, printout, prompt=True) and
+        if (not printer.Print(self, printout, prompt=prompt) and
                        printer.GetLastError() == wx.PRINTER_ERROR):
             dlg = wx.MessageDialog(self, 'Unable to perform printing',
                               'Printer' , wx.OK | wx.ICON_INFORMATION)
