@@ -2691,7 +2691,7 @@ class AuiNotebook(wx.PyPanel):
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=0, agwStyle=AUI_NB_DEFAULT_STYLE):
+                 style=0, agwStyle=AUI_NB_DEFAULT_STYLE, name="AuiNotebook"):
         """
         Default class constructor.
 
@@ -2735,6 +2735,7 @@ class AuiNotebook(wx.PyPanel):
          Default value for `agwStyle` is:
          ``AUI_NB_DEFAULT_STYLE`` = ``AUI_NB_TOP`` | ``AUI_NB_TAB_SPLIT`` | ``AUI_NB_TAB_MOVE`` | ``AUI_NB_SCROLL_BUTTONS`` | ``AUI_NB_CLOSE_ON_ACTIVE_TAB`` | ``AUI_NB_MIDDLE_CLICK_CLOSE`` | ``AUI_NB_DRAW_DND_TAB``
 
+        :param `name`: the window name.
         """
 
         self._curpage = -1
@@ -2749,7 +2750,7 @@ class AuiNotebook(wx.PyPanel):
         self._tabBounds = (-1, -1)
         self._click_tab = None
 
-        wx.PyPanel.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE|wx.TAB_TRAVERSAL)
+        wx.PyPanel.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE|wx.TAB_TRAVERSAL, name=name)
         self._mgr = framemanager.AuiManager()
         self._tabs = AuiTabContainer(self)
 
@@ -2772,7 +2773,6 @@ class AuiNotebook(wx.PyPanel):
         :see: L{__init__}
         """
 
-        self.SetName("AuiNotebook")
         self._agwFlags = agwStyle
 
         self._popupWin = None
