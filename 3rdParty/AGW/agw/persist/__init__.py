@@ -44,7 +44,7 @@ following classes are supported:
   L{labelbook.FlatImageBook};
 * wx.CheckBox;
 * wx.ListBox, wx.VListBox, wx.HtmlListBox, wx.SimpleHtmlListBox, wx.gizmos.EditableListBox;
-* wx.ListCtrl, wx.ListView;
+* wx.ListCtrl, wx.ListView, L{ultimatelistctrl.UltimateListCtrl};
 * wx.CheckListBox;
 * wx.Choice, wx.ComboBox, wx.combo.OwnerDrawnComboBox;
 * wx.RadioBox;
@@ -170,8 +170,8 @@ License And Version
 
 PersistentObjects library is distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
-Version 0.2. 
+Latest revision: Andrea Gavana @ 14 Oct 2011, 21.00 GMT
+Version 0.3. 
 
 """
 

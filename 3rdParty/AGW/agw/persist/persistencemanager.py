@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
 # --------------------------------------------------------------------------- #
 # PersistentControls Library wxPython IMPLEMENTATION
 #
@@ -8,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2009
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 14 Oct 2011, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -168,7 +170,7 @@ class PersistentObject(object):
 
 class PersistenceManager(object):
     """
-    PersistenceManager: global aspects of persistent windows.
+    L{PersistenceManager}: global aspects of persistent windows.
 
     Provides support for automatically saving and restoring object properties
     to persistent storage.
@@ -197,7 +199,7 @@ class PersistenceManager(object):
         - `configKey`: the persistent key name inside the configuration file for
           L{PersistenceManager};
         - `customConfigHandler`: the persistent configuration handler for L{PersistenceManager};
-          this attribute is object capable of saving/restoring UI settings. This
+          this attribute is an object capable of saving/restoring UI settings. This
           can be a cPickle object or a ConfigObj one, for example.
         - `style`: a combination of the following values:
 
@@ -569,6 +571,29 @@ class PersistenceManager(object):
         
         return self.Register(window) and self.Restore(window)
 
+
+    def RegisterAndRestoreAll(self, window):
+        """
+        Recursively registers and restore the state of the input `window` and of
+        all of its children.
+
+        :param `window`: an instance of `wx.Window`.
+        """
+
+        for child in window.GetChildren():
+
+            name = child.GetName()
+
+            if name not in PM.BAD_DEFAULT_NAMES and "widget" not in name and \
+               "wxSpinButton" not in name and "auiFloating" not in name and \
+               "AuiTabCtrl" not in name:
+                if PM.HasCtrlHandler(child):
+                    # C|ontrol has persist support
+                    self._persistMgr.RegisterAndRestore(child)
+
+            self.RegisterAndRestore(child)
+            self.RegisterAndRestoreAll(child.GetChildren())
+        
 
     def GetKey(self, obj, keyName):
         """

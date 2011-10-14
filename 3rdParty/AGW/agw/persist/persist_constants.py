@@ -110,8 +110,8 @@ PERSIST_RADIOBUTTON_VALUE = "Value"
 # String constants used by ScrolledWindowHandler
 
 PERSIST_SCROLLEDWINDOW_KIND = "ScrolledWindow"
-PERSIST_SCROLLEDWINDOW_POS_X = "Scroll_X"
-PERSIST_SCROLLEDWINDOW_POS_Y = "Scroll_Y"
+PERSIST_SCROLLEDWINDOW_POS_H = "Scroll_H"
+PERSIST_SCROLLEDWINDOW_POS_V = "Scroll_V"
 
 # ----------------------------------------------------------------------------------- #
 # String constants used by SliderHandler

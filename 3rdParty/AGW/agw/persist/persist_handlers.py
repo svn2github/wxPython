@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
 """
 This module contains different classes which handle different kind of saving/restoring
 actions depending on the widget kind.
@@ -921,29 +923,21 @@ class ScrolledWindowHandler(AbstractHandler):
 
         scroll, obj = self._window, self._pObject
         
-        scrollPos = scroll.GetScrollPos()
-        obj.SaveValue(PERSIST_SCROLLEDWINDOW_POS_X, scrollPos.x)
-        obj.SaveValue(PERSIST_SCROLLEDWINDOW_POS_Y, scrollPos.y)
+        scrollPos = scroll.GetScrollPos(wx.HORIZONTAL)
+        obj.SaveValue(PERSIST_SCROLLEDWINDOW_POS_H, scrollPos)
+        scrollPos = scroll.GetScrollPos(wx.VERTICAL)
+        obj.SaveValue(PERSIST_SCROLLEDWINDOW_POS_V, scrollPos)
         return True
 
 
     def Restore(self):
 
         scroll, obj = self._window, self._pObject
-        xpos = obj.RestoreValue(PERSIST_SCROLLEDWINDOW_POS_X)
-        ypos = obj.RestoreValue(PERSIST_SCROLLEDWINDOW_POS_Y)
+        hpos = obj.RestoreValue(PERSIST_SCROLLEDWINDOW_POS_H)
+        vpos = obj.RestoreValue(PERSIST_SCROLLEDWINDOW_POS_V)
 
-        if xpos is not None and ypos is not None:
-            maxX, maxY = scroll.GetVirtualSize()
-            unitsX, unitsY = scroll.GetScrollPixelsPerUnit()
-            if unitsX > 0 and maxX/unitsX > xpos:
-                if unitsY > 0 and maxY/unitsY > ypos:
-                    return False
-                
-            scroll.Scroll(xpos, ypos)
-            return True
-        
-        return False
+        scroll.SetScrollPos(wx.HORIZONTAL, hpos)
+        scroll.SetScrollPos(wx.VERTICAL, vpos, True)
 
 
     def GetKind(self):
@@ -1137,7 +1131,7 @@ class TextCtrlHandler(AbstractHandler):
         value = obj.RestoreValue(PERSIST_TEXTCTRL_VALUE)
 
         if value is not None:
-            text.SetValue(value)
+            text.ChangeValue(value)
             return True
         
         return False
@@ -2535,13 +2529,18 @@ if hasSB:
 
 def FindHandler(pObject):
     """
-    Finds a suitable handler for the input Persistent Object depending on the widget kind.
+    Finds a suitable handler for the input Persistent Object depending on the
+    widget kind.
 
     :param `pObject`: an instance of L{persistencemanager.PersistentObject} class.
     """
 
     window = pObject.GetWindow()
     klass = window.__class__
+
+    if hasattr(window, "_persistentHandler"):
+        # if control has a handler, just return it
+        return window._persistentHandler
     
     for handler, subclasses in STANDALONE_HANDLERS.items():
         for subclass in subclasses:
@@ -2556,4 +2555,28 @@ def FindHandler(pObject):
     raise Exception("Unsupported persistent handler (class=%s, name=%s)"%(klass, window.GetName()))
 
 # ----------------------------------------------------------------------------------- #
+
+def HasCtrlHandler(control):
+    """
+    Is there a suitable handler for this control
+
+    :param `control`: the control instance to check if a handler for it exists.
+    """
+
+    klass = control.__class__
+
+    if hasattr(control, "_persistentHandler"):
+        # if control has a handler, just return it
+        return True
     
+    for handler, subclasses in STANDALONE_HANDLERS.items():
+        for subclass in subclasses:
+            if issubclass(klass, subclass):
+                return True
+    
+    for handler, subclasses in HANDLERS.items():
+        for subclass in subclasses:
+            if issubclass(klass, subclass):
+                return True
+
+    return False
