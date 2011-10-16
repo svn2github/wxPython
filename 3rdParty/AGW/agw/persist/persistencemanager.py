@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2009
-# Latest Revision: 14 Oct 2011, 21.00 GMT
+# Latest Revision: 16 Oct 2011, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -34,7 +34,7 @@ import datetime
 
 import wx.gizmos
 
-from persist_handlers import FindHandler
+from persist_handlers import FindHandler, HasCtrlHandler
 
 from persist_constants import BAD_DEFAULT_NAMES, CONFIG_PATH_SEPARATOR
 from persist_constants import PM_DEFAULT_STYLE
@@ -572,27 +572,32 @@ class PersistenceManager(object):
         return self.Register(window) and self.Restore(window)
 
 
-    def RegisterAndRestoreAll(self, window):
+    def RegisterAndRestoreAll(self, window, children=None):
         """
         Recursively registers and restore the state of the input `window` and of
         all of its children.
 
-        :param `window`: an instance of `wx.Window`.
+        :param `window`: an instance of `wx.Window`;
+        :param `children`: list of children of the input `window`, on first call it is equal to ``None``.
         """
+        
+        if children is None:
+            if HasCtrlHandler(window):
+                # Control has persist support
+                self.RegisterAndRestore(window)
+            children = window.GetChildren()
 
-        for child in window.GetChildren():
-
+        for child in children:
             name = child.GetName()
 
-            if name not in PM.BAD_DEFAULT_NAMES and "widget" not in name and \
+            if name not in BAD_DEFAULT_NAMES and "widget" not in name and \
                "wxSpinButton" not in name and "auiFloating" not in name and \
                "AuiTabCtrl" not in name:
-                if PM.HasCtrlHandler(child):
-                    # C|ontrol has persist support
-                    self._persistMgr.RegisterAndRestore(child)
+                if HasCtrlHandler(child):
+                    # Control has persist support
+                    self.RegisterAndRestore(child)
 
-            self.RegisterAndRestore(child)
-            self.RegisterAndRestoreAll(child.GetChildren())
+            self.RegisterAndRestoreAll(window, child.GetChildren())
         
 
     def GetKey(self, obj, keyName):
