@@ -1,4 +1,3 @@
-<<<<<<< .mine
 # -*- coding: utf-8 -*-#
 #!/usr/bin/env python
 # --------------------------------------------------------------------------- #
@@ -1411,5 +1410,3 @@ class PersistenceManager(object):
             
             return eval(result)
 
-        
->>>>>>> .r69518

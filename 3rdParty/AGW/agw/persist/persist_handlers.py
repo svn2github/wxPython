@@ -1,4 +1,3 @@
-<<<<<<< .mine
 # -*- coding: utf-8 -*-#
 #!/usr/bin/env python
 """
@@ -5171,4 +5170,3 @@ def HasCtrlHandler(control):
                 return True
 
     return False
->>>>>>> .r69518

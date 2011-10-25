@@ -1,4 +1,3 @@
-<<<<<<< .mine
 """
 This module contains all the constants used by the persistent objects.
 """
@@ -519,4 +518,3 @@ PERSIST_TOOLBAR_CHECKRADIO_ITEMS = "Checked"
 
 PERSIST_FOLDPANELBAR_KIND = "FoldPanelBar"
 PERSIST_FOLDPANELBAR_EXPANDED = "FoldpPanelExpanded"
->>>>>>> .r69518

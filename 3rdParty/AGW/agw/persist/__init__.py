@@ -1,4 +1,3 @@
-<<<<<<< .mine
 """
 Introduction
 ============
@@ -369,5 +368,3 @@ __date__ = "16 November 2009"
 from persist_constants import *
 from persistencemanager import *
 from persist_handlers import *
-
->>>>>>> .r69518
