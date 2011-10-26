@@ -591,7 +591,7 @@ class Polygon(PointsObjectMixin, LineAndFillMixin, DrawObject):
                  FillStyle    = "Solid",
                  InForeground = False):
         DrawObject.__init__(self, InForeground)
-        self.Points = N.array(Points ,N.float) # this DOES need to make a copy
+        self.Points = N.array(Points, N.float) # this DOES need to make a copy
         self.CalcBoundingBox()
 
         self.LineColor = LineColor
@@ -1982,12 +1982,10 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         if (self.ScaledBitmap is None) or (self.ScaledBitmap[0] != (0, 0, self.bmpWidth, self.bmpHeight, W, H) ):
         #if True: #fixme: (self.ScaledBitmap is None) or (H <> self.ScaledHeight) :
             self.ScaledHeight = H
-            #print "Scaling to:", W, H
             Img = self.Image.Scale(W, H)
             bmp = wx.BitmapFromImage(Img)
             self.ScaledBitmap = ((0, 0, self.bmpWidth, self.bmpHeight , W, H), bmp)# this defines the cached bitmap
         else:
-            #print "Using Cached bitmap"
             bmp = self.ScaledBitmap[1]
         XY = self.ShiftFun(XY[0], XY[1], W, H)
         dc.DrawBitmapPoint(bmp, XY, True)
@@ -2049,7 +2047,6 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         Hs = int(scale * Hb + 0.5)
         if (self.ScaledBitmap is None) or (self.ScaledBitmap[0] != (Xb, Yb, Wb, Hb, Ws, Ws) ):
             Img = self.Image.GetSubImage(wx.Rect(Xb, Yb, Wb, Hb))
-            print "rescaling with High quality"
             Img.Rescale(Ws, Hs, quality=wx.IMAGE_QUALITY_HIGH)
             bmp = wx.BitmapFromImage(Img)
             self.ScaledBitmap = ((Xb, Yb, Wb, Hb, Ws, Ws), bmp)# this defines the cached bitmap
@@ -2923,24 +2920,26 @@ class FloatCanvas(wx.Panel):
             self.MapProjectionVector = self.ProjectionFun(self.ViewPortCenter)
             # Compute the new Scale
             BoundingBox = BoundingBox*self.MapProjectionVector # this does need to make a copy!
-            try:
-                self.Scale = min(abs(self.PanelSize[0] / (BoundingBox[1,0]-BoundingBox[0,0])),
-                                 abs(self.PanelSize[1] / (BoundingBox[1,1]-BoundingBox[0,1])) )*0.95
-            except ZeroDivisionError: # this will happen if the BB has zero width or height
-                try: #width == 0
-                    self.Scale = (self.PanelSize[0]  / (BoundingBox[1,0]-BoundingBox[0,0]))*0.95
-                except ZeroDivisionError:
-                    try: # height == 0
-                        self.Scale = (self.PanelSize[1]  / (BoundingBox[1,1]-BoundingBox[0,1]))*0.95
-                    except ZeroDivisionError: #zero size! (must be a single point)
-                        self.Scale = 1
-
+            bbw = BoundingBox.Width
+            bbh = BoundingBox.Height
+            ## these checks because numpy warns, rather than raises an exception with zero division error.
+            if bbw == 0.0 and bbh == 0.0:
+                self.Scale = 1.0 # zero-size bouding box -- no way to know what it should be
+            elif bbw == 0.0:
+                # scale to height
+                self.Scale = abs(self.PanelSize[1] / bbh ) *0.95
+            elif bbh == 0.0:
+                # scale to width
+                self.Scale = abs(self.PanelSize[0] / bbw ) *0.95
+            else: # scale to lessor of both
+                self.Scale = min( abs(self.PanelSize[0] / bbw),
+                                  abs(self.PanelSize[1] / bbh) ) * 0.95
             if DrawFlag:
                 self._BackgroundDirty = True
         else:
             # Reset the shifting and scaling to defaults when there is no BB
             self.ViewPortCenter= N.array( (0,0), N.float)
-            self.Scale= 1
+            self.Scale= 1.0
         self.SetToNewScale(DrawFlag=DrawFlag)
 
     def SetToNewScale(self, DrawFlag=True):
@@ -3000,12 +2999,12 @@ class FloatCanvas(wx.Panel):
             for obj in self._DrawList + self._ForeDrawList:
                 if not obj.BoundingBox.IsNull():
                     bblist.append(obj.BoundingBox)
-            if bblist: # if there are only NullBBoxes in DrawLists
+            if bblist: # if there are any non-NullBBoxes in DrawLists
                 self.BoundingBox = BBox.fromBBArray(bblist)
             else:
                 SetToNull = True
-            if self.BoundingBox.Width == 0 or self.BoundingBox.Height == 0:
-                SetToNull=True
+            #if self.BoundingBox.Width == 0 and self.BoundingBox.Height == 0:
+            #    SetToNull=True
         else:
             SetToNull=True
         if SetToNull:
@@ -3013,7 +3012,7 @@ class FloatCanvas(wx.Panel):
             self.ViewPortCenter= N.array( (0,0), N.float)
             self.TransformVector = N.array( (1,-1), N.float)
             self.MapProjectionVector = N.array( (1,1), N.float)
-            self.Scale = 1
+            self.Scale = 1.0
         self.BoundingBoxDirty = False
 
     def PixelToWorld(self, Points):
