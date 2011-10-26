@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 26 Oct 2011, 21.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -175,7 +175,7 @@ License And Version
 
 L{FlatNotebook} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 26 Oct 2011, 21.00 GMT
 
 Version 3.2
 """
@@ -793,6 +793,26 @@ def LightColour(colour, percent):
     return wx.Colour(r, g, b)
 
 
+def FormatColour(colour):
+    """
+    Convert the input `colour` into a valid `wx.Colour` instance, using whatever typemap
+    accepted by wxWidgets/wxPython.
+    
+    :param `colour`: can be an instance of `wx.Colour`, a 3 or 4 integer tuple, a hex
+     string, a string representing the colour name or ``None``.
+
+    :returns: a valid instance of `wx.Colour` or ``None`` if the input `colour` was ``None``
+     in the first place.
+    """
+
+    if isinstance(colour, (list, tuple)):
+        colour = wx.Colour(*colour)
+    elif isinstance(clr, basestring):
+        colour = wx.Colour(colour)
+
+    return colour
+
+
 def RandomColour():
     """ Creates a random colour. """
 
@@ -1209,6 +1229,8 @@ class PageInfo(object):
          `wx.NullColour` to return to the default page text colour.
         """
 
+        colour = FormatColour(colour)
+
         if colour is None or not colour.IsOk():
             self._pageTextColour = None
         else:
@@ -1274,10 +1296,11 @@ class PageInfo(object):
         """
         Sets the tab colour.
 
-        :param `colour`: a valid `wx.Colour` object.
+        :param `colour`: a valid `wx.Colour` object or any typemap supported by wxWidgets/wxPython
+         to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
-        self._colour = colour
+        self._colour = FormatColour(colour)
 
 
 # ---------------------------------------------------------------------------- #
@@ -4121,10 +4144,11 @@ class FlatNotebook(wx.PyPanel):
         """
         Sets the text colour for the active tab.
 
-        :param `textColour`: a valid `wx.Colour` object.
+        :param `textColour`: a valid `wx.Colour` object or any typemap supported by wxWidgets/wxPython
+         to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
-        self._pages._activeTextColour = textColour
+        self._pages._activeTextColour = FormatColour(textColour)
 
 
     def OnDropTarget(self, x, y, nTabPage, wnd_oldContainer):
@@ -4970,10 +4994,11 @@ class FlatNotebook(wx.PyPanel):
         """
         Sets the non active tabs text colour.
 
-        :param `colour`: a valid instance of `wx.Colour`.
+        :param `colour`: a valid `wx.Colour` object or any typemap supported by wxWidgets/wxPython
+         to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
-        self._pages._nonActiveTextColour = colour
+        self._pages._nonActiveTextColour = FormatColour(colour)
 
 
     def GetPageTextColour(self, page):
@@ -4991,8 +5016,9 @@ class FlatNotebook(wx.PyPanel):
         Sets the tab text colour individually.
 
         :param `page`: an integer specifying the page index;
-        :param `colour`: an instance of `wx.Colour`. You can pass ``None`` or
-         `wx.NullColour` to return to the default page text colour.
+        :param `colour`: a valid `wx.Colour` object or any typemap supported by wxWidgets/wxPython
+         to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple). You can
+         pass ``None`` or `wx.NullColour` to return to the default page text colour.
         """
 
         self._pages.SetPageTextColour(page, colour)
@@ -5002,10 +5028,11 @@ class FlatNotebook(wx.PyPanel):
         """
         Sets the area behind the tabs colour.
 
-        :param `colour`: a valid instance of `wx.Colour`.
+        :param `colour`: a valid `wx.Colour` object or any typemap supported by wxWidgets/wxPython
+         to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
-        self._pages._tabAreaColour = colour
+        self._pages._tabAreaColour = FormatColour(colour)
 
 
     def GetTabAreaColour(self):
@@ -5018,10 +5045,11 @@ class FlatNotebook(wx.PyPanel):
         """
         Sets the active tab colour.
 
-        :param `colour`: a valid instance of `wx.Colour`.
+        :param `colour`: a valid `wx.Colour` object or any typemap supported by wxWidgets/wxPython
+         to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
-        self._pages._activeTabColour = colour
+        self._pages._activeTabColour = FormatColour(colour)
 
 
     def GetActiveTabColour(self):
@@ -6031,8 +6059,9 @@ class PageContainer(wx.PyPanel):
         Sets the tab text colour individually.
 
         :param `page`: an integer specifying the page index;
-        :param `colour`: an instance of `wx.Colour`. You can pass ``None`` or
-         `wx.NullColour` to return to the default page text colour.
+        :param `colour`: a valid `wx.Colour` object or any typemap supported by wxWidgets/wxPython
+         to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple). You can
+         pass ``None`` or `wx.NullColour` to return to the default page text colour.
         """
 
         if page < len(self._pagesInfoVec):
