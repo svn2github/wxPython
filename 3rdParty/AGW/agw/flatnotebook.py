@@ -808,7 +808,7 @@ def FormatColour(colour):
     if isinstance(colour, (list, tuple)):
         colour = wx.Colour(*colour)
     elif isinstance(clr, basestring):
-        colour = wx.Colour(colour)
+        colour = wx.NamedColour(colour)
 
     return colour
 
