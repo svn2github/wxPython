@@ -1500,6 +1500,8 @@ class AuiFrame(wx.Frame):
         self.Bind(aui.EVT_AUI_PANE_DOCKING, self.OnFloatDock)
         self.Bind(aui.EVT_AUI_PANE_DOCKED, self.OnFloatDock)
 
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
+
         self.Bind(wx.EVT_TIMER, self.TimerHandler)
         self.timer = wx.Timer(self)
         self.timer.Start(100)
@@ -1509,6 +1511,13 @@ class AuiFrame(wx.Frame):
 
         self.timer.Stop()
 
+
+    def OnClose(self, event):
+
+        self.timer.Stop()
+        self._mgr.UnInit()
+        event.Skip()
+        
 
     def TimerHandler(self, event):
 

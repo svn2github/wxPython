@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 09 Oct 2011, 21.00 GMT
+# Latest Revision: 31 Oct 2011, 21.00 GMT
 #
 #
 # TODO List
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 09 Oct 2011, 21.00 GMT
+Latest Revision: Andrea Gavana @ 31 Oct 2011, 21.00 GMT
 
 Version 0.8
 
@@ -4598,7 +4598,6 @@ class UltimateListLineData(object):
                         dc.SetTextForeground(item.GetColour())
                     elif useVista and drawn:
                         dc.SetTextForeground(wx.BLACK)
-                        dc.SetFont(boldFont)
 
                 if item.IsHyperText():
                     dc.SetFont(self._owner.GetHyperTextFont())
@@ -10376,10 +10375,10 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         if not func:
             self.__func = None
-            self._lines.sort(self.OnCompareItems)
         else:
             self.__func = func
-            self._lines.sort(self.OnCompareItems)
+
+        self._lines.sort(self.OnCompareItems)
         
         if self.IsShownOnScreen():
             self._dirty = True
@@ -10862,7 +10861,7 @@ class UltimateListCtrl(wx.PyControl):
 
             self._headerWin = UltimateListHeaderWindow(self, wx.ID_ANY, self._mainWin,
                                                        wx.Point(0, 0),
-                                                       wx.Size(self.GetClientSize().x, self._headerHeight),
+                                                       wx.DefaultSize,
                                                        wx.TAB_TRAVERSAL, isFooter=False)
 
             # ----------------------------------------------------
@@ -10900,7 +10899,7 @@ class UltimateListCtrl(wx.PyControl):
 
             self._footerWin = UltimateListHeaderWindow(self, wx.ID_ANY, self._mainWin,
                                                        wx.Point(0, 0),
-                                                       wx.Size(self.GetClientSize().x, self._footerHeight),
+                                                       wx.DefaultSize,
                                                        wx.TAB_TRAVERSAL, isFooter=True)
 
             # ----------------------------------------------------
