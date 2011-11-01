@@ -1625,7 +1625,9 @@ class FoldPanelBar(wx.Panel):
         :param `foldpanel`: an instance of L{FoldPanelItem};
         :param `cbstyle`: an instance of L{CaptionBarStyle}.
 
-        :note: The changes are applied immediately. All styles not set in the
+        :note:
+
+         The changes are applied immediately. All styles not set in the
          L{CaptionBarStyle} class are not applied. Use the L{CaptionBar} reference
          to indicate what captionbar you want to apply the style to. To apply one
          style to all L{CaptionBar} items, use L{ApplyCaptionStyleAll}.

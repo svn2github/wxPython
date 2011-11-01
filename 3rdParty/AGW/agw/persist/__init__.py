@@ -6,6 +6,7 @@ Persistent objects are simply the objects which automatically save their state
 when they are destroyed and restore it when they are recreated, even during
 another program invocation.
 
+
 .. _persistent-overview:
 
 Persistent Object Overview

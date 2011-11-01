@@ -440,9 +440,12 @@ class PersistenceManager(object):
         :param `persistenceHandler`: if not ``None``, this should a custom handler derived
          from L{persist_handlers.AbstractHandler}.
 
-        :note: Note that registering the object doesn't do anything except allowing to call
+        :note:
+
+         Note that registering the object doesn't do anything except allowing to call
          L{Restore} for it later. If you want to register the object and restore its
          properties, use L{RegisterAndRestore}.
+         
 
         :note: The manager takes ownership of the L{PersistentObject} and will delete it when
          it is unregistered.         

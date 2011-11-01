@@ -2585,7 +2585,9 @@ class TabFrame(wx.PyWindow):
 
         :param `show`: ``True`` to show the window, ``False`` otherwise.
 
-        :note: Overridden from `wx.PyControl`, this method always returns ``False`` as
+        :note:
+
+         Overridden from `wx.PyControl`, this method always returns ``False`` as
          L{TabFrame} should never be phisically shown on screen.
         """
 
@@ -3309,7 +3311,9 @@ class AuiNotebook(wx.PyPanel):
 
         :param `page_idx`: the page index to be deleted.
 
-        :note: L{DeletePage} removes a tab from the multi-notebook, and destroys the window as well.
+        :note:
+
+         L{DeletePage} removes a tab from the multi-notebook, and destroys the window as well.
 
         :see: L{RemovePage}
         """
@@ -3338,7 +3342,9 @@ class AuiNotebook(wx.PyPanel):
 
         :param `page_idx`: the page index to be removed.
 
-        :note: L{RemovePage} removes a tab from the multi-notebook, but does not destroy the window.
+        :note:
+
+         L{RemovePage} removes a tab from the multi-notebook, but does not destroy the window.
 
         :see: L{DeletePage}
         """

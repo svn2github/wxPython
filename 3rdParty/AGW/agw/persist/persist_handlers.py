@@ -1344,7 +1344,9 @@ class TreeCtrlHandler(AbstractHandler):
         Returns a list of checked items. Checked items are coded as determined by
         the result of L{TreeCtrlHandler.GetItemIdentity}.
         
-        :note: This is meaningful only for L{customtreectrl.CustomTreeCtrl} and
+        :note:
+
+         This is meaningful only for L{customtreectrl.CustomTreeCtrl} and
          L{hypertreelist.HyperTreeList}.
         """
         
@@ -1364,7 +1366,9 @@ class TreeCtrlHandler(AbstractHandler):
         
         :param `listOfCheckedItems`: a list of checked L{customtreectrl.CustomTreeCtrl} items.
 
-        :note: This is meaningful only for L{customtreectrl.CustomTreeCtrl} and
+        :note:
+
+         This is meaningful only for L{customtreectrl.CustomTreeCtrl} and
          L{hypertreelist.HyperTreeList}.
         """
         

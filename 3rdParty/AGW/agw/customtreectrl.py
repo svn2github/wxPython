@@ -2832,7 +2832,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         :return: An instance of L{GenericTreeItem}.
         
-        :note: This method is valid only with the style ``TR_SINGLE`` set. Use
+        :note:
+
+         This method is valid only with the style ``TR_SINGLE`` set. Use
          L{GetSelections} for multiple-selections trees.
         """
 

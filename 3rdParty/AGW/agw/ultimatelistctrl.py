@@ -11724,7 +11724,9 @@ class UltimateListCtrl(wx.PyControl):
         :param `which`: one of ``wx.IMAGE_LIST_NORMAL``, ``wx.IMAGE_LIST_SMALL``,
          ``wx.IMAGE_LIST_STATE`` (the last is unimplemented).
 
-        :note: As L{UltimateListCtrl} allows you to use a standard `wx.ImageList` or
+        :note:
+
+         As L{UltimateListCtrl} allows you to use a standard `wx.ImageList` or
          L{PyImageList}, the returned object depends on which kind of image list you
          chose.
         """
@@ -12570,7 +12572,9 @@ class UltimateListCtrl(wx.PyControl):
 
         :param `item`: an integer specifying the item index.
 
-        :note: L{UltimateListCtrl} will not delete the pointer or keep a reference of it.
+        :note:
+
+         L{UltimateListCtrl} will not delete the pointer or keep a reference of it.
          You can return the same L{UltimateListItemAttr} pointer for every
          L{OnGetItemAttr} call.
 
