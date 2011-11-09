@@ -2,7 +2,7 @@
 # AQUABUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 17 Sep 2011, 23.00 GMT
+# Latest Revision: 09 Nov 2011, 21.00 GMT
 #
 #
 # TODO List
@@ -100,7 +100,7 @@ License And Version
 
 L{AquaButton} control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Sep 2011, 17.00 GMT
+Latest Revision: Andrea Gavana @ 09 Nov 2011, 21.00 GMT
 
 Version 0.4
 
@@ -657,7 +657,7 @@ class AquaButton(wx.PyControl):
         retWidth, retHeight = dc.GetTextExtent(label)
 
         bmpWidth = bmpHeight = 0
-        constant = 30
+        constant = 24
         if self._bitmap:
             bmpWidth, bmpHeight = self._bitmap.GetWidth()+10, self._bitmap.GetHeight()
             retWidth += bmpWidth
