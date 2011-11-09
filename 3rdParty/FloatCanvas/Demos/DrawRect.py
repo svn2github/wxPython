@@ -3,6 +3,8 @@
 """
 A simple demo that shows how to use FloatCanvas to draw rectangles on the screen
 
+Note: this is now broken -- the events are not getting to the Rubber Band Box object.
+      It should be re-factored to use GUIMode
 """
 
 
@@ -11,7 +13,7 @@ import wx
 ## import a local version
 import sys
 sys.path.append("..")
-from floatcanvas import NavCanvas, FloatCanvas, Resources, Utilities
+from floatcanvas import NavCanvas, FloatCanvas, Resources, Utilities, GUIMode
 from floatcanvas.Utilities import GUI
 ## import the installed version
 #from wx.lib.floatcanvas import NavCanvas, FloatCanvas
@@ -59,9 +61,9 @@ class DrawFrame(wx.Frame):
         # Initialize a few values
         self.Rects = []
 
-        self.RBBox = GUI.RubberBandBox(self.Canvas, self.NewRect)
-        self.RBBox.Enable()
-        
+        self.RBBoxMode = GUI.RubberBandBox(self.NewRect)
+        self.Canvas.SetMode(self.RBBoxMode)
+                
         self.Canvas.ZoomToBB()
 
         self.Show(True)
@@ -76,15 +78,15 @@ class DrawFrame(wx.Frame):
         label = self.DrawButton.GetLabel()
         if label == "Draw":
             self.DrawButton.SetLabel("StopDrawing")
-            self.RBBox.Enable()
+            self.Canvas.SetMode(self.RBBoxMode)
         elif label == "StopDrawing":
             self.DrawButton.SetLabel("Draw")
-            self.RBBox.Disable()
+            self.Canvas.SetMode(GUIMode.GUIMouse())
         else: # huh?
             pass
 
     def NewRect(self, rect):
-        self.Rects.append(self.Canvas.AddRectangle(*rect))
+        self.Rects.append(self.Canvas.AddRectangle(*rect, LineWidth=4))
         self.Canvas.Draw(True)
 
     def OnMove(self, event):
@@ -93,6 +95,7 @@ class DrawFrame(wx.Frame):
 
         """
         self.SetStatusText("%.4f, %.4f"%tuple(event.Coords))
+        event.Skip()
 
 app = wx.PySimpleApp()
 DrawFrame(None, -1, "FloatCanvas Rectangle Drawer", wx.DefaultPosition, (700,700) )
