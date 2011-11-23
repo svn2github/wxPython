@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 23 Nov 2011, 18.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -160,7 +160,7 @@ License And Version
 
 L{LabelBook} and L{FlatImageBook} are distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 23 Nov 2011, 18.00 GMT
 
 Version 0.5.
 
@@ -2270,7 +2270,7 @@ class FlatBookBase(wx.Panel):
         self._windows.append(page)
         
         if select or len(self._windows) == 1:
-            self.DoSetSelection(page)
+            self.SetSelection(len(self._windows)-1)
         else:
             page.Hide()
 
@@ -2300,7 +2300,7 @@ class FlatBookBase(wx.Panel):
         self._windows.insert(page_idx, page)
         
         if select or len(self._windows) == 1:
-            self.DoSetSelection(page)
+            self.SetSelection(page_idx)
         else:
             page.Hide()
 
