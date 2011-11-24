@@ -2,7 +2,7 @@
 # AQUABUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 09 Nov 2011, 21.00 GMT
+# Latest Revision: 24 Nov 2011, 22.00 GMT
 #
 #
 # TODO List
@@ -100,7 +100,7 @@ License And Version
 
 L{AquaButton} control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 09 Nov 2011, 21.00 GMT
+Latest Revision: Andrea Gavana @ 22 Nov 2011, 22.00 GMT
 
 Version 0.4
 
@@ -345,7 +345,7 @@ class AquaButton(wx.PyControl):
             # Save the bitmap using wx.MemoryDC for later use
             self._saveBitmap = False
             memory = wx.MemoryDC()
-            self._storedBitmap = wx.EmptyBitmapRGBA(width, height)
+            self._storedBitmap = wx.EmptyBitmapRGBA(max(width, 1), max(height, 1))
             memory.SelectObject(self._storedBitmap)
 
             gcMemory = wx.GraphicsContext.Create(memory)
@@ -1002,7 +1002,7 @@ class __ToggleMixin(object):
             # Save the bitmap using wx.MemoryDC for later use
             self._saveBitmap = False
             memory = wx.MemoryDC()
-            self._storedBitmap = wx.EmptyBitmapRGBA(width, height)
+            self._storedBitmap = wx.EmptyBitmapRGBA(max(width, 1), max(height, 1))
             memory.SelectObject(self._storedBitmap)
 
             gcMemory = wx.GraphicsContext.Create(memory)
