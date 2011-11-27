@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 31 Oct 2011, 21.00 GMT
+# Latest Revision: 27 Nov 2011, 13.00 GMT
 #
 #
 # TODO List
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 31 Oct 2011, 21.00 GMT
+Latest Revision: Andrea Gavana @ 27 Nov 2011, 13.00 GMT
 
 Version 0.8
 
@@ -550,6 +550,10 @@ if wx.Platform == "__WXMSW__":
 IL_FIXED_SIZE = 0
 IL_VARIABLE_SIZE = 1
 
+# Python integers, to make long types to work with CreateListItem
+INTEGER_TYPES = [types.IntType, types.LongType]
+
+
 # ----------------------------------------------------------------------------
 # Functions
 # ----------------------------------------------------------------------------
@@ -593,7 +597,7 @@ def CreateListItem(itemOrId, col):
     :param `col`: the item column.
     """
 
-    if type(itemOrId) == types.IntType:
+    if type(itemOrId) in INTEGER_TYPES:
         item = UltimateListItem()
         item._itemId = itemOrId
         item._col = col

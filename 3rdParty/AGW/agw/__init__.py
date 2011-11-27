@@ -116,7 +116,7 @@ andrea.gavana@maerskoil.com
 
 AGW version: 0.9.2
 
-Last updated: 24 Nov 2011, 22.00 GMT
+Last updated: 27 Nov 2011, 13.00 GMT
 
 """
 
