@@ -4106,7 +4106,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         """
         Returns the pen colour for separator-type items.
 
-        :return An instance of `wx.Colour` representing the separator pen colour.
+        :return: An instance of `wx.Colour` representing the separator pen colour.
         """
 
         return self._separatorPen.GetColour()
