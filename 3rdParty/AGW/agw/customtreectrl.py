@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 29 Nov 2011, 15.00 GMT
 #
 #
 # TODO List
@@ -83,6 +83,18 @@ to the standard `wx.TreeCtrl` behaviour this class supports:
 * Changing the style of the lines that connect the items (in terms of `wx.Pen` styles);
 * Using an image as a L{CustomTreeCtrl} background (currently only in "tile" mode);
 * Adding images to any item in the leftmost area of the L{CustomTreeCtrl} client window.
+* Separator-type items which are simply visual indicators that are meant to set apart
+  or divide tree items, with the following caveats:
+
+  - Separator items should not have children, labels, data or an associated window;
+  - You can change the color of individual separators by using L{SetItemTextColour}, or you can use
+    L{SetSeparatorColour} to change the color of all separators. The default separator colour
+    is that returned by `wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)`;
+  - Separators can be selected just like any other tree item;
+  - Separators cannot have text;
+  - Separators cannot have children;
+  - Separators cannot be edited via the ``EVT_TREE_BEGIN_LABEL_EDIT`` event.
+
 
 And a lot more. Check the demo for an almost complete review of the functionalities.
 
@@ -273,14 +285,14 @@ License And Version
 
 L{CustomTreeCtrl} is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 29 Nov 2011, 15.00 GMT
 
-Version 2.4
+Version 2.5
 
 """
 
 # Version Info
-__version__ = "2.4"
+__version__ = "2.5"
 
 import wx
 from wx.lib.expando import ExpandoTextCtrl
@@ -1448,7 +1460,7 @@ class GenericTreeItem(object):
     L{CustomTreeCtrl}. This is a generic implementation of `wx.TreeItem`.
     """
     
-    def __init__(self, parent, text="", ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
+    def __init__(self, parent, text="", ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
         """
         Default class constructor.
         For internal use: do not call it in your code!
@@ -1473,7 +1485,8 @@ class GenericTreeItem(object):
         :param integer `selImage`: an index within the normal image list specifying the image to
          use for the item in selected state; if `image` > -1 and `selImage` is -1, the
          same image is used for both selected and unselected items;
-        :param object `data`: associate the given Python object `data` with the item.
+        :param object `data`: associate the given Python object `data` with the item;
+        :param bool `separator`: ``True`` if the item is a separator, ``False`` otherwise. 
 
         :note: Regarding radiobutton-type items (with `ct_type` = 2), the following
          approach is used:
@@ -1484,7 +1497,19 @@ class GenericTreeItem(object):
            must be unchecked.
          - If a radiobutton node becomes unchecked, then all of its child nodes will become
            inactive.
-        
+
+
+        :note: Separator items should not have children, labels, data or an associated window.
+         Other issues/features associated to separator items:
+         
+         - You can change the color of individual separators by using L{SetItemTextColour}, or you can use
+           L{SetSeparatorColour} to change the color of all separators. The default separator colour
+           is that returned by `wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)`;
+         - Separators can be selected just like any other tree item;
+         - Separators cannot have text;
+         - Separators cannot have children;
+         - Separators cannot be edited via the ``EVT_TREE_BEGIN_LABEL_EDIT`` event.
+
         """
         
         # since there can be very many of these, we save size by chosing
@@ -1497,6 +1522,8 @@ class GenericTreeItem(object):
         self._parent = parent   # parent of this item
 
         self._attr = None       # attributes???
+
+        self._separator = separator        
 
         # tree ctrl images for the normal, selected, expanded and
         # expanded+selected states
@@ -1556,6 +1583,16 @@ class GenericTreeItem(object):
         """
         
         return True
+    
+
+    def IsSeparator(self):
+        """
+        Returns whether the item is meant to be an horizontal line separator or not.
+
+        :return: ``True`` if this item is a separator, ``False`` otherwise.
+        """
+
+        return self._separator
     
 
     def GetChildren(self):
@@ -1784,7 +1821,12 @@ class GenericTreeItem(object):
 
         :param `wnd`: a non-toplevel window to be displayed next to the item, any
          subclass of `wx.Window`.
+
+        :raise: `Exception` if the input `item` is a separator and `wnd` is not ``None``.
         """
+
+        if self.IsSeparator() and wnd is not None:
+            raise Exception("Separator items can not have an associated window")
 
         self._wnd = wnd
 
@@ -2277,7 +2319,12 @@ class GenericTreeItem(object):
         Sets the item text.
 
         :param string `text`: the new item label.
+
+        :raise: `Exception` if the item is a separator.        
         """
+
+        if self.IsSeparator():
+            raise Exception("Separator items can not have text")
 
         self._text = text
 
@@ -2668,6 +2715,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             self._drawingfunction = DrawTreeItemButton
         else:
             self._drawingfunction = wx.RendererNative.Get().DrawTreeItemButton
+
+        # Set the separator pen default colour
+        self._separatorPen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
 
         # Create our container... at last!    
         wx.PyScrolledWindow.__init__(self, parent, id, pos, size, style|wx.HSCROLL|wx.VSCROLL, name)
@@ -3444,7 +3494,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
     def GetItemTextColour(self, item):
         """
-        Returns the item text colour.
+        Returns the item text colour or separator horizontal line colour.
 
         :param `item`: an instance of L{GenericTreeItem}.
 
@@ -3500,8 +3550,13 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         :param `item`: an instance of L{GenericTreeItem};
         :param string `text`: the new item label.
+
+        :raise: `Exception` if the input `item` is a separator.        
         """
 
+        if item.IsSeparator():
+            raise Exception("Separator items can not have text")
+        
         dc = wx.ClientDC(self)
         item.SetText(text)
         self.CalculateSize(item, dc)
@@ -3616,7 +3671,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
     def SetItemTextColour(self, item, colour):
         """
-        Sets the item text colour.
+        Sets the item text colour or separator horizontal line colour.
 
         :param `item`: an instance of L{GenericTreeItem};
         :param `colour`: a valid `wx.Colour` instance.
@@ -3624,7 +3679,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         item.Attr().SetTextColour(colour)
         self.RefreshLine(item)
-
+        
 
     def SetItemBackgroundColour(self, item, colour):
         """
@@ -4036,6 +4091,37 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         return self._backgroundImage        
     
 
+    def SetSeparatorColour(self, colour):
+        """
+        Sets the pen colour for separator-type items.
+
+        :param `colour` a valid instance of `wx.Colour`.
+        """
+
+        self._separatorPen = wx.Pen(colour, 1)
+        self.Refresh()
+
+
+    def GetSeparatorColour(self, colour):
+        """
+        Returns the pen colour for separator-type items.
+
+        :return An instance of `wx.Colour` representing the separator pen colour.
+        """
+
+        return self._separatorPen.GetColour()
+
+
+    def IsItemSeparator(self, item):
+        """
+        Returns whether an item is of separator type or not.
+
+        :param `item`: an instance of L{GenericTreeItem}.
+        """
+
+        return item.IsSeparator()
+        
+
     def GetItemWindow(self, item):
         """
         Returns the window associated to the item (if any).
@@ -4055,7 +4141,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param `item`: an instance of L{GenericTreeItem};
         :param `wnd`: if not ``None``, a non-toplevel window to be displayed next to
          the item.
+
+        :raise: `Exception` if the input `item` is a separator and `wnd` is not ``None``.
         """
+
+        if item.IsSeparator() and wnd is not None:
+            raise Exception("Separator items can not have an associated window")
 
         if wnd is not None:
             self._hasWindows = True
@@ -4623,7 +4714,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 # operations
 # -----------------------------------------------------------------------------
 
-    def DoInsertItem(self, parentId, previous, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
+    def DoInsertItem(self, parentId, previous, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
         """
         Actually inserts an item in the tree.
 
@@ -4640,7 +4731,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param integer `selImage`: an index within the normal image list specifying the image to
          use for the item in selected state; if `image` > -1 and `selImage` is -1, the
          same image is used for both selected and unselected items;
-        :param object `data`: associate the given Python object `data` with the item.
+        :param object `data`: associate the given Python object `data` with the item;
+        :param bool `separator`: ``True`` if the item is a separator, ``False`` otherwise. 
 
         :return: An instance of L{GenericTreeItem} upon successful insertion.
 
@@ -4650,7 +4742,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
            set for L{CustomTreeCtrl};
          - The item has multiline text (with line-breaks in it) but the ``TR_HAS_VARIABLE_ROW_HEIGHT``
            flag has not been set for L{CustomTreeCtrl};
-         - The `ct_type` attribute is less than ``0`` or greater than ``2``.
+         - The `ct_type` attribute is less than ``0`` or greater than ``2``;
+         - The parent item is a separator;
+         - The item is a separator but it has text or an associated window.
+
+
+        :note: Separator items should not have children, text labels or an associated window.        
         """
 
         if wnd is not None and not self.HasAGWFlag(TR_HAS_VARIABLE_ROW_HEIGHT):
@@ -4661,6 +4758,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         if ct_type < 0 or ct_type > 2:
             raise Exception("\nERROR: Item Type Should Be 0 (Normal), 1 (CheckBox) or 2 (RadioButton). ")
+
+        if separator:
+            if wnd:
+                raise Exception("Separator items can not have associated windows")
+            if text.strip():
+                raise Exception("Separator items can not text labels")
         
         parent = parentId
         
@@ -4670,7 +4773,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         
         self._dirty = True     # do this first so stuff below doesn't cause flicker
 
-        item = GenericTreeItem(parent, text, ct_type, wnd, image, selImage, data)
+        item = GenericTreeItem(parent, text, ct_type, wnd, image, selImage, data, separator)
         
         if wnd is not None:
             self._hasWindows = True
@@ -4747,7 +4850,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         return self._anchor
 
 
-    def PrependItem(self, parent, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
+    def PrependItem(self, parent, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
         """
         Prepends an item as a first child of parent.
 
@@ -4763,17 +4866,18 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param integer `selImage`: an index within the normal image list specifying the image to
          use for the item in selected state; if `image` > -1 and `selImage` is -1, the
          same image is used for both selected and unselected items;
-        :param object `data`: associate the given Python object `data` with the item.
+        :param object `data`: associate the given Python object `data` with the item;
+        :param bool `separator`: ``True`` if the item is a separator, ``False`` otherwise.
 
         :return: An instance of L{GenericTreeItem} upon successful insertion.
 
         :see: L{DoInsertItem} for possible exceptions generated by this method.        
         """
 
-        return self.DoInsertItem(parent, 0, text, ct_type, wnd, image, selImage, data)
+        return self.DoInsertItem(parent, 0, text, ct_type, wnd, image, selImage, data, separator)
 
 
-    def InsertItemByItem(self, parentId, idPrevious, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
+    def InsertItemByItem(self, parentId, idPrevious, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
         """
         Inserts an item after the given previous.
 
@@ -4791,8 +4895,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param integer `selImage`: an index within the normal image list specifying the image to
          use for the item in selected state; if `image` > -1 and `selImage` is -1, the
          same image is used for both selected and unselected items;
-        :param object `data`: associate the given Python object `data` with the item.
-
+        :param object `data`: associate the given Python object `data` with the item;
+        :param bool `separator`: ``True`` if the item is a separator, ``False`` otherwise.
+        
         :return: An instance of L{GenericTreeItem} upon successful insertion.
 
         :raise: `Exception` if the previous item is not a sibling.        
@@ -4814,10 +4919,10 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             except:
                 raise Exception("ERROR: Previous Item In CustomTreeCtrl.InsertItem() Is Not A Sibling")
 
-        return self.DoInsertItem(parentId, index+1, text, ct_type, wnd, image, selImage, data)
+        return self.DoInsertItem(parentId, index+1, text, ct_type, wnd, image, selImage, data, separator)
 
 
-    def InsertItemByIndex(self, parentId, idPrevious, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
+    def InsertItemByIndex(self, parentId, idPrevious, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
         """
         Inserts an item after the given previous.
 
@@ -4834,8 +4939,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param integer `selImage`: an index within the normal image list specifying the image to
          use for the item in selected state; if `image` > -1 and `selImage` is -1, the
          same image is used for both selected and unselected items;
-        :param object `data`: associate the given Python object `data` with the item.
-
+        :param object `data`: associate the given Python object `data` with the item;
+        :param bool `separator`: ``True`` if the item is a separator, ``False`` otherwise.
+        
         :return: An instance of L{GenericTreeItem} upon successful insertion.
 
         :see: L{DoInsertItem} for possible exceptions generated by this method.
@@ -4847,10 +4953,10 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             # should we give a warning here?
             return self.AddRoot(text, ct_type, wnd, image, selImage, data)
         
-        return self.DoInsertItem(parentId, idPrevious, text, ct_type, wnd, image, selImage, data)
+        return self.DoInsertItem(parentId, idPrevious, text, ct_type, wnd, image, selImage, data, separator)
 
 
-    def InsertItem(self, parentId, input, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
+    def InsertItem(self, parentId, input, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None, separator=False):
         """
         Inserts an item after the given previous.
 
@@ -4863,9 +4969,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         """
 
         if type(input) == type(1):
-            return self.InsertItemByIndex(parentId, input, text, ct_type, wnd, image, selImage, data)
+            return self.InsertItemByIndex(parentId, input, text, ct_type, wnd, image, selImage, data, separator)
         else:
-            return self.InsertItemByItem(parentId, input, text, ct_type, wnd, image, selImage, data)
+            return self.InsertItemByItem(parentId, input, text, ct_type, wnd, image, selImage, data, separator)
             
 
     def AppendItem(self, parentId, text, ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
@@ -4898,6 +5004,52 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             return self.AddRoot(text, ct_type, wnd, image, selImage, data)
         
         return self.DoInsertItem(parent, len(parent.GetChildren()), text, ct_type, wnd, image, selImage, data)
+
+
+    def AppendSeparator(self, parentId):
+        """
+        Appends an horizontal line separator as a last child of its parent.
+
+        :param `parentId`: an instance of L{GenericTreeItem} representing the
+         separator's parent.
+
+        :return: An instance of L{GenericTreeItem} upon successful insertion.
+
+        :see: L{DoInsertItem} for possible exceptions generated by this method.
+        """
+
+        parent = parentId
+        return self.DoInsertItem(parent, len(parent.GetChildren()), "", separator=True)
+
+
+    def InsertSeparator(self, parentId, input):
+        """
+        Inserts a separator item after the given previous.
+
+        :return: An instance of L{GenericTreeItem} upon successful insertion.
+
+        :see: L{InsertItemByIndex} and L{InsertItemByItem} for an explanation of
+         the input parameters.
+
+        :see: L{DoInsertItem} for possible exceptions generated by this method.
+        """
+
+        return self.InsertItem(parentId, input, "", separator=True)
+        
+
+    def PrependSeparator(self, parent):
+        """
+        Prepends a separator item as a first child of parent.
+
+        :param `parent`: an instance of L{GenericTreeItem} representing the
+         item's parent.
+
+        :return: An instance of L{GenericTreeItem} upon successful insertion.
+
+        :see: L{DoInsertItem} for possible exceptions generated by this method.        
+        """
+
+        return self.PrependItem(parent, 0, separator=True)
 
 
     def SendDeleteEvent(self, item):
@@ -6211,10 +6363,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 dc.SetTextForeground(self.GetHyperTextNewColour())
                     
         text_w, text_h, dummy = dc.GetMultiLineTextExtent(item.GetText())
-
+        w, h = self.GetClientSize()
+        
         image = item.GetCurrentImage()
         checkimage = item.GetCurrentCheckedImage()
         leftimage = _NO_IMAGE
+        separator = item.IsSeparator()
         
         if self._imageListLeft:
             leftimage = item.GetLeftImage()
@@ -6270,7 +6424,6 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         
         if self.HasAGWFlag(TR_FULL_ROW_HIGHLIGHT):
             x = 0
-            w, h = self.GetClientSize()
 
             itemrect = wx.Rect(x, item.GetY()+offset, w, total_h-offset)
             
@@ -6311,9 +6464,14 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 if wnd:
                     wndx, wndy = item.GetWindowSize()
 
+                if separator:
+                    item_width = w
+                else:
+                    item_width = item.GetWidth() - image_w - wcheck + 2 - wndx
+                    
                 itemrect = wx.Rect(item.GetX() + wcheck + image_w - 2,
                                    item.GetY()+offset,
-                                   item.GetWidth() - image_w - wcheck + 2 - wndx,
+                                   item_width,
                                    total_h-offset)
 
                 if self._usegradients:
@@ -6337,9 +6495,15 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             elif drawItemBackground:
 
                 minusicon = wcheck + image_w - 2
+
+                if separator:
+                    item_width = w
+                else:
+                    item_width = item.GetWidth()-minusicon,
+                
                 itemrect = wx.Rect(item.GetX()+minusicon,
                                    item.GetY()+offset,
-                                   item.GetWidth()-minusicon,
+                                   item_width,
                                    total_h-offset)
                                 
                 if self._usegradients and self._hasFocus:
@@ -6417,13 +6581,28 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                     
             elif align == 2:
                 # Rightmost alignment of windows
-                wndx = self.GetClientSize().x - item.GetWindowSize().x - 2
+                wndx = w - item.GetWindowSize().x - 2
                 
             if not wnd.IsShown():
                 wnd.Show()
             if wnd.GetPosition() != (wndx, ya):
                 wnd.SetPosition((wndx, ya))
 
+        if separator:
+            oldPen = dc.GetPen()
+
+            if item.IsEnabled():
+                if attr and attr.HasTextColour():
+                    separatorPen = wx.Pen(attr.GetTextColour(), 1)
+                else:
+                    separatorPen = self._separatorPen
+            else:
+                separatorPen = wx.GREY_PEN
+                    
+            dc.SetPen(separatorPen)
+            dc.DrawLine(item.GetX()+2, item.GetY()+total_h/2, w, item.GetY()+total_h/2)
+            dc.SetPen(oldPen)
+            
         # restore normal font
         dc.SetFont(self._normalFont)
         
@@ -7172,9 +7351,14 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         Internal function. Starts the editing of an item label, sending a
         ``EVT_TREE_BEGIN_LABEL_EDIT`` event.
 
-        :param `item`: an instance of L{GenericTreeItem}.        
+        :param `item`: an instance of L{GenericTreeItem}.
+
+        :warning: Separator-type items can not be edited.        
         """
 
+        if item.IsSeparator():
+            return
+        
         te = TreeEvent(wxEVT_TREE_BEGIN_LABEL_EDIT, self.GetId())
         te._item = item
         te.SetEventObject(self)
@@ -7724,7 +7908,11 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                     self.absoluteWindows[level] = image_w+text_w+wcheck+2
             elif align == 1:
                 self.absoluteWindows[level] = max(self.absoluteWindows[level], image_w+text_w+wcheck+2)
-                                        
+
+        if item.IsSeparator():
+            totalWidth = self.GetClientSize()[0]
+            totalHeight = total_h
+            
         item.SetWidth(totalWidth)
         item.SetHeight(totalHeight)
 
@@ -8135,4 +8323,5 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         return attr
 
     GetClassDefaultAttributes = classmethod(GetClassDefaultAttributes)
+
 
