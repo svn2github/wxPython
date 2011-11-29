@@ -1502,9 +1502,9 @@ class GenericTreeItem(object):
         :note: Separator items should not have children, labels, data or an associated window.
          Other issues/features associated to separator items:
          
-         - You can change the color of individual separators by using L{SetItemTextColour}, or you can use
-           L{SetSeparatorColour} to change the color of all separators. The default separator colour
-           is that returned by `wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)`;
+         - You can change the color of individual separators by using L{CustomTreeCtrl.SetItemTextColour},
+           or you can use L{CustomTreeCtrl.SetSeparatorColour} to change the color of all
+           separators. The default separator colour is that returned by `wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)`;
          - Separators can be selected just like any other tree item;
          - Separators cannot have text;
          - Separators cannot have children;
@@ -4095,7 +4095,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         """
         Sets the pen colour for separator-type items.
 
-        :param `colour` a valid instance of `wx.Colour`.
+        :param `colour`: a valid instance of `wx.Colour`.
         """
 
         self._separatorPen = wx.Pen(colour, 1)
