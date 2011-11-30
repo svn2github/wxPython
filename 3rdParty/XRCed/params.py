@@ -216,10 +216,9 @@ class ParamFont(PPanel):
         self.text.Bind(wx.EVT_KILL_FOCUS, self.OnTextKillFocus)
     def OnText(self, evt):
         Presenter.setApplied(False)
-        if evt.GetString():
-            evt.Skip()
-        else:
+        if not evt.GetString():
             self.text.ChangeValue('')
+            self.value = {}
     def OnTextKillFocus(self, evt):
         if self.text.GetValue():
             evt.Skip()

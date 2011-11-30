@@ -21,7 +21,8 @@ using the Manager global object.
 
 import os,sys,bisect
 import wx
-from sets import Set
+try: set
+except: from sets import Set as set
 from globals import *
 from model import Model
 from attribute import *
@@ -347,7 +348,7 @@ class Container(Component):
         for g in self.groups:
             if '!'+component.groups[0] in parentChildGroups.get(g, []): return False
         # Test for any possible parent-child
-        groups = Set(component.groups)
+        groups = set(component.groups)
         for g in self.groups:
             if groups.intersection(parentChildGroups.get(g, [])):
                 return True
