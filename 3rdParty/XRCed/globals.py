@@ -20,7 +20,7 @@ logger = logging.getLogger('xrced')
 
 progname = 'xrced'
 ProgName = 'XRCed'
-version = '0.2.0-9'
+version = '0.2.1-0'
 # Minimal wxWidgets version
 MinWxVersion = (2,8,0)
 if wx.VERSION[:3] < MinWxVersion:

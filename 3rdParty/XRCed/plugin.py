@@ -30,7 +30,7 @@ def load_plugins(dir):
     dir = os.path.abspath(os.path.normpath(dir))
     TRACE('* load_plugins from %s' % dir)
     os.chdir(dir)
-    sys.path = sys_path + [dir]
+    sys.path = [dir] + sys_path
     try:                                # try/finally shield
         ff_py = glob.glob('[!_]*.py')
         for f in ff_py:
