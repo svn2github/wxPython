@@ -1749,7 +1749,7 @@ class AuiToolBar(wx.PyControl):
         return self.AddTool(tool_id, "", bitmap, disabled_bitmap, kind, short_help_string, long_help_string, client_data)
 
 
-    def AddTool(self, tool_id, label, bitmap, disabled_bitmap, kind, short_help_string, long_help_string, client_data, target):
+    def AddTool(self, tool_id, label, bitmap, disabled_bitmap, kind, short_help_string='', long_help_string='', client_data=None, target=None):
         """
         Adds a tool to the toolbar. This is the full feature version of L{AddTool}.
 
