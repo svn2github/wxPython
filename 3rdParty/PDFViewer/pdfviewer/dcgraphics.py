@@ -8,7 +8,8 @@
 # Copyright:    Forestfield Software Ltd
 # Licence:      Same as wxPython host
 
-# History:      Created 8 Aug 2009
+# History:       8 Aug 2009 - created
+#               12 Dec 2011 - amended DrawText
 #
 #----------------------------------------------------------------------------
 """
@@ -113,7 +114,7 @@ class dcGraphicsContext(object):
         self.saved_state = []
         self.gstate.Yoffset = yoffset
         self.fontscale = 1.0
-        if have_cairo:
+        if have_cairo and wx.PlatformInfo[1] == 'wxMSW':
             self.fontscale =  72.0 / 96.0
 
 
@@ -230,13 +231,13 @@ class dcGraphicsContext(object):
         Ignore backgroundBrush 
         """
         g = self.gstate
-        size = self._font.GetPointSize()
-        size *= (g.Xscale * self.fontscale)
+        orgsize = self._font.GetPointSize()
+        newsize = orgsize * (g.Xscale * self.fontscale)
+
+        self._font.SetPointSize(newsize)
         self._context.SetFont(self._font)
-        font2 = self._context.GetFont()      # returns a copy
-        font2.SetPointSize(size)
-        self._context.SetFont(font2)
         self._context.DrawRotatedText(text, g.Get_x(x, y), g.Get_y(x, y), g.Get_angle())
+        self._font.SetPointSize(orgsize)
            
 
     def DrawBitmap(self, bmp, x, y, w=-1, h=-1):
