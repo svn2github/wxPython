@@ -80,7 +80,7 @@ TODO: add isMsgReceivable(listener, topicName) to find out if listener is
 
 PUBSUB_VERSION = 3                     # DO NOT CHANGE
 SVN_VERSION = "$Rev: 243 $".split()[1] # DO NOT CHANGE
-VERSION_STR = "3.1.1b1.201005.r" + SVN_VERSION
+VERSION_STR = "3.1.2.201112.r" + SVN_VERSION # update at each new release
 
 
 from core.listener import \
