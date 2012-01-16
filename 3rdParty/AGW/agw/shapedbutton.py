@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 18 Oct 2005
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 16 Jan 2012, 20.00 GMT
 #
 #
 # TODO List/Caveats
@@ -149,7 +149,7 @@ License And Version
 
 `ShapedButton` is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest revision: Andrea Gavana @ 16 Jan 2012, 20.00 GMT
 
 Version 0.4
 
@@ -859,7 +859,7 @@ class SButton(wx.Window):
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
 
-        if self._hasfocus and event.KeyCode() == ord(" "):
+        if self._hasfocus and event.GetKeyCode() == ord(" "):
 
             self._isup = False
             self.Refresh()
@@ -1371,7 +1371,7 @@ class __SToggleMixin(object):
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
 
-        if self._hasfocus and event.KeyCode() == ord(" "):
+        if self._hasfocus and event.GetKeyCode() == ord(" "):
 
             self._isup = not self._isup
             self.Notify()
