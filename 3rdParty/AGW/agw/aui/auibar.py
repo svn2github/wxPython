@@ -733,8 +733,8 @@ class AuiDefaultToolBarArt(object):
 
     def __init__(self):
         """ Default class constructor. """
-        
-        self._base_colour = GetBaseColour()
+
+        self.SetDefaultColours()
 
         self._agwFlags = 0
         self._text_orientation = AUI_TBTOOL_TEXT_BOTTOM
@@ -744,16 +744,6 @@ class AuiDefaultToolBarArt(object):
         self._orientation = AUI_TBTOOL_HORIZONTAL
         self._gripper_size = 7
         self._overflow_size = 16
-
-        darker1_colour = StepColour(self._base_colour, 85)
-        darker2_colour = StepColour(self._base_colour, 75)
-        darker3_colour = StepColour(self._base_colour, 60)
-        darker4_colour = StepColour(self._base_colour, 50)
-        darker5_colour = StepColour(self._base_colour, 40)
-
-        self._gripper_pen1 = wx.Pen(darker5_colour)
-        self._gripper_pen2 = wx.Pen(darker3_colour)
-        self._gripper_pen3 = wx.WHITE_PEN
 
         button_dropdown_bits = "\xe0\xf1\xfb"
         overflow_bits = "\x80\xff\x80\xc1\xe3\xf7"
@@ -766,6 +756,27 @@ class AuiDefaultToolBarArt(object):
 
         self._font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
 
+
+    def SetDefaultColours(self, base_colour=None):
+        """
+        Sets the default colours, which are calculated from the given base colour.
+
+        :param `base_colour`: an instance of `wx.Colour`. If defaulted to ``None``, a colour
+         is generated accordingly to the platform and theme.
+        """
+
+        if base_colour is None:
+            self._base_colour = GetBaseColour()
+        else:
+            self._base_colour = base_colour
+
+        darker3_colour = StepColour(self._base_colour, 60)
+        darker5_colour = StepColour(self._base_colour, 40)
+
+        self._gripper_pen1 = wx.Pen(darker5_colour)
+        self._gripper_pen2 = wx.Pen(darker3_colour)
+        self._gripper_pen3 = wx.WHITE_PEN
+        
 
     def Clone(self):
         """ Clones the L{AuiToolBar} art. """

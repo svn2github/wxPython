@@ -2,7 +2,7 @@
 # GRADIENTBUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 09 Feb 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -108,7 +108,7 @@ License And Version
 
 L{GradientButton} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 09 Feb 2012, 21.00 GMT
 
 Version 0.3
 
@@ -198,8 +198,17 @@ class GradientButton(wx.PyControl):
         self.InheritAttributes()
         self.SetInitialSize(size)
 
-        # The following defaults are better suited to draw the text outline
-        self._bottomStartColour = wx.BLACK
+        self.SetBaseColours()
+
+
+    def SetBaseColours(self, startcolour=wx.BLACK, foregroundcolour=wx.WHITE):
+        """Sets the bottom, top, pressed and foreground colour
+        
+        :param startcolour: based colour to be used for bottom, top and pressed
+        :param foregroundcolour: colour used for the text
+        
+        """
+        self._bottomStartColour = startcolour
         rgba = self._bottomStartColour.Red(), self._bottomStartColour.Green(), \
                self._bottomStartColour.Blue(), self._bottomStartColour.Alpha()
         self._bottomEndColour = self.LightColour(self._bottomStartColour, 20)
@@ -207,14 +216,8 @@ class GradientButton(wx.PyControl):
         self._topEndColour = self.LightColour(self._bottomStartColour, 25)
         self._pressedTopColour = self.LightColour(self._bottomStartColour, 20)
         self._pressedBottomColour = wx.Colour(*rgba)
-        self.SetForegroundColour(wx.WHITE)
+        self.SetForegroundColour(foregroundcolour)
 
-        for method in dir(self):
-            if method.endswith("Colour"):
-                newMethod = method[0:-6] + "Colour"
-                if not hasattr(self, newMethod):
-                    setattr(self, newMethod, method)
-        
 
     def LightColour(self, colour, percent):
         """

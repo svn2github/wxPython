@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 27 Nov 2011, 13.00 GMT
+# Latest Revision: 09 Feb 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 27 Nov 2011, 13.00 GMT
+Latest Revision: Andrea Gavana @ 09 Feb 2012, 21.00 GMT
 
 Version 0.8
 
@@ -8054,7 +8054,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         """
 
         parent = self.GetParent()
-        
+
+        if self.IsVirtual() and self.GetItemCount() == 0:
+            event.Skip()
+            return
+
         # we send a list_key event up        
         if self.HasCurrent():
             le = UltimateListEvent(wxEVT_COMMAND_LIST_KEY_DOWN, self.GetParent().GetId())
@@ -12427,7 +12431,22 @@ class UltimateListCtrl(wx.PyControl):
         return self._mainWin.PopupMenu(menu, pos)
 
 
-    def ClientToScreen(self, x, y):
+    def ClientToScreen(self, pointOrTuple):
+        """
+        Converts to screen coordinates from coordinates relative to this window.
+
+        :param `pointOrTuple`: an instance of `wx.Point` or a tuple representing the
+         `x`, `y` coordinates for this point.
+
+        :return: the coordinates relative to the screen.
+        
+        :note: Overridden from `wx.PyControl`.
+        """
+
+        return self._mainWin.ClientToScreen(*pointOrTuple)
+
+
+    def ClientToScreenXY(self, x, y):
         """
         Converts to screen coordinates from coordinates relative to this window.
 
@@ -12442,7 +12461,22 @@ class UltimateListCtrl(wx.PyControl):
         return self._mainWin.ClientToScreen(x, y)
 
 
-    def ScreenToClient(self, x, y):
+    def ScreenToClient(self, pointOrTuple):
+        """
+        Converts from screen to client window coordinates.
+
+        :param `pointOrTuple`: an instance of `wx.Point` or a tuple representing the
+         `x`, `y` coordinates for this point.
+
+        :return: the coordinates relative to this window.
+        
+        :note: Overridden from `wx.PyControl`.
+        """
+
+        return self._mainWin.ScreenToClient(*pointOrTuple)
+
+
+    def ScreenToClientXY(self, x, y):
         """
         Converts from screen to client window coordinates.
 
