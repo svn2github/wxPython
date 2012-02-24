@@ -45,7 +45,7 @@ c.addStyles('wxDEFAULT_FRAME_STYLE', 'wxDEFAULT_DIALOG_STYLE', 'wxCAPTION',
             'wxFRAME_NO_TASKBAR', 'wxFRAME_SHAPED', 'wxFRAME_TOOL_WINDOW',
             'wxFRAME_FLOAT_ON_PARENT',
             'wxTAB_TRAVERSAL')
-c.addExStyles('wxFRAME_EX_CONTEXTHELP', 'wxFRAME_EX_METAL', 'wxWS_EX_VALIDATE_RECURSIVELY')
+c.addExStyles('wxFRAME_EX_CONTEXTHELP', 'wxFRAME_EX_METAL')
 c.addEvents('EVT_SIZE', 'EVT_CLOSE', 'EVT_MENU_HIGHLIGHT', 'EVT_ICONIZE', 'EVT_MAXIMIZE',
             'EVT_ACTIVATE', 'EVT_UPDATE_UI')
 component.Manager.register(c)
@@ -79,7 +79,7 @@ c.addStyles('wxDEFAULT_FRAME_STYLE', 'wxDEFAULT_DIALOG_STYLE', 'wxCAPTION',
             'wxFRAME_NO_TASKBAR', 'wxFRAME_SHAPED', 'wxFRAME_TOOL_WINDOW',
             'wxFRAME_FLOAT_ON_PARENT', 'wxFRAME_NO_WINDOW_MENU',
             'wxTAB_TRAVERSAL')
-c.addExStyles('wxFRAME_EX_METAL', 'wxWS_EX_VALIDATE_RECURSIVELY')
+c.addExStyles('wxFRAME_EX_METAL')
 c.addEvents('EVT_SIZE', 'EVT_CLOSE', 'EVT_MENU_HIGHLIGHT', 'EVT_ICONIZE', 'EVT_MAXIMIZE',
             'EVT_ACTIVATE', 'EVT_UPDATE_UI')
 component.Manager.register(c)
@@ -112,7 +112,7 @@ c.addStyles('wxDEFAULT_FRAME_STYLE', 'wxDEFAULT_DIALOG_STYLE', 'wxCAPTION',
             'wxFRAME_NO_TASKBAR', 'wxFRAME_SHAPED', 'wxFRAME_TOOL_WINDOW',
             'wxFRAME_FLOAT_ON_PARENT', 'wxFRAME_NO_WINDOW_MENU',
             'wxTAB_TRAVERSAL')
-c.addExStyles('wxFRAME_EX_METAL', 'wxWS_EX_VALIDATE_RECURSIVELY')
+c.addExStyles('wxFRAME_EX_METAL')
 c.addEvents('EVT_SIZE', 'EVT_CLOSE', 'EVT_MENU_HIGHLIGHT', 'EVT_ICONIZE', 'EVT_MAXIMIZE',
             'EVT_ACTIVATE', 'EVT_UPDATE_UI')
 component.Manager.register(c)
@@ -132,7 +132,7 @@ c.addStyles('wxDEFAULT_DIALOG_STYLE', 'wxCAPTION',
             'wxMAXIMIZE_BOX', 'wxMINIMIZE_BOX',
             'wxDIALOG_NO_PARENT', 'wxFRAME_SHAPED',
             'wxTAB_TRAVERSAL')
-c.addExStyles('wxDIALOG_EX_CONTEXTHELP', 'wxDIALOG_EX_METAL', 'wxWS_EX_VALIDATE_RECURSIVELY')
+c.addExStyles('wxDIALOG_EX_CONTEXTHELP', 'wxDIALOG_EX_METAL')
 c.addEvents('EVT_INIT_DIALOG', 'EVT_SIZE', 'EVT_CLOSE', 
             'EVT_ICONIZE', 'EVT_MAXIMIZE', 'EVT_ACTIVATE', 'EVT_UPDATE_UI')
 component.Manager.register(c)
@@ -145,7 +145,6 @@ c = component.Container('wxPanel', ['window', 'top_level', 'control'],
               ['pos', 'size'],
               image=images.TreePanel.GetImage())
 c.addStyles('wxTAB_TRAVERSAL')
-c.addExStyles('wxWS_EX_VALIDATE_RECURSIVELY')
 component.Manager.register(c)
 component.Manager.setMenu(c, 'TOP_LEVEL', 'panel', 'wxPanel', 30)
 component.Manager.setMenu(c, 'container', 'panel', 'wxPanel', 10)
@@ -230,7 +229,7 @@ c.addStyles('wxDEFAULT_DIALOG_STYLE', 'wxCAPTION', 'wxFRAME_SHAPED',
             'wxRESIZE_BORDER', 'wxCLOSE_BOX', 'wxMAXIMIZE_BOX', 'wxMINIMIZE_BOX',
             'wxDIALOG_MODAL', 'wxDIALOG_MODELESS', 'wxDIALOG_NO_PARENT',
             'wxTAB_TRAVERSAL')
-c.addExStyles('wxDIALOG_EX_CONTEXTHELP', 'wxDIALOG_EX_METAL', 'wxWS_EX_VALIDATE_RECURSIVELY')
+c.addExStyles('wxDIALOG_EX_CONTEXTHELP', 'wxDIALOG_EX_METAL')
 c.addEvents('EVT_INIT_DIALOG', 'EVT_SIZE', 'EVT_CLOSE', 
             'EVT_ICONIZE', 'EVT_MAXIMIZE', 'EVT_ACTIVATE', 'EVT_UPDATE_UI')
 component.Manager.register(c)
@@ -337,7 +336,6 @@ component.Manager.setTool(c, 'Sizers', pos=(1,2))
 
 c = component.Container('wxScrolledWindow', ['window', 'control'], ['pos', 'size'])
 c.addStyles('wxHSCROLL', 'wxVSCROLL', 'wxTAB_TRAVERSAL')
-c.addExStyles('wxWS_EX_VALIDATE_RECURSIVELY')
 c.addEvents('EVT_SCROLLWIN_TOP',
             'EVT_SCROLLWIN_BOTTOM',
             'EVT_SCROLLWIN_LINEUP',
