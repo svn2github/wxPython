@@ -4,7 +4,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Aug 2007
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 26 Feb 2012, 15.00 GMT
 #
 #
 # TODO List
@@ -124,9 +124,9 @@ License And Version
 
 L{CubeColourDialog} is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 26 Feb 2012, 15.00 GMT
 
-Version 0.3.
+Version 0.4.
 
 """
 
@@ -2873,24 +2873,24 @@ class CubeColourDialog(wx.Dialog):
 
         self.mainPanel = wx.Panel(self, -1)
 
-        self.hsvSizer_staticbox = wx.StaticBox(self.mainPanel, -1, "HSB")
-        self.rgbValueSizer_staticbox = wx.StaticBox(self.mainPanel, -1, "RGB Values")
-        self.hsvValueSizer_staticbox = wx.StaticBox(self.mainPanel, -1, "HSB Values")
-        self.rgbSizer_staticbox = wx.StaticBox(self.mainPanel, -1, "RGB")
-        self.alphaSizer_staticbox = wx.StaticBox(self.mainPanel, -1, "Alpha")
-        self.alphaValueSizer_staticbox = wx.StaticBox(self.mainPanel, -1, "Alpha")
+        self.hsvSizer_staticbox = wx.StaticBox(self.mainPanel, -1, _("HSB"))
+        self.rgbValueSizer_staticbox = wx.StaticBox(self.mainPanel, -1, _("RGB Values"))
+        self.hsvValueSizer_staticbox = wx.StaticBox(self.mainPanel, -1, _("HSB Values"))
+        self.rgbSizer_staticbox = wx.StaticBox(self.mainPanel, -1, _("RGB"))
+        self.alphaSizer_staticbox = wx.StaticBox(self.mainPanel, -1, _("Alpha"))
+        self.alphaValueSizer_staticbox = wx.StaticBox(self.mainPanel, -1, _("Alpha"))
 
         self.rgbBitmap = RGBCube(self.mainPanel)
         self.hsvBitmap = HSVWheel(self.mainPanel)
         self.brightCtrl = BrightCtrl(self.mainPanel)
         self.alphaCtrl = AlphaCtrl(self.mainPanel)
 
-        self.showAlpha = wx.CheckBox(self.mainPanel, -1, "Show Alpha Control")
+        self.showAlpha = wx.CheckBox(self.mainPanel, -1, _("Show Alpha Control"))
         self.customColours = CustomPanel(self.mainPanel, self._colourData)
-        self.addCustom = wx.Button(self.mainPanel, -1, "Add to custom colours")
+        self.addCustom = wx.Button(self.mainPanel, -1, _("Add to custom colours"))
         
-        self.okButton = wx.Button(self.mainPanel, -1, "Ok")
-        self.cancelButton = wx.Button(self.mainPanel, -1, "Cancel")
+        self.okButton = wx.Button(self.mainPanel, -1, _("OK"))
+        self.cancelButton = wx.Button(self.mainPanel, -1, _("Cancel"))
 
         self.oldColourPanel = ColourPanel(self.mainPanel, style=wx.SIMPLE_BORDER)
         self.newColourPanel = ColourPanel(self.mainPanel, style=wx.SIMPLE_BORDER)
@@ -2983,8 +2983,8 @@ class CubeColourDialog(wx.Dialog):
 
         mainSizer.Add(self.showAlpha, (0, 0), (1, 1), wx.LEFT|wx.TOP, 10)
 
-        htmlLabel1 = wx.StaticText(self.mainPanel, -1, "HTML Code")
-        htmlLabel2 = wx.StaticText(self.mainPanel, -1, "Web Safe")
+        htmlLabel1 = wx.StaticText(self.mainPanel, -1, _("HTML Code"))
+        htmlLabel2 = wx.StaticText(self.mainPanel, -1, _("Web Safe"))
         htmlSizer_a.Add(htmlLabel1, 0, wx.TOP, 3)
         htmlSizer_b.Add(htmlLabel2, 0, wx.TOP, 3)
         htmlSizer_a.Add(self.htmlCode, 0, wx.TOP, 3)
@@ -2994,13 +2994,13 @@ class CubeColourDialog(wx.Dialog):
         htmlSizer1.Add(htmlSizer_b, 0, wx.LEFT, 10)
         mainSizer.Add(htmlSizer1, (1, 0), (1, 1), wx.LEFT|wx.RIGHT, 10)
         
-        htmlLabel3 = wx.StaticText(self.mainPanel, -1, "HTML Name")
+        htmlLabel3 = wx.StaticText(self.mainPanel, -1, _("HTML Name"))
         htmlSizer2.Add(htmlLabel3, 0, wx.TOP|wx.BOTTOM, 3)
         htmlSizer2.Add(self.htmlName, 0)
         
         mainSizer.Add(htmlSizer2, (1, 1), (1, 1), wx.LEFT|wx.RIGHT, 10)
 
-        customLabel = wx.StaticText(self.mainPanel, -1, "Custom Colours")
+        customLabel = wx.StaticText(self.mainPanel, -1, _("Custom Colours"))
         customSizer.Add(customLabel, 0, wx.BOTTOM, 3)
         customSizer.Add(self.customColours, 0)
         customSizer.Add(self.addCustom, 0, wx.TOP|wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL, 5)
@@ -3014,11 +3014,11 @@ class CubeColourDialog(wx.Dialog):
         alphaSizer.Add(self.alphaCtrl, 0, wx.TOP|wx.ALIGN_CENTER, 15)
         mainSizer.Add(alphaSizer, (2, 2), (1, 1), wx.ALL|wx.EXPAND, 10)
         
-        oldLabel = wx.StaticText(self.mainPanel, -1, "Old Colour")
+        oldLabel = wx.StaticText(self.mainPanel, -1, _("Old Colour"))
         panelSizer.Add(oldLabel, 0, wx.BOTTOM, 3)
         panelSizer.Add(self.oldColourPanel, 0, wx.BOTTOM|wx.EXPAND, 20)
-        newLabel = wx.StaticText(self.mainPanel, -1, "New Colour")
-        accessLabel = wx.StaticText(self.mainPanel, -1, "MS Access Code")
+        newLabel = wx.StaticText(self.mainPanel, -1, _("New Colour"))
+        accessLabel = wx.StaticText(self.mainPanel, -1, _("MS Access Code"))
         accessSizer.Add(accessLabel, 0, wx.BOTTOM, 3)
         accessSizer.Add(self.accessCode, 0)
         panelSizer.Add(newLabel, 0, wx.BOTTOM, 3)
@@ -3026,29 +3026,29 @@ class CubeColourDialog(wx.Dialog):
         panelSizer.Add((0, 0), 1, wx.EXPAND)
         panelSizer.Add(accessSizer, 0, wx.TOP, 5)
         mainSizer.Add(panelSizer, (2, 3), (1, 1), wx.ALL|wx.EXPAND, 10)
-        redLabel = wx.StaticText(self.mainPanel, -1, "Red")
+        redLabel = wx.StaticText(self.mainPanel, -1, _("Red"))
         rgbGridSizer.Add(redLabel, 0)
-        greenLabel = wx.StaticText(self.mainPanel, -1, "Green")
+        greenLabel = wx.StaticText(self.mainPanel, -1, _("Green"))
         rgbGridSizer.Add(greenLabel, 0)
-        blueLabel = wx.StaticText(self.mainPanel, -1, "Blue")
+        blueLabel = wx.StaticText(self.mainPanel, -1, _("Blue"))
         rgbGridSizer.Add(blueLabel, 0)
         rgbGridSizer.Add(self.redSpin, 0, wx.EXPAND)
         rgbGridSizer.Add(self.greenSpin, 0, wx.EXPAND)
         rgbGridSizer.Add(self.blueSpin, 0, wx.EXPAND)
         rgbValueSizer.Add(rgbGridSizer, 1, 0, 0)
         mainSizer.Add(rgbValueSizer, (3, 0), (1, 1), wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.EXPAND, 10)
-        hueLabel = wx.StaticText(self.mainPanel, -1, "Hue")
+        hueLabel = wx.StaticText(self.mainPanel, -1, _("Hue"))
         hsvGridSizer.Add(hueLabel, 0)
-        saturationLabel = wx.StaticText(self.mainPanel, -1, "Saturation")
+        saturationLabel = wx.StaticText(self.mainPanel, -1, _("Saturation"))
         hsvGridSizer.Add(saturationLabel, 0)
-        brightnessLabel = wx.StaticText(self.mainPanel, -1, "Brightness")
+        brightnessLabel = wx.StaticText(self.mainPanel, -1, _("Brightness"))
         hsvGridSizer.Add(brightnessLabel, 0)
         hsvGridSizer.Add(self.hueSpin, 0, wx.EXPAND)
         hsvGridSizer.Add(self.saturationSpin, 0, wx.EXPAND)
         hsvGridSizer.Add(self.brightnessSpin, 0, wx.EXPAND)
         hsvValueSizer.Add(hsvGridSizer, 1, wx.EXPAND)
         mainSizer.Add(hsvValueSizer, (3, 1), (1, 1), wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.EXPAND, 10)
-        alphaLabel = wx.StaticText(self.mainPanel, -1, "Alpha")
+        alphaLabel = wx.StaticText(self.mainPanel, -1, _("Alpha"))
         alphaGridSizer.Add(alphaLabel, 0)
         alphaGridSizer.Add(self.alphaSpin, 0, wx.EXPAND|wx.TOP, 10)
         alphaValueSizer.Add(alphaGridSizer, 1, wx.EXPAND)
