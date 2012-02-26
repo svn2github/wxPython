@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 01 Nov 2011, 21.00 GMT
+# Latest Revision: 26 Feb 2012, 15.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -9906,7 +9906,8 @@ class AuiManager(wx.EvtHandler):
             if posMask == AUI_MINIMIZE_POS_TOOLBAR:
                 target = paneInfo.name
                 
-            minimize_toolbar.AddSimpleTool(ID_RESTORE_FRAME, paneInfo.caption, restore_bitmap, "Restore " + paneInfo.caption, target=target)
+            minimize_toolbar.AddSimpleTool(ID_RESTORE_FRAME, paneInfo.caption, restore_bitmap,
+                                           _(u"Restore %s")%paneInfo.caption, target=target)
             minimize_toolbar.SetAuiManager(self)
             minimize_toolbar.Realize()
             toolpanelname = paneInfo.name + "_min"
