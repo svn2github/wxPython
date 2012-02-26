@@ -2,7 +2,7 @@
 # FLATMENU wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 26 Feb 2012, 15.00 GMT
 #
 # TODO List
 #
@@ -185,7 +185,7 @@ License And Version
 
 L{FlatMenu} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 26 Feb 2012, 15.00 GMT
 
 Version 1.0
 
@@ -223,6 +223,9 @@ FM_OPT_SHOW_TOOLBAR = 8
 
 _libimported = None
 _DELAY = 5000
+
+# Define a translation string
+_ = wx.GetTranslation
 
 if wx.Platform == "__WXMSW__":
     osVersion = wx.GetOsVersion()
@@ -3555,7 +3558,7 @@ class FlatMenuBar(wx.Panel):
         if self._showCustomize:
             if invT + invM > 0:
                 self._moreMenu.AppendSeparator()
-            item = FlatMenuItem(self._moreMenu, self._popupDlgCmdId, "Customize ...")
+            item = FlatMenuItem(self._moreMenu, self._popupDlgCmdId, _(u"Customize..."))
             self._moreMenu.AppendItem(item)
 
 
