@@ -556,7 +556,7 @@ class TabNavigatorProps(object):
 
     def __init__(self):
         """ Default class constructor. """
-        
+
         super(TabNavigatorProps, self).__init__()
 
         # Attributes
@@ -609,9 +609,9 @@ class TabNavigatorWindow(wx.Dialog):
 
         sz = wx.BoxSizer(wx.VERTICAL)
 
-        self._listBox = wx.ListBox(self, wx.ID_ANY, 
-                                   wx.DefaultPosition, 
-                                   wx.Size(200, 150), [], 
+        self._listBox = wx.ListBox(self, wx.ID_ANY,
+                                   wx.DefaultPosition,
+                                   wx.Size(200, 150), [],
                                    wx.LB_SINGLE | wx.NO_BORDER)
 
         mem_dc = wx.MemoryDC()
@@ -627,7 +627,7 @@ class TabNavigatorWindow(wx.Dialog):
         if panelHeight < 24:
             panelHeight = 24
 
-        self._panel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, 
+        self._panel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition,
                                wx.Size(-1, panelHeight))
 
         sz.Add(self._panel, 0, wx.EXPAND)
@@ -1391,7 +1391,15 @@ class AuiTabContainer(object):
                 else:
                     visible_width += size[0]
 
-        if total_width > self._rect.GetWidth() or self._tab_offset != 0:
+        buttons_width = 0
+
+        for button in self._buttons:
+            if not (button.cur_state & AUI_BUTTON_STATE_HIDDEN):
+                buttons_width += button.rect.GetWidth()
+
+        total_width += buttons_width
+
+        if (total_width > self._rect.GetWidth() and page_count > 1) or self._tab_offset != 0:
 
             # show left/right buttons
             for button in self._buttons:
@@ -1418,7 +1426,7 @@ class AuiTabContainer(object):
                     button.cur_state &= ~AUI_BUTTON_STATE_DISABLED
 
             if button.id == AUI_BUTTON_RIGHT:
-                if visible_width < self._rect.GetWidth() - 16*button_count:
+                if visible_width < self._rect.GetWidth() - buttons_width:
                     button.cur_state |= AUI_BUTTON_STATE_DISABLED
                 else:
                     button.cur_state &= ~AUI_BUTTON_STATE_DISABLED
@@ -1494,6 +1502,20 @@ class AuiTabContainer(object):
                     self._pages[i].control.Hide()
 
         self.MinimizeTabOffset(dc, wnd, self._rect.GetWidth() - right_buttons_width - offset - 2)
+
+        # draw tab before tab offset
+        if self._tab_offset > 0:
+            page = self._pages[self._tab_offset - 1]
+            tab_button = self._tab_close_buttons[self._tab_offset - 1]
+            size, x_extent = self._art.GetTabSize(dc, wnd, page.caption, page.bitmap, page.active, tab_button.cur_state, page.control)
+
+            rect = wx.Rect(offset - x_extent, 0, self._rect.width - right_buttons_width - offset - x_extent - 2, self._rect.height)
+            clip_rect = wx.Rect(*self._rect)
+            clip_rect.x = offset
+
+            dc.SetClippingRect(clip_rect)
+            self._art.DrawTab(dc, wnd, page, rect, tab_button.cur_state)
+            dc.DestroyClippingRegion()
 
         # draw the tabs
         active = 999
@@ -1883,7 +1905,9 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
 
-        self.CaptureMouse()
+        if not self.HasCapture():
+            self.CaptureMouse()
+
         self._click_pt = wx.Point(-1, -1)
         self._is_dragging = False
         self._click_tab = None
@@ -1908,15 +1932,19 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
             self._click_pt.x = event.GetX()
             self._click_pt.y = event.GetY()
             self._click_tab = wnd
+
+            wnd.SetFocus()
         else:
             page_index = self.GetActivePage()
             if page_index != wx.NOT_FOUND:
                 self.GetWindowFromIdx(page_index).SetFocus()
 
+            self._hover_button = self.ButtonHitTest(event.GetX(), event.GetY())
         if self._hover_button:
             self._pressed_button = self._hover_button
             self._pressed_button.cur_state = AUI_BUTTON_STATE_PRESSED
             self._on_button = True
+
             self.Refresh()
             self.Update()
 
@@ -1980,6 +2008,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
         if self._hover_button:
             self._pressed_button = self._hover_button
+            self._hover_button.cur_state = AUI_BUTTON_STATE_NORMAL
 
         if self._pressed_button:
 
@@ -4484,6 +4513,8 @@ class AuiNotebook(wx.PyPanel):
 
         :param `event`: a L{AuiNotebookEvent} event to be processed.
         """
+
+        self._curpage = event.GetSelection()
 
         tabs = event.GetEventObject()
         if not tabs.GetEnabled(event.GetSelection()):
