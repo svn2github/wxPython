@@ -73,6 +73,8 @@ an asterisk were already present in `wx.lib` before:
   you can find in text editors software;
 - ShapedButton: this class tries to fill the lack of "custom shaped" controls
   in wxPython. It can be used to build round buttons or elliptic buttons;
+- ShortcutEditor: a widget that allows the user to customize and change 
+  keyboard shortcuts via a dialog;
 - SpeedMeter: this widget tries to reproduce the behavior of some car
   controls (but not only), by creating an "angular" control;
 - SuperToolTip: a class that mimics the behaviour of `wx.TipWindow` and
@@ -114,11 +116,11 @@ You can contact me at:
 andrea.gavana@gmail.com
 andrea.gavana@maerskoil.com
 
-AGW version: 0.9.2
+AGW version: 0.9.3
 
-Last updated: 28 Feb 2012, 21.00 GMT
+Last updated: 05 Mar 2012, 21.00 GMT
 
 """
 
-__version__ = "0.9.2"
+__version__ = "0.9.3"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"

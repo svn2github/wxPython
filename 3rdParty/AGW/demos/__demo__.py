@@ -13,12 +13,12 @@ this module returns the following information:
                        
 These meta data are merged into the wxPython demo tree at startup.
 
-Last updated: Andrea Gavana @ 29 Nov 2011, 15.00 GMT.
-Version 0.9.2.
+Last updated: Andrea Gavana @ 05 Mar 2012, 21.00 GMT.
+Version 0.9.3.
 
 """
 
-__version__ = "0.9.2"
+__version__ = "0.9.3"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 
 
@@ -88,7 +88,7 @@ def GetRecentAdditions():
         recentAdditions = ['AUI', 'PersistentControls', 'PyBusyInfo', 'PyGauge',
                            'RibbonBar', 'UltimateListCtrl', 'XLSGrid', 'ZoomBar']
     else:
-        recentAdditions = ['PersistentControls', 'XLSGrid']
+        recentAdditions = ['PersistentControls', 'ShortcutEditor', 'XLSGrid']
 
     # Return the Recent Additions for AGW    
     return recentAdditions
@@ -112,9 +112,9 @@ def GetDemos():
                 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
                 'PeakMeter', 'PersistentControls', 'PieCtrl', 'PyBusyInfo',
                 'PyCollapsiblePane', 'PyGauge', 'PyProgress', 'RibbonBar',
-                'RulerCtrl', 'ShapedButton', 'SpeedMeter', 'SuperToolTip',
-                'ThumbnailCtrl', 'ToasterBox', 'UltimateListCtrl', 'XLSGrid',
-                'ZoomBar']
+                'RulerCtrl', 'ShapedButton', 'ShortcutEditor', 'SpeedMeter',
+                'SuperToolTip', 'ThumbnailCtrl', 'ToasterBox',
+                'UltimateListCtrl', 'XLSGrid', 'ZoomBar']
 
     return AGWTreeItem, AGWDemos
 

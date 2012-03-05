@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 03 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -83,6 +83,8 @@ In addition to the standard `wx.gizmos.TreeListCtrl` behaviour this class suppor
 * Setting the L{HyperTreeList} check/radio item icons to a personalized imagelist;
 * Changing the style of the lines that connect the items (in terms of `wx.Pen` styles);
 * Using an image as a L{HyperTreeList} background (currently only in "tile" mode);
+* Ellipsization of long items when the horizontal space is low, via the ``TR_ELLIPSIZE_LONG_ITEMS``
+  style (`New in version 0.9.3`).
 
 And a lot more. Check the demo for an almost complete review of the functionalities.
 
@@ -103,6 +105,12 @@ Plus it has 3 more styles to handle checkbox-type items:
 And a style useful to hide the TreeListCtrl header:
 
 - ``TR_NO_HEADER``: hides the L{HyperTreeList} header.
+
+And a style related to long items (with a lot of text in them), which can be 
+ellipsized:
+
+- ``TR_ELLIPSIZE_LONG_ITEMS``: ellipsizes long items when the horizontal space for
+  L{HyperTreeList} is low (`New in version 0.9.3`).
 
 
 All the methods available in `wx.gizmos.TreeListCtrl` are also available in L{HyperTreeList}.
@@ -188,7 +196,7 @@ Window Styles                  Hex Value   Description
 ``TR_HAS_BUTTONS``                     0x1 Use this style to show + and - buttons to the left of parent items.
 ``TR_NO_LINES``                        0x4 Use this style to hide vertical level connectors.
 ``TR_LINES_AT_ROOT``                   0x8 Use this style to show lines between root nodes. Only applicable if ``TR_HIDE_ROOT`` is set and ``TR_NO_LINES`` is not set.
-``TR_DEFAULT_STYLE``                   0x9 No Docs
+``TR_DEFAULT_STYLE``                   0x9 The set of flags that are closest to the defaults for the native control for a particular toolkit.
 ``TR_TWIST_BUTTONS``                  0x10 Use old Mac-twist style buttons.
 ``TR_MULTIPLE``                       0x20 Use this style to allow a range of items to be selected. If a second range is selected, the current range, if any, is deselected.
 ``TR_EXTENDED``                       0x40 Use this style to allow disjoint items to be selected. (Only partially implemented; may not work in all cases).
@@ -196,14 +204,15 @@ Window Styles                  Hex Value   Description
 ``TR_EDIT_LABELS``                   0x200 Use this style if you wish the user to be able to edit labels in the tree control.
 ``TR_ROW_LINES``                     0x400 Use this style to draw a contrasting border between displayed rows.
 ``TR_HIDE_ROOT``                     0x800 Use this style to suppress the display of the root node, effectively causing the first-level nodes to appear as a series of root nodes.
-``TR_COLUMN_LINES``                 0x1000 No Docs
+``TR_COLUMN_LINES``                 0x1000 Use this style to draw a contrasting border between displayed columns.
 ``TR_FULL_ROW_HIGHLIGHT``           0x2000 Use this style to have the background colour and the selection highlight extend  over the entire horizontal row of the tree control window.
 ``TR_AUTO_CHECK_CHILD``             0x4000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are checked/unchecked as well.
 ``TR_AUTO_TOGGLE_CHILD``            0x8000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly.
 ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
 ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
 ``TR_NO_HEADER``                   0x40000 Use this style to hide the columns header.
-``TR_VIRTUAL``                     0x80000 L{HyperTreeList} will have virtual behaviour.
+``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for L{HyperTreeList} columns is low.
+``TR_VIRTUAL``                    0x100000 L{HyperTreeList} will have virtual behaviour.
 ============================== =========== ==================================================
 
 
@@ -252,9 +261,9 @@ License And Version
 
 L{HyperTreeList} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 03 Mar 2012, 21.00 GMT
 
-Version 1.2
+Version 1.3
 
 """
 
@@ -262,12 +271,12 @@ import wx
 import wx.gizmos
 
 from customtreectrl import CustomTreeCtrl
-from customtreectrl import DragImage, TreeEvent, GenericTreeItem
+from customtreectrl import DragImage, TreeEvent, GenericTreeItem, ChopText
 from customtreectrl import TreeEditTimer as TreeListEditTimer
 from customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHECKED, EVT_TREE_ITEM_HYPERLINK
 
 # Version Info
-__version__ = "1.2"
+__version__ = "1.3"
 
 # --------------------------------------------------------------------------
 # Constants
@@ -343,7 +352,9 @@ TR_AUTO_CHECK_PARENT = 0x10000                                 # only meaningful
 """ its parent item is checked/unchecked as well. """
 TR_ALIGN_WINDOWS = 0x20000                                     # to align windows horizontally for items at the same level
 """ Flag used to align windows (in items with windows) at the same horizontal position. """
-TR_VIRTUAL = 0x80000
+TR_ELLIPSIZE_LONG_ITEMS = 0x80000                              # to ellipsize long items when horizontal space is low
+""" Flag used to ellipsize long items when the horizontal space for L{HyperTreeList} columns is low."""
+TR_VIRTUAL = 0x100000
 """ L{HyperTreeList} will have virtual behaviour. """
 
 # --------------------------------------------------------------------------
@@ -2044,7 +2055,8 @@ class TreeListMainWindow(CustomTreeCtrl):
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
          ``TR_NO_HEADER``                   0x40000 Use this style to hide the columns header.
-         ``TR_VIRTUAL``                     0x80000 L{HyperTreeList} will have virtual behaviour.
+         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for L{CustomTreeCtrl} is low.
+         ``TR_VIRTUAL``                    0x100000 L{HyperTreeList} will have virtual behaviour.
          ============================== =========== ==================================================
 
         :param `validator`: window validator;
@@ -2969,6 +2981,14 @@ class TreeListMainWindow(CustomTreeCtrl):
             text_extraH = (total_h > text_h and [(total_h - text_h)/2] or [0])[0]            
             text_y = item.GetY() + text_extraH
             textrect = wx.Rect(text_x, text_y, text_w, text_h)
+
+            if self.HasAGWFlag(TR_ELLIPSIZE_LONG_ITEMS):
+                if i == self.GetMainColumn():
+                    maxsize = col_w - text_x - _MARGIN
+                else:
+                    maxsize = col_w - (wcheck + image_w + _MARGIN)
+
+                text = ChopText(dc, text, maxsize)
         
             if not item.IsEnabled():
                 foreground = dc.GetTextForeground()
@@ -3930,8 +3950,8 @@ class TreeListMainWindow(CustomTreeCtrl):
                 font = self.GetHyperTextFont()
             else:
                 font = self._normalFont
-            
-        dc = wx.ClientDC(self)
+
+        dc = wx.ClientDC(self)            
         dc.SetFont(font)
         w, h, dummy = dc.GetMultiLineTextExtent(item.GetText(column))
         w += 2*_MARGIN
@@ -3961,7 +3981,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         wnd = item.GetWindow(column)
         if wnd:
             width += wnd.GetSize()[0] + 2*_MARGIN
-            
+
         return width
 
 
@@ -3975,6 +3995,10 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         maxWidth, h = self.GetClientSize()
         width = 0
+
+        if maxWidth < 5:
+            # Not shown on screen
+            maxWidth = 1000
 
         # get root if on item
         if not parent:
@@ -4086,7 +4110,7 @@ class HyperTreeList(wx.PyControl):
          ``TR_HAS_BUTTONS``                     0x1 Use this style to show + and - buttons to the left of parent items.
          ``TR_NO_LINES``                        0x4 Use this style to hide vertical level connectors.
          ``TR_LINES_AT_ROOT``                   0x8 Use this style to show lines between root nodes. Only applicable if ``TR_HIDE_ROOT`` is set and ``TR_NO_LINES`` is not set.
-         ``TR_DEFAULT_STYLE``                   0x9 No Docs
+         ``TR_DEFAULT_STYLE``                   0x9 The set of flags that are closest to the defaults for the native control for a particular toolkit.
          ``TR_TWIST_BUTTONS``                  0x10 Use old Mac-twist style buttons.
          ``TR_MULTIPLE``                       0x20 Use this style to allow a range of items to be selected. If a second range is selected, the current range, if any, is deselected.
          ``TR_EXTENDED``                       0x40 Use this style to allow disjoint items to be selected. (Only partially implemented; may not work in all cases).
@@ -4094,14 +4118,15 @@ class HyperTreeList(wx.PyControl):
          ``TR_EDIT_LABELS``                   0x200 Use this style if you wish the user to be able to edit labels in the tree control.
          ``TR_ROW_LINES``                     0x400 Use this style to draw a contrasting border between displayed rows.
          ``TR_HIDE_ROOT``                     0x800 Use this style to suppress the display of the root node, effectively causing the first-level nodes to appear as a series of root nodes.
-         ``TR_COLUMN_LINES``                 0x1000 No Docs
+         ``TR_COLUMN_LINES``                 0x1000 Use this style to draw a contrasting border between displayed columns.
          ``TR_FULL_ROW_HIGHLIGHT``           0x2000 Use this style to have the background colour and the selection highlight extend  over the entire horizontal row of the tree control window.
          ``TR_AUTO_CHECK_CHILD``             0x4000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are checked/unchecked as well.
          ``TR_AUTO_TOGGLE_CHILD``            0x8000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly.
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
          ``TR_NO_HEADER``                   0x40000 Use this style to hide the columns header.
-         ``TR_VIRTUAL``                     0x80000 L{HyperTreeList} will have virtual behaviour.
+         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for L{CustomTreeCtrl} is low.
+         ``TR_VIRTUAL``                    0x100000 L{HyperTreeList} will have virtual behaviour.
          ============================== =========== ==================================================
 
         :param `validator`: window validator;
@@ -4246,7 +4271,7 @@ class HyperTreeList(wx.PyControl):
          ``TR_HAS_BUTTONS``                     0x1 Use this style to show + and - buttons to the left of parent items.
          ``TR_NO_LINES``                        0x4 Use this style to hide vertical level connectors.
          ``TR_LINES_AT_ROOT``                   0x8 Use this style to show lines between root nodes. Only applicable if ``TR_HIDE_ROOT`` is set and ``TR_NO_LINES`` is not set.
-         ``TR_DEFAULT_STYLE``                   0x9 No Docs
+         ``TR_DEFAULT_STYLE``                   0x9 The set of flags that are closest to the defaults for the native control for a particular toolkit.
          ``TR_TWIST_BUTTONS``                  0x10 Use old Mac-twist style buttons.
          ``TR_MULTIPLE``                       0x20 Use this style to allow a range of items to be selected. If a second range is selected, the current range, if any, is deselected.
          ``TR_EXTENDED``                       0x40 Use this style to allow disjoint items to be selected. (Only partially implemented; may not work in all cases).
@@ -4254,14 +4279,15 @@ class HyperTreeList(wx.PyControl):
          ``TR_EDIT_LABELS``                   0x200 Use this style if you wish the user to be able to edit labels in the tree control.
          ``TR_ROW_LINES``                     0x400 Use this style to draw a contrasting border between displayed rows.
          ``TR_HIDE_ROOT``                     0x800 Use this style to suppress the display of the root node, effectively causing the first-level nodes to appear as a series of root nodes.
-         ``TR_COLUMN_LINES``                 0x1000 No Docs
+         ``TR_COLUMN_LINES``                 0x1000 Use this style to draw a contrasting border between displayed columns.
          ``TR_FULL_ROW_HIGHLIGHT``           0x2000 Use this style to have the background colour and the selection highlight extend  over the entire horizontal row of the tree control window.
          ``TR_AUTO_CHECK_CHILD``             0x4000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are checked/unchecked as well.
          ``TR_AUTO_TOGGLE_CHILD``            0x8000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly.
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
          ``TR_NO_HEADER``                   0x40000 Use this style to hide the columns header.
-         ``TR_VIRTUAL``                     0x80000 L{HyperTreeList} will have virtual behaviour.
+         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for L{CustomTreeCtrl} is low.
+         ``TR_VIRTUAL``                    0x100000 L{HyperTreeList} will have virtual behaviour.
          ============================== =========== ==================================================
          
         :note: Please note that some styles cannot be changed after the window creation

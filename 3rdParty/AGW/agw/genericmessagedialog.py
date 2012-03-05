@@ -2,7 +2,7 @@
 # GENERICMESSAGEDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 29 Feb 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -30,11 +30,14 @@ Description
 ===========
 
 This class represents a dialog that shows a single or multi-line message,
-with a choice of ``OK``, ``Yes``, ``No`` and ``Cancel`` buttons. It is a possible
+with a choice of ``OK``, ``Yes``, ``No``, ``Cancel`` and ``Help`` buttons. It is a possible
 replacement for the standard `wx.MessageDialog`, with these extra functionalities:
 
 * Possibility to modify the dialog position;
 * Custom themed generic bitmap & text buttons;
+* Support for normal and extended message (in different fonts);
+* Custom labels for the ``OK``, ``Yes``, ``No``, ``Cancel`` and ``Help`` buttons;
+* Custom icons for the ``OK``, ``Yes``, ``No``, ``Cancel`` and ``Help`` buttons;
 * Possibility to set an icon to the dialog;
 * More visibility to the button getting the focus;
 * Support for Aqua buttons or Gradient buttons instead of themed ones (see L{AquaButton}
@@ -117,9 +120,9 @@ License And Version
 
 L{GenericMessageDialog} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 29 Feb 2012, 21.00 GMT
 
-Version 0.6
+Version 0.7
 
 """
 
@@ -601,7 +604,7 @@ class GenericMessageDialog(wx.Dialog):
                  style=wx.DEFAULT_DIALOG_STYLE|wx.WANTS_CHARS,
                  wrap=-1):
         """
-        Default class constructor.
+        Default class constructor. Use L{ShowModal} to show the dialog.
 
         :param `parent`: the L{GenericMessageDialog} parent (if any);
         :param `message`: the message in the main body of the dialog;
@@ -640,15 +643,37 @@ class GenericMessageDialog(wx.Dialog):
         :param `style`: the underlying `wx.Dialog` style;
         :param `wrap`: if set greater than zero, wraps the string in `message` so that
          every line is at most `wrap` pixels long.
+
+        :note: Notice that not all styles are compatible: only one of ``wx.OK`` and ``wx.YES_NO`` may be
+         specified (and one of them must be specified) and at most one default button style can be used
+         and it is only valid if the corresponding button is shown in the message box.         
         """
 
         wx.Dialog.__init__(self, parent, wx.ID_ANY, caption, pos, size, style)
 
+        self._message = message
         self._agwStyle = agwStyle
+        self._wrap = wrap
 
-        if wrap > 0:
-            message = self.WrapMessage(message, wrap)
+        # The extended message placeholder
+        self._extendedMessage = ''
+        
+        # Labels for the buttons, initially empty meaning that the defaults should
+        # be used, use GetYes/No/OK/CancelLabel() to access them    
+        self._yes = self._no = self._ok = self._cancel = self._help = ''
 
+        # Icons for the buttons, initially empty meaning that the defaults should
+        # be used, use GetYes/No/OK/CancelBitmap() to access them    
+        self._yesBitmap = self._noBitmap = self._okBitmap = self._cancelBitmap = self._helpBitmap = None
+        
+        self._created = False
+    
+
+    def CreateMessageDialog(self):
+        """ Actually creates the L{GenericMessageDialog}, just before showing it on screen. """
+
+        message = self.GetMessage()
+        
         topsizer = wx.BoxSizer(wx.VERTICAL)
         icon_text = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -669,8 +694,36 @@ class GenericMessageDialog(wx.Dialog):
         # Populate the sizers...
         icon = wx.StaticBitmap(self, -1, bitmap.GetBitmap())
         icon_text.Add(icon, 0, wx.ALIGN_CENTER_HORIZONTAL)
-        icon_text.Add(self.CreateTextSizer(message), 1, wx.ALIGN_CENTER | wx.LEFT, 10)
+    
+        textsizer = wx.BoxSizer(wx.VERTICAL)
+        
+        # We want to show the main message in a different font to make it stand
+        # out if the extended message is used as well. This looks better and is
+        # more consistent with the native dialogs under MSW and GTK.
 
+        if self._extendedMessage.strip():
+            boldFont = self.GetFont().Larger().MakeBold()
+            if self._wrap > 0:
+                message = self.WrapMessage(message, self._wrap, boldFont)
+
+            msgSizer = self.CreateTextSizer(message)
+
+            for index in xrange(len(msgSizer.GetChildren())):
+                msgSizer.GetItem(index).GetWindow().SetFont(boldFont)
+                
+            textsizer.AddF(msgSizer, wx.SizerFlags().Border(wx.BOTTOM, 20))
+            lowerMessage = self.GetExtendedMessage()
+
+        else: # no extended message
+
+            lowerMessage = message
+
+        if self._wrap > 0:
+            lowerMessage = self.WrapMessage(lowerMessage, self._wrap)
+
+        textsizer.Add(self.CreateTextSizer(lowerMessage))
+
+        icon_text.Add(textsizer, 1, wx.ALIGN_CENTER | wx.LEFT, 10)
         topsizer.Add(icon_text, 1, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, 10)
 
         center_flag = wx.EXPAND
@@ -699,6 +752,7 @@ class GenericMessageDialog(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self.OnOk, id=wx.ID_OK)
         self.Bind(wx.EVT_BUTTON, self.OnNo, id=wx.ID_NO)
         self.Bind(wx.EVT_BUTTON, self.OnCancel, id=wx.ID_CANCEL)
+        self.Bind(wx.EVT_BUTTON, self.OnHelp, id=wx.ID_HELP)
 
         for child in self.GetChildren():
             if isinstance(child, wx.lib.buttons.ThemedGenBitmapTextButton) or \
@@ -709,7 +763,7 @@ class GenericMessageDialog(wx.Dialog):
                     child.SetUseFocusIndicator(False)
 
         self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigation)
-        self.SwitchFocus()
+        self.SwitchFocus()        
         
 
     def EndDialog(self, rc):
@@ -756,6 +810,12 @@ class GenericMessageDialog(wx.Dialog):
             self.EndDialog(wx.ID_CANCEL)
 
 
+    def OnHelp(self, event):
+        """ L{GenericMessageDialog} had received a ``wx.ID_HELP`` answer. """
+
+        self.EndDialog(wx.ID_HELP)
+
+
     def OnKeyDown(self, event):
         """
         Handles the ``wx.EVT_KEY_DOWN`` event for L{GenericMessageDialog}.
@@ -781,6 +841,8 @@ class GenericMessageDialog(wx.Dialog):
             self.OnCancel(None)
         elif key in [ord("o"), ord("O")] and wx.ID_OK in ids:
             self.OnOk(None)
+        elif key in [ord("h"), ord("H")] and wx.ID_HELP in ids:
+            self.OnHelp(None)
             
         event.Skip()
 
@@ -892,33 +954,31 @@ class GenericMessageDialog(wx.Dialog):
             # Remove unwanted flags...
             flags &= ~(wx.YES | wx.NO | wx.NO_DEFAULT)
 
-        size=(-1, 28)
         if self._agwStyle & GMD_USE_AQUABUTTONS:
             klass = AB.AquaButton
-            size=(-1, -1)
         elif self._agwStyle & GMD_USE_GRADIENTBUTTONS:
             klass = GB.GradientButton
         else:
             klass = buttons.ThemedGenBitmapTextButton
             
         if flags & wx.OK:
-            ok = klass(self, wx.ID_OK, _ok.GetBitmap(), _("OK"), size=size)
+            ok = klass(self, wx.ID_OK, self.GetCustomOKBitmap(), self.GetCustomOKLabel())
             sizer.AddButton(ok)
 
         if flags & wx.CANCEL:
-            cancel = klass(self, wx.ID_CANCEL, _cancel.GetBitmap(), _("Cancel"), size=size)
+            cancel = klass(self, wx.ID_CANCEL, self.GetCustomCancelBitmap(), self.GetCustomCancelLabel())
             sizer.AddButton(cancel)
         
         if flags & wx.YES:
-            yes = klass(self, wx.ID_YES, _yes.GetBitmap(), _("Yes"), size=size)
+            yes = klass(self, wx.ID_YES, self.GetCustomYesBitmap(), self.GetCustomYesLabel())
             sizer.AddButton(yes)
         
         if flags & wx.NO:
-            no = klass(self, wx.ID_NO, _no.GetBitmap(), _("No"), size=size)
+            no = klass(self, wx.ID_NO, self.GetCustomNoBitmap(), self.GetCustomNoLabel())
             sizer.AddButton(no)
                 
         if flags & wx.HELP:
-            help = klass(self, wx.ID_HELP, _help.GetBitmap(), _("Help"), size=size)
+            help = klass(self, wx.ID_HELP, self.GetCustomHelpBitmap(), self.GetCustomHelpLabel())
             sizer.AddButton(help)
         
         if flags & wx.NO_DEFAULT:
@@ -943,14 +1003,459 @@ class GenericMessageDialog(wx.Dialog):
         return sizer
 
 
-    def WrapMessage(self, message, wrap):
+    def GetDefaultYesLabel(self):
+        """
+        Returns the default label for the ``Yes`` button.
+
+        :note: this method may be overridden to provide different defaults for the
+         default button labels.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return _("Yes")
+
+
+    def GetDefaultNoLabel(self):
+        """
+        Returns the default label for the ``No`` button.
+
+        :note: this method may be overridden to provide different defaults for the
+         default button labels.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return _("No")
+    
+
+    def GetDefaultOKLabel(self):
+        """
+        Returns the default label for the ``OK`` button.
+
+        :note: this method may be overridden to provide different defaults for the
+         default button labels.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return _("OK")
+
+
+    def GetDefaultCancelLabel(self):
+        """
+        Returns the default label for the ``Cancel`` button.
+
+        :note: this method may be overridden to provide different defaults for the
+         default button labels.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return _("Cancel")
+
+
+    def GetDefaultHelpLabel(self):
+        """
+        Returns the default label for the ``Help`` button.
+
+        :note: this method may be overridden to provide different defaults for the
+         default button labels.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return _("Help")
+
+
+    def GetCustomOKLabel(self):
+        """
+        If a custom label has been used for the ``OK`` button, this method will return
+        it as a string. Otherwise, the default one (as defined in L{GetDefaultOKLabel})
+        is returned.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return (self._ok and [self._ok] or [self.GetDefaultOKLabel()])[0]
+
+
+    def GetCustomYesLabel(self):
+        """
+        If a custom label has been used for the ``Yes`` button, this method will return
+        it as a string. Otherwise, the default one (as defined in L{GetDefaultYesLabel})
+        is returned.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return (self._yes and [self._yes] or [self.GetDefaultYesLabel()])[0]
+
+
+    def GetCustomNoLabel(self):
+        """
+        If a custom label has been used for the ``No`` button, this method will return
+        it as a string. Otherwise, the default one (as defined in L{GetDefaultNoLabel})
+        is returned.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return (self._no and [self._no] or [self.GetDefaultNoLabel()])[0]
+
+
+    def GetCustomCancelLabel(self):
+        """
+        If a custom label has been used for the ``Cancel`` button, this method will return
+        it as a string. Otherwise, the default one (as defined in L{GetDefaultCancelLabel})
+        is returned.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return (self._cancel and [self._cancel] or [self.GetDefaultCancelLabel()])[0]
+
+
+    def GetCustomHelpLabel(self):
+        """
+        If a custom label has been used for the ``Help`` button, this method will return
+        it as a string. Otherwise, the default one (as defined in L{GetDefaultHelpLabel})
+        is returned.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return (self._help and [self._help] or [self.GetDefaultHelpLabel()])[0]
+    
+
+    # Customization of the message box buttons
+    def SetYesNoLabels(self, yes, no):
+        """
+        Overrides the default labels of the ``Yes`` and ``No`` buttons.
+
+        :param `yes`: the new label for the ``Yes`` button;
+        :param `no`: the new label for the ``No`` button.
+
+        Typically, if the function was used successfully, the main dialog message may need to be changed, e.g.::
+
+            main_message = "Hello world! I am the main message."
+    
+            dlg = GenericMessageDialog(None, main_message, "A Nice Message Box",
+                                       agwStyle=wx.ICON_INFORMATION|wx.OK)
+                                       
+            if dlg.SetYesNoLabels(_("&Quit"), _("&Don't quit")):
+                dlg.SetMessage(_("What do you want to do?"))
+
+            else: # buttons have standard "Yes"/"No" values, so rephrase the question
+                dlg.SetMessage(_("Do you really want to quit?"))
+
+                
+        .. versionadded:: 0.9.3
+        """
+        
+        self._yes, self._no = yes, no
+        return True
+
+
+    def SetYesNoCancelLabels(self, yes, no, cancel):
+        """
+        Overrides the default labels of the ``Yes`` and ``No`` buttons.
+
+        :param `yes`: the new label for the ``Yes`` button;
+        :param `no`: the new label for the ``No`` button;
+        :param `cancel`: the new label for the ``Cancel`` button.
+
+        :see: The remarks in the L{SetYesNoLabels} documentation.
+
+        .. versionadded:: 0.9.3
+        """
+        
+        self._yes, self._no, self._cancel = yes, no, cancel
+        return True
+
+
+    def SetOKLabel(self, ok):
+        """
+        Overrides the default label of the ``OK`` button.
+
+        :param `ok`: the new label for the ``OK`` button.
+
+        :see: The remarks in the L{SetYesNoLabels} documentation.
+
+        .. versionadded:: 0.9.3
+        """
+
+        self._ok = ok
+        return True
+
+
+    def SetOKCancelLabels(self, ok, cancel):
+        """
+        Overrides the default labels of the ``OK`` and ``Cancel`` buttons.
+
+        :param `ok`: the new label for the ``OK`` button;
+        :param `cancel`: the new label for the ``Cancel`` button.
+
+        :see: The remarks in the L{SetYesNoLabels} documentation.
+
+        .. versionadded:: 0.9.3
+        """
+
+        self._ok, self._cancel = ok, cancel
+        return True
+
+
+    def SetHelpLabel(self, help):
+        """
+        Overrides the default label of the ``Help`` button.
+
+        :param `help`: the new label for the ``Help`` button.
+
+        :see: The remarks in the L{SetYesNoLabels} documentation.
+
+        .. versionadded:: 0.9.3
+        """
+
+        self._help = help
+        return True
+    
+    
+    # Test if any custom labels were set
+    def HasCustomLabels(self):
+        """
+        Returns ``True`` if any of the buttons have a non-default label.
+
+        .. versionadded:: 0.9.3
+        """
+
+        for label in [self._ok, self._no, self._yes, self._cancel, self._help]:
+            if label.strip():
+                return True
+
+        return False
+
+
+    def GetDefaultYesBitmap(self):
+        """
+        Returns the default icon for the ``Yes`` button.
+
+        :note: this method may be overridden to provide different defaults for the
+         default button icons.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return _yes.GetBitmap()
+
+
+    def GetDefaultNoBitmap(self):
+        """
+        Returns the default icon for the ``No`` button.
+
+        :note: this method may be overridden to provide different defaults for the
+         default button icons.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return _no.GetBitmap()
+    
+
+    def GetDefaultOKBitmap(self):
+        """
+        Returns the default icon for the ``OK`` button.
+
+        :note: this method may be overridden to provide different defaults for the
+         default button icons.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return _ok.GetBitmap()
+
+
+    def GetDefaultCancelBitmap(self):
+        """
+        Returns the default icon for the ``Cancel`` button.
+
+        :note: this method may be overridden to provide different defaults for the
+         default button icons.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return _cancel.GetBitmap()
+
+
+    def GetDefaultHelpBitmap(self):
+        """
+        Returns the default icon for the ``Help`` button.
+
+        :note: this method may be overridden to provide different defaults for the
+         default button icons.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return _help.GetBitmap()
+
+
+    def GetCustomOKBitmap(self):
+        """
+        If a custom icon has been used for the ``OK`` button, this method will return
+        it as an instance of `wx.Bitmap`. Otherwise, the default one (as defined in
+        L{GetDefaultOKBitmap}) is returned.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return (self._okBitmap and [self._okBitmap] or [self.GetDefaultOKBitmap()])[0]
+
+
+    def GetCustomYesBitmap(self):
+        """
+        If a custom icon has been used for the ``Yes`` button, this method will return
+        it as an instance of `wx.Bitmap`. Otherwise, the default one (as defined in
+        L{GetDefaultYesBitmap}) is returned.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return (self._yesBitmap and [self._yesBitmap] or [self.GetDefaultYesBitmap()])[0]
+
+
+    def GetCustomNoBitmap(self):
+        """
+        If a custom icon has been used for the ``No`` button, this method will return
+        it as an instance of `wx.Bitmap`. Otherwise, the default one (as defined in
+        L{GetDefaultNoBitmap}) is returned.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return (self._noBitmap and [self._noBitmap] or [self.GetDefaultNoBitmap()])[0]
+
+
+    def GetCustomCancelBitmap(self):
+        """
+        If a custom icon been used for the ``Cancel`` button, this method will return
+        it as an instance of `wx.Bitmap`. Otherwise, the default one (as defined in
+        L{GetDefaultCancelBitmap}) is returned.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return (self._cancelBitmap and [self._cancelBitmap] or [self.GetDefaultCancelBitmap()])[0]
+
+
+    def GetCustomHelpBitmap(self):
+        """
+        If a custom icon has been used for the ``Help`` button, this method will return
+        it as an instance of `wx.Bitmap`. Otherwise, the default one (as defined in
+        L{GetDefaultHelpBitmap}) is returned.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return (self._helpBitmap and [self._helpBitmap] or [self.GetDefaultHelpBitmap()])[0]
+    
+
+    # Customization of the message box buttons icons
+    def SetYesNoBitmaps(self, yesBitmap, noBitmap):
+        """
+        Overrides the default icons of the ``Yes`` and ``No`` buttons.
+
+        :param `yesBitmap`: the new icon for the ``Yes`` button, an instance of `wx.Bitmap`;
+        :param `noBitmap`: the new icon for the ``No`` button, an instance of `wx.Bitmap`.
+
+        .. versionadded:: 0.9.3
+        """
+        
+        self._yesBitmap, self._noBitmap = yesBitmap, noBitmap
+        return True
+
+
+    def SetYesNoCancelBitmaps(self, yesBitmap, noBitmap, cancelBitmap):
+        """
+        Overrides the default icons of the ``Yes`` and ``No`` buttons.
+
+        :param `yesBitmap`: the new icon for the ``Yes`` button, an instance of `wx.Bitmap`;
+        :param `noBitmap`: the new icon for the ``No`` button, an instance of `wx.Bitmap`;
+        :param `cancelBitmap`: the new icon for the ``Cancel`` button, an instance of `wx.Bitmap`.
+
+        .. versionadded:: 0.9.3
+        """
+        
+        self._yesBitmap, self._noBitmap, self._cancelBitmap = yesBitmap, noBitmap, cancelBitmap
+        return True
+
+
+    def SetOKBitmap(self, okBitmap):
+        """
+        Overrides the default icon of the ``OK`` button.
+
+        :param `yesBitmap`: the new icon for the ``OK`` button, an instance of `wx.Bitmap`;
+
+        .. versionadded:: 0.9.3
+        """
+
+        self._okBitmap = okBitmap
+        return True
+
+
+    def SetOKCancelBitmaps(self, okBitmap, cancelBitmap):
+        """
+        Overrides the default icons of the ``OK`` and ``Cancel`` buttons.
+
+        :param `okBitmap`: the new icon for the ``OK`` button, an instance of `wx.Bitmap`;
+        :param `cancelBitmap`: the new icon for the ``Cancel`` button, an instance of `wx.Bitmap`.
+
+        .. versionadded:: 0.9.3
+        """
+
+        self._okBitmap, self._cancelBitmap = okBitmap, cancelBitmap
+        return True
+
+
+    def SetHelpBitmap(self, helpBitmap):
+        """
+        Overrides the default icon of the ``Help`` button.
+
+        :param `helpBitmap`: the new icon for the ``Help`` button, an instance of `wx.Bitmap`.
+
+        .. versionadded:: 0.9.3
+        """
+
+        self._helpBitmap = helpBitmap
+        return True
+    
+    
+    # Test if any custom icons were set
+    def HasCustomBitmaps(self):
+        """
+        Returns ``True`` if any of the buttons have a non-default icons.
+
+        .. versionadded:: 0.9.3
+        """
+
+        for icon in [self._okBitmap, self._noBitmap, self._yesBitmap,
+                     self._cancelBitmap, self._helpBitmap]:
+            if icon is not None:
+                return True
+
+        return False
+
+    
+    def WrapMessage(self, message, wrap, font=None):
         """
         Wraps the input message to multi lines so that the resulting new message
         is at most `wrap` pixels wide.
 
         :param `message`: the original input message;
         :param `wrap`: wraps the string in `message` so that every line is at most
-         `wrap` pixels long.
+         `wrap` pixels long;
+        :param `font`: if not ``None``, it should be an instance of `wx.Font` to be
+         used to measure and then wrap the input `message`.
 
         :return: a new message wrapped at maximum `wrap` pixels wide.
         
@@ -960,8 +1465,115 @@ class GenericMessageDialog(wx.Dialog):
         """
         
         dc = wx.ClientDC(self)
-        dc.SetFont(self.GetFont())
+
+        if font is None:
+            dc.SetFont(self.GetFont())
+        else:
+            dc.SetFont(font)
 
         newMessage = wordwrap.wordwrap(message, wrap, dc, False)
         return newMessage
+
+
+    def ShowModal(self):
+        """
+        Shows the dialog, returning one of ``wx.ID_OK``, ``wx.ID_CANCEL``, ``wx.ID_YES``,
+        ``wx.ID_NO`` or ``wx.ID_HELP``.
+
+        :note: Notice that this method returns the identifier of the button which was
+         clicked unlike the `wx.MessageBox()` function.
+
+        :note: Reimplemented from `wx.Dialog`.
+        """
+        
+        if not self._created:
+
+            self._created = True
+            self.CreateMessageDialog()
+
+        return wx.Dialog.ShowModal(self)
+
+
+    def GetCaption(self):
+        """
+        Returns the main caption (the title) for L{GenericMessageDialog}.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return self.GetTitle()
+
+
+    def SetMessage(self, message):
+        """
+        Sets the message shown by the dialog.
+
+        :param `message`: a string representing the main L{GenericMessageDialog} message.
+
+        .. versionadded:: 0.9.3
+        """
+
+        self._message = message
+
+
+    def GetMessage(self):
+        """
+        Returns a string representing the main L{GenericMessageDialog} message.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return self._message
+
+
+    def SetExtendedMessage(self, extendedMessage):
+        """
+        Sets the extended message for the dialog: this message is usually an extension of the
+        short message specified in the constructor or set with L{SetMessage}.
+
+        If it is set, the main message appears highlighted and this message appears beneath
+        it in normal font.
+
+        :param `extendedMessage`: a string representing the extended L{GenericMessageDialog} message.
+
+        .. versionadded:: 0.9.3
+        """
+
+        self._extendedMessage = extendedMessage
+
+        
+    def GetExtendedMessage(self):
+        """
+        Returns a string representing the extended L{GenericMessageDialog} message.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return self._extendedMessage
+
     
+    def GetMessageDialogStyle(self):
+        """
+        Returns the AGW-specific window style for L{GenericMessageDialog}.
+
+        .. versionadded:: 0.9.3
+        """
+
+        return self._agwStyle
+
+
+    # To combine the separate main and extended messages in a single string
+    def GetFullMessage(self):
+        """
+        Returns a string representing the combination of the main L{GenericMessageDialog}
+        message and the extended message, separated by an empty line.
+
+        .. versionadded:: 0.9.3
+        """
+
+        msg = self._message
+        if self._extendedMessage.strip():
+            msg += '\n\n' + self._extendedMessage
+
+        return msg
+

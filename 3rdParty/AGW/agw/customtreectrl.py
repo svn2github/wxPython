@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 29 Nov 2011, 15.00 GMT
+# Latest Revision: 03 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -95,6 +95,10 @@ to the standard `wx.TreeCtrl` behaviour this class supports:
   - Separators cannot have children;
   - Separators cannot be edited via the ``EVT_TREE_BEGIN_LABEL_EDIT`` event.
 
+* Ellipsization of long items when the horizontal space is low, via the ``TR_ELLIPSIZE_LONG_ITEMS``
+  style (`New in version 0.9.3`);
+* Tooltips on long items when the horizontal space is low, via the ``TR_TOOLTIP_ON_LONG_ITEMS``
+  style (`New in version 0.9.3`).
 
 And a lot more. Check the demo for an almost complete review of the functionalities.
 
@@ -119,7 +123,15 @@ attached to the tree items:
   same tree level.
 - ``TR_ALIGN_WINDOWS_RIGHT``: aligns to the rightmost position the windows belonging
   to the item on the same tree level.
-    
+
+And two styles related to long items (with a lot of text in them), which can be 
+ellipsized and/or highlighted with a tooltip:
+
+- ``TR_ELLIPSIZE_LONG_ITEMS``: ellipsizes long items when the horizontal space for
+  L{CustomTreeCtrl} is low (`New in version 0.9.3`);
+- ``TR_TOOLTIP_ON_LONG_ITEMS``: shows tooltips on long items when the horizontal space
+  for L{CustomTreeCtrl} is low (`New in version 0.9.3`);.
+
 All the methods available in `wx.TreeCtrl` are also available in L{CustomTreeCtrl}.
 
 
@@ -242,6 +254,8 @@ Window Styles                  Hex Value   Description
 ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
 ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
 ``TR_ALIGN_WINDOWS_RIGHT``         0x40000 Flag used to align windows (in items with windows) to the rightmost edge of L{CustomTreeCtrl}.
+``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for L{CustomTreeCtrl} is low.
+``TR_TOOLTIP_ON_LONG_ITEMS``      0x100000 Flag used to show tooltips on long items when the horizontal space for L{CustomTreeCtrl} is low.
 ============================== =========== ==================================================
 
 
@@ -285,14 +299,14 @@ License And Version
 
 L{CustomTreeCtrl} is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 29 Nov 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 03 Mar 2012, 21.00 GMT
 
-Version 2.5
+Version 2.6
 
 """
 
 # Version Info
-__version__ = "2.5"
+__version__ = "2.6"
 
 import wx
 from wx.lib.expando import ExpandoTextCtrl
@@ -386,6 +400,10 @@ TR_ALIGN_WINDOWS = 0x20000                                     # to align window
 """ Flag used to align windows (in items with windows) at the same horizontal position. """
 TR_ALIGN_WINDOWS_RIGHT = 0x40000                               # to align windows to the rightmost edge of CustomTreeCtrl
 """ Flag used to align windows (in items with windows) to the rightmost edge of L{CustomTreeCtrl}."""
+TR_ELLIPSIZE_LONG_ITEMS = 0x80000                              # to ellipsize long items when horizontal space is low
+""" Flag used to ellipsize long items when the horizontal space for L{CustomTreeCtrl} is low."""
+TR_TOOLTIP_ON_LONG_ITEMS = 0x100000                            # to display tooltips on long items when horizontal space is low
+""" Flag used to show tooltips on long items when the horizontal space for L{CustomTreeCtrl} is low."""
 
 TR_DEFAULT_STYLE = wx.TR_DEFAULT_STYLE                         # default style for the tree control
 """ The set of flags that are closest to the defaults for the native control for a""" \
@@ -577,6 +595,7 @@ def DrawTreeItemButton(win, dc, rect, flags):
         dc.DrawLine(xMiddle, yMiddle - halfHeight,
                     xMiddle, yMiddle + halfHeight + 1)
 
+# ----------------------------------------------------------------------------
 
 def EventFlagsToSelType(style, shiftDown=False, ctrlDown=False):
     """
@@ -601,6 +620,45 @@ def EventFlagsToSelType(style, shiftDown=False, ctrlDown=False):
     unselect_others = not (extended_select or (ctrlDown and is_multiple))
 
     return is_multiple, extended_select, unselect_others
+
+# ----------------------------------------------------------------------------
+
+def ChopText(dc, text, max_size):
+    """
+    Chops the input `text` if its size does not fit in `max_size`, by cutting the
+    text and adding ellipsis at the end.
+
+    :param `dc`: a `wx.DC` device context;
+    :param `text`: the text to chop;
+    :param `max_size`: the maximum size in which the text should fit.
+
+    :note: This method is used exclusively when L{CustomTreeCtrl} has the ``TR_ELLIPSIZE_LONG_ITEMS``
+     style set.
+
+    .. versionadded:: 0.9.3
+    """
+    
+    # first check if the text fits with no problems
+    x, y, dummy = dc.GetMultiLineTextExtent(text)
+    
+    if x <= max_size:
+        return text
+
+    textLen = len(text)
+    last_good_length = 0
+    
+    for i in xrange(textLen, -1, -1):
+        s = text[0:i]
+        s += "..."
+
+        x, y = dc.GetTextExtent(s)
+        last_good_length = i
+        
+        if x < max_size:
+            break
+
+    ret = text[0:last_good_length] + "..."    
+    return ret
 
     
 #---------------------------------------------------------------------------
@@ -2588,6 +2646,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
          ``TR_ALIGN_WINDOWS_RIGHT``         0x40000 Flag used to align windows (in items with windows) to the rightmost edge of L{CustomTreeCtrl}.
+         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for L{CustomTreeCtrl} is low.
+         ``TR_TOOLTIP_ON_LONG_ITEMS``      0x100000 Flag used to show tooltips on long items when the horizontal space for L{CustomTreeCtrl} is low.
          ============================== =========== ==================================================
 
         :param `wx.Validator` `validator`: window validator;
@@ -3439,6 +3499,35 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         return item.GetText()
     
+
+    def GetItemSize(self, item):
+        """
+        Returns the horizontal space available in L{CustomTreeCtrl}, in pixels, to draw this item.
+
+        :param `item`: an instance of L{GenericTreeItem}.
+
+        .. versionadded:: 0.9.3
+        """
+        
+        w, h = self.GetClientSize()
+        xa, ya = self.CalcScrolledPosition((0, item.GetY()))
+        
+        wcheck = image_w = 0
+        
+        if item.GetType() != 0:
+            wcheck, dummy = self._imageListCheck.GetSize(item.GetType())
+            wcheck += 4
+
+        image = item.GetCurrentImage()
+        
+        if image != _NO_IMAGE:                    
+            if self._imageListNormal:                        
+                image_w, dummy = self._imageListNormal.GetSize(image)
+                image_w += 4
+
+        maxsize = w - (wcheck + image_w + item.GetX()) + xa
+        return maxsize
+        
 
     def GetItemImage(self, item, which=TreeItemIcon_Normal):
         """
@@ -6555,16 +6644,22 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         extraH = ((total_h > text_h) and [(total_h - text_h)/2] or [0])[0]
 
         textrect = wx.Rect(wcheck + image_w + item.GetX(), item.GetY() + extraH, text_w, text_h)
+
+        itemText = item.GetText()
+        if self.HasAGWFlag(TR_ELLIPSIZE_LONG_ITEMS) and not separator:
+            xa, ya = self.CalcScrolledPosition((0, item.GetY()))
+            maxsize = w - (wcheck + image_w + item.GetX()) + xa
+            itemText = ChopText(dc, itemText, maxsize)
         
         if not item.IsEnabled():
             foreground = dc.GetTextForeground()
             dc.SetTextForeground(self._disabledColour)
-            dc.DrawLabel(item.GetText(), textrect)
+            dc.DrawLabel(itemText, textrect)
             dc.SetTextForeground(foreground)
         else:
             if wx.Platform == "__WXMAC__" and item.IsSelected() and self._hasFocus:
                 dc.SetTextForeground(wx.WHITE)
-            dc.DrawLabel(item.GetText(), textrect)
+            dc.DrawLabel(itemText, textrect)
 
         wnd = item.GetWindow()
         if wnd:
@@ -6875,6 +6970,11 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
 
+        if self.HasAGWFlag(TR_ELLIPSIZE_LONG_ITEMS):
+            self.Refresh()
+            event.Skip()
+            return
+        
         if self.HasAGWFlag(TR_ALIGN_WINDOWS_RIGHT) and self._itemWithWindow:
             self.RefreshItemWithWindows()
         else:
@@ -7480,8 +7580,28 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 hevent.SetEventObject(self)
 
                 if self.GetEventHandler().ProcessEvent(hevent) and hevent.IsAllowed():
-                    self.SetToolTip(hevent._label)
+                    self.SetToolTipString(hevent._label)
 
+                elif self.HasAGWFlag(TR_TOOLTIP_ON_LONG_ITEMS):
+
+                    tip = self.GetToolTipString()
+
+                    if hoverItem.IsSeparator():
+                        if tip:
+                            self.SetToolTipString('')
+                    else:                        
+                        maxsize = self.GetItemSize(hoverItem)
+                        itemText = hoverItem.GetText()
+
+                        dc = wx.ClientDC(self)
+                        
+                        if dc.GetMultiLineTextExtent(itemText)[0] > maxsize:
+                            if tip != itemText:
+                                self.SetToolTipString(itemText)
+                        else:
+                            if tip:
+                                self.SetToolTipString('')
+                        
                 if hoverItem.IsHyperText() and (flags & TREE_HITTEST_ONITEMLABEL) and hoverItem.IsEnabled():
                     self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
                     self._isonhyperlink = True
