@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 03 Mar 2012, 21.00 GMT
+# Latest Revision: 06 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -299,7 +299,7 @@ License And Version
 
 L{CustomTreeCtrl} is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 03 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 06 Mar 2012, 21.00 GMT
 
 Version 2.6
 
@@ -7580,8 +7580,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 hevent.SetEventObject(self)
 
                 if self.GetEventHandler().ProcessEvent(hevent) and hevent.IsAllowed():
-                    self.SetToolTipString(hevent._label)
-
+                    self.SetToolTip(hevent._label)
+                
                 elif self.HasAGWFlag(TR_TOOLTIP_ON_LONG_ITEMS):
 
                     tip = self.GetToolTipString()

@@ -3,7 +3,7 @@
 # Inspired By the GIMP Shortcut Editor.
 #
 # Andrea Gavana, @ 05 March 2012
-# Latest Revision: 05 Mar 2012, 21.00 GMT
+# Latest Revision: 06 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -286,7 +286,7 @@ License And Version
 
 L{ShortcutEditor} is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 05 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 06 Mar 2012, 21.00 GMT
 
 Version 0.1
 
@@ -1120,7 +1120,7 @@ class ShortcutEvent(wx.PyCommandEvent):
         Sets the previous shortcut string for ``EVT_SHORTCUT_CHANGED`` and
         ``EVT_SHORTCUT_CHANGING`` events.
 
-        :param `accelerator`: a string representing the old shortcut string (accelerator).
+        :param string `accelerator`: a string representing the old shortcut string (accelerator).
         """
         
         self.oldAccelerator = accelerator
@@ -1174,7 +1174,7 @@ class Shortcut(object):
         :param string `help`: the help string for this shortcut, to display in the interface tree;
         :param `menuItem`: if this L{Shortcut} is derived from a `wx.MenuItem`, the `wx.MenuItem`
          to which it should be associated;
-        :param `accelId`: if this L{Shortcut} is derived from an accelerator in a `wx.AcceleratorTable`
+        :param integer `accelId`: if this L{Shortcut} is derived from an accelerator in a `wx.AcceleratorTable`
          or from a custom, developer-defined shortcut, it represents the ID it is associated with.
         """
 
@@ -1217,7 +1217,7 @@ class Shortcut(object):
         """
         Sets the string accelerator associated with this shortcut.
 
-        :param `accelerator`: a string representing the shortcut string (accelerator).
+        :param string `accelerator`: a string representing the shortcut string (accelerator).
         """
 
         self.accelerator = accelerator
@@ -1592,7 +1592,7 @@ class Shortcut(object):
         * **keyCode**: the keycode to be detected (i.e., ord('b'), wx.WXK_F10, etc...);
         * **cmdID**: the menu or control command ID to use for the accelerator event.
         
-        :param `table`: a list of tuples.
+        :param `table`: a list of tuples, with the above specifications.
         """
 
         if self.menuItem is not None or not self.changed:
@@ -1743,7 +1743,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
         Recursively populates the L{ListShortcut} with information from the L{Shortcut} tree.
 
         :param `item`: an instance of L{GenericTreeItem}. If ``None``, it is defaulted to
-         `self.manager` to make this function reentrant (i.e. allow more than one
+         the L{ListShortcut} root item to make this function reentrant (i.e. allow more than one
          enumeration on one and the same object simultaneously);
         :param `shortcut`: an instance of L{Shortcut}. If ``None``, it is defaulted to
          `self.manager` to make this function reentrant (i.e. allow more than one
@@ -1823,6 +1823,8 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
         Return a hashable object that represents the identity of a L{ListShortcut} item.
 
         In this implementation this returns the item label.
+
+        :param `item`: an instance of L{GenericTreeItem}.        
         """
 
         return self.GetItemText(item)
@@ -2111,7 +2113,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
         has entered. This `wx.TextCtrl` remains visible only for a short amount of time
         and only when some keys are down.
 
-        :param `show`: ``True`` to show the `wx.TextCtrl`, ``False`` to hide it.
+        :param bool `show`: ``True`` to show the `wx.TextCtrl`, ``False`` to hide it.
         """
 
         textCtrl = self.GetParent().hiddenText
@@ -2159,6 +2161,10 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
         """
         Overridden from `wx.Window` as a workaround on the conflicts between `treemixin` and
         L{HyperTreeList} with the ``wx.TR_HIDE_ROOT`` `agwStyle` set.
+
+        :param integer `flag`: an integer bit flag specifying the `agwStyle` style.
+
+        :return: ``True`` if the L{ListShortcut} has the input `flag` set, ``False`` otherwise.        
 
         :note: Overridden from `wx.Window`.
         """
@@ -2386,7 +2392,7 @@ class ShortcutEditor(wx.Dialog):
         """
         Builds the entire shortcut hierarchy starting from a modified version of a `wx.AcceleratorTable`.
 
-        :param `accelTable`: a modified version of `wx.AcceleratorTable`,  is a list of tuples (4 elements per tuple),
+        :param `accelTable`: a modified version of `wx.AcceleratorTable`, is a list of tuples (4 elements per tuple),
          populated like this::
 
             accelTable = []
@@ -2428,7 +2434,7 @@ class ShortcutEditor(wx.Dialog):
         a `wx.AcceleratorTable`. This method **does** rebuild the `wx.AcceleratorTable` and sets it back
         to the input `window`.
 
-        :param `window`: an instance of `wx.Window`, to which the `wx.AcceleratorTable` should be set.
+        :param `window`: an instance of `wx.Window`, to which the new `wx.AcceleratorTable` should be set.
         """
 
         def AccelItemSet(shortcut, table):
