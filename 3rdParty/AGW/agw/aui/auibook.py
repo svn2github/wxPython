@@ -550,7 +550,7 @@ class AuiNotebookEvent(CommandNotebookEvent):
 
 class TabNavigatorProps(object):
     """
-    Data storage class for managing and providing access to L{TabNavigatorWindow}
+    Data storage class for managing and providing access to L{TabNavigatorWindow}.
     properties.
     """
 
@@ -566,11 +566,14 @@ class TabNavigatorProps(object):
 
     # Accessors
     Icon = property(lambda self: self._icon,
-                    lambda self, icon: setattr(self, '_icon', icon))
+                    lambda self, icon: setattr(self, '_icon', icon),
+                    doc='Sets/Gets the icon for the L{TabNavigatorWindow}, an instance of `wx.Bitmap`.')
     Font = property(lambda self: self._font,
-                    lambda self, font: setattr(self, '_font', font))
+                    lambda self, font: setattr(self, '_font', font),
+                    doc='Sets/Gets the font for the L{TabNavigatorWindow}, an instance of `wx.Font`.')
     MinSize = property(lambda self: self._minsize,
-                       lambda self, size: setattr(self, '_minsize', size))
+                       lambda self, size: setattr(self, '_minsize', size),
+                       doc='Sets/Gets the minimum size for the L{TabNavigatorWindow}, an instance of `wx.Size`.')
 
 # ---------------------------------------------------------------------------- #
 # Class TabNavigatorWindow
@@ -2788,6 +2791,25 @@ class AuiNotebook(wx.PyPanel):
         self.InitNotebook(agwStyle)
 
     NavigatorProps = property(lambda self: self._navProps)
+
+
+    def Destroy(self):
+        """
+        Destroys the window safely.
+
+        Use this function instead of the `del` operator, since different window
+        classes can be destroyed differently. Frames and dialogs are not destroyed
+        immediately when this function is called -- they are added to a list of
+        windows to be deleted on idle time, when all the window's events have been
+        processed. This prevents problems with events being sent to non-existent windows.
+
+        :return: ``True`` if the window has either been successfully deleted, or
+         it has been added to the list of windows pending real deletion.
+        """
+        
+        self._mgr.UnInit()
+        return wx.PyPanel.Destroy(self)
+        
 
     def GetTabContainer(self):
         """ Returns the instance of L{AuiTabContainer}. """

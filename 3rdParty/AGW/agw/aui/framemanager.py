@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 26 Feb 2012, 15.00 GMT
+# Latest Revision: 07 Mar 2012, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -4482,6 +4482,7 @@ class AuiManager(wx.EvtHandler):
         """
 
         if not self._frame:
+            self.Destroy()
             return
 
         for klass in [self._frame] + list(self._frame.GetChildren()):
