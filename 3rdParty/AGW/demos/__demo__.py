@@ -82,11 +82,13 @@ def GetRecentAdditions():
                            'KnobCtrl', 'LabelBook', 'MultiDirDialog',
                            'PeakMeter', 'PersistentControls', 'PieCtrl', 'PyBusyInfo',
                            'PyCollapsiblePane', 'PyProgress', 'RibbonBar', 'RulerCtrl',
-                           'ShapedButton', 'SpeedMeter', 'SuperToolTip', 'ThumbnailCtrl',
-                           'ToasterBox', 'UltimateListCtrl', 'XLSGrid', 'ZoomBar']
+                           'ShapedButton', 'ShortcutEditor', 'SpeedMeter', 'SuperToolTip',
+                           'ThumbnailCtrl', 'ToasterBox', 'UltimateListCtrl',
+                           'XLSGrid', 'ZoomBar']
     elif wx.VERSION < (2,9,2):
         recentAdditions = ['AUI', 'PersistentControls', 'PyBusyInfo', 'PyGauge',
-                           'RibbonBar', 'UltimateListCtrl', 'XLSGrid', 'ZoomBar']
+                           'RibbonBar', 'ShortcutEditor', 'UltimateListCtrl',
+                           'XLSGrid', 'ZoomBar']
     else:
         recentAdditions = ['PersistentControls', 'ShortcutEditor', 'XLSGrid']
 

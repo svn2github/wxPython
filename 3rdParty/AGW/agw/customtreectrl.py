@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 06 Mar 2012, 21.00 GMT
+# Latest Revision: 08 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -299,7 +299,7 @@ License And Version
 
 L{CustomTreeCtrl} is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 06 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 08 Mar 2012, 21.00 GMT
 
 Version 2.6
 
@@ -6672,11 +6672,11 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             if align == 1:
                 # Horizontal alignment of windows
                 if level in self.absoluteWindows:
-                    wndx = self.absoluteWindows[level] + item.GetX() + 2
+                    wndx = self.absoluteWindows[level] + item.GetX() + 2 + xa
                     
             elif align == 2:
                 # Rightmost alignment of windows
-                wndx = w - item.GetWindowSize().x - 2
+                wndx = w - item.GetWindowSize().x - 2 + xa
                 
             if not wnd.IsShown():
                 wnd.Show()
