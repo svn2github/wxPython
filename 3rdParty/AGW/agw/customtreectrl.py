@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 08 Mar 2012, 21.00 GMT
+# Latest Revision: 10 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -299,7 +299,7 @@ License And Version
 
 L{CustomTreeCtrl} is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 08 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 10 Mar 2012, 21.00 GMT
 
 Version 2.6
 
@@ -6878,8 +6878,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                     else:
                         # These are the standard wx.TreeCtrl buttons as wx.RendererNative knows
                         
-                        wImage = 9
-                        hImage = 9
+                        wImage = 11
+                        hImage = 11
 
                         flag = 0
 
@@ -6888,7 +6888,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                         if item == self._underMouse:
                             flag |= _CONTROL_CURRENT
 
-                        self._drawingfunction(self, dc, wx.Rect(x - wImage/2, y_mid - hImage/2,wImage, hImage), flag)
+                        self._drawingfunction(self, dc, wx.Rect(x - wImage/2, y_mid - hImage/2, wImage, hImage), flag)
                 
         if item.IsExpanded():
         
