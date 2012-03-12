@@ -1943,13 +1943,14 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
                 self.GetWindowFromIdx(page_index).SetFocus()
 
             self._hover_button = self.ButtonHitTest(event.GetX(), event.GetY())
-        if self._hover_button:
-            self._pressed_button = self._hover_button
-            self._pressed_button.cur_state = AUI_BUTTON_STATE_PRESSED
-            self._on_button = True
 
-            self.Refresh()
-            self.Update()
+            if self._hover_button:
+                self._pressed_button = self._hover_button
+                self._pressed_button.cur_state = AUI_BUTTON_STATE_PRESSED
+                self._on_button = True
+
+                self.Refresh()
+                self.Update()
 
 
     def OnCaptureLost(self, event):
