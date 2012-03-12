@@ -2837,10 +2837,10 @@ class FlatMenuBar(wx.Panel):
          ========================= ==================================================
          Return Tuple              Description
          ========================= ==================================================
-         (-1, 0)                   The L{HitTest} method didn't find any item with the specified input point `pt` (``NoWhere``=0)
-         (`integer`, 1)            A menu item has been hit, its position specified by the tuple item `integer` (``MenuItem``=1)
-         (`integer`, 2)            A toolbar item has ben hit, its position specified by the tuple item `integer` (``ToolbarItem``=2)
-         (-1, 3)                   The drop-down area button has been hit (``DropDownArrowButton``=3)
+         (-1, 0)                   The L{HitTest} method didn't find any item with the specified input point `pt` (``NoWhere`` = 0)
+         (`integer`, 1)            A menu item has been hit, its position specified by the tuple item `integer` (``MenuItem`` = 1)
+         (`integer`, 2)            A toolbar item has ben hit, its position specified by the tuple item `integer` (``ToolbarItem`` = 2)
+         (-1, 3)                   The drop-down area button has been hit (``DropDownArrowButton`` = 3)
          ========================= ==================================================
         
         """
@@ -6045,10 +6045,10 @@ class FlatMenu(FlatMenuBase):
          ========================= ==================================================
          Return Tuple              Description
          ========================= ==================================================
-         (0, -1)                   The L{HitTest} method didn't find any item with the specified input point `pt` (``MENU_HT_NONE``=0)
-         (1, `integer`)            A menu item has been hit (``MENU_HT_ITEM``=1)
-         (2, -1)                   The `Scroll Up` button has been hit (``MENU_HT_SCROLL_UP``=2)
-         (3, -1)                   The `Scroll Down` button has been hit (``MENU_HT_SCROLL_DOWN``=3)
+         (0, -1)                   The L{HitTest} method didn't find any item with the specified input point `pt` (``MENU_HT_NONE`` = 0)
+         (1, `integer`)            A menu item has been hit (``MENU_HT_ITEM`` = 1)
+         (2, -1)                   The `Scroll Up` button has been hit (``MENU_HT_SCROLL_UP`` = 2)
+         (3, -1)                   The `Scroll Down` button has been hit (``MENU_HT_SCROLL_DOWN`` = 3)
          ========================= ==================================================
         
         """

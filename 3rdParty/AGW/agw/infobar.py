@@ -35,8 +35,10 @@ Description
 An info bar is a transient window shown at top or bottom of its parent window to display
 non-critical information to the user.
 
-:note: The Python implementation of L{InfoBar} is a direct translation of the generic C++
- implementation of `wx.InfoBar`.
+:note:
+
+    The Python implementation of L{InfoBar} is a direct translation of the generic C++
+    implementation of `wx.InfoBar`.
 
  
 This class provides another way to show messages to the user, intermediate between message
@@ -49,7 +51,7 @@ Info bar may show an icon (on the left), text message and, optionally, buttons a
 user to react to the information presented. It always has a close button at the right allowing
 the user to dismiss it so it isn't necessary to provide a button just to close it.
 
-L{InfoBar] calls its parent `Layout()` method (if its parent is **not** managed by L{aui.AuiManager}
+L{InfoBar} calls its parent `Layout()` method (if its parent is **not** managed by L{AuiManager}
 or `wx.aui.AuiManager`) and assumes that it will change the parent layout appropriately depending
 on whether the info bar itself is shown or hidden. Usually this is achieved by simply using a
 sizer for the parent window layout and adding wxInfoBar to this sizer as one of the items.
@@ -198,8 +200,8 @@ def GetCloseButtonBitmap(win, size, colBg, flags=0):
     to draw a natively-looking close button on the L{InfoBar} itself.
 
     :param `win`: the window in which we wish to draw the close button (an instance of
-     L{InfoBar};
-    :param tuple `size` the close button size, a tuple of `(width, height)` dimensions in pixels;
+     L{InfoBar});
+    :param tuple `size`: the close button size, a tuple of `(width, height)` dimensions in pixels;
     :param `colBg`: the background colour of the parent window, an instance of `wx.Colour`;
     :param integer `flags`: may have the ``wx.CONTROL_PRESSED``, ``wx.CONTROL_CURRENT`` or
      ``wx.CONTROL_ISDEFAULT`` bit set.
@@ -243,7 +245,7 @@ class InfoBar(wx.PyControl):
          chosen by either the windowing system or wxPython, depending on platform;
         :type `size`: tuple or `wx.Size`
         :param integer `style`: the L{InfoBar} style (unused at present);
-        :param string `name`: the button name.
+        :param string `name`: the control name.
         """
 
         wx.PyControl.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE, name=name)
@@ -378,7 +380,7 @@ class InfoBar(wx.PyControl):
          ``wx.SHOW_EFFECT_NONE``                    0x0 No effect, equivalent to normal `Show()` or `Hide()` call.
          ``wx.SHOW_EFFECT_SLIDE_TO_TOP``            0x7 Slide the L{InfoBar} window to the top. 
          ``wx.SHOW_EFFECT_SLIDE_TO_BOTTOM``         0x8 Slide the L{InfoBar} window to the bottom. 
-         =================================== =========== ==================================================
+         ================================== =========== ==================================================
         
         """
         
@@ -412,7 +414,7 @@ class InfoBar(wx.PyControl):
          ``wx.SHOW_EFFECT_NONE``                    0x0 No effect, equivalent to normal `Show()` or `Hide()` call.
          ``wx.SHOW_EFFECT_SLIDE_TO_TOP``            0x7 Slide the L{InfoBar} window to the top. 
          ``wx.SHOW_EFFECT_SLIDE_TO_BOTTOM``         0x8 Slide the L{InfoBar} window to the bottom. 
-         =================================== =========== ==================================================
+         ================================== =========== ==================================================
         
         """
         
@@ -443,7 +445,7 @@ class InfoBar(wx.PyControl):
     def UpdateParent(self):
         """
         Updates the parent layout appearance, but only if this L{InfoBar} parent is **not** managed
-        by L{aui.AuiManager} or `wx.aui.AuiManager`.
+        by L{AuiManager} or `wx.aui.AuiManager`.
         """
         
         parent = self.GetParent()
@@ -545,7 +547,7 @@ class InfoBar(wx.PyControl):
 
         This method hides the window and lays out the parent window to account for
         its disappearance (unlike a simple `Hide()`), but only if this L{InfoBar}
-        parent is **not** managed by L{aui.AuiManager} or `wx.aui.AuiManager`.
+        parent is **not** managed by L{AuiManager} or `wx.aui.AuiManager`.
         """
         
         self.DoHide()
@@ -575,10 +577,12 @@ class InfoBar(wx.PyControl):
         :param `bitmap`: if not equal to `wx.NullBitmap`, a valid `wx.Bitmap` image to show beside
          the button text.
 
-        :note: Notice that the generic L{InfoBar} implementation handles the button events itself
-         and so they are not propagated to the info bar parent and you need to either inherit from
-         L{InfoBar} and handle them in your derived class or use `self.Bind(...)` to handle the
-         button events in the parent frame.
+        :note:
+
+             Notice that the generic L{InfoBar} implementation handles the button events itself
+             and so they are not propagated to the info bar parent and you need to either inherit from
+             L{InfoBar} and handle them in your derived class or use `self.Bind(...)` to handle the
+             button events in the parent frame.
 
         """
         
@@ -655,10 +659,12 @@ class InfoBar(wx.PyControl):
 
         :param `event`: a `wx.CommandEvent` to be processed.
 
-        :note: Notice that the generic L{InfoBar} implementation handles the button events itself
-         and so they are not propagated to the info bar parent and you need to either inherit from
-         L{InfoBar} and handle them in your derived class or use `self.Bind(...)` to handle the
-         button events in the parent frame.
+        :note:
+
+             Notice that the generic L{InfoBar} implementation handles the button events itself
+             and so they are not propagated to the info bar parent and you need to either inherit from
+             L{InfoBar} and handle them in your derived class or use `self.Bind(...)` to handle the
+             button events in the parent frame.
         """
         
         self.DoHide()
