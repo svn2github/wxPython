@@ -13,12 +13,12 @@ this module returns the following information:
                        
 These meta data are merged into the wxPython demo tree at startup.
 
-Last updated: Andrea Gavana @ 05 Mar 2012, 21.00 GMT.
-Version 0.9.3.
+Last updated: Andrea Gavana @ 12 Mar 2012, 21.00 GMT.
+Version 0.9.4.
 
 """
 
-__version__ = "0.9.3"
+__version__ = "0.9.4"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 
 
@@ -79,18 +79,18 @@ def GetRecentAdditions():
                            'FlatMenu', 'FlatNotebook', 'FloatSpin',
                            'FoldPanelBar', 'FourWaySplitter', 'GenericMessageDialog',
                            'GradientButton', 'HyperLinkCtrl', 'HyperTreeList',
-                           'KnobCtrl', 'LabelBook', 'MultiDirDialog',
+                           'InfoBar', 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
                            'PeakMeter', 'PersistentControls', 'PieCtrl', 'PyBusyInfo',
                            'PyCollapsiblePane', 'PyProgress', 'RibbonBar', 'RulerCtrl',
                            'ShapedButton', 'ShortcutEditor', 'SpeedMeter', 'SuperToolTip',
                            'ThumbnailCtrl', 'ToasterBox', 'UltimateListCtrl',
                            'XLSGrid', 'ZoomBar']
     elif wx.VERSION < (2,9,2):
-        recentAdditions = ['AUI', 'PersistentControls', 'PyBusyInfo', 'PyGauge',
+        recentAdditions = ['AUI', 'InfoBar', 'PersistentControls', 'PyBusyInfo', 'PyGauge',
                            'RibbonBar', 'ShortcutEditor', 'UltimateListCtrl',
                            'XLSGrid', 'ZoomBar']
     else:
-        recentAdditions = ['PersistentControls', 'ShortcutEditor', 'XLSGrid']
+        recentAdditions = ['InfoBar', 'PersistentControls', 'ShortcutEditor', 'XLSGrid']
 
     # Return the Recent Additions for AGW    
     return recentAdditions
@@ -111,7 +111,7 @@ def GetDemos():
                 'FlatMenu', 'FlatNotebook', 'FloatSpin',
                 'FoldPanelBar', 'FourWaySplitter', 'GenericMessageDialog',
                 'GradientButton', 'HyperLinkCtrl', 'HyperTreeList',
-                'KnobCtrl', 'LabelBook', 'MultiDirDialog',
+                'InfoBar', 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
                 'PeakMeter', 'PersistentControls', 'PieCtrl', 'PyBusyInfo',
                 'PyCollapsiblePane', 'PyGauge', 'PyProgress', 'RibbonBar',
                 'RulerCtrl', 'ShapedButton', 'ShortcutEditor', 'SpeedMeter',

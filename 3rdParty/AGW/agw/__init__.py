@@ -43,6 +43,8 @@ an asterisk were already present in `wx.lib` before:
 - HyperLinkCtrl (*): this widget acts line an hyper link in a typical browser;
 - HyperTreeList: a class that mimics the behaviour of `wx.gizmos.TreeListCtrl`,
   with almost the same base functionalities plus some more enhancements;
+- InfoBar: a transient window shown at top or bottom of its parent window to display
+  non-critical information to the user;
 - KnobCtrl: a widget which lets the user select a numerical value by
   rotating it, like a slider with a wheel shape;
 - LabelBook and FlatImageBook: these are a quasi-full implementations of
@@ -116,11 +118,11 @@ You can contact me at:
 andrea.gavana@gmail.com
 andrea.gavana@maerskoil.com
 
-AGW version: 0.9.3
+AGW version: 0.9.4
 
 Last updated: 12 Mar 2012, 21.00 GMT
 
 """
 
-__version__ = "0.9.3"
+__version__ = "0.9.4"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
