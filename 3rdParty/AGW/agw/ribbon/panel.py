@@ -61,15 +61,16 @@ class RibbonPanel(RibbonControl):
         """
         Default class constructor.
 
-        :param `parent`: Pointer to a parent window;
-        :param `id`: Window identifier. If ``wx.ID_ANY``, will automatically create
+        :param `parent`: pointer to a parent window, typically a L{RibbonPage}, though
+         it can be any window;
+        :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
-        :param `label`: Label of the new button;
+        :param `label`: label of the new button;
         :param `minimised_icon`: the bitmap to be used in place of the panel children
          when it is minimised;
-        :param `pos`: Window position. ``wx.DefaultPosition`` indicates that wxPython
+        :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
          should generate a default position for the window;
-        :param `size`: Window size. ``wx.DefaultSize`` indicates that wxPython should
+        :param `size`: window size. ``wx.DefaultSize`` indicates that wxPython should
          generate a default size for the window. If no suitable size can be found, the
          window will be sized to 20x20 pixels so that the window is visible but obviously
          not correctly sized;
@@ -119,7 +120,7 @@ class RibbonPanel(RibbonControl):
 
         Reimplemented from L{RibbonControl}.
 
-        :param `art`: MISSING DESCRIPTION.
+        :param `art`: an art provider.
 
         """
 
@@ -162,7 +163,7 @@ class RibbonPanel(RibbonControl):
         Query if the panel would be minimised at a given size.
 
         :param `at_size`: an instance of `wx.Size`, giving the size at which the
-         panel should be test for minimisation.
+         panel should be tested for minimisation.
         """
         
         if at_size is None:
@@ -344,7 +345,7 @@ class RibbonPanel(RibbonControl):
         Query if the panel would be minimised at a given size.
 
         :param `at_size`: an instance of `wx.Size`, giving the size at which the
-         panel should be test for minimisation.
+         panel should be tested for minimisation.
         """
 
         if self.GetSizer():

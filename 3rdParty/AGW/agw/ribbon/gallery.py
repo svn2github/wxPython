@@ -150,23 +150,26 @@ class RibbonGalleryItem(object):
 
 
 class RibbonGallery(RibbonControl):
-
+    """
+    A ribbon gallery is like a `wx.ListBox`, but for bitmaps rather than strings.
+    """
+    
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, agwStyle=0,
                  name="RibbonGallery"):
 
         """
         Default class constructor.
 
-        :param `parent`: Pointer to a parent window;
-        :param `id`: Window identifier. If ``wx.ID_ANY``, will automatically create an
+        :param `parent`: pointer to a parent window, typically a L{RibbonPanel};
+        :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create an
          identifier;
-        :param `pos`: Window position. ``wx.DefaultPosition`` indicates that wxPython
+        :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
          should generate a default position for the window;
-        :param `size`: Window size. ``wx.DefaultSize`` indicates that wxPython should
+        :param `size`: window size. ``wx.DefaultSize`` indicates that wxPython should
          generate a default size for the window. If no suitable size can be found, the
          window will be sized to 20x20 pixels so that the window is visible but obviously
          not correctly sized;
-        :param `agwStyle`: the AGW-specific window style;
+        :param `agwStyle`: the AGW-specific window style, currently unused;
         :param `name`: the window name.
         """
 
@@ -605,11 +608,11 @@ class RibbonGallery(RibbonControl):
         """
         Add an item to the gallery (with complex client data).
 
-        :param `bitmap`: The bitmap to display for the item. Note that all items must
+        :param `bitmap`: the bitmap to display for the item. Note that all items must
          have equally sized bitmaps;
-        :param `id`: ID number to associate with the item. Not currently used for
+        :param `id`: id number to associate with the item. Not currently used for
          anything important;
-        :param `clientData`: An object which contains data to associate with the item.
+        :param `clientData`: an object which contains data to associate with the item.
          The item takes ownership of this pointer, and will delete it when the item
          client data is changed to something else, or when the item is destroyed.
         """
@@ -869,7 +872,7 @@ class RibbonGallery(RibbonControl):
         """
         Get an item by index.
 
-        :param `n`: the zero-based item in the gallery, an instance of L{RibbonGalleryItem}.
+        :param `n`: the zero-based item in the gallery, which is an instance of L{RibbonGalleryItem}.
         """
 
         if n >= self.GetCount():

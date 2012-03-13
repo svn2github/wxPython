@@ -216,12 +216,12 @@ class RibbonBar(RibbonControl):
         """
         Default constructor.
 
-        :param `parent`: Pointer to a parent window;
-        :param `id`: Window identifier. If ``wx.ID_ANY``, will automatically create
+        :param `parent`: pointer to a parent window, must not be ``None``;
+        :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
-        :param `pos`: Window position. ``wx.DefaultPosition`` indicates that wxPython
+        :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
          should generate a default position for the window;
-        :param `size`: Window size. ``wx.DefaultSize`` indicates that wxPython should
+        :param `size`: window size. ``wx.DefaultSize`` indicates that wxPython should
          generate a default size for the window. If no suitable size can be found,
          the window will be sized to 20x20 pixels so that the window is visible but
          obviously not correctly sized;

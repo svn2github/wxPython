@@ -214,7 +214,7 @@ class RibbonButtonBar(RibbonControl):
         """
         Default class constructor.
 
-        :param `parent`: pointer to a parent window;
+        :param `parent`: pointer to a parent window, typically a L{RibbonPanel};
         :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
         :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
@@ -223,7 +223,7 @@ class RibbonButtonBar(RibbonControl):
          generate a default size for the window. If no suitable size can be found, the
          window will be sized to 20x20 pixels so that the window is visible but obviously
          not correctly sized;
-        :param `agwStyle`: the AGW-specific window style.
+        :param `agwStyle`: the AGW-specific window style, currently unused.
         """
 
         RibbonControl.__init__(self, parent, id, pos, size, style=wx.BORDER_NONE)        
@@ -250,13 +250,13 @@ class RibbonButtonBar(RibbonControl):
         :param `label`: label of the new button;
         :param `bitmap`: large bitmap of the new button. Must be the same size as
          all other large bitmaps used on the button bar;
-        :param `bitmap_small`: small bitmap of the new button. If left as ``None``,
+        :param `bitmap_small`: small bitmap of the new button. If left as `wx.NullBitmap`,
          then a small bitmap will be automatically generated. Must be the same size
          as all other small bitmaps used on the button bar;
         :param `bitmap_disabled`: large bitmap of the new button when it is disabled.
-         If left as ``None``, then a bitmap will be automatically generated from `bitmap`;
+         If left as `wx.NullBitmap`, then a bitmap will be automatically generated from `bitmap`;
         :param `bitmap_small_disabled`: small bitmap of the new button when it is disabled.
-         If left as ``None``, then a bitmap will be automatically generated from `bitmap_small`;
+         If left as `wx.NullBitmap`, then a bitmap will be automatically generated from `bitmap_small`;
         :param `kind`: the kind of button to add;
         :param `help_string`: the UI help string to associate with the new button;
         :param `client_data`: client data to associate with the new button.
@@ -280,7 +280,7 @@ class RibbonButtonBar(RibbonControl):
         :param `bitmap`: large bitmap of the new button. Must be the same size as
          all other large bitmaps used on the button bar;
         :param `help_string`: the UI help string to associate with the new button;
-        :param `kind`: The kind of button to add.
+        :param `kind`: the kind of button to add.
 
         """
 
@@ -299,13 +299,13 @@ class RibbonButtonBar(RibbonControl):
         :param `label`: label of the new button;
         :param `bitmap`: large bitmap of the new button. Must be the same size as
          all other large bitmaps used on the button bar;
-        :param `bitmap_small`: small bitmap of the new button. If left as ``None``,
+        :param `bitmap_small`: small bitmap of the new button. If left as `wx.NullBitmap`,
          then a small bitmap will be automatically generated. Must be the same size
          as all other small bitmaps used on the button bar;
         :param `bitmap_disabled`: large bitmap of the new button when it is disabled.
-         If left as ``None``, then a bitmap will be automatically generated from `bitmap`;
+         If left as `wx.NullBitmap`, then a bitmap will be automatically generated from `bitmap`;
         :param `bitmap_small_disabled`: small bitmap of the new button when it is disabled.
-         If left as ``None``, then a bitmap will be automatically generated from `bitmap_small`;
+         If left as `wx.NullBitmap`, then a bitmap will be automatically generated from `bitmap_small`;
         :param `kind`: the kind of button to add;
         :param `help_string`: the UI help string to associate with the new button;
         :param `client_data`: client data to associate with the new button.
@@ -436,7 +436,7 @@ class RibbonButtonBar(RibbonControl):
 
     def InsertToggleButton(self, pos, button_id, label, bitmap, help_string=""):
         """
-        Inserts a dropdown button in the button bar at the position specified by `pos`.
+        Inserts a toggle button in the button bar at the position specified by `pos`.
 
         :param `pos`: the position at which the new button must be inserted (zero-based);
         :param `button_id`: ID of the button;
@@ -704,7 +704,7 @@ class RibbonButtonBar(RibbonControl):
 
     def DoGetNextLargerSize(self, direction, _result):
         """
-        Implementation of L{GetNextLargerSize}.
+        Implementation of L{RibbonControl.GetNextLargerSize}.
 
         Controls which have non-continuous sizing must override this virtual function
         rather than L{RibbonControl.GetNextLargerSize}.

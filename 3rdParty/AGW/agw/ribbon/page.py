@@ -252,13 +252,13 @@ class RibbonPage(RibbonControl):
         up or left (depending on the direction in which panels are stacked). A line is
         equivalent to a constant number of pixels.
 
-        Reimplemented from `wx.Window`.
-
         :param integer `lines`: number of lines to scroll the page.
 
         :returns: ``True`` if the page scrolled at least one pixel in the given direction,
          ``False`` if it did not scroll.
-         
+
+        :note: Reimplemented from `wx.Window`.
+
         :see: L{GetMajorAxis}, L{ScrollPixels}
         """
 
