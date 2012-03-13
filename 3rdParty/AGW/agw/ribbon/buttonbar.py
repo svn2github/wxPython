@@ -155,6 +155,13 @@ class RibbonButtonBarEvent(wx.PyCommandEvent):
     """
     
     def __init__(self, command_type=None, win_id=0, bar=None):
+        """
+        Default class constructor.
+
+        :param integer `command_type`: the event type;
+        :param integer `win_id`: the event identifier;
+        :param `bar`: an instance of L{RibbonButtonBar}.
+        """
 
         wx.PyCommandEvent.__init__(self, command_type, win_id)
         self._bar = bar
@@ -163,6 +170,8 @@ class RibbonButtonBarEvent(wx.PyCommandEvent):
     def GetBar(self):
         """
         Returns the bar which contains the button which the event relates to.
+
+        :returns: An instance of L{RibbonButtonBar}.
         """
 
         return self._bar
@@ -172,7 +181,7 @@ class RibbonButtonBarEvent(wx.PyCommandEvent):
         """
         Sets the button bar relating to this event.
 
-        :param `bar`: MISSING DESCRIPTION.
+        :param `bar`: an instance of L{RibbonButtonBar}.
 
         """
 
@@ -183,8 +192,7 @@ class RibbonButtonBarEvent(wx.PyCommandEvent):
         """
         Display a popup menu as a result of this (dropdown clicked) event.
 
-        :param `menu`: MISSING DESCRIPTION.
-
+        :param `menu`: an instance of `wx.Menu`.
         """
 
         pos = wx.Point()
@@ -216,7 +224,6 @@ class RibbonButtonBar(RibbonControl):
          window will be sized to 20x20 pixels so that the window is visible but obviously
          not correctly sized;
         :param `agwStyle`: the AGW-specific window style.
-
         """
 
         RibbonControl.__init__(self, parent, id, pos, size, style=wx.BORDER_NONE)        
@@ -233,55 +240,6 @@ class RibbonButtonBar(RibbonControl):
         self.Bind(wx.EVT_LEFT_DOWN, self.OnMouseDown)
         self.Bind(wx.EVT_LEFT_UP, self.OnMouseUp)
     
-
-    def AddSimpleButton(self, button_id, label, bitmap, help_string, kind=RIBBON_BUTTON_NORMAL):
-        """
-        Add a button to the button bar (simple version).
-
-        :param `button_id`: ID of the button;
-        :param `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button. Must be the same size as
-         all other large bitmaps used on the button bar;
-        :param `help_string`: the UI help string to associate with the new button;
-        :param `kind`: The kind of button to add.
-
-        """
-
-        return self.AddButton(button_id, label, bitmap, wx.NullBitmap, wx.NullBitmap,
-                              wx.NullBitmap, kind, help_string)
-
-
-    def AddDropdownButton(self, button_id, label, bitmap, help_string=""):
-        """
-        Add a dropdown button to the button bar (simple version).
-
-        :param `button_id`: ID of the button;
-        :param `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button. Must be the same size as
-         all other large bitmaps used on the button bar;
-        :param `help_string`: the UI help string to associate with the new button.
-
-        :see: L{AddButton}
-        """
-
-        return self.AddSimpleButton(button_id, label, bitmap, help_string, RIBBON_BUTTON_DROPDOWN)
-
-
-    def AddHybridButton(self, button_id, label, bitmap, help_string=""):
-        """
-        Add a hybrid button to the button bar (simple version).
-
-        :param `button_id`: ID of the button;
-        :param `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button. Must be the same size as
-         all other large bitmaps used on the button bar;
-        :param `help_string`: the UI help string to associate with the new button.
-
-        :see: L{AddButton}
-        """
-
-        return self.AddSimpleButton(button_id, label, bitmap, help_string, RIBBON_BUTTON_HYBRID)
-
     
     def AddButton(self, button_id, label, bitmap, bitmap_small=wx.NullBitmap, bitmap_disabled=wx.NullBitmap,
                   bitmap_small_disabled=wx.NullBitmap, kind=RIBBON_BUTTON_NORMAL, help_string="", client_data=None):
@@ -305,7 +263,58 @@ class RibbonButtonBar(RibbonControl):
 
         :returns: An opaque pointer which can be used only with other button bar methods.
         
-        :see: L{AddDropdownButton}, L{AddHybridButton}
+        :see: L{InsertButton}, L{AddDropdownButton}, L{AddHybridButton}
+        """
+
+        return self.InsertButton(self.GetButtonCount(), button_id, label, bitmap,
+                                 bitmap_small, bitmap_disabled, bitmap_small_disabled, kind, help_string,
+                                 client_data)
+
+
+    def AddSimpleButton(self, button_id, label, bitmap, help_string, kind=RIBBON_BUTTON_NORMAL):
+        """
+        Add a button to the button bar (simple version).
+
+        :param `button_id`: ID of the button;
+        :param `label`: label of the new button;
+        :param `bitmap`: large bitmap of the new button. Must be the same size as
+         all other large bitmaps used on the button bar;
+        :param `help_string`: the UI help string to associate with the new button;
+        :param `kind`: The kind of button to add.
+
+        """
+
+        return self.AddButton(button_id, label, bitmap, wx.NullBitmap, wx.NullBitmap,
+                              wx.NullBitmap, kind, help_string)
+
+
+    def InsertButton(self, pos, button_id, label, bitmap, bitmap_small=wx.NullBitmap, bitmap_disabled=wx.NullBitmap,
+                     bitmap_small_disabled=wx.NullBitmap, kind=RIBBON_BUTTON_NORMAL, help_string="", client_data=None):
+
+        """
+        Inserts a button in the button bar at the position specified by `pos`.
+
+        :param `pos`: the position at which the new button must be inserted (zero-based);
+        :param `button_id`: ID of the new button (used for event callbacks);
+        :param `label`: label of the new button;
+        :param `bitmap`: large bitmap of the new button. Must be the same size as
+         all other large bitmaps used on the button bar;
+        :param `bitmap_small`: small bitmap of the new button. If left as ``None``,
+         then a small bitmap will be automatically generated. Must be the same size
+         as all other small bitmaps used on the button bar;
+        :param `bitmap_disabled`: large bitmap of the new button when it is disabled.
+         If left as ``None``, then a bitmap will be automatically generated from `bitmap`;
+        :param `bitmap_small_disabled`: small bitmap of the new button when it is disabled.
+         If left as ``None``, then a bitmap will be automatically generated from `bitmap_small`;
+        :param `kind`: the kind of button to add;
+        :param `help_string`: the UI help string to associate with the new button;
+        :param `client_data`: client data to associate with the new button.
+
+        :returns: An opaque pointer which can be used only with other button bar methods.
+        
+        :see: L{AddButton}, L{AddDropdownButton}, L{AddHybridButton}
+
+        .. versionadded:: 0.9.5
         """
 
         if not bitmap.IsOk() and not bitmap_small.IsOk():
@@ -368,12 +377,46 @@ class RibbonButtonBar(RibbonControl):
         self.FetchButtonSizeInfo(base, RIBBON_BUTTONBAR_BUTTON_MEDIUM, temp_dc)
         self.FetchButtonSizeInfo(base, RIBBON_BUTTONBAR_BUTTON_LARGE, temp_dc)
 
-        # TODO
-        self._buttons.append(base)
+        self._buttons.insert(pos, base)
         self._layouts_valid = False
         
         return base
 
+
+    def AddDropdownButton(self, button_id, label, bitmap, help_string=""):
+        """
+        Add a dropdown button to the button bar (simple version).
+
+        :param `button_id`: ID of the button;
+        :param `label`: label of the new button;
+        :param `bitmap`: large bitmap of the new button. Must be the same size as
+         all other large bitmaps used on the button bar;
+        :param `help_string`: the UI help string to associate with the new button.
+
+        :see: L{AddButton}
+        """
+
+        return self.AddSimpleButton(button_id, label, bitmap, help_string, RIBBON_BUTTON_DROPDOWN)
+
+
+    def InsertDropdownButton(self, pos, button_id, label, bitmap, help_string=""):
+        """
+        Inserts a dropdown button in the button bar at the position specified by `pos`.
+
+        :param `pos`: the position at which the new button must be inserted (zero-based);
+        :param `button_id`: ID of the button;
+        :param `label`: label of the new button;
+        :param `bitmap`: large bitmap of the new button. Must be the same size as
+         all other large bitmaps used on the button bar;
+        :param `help_string`: the UI help string to associate with the new button.
+
+        :see: L{AddButton}, L{InsertButton}
+
+        .. versionadded:: 0.9.5
+        """
+
+        return self.InsertButton(pos, button_id, label, bitmap, kind=RIBBON_BUTTON_DROPDOWN, help_string=help_string)
+    
 
     def AddToggleButton(self, button_id, label, bitmap, help_string=""):
         """
@@ -385,12 +428,66 @@ class RibbonButtonBar(RibbonControl):
          all other large bitmaps used on the button bar;
         :param `help_string`: the UI help string to associate with the new button.
 
-        :see: L{AddButton}
+        :see: L{AddButton}, L{InsertButton}
         """
 
         return self.AddButton(button_id, label, bitmap, help_string, RIBBON_BUTTON_TOGGLE)
 
 
+    def InsertToggleButton(self, pos, button_id, label, bitmap, help_string=""):
+        """
+        Inserts a dropdown button in the button bar at the position specified by `pos`.
+
+        :param `pos`: the position at which the new button must be inserted (zero-based);
+        :param `button_id`: ID of the button;
+        :param `label`: label of the new button;
+        :param `bitmap`: large bitmap of the new button. Must be the same size as
+         all other large bitmaps used on the button bar;
+        :param `help_string`: the UI help string to associate with the new button.
+
+        :see: L{AddButton}, L{InsertButton}
+
+        .. versionadded:: 0.9.5
+        """
+
+        return self.InsertButton(pos, button_id, label, bitmap, kind=RIBBON_BUTTON_TOGGLE, help_string=help_string)
+
+
+    def AddHybridButton(self, button_id, label, bitmap, help_string=""):
+        """
+        Add a hybrid button to the button bar (simple version).
+
+        :param `button_id`: ID of the button;
+        :param `label`: label of the new button;
+        :param `bitmap`: large bitmap of the new button. Must be the same size as
+         all other large bitmaps used on the button bar;
+        :param `help_string`: the UI help string to associate with the new button.
+
+        :see: L{AddButton}
+        """
+
+        return self.AddSimpleButton(button_id, label, bitmap, help_string, RIBBON_BUTTON_HYBRID)
+
+
+    def InsertHybridButton(self, pos, button_id, label, bitmap, help_string=""):
+        """
+        Inserts a hybrid button in the button bar at the position specified by `pos`.
+
+        :param `pos`: the position at which the new button must be inserted (zero-based);
+        :param `button_id`: ID of the button;
+        :param `label`: label of the new button;
+        :param `bitmap`: large bitmap of the new button. Must be the same size as
+         all other large bitmaps used on the button bar;
+        :param `help_string`: the UI help string to associate with the new button.
+
+        :see: L{AddButton}, L{InsertButton}
+
+        .. versionadded:: 0.9.5
+        """
+
+        return self.InsertButton(pos, button_id, label, bitmap, kind=RIBBON_BUTTON_HYBRID, help_string=help_string)
+
+        
     def FetchButtonSizeInfo(self, button, size, dc):
 
         info = button.sizes[size]
@@ -525,8 +622,28 @@ class RibbonButtonBar(RibbonControl):
                     return False
                 return True
             
+
+    def GetButtonCount(self):
+        """
+        Returns the number of buttons in this L{RibbonButtonBar}.
+
+        .. versionadded:: 0.9.5
+        """
+
+        return len(self._buttons)
+    
             
     def SetArtProvider(self, art):
+        """
+        Set the art provider to be used.
+
+        In many cases, setting the art provider will also set the art provider on all
+        child windows which extend L{RibbonControl}. In most cases, controls will not
+        take ownership of the given pointer, with the notable exception being
+        L{RibbonBar.SetArtProvider}.
+
+        :param `art`: an art provider.
+        """
 
         if art == self._art:        
             return
@@ -544,12 +661,24 @@ class RibbonButtonBar(RibbonControl):
 
 
     def IsSizingContinuous(self):
+        """
+        Returns ``True`` if this window can take any size (greater than its minimum size),
+        ``False`` if it can only take certain sizes.
+        
+        :see: L{RibbonControl.GetNextSmallerSize}, L{RibbonControl.GetNextLargerSize}
+        """
 
         return False
 
 
     def DoGetNextSmallerSize(self, direction, _result):
+        """
+        Implementation of L{RibbonControl.GetNextSmallerSize}.
 
+        Controls which have non-continuous sizing must override this virtual function
+        rather than L{RibbonControl.GetNextSmallerSize}.
+        """
+        
         result = wx.Size(*_result)
         
         for i, layout in enumerate(self._layouts):
@@ -574,6 +703,12 @@ class RibbonButtonBar(RibbonControl):
 
 
     def DoGetNextLargerSize(self, direction, _result):
+        """
+        Implementation of L{GetNextLargerSize}.
+
+        Controls which have non-continuous sizing must override this virtual function
+        rather than L{RibbonControl.GetNextLargerSize}.
+        """
 
         nlayouts = i = len(self._layouts)
         result = wx.Size(*_result)
@@ -605,12 +740,22 @@ class RibbonButtonBar(RibbonControl):
 
 
     def OnEraseBackground(self, event):
+        """
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{RibbonButtonBar}.
+
+        :param `event`: a `wx.EraseEvent` event to be processed.
+        """
 
         # All painting done in main paint handler to minimise flicker
         pass
 
 
     def OnPaint(self, event):
+        """
+        Handles the ``wx.EVT_PAINT`` event for L{RibbonButtonBar}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
 
         dc = wx.AutoBufferedPaintDC(self)
         self._art.DrawButtonBarBackground(dc, self, wx.Rect(0, 0, *self.GetSize()))
@@ -632,6 +777,11 @@ class RibbonButtonBar(RibbonControl):
         
 
     def OnSize(self, event):
+        """
+        Handles the ``wx.EVT_SIZE`` event for L{RibbonButtonBar}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.
+        """
 
         new_size = event.GetSize()
         layout_count = len(self._layouts)
@@ -650,6 +800,65 @@ class RibbonButtonBar(RibbonControl):
         self.Refresh()
 
 
+    def UpdateWindowUI(self, flags):
+        """
+        This function sends one or more `wx.UpdateUIEvent` to the window.
+
+        The particular implementation depends on the window; for example a `wx.ToolBar` will
+        send an update UI event for each toolbar button, and a `wx.Frame` will send an
+        update UI event for each menubar menu item.
+
+        You can call this function from your application to ensure that your UI is up-to-date
+        at this point (as far as your `wx.UpdateUIEvent` handlers are concerned). This may be
+        necessary if you have called `wx.UpdateUIEvent.SetMode` or `wx.UpdateUIEvent.SetUpdateInterval`
+        to limit the overhead that wxWidgets incurs by sending update UI events in idle time.
+
+        :param integer `flags`: should be a bitlist of one or more of ``wx.UPDATE_UI_NONE``,
+         ``wx.UPDATE_UI_RECURSE`` or ``wx.UPDATE_UI_FROMIDLE``.
+
+        If you are calling this function from an `OnInternalIdle` or `OnIdle` function, make sure
+        you pass the ``wx.UPDATE_UI_FROMIDLE`` flag, since this tells the window to only update
+        the UI elements that need to be updated in idle time. Some windows update their elements
+        only when necessary, for example when a menu is about to be shown. The following is an
+        example of how to call L{UpdateWindowUI] from an idle function::
+
+            def OnInternalIdle(self):
+
+                if wx.UpdateUIEvent.CanUpdate(self):
+                    self.UpdateWindowUI(wx.UPDATE_UI_FROMIDLE)
+
+
+        
+        .. versionadded:: 0.9.5
+        """        
+
+        wx.PyControl.UpdateWindowUI(self, flags)
+
+        # don't waste time updating state of tools in a hidden toolbar
+        if not self.IsShown():
+            return
+
+        rerealize = False
+
+        for button in self._buttons:
+
+            id = button.id
+            event = wx.UpdateUIEvent(id)
+            event.SetEventObject(self)
+
+            if self.ProcessWindowEvent(event):
+                if event.GetSetEnabled():
+                    self.EnableButton(id, event.GetEnabled())
+                if event.GetSetChecked():
+                    self.ToggleButton(id, event.GetChecked())
+                if event.GetSetText():
+                    button.label = event.GetText()
+                    rerealize = True
+
+        if rerealize:
+            self.Realize()
+
+        
     def CommonInit(self, agwStyle):
 
         self._bitmap_size_large = wx.Size(32, 32)
@@ -671,11 +880,27 @@ class RibbonButtonBar(RibbonControl):
 
 
     def GetMinSize(self):
+        """
+        Returns the minimum size of the window, an indication to the sizer layout mechanism
+        that this is the minimum required size.
+
+        This method normally just returns the value set by `SetMinSize`, but it can be
+        overridden to do the calculation on demand.
+        """
 
         return wx.Size(*self._layouts[-1].overall_size)
 
 
     def DoGetBestSize(self):
+        """
+        Gets the size which best suits the window: for a control, it would be the
+        minimal size which doesn't truncate the control, for a panel - the same size
+        as it would have after a call to `Fit()`.
+
+        :return: An instance of `wx.Size`.
+        
+        :note: Overridden from `wx.PyControl`.
+        """
 
         return wx.Size(*self._layouts[0].overall_size)
 
@@ -818,6 +1043,11 @@ class RibbonButtonBar(RibbonControl):
 
 
     def OnMouseMove(self, event):
+        """
+        Handles the ``wx.EVT_MOTION`` event for L{RibbonButtonBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         cursor = event.GetPosition()
         new_hovered = None
@@ -887,6 +1117,11 @@ class RibbonButtonBar(RibbonControl):
         
 
     def OnMouseDown(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_DOWN`` event for L{RibbonButtonBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         cursor = event.GetPosition()
         self._active_button = None
@@ -914,6 +1149,11 @@ class RibbonButtonBar(RibbonControl):
             
 
     def OnMouseUp(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_UP`` event for L{RibbonButtonBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         cursor = event.GetPosition()
 
@@ -957,12 +1197,22 @@ class RibbonButtonBar(RibbonControl):
         
 
     def OnMouseEnter(self, event):
+        """
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for L{RibbonButtonBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         if self._active_button and not event.LeftIsDown():
             self._active_button = None
     
 
     def OnMouseLeave(self, event):
+        """
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{RibbonButtonBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         repaint = False
         if self._hovered_button != None:
@@ -979,6 +1229,7 @@ class RibbonButtonBar(RibbonControl):
 
 
     def GetDefaultBorder(self):
+        """ Returns the default border style for L{RibbonButtonBar}. """
 
         return wx.BORDER_NONE
 

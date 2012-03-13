@@ -132,7 +132,7 @@ Usage example::
 What's New
 ==========
 
-Current wxRibbon Version Tracked: wxWidgets 2.9.2 (SVN HEAD)
+Current wxRibbon Version Tracked: wxWidgets 2.9.4 (SVN HEAD)
 
 New features recently implemented:
 
@@ -150,9 +150,9 @@ License And Version
 
 RIBBON library is distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest revision: Andrea Gavana @ 13 Mar 2012, 21.00 GMT
 
-Version 0.2. 
+Version 0.3. 
 
 """
 

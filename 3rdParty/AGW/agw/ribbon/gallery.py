@@ -45,8 +45,17 @@ EVT_RIBBONGALLERY_CLICKED = wx.PyEventBinder(wxEVT_COMMAND_RIBBONGALLERY_CLICKED
 
 
 class RibbonGalleryEvent(wx.PyCommandEvent):
+    """ Handles events related to L{RibbonGallery}. """
 
     def __init__(self, command_type=None, win_id=0, gallery=None, item=None):
+        """
+        Default class constructor.
+
+        :param integer `command_type`: the event type;
+        :param integer `win_id`: the event identifier;
+        :param `gallery`: an instance of L{RibbonGallery};
+        :param `item`: an instance of L{RibbonGalleryItem}.
+        """
         
         wx.PyCommandEvent.__init__(self, command_type, win_id)
         self._gallery = gallery
@@ -54,21 +63,33 @@ class RibbonGalleryEvent(wx.PyCommandEvent):
 
 
     def GetGallery(self):
+        """ Returns the gallery which the event relates to. """
 
         return self._gallery
 
     
     def GetGalleryItem(self):
+        """ Returns the gallery item which the event relates to, or ``None`` if it does not relate to an item. """
 
         return self._item
 
     
     def SetGallery(self, gallery):
+        """
+        Sets the gallery relating to this event.
+
+        :param `gallery`: an instance of L{RibbonGallery}.
+        """
 
         self._gallery = gallery
 
         
     def SetGalleryItem(self, item):
+        """
+        Sets the gallery item relating to this event.
+
+        :param `item`: an instance of L{RibbonGalleryItem}.
+        """
 
         self._item = item
 
@@ -147,7 +168,6 @@ class RibbonGallery(RibbonControl):
          not correctly sized;
         :param `agwStyle`: the AGW-specific window style;
         :param `name`: the window name.
-
         """
 
         RibbonControl.__init__(self, parent, id, pos, size, style=wx.BORDER_NONE, name=name)
@@ -190,6 +210,11 @@ class RibbonGallery(RibbonControl):
 
 
     def OnMouseEnter(self, event):
+        """
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for L{RibbonGallery}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         self._hovered = True
         
@@ -201,6 +226,11 @@ class RibbonGallery(RibbonControl):
 
 
     def OnMouseMove(self, event):
+        """
+        Handles the ``wx.EVT_MOTION`` event for L{RibbonGallery}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         refresh = False
         pos = event.GetPosition()
@@ -270,6 +300,11 @@ class RibbonGallery(RibbonControl):
     
 
     def OnMouseLeave(self, event):
+        """
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{RibbonGallery}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         self._hovered = False
         self._active_item = None
@@ -291,6 +326,11 @@ class RibbonGallery(RibbonControl):
 
 
     def OnMouseDown(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_DOWN`` event for L{RibbonGallery}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         pos = event.GetPosition()
         self._mouse_active_rect = None
@@ -331,6 +371,11 @@ class RibbonGallery(RibbonControl):
 
 
     def OnMouseUp(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_UP`` event for L{RibbonGallery}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         if self._mouse_active_rect != None:
             pos = event.GetPosition()
@@ -377,6 +422,11 @@ class RibbonGallery(RibbonControl):
 
 
     def OnMouseDClick(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_DCLICK`` event for L{RibbonGallery}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         # The 2nd click of a double-click should be handled as a click in the
         # same way as the 1st click of the double-click. This is useful for
@@ -389,8 +439,8 @@ class RibbonGallery(RibbonControl):
         """
         Set the client data associated with a gallery item.
         
-        :param `item`: MISSING DESCRIPTION;
-        :param `data`: MISSING DESCRIPTION.
+        :param `item`: an instance of L{RibbonGalleryItem};
+        :param `data`: any Python object.
 
         """
 
@@ -401,8 +451,7 @@ class RibbonGallery(RibbonControl):
         """
         Get the client data associated with a gallery item.
 
-        :param `item`: MISSING DESCRIPTION.
-
+        :param `item`: an instance of L{RibbonGalleryItem}.
         """
 
         return item.GetClientData()
@@ -412,13 +461,13 @@ class RibbonGallery(RibbonControl):
         """
         Scroll the gallery contents by some amount.
 
-        Reimplemented from `wx.Window`.
-
         :param `lines`: Positive values scroll toward the end of the gallery, while
          negative values scroll toward the start.
 
         :returns: ``True`` if the gallery scrolled at least one pixel in the given
          direction, ``False`` if it did not scroll.
+
+        :note: Reimplemented from `wx.Window`.
         """
 
         if self._scroll_limit == 0 or self._art == None:
@@ -468,8 +517,7 @@ class RibbonGallery(RibbonControl):
         """
         Scroll the gallery to ensure that the given item is visible.
         
-        :param `item`: MISSING DESCRIPTION.
-
+        :param `item`: an instance of L{RibbonGalleryItem}.
         """
 
         if item is None or not item.IsVisible() or self.IsEmpty():
@@ -493,12 +541,22 @@ class RibbonGallery(RibbonControl):
 
 
     def OnEraseBackground(self, event):
+        """
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{RibbonGallery}.
+
+        :param `event`: a `wx.EraseEvent` event to be processed.
+        """
 
         # All painting done in main paint handler to minimise flicker
         pass
 
 
     def OnPaint(self, event):
+        """
+        Handles the ``wx.EVT_PAINT`` event for L{RibbonGallery}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
 
         dc = wx.AutoBufferedPaintDC(self)
 
@@ -534,6 +592,11 @@ class RibbonGallery(RibbonControl):
         
 
     def OnSize(self, event):
+        """
+        Handles the ``wx.EVT_SIZE`` event for L{RibbonGallery}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.
+        """
 
         self.Layout()
 
@@ -549,7 +612,6 @@ class RibbonGallery(RibbonControl):
         :param `clientData`: An object which contains data to associate with the item.
          The item takes ownership of this pointer, and will delete it when the item
          client data is changed to something else, or when the item is destroyed.
-
         """
 
         if not bitmap.IsOk():
@@ -581,6 +643,12 @@ class RibbonGallery(RibbonControl):
 
 
     def IsSizingContinuous(self):
+        """
+        Returns ``True`` if this window can take any size (greater than its minimum size),
+        ``False`` if it can only take certain sizes.
+        
+        :see: L{RibbonControl.GetNextSmallerSize}, L{RibbonControl.GetNextLargerSize}
+        """
 
         return False
 
@@ -606,6 +674,10 @@ class RibbonGallery(RibbonControl):
         
 
     def Realize(self):
+        """
+        Perform initial size and layout calculations after children have been added,
+        and/or realize children.
+        """
 
         self.CalculateMinSize()
         return self.Layout()
@@ -679,11 +751,26 @@ class RibbonGallery(RibbonControl):
 
 
     def DoGetBestSize(self):
+        """
+        Gets the size which best suits the window: for a control, it would be the
+        minimal size which doesn't truncate the control, for a panel - the same size
+        as it would have after a call to `Fit()`.
+
+        :return: An instance of `wx.Size`.
+        
+        :note: Overridden from `wx.PyControl`.
+        """
 
         return self._best_size
 
 
     def DoGetNextSmallerSize(self, direction, relative_to):
+        """
+        Implementation of L{RibbonControl.GetNextSmallerSize}.
+
+        Controls which have non-continuous sizing must override this virtual function
+        rather than L{RibbonControl.GetNextSmallerSize}.
+        """
 
         if self._art == None:
             return relative_to
@@ -719,6 +806,12 @@ class RibbonGallery(RibbonControl):
 
 
     def DoGetNextLargerSize(self, direction, relative_to):
+        """
+        Implementation of L{RibbonControl.GetNextLargerSize}.
+
+        Controls which have non-continuous sizing must override this virtual function
+        rather than L{RibbonControl.GetNextLargerSize}.
+        """
 
         if self._art == None:
             return relative_to
@@ -776,8 +869,7 @@ class RibbonGallery(RibbonControl):
         """
         Get an item by index.
 
-        :param `n`: MISSING DESCRIPTION.
-
+        :param `n`: the zero-based item in the gallery, an instance of L{RibbonGalleryItem}.
         """
 
         if n >= self.GetCount():
@@ -792,7 +884,7 @@ class RibbonGallery(RibbonControl):
 
         Note that this not cause any events to be emitted.
 
-        :param `item`: MISSING DESCRIPTION.
+        :param `item`: an instance of L{RibbonGalleryItem}, can also be ``None`` to remove the selection.
 
         """
 
@@ -806,7 +898,6 @@ class RibbonGallery(RibbonControl):
         Get the currently selected item, or ``None`` if there is none.
 
         The selected item is set by L{SetSelection}, or by the user clicking on an item.
-
         """
 
         return self._selected_item
@@ -817,7 +908,6 @@ class RibbonGallery(RibbonControl):
         Get the currently hovered item, or ``None`` if there is none.
 
         The hovered item is the item underneath the mouse cursor.
-
         """
 
         return self._hovered_item
@@ -829,7 +919,6 @@ class RibbonGallery(RibbonControl):
 
         The active item is the item being pressed by the user, and will thus become the
         selected item if the user releases the mouse button.
-
         """
 
         return self._active_item
@@ -860,6 +949,7 @@ class RibbonGallery(RibbonControl):
 
 
     def GetDefaultBorder(self):
+        """ Returns the default border style for L{RibbonGallery}. """
 
         return wx.BORDER_NONE
 

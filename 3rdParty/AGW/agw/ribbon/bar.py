@@ -60,6 +60,7 @@ Window Styles                              Hex Value   Description
 ``RIBBON_BAR_FLOW_VERTICAL``                       0x4 Causes panels within pages to stack vertically.
 ``RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS``              0x8 Causes extension buttons to be shown on panels (where the panel has such a button).
 ``RIBBON_BAR_SHOW_PANEL_MINIMISE_BUTTONS``        0x10 Causes minimise buttons to be shown on panels (where the panel has such a button).
+``RIBBON_BAR_ALWAYS_SHOW_TABS``                   0x20 Always shows the tabs area even when only one tab is added.
 ========================================== =========== ==========================================
 
 
@@ -142,7 +143,14 @@ class RibbonBarEvent(wx.NotifyEvent):
     """
     
     def __init__(self, command_type=None, win_id=0, page=None):
-    
+        """
+        Default class constructor.
+
+        :param integer `command_type`: the event type;
+        :param integer `win_id`: the event identifier;
+        :param `page`: an instance of L{RibbonPage}.
+        """
+
         wx.NotifyEvent.__init__(self, command_type, win_id)
         self._page = page
 
@@ -152,6 +160,8 @@ class RibbonBarEvent(wx.NotifyEvent):
     def GetPage(self):
         """
         Returns the page being changed to, or being clicked on.
+
+        :returns: An instance of L{RibbonPage}.
         """
 
         return self._page
@@ -161,24 +171,40 @@ class RibbonBarEvent(wx.NotifyEvent):
         """
         Sets the page relating to this event.
 
-        :param `page`: MISSING DESCRIPTION.
-
+        :param `page`: an instance of L{RibbonPage}.
         """
 
         self._page = page
 
 
     def Allow(self):
+        """
+        This is the opposite of L{Veto}: it explicitly allows the event to be processed.
+        For most events it is not necessary to call this method as the events are
+        allowed anyhow but some are forbidden by default (this will be mentioned
+        in the corresponding event description).
+        """
 
         self._isAllowed = True
 
 
     def Veto(self):
+        """
+        Prevents the change announced by this event from happening.
+
+        :note: It is in general a good idea to notify the user about the reasons
+         for vetoing the change because otherwise the applications behaviour (which
+         just refuses to do what the user wants) might be quite surprising.
+        """
 
         self._isAllowed = False
 
 
     def IsAllowed(self):
+        """
+        Returns ``True`` if the change is allowed (L{Veto} hasn't been called) or
+        ``False`` otherwise (if it was).
+        """
 
         return self._isAllowed        
 
@@ -213,6 +239,7 @@ class RibbonBar(RibbonControl):
          ``RIBBON_BAR_FLOW_VERTICAL``                       0x4 Causes panels within pages to stack vertically.
          ``RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS``              0x8 Causes extension buttons to be shown on panels (where the panel has such a button).
          ``RIBBON_BAR_SHOW_PANEL_MINIMISE_BUTTONS``        0x10 Causes minimise buttons to be shown on panels (where the panel has such a button).
+         ``RIBBON_BAR_ALWAYS_SHOW_TABS``                   0x20 Always shows the tabs area even when only one tab is added.
          ========================================== =========== ==========================================
 
         :param `validator`: the window validator;
@@ -254,7 +281,12 @@ class RibbonBar(RibbonControl):
         
 
     def AddPage(self, page):
+        """
+        Adds a page to the L{RibbonBar}.
 
+        :param `page`: an instance of L{RibbonPage}.
+        """
+        
         info = RibbonPageTabInfo()
 
         info.page = page
@@ -337,6 +369,7 @@ class RibbonBar(RibbonControl):
          ``RIBBON_BAR_FLOW_VERTICAL``                       0x4 Causes panels within pages to stack vertically.
          ``RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS``              0x8 Causes extension buttons to be shown on panels (where the panel has such a button).
          ``RIBBON_BAR_SHOW_PANEL_MINIMISE_BUTTONS``        0x10 Causes minimise buttons to be shown on panels (where the panel has such a button).
+         ``RIBBON_BAR_ALWAYS_SHOW_TABS``                   0x20 Always shows the tabs area even when only one tab is added.
          ========================================== =========== ==========================================
          
         :note: Please note that some styles cannot be changed after the window creation
@@ -368,8 +401,7 @@ class RibbonBar(RibbonControl):
         children created, etc.) - if it is not, then windows may not be laid out or
         sized correctly. Also calls L{RibbonPage.Realize} on each child page.
         
-        Reimplemented from L{RibbonControl}.
-
+        :note: Reimplemented from L{RibbonControl}.
         """
 
         status = True
@@ -415,6 +447,11 @@ class RibbonBar(RibbonControl):
 
 
     def OnMouseMove(self, event):
+        """
+        Handles the ``wx.EVT_MOTION`` event for L{RibbonBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         x, y = event.GetX(), event.GetY()
         hovered_page = -1
@@ -459,6 +496,11 @@ class RibbonBar(RibbonControl):
         
 
     def OnMouseLeave(self, event):
+        """
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{RibbonBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         # The ribbon bar is (usually) at the top of a window, and at least on MSW, the mouse
         # can leave the window quickly and leave a tab in the hovered state.
@@ -487,7 +529,7 @@ class RibbonBar(RibbonControl):
 
         ``None`` will be returned if the given index is out of range.
 
-        :param `n`: MISSING DESCRIPTION.
+        :param `n`: the zero-based index indicating the page position.
 
         """
 
@@ -539,7 +581,6 @@ class RibbonBar(RibbonControl):
         :returns: ``True`` if the specified page is now active, ``False`` if it could
          not be activated (for example because the given page is not a child of the
          ribbon bar).
-         
         """
 
         for i in xrange(len(self._pages)):
@@ -579,8 +620,8 @@ class RibbonBar(RibbonControl):
         currently implemented. The right margin could be used for rendering a help
         button, and/or MDI buttons, but again, this is not currently implemented.
 
-        :param `left`: MISSING DESCRIPTION;
-        :param `right`: MISSING DESCRIPTION.
+        :param integer `left`: the left margin (in pixels);
+        :param integer `right`: the right margin (in pixels).
 
         """
 
@@ -793,10 +834,9 @@ class RibbonBar(RibbonControl):
         If this behaviour is not desired, then clone the art provider before setting
         it.
 
-        Reimplemented from L{RibbonControl}.
+        :param `art`: an art provider.
 
-        :param `art`: MISSING DESCRIPTION.
-
+        :note: Reimplemented from L{RibbonControl}.
         """
 
         self._art = art
@@ -810,6 +850,11 @@ class RibbonBar(RibbonControl):
             
 
     def OnPaint(self, event):
+        """
+        Handles the ``wx.EVT_PAINT`` event for L{RibbonBar}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
 
         dc = wx.AutoBufferedPaintDC(self)
 
@@ -875,6 +920,11 @@ class RibbonBar(RibbonControl):
             
 
     def OnEraseBackground(self, event):
+        """
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{RibbonBar}.
+
+        :param `event`: a `wx.EraseEvent` event to be processed.
+        """
 
         # Background painting done in main paint handler to reduce screen flicker
         pass
@@ -888,6 +938,11 @@ class RibbonBar(RibbonControl):
 
 
     def OnSize(self, event):
+        """
+        Handles the ``wx.EVT_SIZE`` event for L{RibbonBar}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.
+        """
 
         self.RecalculateTabSizes()
         if self._current_page != -1:
@@ -920,6 +975,11 @@ class RibbonBar(RibbonControl):
 
 
     def OnMouseLeftDown(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_DOWN`` event for L{RibbonBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         index, tab = self.HitTestTabs(event.GetPosition())
         if tab and tab != self._pages[self._current_page]:
@@ -944,11 +1004,21 @@ class RibbonBar(RibbonControl):
 
 
     def OnMouseDoubleClick(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_DCLICK`` event for L{RibbonBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         self.DoMouseButtonCommon(event, wxEVT_COMMAND_RIBBONBAR_TAB_LEFT_DCLICK)
 
         
     def OnMouseLeftUp(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_UP`` event for L{RibbonBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         if not self._tab_scroll_buttons_shown:
             return
@@ -1025,21 +1095,41 @@ class RibbonBar(RibbonControl):
 
 
     def OnMouseMiddleDown(self, event):
+        """
+        Handles the ``wx.EVT_MIDDLE_DOWN`` event for L{RibbonBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         self.DoMouseButtonCommon(event, wxEVT_COMMAND_RIBBONBAR_TAB_MIDDLE_DOWN)
 
 
     def OnMouseMiddleUp(self, event):
+        """
+        Handles the ``wx.EVT_MIDDLE_UP`` event for L{RibbonBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         self.DoMouseButtonCommon(event, wxEVT_COMMAND_RIBBONBAR_TAB_MIDDLE_UP)
 
 
     def OnMouseRightDown(self, event):
+        """
+        Handles the ``wx.EVT_RIGHT_DOWN`` event for L{RibbonBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         self.DoMouseButtonCommon(event, wxEVT_COMMAND_RIBBONBAR_TAB_RIGHT_DOWN)
 
 
     def OnMouseRightUp(self, event):
+        """
+        Handles the ``wx.EVT_RIGHT_UP`` event for L{RibbonBar}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         self.DoMouseButtonCommon(event, wxEVT_COMMAND_RIBBONBAR_TAB_RIGHT_UP)
 
@@ -1077,6 +1167,15 @@ class RibbonBar(RibbonControl):
 
 
     def DoGetBestSize(self):
+        """
+        Gets the size which best suits the window: for a control, it would be the
+        minimal size which doesn't truncate the control, for a panel - the same size
+        as it would have after a call to `Fit()`.
+
+        :return: An instance of `wx.Size`.
+        
+        :note: Overridden from `wx.PyControl`.
+        """
 
         best = wx.Size(0, 0)
         
@@ -1095,11 +1194,19 @@ class RibbonBar(RibbonControl):
 
 
     def HasMultiplePages(self):
+        """
+        This method should be overridden to return true if this window has multiple pages.
 
+        All standard class with multiple pages such as `wx.Notebook`, `wx.Listbook` and `wx.Treebook`
+        already override it to return true and user-defined classes with similar behaviour should also
+        do so, to allow the library to handle such windows appropriately.
+        """
+        
         return True
 
 
     def GetDefaultBorder(self):
+        """ Returns the default border style for L{RibbonBar}. """
 
         return wx.BORDER_NONE
 

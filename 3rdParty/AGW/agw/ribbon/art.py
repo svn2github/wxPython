@@ -103,32 +103,43 @@ RIBBON_ART_TOOL_ACTIVE_BACKGROUND_GRADIENT_COLOUR = 98
 # RibbonScrollButtonStyle
 
 RIBBON_SCROLL_BTN_LEFT = 0
+"""Button will scroll to the left."""
 RIBBON_SCROLL_BTN_RIGHT = 1
+"""Button will scroll to the right."""
 RIBBON_SCROLL_BTN_UP = 2
+"""Button will scroll upward."""
 RIBBON_SCROLL_BTN_DOWN = 3
+"""Button will scroll downward."""
 
 RIBBON_SCROLL_BTN_DIRECTION_MASK = 3
-
+"""A mask to extract direction from a combination of flags."""
 RIBBON_SCROLL_BTN_NORMAL = 0
+"""Button is not active or hovered."""
 RIBBON_SCROLL_BTN_HOVERED = 4
+"""Button has a cursor hovering over it."""
 RIBBON_SCROLL_BTN_ACTIVE = 8
-
+"""Button is being pressed."""
 RIBBON_SCROLL_BTN_STATE_MASK = 12
-
+"""A mask to extract state from a combination of flags."""
 RIBBON_SCROLL_BTN_FOR_OTHER = 0
+"""Button is not for scrolling tabs nor pages."""
 RIBBON_SCROLL_BTN_FOR_TABS = 16
+"""Button is for scrolling tabs."""
 RIBBON_SCROLL_BTN_FOR_PAGE = 32
-
+"""Button is for scrolling pages."""
 RIBBON_SCROLL_BTN_FOR_MASK = 48
-
+"""A mask to extract purpose from a combination of flags."""
 
 # RibbonButtonKind
 
 RIBBON_BUTTON_NORMAL    = 1 << 0
+"""Normal button or tool with a clickable area which causes some generic action."""
 RIBBON_BUTTON_DROPDOWN  = 1 << 1
+"""Dropdown button or tool with a clickable area which typically causes a dropdown menu."""
 RIBBON_BUTTON_HYBRID    = RIBBON_BUTTON_NORMAL | RIBBON_BUTTON_DROPDOWN
+"""Button or tool with two clickable areas - one which causes a dropdown menu, and one which causes a generic action."""
 RIBBON_BUTTON_TOGGLE    = 1 << 2
-
+"""Normal button or tool with a clickable area which toggles the button between a pressed and unpressed state."""
 
 # RibbonButtonBarButtonState
 
@@ -163,6 +174,9 @@ RIBBON_BAR_FLOW_VERTICAL               = 1 << 2
 RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS      = 1 << 3
 RIBBON_BAR_SHOW_PANEL_MINIMISE_BUTTONS = 1 << 4
 RIBBON_BAR_ALWAYS_SHOW_TABS            = 1 << 5
+RIBBON_PANEL_STRETCH                   = 1 << 6
+RIBBON_PANEL_FLEXIBLE                  = 1 << 7
+
 
 RIBBON_BAR_DEFAULT_STYLE =  RIBBON_BAR_FLOW_HORIZONTAL | RIBBON_BAR_SHOW_PAGE_LABELS \
                             | RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS
@@ -182,7 +196,8 @@ RIBBON_TOOLBAR_TOOL_NORMAL_ACTIVE     = 1 << 5
 RIBBON_TOOLBAR_TOOL_DROPDOWN_ACTIVE   = 1 << 6
 RIBBON_TOOLBAR_TOOL_ACTIVE_MASK       = RIBBON_TOOLBAR_TOOL_NORMAL_ACTIVE | RIBBON_TOOLBAR_TOOL_DROPDOWN_ACTIVE
 RIBBON_TOOLBAR_TOOL_DISABLED          = 1 << 7
-RIBBON_TOOLBAR_TOOL_STATE_MASK        = 0xF8
+RIBBON_TOOLBAR_TOOL_TOGGLED           = 1 << 8
+RIBBON_TOOLBAR_TOOL_STATE_MASK        = 0x1F8
 
 RIBBON_PANEL_NO_AUTO_MINIMISE = 1 << 0
 RIBBON_PANEL_EXT_BUTTON       = 1 << 3

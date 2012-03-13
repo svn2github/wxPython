@@ -326,13 +326,46 @@ class RibbonPanel(RibbonControl):
         
 
     def IsSizingContinuous(self):
+        """
+        Returns ``True`` if this window can take any size (greater than its minimum size),
+        ``False`` if it can only take certain sizes.
+        
+        :see: L{RibbonControl.GetNextSmallerSize}, L{RibbonControl.GetNextLargerSize}
+        """
 
         # A panel never sizes continuously, even if all of its children can,
         # as it would appear out of place along side non-continuous panels.
-        return False
+
+        # JS 2012-03-09: introducing wxRIBBON_PANEL_STRETCH to allow
+        # the panel to fill its parent page. For example we might have
+        # a list of styles in one of the pages, which should stretch to
+        # fill available space.
+        return self._flags & RIBBON_PANEL_STRETCH
+
+
+    def GetBestSizeForParentSize(self, parentSize):
+        """ Finds the best width and height given the parent's width and height. """
+
+        if len(self.GetChildren()) == 1:
+            win = self.GetChildren()[0]
+
+            if isinstance(win, RibbonControl):
+                temp_dc = wx.ClientDC(self)
+                childSize = win.GetBestSizeForParentSize(parentSize)
+                clientParentSize = self._art.GetPanelClientSize(temp_dc, self, wx.Size(*parentSize), None)
+                overallSize = self._art.GetPanelSize(temp_dc, self, wx.Size(*clientParentSize), None)
+                return overallSize
+
+        return self.GetSize()
 
 
     def DoGetNextSmallerSize(self, direction, relative_to):
+        """
+        Implementation of L{RibbonControl.GetNextSmallerSize}.
+
+        Controls which have non-continuous sizing must override this virtual function
+        rather than L{RibbonControl.GetNextSmallerSize}.
+        """
 
         if self._expanded_panel != None:
             # Next size depends upon children, who are currently in the
@@ -404,6 +437,12 @@ class RibbonPanel(RibbonControl):
 
 
     def DoGetNextLargerSize(self, direction, relative_to):
+        """
+        Implementation of L{RibbonControl.GetNextLargerSize}.
+
+        Controls which have non-continuous sizing must override this virtual function
+        rather than L{RibbonControl.GetNextLargerSize}.
+        """
 
         if self._expanded_panel != None:        
             # Next size depends upon children, who are currently in the
@@ -919,7 +958,12 @@ class RibbonPanel(RibbonControl):
 
 
     def GetDefaultBorder(self):
+        """ Returns the default border style for L{RibbonBar}. """
 
         return wx.BORDER_NONE
 
-    
+
+    def GetFlags(self):
+
+        return self._flags
+

@@ -1062,7 +1062,6 @@ class SplitterHandler(AbstractHandler):
 
         splitter, obj = self._window, self._pObject        
         obj.SaveValue(PERSIST_SPLITTER_POSITION, splitter.GetSashPosition())
-        print 'sash on save: %s' % splitter.GetSashPosition()
         return True
     
 
@@ -1071,7 +1070,6 @@ class SplitterHandler(AbstractHandler):
         splitter, obj = self._window, self._pObject
         value = obj.RestoreValue(PERSIST_SPLITTER_POSITION)
 
-        print 'sash on restore: %s' % value
         if value is None:
             return False
 
@@ -1091,7 +1089,6 @@ class SplitterHandler(AbstractHandler):
             if value > width - minPaneSize:
                 return False
             
-        print 'sash on restore 2: %s' % value            
         splitter.SetSashPosition(value)
         return True
         
@@ -1269,7 +1266,7 @@ class TreeCtrlHandler(AbstractHandler):
 
         :param `item`: a `wx.TreeCtrl` item or a L{customtreectrl.CustomTreeCtrl} item;        
         """
-        
+
         return self.GetIndexOfItem(item)
  
 
@@ -1418,7 +1415,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         
         listOfCheckedItems = []
-        if self._window.IsChecked(item):
+        if self._window.IsItemChecked(item):
             listOfCheckedItems.append(self.GetItemIdentity(item))
             
         listOfCheckedItems.extend(self.GetCheckedStateOfChildren(item))
@@ -1452,7 +1449,6 @@ class TreeCtrlHandler(AbstractHandler):
             listOfSelectedItems.append(self.GetItemIdentity(item))
             
         listOfSelectedItems.extend(self.GetSelectionStateOfChildren(item))
-            
         return listOfSelectedItems
 
 
@@ -1571,7 +1567,7 @@ class TreeCtrlHandler(AbstractHandler):
         if manager.GetManagerStyle() & PM_SAVE_RESTORE_TREE_LIST_SELECTIONS == 0:
             # We don't want to save selected items
             return True
-        
+    
         obj.SaveCtrlValue(PERSIST_TREECTRL_SELECTIONS, self.GetSelectionState())
         return True
     
@@ -2489,52 +2485,52 @@ class TextEntryHandler(TLWHandler, TextCtrlHandler):
 # ----------------------------------------------------------------------------------- #
 
 
-HANDLERS = {
-    "BookHandler": (wx.BookCtrlBase, wx.aui.AuiNotebook, AUI.AuiNotebook, FNB.FlatNotebook,
-                    LBK.LabelBook, LBK.FlatImageBook),
-    "TLWHandler": (wx.TopLevelWindow, ),
-    "CheckBoxHandler": (wx.CheckBox, ),
-    "ListBoxHandler": (wx.ListBox, wx.VListBox, wx.HtmlListBox, wx.SimpleHtmlListBox,
-                       wx.gizmos.EditableListBox),
-    "ListCtrlHandler": (wx.ListCtrl, wx.ListView), #ULC.UltimateListCtrl (later)
-    "ChoiceComboHandler": (wx.Choice, wx.ComboBox, wx.combo.OwnerDrawnComboBox),
-    "RadioBoxHandler": (wx.RadioBox, ),
-    "RadioButtonHandler": (wx.RadioButton, ),
-    "ScrolledWindowHandler": (wx.ScrolledWindow, scrolled.ScrolledPanel),
-    "SliderHandler": (wx.Slider, KC.KnobCtrl),
-    "SpinHandler": (wx.SpinButton, wx.SpinCtrl, FS.FloatSpin),
-    "SplitterHandler": (wx.SplitterWindow, ),
-    "TextCtrlHandler": (wx.TextCtrl, wx.SearchCtrl, expando.ExpandoTextCtrl, masked.TextCtrl,
-                        masked.ComboBox, masked.IpAddrCtrl, masked.TimeCtrl, masked.NumCtrl),
-    "ToggleButtonHandler": (wx.ToggleButton, buttons.GenToggleButton,
-                            buttons.GenBitmapToggleButton, buttons.GenBitmapTextToggleButton),
-    "TreeCtrlHandler": (wx.TreeCtrl, wx.GenericDirCtrl, CT.CustomTreeCtrl),
-    "TreeListCtrlHandler": (HTL.HyperTreeList, wx.gizmos.TreeListCtrl),
-    "CalendarCtrlHandler": (calendar.CalendarCtrl, ),
-    "CollapsiblePaneHandler": (wx.CollapsiblePane, ),
-    "DatePickerHandler": (wx.DatePickerCtrl, wx.GenericDatePickerCtrl),
-    "MediaCtrlHandler": (wx.media.MediaCtrl, ),
-    "ColourPickerHandler": (wx.ColourPickerCtrl, csel.ColourSelect),
-    "FileDirPickerHandler": (wx.FilePickerCtrl, wx.DirPickerCtrl),
-    "FontPickerHandler": (wx.FontPickerCtrl, ),
-    "FileHistoryHandler": (wx.FileHistory, ),
-    "MenuBarHandler": (wx.MenuBar, FM.FlatMenuBar),
-    "ToolBarHandler": (AUI.AuiToolBar, )
-    }
+HANDLERS = [
+    ("BookHandler", (wx.BookCtrlBase, wx.aui.AuiNotebook, AUI.AuiNotebook, FNB.FlatNotebook,
+                    LBK.LabelBook, LBK.FlatImageBook)),
+    ("TLWHandler", (wx.TopLevelWindow, )), 
+    ("CheckBoxHandler", (wx.CheckBox, )), 
+    ("TreeCtrlHandler", (wx.TreeCtrl, wx.GenericDirCtrl, CT.CustomTreeCtrl)), 
+    ("MenuBarHandler", (wx.MenuBar, FM.FlatMenuBar)), 
+    ("ToolBarHandler", (AUI.AuiToolBar, )),
+    ("ListBoxHandler", (wx.ListBox, wx.VListBox, wx.HtmlListBox, wx.SimpleHtmlListBox,
+                        wx.gizmos.EditableListBox)), 
+    ("ListCtrlHandler", (wx.ListCtrl, wx.ListView)),  #ULC.UltimateListCtrl (later)
+    ("ChoiceComboHandler", (wx.Choice, wx.ComboBox, wx.combo.OwnerDrawnComboBox)), 
+    ("RadioBoxHandler", (wx.RadioBox, )), 
+    ("RadioButtonHandler", (wx.RadioButton, )), 
+    ("ScrolledWindowHandler", (wx.ScrolledWindow, scrolled.ScrolledPanel)), 
+    ("SliderHandler", (wx.Slider, KC.KnobCtrl)), 
+    ("SpinHandler", (wx.SpinButton, wx.SpinCtrl, FS.FloatSpin)), 
+    ("SplitterHandler", (wx.SplitterWindow, )), 
+    ("TextCtrlHandler", (wx.TextCtrl, wx.SearchCtrl, expando.ExpandoTextCtrl, masked.TextCtrl,
+                        masked.ComboBox, masked.IpAddrCtrl, masked.TimeCtrl, masked.NumCtrl)), 
+    ("TreeListCtrlHandler", (HTL.HyperTreeList, wx.gizmos.TreeListCtrl)), 
+    ("CalendarCtrlHandler", (calendar.CalendarCtrl, )), 
+    ("CollapsiblePaneHandler", (wx.CollapsiblePane, )), 
+    ("DatePickerHandler", (wx.DatePickerCtrl, wx.GenericDatePickerCtrl)), 
+    ("MediaCtrlHandler", (wx.media.MediaCtrl, )), 
+    ("ColourPickerHandler", (wx.ColourPickerCtrl, csel.ColourSelect)), 
+    ("FileDirPickerHandler", (wx.FilePickerCtrl, wx.DirPickerCtrl)), 
+    ("FontPickerHandler", (wx.FontPickerCtrl, )), 
+    ("FileHistoryHandler", (wx.FileHistory, )), 
+    ("ToggleButtonHandler", (wx.ToggleButton, buttons.GenToggleButton,
+                            buttons.GenBitmapToggleButton, buttons.GenBitmapTextToggleButton)), 
+    ]
 
-STANDALONE_HANDLERS = {
-    "TreebookHandler": (wx.Treebook, ),
-    "CheckListBoxHandler": (wx.CheckListBox, ),
-    "FileDirDialogHandler": (wx.DirDialog, wx.FileDialog),
-    "FindReplaceHandler": (wx.FindReplaceDialog, ),
-    "FontDialogHandler": (wx.FontDialog, ),
-    "ColourDialogHandler": (wx.ColourDialog, CCD.CubeColourDialog),
-    "ChoiceDialogHandler": (wx.SingleChoiceDialog, wx.MultiChoiceDialog),
-    "TextEntryHandler": (wx.TextEntryDialog, wx.PasswordEntryDialog),
-    }
+STANDALONE_HANDLERS = [
+    ("TreebookHandler", (wx.Treebook, )), 
+    ("CheckListBoxHandler", (wx.CheckListBox, )), 
+    ("FileDirDialogHandler", (wx.DirDialog, wx.FileDialog)), 
+    ("FindReplaceHandler", (wx.FindReplaceDialog, )), 
+    ("FontDialogHandler", (wx.FontDialog, )), 
+    ("ColourDialogHandler", (wx.ColourDialog, CCD.CubeColourDialog)), 
+    ("ChoiceDialogHandler", (wx.SingleChoiceDialog, wx.MultiChoiceDialog)), 
+    ("TextEntryHandler", (wx.TextEntryDialog, wx.PasswordEntryDialog)), 
+    ]
 
 if hasSB:
-    HANDLERS["ToggleButtonHandler"] += (SB.SToggleButton, SB.SBitmapToggleButton, SB.SBitmapTextToggleButton)
+    HANDLERS[-1] += (SB.SToggleButton, SB.SBitmapToggleButton, SB.SBitmapTextToggleButton)
 
 # ----------------------------------------------------------------------------------- #
 
@@ -2553,12 +2549,12 @@ def FindHandler(pObject):
         # if control has a handler, just return it
         return window._persistentHandler
     
-    for handler, subclasses in STANDALONE_HANDLERS.items():
+    for handler, subclasses in STANDALONE_HANDLERS:
         for subclass in subclasses:
             if issubclass(klass, subclass):
                 return eval(handler)(pObject)
     
-    for handler, subclasses in HANDLERS.items():
+    for handler, subclasses in HANDLERS:
         for subclass in subclasses:
             if issubclass(klass, subclass):
                 return eval(handler)(pObject)
@@ -2580,12 +2576,12 @@ def HasCtrlHandler(control):
         # if control has a handler, just return it
         return True
     
-    for handler, subclasses in STANDALONE_HANDLERS.items():
+    for handler, subclasses in STANDALONE_HANDLERS:
         for subclass in subclasses:
             if issubclass(klass, subclass):
                 return True
     
-    for handler, subclasses in HANDLERS.items():
+    for handler, subclasses in HANDLERS:
         for subclass in subclasses:
             if issubclass(klass, subclass):
                 return True

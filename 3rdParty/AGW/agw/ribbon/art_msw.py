@@ -1869,9 +1869,9 @@ class RibbonMSWArtProvider(object):
          `RibbonButtonBarButtonState` enumeration;
         :param `label`: The label of the button;
         :param `bitmap_large`: The large bitmap of the button (or the large disabled
-         bitmap when ``RIBBON_BUTTONBAR_BUTTON_DISABLED`` is set in );
+         bitmap when ``RIBBON_BUTTONBAR_BUTTON_DISABLED`` is set in `state`);
         :param `bitmap_small`: The small bitmap of the button (or the small disabled
-         bitmap when ``RIBBON_BUTTONBAR_BUTTON_DISABLED`` is set in ).
+         bitmap when ``RIBBON_BUTTONBAR_BUTTON_DISABLED`` is set in `state`).
          
         """
 
@@ -2096,6 +2096,10 @@ class RibbonMSWArtProvider(object):
 
         """
 
+        if kind == RIBBON_BUTTON_TOGGLE:
+            if state & RIBBON_TOOLBAR_TOOL_TOGGLED:
+                state ^= RIBBON_TOOLBAR_TOOL_ACTIVE_MASK
+
         bg_rect = wx.Rect(*rect)
         bg_rect.Deflate(1, 1)
         
@@ -2160,7 +2164,7 @@ class RibbonMSWArtProvider(object):
         # Foreground
         avail_width = bg_rect.GetWidth()
         
-        if kind != RIBBON_BUTTON_NORMAL:        
+        if kind & RIBBON_BUTTON_DROPDOWN:        
             avail_width -= 8
             if is_split_hybrid:            
                 dc.DrawLine(rect.x + avail_width + 1, rect.y, rect.x + avail_width + 1, rect.y + rect.height)
@@ -2644,7 +2648,7 @@ class RibbonMSWArtProvider(object):
         if is_last:
             size.IncBy(1, 0)
 
-        if kind != RIBBON_BUTTON_NORMAL:
+        if kind & RIBBON_BUTTON_DROPDOWN:
             size.IncBy(8, 0)
             if kind == RIBBON_BUTTON_DROPDOWN:
                 dropdown_region = wx.Rect(0, 0, *size)

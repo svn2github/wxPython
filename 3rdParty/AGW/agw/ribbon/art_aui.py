@@ -1157,6 +1157,10 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
         """
 
+        if kind == RIBBON_BUTTON_TOGGLE:
+            if state & RIBBON_TOOLBAR_TOOL_TOGGLED:
+                state ^= RIBBON_TOOLBAR_TOOL_ACTIVE_MASK
+
         bg_rect = wx.Rect(*rect)
         bg_rect.Deflate(1, 1)
         
@@ -1206,7 +1210,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         # Foreground
         avail_width = bg_rect.GetWidth()
 
-        if kind != RIBBON_BUTTON_NORMAL:        
+        if kind & RIBBON_BUTTON_DROPDOWN: 
             avail_width -= 8
             if is_split_hybrid:            
                 dc.DrawLine(rect.x + avail_width + 1, rect.y, rect.x + avail_width + 1, rect.y + rect.height)

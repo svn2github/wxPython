@@ -1298,36 +1298,6 @@ class AuiTabContainer(object):
         self._tab_offset = offset
 
 
-    def MinimizeTabOffset(self, dc, wnd, max_width):
-        """
-        Minimize `self._tab_offset` to fit as many tabs as possible in the available space.
-
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: an instance of `wx.Window`;
-        :param `max_width`: the maximum available width for the tabs.
-        """
-
-        total_width = 0
-
-        for i, page in reversed(list(enumerate(self._pages))):
-
-            tab_button = self._tab_close_buttons[i]
-            (tab_width, tab_height), x_extent = self._art.GetTabSize(dc, wnd, page.caption, page.bitmap, page.active, tab_button.cur_state, page.control)
-            total_width += tab_width
-
-            if total_width > max_width:
-
-                tab_offset = i + 1
-
-                if tab_offset < self._tab_offset and tab_offset < len(self._pages):
-                    self._tab_offset = tab_offset
-
-                break
-
-        if i == 0:
-            self._tab_offset = 0
-
-
     def Render(self, raw_dc, wnd):
         """
         Renders the tab catalog to the specified `wx.DC`.
@@ -1358,9 +1328,23 @@ class AuiTabContainer(object):
         if not dc.IsOk():
             return
 
+        # prepare the tab-close-button array
+        # make sure tab button entries which aren't used are marked as hidden
+        for i in xrange(page_count, len(self._tab_close_buttons)):
+            self._tab_close_buttons[i].cur_state = AUI_BUTTON_STATE_HIDDEN
+
+        # make sure there are enough tab button entries to accommodate all tabs
+        while len(self._tab_close_buttons) < page_count:
+            tempbtn = AuiTabContainerButton()
+            tempbtn.id = AUI_BUTTON_CLOSE
+            tempbtn.location = wx.CENTER
+            tempbtn.cur_state = AUI_BUTTON_STATE_HIDDEN
+            self._tab_close_buttons.append(tempbtn)
+
         # find out if size of tabs is larger than can be
         # afforded on screen
         total_width = visible_width = 0
+        tab_width = [0] * page_count
 
         for i in xrange(page_count):
             page = self._pages[i]
@@ -1385,15 +1369,18 @@ class AuiTabContainer(object):
 
             if i+1 < page_count:
                 total_width += x_extent
+                tab_width[i] = x_extent
             else:
                 total_width += size[0]
+                tab_width[i] = size[0]
 
-            if i >= self._tab_offset:
+            if i >= self._tab_offset:            
                 if i+1 < page_count:
                     visible_width += x_extent
                 else:
                     visible_width += size[0]
 
+        # Calculate the width of visible buttons
         buttons_width = 0
 
         for button in self._buttons:
@@ -1417,8 +1404,20 @@ class AuiTabContainer(object):
             for button in self._buttons:
                 if button.id == AUI_BUTTON_LEFT or \
                    button.id == AUI_BUTTON_RIGHT:
-
+                    
                     button.cur_state |= AUI_BUTTON_STATE_HIDDEN
+
+        # Re-calculate the width of visible buttons (may have been hidden/shown)
+        buttons_width = 0
+        for button in self._buttons:
+            if not (button.cur_state & AUI_BUTTON_STATE_HIDDEN):
+                buttons_width += button.rect.GetWidth()
+
+        # Shift the tab offset down to make use of available space
+        available_width = self._rect.GetWidth() - buttons_width
+        while self._tab_offset > 0 and visible_width + tab_width[self._tab_offset - 1] < available_width:
+            self._tab_offset -= 1
+            visible_width += tab_width[self._tab_offset]
 
         # determine whether left button should be enabled
         for button in self._buttons:
@@ -1484,27 +1483,12 @@ class AuiTabContainer(object):
         if offset == 0:
             offset += self._art.GetIndentSize()
 
-        # prepare the tab-close-button array
-        # make sure tab button entries which aren't used are marked as hidden
-        for i in xrange(page_count, len(self._tab_close_buttons)):
-            self._tab_close_buttons[i].cur_state = AUI_BUTTON_STATE_HIDDEN
-
-        # make sure there are enough tab button entries to accommodate all tabs
-        while len(self._tab_close_buttons) < page_count:
-            tempbtn = AuiTabContainerButton()
-            tempbtn.id = AUI_BUTTON_CLOSE
-            tempbtn.location = wx.CENTER
-            tempbtn.cur_state = AUI_BUTTON_STATE_HIDDEN
-            self._tab_close_buttons.append(tempbtn)
-
         # buttons before the tab offset must be set to hidden
         for i in xrange(self._tab_offset):
             self._tab_close_buttons[i].cur_state = AUI_BUTTON_STATE_HIDDEN
             if self._pages[i].control:
                 if self._pages[i].control.IsShown():
                     self._pages[i].control.Hide()
-
-        self.MinimizeTabOffset(dc, wnd, self._rect.GetWidth() - right_buttons_width - offset - 2)
 
         # draw tab before tab offset
         if self._tab_offset > 0:

@@ -111,12 +111,13 @@ class RibbonPage(RibbonControl):
         """
         Default class constructor.
 
-        :param `parent`: Pointer to a parent window;
-        :param `id`: Window identifier. If ``wx.ID_ANY``, will automatically create an identifier;
-        :param `label`: Label of the new button;
-        :param `icon`: the icon used for the page in the ribbon bar tab area;
-        :param `style`: Window style.
-
+        :param `parent`: pointer to a parent window, an instance of L{RibbonBar};
+        :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create an identifier;
+        :param `label`: label to be used in the L{RibbonBar}'s tab list for this page (if the
+         ribbon bar is set to display labels);
+        :param `icon`: the icon used for the page in the ribbon bar tab area (if the ribbon bar is
+         set to display icons);
+        :param `style`: window style. Currently unused, should be zero.
         """
 
         RibbonControl.__init__(self, parent, id, wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE)
@@ -156,10 +157,9 @@ class RibbonPage(RibbonControl):
         art provider changed on the bar. The new art provider will be propagated to the
         children of the page.
 
-        Reimplemented from L{RibbonControl}.
+        :param `art`: an art provider.
 
-        :param `art`: MISSING DESCRIPTION.
-
+        :note: Reimplemented from L{RibbonControl}.
         """
 
         self._art = art
@@ -176,7 +176,6 @@ class RibbonPage(RibbonControl):
 
         :param `rect`: The rectangle to adjust. The width and height will not be
          reduced, and the x and y will not be increased.
-
         """
 
         if self._scroll_buttons_visible:        
@@ -200,12 +199,22 @@ class RibbonPage(RibbonControl):
     
 
     def OnEraseBackground(self, event):
+        """
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{RibbonPage}.
+
+        :param `event`: a `wx.EraseEvent` event to be processed.
+        """
 
         # All painting done in main paint handler to minimise flicker
         pass
 
 
     def OnPaint(self, event):
+        """
+        Handles the ``wx.EVT_PAINT`` event for L{RibbonPage}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
 
         # No foreground painting done by the page itself, but a paint DC
         # must be created anyway.
@@ -245,7 +254,7 @@ class RibbonPage(RibbonControl):
 
         Reimplemented from `wx.Window`.
 
-        :param `lines`: MISSING DESCRIPTION.
+        :param integer `lines`: number of lines to scroll the page.
 
         :returns: ``True`` if the page scrolled at least one pixel in the given direction,
          ``False`` if it did not scroll.
@@ -265,7 +274,7 @@ class RibbonPage(RibbonControl):
         Positive values of will scroll right or down, while negative values will scroll
         up or left (depending on the direction in which panels are stacked).
 
-        :param `pixels`: MISSING DESCRIPTION.
+        :param integer `pixels`: number of pixels to scroll the page.
 
         :returns: ``True`` if the page scrolled at least one pixel in the given direction,
          ``False`` if it did not scroll.
@@ -323,11 +332,10 @@ class RibbonPage(RibbonControl):
         of `SetSize`, as iteracting algorithms may not expect `SetSize` to also
         set the size of siblings.
 
-        :param `x`: MISSING DESCRIPTION;
-        :param `y`: MISSING DESCRIPTION;
-        :param `width`: MISSING DESCRIPTION;
-        :param `height`: MISSING DESCRIPTION.
-
+        :param `x`: the page `x` position, in pixels;
+        :param `y`: the page `y` position, in pixels;
+        :param `width`: the page width, in pixels;
+        :param `height`: the page height, in pixels.
         """
 
         if self._scroll_buttons_visible:        
@@ -364,7 +372,35 @@ class RibbonPage(RibbonControl):
 
 
     def DoSetSize(self, x, y, width, height, sizeFlags=wx.SIZE_AUTO):
+        """
+        Sets the size of the window in pixels.
 
+        :param integer `x`: required `x` position in pixels, or ``wx.DefaultCoord`` to
+         indicate that the existing value should be used;
+        :param integer `y`: required `y` position in pixels, or ``wx.DefaultCoord`` to
+         indicate that the existing value should be used;
+        :param integer `width`: required width in pixels, or ``wx.DefaultCoord`` to
+         indicate that the existing value should be used;
+        :param integer `height`: required height in pixels, or ``wx.DefaultCoord`` to
+         indicate that the existing value should be used;
+        :param integer `sizeFlags`: indicates the interpretation of other parameters.
+         It is a bit list of the following:
+
+         * ``wx.SIZE_AUTO_WIDTH``: a ``wx.DefaultCoord`` width value is taken to indicate a
+           wxPython-supplied default width.
+         * ``wx.SIZE_AUTO_HEIGHT``: a ``wx.DefaultCoord`` height value is taken to indicate a
+           wxPython-supplied default height.
+         * ``wx.SIZE_AUTO``: ``wx.DefaultCoord`` size values are taken to indicate a wxPython-supplied
+           default size.
+         * ``wx.SIZE_USE_EXISTING``: existing dimensions should be used if ``wx.DefaultCoord`` values are supplied.
+         * ``wx.SIZE_ALLOW_MINUS_ONE``: allow negative dimensions (i.e. value of ``wx.DefaultCoord``)
+           to be interpreted as real dimensions, not default values.
+         * ``wx.SIZE_FORCE``: normally, if the position and the size of the window are already
+           the same as the parameters of this function, nothing is done. but with this flag a window
+           resize may be forced even in this case (supported in wx 2.6.2 and later and only implemented
+           for MSW and ignored elsewhere currently).
+        """
+        
         # When a resize triggers the scroll buttons to become visible, the page is resized.
         # This resize from within a resize event can cause (MSW) wxWidgets some confusion,
         # and report the 1st size to the 2nd size event. Hence the most recent size is
@@ -372,19 +408,38 @@ class RibbonPage(RibbonControl):
 
         if self.GetMajorAxis() == wx.HORIZONTAL:
             self._size_in_major_axis_for_children = width
+
+            if self._scroll_buttons_visible:
+                if self._scroll_left_btn:
+                    self._size_in_major_axis_for_children += self._scroll_left_btn.GetSize().GetWidth()
+                if self._scroll_right_btn:
+                    self._size_in_major_axis_for_children += self._scroll_right_btn.GetSize().GetWidth()
+                    
         else:
             self._size_in_major_axis_for_children = height
+
+            if self._scroll_buttons_visible:
+                if self._scroll_left_btn:
+                    self._size_in_major_axis_for_children += self._scroll_left_btn.GetSize().GetHeight()
+                if self._scroll_right_btn:
+                    self._size_in_major_axis_for_children += self._scroll_right_btn.GetSize().GetHeight()
 
         RibbonControl.DoSetSize(self, x, y, width, height, sizeFlags)
 
 
     def OnSize(self, event):
+        """
+        Handles the ``wx.EVT_SIZE`` event for L{RibbonPage}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.
+        """
 
         new_size = event.GetSize()
 
-        temp_dc = wx.MemoryDC()
-        invalid_rect = self._art.GetPageBackgroundRedrawArea(temp_dc, self, self._old_size, new_size)
-        self.Refresh(True, invalid_rect)
+        if self._art:
+            temp_dc = wx.MemoryDC()
+            invalid_rect = self._art.GetPageBackgroundRedrawArea(temp_dc, self, self._old_size, new_size)
+            self.Refresh(True, invalid_rect)
 
         self._old_size = wx.Size(*new_size)
         x, y = new_size
@@ -401,8 +456,7 @@ class RibbonPage(RibbonControl):
 
 
     def RemoveChild(self, child):
-
-        # Remove all references to the child from the collapse stack
+        """ Remove all references to the child from the collapse stack. """
 
         try:
             self._collapse_stack.remove(child)
@@ -422,8 +476,7 @@ class RibbonPage(RibbonControl):
         called automatically when L{RibbonBar.Realize} is called. Will invoke
         L{RibbonPanel.Realize} for all child panels.
 
-        Reimplemented from L{RibbonControl}.
-
+        :note: Reimplemented from L{RibbonControl}.
         """
 
         status = True
@@ -472,6 +525,9 @@ class RibbonPage(RibbonControl):
             gap = self._art.GetMetric(RIBBON_ART_PANEL_Y_SEPARATION_SIZE)
             minor_axis_size = self.GetSize().GetWidth() - origin.x - self._art.GetMetric(RIBBON_ART_PAGE_BORDER_RIGHT_SIZE)
 
+        if minor_axis_size < 0:
+            minor_axis_size = 0
+ 
         for iteration in xrange(1, 3):
         
             for child in self.GetChildren():
@@ -635,7 +691,7 @@ class RibbonPage(RibbonControl):
                 
                 if not isinstance(panel, RibbonPanel):
                     continue
-                
+
                 if panel.IsSizingContinuous():
                     size = GetSizeInOrientation(panel.GetSize(), direction)
                     if size < smallest_size:                    
@@ -787,6 +843,13 @@ class RibbonPage(RibbonControl):
 
 
     def GetMinSize(self):
+        """
+        Returns the minimum size of the window, an indication to the sizer layout mechanism
+        that this is the minimum required size.
+
+        This method normally just returns the value set by `SetMinSize`, but it can be overridden
+        to do the calculation on demand.
+        """
 
         minSize = wx.Size(-1, -1)
 
@@ -810,6 +873,15 @@ class RibbonPage(RibbonControl):
 
 
     def DoGetBestSize(self):
+        """
+        Gets the size which best suits the window: for a control, it would be the
+        minimal size which doesn't truncate the control, for a panel - the same size
+        as it would have after a call to `Fit()`.
+
+        :return: An instance of `wx.Size`.
+        
+        :note: Overridden from `wx.PyControl`.
+        """
 
         best = wx.Size(0, 0)
         count = 0
@@ -853,6 +925,7 @@ class RibbonPage(RibbonControl):
 
 
     def GetDefaultBorder(self):
+        """ Returns the default border style for L{RibbonBar}. """
 
         return wx.BORDER_NONE
 

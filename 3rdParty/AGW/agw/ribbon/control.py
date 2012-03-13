@@ -23,9 +23,28 @@ rectangle being painted) if you want transparent regions.
 import wx
 
 class RibbonControl(wx.PyControl):
+    """ Base class for all the Ribbon stuff. """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0,
                  validator=wx.DefaultValidator, name="RibbonControl"):
+        """
+        Default class constructor.
+
+        :param `wx.Window` `parent`: pointer to a parent window;
+        :param integer `id`: window identifier. If ``wx.ID_ANY``, will automatically create
+         an identifier;
+        :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
+         should generate a default position for the window;
+        :type `pos`: tuple or `wx.Point`
+        :param `size`: window size. ``wx.DefaultSize`` indicates that wxPython should
+         generate a default size for the window. If no suitable size can be found, the
+         window will be sized to 20x20 pixels so that the window is visible but obviously
+         not correctly sized;
+        :type `size`: tuple or `wx.Point`
+        :param integer `style`: the window style;
+        :param `wx.Validator` `validator`: window validator;
+        :param string `name`: window name.
+        """
 
         wx.PyControl.__init__(self, parent, id, pos, size, style, validator, name)
         self._art = None
@@ -43,8 +62,7 @@ class RibbonControl(wx.PyControl):
         take ownership of the given pointer, with the notable exception being
         L{RibbonBar.SetArtProvider}.
 
-        :param `art`: MISSING DESCRIPTION.
-
+        :param `art`: an art provider.
         """
 
         self._art = art
@@ -56,7 +74,6 @@ class RibbonControl(wx.PyControl):
 
         Note that until an art provider has been set in some way, this function may
         return ``None``.
-
         """
 
         return self._art
@@ -64,8 +81,8 @@ class RibbonControl(wx.PyControl):
 
     def IsSizingContinuous(self):
         """
-        :returns: ``True`` if this window can take any size (greater than its minimum size),
-         ``False`` if it can only take certain sizes.
+        Returns ``True`` if this window can take any size (greater than its minimum size),
+        ``False`` if it can only take certain sizes.
         
         :see: L{GetNextSmallerSize}, L{GetNextLargerSize}
         """
@@ -80,9 +97,8 @@ class RibbonControl(wx.PyControl):
         Controls which have non-continuous sizing must override this virtual function
         rather than L{GetNextSmallerSize}.
 
-        :param `direction`: MISSING DESCRIPTION;
-        :param `relative_to`: MISSING DESCRIPTION.
-
+        :param integer `direction`: the direction(s) in which the size should increase;
+        :param `wx.Size` `size`: the size for which a larger size should be found.
         """
 
         # Dummy implementation for code which doesn't check for IsSizingContinuous() == true
@@ -103,9 +119,8 @@ class RibbonControl(wx.PyControl):
         Controls which have non-continuous sizing must override this virtual function
         rather than L{GetNextLargerSize}.
 
-        :param `direction`: MISSING DESCRIPTION;
-        :param `relative_to`: MISSING DESCRIPTION.
-
+        :param integer `direction`: the direction(s) in which the size should increase;
+        :param `wx.Size` `size`: the size for which a larger size should be found.
         """
 
         # Dummy implementation for code which doesn't check for IsSizingContinuous() == true
@@ -122,8 +137,8 @@ class RibbonControl(wx.PyControl):
         If sizing is not continuous, then return a suitable size for the control which
         is smaller than the given size.
 
-        :param `direction`: The direction(s) in which the size should reduce;
-        :param `relative_to`: The size for which a smaller size should be found.
+        :param integer `direction`: The direction(s) in which the size should reduce;
+        :param `wx.Size` `relative_to`: The size for which a smaller size should be found.
 
         :returns: if there is no smaller size, otherwise a suitable size which is smaller
          in the given direction(s), and the same as in the other direction (if any).
@@ -142,8 +157,8 @@ class RibbonControl(wx.PyControl):
         If sizing is not continuous, then return a suitable size for the control which
         is larger then the given size.
 
-        :param `direction`: The direction(s) in which the size should increase;
-        :param `relative_to`: The size for which a larger size should be found.
+        :param integer `direction`: The direction(s) in which the size should reduce;
+        :param `wx.Size` `relative_to`: The size for which a smaller size should be found.
 
         :returns: if there is no larger size, otherwise a suitable size which is larger
          in the given direction(s), and the same as in the other direction (if any).
