@@ -22,6 +22,8 @@ Window Styles                     Hex Value   Description
 ``RIBBON_PANEL_NO_AUTO_MINIMISE``         0x1 Prevents the panel from automatically minimising to conserve screen space.
 ``RIBBON_PANEL_EXT_BUTTON``               0x8 Causes an extension button to be shown in the panel's chrome (if the bar in which it is contained has ``RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS`` set). The behaviour of this button is application controlled, but typically will show an extended drop-down menu relating to the panel.
 ``RIBBON_PANEL_MINIMISE_BUTTON``         0x10 Causes a (de)minimise button to be shown in the panel's chrome (if the bar in which it is contained has the ``RIBBON_BAR_SHOW_PANEL_MINIMISE_BUTTONS`` style set). This flag is typically combined with ``RIBBON_PANEL_NO_AUTO_MINIMISE`` to make a panel which the user always has manual control over when it minimises.
+``RIBBON_PANEL_STRETCH``                 0x20 Allows a single panel to stretch to fill the parent page.
+``RIBBON_PANEL_FLEXIBLE``                0x40 Allows toolbars to wrap, taking up the optimum amount of space when used in a vertical palette.
 ================================= =========== =================================
 
 
@@ -81,6 +83,8 @@ class RibbonPanel(RibbonControl):
          ``RIBBON_PANEL_NO_AUTO_MINIMISE``         0x1 Prevents the panel from automatically minimising to conserve screen space.
          ``RIBBON_PANEL_EXT_BUTTON``               0x8 Causes an extension button to be shown in the panel's chrome (if the bar in which it is contained has ``RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS`` set). The behaviour of this button is application controlled, but typically will show an extended drop-down menu relating to the panel.
          ``RIBBON_PANEL_MINIMISE_BUTTON``         0x10 Causes a (de)minimise button to be shown in the panel's chrome (if the bar in which it is contained has the ``RIBBON_BAR_SHOW_PANEL_MINIMISE_BUTTONS`` style set). This flag is typically combined with ``RIBBON_PANEL_NO_AUTO_MINIMISE`` to make a panel which the user always has manual control over when it minimises.
+         ``RIBBON_PANEL_STRETCH``                 0x20 Allows a single panel to stretch to fill the parent page.
+         ``RIBBON_PANEL_FLEXIBLE``                0x40 Allows toolbars to wrap, taking up the optimum amount of space when used in a vertical palette.
          ================================= =========== =================================
          
         :param `name`: the window name.
@@ -157,8 +161,8 @@ class RibbonPanel(RibbonControl):
         """
         Query if the panel would be minimised at a given size.
 
-        :param `at_size`: MISSING DESCRIPTION.
-
+        :param `at_size`: an instance of `wx.Size`, giving the size at which the
+         panel should be test for minimisation.
         """
         
         if at_size is None:
@@ -185,11 +189,21 @@ class RibbonPanel(RibbonControl):
 
 
     def OnMouseEnter(self, event):
+        """
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for L{RibbonPanel}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         self.TestPositionForHover(event.GetPosition())
 
 
     def OnMouseEnterChild(self, event):
+        """
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for children of L{RibbonPanel}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         pos = event.GetPosition()
         child = event.GetEventObject()
@@ -202,11 +216,21 @@ class RibbonPanel(RibbonControl):
 
 
     def OnMouseLeave(self, event):
+        """
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{RibbonPanel}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         self.TestPositionForHover(event.GetPosition())
 
 
     def OnMouseLeaveChild(self, event):
+        """
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for children of L{RibbonPanel}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         pos = event.GetPosition()
         child = event.GetEventObject()
@@ -253,6 +277,11 @@ class RibbonPanel(RibbonControl):
 
 
     def OnSize(self, event):
+        """
+        Handles the ``wx.EVT_SIZE`` event for L{RibbonPanel}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.
+        """
 
         if self.GetAutoLayout():
             self.Layout()
@@ -261,6 +290,34 @@ class RibbonPanel(RibbonControl):
 
 
     def DoSetSize(self, x, y, width, height, sizeFlags=wx.SIZE_AUTO):
+        """
+        Sets the size of the window in pixels.
+
+        :param integer `x`: required `x` position in pixels, or ``wx.DefaultCoord`` to
+         indicate that the existing value should be used;
+        :param integer `y`: required `y` position in pixels, or ``wx.DefaultCoord`` to
+         indicate that the existing value should be used;
+        :param integer `width`: required width in pixels, or ``wx.DefaultCoord`` to
+         indicate that the existing value should be used;
+        :param integer `height`: required height in pixels, or ``wx.DefaultCoord`` to
+         indicate that the existing value should be used;
+        :param integer `sizeFlags`: indicates the interpretation of other parameters.
+         It is a bit list of the following:
+
+         * ``wx.SIZE_AUTO_WIDTH``: a ``wx.DefaultCoord`` width value is taken to indicate a
+           wxPython-supplied default width.
+         * ``wx.SIZE_AUTO_HEIGHT``: a ``wx.DefaultCoord`` height value is taken to indicate a
+           wxPython-supplied default height.
+         * ``wx.SIZE_AUTO``: ``wx.DefaultCoord`` size values are taken to indicate a wxPython-supplied
+           default size.
+         * ``wx.SIZE_USE_EXISTING``: existing dimensions should be used if ``wx.DefaultCoord`` values are supplied.
+         * ``wx.SIZE_ALLOW_MINUS_ONE``: allow negative dimensions (i.e. value of ``wx.DefaultCoord``)
+           to be interpreted as real dimensions, not default values.
+         * ``wx.SIZE_FORCE``: normally, if the position and the size of the window are already
+           the same as the parameters of this function, nothing is done. but with this flag a window
+           resize may be forced even in this case (supported in wx 2.6.2 and later and only implemented
+           for MSW and ignored elsewhere currently).
+        """
 
         # At least on MSW, changing the size of a window will cause GetSize() to
         # report the new size, but a size event may not be handled immediately.
@@ -286,8 +343,8 @@ class RibbonPanel(RibbonControl):
         """
         Query if the panel would be minimised at a given size.
 
-        :param `at_size`: MISSING DESCRIPTION.
-
+        :param `at_size`: an instance of `wx.Size`, giving the size at which the
+         panel should be test for minimisation.
         """
 
         if self.GetSizer():
@@ -309,12 +366,22 @@ class RibbonPanel(RibbonControl):
 
 
     def OnEraseBackground(self, event):
+        """
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{RibbonPanel}.
+
+        :param `event`: a `wx.EraseEvent` event to be processed.
+        """
 
         # All painting done in main paint handler to minimise flicker
         pass
 
 
     def OnPaint(self, event):
+        """
+        Handles the ``wx.EVT_PAINT`` event for L{RibbonPanel}.
+
+        :param `event`: a `wx.PaintEvent` event to be processed.
+        """
 
         dc = wx.AutoBufferedPaintDC(self)
 
@@ -525,6 +592,13 @@ class RibbonPanel(RibbonControl):
 
 
     def GetMinSize(self):
+        """
+        Returns the minimum size of the window, an indication to the sizer layout mechanism
+        that this is the minimum required size.
+
+        This method normally just returns the value set by `SetMinSize`, but it can be
+        overridden to do the calculation on demand.
+        """
 
         if self._expanded_panel != None:        
             # Minimum size depends upon children, who are currently in the
@@ -580,6 +654,15 @@ class RibbonPanel(RibbonControl):
 
 
     def DoGetBestSize(self):
+        """
+        Gets the size which best suits the window: for a control, it would be the
+        minimal size which doesn't truncate the control, for a panel - the same size
+        as it would have after a call to `Fit()`.
+
+        :return: An instance of `wx.Size`.
+        
+        :note: Overridden from `wx.PyControl`.
+        """
 
         # Ask sizer if present
         if self.GetSizer():
@@ -599,7 +682,7 @@ class RibbonPanel(RibbonControl):
         """
         Realize all children of the panel.
 
-        Reimplemented from L{RibbonControl}.
+        :note: Reimplemented from L{RibbonControl}.
         """
 
         status = True
@@ -671,6 +754,11 @@ class RibbonPanel(RibbonControl):
 
 
     def OnMouseClick(self, event):
+        """
+        Handles the ``wx.EVT_LEFT_DOWN`` event for L{RibbonPanel}.
+
+        :param `event`: a `wx.MouseEvent` event to be processed.
+        """
 
         if self.IsMinimised():        
             if self._expanded_panel != None:            
@@ -790,6 +878,11 @@ class RibbonPanel(RibbonControl):
     
 
     def OnKillFocus(self, event):
+        """
+        Handles the ``wx.EVT_KILL_FOCUS`` event for L{RibbonPanel}.
+
+        :param `event`: a `wx.FocusEvent` event to be processed.
+        """
 
         if self._expanded_dummy:
             receiver = event.GetWindow()
@@ -803,6 +896,11 @@ class RibbonPanel(RibbonControl):
         
 
     def OnChildKillFocus(self, event):
+        """
+        Handles the ``wx.EVT_KILL_FOCUS`` event for children of L{RibbonPanel}.
+
+        :param `event`: a `wx.FocusEvent` event to be processed.
+        """
 
         if self._child_with_focus == None:
             return # Should never happen, but a check can't hurt
@@ -958,12 +1056,13 @@ class RibbonPanel(RibbonControl):
 
 
     def GetDefaultBorder(self):
-        """ Returns the default border style for L{RibbonBar}. """
+        """ Returns the default border style for L{RibbonPanel}. """
 
         return wx.BORDER_NONE
 
 
     def GetFlags(self):
+        """ Returns the AGW-specific window style for L{RibbonPanel}. """
 
         return self._flags
 

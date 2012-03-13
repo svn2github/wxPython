@@ -820,7 +820,7 @@ class RibbonButtonBar(RibbonControl):
         you pass the ``wx.UPDATE_UI_FROMIDLE`` flag, since this tells the window to only update
         the UI elements that need to be updated in idle time. Some windows update their elements
         only when necessary, for example when a menu is about to be shown. The following is an
-        example of how to call L{UpdateWindowUI] from an idle function::
+        example of how to call L{UpdateWindowUI} from an idle function::
 
             def OnInternalIdle(self):
 
