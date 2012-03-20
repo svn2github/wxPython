@@ -1028,6 +1028,23 @@ class SuperToolTip(object):
         self.DoShowNow()
         
 
+    def Update(self):
+        """
+        Calling this method immediately repaints the invalidated area of the window and all of its
+        children recursively (this normally only happens when the flow of control returns to the
+        event loop).
+
+        :note: Notice that this function doesn't invalidate any area of the window so nothing happens
+         if nothing has been invalidated (i.e. marked as requiring a redraw). Use `Refresh` first if
+         you want to immediately redraw the window unconditionally.
+
+        .. versionadded:: 0.5
+        """
+
+        if self._superToolTip:
+            self._superToolTip.Update()
+
+
     def OnDestroy(self, event):
         """ Handles the L{SuperToolTip} target destruction. """
 
