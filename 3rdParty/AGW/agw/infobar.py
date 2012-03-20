@@ -276,7 +276,7 @@ class AutoWrapStaticText(StaticText):
         :param integer `width`: the maximum available width for the text, in pixels.
 
         :note: Note that this `width` is not necessarily the total width of the control,
-        since a few pixels for the border (depending on the controls border style) may be added.
+         since a few pixels for the border (depending on the controls border style) may be added.
         """
 
         if width < 0:

@@ -86,7 +86,7 @@ This class supports the following window styles:
 =========================== =========== ==================================================
 Window Styles               Hex Value   Description
 =========================== =========== ==================================================
-``GMD_DEFAULT``                    0x0  Uses generic buttons.
+``GMD_DEFAULT``                     0x0 Uses generic buttons.
 ``GMD_USE_AQUABUTTONS``            0x20 Uses `wx.lib.agw.aquabutton` buttons instead of generic buttons.
 ``GMD_USE_GRADIENTBUTTONS``        0x40 Uses `wx.lib.agw.gradientbutton` buttons instead of generic buttons.
 =========================== =========== ==================================================
@@ -619,7 +619,7 @@ class GenericMessageDialog(wx.Dialog):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``GMD_DEFAULT``                        0 Uses normal generic buttons
+         ``GMD_DEFAULT``                       0 Uses normal generic buttons
          ``GMD_USE_AQUABUTTONS``            0x20 Uses L{AquaButton} buttons instead of generic buttons.
          ``GMD_USE_GRADIENTBUTTONS``        0x40 Uses L{GradientButton} buttons instead of generic buttons.
          =========================== =========== ==================================================
