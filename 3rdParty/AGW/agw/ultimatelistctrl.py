@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 09 Feb 2012, 21.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 09 Feb 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.8
 
@@ -252,8 +252,9 @@ _VERSION_STRING = wx.VERSION_STRING
 
 # style flags
 ULC_VRULES                  = wx.LC_VRULES
+""" Draws light vertical rules between rows in report mode. """
 ULC_HRULES                  = wx.LC_HRULES
-
+""" Draws light horizontal rules between rows in report mode. """
 ULC_ICON                    = wx.LC_ICON
 ULC_SMALL_ICON              = wx.LC_SMALL_ICON
 ULC_LIST                    = wx.LC_LIST

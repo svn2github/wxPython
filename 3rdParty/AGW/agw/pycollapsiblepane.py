@@ -3,7 +3,7 @@
 # Generic Implementation Based On wx.CollapsiblePane.
 #
 # Andrea Gavana, @ 09 Aug 2007
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -158,7 +158,7 @@ License And Version
 
 L{PyCollapsiblePane} is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.4
 
@@ -175,10 +175,7 @@ CP_LINE_ABOVE = 16
 CP_DEFAULT_STYLE = wx.CP_DEFAULT_STYLE
 """ The default style. It includes ``wx.TAB_TRAVERSAL`` and ``wx.BORDER_NONE``. """
 CP_NO_TLW_RESIZE = wx.CP_NO_TLW_RESIZE
-""" By default L{PyCollapsiblePane} resizes the top level window containing it when its""" \
-""" own size changes. This allows to easily implement dialogs containing an optionally""" \
-""" shown part, for example, and so is the default behaviour but can be inconvenient""" \
-""" in some specific cases -- use this flag to disable this automatic parent resizing then. """
+""" By default L{PyCollapsiblePane} resizes the top level window containing it when its own size changes. This allows to easily implement dialogs containing an optionally shown part, for example, and so is the default behaviour but can be inconvenient in some specific cases -- use this flag to disable this automatic parent resizing then. """
 
 # inject into the wx namespace with the other CP_* constants
 wx.CP_GTK_EXPANDER = CP_GTK_EXPANDER

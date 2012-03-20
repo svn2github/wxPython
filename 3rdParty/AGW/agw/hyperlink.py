@@ -3,7 +3,7 @@
 # Ported From Angelo Mandato C++ Code By:
 #
 # Andrea Gavana, @ 27 Mar 2005
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # Original Web Site (For The C++ Code):
@@ -114,7 +114,7 @@ License And Version
 
 L{HyperLinkCtrl} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.6
 
@@ -131,6 +131,7 @@ webbrowser.PROCESS_CREATION_DELAY = 0
 
 # To show a popup that copies the hyperlinks on the clipboard
 wxHYPERLINKS_POPUP_COPY = 1000
+""" Flag used to show a popup that copies the hyperlinks on the clipboard. """
 
 
 #-----------------------------------#
@@ -153,6 +154,7 @@ EVT_HYPERLINK_MIDDLE = wx.PyEventBinder(wxEVT_HYPERLINK_MIDDLE, 1)
 EVT_HYPERLINK_RIGHT = wx.PyEventBinder(wxEVT_HYPERLINK_RIGHT, 1)
 """ Handles a right mouse button event. Sent when the right mouse button is""" \
 """ clicked, but only if `DoPopup` is set to ``False``. """
+
 
 # ------------------------------------------------------------
 # This class implements the event listener for the hyperlinks

@@ -2,7 +2,7 @@
 # GENERICMESSAGEDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 29 Feb 2012, 21.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -86,6 +86,7 @@ This class supports the following window styles:
 =========================== =========== ==================================================
 Window Styles               Hex Value   Description
 =========================== =========== ==================================================
+``GMD_DEFAULT``                    0x0  Uses generic buttons.
 ``GMD_USE_AQUABUTTONS``            0x20 Uses `wx.lib.agw.aquabutton` buttons instead of generic buttons.
 ``GMD_USE_GRADIENTBUTTONS``        0x40 Uses `wx.lib.agw.gradientbutton` buttons instead of generic buttons.
 =========================== =========== ==================================================
@@ -120,7 +121,7 @@ License And Version
 
 L{GenericMessageDialog} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 29 Feb 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.7
 
@@ -137,6 +138,8 @@ import aquabutton as AB
 import gradientbutton as GB
 
 # GenericMessageDialog styles
+GMD_DEFAULT = 0
+""" Uses generic buttons. """
 GMD_USE_AQUABUTTONS = 32
 """ Uses `wx.lib.agw.aquabutton` buttons instead of generic buttons. """
 GMD_USE_GRADIENTBUTTONS = 64
@@ -144,6 +147,7 @@ GMD_USE_GRADIENTBUTTONS = 64
 
 # Avoid 2.9 errors
 BUTTON_SIZER_FLAGS = wx.OK | wx.CANCEL | wx.YES | wx.NO | wx.HELP | wx.NO_DEFAULT
+""" Flag used to mask the L{GenericMessageDialog} AGW-specific style. """
 
 _ = wx.GetTranslation
 
@@ -615,7 +619,7 @@ class GenericMessageDialog(wx.Dialog):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         0                                     0 Uses normal generic buttons
+         ``GMD_DEFAULT``                        0 Uses normal generic buttons
          ``GMD_USE_AQUABUTTONS``            0x20 Uses L{AquaButton} buttons instead of generic buttons.
          ``GMD_USE_GRADIENTBUTTONS``        0x40 Uses L{GradientButton} buttons instead of generic buttons.
          =========================== =========== ==================================================

@@ -13,11 +13,11 @@ _isStandalone = False
 
 try:
     from agw import xlsgrid as XG
-    dataDir = "data/"
+    dataDir = os.path.join(dirName, "data")
     _isStandalone = True
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.xlsgrid as XG
-    dataDir = "agw/data/"
+    dataDir = os.path.join(dirName, "agw", "data")
 
 _hasXLRD = True
 
@@ -215,9 +215,10 @@ def runTest(frame, nb, log):
               'See: http://pypi.python.org/pypi/xlrd'
         
         if _isStandalone:
-            wx.MessageDialog(nb, msg, 'Sorry', wx.ICON_WARNING|wx.OK)
+            dlg = wx.MessageDialog(nb, msg, 'Sorry', wx.ICON_WARNING|wx.OK)
             dlg.ShowModal()
             dlg.Destroy()
+            return None
         else:
             from Main import MessagePanel
             win = MessagePanel(nb, msg, 'Sorry', wx.ICON_WARNING)

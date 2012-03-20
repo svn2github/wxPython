@@ -1083,7 +1083,7 @@ class BoxSizer(Sizer, wx.BoxSizer):
          |                                                                     | maintaining its aspect ratio                                                |
          +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
          | ``wx.FIXED_MINSIZE``                                                | Normally `wx.Sizers` will use                                               |
-         |                                                                     | ``wx.Window.GetAdjustedBestSize`` to                                        |
+         |                                                                     | `wx.Window.GetAdjustedBestSize` to                                          |
          |                                                                     | determine what the minimal size of window items should be, and will use that| 
          |                                                                     | size to calculate the layout. This allows layouts to adjust when an item    |
          |                                                                     | changes and its best size becomes different. If you would rather have a     |

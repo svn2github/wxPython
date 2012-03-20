@@ -2,7 +2,7 @@
 # XLSGRID wxPython IMPLEMENTATION
 #
 # Andrea Gavana @ 08 Aug 2011
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 20 MAr 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -226,14 +226,14 @@ License And Version
 
 L{XLSGrid} is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 20 Mar 2012, 21.00 GMT
 
-Version 0.3
+Version 0.4
 
 """
 
 # Version Info
-__version__ = "0.3"
+__version__ = "0.4"
 
 # Start the imports
 import wx
@@ -493,19 +493,24 @@ def ReadExcelCOM(filename, sheetname, rows, cols):
 
     if not _hasWin32:
         return comments, texts
+
+    try:
+        workbook = Excel(filename, sheetname)
+
+        for i in xrange(1, rows+1):
+            for j in xrange(1, cols+1):
+                texts[i-1][j-1]    = workbook.GetText(i, j)
+
+        comm_range = workbook.GetCommentsRange()
+        if comm_range is not None:
+            for comm in comm_range:
+                comments[comm.Row-1][comm.Column-1] = comm.Comment.Text()
+                
+        workbook.Close()
+
+    except pywintypes.com_error:
+        pass
     
-    workbook = Excel(filename, sheetname)
-
-    for i in xrange(1, rows+1):
-        for j in xrange(1, cols+1):
-            texts[i-1][j-1]    = workbook.GetText(i, j)
-
-    comm_range = workbook.GetCommentsRange()
-    if comm_range is not None:
-        for comm in comm_range:
-            comments[comm.Row-1][comm.Column-1] = comm.Comment.Text()
-            
-    workbook.Close()
     return comments, texts
 
 

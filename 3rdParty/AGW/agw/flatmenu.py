@@ -2,7 +2,7 @@
 # FLATMENU wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 07 Mar 2012, 21.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 # TODO List
 #
@@ -185,7 +185,7 @@ License And Version
 
 L{FlatMenu} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 07 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 1.0
 
@@ -263,10 +263,12 @@ if wx.Platform == "__WXMSW__":
 
 import wx.aui as AUI
 AuiPaneInfo = AUI.AuiPaneInfo
+""" Default AuiPaneInfo as in `wx.aui.AuiPaneInfo`. """
 
 try:
     import aui as PyAUI
     PyAuiPaneInfo = PyAUI.AuiPaneInfo
+    """ Default AuiPaneInfo as in L{AuiPaneInfo}. """
 except ImportError:
     pass
 
@@ -3879,6 +3881,7 @@ class mcPopupWindow(wx.MiniFrame):
 
 
 havePopupWindow = 1
+""" Flag used to indicate whether the platform supports the native `wx.PopupWindow`. """
 
 if wx.Platform == '__WXMAC__':
     havePopupWindow = 0

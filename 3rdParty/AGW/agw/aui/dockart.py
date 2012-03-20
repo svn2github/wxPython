@@ -22,6 +22,7 @@ from aui_utilities import DarkenBitmap, LightContrastColour
 from aui_constants import *
 
 optionActive = 2**14
+""" Indicates that a pane is active and should display an active caption (if present). """
 
 _ctypes = False
 

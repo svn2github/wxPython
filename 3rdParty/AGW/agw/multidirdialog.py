@@ -2,7 +2,7 @@
 # MULTIDIRDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -108,7 +108,7 @@ License And Version
 
 L{MultiDirDialog} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.3
 
@@ -126,10 +126,9 @@ DD_MULTIPLE = 1024
 DD_DEFAULT_STYLE = wx.DD_DEFAULT_STYLE
 """ Equivalent to a combination of ``wx.DEFAULT_DIALOG_STYLE`` and ``wx.RESIZE_BORDER``. """
 DD_DIR_MUST_EXIST = wx.DD_DIR_MUST_EXIST
-""" The dialog will allow the user to choose only an existing folder. When this style""" \
-""" is not given, a "Create new directory" button is added to the dialog (on Windows)""" \
-""" or some other way is provided to the user to type the name of a new folder. """
+""" The dialog will allow the user to choose only an existing folder. When this style is not given, a "Create new directory" button is added to the dialog (on Windows) or some other way is provided to the user to type the name of a new folder. """
 DD_NEW_DIR_BUTTON = wx.DD_NEW_DIR_BUTTON
+""" The `Make New Folder` button will be displayed. """
 
 _ = wx.GetTranslation
 

@@ -10,8 +10,8 @@ This allows a ribbon bar to have a pluggable look-and-feel, while retaining the 
 underlying behaviour. As a single art provider is used for all ribbon components, a
 ribbon bar usually has a consistent (though unique) appearance.
 
-By default, a L{RibbonBar} uses an instance of a class called `RibbonDefaultArtProvider`,
-which resolves to `RibbonAUIArtProvider`, `RibbonMSWArtProvider`, or `RibbonOSXArtProvider`
+By default, a L{RibbonBar} uses an instance of a class called L{RibbonDefaultArtProvider},
+which resolves to L{RibbonAUIArtProvider}, L{RibbonMSWArtProvider}, or L{RibbonOSXArtProvider}
 - whichever is most appropriate to the current platform. These art providers are all
 slightly configurable with regard to colours and fonts, but for larger modifications,
 you can derive from one of these classes, or write a completely new art provider class.

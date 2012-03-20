@@ -1856,6 +1856,7 @@ class AuiPaneInfo(object):
 
 # Null AuiPaneInfo reference
 NonePaneInfo = AuiPaneInfo()
+""" Null L{AuiPaneInfo} reference, an invalid instance of L{AuiPaneInfo}. """
 
 
 # ---------------------------------------------------------------------------- #

@@ -2,7 +2,7 @@
 # PEAKMETERCTRL wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -155,7 +155,7 @@ License And Version
 
 L{PeakMeterCtrl} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.3
 
@@ -171,11 +171,17 @@ PM_VERTICAL = 1
 
 # Some useful constants...
 BAND_DEFAULT = 8
+""" Number of bands in the L{PeakMeterCtrl}. """
 LEDS_DEFAULT = 8
+""" Number of leds per band in the L{PeakMeterCtrl}. """
 BAND_PERCENT = 10       # 10% of Max Range (Auto Decrease)
+""" 10% of max range (auto decrease). """
 GRID_INCREASEBY = 15    # Increase Grid colour based on Background colour
+""" Increase grid colour based on background colour. """
 FALL_INCREASEBY = 60    # Increase Falloff colour based on Background
+""" Increase falloff colour based on background colour. """
 DEFAULT_SPEED = 10
+""" Default increase/decrease speed. """
 
 
 def InRange(val, valMin, valMax):

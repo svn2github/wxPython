@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 25 Sep 2005
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -184,7 +184,7 @@ License And Version
 
 L{SpeedMeter} is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.3
 
@@ -207,7 +207,9 @@ from math import pi, sin, cos, log, sqrt, atan2
 # SM_BUFFERED_DC Uses The Double Buffered Drawing Style
 
 SM_NORMAL_DC = 0
+""" Uses the normal `wx.PaintDC`. """
 SM_BUFFERED_DC = 1
+""" Uses a double buffered drawing code. """
 
 #----------------------------------------------------------------------
 # SpeedMeter Styles
@@ -236,8 +238,7 @@ SM_BUFFERED_DC = 1
 SM_ROTATE_TEXT = 1
 """ Draws the ticks rotated: the ticks are rotated accordingly to the tick marks positions. """
 SM_DRAW_SECTORS = 2
-""" Different intervals are painted in differend colours (every sector of the""" \
-""" circle has its own colour). """
+""" Different intervals are painted in differend colours (every sector of the circle has its own colour). """
 SM_DRAW_PARTIAL_SECTORS = 4
 """ Every interval has its own colour, but only a circle corona is painted near the ticks. """
 SM_DRAW_HAND = 8
@@ -255,8 +256,7 @@ SM_DRAW_MIDDLE_ICON = 256
 SM_DRAW_GRADIENT = 512
 """ A gradient of colours will fill the control. """
 SM_DRAW_FANCY_TICKS = 1024
-""" With this style you can use xml tags to create some custom text and""" \
-""" draw it at the ticks position. See `wx.lib.fancytext` for the tags. """
+""" With this style you can use xml tags to create some custom text and draw it at the ticks position. See `wx.lib.fancytext` for the tags. """
 
 #----------------------------------------------------------------------
 # Event Binding
@@ -265,7 +265,7 @@ SM_DRAW_FANCY_TICKS = 1024
 #                 SpeedMeter Value Interactively
 
 SM_MOUSE_TRACK = 1
-
+""" Flag to allow the left/right click of the mouse to change the L{SpeedMeter} value interactively. """
 
 fontfamily = range(70, 78)
 familyname = ["default", "decorative", "roman", "script", "swiss", "modern", "teletype"]

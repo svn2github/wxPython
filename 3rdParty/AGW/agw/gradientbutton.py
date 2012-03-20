@@ -2,7 +2,7 @@
 # GRADIENTBUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 09 Feb 2012, 21.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -108,7 +108,7 @@ License And Version
 
 L{GradientButton} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 09 Feb 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.3
 
@@ -118,7 +118,10 @@ import wx
 
 
 HOVER = 1
+""" Flag used to indicate that the mouse is hovering on a L{GradientButton}. """
 CLICK = 2
+""" Flag used to indicate that the L{GradientButton} is on a pressed state. """
+
 
 class GradientButtonEvent(wx.PyCommandEvent):
     """ Event sent from L{GradientButton} when the button is activated. """

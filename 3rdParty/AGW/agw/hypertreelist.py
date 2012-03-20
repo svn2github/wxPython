@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 03 Mar 2012, 21.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -261,7 +261,7 @@ License And Version
 
 L{HyperTreeList} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 03 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 1.3
 
@@ -305,6 +305,7 @@ _EDIT_TIMER_TICKS = 250 # minimum edit wait time in ms
 # Additional HitTest style
 # --------------------------------------------------------------------------
 TREE_HITTEST_ONITEMCHECKICON  = 0x4000
+""" On the check icon, if present. """
 
 # HyperTreeList styles
 TR_NO_BUTTONS = wx.TR_NO_BUTTONS                               # for convenience
@@ -314,42 +315,32 @@ TR_HAS_BUTTONS = wx.TR_HAS_BUTTONS                             # draw collapsed/
 TR_NO_LINES = wx.TR_NO_LINES                                   # don't draw lines at all
 """ Use this style to hide vertical level connectors. """
 TR_LINES_AT_ROOT = wx.TR_LINES_AT_ROOT                         # connect top-level nodes
-""" Use this style to show lines between root nodes. Only applicable if ``TR_HIDE_ROOT`` is""" \
-""" set and ``TR_NO_LINES`` is not set. """
+""" Use this style to show lines between root nodes. Only applicable if ``TR_HIDE_ROOT`` is set and ``TR_NO_LINES`` is not set. """
 TR_TWIST_BUTTONS = wx.TR_TWIST_BUTTONS                         # still used by wxTreeListCtrl
 """ Use old Mac-twist style buttons. """
 TR_SINGLE = wx.TR_SINGLE                                       # for convenience
-""" For convenience to document that only one item may be selected at a time. Selecting another""" \
-""" item causes the current selection, if any, to be deselected. This is the default. """
+""" For convenience to document that only one item may be selected at a time. Selecting another item causes the current selection, if any, to be deselected. This is the default. """
 TR_MULTIPLE = wx.TR_MULTIPLE                                   # can select multiple items
-""" Use this style to allow a range of items to be selected. If a second range is selected,""" \
-""" the current range, if any, is deselected. """
+""" Use this style to allow a range of items to be selected. If a second range is selected, the current range, if any, is deselected. """
 TR_EXTENDED = wx.TR_EXTENDED                                   # TODO: allow extended selection
-""" Use this style to allow disjoint items to be selected. (Only partially implemented;""" \
-""" may not work in all cases). """
+""" Use this style to allow disjoint items to be selected. (Only partially implemented; may not work in all cases). """
 TR_HAS_VARIABLE_ROW_HEIGHT = wx.TR_HAS_VARIABLE_ROW_HEIGHT     # what it says
-""" Use this style to cause row heights to be just big enough to fit the content.""" \
-""" If not set, all rows use the largest row height. The default is that this flag is unset. """
+""" Use this style to cause row heights to be just big enough to fit the content. If not set, all rows use the largest row height. The default is that this flag is unset. """
 TR_EDIT_LABELS = wx.TR_EDIT_LABELS                             # can edit item labels
 """ Use this style if you wish the user to be able to edit labels in the tree control. """
 TR_ROW_LINES = wx.TR_ROW_LINES                                 # put border around items
 """ Use this style to draw a contrasting border between displayed rows. """
 TR_HIDE_ROOT = wx.TR_HIDE_ROOT                                 # don't display root node
-""" Use this style to suppress the display of the root node, effectively causing the""" \
-""" first-level nodes to appear as a series of root nodes. """
+""" Use this style to suppress the display of the root node, effectively causing the first-level nodes to appear as a series of root nodes. """
 TR_FULL_ROW_HIGHLIGHT = wx.TR_FULL_ROW_HIGHLIGHT               # highlight full horz space
-""" Use this style to have the background colour and the selection highlight extend """ \
-""" over the entire horizontal row of the tree control window. """
+""" Use this style to have the background colour and the selection highlight extend over the entire horizontal row of the tree control window. """
 
 TR_AUTO_CHECK_CHILD = 0x04000                                  # only meaningful for checkboxes
-""" Only meaningful foe checkbox-type items: when a parent item is checked/unchecked""" \
-""" its children are checked/unchecked as well. """
+""" Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are checked/unchecked as well. """
 TR_AUTO_TOGGLE_CHILD = 0x08000                                 # only meaningful for checkboxes
-""" Only meaningful foe checkbox-type items: when a parent item is checked/unchecked""" \
-""" its children are toggled accordingly. """
+""" Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly. """
 TR_AUTO_CHECK_PARENT = 0x10000                                 # only meaningful for checkboxes
-""" Only meaningful foe checkbox-type items: when a child item is checked/unchecked""" \
-""" its parent item is checked/unchecked as well. """
+""" Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well. """
 TR_ALIGN_WINDOWS = 0x20000                                     # to align windows horizontally for items at the same level
 """ Flag used to align windows (in items with windows) at the same horizontal position. """
 TR_ELLIPSIZE_LONG_ITEMS = 0x80000                              # to ellipsize long items when horizontal space is low

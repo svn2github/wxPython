@@ -3,7 +3,7 @@
 # Inspired By the GIMP Shortcut Editor.
 #
 # Andrea Gavana, @ 05 March 2012
-# Latest Revision: 06 Mar 2012, 21.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -286,7 +286,7 @@ License And Version
 
 L{ShortcutEditor} is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 06 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.1
 
@@ -325,6 +325,7 @@ except:
 # ----------------------------------------------------------------------------
 
 DATA_DIR = os.path.join(dirName, 'data')
+""" The folder where the default HTML help for L{ShortcutEditor} lives. """
 
 # These commented out things need to be taken into account somehow, but I
 # have no idea how to treat them and even if they could be valid accelerators
@@ -469,7 +470,9 @@ else:
 
 # Define a couple of standard, default accelerators
 NEW_ACCEL_STRING = _('New accelerator...')
+""" The string to display when the user wants to enter a new accelerator (by default is `New accelerator...`). """
 DISABLED_STRING = _('Disabled')
+""" The string to display when an accelerator is disabled (by default is `Disabled`). """
 
 # Events handled by ShortcutEditor
 wxEVT_SHORTCUT_CHANGING = wx.NewEventType()

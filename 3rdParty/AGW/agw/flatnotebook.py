@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 26 Oct 2011, 21.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -175,7 +175,7 @@ License And Version
 
 L{FlatNotebook} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 26 Oct 2011, 21.00 GMT
+Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 3.2
 """
@@ -202,6 +202,7 @@ if wx.VERSION_STRING < "2.7":
     wx.Rect.Contains = lambda self, point: wx.Rect.Inside(self, point)
 
 FNB_HEIGHT_SPACER = 10
+""" Padding for the tab widths/heights, in pixels. """
 
 # Use Visual Studio 2003 (VC7.1) style for tabs
 FNB_VC71 = 1
@@ -268,7 +269,7 @@ FNB_ALLOW_FOREIGN_DND = 32768
 """Allows drag and drop operations between different L{FlatNotebook}"""
 
 FNB_HIDE_ON_SINGLE_TAB = 65536
-"""Hides the Page Container when there is one or fewer tabs"""
+"""Hides the L{PageContainer} when there is one or fewer tabs"""
 
 FNB_NO_TAB_FOCUS = 262144
 """ Does not allow tabs to have focus"""
@@ -283,12 +284,11 @@ FNB_NAV_BUTTONS_WHEN_NEEDED = 0x200000
 """ Hides the navigation left/right arrows if all tabs fit. """
 
 VERTICAL_BORDER_PADDING = 4
+""" Padding between the text and the tab border. """
 
 # Button size is a 16x16 xpm bitmap
 BUTTON_SPACE = 16
 """Button size is a 16x16 xpm bitmap"""
-
-VC8_SHAPE_LEN = 16
 
 MASK_COLOUR  = wx.Colour(0, 128, 128)
 """Mask colour for the arrow bitmaps"""

@@ -2,7 +2,7 @@
 # PYPROGRESS wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -125,7 +125,7 @@ License And Version
 
 L{PyProgress} is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.4
 
@@ -138,23 +138,25 @@ import wx
 
 # Some constants, taken straight from wx.ProgressDialog
 Uncancelable = -1
+""" Classifies the L{PyProgress} as "uncancelable". """
 Canceled = 0
+""" L{PyProgress} has been canceled. """
 Continue = 1
+""" L{PyProgress} can continue. """
 Finished = 2
+""" L{PyProgress} has finished. """
 
 # Margins between gauge and text/button
 LAYOUT_MARGIN = 8
+""" Margins between gauge and text/button (in pixels). """
 
 # PyProgress styles
 PD_CAN_ABORT = wx.PD_CAN_ABORT
-""" This flag tells the dialog that it should have a "Cancel" button which the user""" \
-""" may press. If this happens, the next call to `Update()` will return ``False``. """
+""" This flag tells the dialog that it should have a "Cancel" button which the user may press. If this happens, the next call to `Update()` will return ``False``. """
 PD_APP_MODAL = wx.PD_APP_MODAL
-""" Make the progress dialog modal. If this flag is not given, it is only 'locally'"""\
-""" modal - that is the input to the parent window is disabled, but not to the other ones. """
+""" Make the progress dialog modal. If this flag is not given, it is only 'locally' modal - that is the input to the parent window is disabled, but not to the other ones. """
 PD_AUTO_HIDE = wx.PD_AUTO_HIDE
-""" Causes the progress dialog to disappear from screen as soon as the maximum""" \
-""" value of the progress meter has been reached. """
+""" Causes the progress dialog to disappear from screen as soon as the maximum value of the progress meter has been reached. """
 PD_ELAPSED_TIME = wx.PD_ELAPSED_TIME
 """ This flag tells the dialog that it should show elapsed time (since creating the dialog). """
 

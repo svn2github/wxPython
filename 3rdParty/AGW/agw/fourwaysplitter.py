@@ -2,7 +2,7 @@
 # FOURWAYSPLITTER wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -126,7 +126,7 @@ License And Version
 
 L{FourWaySplitter} is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.4
 
@@ -144,8 +144,11 @@ _TOLERANCE = 5
 
 # Modes
 NOWHERE = 0
+""" No sashes are changing position. """
 FLAG_CHANGED = 1
+""" Sashes are changing position. """
 FLAG_PRESSED = 2
+""" Sashes are in a pressed state. """
 
 # FourWaySplitter styles
 SP_NOSASH = wx.SP_NOSASH

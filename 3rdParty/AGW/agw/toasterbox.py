@@ -3,7 +3,7 @@
 # Ported And Enhanced From wxWidgets Contribution (Aj Bommarito) By:
 #
 # Andrea Gavana, @ 16 September 2005
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # TODO/Caveats List
@@ -129,7 +129,7 @@ License And Version
 
 ToasterBox is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.3
 
@@ -141,18 +141,16 @@ import wx
 
 # Define Window List, We Use It Globally
 winlist = []
+""" Globally defined window list. """
 
 TB_SIMPLE = 1
 """ A simple ToasterBox, with background image and text customization can be created. """
 TB_COMPLEX = 2
-""" ToasterBoxes with different degree of complexity can be created. You can add as """ \
-""" many controls as you want, provided that you call the AddPanel() method and pass """ \
-""" to it a dummy frame and a wx.Panel. See the demo for details. """
+""" ToasterBoxes with different degree of complexity can be created. You can add as  many controls as you want, provided that you call the AddPanel() method and pass to it a dummy frame and a wx.Panel. See the demo for details. """
 TB_DEFAULT_STYLE = wx.SIMPLE_BORDER | wx.STAY_ON_TOP | wx.FRAME_NO_TASKBAR
 """ Default window style for `ToasterBox`, with no caption nor close box. """
 TB_CAPTION = TB_DEFAULT_STYLE | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.FRAME_NO_TASKBAR
-""" `ToasterBox` will have a caption, with the possibility to set a title """ \
-""" for the `ToasterBox` frame, and a close box. """
+""" `ToasterBox` will have a caption, with the possibility to set a title for the `ToasterBox` frame, and a close box. """
 TB_ONTIME = 1
 """ `ToasterBox` will close after a specified amount of time. """
 TB_ONCLICK = 2
@@ -160,10 +158,13 @@ TB_ONCLICK = 2
 
 # scroll from up to down
 TB_SCR_TYPE_UD = 1
+""" Scroll from up to down. """
 # scroll from down to up
 TB_SCR_TYPE_DU = 2
+""" Scroll from down to up. """
 # fade in/out 
 TB_SCR_TYPE_FADE = 4
+""" Fade in and out. """
 
 
 # ------------------------------------------------------------------------------ #

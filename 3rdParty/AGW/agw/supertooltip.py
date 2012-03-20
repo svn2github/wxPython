@@ -2,7 +2,7 @@
 # SUPERTOOLTIP wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 14 Sep 2011, 21.00 GMT
+# Latest Revision: 20 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -117,11 +117,14 @@ License And Version
 
 L{SuperToolTip} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Sep 2011, 21.00 GMT
+Latest Revision: Andrea Gavana @ 20 Mar 2012, 21.00 GMT
 
-Version 0.4
+Version 0.5
 
 """
+
+# Version Info
+__version__ = "0.5"
 
 import wx
 import webbrowser
@@ -1002,6 +1005,28 @@ class SuperToolTip(object):
 
         self._endTimer.Start(self._endDelayTime*1000)
 
+
+    def Show(self, show=True):
+        """
+        Shows or hides the window.
+
+        You may need to call `Raise` for a top level window if you want to bring it to
+        top, although this is not needed if L{Show} is called immediately after the frame creation.
+
+        :param bool `show`: ``True`` to show the L{SuperToolTip} window, ``False`` to hide it.
+        
+        :return: ``True`` if the window has been shown or hidden or ``False`` if nothing was done
+         because it already was in the requested state.
+
+        :note: Notice that the default state of newly created top level windows is hidden (to allow
+         you to create their contents without flicker) unlike for all the other, not derived from
+         `wx.TopLevelWindow`, windows that are by default created in the shown state.
+
+        .. versionadded:: 0.5
+        """
+        
+        self.DoShowNow()
+        
 
     def OnDestroy(self, event):
         """ Handles the L{SuperToolTip} target destruction. """

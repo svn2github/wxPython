@@ -95,12 +95,14 @@ License And Version
 
 L{PyBusyInfo} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 20 Mar 2012, 21.00 GMT
 
-Version 0.1
+Version 0.2
 
 """
 
+# Version Info
+__version__ = "0.2"
 
 import wx
 
@@ -269,10 +271,9 @@ class PyBusyInfo(object):
         if parent and parent.HasFlag(wx.STAY_ON_TOP):
             # we must have this flag to be in front of our parent if it has it
             self._infoFrame.SetWindowStyleFlag(wx.STAY_ON_TOP)
-            
-        self._infoFrame.Show(True)
-        self._infoFrame.Refresh()
-        self._infoFrame.Update()
+
+        # Added for the screenshot-taking tool
+        self.Show()
         
 
     def __del__(self):
@@ -282,4 +283,30 @@ class PyBusyInfo(object):
         self._infoFrame.Destroy()
 
 
+    def Show(self, show=True):
+        """
+        Shows or hides the window.
+
+        You may need to call `Raise` for a top level window if you want to bring it to
+        top, although this is not needed if L{Show} is called immediately after the frame creation.
+
+        :param bool `show`: ``True`` to show the L{PyBusyInfo} frame, ``False`` to hide it.
         
+        :return: ``True`` if the window has been shown or hidden or ``False`` if nothing was done
+         because it already was in the requested state.
+
+        :note: Notice that the default state of newly created top level windows is hidden (to allow
+         you to create their contents without flicker) unlike for all the other, not derived from
+         `wx.TopLevelWindow`, windows that are by default created in the shown state.
+
+        .. versionadded:: 0.2 
+        """
+        
+        retVal = self._infoFrame.Show(show)
+
+        if show:
+            self._infoFrame.Refresh()
+            self._infoFrame.Update()
+
+        return retVal        
+

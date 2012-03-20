@@ -11,7 +11,10 @@ except:
 
 sys.path.append(os.path.split(dirName)[0])
 
-import agw.infobar as IB
+try:
+    import agw.infobar as IB
+except ImportError: # if it's not there locally, try the wxPython lib.
+    import wx.lib.agw.infobar as IB
 
 from images import catalog
 

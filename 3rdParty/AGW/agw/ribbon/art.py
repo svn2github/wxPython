@@ -1,5 +1,4 @@
 # RibbonArtSetting
-
 RIBBON_ART_TAB_SEPARATION_SIZE = 1
 RIBBON_ART_PAGE_BORDER_LEFT_SIZE = 2
 RIBBON_ART_PAGE_BORDER_TOP_SIZE = 3
@@ -101,7 +100,6 @@ RIBBON_ART_TOOL_ACTIVE_BACKGROUND_GRADIENT_COLOUR = 98
 
 
 # RibbonScrollButtonStyle
-
 RIBBON_SCROLL_BTN_LEFT = 0
 """Button will scroll to the left."""
 RIBBON_SCROLL_BTN_RIGHT = 1
@@ -131,7 +129,6 @@ RIBBON_SCROLL_BTN_FOR_MASK = 48
 """A mask to extract purpose from a combination of flags."""
 
 # RibbonButtonKind
-
 RIBBON_BUTTON_NORMAL    = 1 << 0
 """Normal button or tool with a clickable area which causes some generic action."""
 RIBBON_BUTTON_DROPDOWN  = 1 << 1
@@ -142,7 +139,6 @@ RIBBON_BUTTON_TOGGLE    = 1 << 2
 """Normal button or tool with a clickable area which toggles the button between a pressed and unpressed state."""
 
 # RibbonButtonBarButtonState
-
 RIBBON_BUTTONBAR_BUTTON_SMALL     = 0 << 0
 RIBBON_BUTTONBAR_BUTTON_MEDIUM    = 1 << 0
 RIBBON_BUTTONBAR_BUTTON_LARGE     = 2 << 0
@@ -160,7 +156,6 @@ RIBBON_BUTTONBAR_BUTTON_STATE_MASK        = 0x1F8
 
 
 # RibbonGalleryButtonState
-
 RIBBON_GALLERY_BUTTON_NORMAL = 1
 RIBBON_GALLERY_BUTTON_HOVERED = 2
 RIBBON_GALLERY_BUTTON_ACTIVE = 3

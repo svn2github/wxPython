@@ -3,7 +3,7 @@
 # Ported From Jorgen Bodde & Julian Smart (Extended Demo) C++ Code By:
 #
 # Andrea Gavana, @ 23 Mar 2005
-# Latest Revision: 17 Sep 2011, 23.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -195,7 +195,7 @@ License And Version
 
 L{FoldPanelBar} is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Sep 2011, 23.00 GMT
+Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.5
 
@@ -232,31 +232,37 @@ ExpandedIcon = PyEmbeddedImage(
 #- CAPTIONBAR_FILLED_RECTANGLE: Draws a filled rectangle and a border around it
 
 CAPTIONBAR_NOSTYLE            = 0
+""" The L{CaptionBar} has no style bit set. """
 CAPTIONBAR_GRADIENT_V         = 1
+""" Draws a vertical gradient from top to bottom. """
 CAPTIONBAR_GRADIENT_H         = 2
+""" Draws a vertical gradient from left to right. """
 CAPTIONBAR_SINGLE             = 3
+""" Draws a single filled rectangle to draw the caption. """
 CAPTIONBAR_RECTANGLE          = 4
+""" Draws a single colour with a rectangle around the caption. """
 CAPTIONBAR_FILLED_RECTANGLE   = 5
+""" Draws a filled rectangle and a border around it. """
 
 FPB_EXTRA_X = 10
+""" Extra horizontal padding, in pixels. """
 FPB_EXTRA_Y = 4
+""" Extra vertical padding, in pixels. """
 
 # pixels of the bmp to be aligned from the right filled with space
 FPB_BMP_RIGHTSPACE = 2
+""" Pixels of the bmp to be aligned from the right filled with space. """
 
 # Now supported! Single fold forces
 # other panels to close when they are open, and only opens the current panel.
 # This will allow the open panel to gain the full size left in the client area
 FPB_SINGLE_FOLD = 0x0001
-""" Single fold forces other panels to close when they are open, and only opens""" \
-""" the current panel. This will allow the open panel to gain the full size left""" \
-""" in the client area."""
+""" Single fold forces other panels to close when they are open, and only opens the current panel. This will allow the open panel to gain the full size left in the client area."""
 
 # All panels are stacked to the bottom. When they are expanded again they
 # show up at the top
 FPB_COLLAPSE_TO_BOTTOM = 0x0002
-""" All panels are stacked to the bottom. When they are expanded again they show""" \
-""" up at the top. """
+""" All panels are stacked to the bottom. When they are expanded again they show up at the top. """
 
 # Now supported! Single fold plus panels
 # will be stacked at the bottom
@@ -270,8 +276,10 @@ FPB_VERTICAL = 0x0010
 """ L{FoldPanelBar} will be vertical. """
 
 # FoldPanelItem default settings
-FPB_ALIGN_LEFT = 0 
+FPB_ALIGN_LEFT = 0
+""" Aligns left instead of fitting the width of the child window to be added. Use either this one or ``FPB_ALIGN_WIDTH``. """
 FPB_ALIGN_WIDTH = 1
+""" The `wx.Window` to be added will be aligned to fit the width of the FoldPanel when it is resized. Very handy for sizer items, buttons and text boxes. """
 
 FPB_DEFAULT_LEFTSPACING = 5
 FPB_DEFAULT_RIGHTSPACING = 10

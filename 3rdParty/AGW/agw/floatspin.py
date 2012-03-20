@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2005
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -135,7 +135,7 @@ License And Version
 
 L{FloatSpin} control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.9
 
@@ -1238,6 +1238,7 @@ __version__ = 0, 0, 4
 # The default value for the number of decimal digits carried after the
 # decimal point.  This only has effect at compile-time.
 DEFAULT_PRECISION = 2
+""" The default value for the number of decimal digits carried after the decimal point.  This only has effect at compile-time. """
 
 class FixedPoint(object):
     """
@@ -1429,7 +1430,7 @@ class FixedPoint(object):
         :param `precision`: must be an int >= 0, and defaults to
          ``DEFAULT_PRECISION``.
 
-        :note: If `precision` is less than this FixedPoint's current precision,
+        :note: If `precision` is less than this L{FixedPoint}'s current precision,
          information may be lost to rounding.
         """
 

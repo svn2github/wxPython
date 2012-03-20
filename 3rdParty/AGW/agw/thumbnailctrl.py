@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana And Peter Damoc, @ 12 Dec 2005
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 14 Mar 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -149,7 +149,7 @@ License And Version
 
 L{ThumbnailCtrl} is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
 Version 0.9
 
@@ -351,17 +351,25 @@ def opj(path):
 # THUMB_OUTLINE_IMAGE: Only Image Rect Outlined On Selection
 
 THUMB_OUTLINE_NONE = 0
+""" No outline drawn on selection. """
 THUMB_OUTLINE_FULL = 1
+""" Full outline drawn on selection. """
 THUMB_OUTLINE_RECT = 2
+""" Only the maximum image rectangle outlined on selection. """
 THUMB_OUTLINE_IMAGE = 4
+""" Only the image rectangle outlined on selection. """
 
 # Options For Filtering Files
 THUMB_FILTER_IMAGES = 1
+""" Only load images. We dont know yet how to create thumbnails for other file types... """
+
 # THUMB_FILTER_VIDEOS = 2  Don't Know How To Create Thumbnails For Videos!!!
 
 # ThumbnailCtrl Orientation: Not Fully Implemented Till Now
 THUMB_HORIZONTAL = wx.HORIZONTAL
+""" The L{ThumbnailCtrl} will be horizontal. """
 THUMB_VERTICAL = wx.VERTICAL
+""" The L{ThumbnailCtrl} will be vertical. """
 
 # Image File Name Extensions: Am I Missing Some Extensions Here?
 extensions = [".jpeg", ".jpg", ".bmp", ".png", ".ico", ".tiff", ".ani", ".cur", ".gif",
@@ -396,8 +404,10 @@ EVT_THUMBNAILS_THUMB_CHANGED = wx.PyEventBinder(wxEVT_THUMBNAILS_THUMB_CHANGED, 
 """ The thumbnail of an image has changed. Used internally"""
 
 TN_USE_PIL = 0
+""" If set to ``True`` or to ``1``, L{ThumbnailCtrl} will use PIL to load the images (much faster). """
 
 TIME_FMT = '%d %b %Y, %H:%M:%S'
+""" Time format string for the L{Thumb} representation on screen. """
 
 
 def CmpThumb(first, second):

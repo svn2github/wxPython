@@ -210,6 +210,7 @@ class RibbonBarEvent(wx.NotifyEvent):
 
 
 class RibbonBar(RibbonControl):
+    """ Top-level control in a ribbon user interface. """
     
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, agwStyle=RIBBON_BAR_DEFAULT_STYLE,
                  validator=wx.DefaultValidator, name="RibbonBar"):
@@ -217,14 +218,17 @@ class RibbonBar(RibbonControl):
         Default constructor.
 
         :param `parent`: pointer to a parent window, must not be ``None``;
-        :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create
+        :type `parent`: `wx.Window`
+        :param integer `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
         :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
          should generate a default position for the window;
+        :type `pos`: tuple or `wx.Point`
         :param `size`: window size. ``wx.DefaultSize`` indicates that wxPython should
-         generate a default size for the window. If no suitable size can be found,
-         the window will be sized to 20x20 pixels so that the window is visible but
-         obviously not correctly sized;
+         generate a default size for the window. If no suitable size can be found, the
+         window will be sized to 20x20 pixels so that the window is visible but obviously
+         not correctly sized;
+        :type `size`: tuple or `wx.Size`
         :param `agwStyle`: the AGW-specific window style. This can be a combination of the
          following bits:
 
@@ -243,7 +247,8 @@ class RibbonBar(RibbonControl):
          ========================================== =========== ==========================================
 
         :param `validator`: the window validator;
-        :param `name`: the window name.
+        :type `validator`: `wx.Validator`
+        :param string `name`: the window name.
 
         """
 
@@ -343,7 +348,7 @@ class RibbonBar(RibbonControl):
         """
         Shows or hides the panels inside L{RibbonBar}.
 
-        :param `show`: ``True`` to show the panels, ``False`` to hide them.
+        :param bool `show`: ``True`` to show the panels, ``False`` to hide them.
         """
 
         self._arePanelsShown = show
@@ -356,7 +361,7 @@ class RibbonBar(RibbonControl):
         """
         Sets the window style for L{RibbonBar}.
 
-        :param `agwStyle`: can be a combination of the following bits:
+        :param integer `agwStyle`: can be a combination of the following bits:
 
          ========================================== =========== ==========================================
          Window Styles                              Hex Value   Description
@@ -529,7 +534,7 @@ class RibbonBar(RibbonControl):
 
         ``None`` will be returned if the given index is out of range.
 
-        :param `n`: the zero-based index indicating the page position.
+        :param integer `n`: the zero-based index indicating the page position.
 
         """
 
@@ -543,7 +548,7 @@ class RibbonBar(RibbonControl):
         """
         Set the active page by index, without triggering any events.
         
-        :param `page`: The zero-based index of the page to activate.
+        :param integer `page`: The zero-based index of the page to activate.
 
         :returns: ``True`` if the specified page is now active, ``False`` if it could
          not be activated (for example because the page index is invalid).
@@ -576,7 +581,7 @@ class RibbonBar(RibbonControl):
         """
         Set the active page, without triggering any events.
 
-        :param `page`: The page to activate.
+        :param `page`: the page to activate, an instance of L{RibbonPage}.
 
         :returns: ``True`` if the specified page is now active, ``False`` if it could
          not be activated (for example because the given page is not a child of the
@@ -622,7 +627,6 @@ class RibbonBar(RibbonControl):
 
         :param integer `left`: the left margin (in pixels);
         :param integer `right`: the right margin (in pixels).
-
         """
 
         self._tab_margin_left = left
@@ -637,6 +641,7 @@ class RibbonBar(RibbonControl):
 
 
     def RecalculateTabSizes(self):
+        """ Recalculates the L{RibbonBar} tab sizes. """
 
         numtabs = len(self._pages)
 
@@ -793,7 +798,14 @@ class RibbonBar(RibbonControl):
 
 
     def CommonInit(self, agwStyle):
+        """
+        Common initialization procedures.
 
+        :param integer `agwStyle`: the AGW-specific window style.         
+
+        :see: L{SetAGWWindowStyleFlag} for a list of valid window styles.
+        """
+        
         self.SetName("RibbonBar")
 
         self._flags = agwStyle
@@ -931,6 +943,11 @@ class RibbonBar(RibbonControl):
 
 
     def DoEraseBackground(self, dc):
+        """
+        Does the initial painting of stuff from the L{OnPaint} event.
+
+        :param `dc`: an instance of `wx.DC`.
+        """
 
         tabs = wx.Rect(0, 0, *self.GetSize())
         tabs.height = self._tab_height
@@ -959,6 +976,15 @@ class RibbonBar(RibbonControl):
 
 
     def HitTestTabs(self, position):
+        """
+        Hit test method for L{RibbonBar}, testing where the given (in client coordinates)
+        point lies.
+
+        :param `position`: an instance of `wx.Point` in client coordinates.
+
+        :return: a tuple containing the tab index and the L{RibbonPage} if the L{HitTestTabs}
+         successfully found such combination, or a tuple `(-1, None)` if no tab has been hit.
+        """
 
         tabs_rect = wx.Rect(self._tab_margin_left, 0, self.GetClientSize().GetWidth() - self._tab_margin_left - self._tab_margin_right, self._tab_height)
         
@@ -1038,6 +1064,11 @@ class RibbonBar(RibbonControl):
         
 
     def ScrollTabBar(self, amount):
+        """
+        Scrolls the tab area left/right/up/down by the specified `amount`.
+
+        :param integer `amount`: the amount by which the tab area is scrolled, in pixels.
+        """
 
         show_left = True
         show_right = True
@@ -1089,6 +1120,7 @@ class RibbonBar(RibbonControl):
 
 
     def RefreshTabBar(self):
+        """ Repaints the tab area in L{RibbonBar}. """
 
         tab_rect = wx.Rect(0, 0, self.GetClientSize().GetWidth(), self._tab_height)
         self.Refresh(False, tab_rect)
@@ -1135,6 +1167,12 @@ class RibbonBar(RibbonControl):
 
 
     def DoMouseButtonCommon(self, event, tab_event_type):
+        """
+        Common methods for all the mouse move/click events.
+
+        :param `event`: a `wx.MouseEvent` event to be processed;
+        :param integer `tab_event_type`: one of the L{RibbonBar} events.
+        """
 
         index, tab = self.HitTestTabs(event.GetPosition())
         
@@ -1145,6 +1183,7 @@ class RibbonBar(RibbonControl):
 
 
     def RecalculateMinSize(self):
+        """ Recalculates the L{RibbonBar} minimum size. """
 
         min_size = wx.Size(-1, -1)
         numtabs = len(self._pages)
