@@ -5,7 +5,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 12 March 2012
-# Latest Revision: 12 Mar 2012, 21.00 GMT
+# Latest Revision: 20 Mar 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -149,14 +149,14 @@ License And Version
 
 L{InfoBar} control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 12 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 20 Mar 2012, 21.00 GMT
 
-Version 0.1
+Version 0.2
 
 """
 
 # Version Info
-__version__ = "0.1"
+__version__ = "0.2"
 
 # Start the imports
 import wx
@@ -166,6 +166,10 @@ import wx
 # of the showing/dismissing is done a bit differently
 import wx.aui
 import aui.framemanager as framemanager
+
+# These are for the AutoWrapStaticText class
+from wx.lib.wordwrap import wordwrap
+from wx.lib.stattext import GenStaticText as StaticText
 
 # Get the translation function
 _ = wx.GetTranslation
@@ -219,6 +223,97 @@ def GetCloseButtonBitmap(win, size, colBg, flags=0):
     return bmp
 
 
+# ----------------------------------------------------------------------------
+# Auto-wrapping static text class
+# ----------------------------------------------------------------------------
+
+class AutoWrapStaticText(StaticText):
+    """
+    A simple class derived from `wx.lib.stattext` that implements auto-wrapping
+    behaviour depending on the parent size.
+
+    .. versionadded:: 0.9.5
+    """
+
+    def __init__(self, parent, label):
+        """
+        Defsult class constructor.
+
+        :param `wx.Window` parent: a subclass of `wx.Window`, must not be ``None``;
+        :param string `label`: the L{AutoWrapStaticText} text label.
+        """
+
+        StaticText.__init__(self, parent, -1, label, style=wx.ST_NO_AUTORESIZE)
+
+        self.label = label
+
+        colBg = wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOBK)
+        self.SetBackgroundColour(colBg)
+        self.SetOwnForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOTEXT))
+
+        self.Bind(wx.EVT_SIZE, self.OnSize)
+
+
+    def OnSize(self, event):
+        """
+        Handles the ``wx.EVT_SIZE`` event for L{AutoWrapStaticText}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.
+        """
+
+        event.Skip()
+        self.Wrap(event.GetSize().width)
+
+
+    def Wrap(self, width):
+        """
+        This functions wraps the controls label so that each of its lines becomes at
+        most `width` pixels wide if possible (the lines are broken at words boundaries
+        so it might not be the case if words are too long).
+
+        If `width` is negative, no wrapping is done.
+
+        :param integer `width`: the maximum available width for the text, in pixels.
+
+        :note: Note that this `width` is not necessarily the total width of the control,
+        since a few pixels for the border (depending on the controls border style) may be added.
+        """
+
+        if width < 0:
+            return
+        
+        self.Freeze()
+
+        dc = wx.ClientDC(self)
+        dc.SetFont(self.GetFont())
+        text = wordwrap(self.label, width, dc)
+        self.SetLabel(text, wrapped=True)
+
+        self.Thaw()
+
+
+    def SetLabel(self, label, wrapped=False):
+        """
+        Sets the L{AutoWrapStaticText} label.
+
+        All "&" characters in the label are special and indicate that the following character is
+        a mnemonic for this control and can be used to activate it from the keyboard (typically
+        by using ``Alt`` key in combination with it). To insert a literal ampersand character, you
+        need to double it, i.e. use "&&". If this behaviour is undesirable, use `SetLabelText` instead.
+
+        :param string `label`: the new L{AutoWrapStaticText} text label;
+        :param bool `wrapped`: ``True`` if this method was called by the developer using L{SetLabel},
+         ``False`` if it comes from the L{OnSize} event handler.
+         
+        :note: Reimplemented from `wx.PyControl`.
+        """
+
+        if not wrapped:
+            self.label = label
+
+        StaticText.SetLabel(self, label)
+
+
 # ============================================================================
 # Implementation
 # ============================================================================
@@ -267,7 +362,7 @@ class InfoBar(wx.PyControl):
 
         # the icon is not shown unless it's assigned a valid bitmap
         self._icon = wx.StaticBitmap(self, wx.ID_ANY, wx.NullBitmap)
-        self._text = wx.StaticText(self, wx.ID_ANY, "")
+        self._text = AutoWrapStaticText(self, "")
 
         if wx.Platform == '__WXGTK__':
             bmp = wx.ArtProvider.GetBitmap(wx.ART_CLOSE, wx.ART_BUTTON)
@@ -293,7 +388,7 @@ class InfoBar(wx.PyControl):
         #     and being preceded by a spacer
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         sizer.AddF(self._icon, wx.SizerFlags().Centre().Border())
-        sizer.AddF(self._text, wx.SizerFlags().Centre())
+        sizer.Add(self._text, 2000000, wx.ALIGN_CENTER_VERTICAL)
         sizer.AddStretchSpacer()
         sizer.AddF(self._button, wx.SizerFlags().Centre().Border())
         self.SetSizer(sizer)
@@ -521,24 +616,29 @@ class InfoBar(wx.PyControl):
         
         # first update the controls
         icon = flags & wx.ICON_MASK
+        iconSize = 0
         
         if not icon or icon == wx.ICON_NONE:
             self._icon.Hide()
             
         else: # do show an icon
-            self._icon.SetBitmap(wx.ArtProvider.GetBitmap(FLAGS2ART[flags], wx.ART_BUTTON))
+            bitmap = wx.ArtProvider.GetBitmap(FLAGS2ART[flags], wx.ART_BUTTON)
+            iconSize = bitmap.GetWidth() + wx.SizerFlags().Border().GetBorderInPixels()
+            self._icon.SetBitmap(bitmap)
             self._icon.Show()
             
         # notice the use of EscapeMnemonics() to ensure that "&" come through
         # correctly
         self._text.SetLabel(wx.PyControl.EscapeMnemonics(msg))
         
+        parentSize = self.GetParent().GetSize()
+        self._text.Wrap(parentSize.x - iconSize - wx.SizerFlags().Border().GetBorderInPixels())
+        
         # then show this entire window if not done yet
         if not self.IsShown():
             self.DoShow()
-        else: # we're already shown
-            # just update the layout to correspond to the new message
-            self.Layout()
+
+        self.Layout()
 
 
     def Dismiss(self):

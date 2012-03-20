@@ -1022,7 +1022,7 @@ class SuperToolTip(object):
          you to create their contents without flicker) unlike for all the other, not derived from
          `wx.TopLevelWindow`, windows that are by default created in the shown state.
 
-        .. versionadded:: 0.5
+        .. versionadded:: 0.9.5
         """
         
         self.DoShowNow()
@@ -1038,7 +1038,7 @@ class SuperToolTip(object):
          if nothing has been invalidated (i.e. marked as requiring a redraw). Use `Refresh` first if
          you want to immediately redraw the window unconditionally.
 
-        .. versionadded:: 0.5
+        .. versionadded:: 0.9.5
         """
 
         if self._superToolTip:
