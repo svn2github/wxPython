@@ -2530,8 +2530,12 @@ STANDALONE_HANDLERS = [
     ]
 
 if hasSB:
-    HANDLERS[-1] += (SB.SToggleButton, SB.SBitmapToggleButton, SB.SBitmapTextToggleButton)
-
+    HANDLERS[-1] = ("ToggleButtonHandler", (wx.ToggleButton, buttons.GenToggleButton,
+                                            buttons.GenBitmapToggleButton,
+                                            buttons.GenBitmapTextToggleButton,
+                                            SB.SToggleButton, SB.SBitmapToggleButton,
+                                            SB.SBitmapTextToggleButton))
+    
 # ----------------------------------------------------------------------------------- #
 
 def FindHandler(pObject):

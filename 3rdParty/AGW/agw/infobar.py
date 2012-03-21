@@ -5,7 +5,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 12 March 2012
-# Latest Revision: 20 Mar 2012, 21.00 GMT
+# Latest Revision: 21 Mar 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -149,7 +149,7 @@ License And Version
 
 L{InfoBar} control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 20 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 21 Mar 2012, 21.00 GMT
 
 Version 0.2
 
@@ -454,10 +454,11 @@ class InfoBar(wx.PyControl):
             return BarPlacement_Unknown
         
         siblings = sizer.GetChildren()
-        
+        lSib = len(siblings) - 1
+
         if siblings[0].GetWindow() == self:
             return BarPlacement_Top
-        elif siblings[-1].GetWindow()== self:
+        elif siblings[lSib].GetWindow()== self:
             return BarPlacement_Bottom
         else:
             return BarPlacement_Unknown
