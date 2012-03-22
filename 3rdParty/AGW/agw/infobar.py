@@ -5,7 +5,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 12 March 2012
-# Latest Revision: 21 Mar 2012, 21.00 GMT
+# Latest Revision: 22 Mar 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -149,7 +149,7 @@ License And Version
 
 L{InfoBar} control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 21 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 22 Mar 2012, 21.00 GMT
 
 Version 0.2
 
@@ -546,7 +546,8 @@ class InfoBar(wx.PyControl):
         
         parent = self.GetParent()
         parent.Layout()
-
+        parent.Refresh()
+        
 
     def DoHide(self):
         """ Hides this L{InfoBar} with whatever hiding effect has been chosen. """
