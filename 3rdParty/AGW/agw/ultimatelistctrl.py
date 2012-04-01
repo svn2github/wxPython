@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 01 Apr 2012, 11.00 GMT
 #
 #
 # TODO List
@@ -117,7 +117,7 @@ Usage example::
 
     # our normal wxApp-derived class, as usual
 
-    app = wx.PySimpleApp()
+    app = wx.App(0)
 
     frame = MyFrame(None)
     app.SetTopWindow(frame)
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 01 Apr 2012, 11.00 GMT
 
 Version 0.8
 
@@ -8008,6 +8008,43 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         self.MoveToFocus()
 
 
+    def SetEventAttrs(self, oldEvent, newEvent):
+        """
+        Copies (almost) all of the ``m_*`` attributes from the original `wx.KeyEvent` event
+        to the copy (`newEvent`). Successfully passes the key codes to the application
+        as expected.
+
+        :param `oldEvent`: the original `wx.KeyEvent` event to be processed;
+        :param `newEvent`: the new `wx.KeyEvent` event to be processed.
+
+        :todo: Find out why getting `m_rawFlags` returns a Python ``long`` but the setter
+         expects to receive an ``unsigned int``.
+
+        .. versionadded:: 0.9.5
+        """
+
+        if _VERSION_STRING < '2.9':
+
+            attributes = ['m_altDown', 'm_controlDown', 'm_keyCode',
+                          'm_metaDown', 'm_rawCode', 'm_scanCode',
+                          'm_shiftDown', 'm_x', 'm_y']
+
+            for attr in attributes:
+                setattr(newEvent, attr, getattr(oldEvent, attr))
+
+        else:
+            # 2.9.something
+            methods = ['AltDown', 'ControlDown', 'MetaDown', 'ShiftDown']
+
+            for meth in methods:
+                eval('newEvent.Set%s(oldEvent.%s())'%(meth, meth))
+
+            attributes = ['m_keyCode', 'm_rawCode', 'm_x', 'm_y']
+
+            for attr in attributes:
+                setattr(newEvent, attr, getattr(oldEvent, attr))
+            
+
     def OnKeyDown(self, event):
         """
         Handles the ``wx.EVT_KEY_DOWN`` event for L{UltimateListMainWindow}.
@@ -8019,7 +8056,8 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         # we propagate the key event upwards
         ke = wx.KeyEvent(event.GetEventType())
-
+        self.SetEventAttrs(event, ke)
+        
         ke.SetEventObject(parent)
         if parent.GetEventHandler().ProcessEvent(ke):
             event.Skip()
@@ -8039,6 +8077,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         # we propagate the key event upwards
         ke = wx.KeyEvent(event.GetEventType())
+        self.SetEventAttrs(event, ke)
 
         ke.SetEventObject(parent)
         if parent.GetEventHandler().ProcessEvent(ke):
@@ -8075,6 +8114,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
             # propagate the char event upwards
             ke = wx.KeyEvent(event.GetEventType())
+            self.SetEventAttrs(event, ke)
             ke.SetEventObject(parent)
             if parent.GetEventHandler().ProcessEvent(ke):
                 return

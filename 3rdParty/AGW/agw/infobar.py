@@ -109,7 +109,7 @@ The simplest possible example of using this class would be::
 
     # our normal wxApp-derived class, as usual
 
-    app = wx.PySimpleApp()
+    app = wx.App(0)
 
     frame = MyFrame(None)
     app.SetTopWindow(frame)

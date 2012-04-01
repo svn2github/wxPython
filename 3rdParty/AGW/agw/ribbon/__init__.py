@@ -119,7 +119,7 @@ Usage example::
 
     # our normal wxApp-derived class, as usual
 
-    app = wx.PySimpleApp()
+    app = wx.App(0)
 
     frame = MyFrame(None)
     app.SetTopWindow(frame)
@@ -150,7 +150,7 @@ License And Version
 
 RIBBON library is distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 01 Apr 2012, 11.00 GMT
 
 Version 0.3. 
 

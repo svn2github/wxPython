@@ -175,7 +175,7 @@ Sample usage::
 
     # our normal wxApp-derived class, as usual
 
-    app = wx.PySimpleApp()
+    app = wx.App(0)
 
     frame = MyFrame(None)
     app.SetTopWindow(frame)
