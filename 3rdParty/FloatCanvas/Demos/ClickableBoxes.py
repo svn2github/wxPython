@@ -24,8 +24,7 @@ sys.path.append("../")
 from floatcanvas import FloatCanvas as FC
 
 
-colors = [ (255, 255, 255), 
-           (255, 0  , 0  ), 
+colors = [ (255, 0  , 0  ), 
            (0  , 255, 0  ), 
            (0  , 0,   255), 
            (255, 255, 0  ),
@@ -61,8 +60,16 @@ class DrawFrame(wx.Frame):
         for i in range(9):
             for j in range(9):
                 Rect = Canvas.AddRectangle((i*dx, j*dx), (w, w), FillColor="White", LineStyle = None)
+                Outline = Canvas.AddRectangle((i*dx, j*dx), (w, w),
+                                              FillColor=None,
+                                              LineWidth=4,
+                                              LineColor='Red',
+                                              LineStyle=None)
                 Rect.indexes = (i,j)
+                Rect.outline = Outline
                 Rect.Bind(FC.EVT_FC_LEFT_DOWN, self.SquareHitLeft)
+                Rect.Bind(FC.EVT_FC_ENTER_OBJECT, self.SquareEnter)
+                Rect.Bind(FC.EVT_FC_LEAVE_OBJECT, self.SquareLeave)
 
         self.Show()
         Canvas.ZoomToBB()
@@ -71,9 +78,19 @@ class DrawFrame(wx.Frame):
         print "square hit:", square.indexes
         # set a random color
         c = random.sample(colors, 1)[0]
-        print "color:", c
         square.SetFillColor( c )
         self.Canvas.Draw(True)
+
+    def SquareEnter(self, square):
+        print "entering square:", square.indexes
+        square.outline.SetLineStyle("Solid")
+        self.Canvas.Draw(True)
+
+    def SquareLeave(self, square):
+        print "leaving square:", square.indexes
+        square.outline.SetLineStyle(None)
+        self.Canvas.Draw(True)
+
 
     def OnSize(self, event):
         """
