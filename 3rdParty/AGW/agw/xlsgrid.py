@@ -124,7 +124,7 @@ the following formatting features already implemented:
   cell comments (notes) are extracted and you will see a small red triangle at
   the top-right corner of any cell containing a comment. Hovering with the
   mouse on that cell will pop-up a "comment-window" displaying the comment
-  text (the comment window is based on `wx.lib.agw.supertooltip`).
+  text (the comment window is based on :mod:`agw.supertooltip`).
 
 * Cell hyperlinks: starting from version 0.7.2 (SVN), `xlrd` is capable of
   extracting hyperlinks from Excel cells. This will be appropriately displayed
