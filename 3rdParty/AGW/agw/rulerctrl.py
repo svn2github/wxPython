@@ -22,18 +22,18 @@
 # --------------------------------------------------------------------------------- #
 
 """
-L{RulerCtrl} implements a ruler window that can be placed on top, bottom, left or right
+:class:`~rulerctrl.RulerCtrl` implements a ruler window that can be placed on top, bottom, left or right
 to any wxPython widget.
 
 
 Description
 ===========
 
-L{RulerCtrl} implements a ruler window that can be placed on top, bottom, left or right
+:class:`~rulerctrl.RulerCtrl` implements a ruler window that can be placed on top, bottom, left or right
 to any wxPython widget. It is somewhat similar to the rulers you can find in text
 editors software, though not so powerful.
 
-L{RulerCtrl} has the following characteristics:
+:class:`~rulerctrl.RulerCtrl` has the following characteristics:
 
 - Can be horizontal or vertical;
 - 4 built-in formats: integer, real, time and linearDB formats;
@@ -108,7 +108,7 @@ Usage example::
 Events
 ======
 
-L{RulerCtrl} implements the following events related to indicators:
+:class:`~rulerctrl.RulerCtrl` implements the following events related to indicators:
 
 - ``EVT_INDICATOR_CHANGING``: the user is about to change the position of one indicator;
 - ``EVT_INDICATOR_CHANGED``: the user has changed the position of one indicator.
@@ -117,7 +117,7 @@ L{RulerCtrl} implements the following events related to indicators:
 Supported Platforms
 ===================
 
-L{RulerCtrl} has been tested on the following platforms:
+:class:`~rulerctrl.RulerCtrl` has been tested on the following platforms:
   * Windows (Windows XP);
   * Linux Ubuntu (Dapper 6.06)
 
@@ -144,7 +144,7 @@ Event Name                 Description
 License And Version
 ===================
 
-L{RulerCtrl} is distributed under the wxPython license. 
+:class:`~rulerctrl.RulerCtrl` is distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
@@ -291,7 +291,7 @@ def ConvertPILToWX(pil, alpha=True):
 
 class RulerCtrlEvent(wx.PyCommandEvent):
     """
-    Represent details of the events that the L{RulerCtrl} object sends.
+    Represent details of the events that the :class:`~rulerctrl.RulerCtrl` object sends.
     """
     
     def __init__(self, eventType, eventId=1):
@@ -343,7 +343,7 @@ class RulerCtrlEvent(wx.PyCommandEvent):
 
 class Label(object):
     """
-    Auxilary class. Just holds information about a label in L{RulerCtrl}.
+    Auxilary class. Just holds information about a label in :class:`~rulerctrl.RulerCtrl`.
     """
     
     def __init__(self, pos=-1, lx=-1, ly=-1, text=""):
@@ -368,21 +368,21 @@ class Label(object):
 
 class Indicator(object):
     """
-    This class holds all the information about a single indicator inside L{RulerCtrl}.
+    This class holds all the information about a single indicator inside :class:`~rulerctrl.RulerCtrl`.
     
     You should not call this class directly. Use::
 
         ruler.AddIndicator(id, value)
 
 
-    to add an indicator to your L{RulerCtrl}.
+    to add an indicator to your :class:`~rulerctrl.RulerCtrl`.
     """
     
     def __init__(self, parent, id=wx.ID_ANY, value=0):
         """
         Default class constructor.
 
-        :param `parent`: the parent window, an instance of L{RulerCtrl};
+        :param `parent`: the parent window, an instance of :class:`~rulerctrl.RulerCtrl`;
         :param `id`: the indicator identifier;
         :param `value`: the initial value of the indicator.
         """
@@ -548,7 +548,7 @@ class Indicator(object):
 
 class RulerCtrl(wx.PyPanel):
     """
-    L{RulerCtrl} implements a ruler window that can be placed on top, bottom, left or right
+    :class:`~rulerctrl.RulerCtrl` implements a ruler window that can be placed on top, bottom, left or right
     to any wxPython widget. It is somewhat similar to the rulers you can find in text
     editors software, though not so powerful.
     """
@@ -565,7 +565,7 @@ class RulerCtrl(wx.PyPanel):
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
         :param `style`: the window style;
-        :param `orient`: sets the orientation of the L{RulerCtrl}, and can be either
+        :param `orient`: sets the orientation of the :class:`~rulerctrl.RulerCtrl`, and can be either
          ``wx.HORIZONTAL`` of ``wx.VERTICAL``.
         """
         
@@ -645,7 +645,7 @@ class RulerCtrl(wx.PyPanel):
 
     def OnMouseEvents(self, event):
         """
-        Handles the ``wx.EVT_MOUSE_EVENTS`` event for L{RulerCtrl}.
+        Handles the ``wx.EVT_MOUSE_EVENTS`` event for :class:`~rulerctrl.RulerCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.        
         """
@@ -679,7 +679,7 @@ class RulerCtrl(wx.PyPanel):
         
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{RulerCtrl}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~rulerctrl.RulerCtrl`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.        
         """
@@ -692,7 +692,7 @@ class RulerCtrl(wx.PyPanel):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{RulerCtrl}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~rulerctrl.RulerCtrl`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.        
         """
@@ -706,7 +706,7 @@ class RulerCtrl(wx.PyPanel):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{RulerCtrl}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~rulerctrl.RulerCtrl`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
 
@@ -720,7 +720,7 @@ class RulerCtrl(wx.PyPanel):
         """
         Sets the indicator value.
 
-        :param `sendEvent`: ``True`` to send a L{RulerCtrlEvent}, ``False`` otherwise.
+        :param `sendEvent`: ``True`` to send a :class:`~rulerctrl.RulerCtrlEvent`, ``False`` otherwise.
         """
 
         if self._currentIndicator is None:
@@ -791,7 +791,7 @@ class RulerCtrl(wx.PyPanel):
 
 
     def CheckStyle(self):
-        """ Adjust the L{RulerCtrl} style accordingly to borders, units, etc..."""
+        """ Adjust the :class:`~rulerctrl.RulerCtrl` style accordingly to borders, units, etc..."""
 
         width, height = self.GetSize()
         
@@ -928,9 +928,9 @@ class RulerCtrl(wx.PyPanel):
 
     def SetFormat(self, format):
         """
-        Sets the format for L{RulerCtrl}.
+        Sets the format for :class:`~rulerctrl.RulerCtrl`.
 
-        :param `format`: the format used to display values in L{RulerCtrl}. This can be
+        :param `format`: the format used to display values in :class:`~rulerctrl.RulerCtrl`. This can be
          one of the following bits:
 
          ====================== ======= ==============================
@@ -951,9 +951,9 @@ class RulerCtrl(wx.PyPanel):
 
     def GetFormat(self):
         """
-        Returns the format used to display values in L{RulerCtrl}.
+        Returns the format used to display values in :class:`~rulerctrl.RulerCtrl`.
 
-        :see: L{SetFormat} for a list of possible formats.
+        :see: :meth:`~rulerctrl.RulerCtrl.SetFormat` for a list of possible formats.
         """
 
         return self._format
@@ -961,7 +961,7 @@ class RulerCtrl(wx.PyPanel):
 
     def SetLog(self, log=True):
         """
-        Sets whether L{RulerCtrl} should have a logarithmic scale or not.
+        Sets whether :class:`~rulerctrl.RulerCtrl` should have a logarithmic scale or not.
 
         :param `log`: ``True`` to use a logarithmic scake, ``False`` to use a
          linear one.
@@ -989,7 +989,7 @@ class RulerCtrl(wx.PyPanel):
 
     def SetBackgroundColour(self, colour):
         """
-        Sets the L{RulerCtrl} background colour.
+        Sets the :class:`~rulerctrl.RulerCtrl` background colour.
 
         :param `colour`: an instance of `wx.Colour`.
 
@@ -1003,7 +1003,7 @@ class RulerCtrl(wx.PyPanel):
         
     def SetOrientation(self, orient=None):
         """
-        Sets the L{RulerCtrl} orientation.
+        Sets the :class:`~rulerctrl.RulerCtrl` orientation.
 
         :param `orient`: can be ``wx.HORIZONTAL`` or ``wx.VERTICAL``.        
         """
@@ -1022,10 +1022,10 @@ class RulerCtrl(wx.PyPanel):
 
     def SetRange(self, minVal, maxVal):
         """
-        Sets the L{RulerCtrl} range.
+        Sets the :class:`~rulerctrl.RulerCtrl` range.
 
-        :param `minVal`: the minimum value of L{RulerCtrl};
-        :param `maxVal`: the maximum value of L{RulerCtrl}.
+        :param `minVal`: the minimum value of :class:`~rulerctrl.RulerCtrl`;
+        :param `maxVal`: the maximum value of :class:`~rulerctrl.RulerCtrl`.
         """
 
         # For a horizontal ruler,
@@ -1040,7 +1040,7 @@ class RulerCtrl(wx.PyPanel):
     
     def SetSpacing(self, spacing):
         """
-        Sets the L{RulerCtrl} spacing between labels.
+        Sets the :class:`~rulerctrl.RulerCtrl` spacing between labels.
 
         :param `spacing`: the spacing between labels, in pixels.
         """
@@ -1155,7 +1155,7 @@ class RulerCtrl(wx.PyPanel):
 
     def SetBounds(self, left, top, right, bottom):
         """
-        Sets the bounds for L{RulerCtrl} (its client rectangle).
+        Sets the bounds for :class:`~rulerctrl.RulerCtrl` (its client rectangle).
 
         :param `left`: the left corner of the client rectangle;
         :param `top`: the top corner of the client rectangle;
@@ -1175,14 +1175,14 @@ class RulerCtrl(wx.PyPanel):
 
 
     def GetBounds(self):
-        """ Returns the L{RulerCtrl} bounds (its client rectangle). """
+        """ Returns the :class:`~rulerctrl.RulerCtrl` bounds (its client rectangle). """
 
         return self._left, self._top, self._right, self._bottom        
 
 
     def AddIndicator(self, id, value):
         """
-        Adds an indicator to L{RulerCtrl}. You should pass a unique `id` and a starting
+        Adds an indicator to :class:`~rulerctrl.RulerCtrl`. You should pass a unique `id` and a starting
         `value` for the indicator.
 
         :param `id`: the indicator identifier;
@@ -1706,7 +1706,7 @@ class RulerCtrl(wx.PyPanel):
 
     def Draw(self, dc):
         """
-        Actually draws the whole L{RulerCtrl}.
+        Actually draws the whole :class:`~rulerctrl.RulerCtrl`.
 
         :param `dc`: an instance of `wx.DC`.
         """
@@ -1786,17 +1786,17 @@ class RulerCtrl(wx.PyPanel):
 
     def SetDrawingParent(self, dparent):
         """
-        Sets the window to which L{RulerCtrl} draws a thin line over.
+        Sets the window to which :class:`~rulerctrl.RulerCtrl` draws a thin line over.
 
         :param `dparent`: an instance of `wx.Window`, representing the window to
-         which L{RulerCtrl} draws a thin line over.
+         which :class:`~rulerctrl.RulerCtrl` draws a thin line over.
         """
 
         self._drawingparent = dparent
 
 
     def GetDrawingParent(self):
-        """ Returns the window to which L{RulerCtrl} draws a thin line over. """
+        """ Returns the window to which :class:`~rulerctrl.RulerCtrl` draws a thin line over. """
 
         return self._drawingparent
 
@@ -1805,7 +1805,7 @@ class RulerCtrl(wx.PyPanel):
         """
         Actually draws the thin line over the drawing parent window.
 
-        :param `indicator`: the current indicator, an instance of L{Indicator}.
+        :param `indicator`: the current indicator, an instance of :class:`~rulerctrl.Indicator`.
 
         :note: This method is currently not available on wxMac as it uses `wx.ScreenDC`.        
         """

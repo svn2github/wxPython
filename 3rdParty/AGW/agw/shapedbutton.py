@@ -277,7 +277,7 @@ class SButton(wx.Window):
         """
         Default class constructor.
 
-        :param `parent`: the L{SButton} parent. Must not be ``None``;
+        :param `parent`: the :class:`~shapedbutton.SButton` parent. Must not be ``None``;
         :param `id`: window identifier. A value of -1 indicates a default value;
         :param `label`: the button text label;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
@@ -682,7 +682,7 @@ class SButton(wx.Window):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{SButton}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~shapedbutton.SButton`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -693,7 +693,7 @@ class SButton(wx.Window):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{SButton}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~shapedbutton.SButton`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -749,7 +749,7 @@ class SButton(wx.Window):
 
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for L{SButton}.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~shapedbutton.SButton`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -775,7 +775,7 @@ class SButton(wx.Window):
 
     def OnLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for L{SButton}.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~shapedbutton.SButton`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -796,7 +796,7 @@ class SButton(wx.Window):
 
     def OnMotion(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for L{SButton}.
+        Handles the ``wx.EVT_MOTION`` event for :class:`~shapedbutton.SButton`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -822,7 +822,7 @@ class SButton(wx.Window):
 
     def OnGainFocus(self, event):
         """
-        Handles the ``wx.EVT_SET_FOCUS`` event for L{SButton}.
+        Handles the ``wx.EVT_SET_FOCUS`` event for :class:`~shapedbutton.SButton`.
 
         :param `event`: a `wx.FocusEvent` event to be processed.
         """
@@ -837,7 +837,7 @@ class SButton(wx.Window):
 
     def OnLoseFocus(self, event):
         """
-        Handles the ``wx.EVT_KILL_FOCUS`` event for L{SButton}.
+        Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`~shapedbutton.SButton`.
 
         :param `event`: a `wx.FocusEvent` event to be processed.
         """
@@ -854,7 +854,7 @@ class SButton(wx.Window):
 
     def OnKeyDown(self, event):
         """
-        Handles the ``wx.EVT_KEY_DOWN`` event for L{SButton}.
+        Handles the ``wx.EVT_KEY_DOWN`` event for :class:`~shapedbutton.SButton`.
 
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
@@ -869,7 +869,7 @@ class SButton(wx.Window):
 
     def OnKeyUp(self, event):
         """
-        Handles the ``wx.EVT_KEY_UP`` event for L{SButton}.
+        Handles the ``wx.EVT_KEY_UP`` event for :class:`~shapedbutton.SButton`.
 
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
@@ -989,7 +989,7 @@ class SButton(wx.Window):
 
 class SBitmapButton(SButton):
     """
-    Subclass of L{SButton} which displays a bitmap, acting like a
+    Subclass of :class:`~shapedbutton.SButton` which displays a bitmap, acting like a
     `wx.BitmapButton`.
     """
 
@@ -997,7 +997,7 @@ class SBitmapButton(SButton):
         """
         Default class constructor.
 
-        :param `parent`: the L{SBitmapButton} parent. Must not be ``None``;
+        :param `parent`: the :class:`~shapedbutton.SBitmapButton` parent. Must not be ``None``;
         :param `id`: window identifier. A value of -1 indicates a default value;
         :param `bitmap`: the button bitmap (if any);
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
@@ -1137,7 +1137,7 @@ class SBitmapButton(SButton):
 
 class SBitmapTextButton(SBitmapButton):
     """
-    Subclass of L{SButton} which displays a bitmap and a label.
+    Subclass of :class:`~shapedbutton.SButton` which displays a bitmap and a label.
     """
 
     def __init__(self, parent, id, bitmap, label,
@@ -1145,7 +1145,7 @@ class SBitmapTextButton(SBitmapButton):
         """
         Default class constructor.
 
-        :param `parent`: the L{SBitmapTextButton} parent. Must not be ``None``;
+        :param `parent`: the :class:`~shapedbutton.SBitmapTextButton` parent. Must not be ``None``;
         :param `id`: window identifier. A value of -1 indicates a default value;
         :param `bitmap`: the button bitmap (if any);
         :param `label`: the button text label;
@@ -1257,8 +1257,8 @@ class SBitmapTextButton(SBitmapButton):
 
 class __SToggleMixin(object):
     """
-    A mixin that allows to transform any of L{SButton}, L{SBitmapButton} and
-    L{SBitmapTextButton} in the corresponding toggle buttons.
+    A mixin that allows to transform any of :class:`~shapedbutton.SButton`, :class:`~shapedbutton.SBitmapButton` and
+    :class:`~shapedbutton.SBitmapTextButton` in the corresponding toggle buttons.
     """
 
     def SetToggle(self, flag):

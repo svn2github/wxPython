@@ -1,14 +1,14 @@
 """
-L{PyBusyInfo} constructs a busy info window and displays a message in it.
+:class:`~pybusyinfo.PyBusyInfo` constructs a busy info window and displays a message in it.
 
 
 Description
 ===========
 
-L{PyBusyInfo} constructs a busy info window and displays a message in it.
+:class:`~pybusyinfo.PyBusyInfo` constructs a busy info window and displays a message in it.
 
 This class makes it easy to tell your user that the program is temporarily busy.
-Just create a L{PyBusyInfo} object, and within the current scope, a message window
+Just create a :class:`~pybusyinfo.PyBusyInfo` object, and within the current scope, a message window
 will be shown.
 
 For example::
@@ -74,7 +74,7 @@ Usage example::
 Supported Platforms
 ===================
 
-L{PyBusyInfo} has been tested on the following platforms:
+:class:`~pybusyinfo.PyBusyInfo` has been tested on the following platforms:
   * Windows (Windows XP).
 
 
@@ -93,7 +93,7 @@ Events Processing
 License And Version
 ===================
 
-L{PyBusyInfo} is distributed under the wxPython license.
+:class:`~pybusyinfo.PyBusyInfo` is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 20 Mar 2012, 21.00 GMT
 
@@ -110,15 +110,15 @@ _ = wx.GetTranslation
 
 
 class PyInfoFrame(wx.Frame):
-    """ Base class for L{PyBusyInfo}. """
+    """ Base class for :class:`~pybusyinfo.PyBusyInfo`. """
 
     def __init__(self, parent, message, title, icon):
         """
         Default class constructor.
         
         :param `parent`: the frame parent;
-        :param `message`: the message to display in the L{PyBusyInfo};
-        :param `title`: the main L{PyBusyInfo} title;
+        :param `message`: the message to display in the :class:`~pybusyinfo.PyBusyInfo`;
+        :param `title`: the main :class:`~pybusyinfo.PyBusyInfo` title;
         :param `icon`: an icon to draw as the frame icon, an instance of `wx.Bitmap`.
         """
         
@@ -168,7 +168,7 @@ class PyInfoFrame(wx.Frame):
 
     def SetBusyShape(self, event=None):
         """
-        Sets L{PyInfoFrame} shape using the region created from the bitmap.
+        Sets :class:`~pybusyinfo.PyInfoFrame` shape using the region created from the bitmap.
 
         :param `event`: a `wx.WindowCreateEvent` event (GTK only, as GTK supports setting
          the window shape only during window creation).
@@ -182,7 +182,7 @@ class PyInfoFrame(wx.Frame):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{PyInfoFrame}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~pybusyinfo.PyInfoFrame`.
 
         :param `event`: a `wx.PaintEvent` to be processed.
         """
@@ -233,7 +233,7 @@ class PyInfoFrame(wx.Frame):
 
     def OnErase(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{PyInfoFrame}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~pybusyinfo.PyInfoFrame`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
 
@@ -257,9 +257,9 @@ class PyBusyInfo(object):
         """
         Default class constructor.
         
-        :param `parent`: the L{PyBusyInfo} parent;
-        :param `message`: the message to display in the L{PyBusyInfo};
-        :param `title`: the main L{PyBusyInfo} title;
+        :param `parent`: the :class:`~pybusyinfo.PyBusyInfo` parent;
+        :param `message`: the message to display in the :class:`~pybusyinfo.PyBusyInfo`;
+        :param `title`: the main :class:`~pybusyinfo.PyBusyInfo` title;
         :param `icon`: an icon to draw as the frame icon, an instance of `wx.Bitmap`.
 
         :note: If `parent` is not ``None`` you must ensure that it is not closed
@@ -288,9 +288,9 @@ class PyBusyInfo(object):
         Shows or hides the window.
 
         You may need to call `Raise` for a top level window if you want to bring it to
-        top, although this is not needed if L{Show} is called immediately after the frame creation.
+        top, although this is not needed if :meth:`~pybusyinfo.PyBusyInfo.Show` is called immediately after the frame creation.
 
-        :param bool `show`: ``True`` to show the L{PyBusyInfo} frame, ``False`` to hide it.
+        :param bool `show`: ``True`` to show the :class:`~pybusyinfo.PyBusyInfo` frame, ``False`` to hide it.
         
         :return: ``True`` if the window has been shown or hidden or ``False`` if nothing was done
          because it already was in the requested state.

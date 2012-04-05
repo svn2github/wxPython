@@ -23,14 +23,14 @@
 # --------------------------------------------------------------------------------- #
 
 """
-L{AquaButton} is another custom-drawn button class which *approximatively* mimics
+:class:`~aquabutton.AquaButton` is another custom-drawn button class which *approximatively* mimics
 the behaviour of Aqua buttons on the Mac.
 
 
 Description
 ===========
 
-L{AquaButton} is another custom-drawn button class which *approximatively* mimics
+:class:`~aquabutton.AquaButton` is another custom-drawn button class which *approximatively* mimics
 the behaviour of Aqua buttons on the Mac. At the moment this class supports:
 
 * Bubble and shadow effects;
@@ -98,7 +98,7 @@ Event Name        Description
 License And Version
 ===================
 
-L{AquaButton} control is distributed under the wxPython license.
+:class:`~aquabutton.AquaButton` control is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 22 Nov 2011, 22.00 GMT
 
@@ -110,13 +110,13 @@ import wx
 
 # Constants for the hovering and clicking effects
 HOVER = 1
-""" Indicates that the mouse is hovering over L{AquaButton} """
+""" Indicates that the mouse is hovering over :class:`~aquabutton.AquaButton` """
 CLICK = 2
-""" Indicates that L{AquaButton} has been clicked """
+""" Indicates that :class:`~aquabutton.AquaButton` has been clicked """
 
 
 class AquaButtonEvent(wx.PyCommandEvent):
-    """ Event sent from the L{AquaButton} buttons when the button is activated. """
+    """ Event sent from the :class:`~aquabutton.AquaButton` buttons when the button is activated. """
 
     def __init__(self, eventType, eventId):
         """
@@ -135,7 +135,7 @@ class AquaButtonEvent(wx.PyCommandEvent):
         """
         Sets the event object for the event.
 
-        :param `btn`: the button object, an instance of L{AquaButton}.
+        :param `btn`: the button object, an instance of :class:`~aquabutton.AquaButton`.
         """
 
         self.theButton = btn
@@ -145,14 +145,14 @@ class AquaButtonEvent(wx.PyCommandEvent):
         """
         Returns the object associated with this event.
 
-        :return: An instance of L{AquaButton}.
+        :return: An instance of :class:`~aquabutton.AquaButton`.
         """
 
         return self.theButton
 
 
 class AquaButton(wx.PyControl):
-    """ This is the main class implementation of L{AquaButton}. """
+    """ This is the main class implementation of :class:`~aquabutton.AquaButton`. """
 
     def __init__(self, parent, id=wx.ID_ANY, bitmap=None, label="", pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.NO_BORDER, validator=wx.DefaultValidator,
@@ -263,7 +263,7 @@ class AquaButton(wx.PyControl):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{AquaButton}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~aquabutton.AquaButton`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -385,7 +385,7 @@ class AquaButton(wx.PyControl):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{AquaButton}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~aquabutton.AquaButton`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -395,7 +395,7 @@ class AquaButton(wx.PyControl):
 
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for L{AquaButton}.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~aquabutton.AquaButton`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -411,7 +411,7 @@ class AquaButton(wx.PyControl):
 
     def OnLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for L{AquaButton}.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~aquabutton.AquaButton`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -437,7 +437,7 @@ class AquaButton(wx.PyControl):
 
     def OnMouseEnter(self, event):
         """
-        Handles the ``wx.EVT_ENTER_WINDOW`` event for L{AquaButton}.
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`~aquabutton.AquaButton`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -452,7 +452,7 @@ class AquaButton(wx.PyControl):
 
     def OnMouseLeave(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{AquaButton}.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~aquabutton.AquaButton`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -464,7 +464,7 @@ class AquaButton(wx.PyControl):
 
     def OnGainFocus(self, event):
         """
-        Handles the ``wx.EVT_SET_FOCUS`` event for L{AquaButton}.
+        Handles the ``wx.EVT_SET_FOCUS`` event for :class:`~aquabutton.AquaButton`.
 
         :param `event`: a `wx.FocusEvent` event to be processed.
         """
@@ -480,7 +480,7 @@ class AquaButton(wx.PyControl):
 
     def OnLoseFocus(self, event):
         """
-        Handles the ``wx.EVT_KILL_FOCUS`` event for L{AquaButton}.
+        Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`~aquabutton.AquaButton`.
 
         :param `event`: a `wx.FocusEvent` event to be processed.
         """
@@ -496,7 +496,7 @@ class AquaButton(wx.PyControl):
 
     def OnKeyDown(self, event):
         """
-        Handles the ``wx.EVT_KEY_DOWN`` event for L{AquaButton}.
+        Handles the ``wx.EVT_KEY_DOWN`` event for :class:`~aquabutton.AquaButton`.
 
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
@@ -509,7 +509,7 @@ class AquaButton(wx.PyControl):
 
     def OnKeyUp(self, event):
         """
-        Handles the ``wx.EVT_KEY_UP`` event for L{AquaButton}.
+        Handles the ``wx.EVT_KEY_UP`` event for :class:`~aquabutton.AquaButton`.
 
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
@@ -523,7 +523,7 @@ class AquaButton(wx.PyControl):
 
     def OnPulseTimer(self, event):
         """
-        Handles the ``wx.EVT_TIMER`` event for L{AquaButton}.
+        Handles the ``wx.EVT_TIMER`` event for :class:`~aquabutton.AquaButton`.
 
         :param `event`: a `wx.TimerEvent` event to be processed.
 
@@ -617,7 +617,7 @@ class AquaButton(wx.PyControl):
         """
         Sets whether to enable the pulsing effect on gaining focus or not.
 
-        :param bool `pulse`: ``True`` to enable pulsing when the L{AquaButton} gains focus,
+        :param bool `pulse`: ``True`` to enable pulsing when the :class:`~aquabutton.AquaButton` gains focus,
          ``False`` to disable this effect.
         """
 
@@ -669,7 +669,7 @@ class AquaButton(wx.PyControl):
 
     def SetBackgroundColour(self, colour):
         """
-        Sets the L{AquaButton} background colour.
+        Sets the :class:`~aquabutton.AquaButton` background colour.
 
         :param `colour`: a valid `wx.Colour` object.
 
@@ -743,7 +743,7 @@ class AquaButton(wx.PyControl):
 
     def SetForegroundColour(self, colour):
         """
-        Sets the L{AquaButton} foreground (text) colour.
+        Sets the :class:`~aquabutton.AquaButton` foreground (text) colour.
 
         :param `colour`: a valid `wx.Colour` object.
 
@@ -757,7 +757,7 @@ class AquaButton(wx.PyControl):
 
     def GetForegroundColour(self):
         """
-        Returns the text colour for L{AquaButton}.
+        Returns the text colour for :class:`~aquabutton.AquaButton`.
 
         :return: An instance of `wx.Colour`.
         
@@ -778,7 +778,7 @@ class AquaButton(wx.PyControl):
 
     def SetDefault(self):
         """
-        This sets the L{AquaButton} to be the default item for the panel or dialog box.
+        This sets the :class:`~aquabutton.AquaButton` to be the default item for the panel or dialog box.
 
         :note: Under Windows, only dialog box buttons respond to this function. As normal
          under Windows and Motif, pressing return causes the default button to be depressed
@@ -787,7 +787,7 @@ class AquaButton(wx.PyControl):
 
         :note: Note that under Motif, calling this function immediately after creation of a button
          and before the creation of other buttons will cause misalignment of the row of buttons,
-         since default buttons are larger. To get around this, call L{SetDefault} after you
+         since default buttons are larger. To get around this, call :meth:`~aquabutton.AquaButton.SetDefault` after you
          have created a row of buttons: wxPython will then set the size of all buttons currently
          on the panel to the same size.
         """
@@ -808,7 +808,7 @@ class AquaButton(wx.PyControl):
 
 class __ToggleMixin(object):
     """
-    A mixin that allows to transform L{AquaButton} in the corresponding toggle button.
+    A mixin that allows to transform :class:`~aquabutton.AquaButton` in the corresponding toggle button.
     """
 
     def SetToggle(self, flag):
@@ -838,7 +838,7 @@ class __ToggleMixin(object):
 
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for L{AquaButton} when used as toggle button.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~aquabutton.AquaButton` when used as toggle button.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -855,7 +855,7 @@ class __ToggleMixin(object):
 
     def OnLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for L{AquaButton} when used as toggle button.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~aquabutton.AquaButton` when used as toggle button.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -871,7 +871,7 @@ class __ToggleMixin(object):
 
     def OnKeyDown(self, event):
         """
-        Handles the ``wx.EVT_KEY_DOWN`` event for L{AquaButton} when used as toggle button.
+        Handles the ``wx.EVT_KEY_DOWN`` event for :class:`~aquabutton.AquaButton` when used as toggle button.
 
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
@@ -881,7 +881,7 @@ class __ToggleMixin(object):
 
     def OnMotion(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for L{AquaButton} when used as toggle button.
+        Handles the ``wx.EVT_MOTION`` event for :class:`~aquabutton.AquaButton` when used as toggle button.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -908,7 +908,7 @@ class __ToggleMixin(object):
 
     def OnKeyUp(self, event):
         """
-        Handles the ``wx.EVT_KEY_UP`` event for L{AquaButton} when used as toggle button.
+        Handles the ``wx.EVT_KEY_UP`` event for :class:`~aquabutton.AquaButton` when used as toggle button.
 
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
@@ -923,7 +923,7 @@ class __ToggleMixin(object):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{AquaButton} when used as toggle button.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~aquabutton.AquaButton` when used as toggle button.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -1023,6 +1023,6 @@ class __ToggleMixin(object):
 
 
 class AquaToggleButton(__ToggleMixin, AquaButton):
-    """ An L{AquaButton} toggle button. """
+    """ An :class:`~aquabutton.AquaButton` toggle button. """
     pass
 

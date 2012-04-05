@@ -111,7 +111,7 @@ Window Styles        Hex Value   Description
 ==================== =========== ==================================================
 ``TB_SIMPLE``                0x1 A simple `ToasterBox`, with background image and text customization can be created.
 ``TB_ONTIME``                0x1 `ToasterBox` will close after a specified amount of time.
-``TB_COMPLEX``               0x2 ToasterBoxes with different degree of complexity can be created. You can add as  many controls as you want, provided that you call the L{AddPanel} method and pass  to it a dummy frame and a `wx.Panel`. See the demo for details.
+``TB_COMPLEX``               0x2 ToasterBoxes with different degree of complexity can be created. You can add as  many controls as you want, provided that you call the :meth:`~ToasterBox.AddPanel` method and pass  to it a dummy frame and a `wx.Panel`. See the demo for details.
 ``TB_ONCLICK``               0x2 `ToasterBox` can be closed by clicking anywhere on the `ToasterBox` frame.
 ``TB_DEFAULT_STYLE``   0x2008002 Default window style for `ToasterBox`, with no caption nor close box.
 ``TB_CAPTION``        0x22009806 `ToasterBox` will have a caption, with the possibility to set a title for the `ToasterBox` frame, and a close box.
@@ -185,45 +185,45 @@ class ToasterBox(wx.Timer):
         Default class constructor.
 
         :param `parent`: the window parent;
-        :param `tbstyle`: the L{ToasterBox} main style. Can be one of the following
+        :param `tbstyle`: the :class:`~toasterbox.ToasterBox` main style. Can be one of the following
          bits:
 
          ====================== ======= ================================
          `ToasterBox` Style      Value  Description
          ====================== ======= ================================
-         ``TB_SIMPLE``              0x1 A simple L{ToasterBox}, with background image and text customization can be created
-         ``TB_COMPLEX``             0x2 `ToasterBoxes` with different degree of complexity can be created. You can add as many controls as you want, provided that you call the L{AddPanel} method and pass to it a dummy frame and a `wx.Panel`.
+         ``TB_SIMPLE``              0x1 A simple :class:`~toasterbox.ToasterBox`, with background image and text customization can be created
+         ``TB_COMPLEX``             0x2 `ToasterBoxes` with different degree of complexity can be created. You can add as many controls as you want, provided that you call the :meth:`~toasterbox.ToasterBox.AddPanel` method and pass to it a dummy frame and a `wx.Panel`.
          ====================== ======= ================================
 
         :param `windowstyle`: this parameter influences the visual appearance of
-         L{ToasterBox}, and can be one of the following styles:
+         :class:`~toasterbox.ToasterBox`, and can be one of the following styles:
 
          ====================== ========== ================================
          Window Style           Hex Value  Description
          ====================== ========== ================================
-         ``TB_DEFAULT_STYLE``   0x2008002  Default window style for L{ToasterBox}, with no caption nor close box.
-         ``TB_CAPTION``         0x22009806 L{ToasterBox} will have a caption, with the possibility to set a title for the L{ToasterBox} frame, and a close box.
+         ``TB_DEFAULT_STYLE``   0x2008002  Default window style for :class:`~toasterbox.ToasterBox`, with no caption nor close box.
+         ``TB_CAPTION``         0x22009806 :class:`~toasterbox.ToasterBox` will have a caption, with the possibility to set a title for the :class:`~toasterbox.ToasterBox` frame, and a close box.
          ====================== ========== ================================
        
-        :param `closingstyle`: the closing style for L{ToasterBox}. Can be one of the
+        :param `closingstyle`: the closing style for :class:`~toasterbox.ToasterBox`. Can be one of the
          following bits:
 
          ==================== =========== ==================================================
          Closing Styles       Hex Value   Description
          ==================== =========== ==================================================
-         ``TB_ONTIME``                0x1 L{ToasterBox} will close after a specified amount of time.
-         ``TB_ONCLICK``               0x2 L{ToasterBox} can be closed by clicking anywhere on the L{ToasterBox} frame.
+         ``TB_ONTIME``                0x1 :class:`~toasterbox.ToasterBox` will close after a specified amount of time.
+         ``TB_ONCLICK``               0x2 :class:`~toasterbox.ToasterBox` can be closed by clicking anywhere on the :class:`~toasterbox.ToasterBox` frame.
          ==================== =========== ==================================================
 
-        :param `scrollType`: the scrolling direction for L{ToasterBox}. Can be one of the
+        :param `scrollType`: the scrolling direction for :class:`~toasterbox.ToasterBox`. Can be one of the
          following bits:
 
          ==================== =========== ==================================================
          Scroll Styles        Hex Value   Description
          ==================== =========== ==================================================
-         ``TB_SCR_TYPE_UD``           0x1 L{ToasterBox} will scroll from up to down
-         ``TB_SCR_TYPE_DU``           0x2 L{ToasterBox} will scroll from down to up
-         ``TB_SCR_TYPE_FADE``         0x4 L{ToasterBox} will fade in/out (without scrolling). 
+         ``TB_SCR_TYPE_UD``           0x1 :class:`~toasterbox.ToasterBox` will scroll from up to down
+         ``TB_SCR_TYPE_DU``           0x2 :class:`~toasterbox.ToasterBox` will scroll from down to up
+         ``TB_SCR_TYPE_FADE``         0x4 :class:`~toasterbox.ToasterBox` will fade in/out (without scrolling). 
          ==================== =========== ==================================================
          
         """
@@ -266,7 +266,7 @@ class ToasterBox(wx.Timer):
         
     def SetPopupPosition(self, pos):
         """
-        Sets the L{ToasterBox} position on screen.
+        Sets the :class:`~toasterbox.ToasterBox` position on screen.
 
         :param `pos`: the widget position, an instance of `wx.Point`.        
         """
@@ -276,7 +276,7 @@ class ToasterBox(wx.Timer):
 
     def SetPopupPositionByInt(self, pos):
         """
-        Sets the L{ToasterBox} position on screen, at one of the screen corners.
+        Sets the :class:`~toasterbox.ToasterBox` position on screen, at one of the screen corners.
  
         :param `pos`: an integer specifying the screen corner, namely:
 
@@ -316,16 +316,16 @@ class ToasterBox(wx.Timer):
 
     def CenterOnParent(self, direction=wx.BOTH):
         """
-        Centres the window on its parent (if any). If the L{ToasterBox} parent is ``None``,
-        it calls L{CenterOnScreen}.
+        Centres the window on its parent (if any). If the :class:`~toasterbox.ToasterBox` parent is ``None``,
+        it calls :meth:`~toasterbox.ToasterBox.CenterOnScreen`.
 
         :param `direction`: specifies the direction for the centering. May be ``wx.HORIZONTAL``,
          ``wx.VERTICAL`` or ``wx.BOTH``.
 
-        :note: This methods provides for a way to center L{ToasterBox} over their parents instead of the
-         entire screen. If there is no parent, then behaviour is the same as L{CenterOnScreen}.
+        :note: This methods provides for a way to center :class:`~toasterbox.ToasterBox` over their parents instead of the
+         entire screen. If there is no parent, then behaviour is the same as :meth:`~toasterbox.ToasterBox.CenterOnScreen`.
 
-        :see: L{CenterOnScreen}.
+        :see: :meth:`~toasterbox.ToasterBox.CenterOnScreen`.
         """
 
         if not self._parent:
@@ -353,12 +353,12 @@ class ToasterBox(wx.Timer):
 
     def CenterOnScreen(self, direction=wx.BOTH):
         """
-        Centres the L{ToasterBox} on screen.
+        Centres the :class:`~toasterbox.ToasterBox` on screen.
 
         :param `direction`: specifies the direction for the centering. May be ``wx.HORIZONTAL``,
          ``wx.VERTICAL`` or ``wx.BOTH``.
 
-        :see: L{CenterOnParent}.
+        :see: :meth:`~toasterbox.ToasterBox.CenterOnParent`.
         """
 
         screenSize = wx.GetDisplaySize()
@@ -380,12 +380,12 @@ class ToasterBox(wx.Timer):
     
     def SetPopupBackgroundColour(self, colour=None):
         """
-        Sets the L{ToasterBox} background colour.
+        Sets the :class:`~toasterbox.ToasterBox` background colour.
 
         :param `colour`: a valid `wx.Colour` object. If defaulted to ``None``, then
          the background colour will be white.
          
-        :note: Use this method only for a L{ToasterBox} created with the ``TB_SIMPLE`` style.
+        :note: Use this method only for a :class:`~toasterbox.ToasterBox` created with the ``TB_SIMPLE`` style.
         """
 
         if colour is None:
@@ -400,12 +400,12 @@ class ToasterBox(wx.Timer):
 
     def SetPopupTextColour(self, colour=None):
         """
-        Sets the L{ToasterBox} foreground colour.
+        Sets the :class:`~toasterbox.ToasterBox` foreground colour.
 
         :param `colour`: a valid `wx.Colour` object. If defaulted to ``None``, then
          the background colour will be black.
          
-        :note: Use this method only for a L{ToasterBox} created with the ``TB_SIMPLE`` style.
+        :note: Use this method only for a :class:`~toasterbox.ToasterBox` created with the ``TB_SIMPLE`` style.
         """
 
         if colour is None:
@@ -419,12 +419,12 @@ class ToasterBox(wx.Timer):
 
     def SetPopupTextFont(self, font=None):
         """
-        Sets the L{ToasterBox} text font.
+        Sets the :class:`~toasterbox.ToasterBox` text font.
 
         :param `colour`: a valid `wx.Colour` object. If defaulted to ``None``, then
          a simple generic font will be generated.
          
-        :note: Use this method only for a L{ToasterBox} created with the ``TB_SIMPLE`` style.
+        :note: Use this method only for a :class:`~toasterbox.ToasterBox` created with the ``TB_SIMPLE`` style.
         """
 
         if font is None:
@@ -435,7 +435,7 @@ class ToasterBox(wx.Timer):
 
     def SetPopupSize(self, size):
         """
-        Sets the L{ToasterBox} size.
+        Sets the :class:`~toasterbox.ToasterBox` size.
 
         :param `size`: the new control size, an instance of `wx.Size`.        
         """
@@ -445,7 +445,7 @@ class ToasterBox(wx.Timer):
 
     def SetPopupPauseTime(self, pausetime):
         """
-        Sets the time after which the L{ToasterBox} is destroyed (linger).
+        Sets the time after which the :class:`~toasterbox.ToasterBox` is destroyed (linger).
 
         :param `pausetime`: the delay after which the control is destroyed, in seconds.
         """
@@ -455,12 +455,12 @@ class ToasterBox(wx.Timer):
 
     def SetPopupBitmap(self, bitmap=None):
         """
-        Sets the L{ToasterBox} background image.
+        Sets the :class:`~toasterbox.ToasterBox` background image.
 
         :param `bitmap`: a valid `wx.Bitmap` object or filename. If defaulted
          to ``None``, then no background bitmap is used.
          
-        :note: Use this method only for a L{ToasterBox} created with the ``TB_SIMPLE`` style.
+        :note: Use this method only for a :class:`~toasterbox.ToasterBox` created with the ``TB_SIMPLE`` style.
         """
 
         if bitmap is not None:
@@ -472,7 +472,7 @@ class ToasterBox(wx.Timer):
 
     def SetPopupScrollSpeed(self, speed):
         """
-        Sets the L{ToasterBox} scroll speed.
+        Sets the :class:`~toasterbox.ToasterBox` scroll speed.
 
         :param `speed`: it is the pause time (in milliseconds) for every step in the
          `ScrollUp` method.
@@ -483,11 +483,11 @@ class ToasterBox(wx.Timer):
 
     def SetPopupText(self, text):
         """
-        Sets the L{ToasterBox} text label.
+        Sets the :class:`~toasterbox.ToasterBox` text label.
 
         :param `text`: the widget label.
          
-        :note: Use this method only for a L{ToasterBox} created with the ``TB_SIMPLE`` style.
+        :note: Use this method only for a :class:`~toasterbox.ToasterBox` created with the ``TB_SIMPLE`` style.
         """
 
         self._popuptext = text
@@ -495,11 +495,11 @@ class ToasterBox(wx.Timer):
 
     def AddPanel(self, panel):
         """
-        Adds a panel to the L{ToasterBox}.
+        Adds a panel to the :class:`~toasterbox.ToasterBox`.
 
         :param `panel`: an instance of `wx.Window`.
         
-        :note: Use this method only for a L{ToasterBox} created with the ``TB_COMPLEX`` style.
+        :note: Use this method only for a :class:`~toasterbox.ToasterBox` created with the ``TB_COMPLEX`` style.
         """
 
         if not self._tbstyle & TB_COMPLEX:
@@ -509,7 +509,7 @@ class ToasterBox(wx.Timer):
 
 
     def Play(self):
-        """ Creates the L{ToasterBoxWindow}, that does all the job. """
+        """ Creates the :class:`~toasterbox.ToasterBoxWindow`, that does all the job. """
 
         # create new window
         self._tb.SetPopupSize((self._popupsize[0], self._popupsize[1]))
@@ -555,9 +555,9 @@ class ToasterBox(wx.Timer):
 
     def MoveAbove(self, tb):
         """
-        If a L{ToasterBox} already exists, move the new one above the existing one.
+        If a :class:`~toasterbox.ToasterBox` already exists, move the new one above the existing one.
 
-        :param `tb`: another instance of L{ToasterBox}.
+        :param `tb`: another instance of :class:`~toasterbox.ToasterBox`.
         """
 
         # recalc where to place this popup
@@ -567,16 +567,16 @@ class ToasterBox(wx.Timer):
 
 
     def GetToasterBoxWindow(self):
-        """ Returns the L{ToasterBox} frame. """
+        """ Returns the :class:`~toasterbox.ToasterBox` frame. """
 
         return self._tb
 
 
     def SetTitle(self, title):
         """
-        Sets the L{ToasterBox} title if it was created with ``TB_CAPTION`` window style.
+        Sets the :class:`~toasterbox.ToasterBox` title if it was created with ``TB_CAPTION`` window style.
 
-        :param `title`: the L{ToasterBox} caption title.        
+        :param `title`: the :class:`~toasterbox.ToasterBox` caption title.        
         """
 
         self._tb.SetTitle(title)
@@ -584,10 +584,10 @@ class ToasterBox(wx.Timer):
 
     def SetUseFocus(self, focus):
         """
-        If `focus` is ``True``, Instructs L{ToasterBox} to steal the focus from the
+        If `focus` is ``True``, Instructs :class:`~toasterbox.ToasterBox` to steal the focus from the
         parent application, otherwise it returns the focus to the original owner.
 
-        :param `focus`: ``True`` to set the focus on L{ToasterBox}, ``False`` to
+        :param `focus`: ``True`` to set the focus on :class:`~toasterbox.ToasterBox`, ``False`` to
          return it to the original owner.
         """
 
@@ -595,13 +595,13 @@ class ToasterBox(wx.Timer):
 
 
     def GetUseFocus(self):
-        """ Returns whether L{ToasterBox} will steal the focus from the parent application. """
+        """ Returns whether :class:`~toasterbox.ToasterBox` will steal the focus from the parent application. """
 
         return self._usefocus
     
 
     def Notify(self):
-        """ It's time to hide a L{ToasterBox}. """
+        """ It's time to hide a :class:`~toasterbox.ToasterBox`. """
 
         if len(winlist) == 0:
             return
@@ -624,7 +624,7 @@ class ToasterBox(wx.Timer):
 
     def OnMoveTimer(self, event):
         """
-        Handles the ``wx.EVT_TIMER`` event for L{ToasterBox}, moving the new window
+        Handles the ``wx.EVT_TIMER`` event for :class:`~toasterbox.ToasterBox`, moving the new window
         on top of the last one created.
 
         :param `event`: a `wx.TimerEvent` event to be processed.
@@ -653,7 +653,7 @@ class ToasterBox(wx.Timer):
         
 
     def CleanList(self):
-        """ Cleans the window list, erasing the stack of L{ToasterBox} objects. """
+        """ Cleans the window list, erasing the stack of :class:`~toasterbox.ToasterBox` objects. """
 
         if len(winlist) == 0:
             return
@@ -685,7 +685,7 @@ class ToasterBox(wx.Timer):
 class ToasterBoxWindow(wx.Frame):
     """
     This class does all the job, by handling background images, text properties
-    and panel adding. Depending on the style you choose, L{ToasterBoxWindow} will
+    and panel adding. Depending on the style you choose, :class:`~toasterbox.ToasterBoxWindow` will
     behave differently in order to handle widgets inside it.
     """
     
@@ -696,46 +696,46 @@ class ToasterBoxWindow(wx.Frame):
         Used internally. Do not call directly this class in your application!
 
         :param `parent`: the window parent;
-        :param `parent2`: the L{ToasterBox} calling this window;
-        :param `tbstyle`: the L{ToasterBoxWindow} main style. Can be one of the following
+        :param `parent2`: the :class:`~toasterbox.ToasterBox` calling this window;
+        :param `tbstyle`: the :class:`~toasterbox.ToasterBoxWindow` main style. Can be one of the following
          bits:
 
          ====================== ======= ================================
          `ToasterBox` Style      Value  Description
          ====================== ======= ================================
-         ``TB_SIMPLE``              0x1 A simple L{ToasterBox}, with background image and text customization can be created
-         ``TB_COMPLEX``             0x2 `ToasterBoxes` with different degree of complexity can be created. You can add as many controls as you want, provided that you call the L{AddPanel} method and pass to it a dummy frame and a `wx.Panel`.
+         ``TB_SIMPLE``              0x1 A simple :class:`~toasterbox.ToasterBox`, with background image and text customization can be created
+         ``TB_COMPLEX``             0x2 `ToasterBoxes` with different degree of complexity can be created. You can add as many controls as you want, provided that you call the :meth:`~toasterbox.ToasterBoxWindow.AddPanel` method and pass to it a dummy frame and a `wx.Panel`.
          ====================== ======= ================================
 
         :param `windowstyle`: this parameter influences the visual appearance of
-         L{ToasterBoxWindow}, and can be one of the following styles:
+         :class:`~toasterbox.ToasterBoxWindow`, and can be one of the following styles:
 
          ====================== ========== ================================
          Window Style           Hex Value  Description
          ====================== ========== ================================
-         ``TB_DEFAULT_STYLE``   0x2008002  Default window style for L{ToasterBox}, with no caption nor close box.
-         ``TB_CAPTION``         0x22009806 L{ToasterBox} will have a caption, with the possibility to set a title for the L{ToasterBox} frame, and a close box.
+         ``TB_DEFAULT_STYLE``   0x2008002  Default window style for :class:`~toasterbox.ToasterBox`, with no caption nor close box.
+         ``TB_CAPTION``         0x22009806 :class:`~toasterbox.ToasterBox` will have a caption, with the possibility to set a title for the :class:`~toasterbox.ToasterBox` frame, and a close box.
          ====================== ========== ================================
        
-        :param `closingstyle`: the closing style for L{ToasterBoxWindow}. Can be one of the
+        :param `closingstyle`: the closing style for :class:`~toasterbox.ToasterBoxWindow`. Can be one of the
          following bits:
 
          ==================== =========== ==================================================
          Closing Styles       Hex Value   Description
          ==================== =========== ==================================================
-         ``TB_ONTIME``                0x1 L{ToasterBox} will close after a specified amount of time.
-         ``TB_ONCLICK``               0x2 L{ToasterBox} can be closed by clicking anywhere on the L{ToasterBox} frame.
+         ``TB_ONTIME``                0x1 :class:`~toasterbox.ToasterBox` will close after a specified amount of time.
+         ``TB_ONCLICK``               0x2 :class:`~toasterbox.ToasterBox` can be closed by clicking anywhere on the :class:`~toasterbox.ToasterBox` frame.
          ==================== =========== ==================================================
 
-        :param `scrollType`: the scrolling direction for L{ToasterBoxWindow}. Can be one of the
+        :param `scrollType`: the scrolling direction for :class:`~toasterbox.ToasterBoxWindow`. Can be one of the
          following bits:
 
          ==================== =========== ==================================================
          Scroll Styles        Hex Value   Description
          ==================== =========== ==================================================
-         ``TB_SCR_TYPE_UD``           0x1 L{ToasterBox} will scroll from up to down
-         ``TB_SCR_TYPE_DU``           0x2 L{ToasterBox} will scroll from down to up
-         ``TB_SCR_TYPE_FADE``         0x4 L{ToasterBox} will fade in/out (without scrolling).
+         ``TB_SCR_TYPE_UD``           0x1 :class:`~toasterbox.ToasterBox` will scroll from up to down
+         ``TB_SCR_TYPE_DU``           0x2 :class:`~toasterbox.ToasterBox` will scroll from down to up
+         ``TB_SCR_TYPE_FADE``         0x4 :class:`~toasterbox.ToasterBox` will fade in/out (without scrolling).
          ==================== =========== ==================================================
 
         """
@@ -797,7 +797,7 @@ class ToasterBoxWindow(wx.Frame):
 
     def OnClose(self, event):
         """
-        Handles the ``wx.EVT_CLOSE`` event for L{ToasterBoxWindow}.
+        Handles the ``wx.EVT_CLOSE`` event for :class:`~toasterbox.ToasterBoxWindow`.
 
         :param `event`: a `wx.CloseEvent` event to be processed.
         """
@@ -808,7 +808,7 @@ class ToasterBoxWindow(wx.Frame):
 
     def OnMouseDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for L{ToasterBoxWindow}.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~toasterbox.ToasterBoxWindow`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -819,12 +819,12 @@ class ToasterBoxWindow(wx.Frame):
 
     def SetPopupBitmap(self, bitmap=None):
         """
-        Sets the L{ToasterBox} background image.
+        Sets the :class:`~toasterbox.ToasterBox` background image.
 
         :param `bitmap`: a valid `wx.Bitmap` object. If defaulted to ``None``, then
          no background bitmap is used.
          
-        :note: Use this method only for a L{ToasterBox} created with the ``TB_SIMPLE`` style.
+        :note: Use this method only for a :class:`~toasterbox.ToasterBox` created with the ``TB_SIMPLE`` style.
         """
 
         if bitmap is None:
@@ -838,7 +838,7 @@ class ToasterBoxWindow(wx.Frame):
 
     def SetPopupSize(self, size):
         """
-        Sets the L{ToasterBox} size.
+        Sets the :class:`~toasterbox.ToasterBox` size.
 
         :param `size`: the new control size, an instance of `wx.Size`.        
         """
@@ -848,7 +848,7 @@ class ToasterBoxWindow(wx.Frame):
 
     def SetPopupPosition(self, pos):
         """
-        Sets the L{ToasterBox} position on screen.
+        Sets the :class:`~toasterbox.ToasterBox` position on screen.
 
         :param `pos`: the widget position, an instance of `wx.Point`.        
         """
@@ -860,7 +860,7 @@ class ToasterBoxWindow(wx.Frame):
 
     def SetPopupPositionByInt(self, pos):
         """
-        Sets the L{ToasterBox} position on screen, at one of the screen corners.
+        Sets the :class:`~toasterbox.ToasterBox` position on screen, at one of the screen corners.
  
         :param `pos`: an integer specifying the screen corner, namely:
 
@@ -900,7 +900,7 @@ class ToasterBoxWindow(wx.Frame):
 
     def SetPopupPauseTime(self, pausetime):
         """
-        Sets the time after which the L{ToasterBox} is destroyed (linger).
+        Sets the time after which the :class:`~toasterbox.ToasterBox` is destroyed (linger).
 
         :param `pausetime`: the delay after which the control is destroyed, in seconds.
         """
@@ -910,10 +910,10 @@ class ToasterBoxWindow(wx.Frame):
 
     def SetPopupScrollSpeed(self, speed):
         """
-        Sets the L{ToasterBox} scroll speed.
+        Sets the :class:`~toasterbox.ToasterBox` scroll speed.
 
         :param `speed`: it is the pause time (in milliseconds) for every step in the
-         L{ScrollUp} method.
+         :meth:`~toasterbox.ToasterBoxWindow.ScrollUp` method.
         """
 
         self._sleeptime = speed
@@ -921,11 +921,11 @@ class ToasterBoxWindow(wx.Frame):
 
     def AddPanel(self, panel):
         """
-        Adds a panel to the L{ToasterBox}.
+        Adds a panel to the :class:`~toasterbox.ToasterBox`.
 
         :param `panel`: an instance of `wx.Window`.
         
-        :note: Use this method only for a L{ToasterBox} created with the ``TB_COMPLEX`` style.
+        :note: Use this method only for a :class:`~toasterbox.ToasterBox` created with the ``TB_COMPLEX`` style.
         """
 
         if not self._tbstyle & TB_COMPLEX:
@@ -941,11 +941,11 @@ class ToasterBoxWindow(wx.Frame):
 
     def SetPopupText(self, text):
         """
-        Sets the L{ToasterBox} text label.
+        Sets the :class:`~toasterbox.ToasterBox` text label.
 
         :param `text`: the widget label.
          
-        :note: Use this method only for a L{ToasterBox} created with the ``TB_SIMPLE`` style.
+        :note: Use this method only for a :class:`~toasterbox.ToasterBox` created with the ``TB_SIMPLE`` style.
         """
 
         self._popuptext = text
@@ -953,12 +953,12 @@ class ToasterBoxWindow(wx.Frame):
 
     def SetPopupTextFont(self, font):
         """
-        Sets the L{ToasterBox} text font.
+        Sets the :class:`~toasterbox.ToasterBox` text font.
 
         :param `colour`: a valid `wx.Colour` object. If defaulted to ``None``, then
          a simple generic font will be generated.
          
-        :note: Use this method only for a L{ToasterBox} created with the ``TB_SIMPLE`` style.
+        :note: Use this method only for a :class:`~toasterbox.ToasterBox` created with the ``TB_SIMPLE`` style.
         """
 
         self._textfont = font
@@ -966,16 +966,16 @@ class ToasterBoxWindow(wx.Frame):
 
     def GetPopupText(self):
         """
-        Returns the L{ToasterBox} text.
+        Returns the :class:`~toasterbox.ToasterBox` text.
 
-        :note: Use this method only for a L{ToasterBox} created with the ``TB_SIMPLE`` style.       
+        :note: Use this method only for a :class:`~toasterbox.ToasterBox` created with the ``TB_SIMPLE`` style.       
         """
 
         return self._popuptext
 
 
     def Play(self):
-        """ Creates the L{ToasterBoxWindow}, that does all the job. """
+        """ Creates the :class:`~toasterbox.ToasterBoxWindow`, that does all the job. """
 
         # do some checks to make sure this window is valid
         if self._bottomright.x < 1 or self._bottomright.y < 1:
@@ -998,7 +998,7 @@ class ToasterBoxWindow(wx.Frame):
 
 
     def NotifyTimer(self, event):
-        """ Hides gradually the L{ToasterBoxWindow}. """
+        """ Hides gradually the :class:`~toasterbox.ToasterBoxWindow`. """
 
         if self._scrollType != TB_SCR_TYPE_FADE:
             self.showtime.Stop()
@@ -1012,12 +1012,12 @@ class ToasterBoxWindow(wx.Frame):
 
     def SetPopupBackgroundColour(self, colour):
         """
-        Sets the L{ToasterBox} background colour.
+        Sets the :class:`~toasterbox.ToasterBox` background colour.
 
         :param `colour`: a valid `wx.Colour` object. If defaulted to ``None``, then
          the background colour will be white.
          
-        :note: Use this method only for a L{ToasterBox} created with the ``TB_SIMPLE`` style.
+        :note: Use this method only for a :class:`~toasterbox.ToasterBox` created with the ``TB_SIMPLE`` style.
         """
 
         self.SetBackgroundColour(colour)
@@ -1026,12 +1026,12 @@ class ToasterBoxWindow(wx.Frame):
 
     def SetPopupTextColour(self, colour):
         """
-        Sets the L{ToasterBox} foreground colour.
+        Sets the :class:`~toasterbox.ToasterBox` foreground colour.
 
         :param `colour`: a valid `wx.Colour` object. If defaulted to ``None``, then
          the background colour will be black.
          
-        :note: Use this method only for a L{ToasterBox} created with the ``TB_SIMPLE`` style.
+        :note: Use this method only for a :class:`~toasterbox.ToasterBox` created with the ``TB_SIMPLE`` style.
         """
 
         self._textcolour = colour
@@ -1039,10 +1039,10 @@ class ToasterBoxWindow(wx.Frame):
 
     def SetUseFocus(self, focus, originalfocus):
         """
-        If `focus` is ``True``, Instructs L{ToasterBoxWindow} to steal the focus from the
+        If `focus` is ``True``, Instructs :class:`~toasterbox.ToasterBoxWindow` to steal the focus from the
         parent application, otherwise it returns the focus to the original owner.
 
-        :param `focus`: ``True`` to set the focus on L{ToasterBoxWindow}, ``False`` to
+        :param `focus`: ``True`` to set the focus on :class:`~toasterbox.ToasterBoxWindow`, ``False`` to
          return it to the original owner;
         :param `originalfocus`: an instance of `wx.Window`, representing a pointer to
          the window which originally had the focus
@@ -1054,7 +1054,7 @@ class ToasterBoxWindow(wx.Frame):
 
     def OnScrollTimer(self, event):
         """
-        Handles the ``wx.EVT_TIMER`` event for L{ToasterBoxWindow} scrolling up/down.
+        Handles the ``wx.EVT_TIMER`` event for :class:`~toasterbox.ToasterBoxWindow` scrolling up/down.
 
         :param `event`: a `wx.TimerEvent` event to be processed.
         """
@@ -1066,7 +1066,7 @@ class ToasterBoxWindow(wx.Frame):
             
         
     def TearUp(self):
-        """ Scrolls the L{ToasterBox} up, which means gradually showing it. """
+        """ Scrolls the :class:`~toasterbox.ToasterBox` up, which means gradually showing it. """
 
         self._windowsize = self._windowsize + self._step
         step = self._currentStep
@@ -1100,7 +1100,7 @@ class ToasterBoxWindow(wx.Frame):
 
         
     def TearDown(self):
-        """ Scrolls the L{ToasterBox} down, which means gradually hiding it. """
+        """ Scrolls the :class:`~toasterbox.ToasterBox` down, which means gradually hiding it. """
 
         self._windowsize = self._windowsize - self._step
         step = self._currentStep
@@ -1131,7 +1131,7 @@ class ToasterBoxWindow(wx.Frame):
 
 
     def SetupPositions(self):
-        """ Sets up the position, size and scrolling step for L{ToasterBoxWindow}. """
+        """ Sets up the position, size and scrolling step for :class:`~toasterbox.ToasterBoxWindow`. """
 
         if self._scrollType == TB_SCR_TYPE_FADE:
             self.SetPosition(wx.Point(*self._dialogtop))
@@ -1172,7 +1172,7 @@ class ToasterBoxWindow(wx.Frame):
 
 
     def ScrollUp(self):
-        """ Scrolls the L{ToasterBox} up, which means gradually showing it. """
+        """ Scrolls the :class:`~toasterbox.ToasterBox` up, which means gradually showing it. """
 
         if self._scrollType == TB_SCR_TYPE_FADE:
             self._amount = 0
@@ -1185,7 +1185,7 @@ class ToasterBoxWindow(wx.Frame):
     
 
     def ScrollDown(self):
-        """ Scrolls the L{ToasterBox} down, which means gradually hiding it. """
+        """ Scrolls the :class:`~toasterbox.ToasterBox` down, which means gradually hiding it. """
 
         if self._scrollType == TB_SCR_TYPE_FADE:
             self._amount = 255
@@ -1197,12 +1197,12 @@ class ToasterBoxWindow(wx.Frame):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{ToasterBoxWindow}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~toasterbox.ToasterBoxWindow`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
 
         :note: This event is handled and processed only if the style ``TB_SIMPLE`` is
-         given to L{ToasterBox}.
+         given to :class:`~toasterbox.ToasterBox`.
         """
         
         dc = wx.AutoBufferedPaintDC(self)
@@ -1211,7 +1211,7 @@ class ToasterBoxWindow(wx.Frame):
             
     def DrawText(self, dc=None):
         """
-        Draws the text label for a L{ToasterBox} with ``TB_SIMPLE`` style set.
+        Draws the text label for a :class:`~toasterbox.ToasterBox` with ``TB_SIMPLE`` style set.
 
         :param `dc`: an instance of `wx.DC`. If defaulted to ``None``, a `wx.ClientDC`
          will be created on the fly.
@@ -1235,7 +1235,7 @@ class ToasterBoxWindow(wx.Frame):
 
     def AlphaCycle(self, event):
         """
-        Handles the ``wx.EVT_TIMER`` event for L{ToasterBoxWindow}.
+        Handles the ``wx.EVT_TIMER`` event for :class:`~toasterbox.ToasterBoxWindow`.
 
         :param `event`: a `wx.TimerEvent` event to be processed.
         """
@@ -1271,7 +1271,7 @@ class ToasterBoxWindow(wx.Frame):
 
     def MakeWindowTransparent(self, amount):
         """
-        Makes the L{ToasterBoxWindow} window transparent.
+        Makes the :class:`~toasterbox.ToasterBoxWindow` window transparent.
 
         :param `amount`: the alpha channel value.
         """
@@ -1288,7 +1288,7 @@ class ToasterBoxWindow(wx.Frame):
 
         :param `dc`: an instance of `wx.DC`.
 
-        :note: Use this method only for a L{ToasterBox} created with the ``TB_SIMPLE`` style.        
+        :note: Use this method only for a :class:`~toasterbox.ToasterBox` created with the ``TB_SIMPLE`` style.        
         """
 
         # border from sides and top to text (in pixels)

@@ -37,29 +37,29 @@ wxPython has built-in support for a (constantly growing) number of controls. Cur
 following classes are supported:
 
 * wx.TopLevelWindow (and hence wx.Frame and wx.Dialog, together with their own AUI perspectives);
-* wx.MenuBar, L{flatmenu.FlatMenuBar};
-* L{auibar.AuiToolBar};
+* wx.MenuBar, :class:`~flatmenu.FlatMenuBar`;
+* :class:`~aui.auibar.AuiToolBar`;
 * wx.Notebook, wx.Toolbook, wx.Treebook, wx.Choicebook, wx.aui.AuiNotebook,
-  L{auibook.AuiNotebook} (together with its own AUI perspective),
-  L{flatnotebook.FlatNotebook}, L{labelbook.LabelBook},
-  L{labelbook.FlatImageBook};
+  :class:`~aui.auibook.AuiNotebook` (together with its own AUI perspective),
+  :class:`~flatnotebook.FlatNotebook`, :class:`~labelbook.LabelBook`,
+  :class:`~labelbook.FlatImageBook`;
 * wx.CheckBox;
 * wx.ListBox, wx.VListBox, wx.HtmlListBox, wx.SimpleHtmlListBox, wx.gizmos.EditableListBox;
-* wx.ListCtrl, wx.ListView, L{ultimatelistctrl.UltimateListCtrl};
+* wx.ListCtrl, wx.ListView, :class:`~ultimatelistctrl.UltimateListCtrl`;
 * wx.CheckListBox;
 * wx.Choice, wx.ComboBox, wx.combo.OwnerDrawnComboBox;
 * wx.RadioBox;
 * wx.RadioButton;
 * wx.ScrolledWindow, wx.lib.scrolledpanel.ScrolledPanel;
-* wx.Slider, L{knobctrl.KnobCtrl};
-* wx.SpinButton, wx.SpinCtrl, L{floatspin.FloatSpin};
+* wx.Slider, :class:`~knobctrl.KnobCtrl`;
+* wx.SpinButton, wx.SpinCtrl, :class:`~floatspin.FloatSpin`;
 * wx.SplitterWindow;
 * wx.TextCtrl, wx.SearchCtrl, wx.lib.expando.ExpandoTextCtrl, wx.lib.masked.Ctrl;
 * wx.ToggleButton, wx.lib.buttons.GenToggleButton, wx.lib.buttons.GenBitmapToggleButton,
-  wx.lib.buttons.GenBitmapTextToggleButton, L{shapedbutton.SToggleButton},
-  L{shapedbutton.SBitmapToggleButton}, L{shapedbutton.SBitmapTextToggleButton};
-* wx.TreeCtrl, wx.GenericDirCtrl, L{customtreectrl.CustomTreeCtrl};
-* wx.gizmos.TreeListCtrl, L{hypertreelist.HyperTreeList};
+  wx.lib.buttons.GenBitmapTextToggleButton, :class:`~shapedbutton.SToggleButton`,
+  :class:`~shapedbutton.SBitmapToggleButton`, :class:`~shapedbutton.SBitmapTextToggleButton`;
+* wx.TreeCtrl, wx.GenericDirCtrl, :class:`~customtreectrl.CustomTreeCtrl`;
+* wx.gizmos.TreeListCtrl, :class:`~hypertreelist.HyperTreeList`;
 * wx.lib.calendar.CalendarCtrl;
 * wx.CollapsiblePane;
 * wx.DatePickerCtrl, wx.GenericDatePickerCtrl;
@@ -71,8 +71,8 @@ following classes are supported:
 * wx.DirDialog, wx.FileDialog;
 * wx.FindReplaceDialog;
 * wx.FontDialog;
-* wx.ColourDialog, L{cubecolourdialog.CubeColourDialog};
-* L{foldpanelbar.FoldPanelBar};
+* wx.ColourDialog, :class:`~cubecolourdialog.CubeColourDialog`;
+* :class:`~foldpanelbar.FoldPanelBar`;
 * wx.SingleChoiceDialog, wx.MultiChoiceDialog;
 * wx.TextEntryDialog, wx.PasswordEntryDialog.
 
@@ -156,7 +156,7 @@ can be only done automatically for windows.
 TODOs
 =====
 
-* Find a way to handle `wx.ToolBar` UI settings as it has been done for L{auibar.AuiToolBar}:
+* Find a way to handle `wx.ToolBar` UI settings as it has been done for :class:`~aui.auibar.AuiToolBar`:
   current `wx.ToolBar` doesn't seem to have easy access to the underlying toolbar tools;
 * Implement handler(s) for `wx.grid.Grid` for row/columns sizes (possibly adding another style
   to `PersistenceManager` as `wx.grid.Grid` sets up arrays to store individual row and column

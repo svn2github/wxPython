@@ -32,14 +32,14 @@
 
 
 """
-L{ThumbnailCtrl} is a widget that can be used to display a series of images in
+:class:`~thumbnailctrl.ThumbnailCtrl` is a widget that can be used to display a series of images in
 a "thumbnail" format.
 
 
 Description
 ===========
 
-L{ThumbnailCtrl} is a widget that can be used to display a series of images in
+:class:`~thumbnailctrl.ThumbnailCtrl` is a widget that can be used to display a series of images in
 a "thumbnail" format; it mimics, for example, the windows explorer behavior
 when you select the "view thumbnails" option.
 Basically, by specifying a folder that contains some image files, the files
@@ -47,7 +47,7 @@ in the folder are displayed as miniature versions of the actual images in
 a `wx.ScrolledWindow`.
 
 The code is partly based on `wxVillaLib`, a wxWidgets implementation of this
-control. However, L{ThumbnailCtrl} wouldn't have been so fast and complete
+control. However, :class:`~thumbnailctrl.ThumbnailCtrl` wouldn't have been so fast and complete
 without the suggestions and hints from Peter Damoc. So, if he accepts the
 mention, this control is his as much as mine.
 
@@ -94,7 +94,7 @@ Usage example::
 Methods and Settings
 ====================
 
-With L{ThumbnailCtrl} you can:
+With :class:`~thumbnailctrl.ThumbnailCtrl` you can:
 
 - Create different thumbnail outlines (none, images only, full, etc...);
 - Highlight thumbnails on mouse hovering;
@@ -109,10 +109,10 @@ With L{ThumbnailCtrl} you can:
   c) ``a`` key rotates 180 degrees.
   
 - Delete files/thumbnails (via the ``del`` key);
-- Drag and drop thumbnails from L{ThumbnailCtrl} to whatever application you want;
+- Drag and drop thumbnails from :class:`~thumbnailctrl.ThumbnailCtrl` to whatever application you want;
 - Use local (when at least one thumbnail is selected) or global (no need for
   thumbnail selection) popup menus;
-- Show/hide a `wx.ComboBox` at the top of L{ThumbnailCtrl}: this combobox contains
+- Show/hide a `wx.ComboBox` at the top of :class:`~thumbnailctrl.ThumbnailCtrl`: this combobox contains
   working directory information and it has history entries;
 - possibility to show tooltips on thumbnails, which display file information
   (like file name, size, last modification date and thumbnail size).
@@ -147,7 +147,7 @@ Event Name                         Description
 License And Version
 ===================
 
-L{ThumbnailCtrl} is distributed under the wxPython license.
+:class:`~thumbnailctrl.ThumbnailCtrl` is distributed under the wxPython license.
 
 Latest revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
@@ -367,9 +367,9 @@ THUMB_FILTER_IMAGES = 1
 
 # ThumbnailCtrl Orientation: Not Fully Implemented Till Now
 THUMB_HORIZONTAL = wx.HORIZONTAL
-""" The L{ThumbnailCtrl} will be horizontal. """
+""" The :class:`~thumbnailctrl.ThumbnailCtrl` will be horizontal. """
 THUMB_VERTICAL = wx.VERTICAL
-""" The L{ThumbnailCtrl} will be vertical. """
+""" The :class:`~thumbnailctrl.ThumbnailCtrl` will be vertical. """
 
 # Image File Name Extensions: Am I Missing Some Extensions Here?
 extensions = [".jpeg", ".jpg", ".bmp", ".png", ".ico", ".tiff", ".ani", ".cur", ".gif",
@@ -404,18 +404,18 @@ EVT_THUMBNAILS_THUMB_CHANGED = wx.PyEventBinder(wxEVT_THUMBNAILS_THUMB_CHANGED, 
 """ The thumbnail of an image has changed. Used internally"""
 
 TN_USE_PIL = 0
-""" If set to ``True`` or to ``1``, L{ThumbnailCtrl} will use PIL to load the images (much faster). """
+""" If set to ``True`` or to ``1``, :class:`~thumbnailctrl.ThumbnailCtrl` will use PIL to load the images (much faster). """
 
 TIME_FMT = '%d %b %Y, %H:%M:%S'
-""" Time format string for the L{Thumb} representation on screen. """
+""" Time format string for the :class:`~thumbnailctrl.Thumb` representation on screen. """
 
 
 def CmpThumb(first, second):
     """
     Compares two thumbnails in terms of file names and ids.
 
-    :param `first`: an instance of L{Thumb};
-    :param `second`: another instance of L{Thumb}.
+    :param `first`: an instance of :class:`~thumbnailctrl.Thumb`;
+    :param `second`: another instance of :class:`~thumbnailctrl.Thumb`.
     """
     
     if first.GetFileName() < second.GetFileName():
@@ -430,7 +430,7 @@ def SortFiles(items, sorteditems, filenames):
     """
     Sort files in alphabetical order.
 
-    :param `sorteditems`: a list of L{Thumb} objects;
+    :param `sorteditems`: a list of :class:`~thumbnailctrl.Thumb` objects;
     :param `filenames`: a list of image filenames.
     """
     
@@ -504,7 +504,7 @@ class PILImageHandler(object):
         Adjust overall image brightness to highlight.
 
         :param `img`: an instance of `wx.Image`;
-        :param `factor`: unused in L{PILImageHandler}.
+        :param `factor`: unused in :class:`~thumbnailctrl.PILImageHandler`.
         """
 
         import PIL.Image as Image
@@ -601,7 +601,7 @@ class Thumb(object):
         """
         Default class constructor.
 
-        :param `parent`: the main L{ThumbnailCtrl} window;
+        :param `parent`: the main :class:`~thumbnailctrl.ThumbnailCtrl` window;
         :param `folder`: the directory containing the images;
         :param `filename`: a file containing an image;
         :param `caption`: the thumbnail caption string;
@@ -908,7 +908,7 @@ class Thumb(object):
 
 class ThumbnailCtrl(wx.Panel):
     """
-    L{ThumbnailCtrl} is a widget that can be used to display a series of images in
+    :class:`~thumbnailctrl.ThumbnailCtrl` is a widget that can be used to display a series of images in
     a "thumbnail" format.
     """
 
@@ -924,7 +924,7 @@ class ThumbnailCtrl(wx.Panel):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `thumboutline`: outline style for L{ThumbnailCtrl}, which may be:
+        :param `thumboutline`: outline style for :class:`~thumbnailctrl.ThumbnailCtrl`, which may be:
 
          =========================== ======= ==================================
          Outline Flag                 Value  Description
@@ -937,8 +937,8 @@ class ThumbnailCtrl(wx.Panel):
 
         :param `thumbfilter`: filter for image/video/audio files. Actually only
          ``THUMB_FILTER_IMAGES`` is implemented;
-        :param `imagehandler`: can be L{PILImageHandler} if PIL is installed (faster), or
-         L{NativeImageHandler} which only uses wxPython image methods.
+        :param `imagehandler`: can be :class:`~thumbnailctrl.PILImageHandler` if PIL is installed (faster), or
+         :class:`~thumbnailctrl.NativeImageHandler` which only uses wxPython image methods.
         """
         
         wx.Panel.__init__(self, parent, id, pos, size)     
@@ -1073,7 +1073,7 @@ class ThumbnailCtrl(wx.Panel):
 # ---------------------------------------------------------------------------- #        
 
 class ScrolledThumbnail(wx.ScrolledWindow):
-    """ This is the main class implementation of L{ThumbnailCtrl}. """
+    """ This is the main class implementation of :class:`~thumbnailctrl.ThumbnailCtrl`. """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, thumboutline=THUMB_OUTLINE_IMAGE,
@@ -1087,7 +1087,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `thumboutline`: outline style for L{ScrolledThumbnail}, which may be:
+        :param `thumboutline`: outline style for :class:`~thumbnailctrl.ScrolledThumbnail`, which may be:
 
          =========================== ======= ==================================
          Outline Flag                 Value  Description
@@ -1100,8 +1100,8 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
         :param `thumbfilter`: filter for image/video/audio files. Actually only
          ``THUMB_FILTER_IMAGES`` is implemented;
-        :param `imagehandler`: can be L{PILImageHandler} if PIL is installed (faster), or
-         L{NativeImageHandler} which only uses wxPython image methods.
+        :param `imagehandler`: can be :class:`~thumbnailctrl.PILImageHandler` if PIL is installed (faster), or
+         :class:`~thumbnailctrl.NativeImageHandler` which only uses wxPython image methods.
         """
         
         wx.ScrolledWindow.__init__(self, parent, id, pos, size)
@@ -1230,7 +1230,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         """
         Returns the thumbnail outline style on selection.
 
-        :see: L{SetThumbOutline} for a list of possible return values.
+        :see: :meth:`~thumbnailctrl.ScrolledThumbnail.SetThumbOutline` for a list of possible return values.
         """
         
         return self._tOutline
@@ -1278,7 +1278,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
 
     def SortItems(self):
-        """ Sorts the items accordingly to the L{CmpThumb} function. """
+        """ Sorts the items accordingly to the :meth:`~thumbnailctrl.CmpThumb` function. """
 
         self._items.sort(CmpThumb)        
 
@@ -1330,7 +1330,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
     def SetOrientation(self, orient=THUMB_VERTICAL):
         """
-        Set the L{ThumbnailCtrl} orientation (partially implemented).
+        Set the :class:`~thumbnailctrl.ThumbnailCtrl` orientation (partially implemented).
 
         :param `orient`: one of ``THUMB_VERTICAL``, ``THUMB_HORIZONTAL``.
 
@@ -1462,7 +1462,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
 
     def Clear(self):
-        """ Clears L{ThumbnailCtrl}. """
+        """ Clears :class:`~thumbnailctrl.ThumbnailCtrl`. """
         
         self._items = []
         self._selected = -1
@@ -1540,7 +1540,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         """
         Shows all the thumbnails.
         
-        :param `thumbs`: should be a sequence with instances of L{Thumb};
+        :param `thumbs`: should be a sequence with instances of :class:`~thumbnailctrl.Thumb`;
         :param `caption`: the caption text for the current selected thumbnail.
         """
 
@@ -1659,7 +1659,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
     def IsAudioVideo(self, fname):
         """
         Returns ``True`` if a file contains either audio or video data.
-        Currently unused as L{ThumbnailCtrl} recognizes only image files.
+        Currently unused as :class:`~thumbnailctrl.ThumbnailCtrl` recognizes only image files.
 
         :param `fname`: a file name.
         
@@ -1673,7 +1673,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
     def IsVideo(self, fname):
         """
         Returns ``True`` if a file contains video data.
-        Currently unused as L{ThumbnailCtrl} recognizes only image files.
+        Currently unused as :class:`~thumbnailctrl.ThumbnailCtrl` recognizes only image files.
 
         :param `fname`: a file name.
 
@@ -1687,7 +1687,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
     def IsAudio(self, fname):
         """
         Returns ``True`` if a file contains audio data.
-        Currently unused as L{ThumbnailCtrl} recognizes only image files.
+        Currently unused as :class:`~thumbnailctrl.ThumbnailCtrl` recognizes only image files.
 
         :param `fname`: a file name.
 
@@ -1824,7 +1824,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
     def UpdateProp(self, checkSize=True):
         """
-        Updates L{ThumbnailCtrl} and its visible thumbnails.
+        Updates :class:`~thumbnailctrl.ThumbnailCtrl` and its visible thumbnails.
 
         :param `checkSize`: ``True`` to update the items visibility if the window
          size has changed.
@@ -1896,7 +1896,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
 
     def GetPaintRect(self):
-        """ Returns the paint bounding rect for the L{OnPaint} method. """
+        """ Returns the paint bounding rect for the :meth:`~thumbnailctrl.ScrolledThumbnail.OnPaint` method. """
         
         size = self.GetClientSize()
         paintRect = wx.Rect(0, 0, size.GetWidth(), size.GetHeight())
@@ -1996,7 +1996,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         Draws a visible thumbnail.
 
         :param `bmp`: the thumbnail version of the original image;
-        :param `thumb`: an instance of L{Thumb};
+        :param `thumb`: an instance of :class:`~thumbnailctrl.Thumb`;
         :param `index`: the index of the thumbnail to draw.
         """
 
@@ -2117,7 +2117,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{ThumbnailCtrl}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~thumbnailctrl.ThumbnailCtrl`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -2180,7 +2180,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
     def OnResize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{ThumbnailCtrl}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~thumbnailctrl.ThumbnailCtrl`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -2192,7 +2192,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
     def OnMouseDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` and ``wx.EVT_RIGHT_DOWN`` events for L{ThumbnailCtrl}.
+        Handles the ``wx.EVT_LEFT_DOWN`` and ``wx.EVT_RIGHT_DOWN`` events for :class:`~thumbnailctrl.ThumbnailCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2258,7 +2258,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
     def OnMouseUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` and ``wx.EVT_RIGHT_UP`` events for L{ThumbnailCtrl}.
+        Handles the ``wx.EVT_LEFT_UP`` and ``wx.EVT_RIGHT_UP`` events for :class:`~thumbnailctrl.ThumbnailCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2301,7 +2301,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
     def OnMouseDClick(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DCLICK`` event for L{ThumbnailCtrl}.
+        Handles the ``wx.EVT_LEFT_DCLICK`` event for :class:`~thumbnailctrl.ThumbnailCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2312,7 +2312,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
     def OnMouseMove(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for L{ThumbnailCtrl}.
+        Handles the ``wx.EVT_MOTION`` event for :class:`~thumbnailctrl.ThumbnailCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2375,7 +2375,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
     def OnMouseLeave(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{ThumbnailCtrl}.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~thumbnailctrl.ThumbnailCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2390,9 +2390,9 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
     def OnThumbChanged(self, event):
         """
-        Handles the ``EVT_THUMBNAILS_THUMB_CHANGED`` event for L{ThumbnailCtrl}.
+        Handles the ``EVT_THUMBNAILS_THUMB_CHANGED`` event for :class:`~thumbnailctrl.ThumbnailCtrl`.
 
-        :param `event`: a L{ThumbnailEvent} event to be processed.
+        :param `event`: a :class:`~thumbnailctrl.ThumbnailEvent` event to be processed.
         """
         
         for ii in xrange(len(self._items)):
@@ -2409,7 +2409,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
     def OnChar(self, event):
         """
-        Handles the ``wx.EVT_CHAR`` event for L{ThumbnailCtrl}.
+        Handles the ``wx.EVT_CHAR`` event for :class:`~thumbnailctrl.ThumbnailCtrl`.
 
         :param `event`: a `wx.KeyEvent` event to be processed.
 
@@ -2535,7 +2535,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
     def OnMouseWheel(self, event):
         """
-        Handles the ``wx.EVT_MOUSEWHEEL`` event for L{ThumbnailCtrl}.
+        Handles the ``wx.EVT_MOUSEWHEEL`` event for :class:`~thumbnailctrl.ThumbnailCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
 

@@ -29,7 +29,7 @@ Base Functionalities
 To use the dialog, you set up the items in a `SwitcherItems` object,
 before passing this to the `SwitcherDialog` instance.
 
-Call L{SwitcherItems.AddItem} and optionally L{SwitcherItems.AddGroup} to add items and headings. These
+Call :meth:`SwitcherItems.AddItem() <aui.aui_switcherdialog.SwitcherItems.AddItem>` and optionally :meth:`SwitcherItems.AddGroup() <aui.aui_switcherdialog.SwitcherItems.AddGroup>` to add items and headings. These
 functions take a label (to be displayed to the user), an identifying name,
 an integer id, and a bitmap. The name and id are purely for application-defined
 identification. You may also set a description to be displayed when each
@@ -40,11 +40,11 @@ Have created the dialog, you call `ShowModal()`, and if the return value is
 ``wx.ID_OK``, retrieve the selection from the dialog and activate the pane.
 
 The sample code below shows a generic method of finding panes and notebook
-tabs within the current L{AuiManager}, and using the pane name or notebook
+tabs within the current :class:`~aui.framemanager.AuiManager`, and using the pane name or notebook
 tab position to display the pane.
 
 The only other code to add is a menu item with the desired accelerator,
-whose modifier matches the one you pass to L{SwitcherDialog.SetModifierKey} 
+whose modifier matches the one you pass to :meth:`SwitcherDialog.SetModifierKey() <aui.aui_switcherdialog.SwitcherDialog.SetModifierKey>` 
 (the default being ``wx.WXK_CONTROL``).
 
 
@@ -180,9 +180,9 @@ class SwitcherItem(object):
 
     def Copy(self, item):
         """
-        Copy operator between 2 L{SwitcherItem} instances.
+        Copy operator between 2 :class:`~aui.aui_switcherdialog.SwitcherItem` instances.
 
-        :param `item`: another instance of L{SwitcherItem}.
+        :param `item`: another instance of :class:`~aui.aui_switcherdialog.SwitcherItem`.
         """
 
         self._id = item._id
@@ -372,9 +372,9 @@ class SwitcherItems(object):
 
     def Copy(self, items):
         """
-        Copy operator between 2 L{SwitcherItems}.
+        Copy operator between 2 :class:`~aui.aui_switcherdialog.SwitcherItems`.
 
-        :param `items`: another instance of L{SwitcherItems}.
+        :param `items`: another instance of :class:`~aui.aui_switcherdialog.SwitcherItems`.
         """
         
         self.Clear()
@@ -1046,7 +1046,7 @@ class MultiColumnListCtrl(wx.PyControl):
 
 class SwitcherDialog(wx.Dialog):
     """
-    SwitcherDialog shows a L{MultiColumnListCtrl} with a list of panes
+    SwitcherDialog shows a :class:`~aui.aui_switcherdialog.MultiColumnListCtrl` with a list of panes
     and tabs for the user to choose. ``Ctrl`` + ``Tab`` cycles through them.
     """
 

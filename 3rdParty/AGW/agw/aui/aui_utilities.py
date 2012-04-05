@@ -150,7 +150,7 @@ def IndentPressedBitmap(rect, button_state):
     Indents the input rectangle `rect` based on the value of `button_state`.
 
     :param `rect`: an instance of `wx.Rect`;
-    :param `button_state`: an L{AuiNotebook} button state.
+    :param `button_state`: an :class:`~aui.auibook.AuiNotebook` button state.
     """
 
     if button_state == AUI_BUTTON_STATE_PRESSED:
@@ -393,7 +393,7 @@ def FindFocusDescendant(ancestor):
 
 def GetLabelSize(dc, label, vertical):
     """
-    Returns the L{AuiToolBar} item label size.
+    Returns the :class:`~aui.auibar.AuiToolBar` item label size.
 
     :param `label`: the toolbar tool label;
     :param `vertical`: whether the toolbar tool orientation is vertical or not.
@@ -433,10 +433,10 @@ class TabDragImage(wx.DragImage):
         
         For internal use: do not call it in your code!
 
-        :param `notebook`: an instance of L{AuiNotebook};
-        :param `page`: the dragged L{AuiNotebook} page;
+        :param `notebook`: an instance of :class:`~aui.auibook.AuiNotebook`;
+        :param `page`: the dragged :class:`~aui.auibook.AuiNotebook` page;
         :param `button_state`: the state of the close button on the tab;
-        :param `tabArt`: an instance of L{AuiDefaultTabArt} or one of its derivations.
+        :param `tabArt`: an instance of :class:`~aui.tabart.AuiDefaultTabArt` or one of its derivations.
         """
 
         self._backgroundColour = wx.NamedColour("pink")        
@@ -448,10 +448,10 @@ class TabDragImage(wx.DragImage):
         """
         Actually creates the drag and drop bitmap.
 
-        :param `notebook`: an instance of L{AuiNotebook};
-        :param `page`: the dragged L{AuiNotebook} page;
+        :param `notebook`: an instance of :class:`~aui.auibook.AuiNotebook`;
+        :param `page`: the dragged :class:`~aui.auibook.AuiNotebook` page;
         :param `button_state`: the state of the close button on the tab;
-        :param `tabArt`: an instance of L{AuiDefaultTabArt} or one of its derivations.
+        :param `tabArt`: an instance of :class:`~aui.tabart.AuiDefaultTabArt` or one of its derivations.
         """
 
         control = page.control
@@ -505,7 +505,7 @@ def GetDockingImage(direction, useAero, center):
     """
     Returns the correct name of the docking bitmap depending on the input parameters.
 
-    :param `useAero`: whether L{AuiManager} is using Aero-style or Whidbey-style docking
+    :param `useAero`: whether :class:`~aui.framemanager.AuiManager` is using Aero-style or Whidbey-style docking
      images or not;
     :param `center`: whether we are looking for the center diamond-shaped bitmap or not. 
     """
@@ -632,7 +632,7 @@ def GetSlidingPoints(rect, size, direction):
     """
     Returns the point at which the sliding in and out of a minimized pane begins.
 
-    :param `rect`: the L{AuiToolBar} tool screen rectangle;
+    :param `rect`: the :class:`~aui.auibar.AuiToolBar` tool screen rectangle;
     :param `size`: the pane window size;
     :param `direction`: the pane docking direction.
     """
@@ -662,8 +662,8 @@ def CopyAttributes(newArt, oldArt):
     """
     Copies pens, brushes, colours and fonts from the old tab art to the new one.
 
-    :param `newArt`: the new instance of L{AuiDefaultTabArt};
-    :param `oldArt`: the old instance of L{AuiDefaultTabArt}.
+    :param `newArt`: the new instance of :class:`~aui.tabart.AuiDefaultTabArt`;
+    :param `oldArt`: the old instance of :class:`~aui.tabart.AuiDefaultTabArt`.
     """    
     
     attrs = dir(oldArt)

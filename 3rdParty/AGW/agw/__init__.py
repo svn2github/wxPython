@@ -16,7 +16,7 @@ an asterisk were already present in `wx.lib` before:
 - AquaButton: this is another custom-drawn button class which
   *approximatively* mimics the behaviour of Aqua buttons on the Mac;
 - AUI: a pure-Python implementation of `wx.aui`, with many bug fixes and
-  new features like HUD docking and L{AuiNotebook} tab arts;
+  new features like HUD docking and :class:`~aui.auibook.AuiNotebook` tab arts;
 - BalloonTip: allows you to display tooltips in a balloon style window
   (actually a frame), similarly to the Windows XP balloon help;
 - ButtonPanel (*): a panel with gradient background shading with the
@@ -118,11 +118,11 @@ You can contact me at:
 andrea.gavana@gmail.com
 andrea.gavana@maerskoil.com
 
-AGW version: 0.9.5
+AGW version: 0.9.6
 
-Last updated: 01 Apr 2012, 11.00 GMT
+Last updated: 05 Apr 2012, 23.00 GMT
 
 """
 
-__version__ = "0.9.5"
+__version__ = "0.9.6"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"

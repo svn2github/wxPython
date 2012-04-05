@@ -93,8 +93,8 @@ class AbstractHandler(object):
     default and automatically reacts to the window destruction.
 
     :note: This is an abstract class. If you wish to add another (custom) handler
-           for your widgets, you should derive from L{AbstractHandler} and override
-           the L{AbstractHandler.Save}, L{AbstractHandler.Restore} and L{AbstractHandler.GetKind}
+           for your widgets, you should derive from :class:`~persist.persist_handlers.AbstractHandler` and override
+           the :meth:`AbstractHandler.Save() <persist.persist_handlers.AbstractHandler.Save>`, :meth:`AbstractHandler.Restore() <persist.persist_handlers.AbstractHandler.Restore>` and :meth:`AbstractHandler.GetKind() <persist.persist_handlers.AbstractHandler.GetKind>`
            methods.
     """
     
@@ -102,7 +102,7 @@ class AbstractHandler(object):
         """
         Default class constructor.
 
-        :param `pObject`: a L{PersistentObject} containing information about the
+        :param `pObject`: a :class:`~persist.persistencemanager.PersistentObject` containing information about the
          persistent widget.
         """
 
@@ -113,8 +113,8 @@ class AbstractHandler(object):
 
     def Save(self):
         """
-        Saves the widget's settings by calling L{PersistentObject.SaveValue}, which in
-        turns calls L{PersistenceManager.SaveValue}.
+        Saves the widget's settings by calling :meth:`PersistentObject.SaveValue() <persist.persistencemanager.PersistentObject.SaveValue>`, which in
+        turns calls :meth:`PersistenceManager.SaveValue() <persist.persistencemanager.PersistenceManager.SaveValue>`.
 
         :note: This method must be overridden in derived classes.        
         """
@@ -124,8 +124,8 @@ class AbstractHandler(object):
 
     def Restore(self):
         """
-        Restores the widget's settings by calling L{PersistentObject.RestoreValue}, which in
-        turns calls L{PersistenceManager.RestoreValue}.
+        Restores the widget's settings by calling :meth:`PersistentObject.RestoreValue() <persist.persistencemanager.PersistentObject.RestoreValue>`, which in
+        turns calls :meth:`PersistenceManager.RestoreValue() <persist.persistencemanager.PersistenceManager.RestoreValue>`.
 
         :note: This method must be overridden in derived classes.        
         """
@@ -154,13 +154,13 @@ class BookHandler(AbstractHandler):
     - `wx.Toolbook`;
     - `wx.Choicebook`;
     - `wx.Listbook`;
-    - `wx.Treebook` (except for opened tree branches, see L{TreebookHandler} for this);
+    - `wx.Treebook` (except for opened tree branches, see :class:`~persist.persist_handlers.TreebookHandler` for this);
     - `wx.Notebook`;
     - `wx.aui.AuiNotebook`;
-    - L{auibook.AuiNotebook};
-    - L{flatnotebook.FlatNotebook};
-    - L{labelbook.LabelBook};
-    - L{labelbook.FlatImageBook}.
+    - :class:`~aui.auibook.AuiNotebook`;
+    - :class:`~flatnotebook.FlatNotebook`;
+    - :class:`~labelbook.LabelBook`;
+    - :class:`~labelbook.FlatImageBook`.
 
     """
     
@@ -219,7 +219,7 @@ class TreebookHandler(BookHandler):
 
     This class handles the following wxPython widgets:
     
-    - `wx.Treebook` (except for page selection, see L{BookHandler} for this).
+    - `wx.Treebook` (except for page selection, see :class:`~persist.persist_handlers.BookHandler` for this).
     
     """
     
@@ -272,7 +272,7 @@ class TreebookHandler(BookHandler):
 
 class AUIHandler(AbstractHandler):
     """
-    Supports saving/restoring `wx.aui.AuiManager` and L{framemanager.AuiManager}
+    Supports saving/restoring `wx.aui.AuiManager` and :class:`~aui.framemanager.AuiManager`
     perspectives.
     """
     
@@ -351,9 +351,9 @@ class TLWHandler(AUIHandler):
     |
     
     In addition, if the toplevel window has an associated AuiManager (whether it is 
-    `wx.aui.AuiManager` or L{framemanager.AuiManager} and L{PersistenceManager}
+    `wx.aui.AuiManager` or :class:`~aui.framemanager.AuiManager` and :class:`~persist.persistencemanager.PersistenceManager`
     has the ``PM_SAVE_RESTORE_AUI_PERSPECTIVES`` style set (the default), this class
-    will also save and restore AUI perspectives using the underlying L{AUIHandler}
+    will also save and restore AUI perspectives using the underlying :class:`~persist.persist_handlers.AUIHandler`
     class.
 
     """
@@ -496,8 +496,8 @@ class ListBoxHandler(AbstractHandler):
     This class handles the following wxPython widgets:
     
     - `wx.ListBox`;
-    - `wx.ListCtrl` (only for selected items. For column sizes see L{ListCtrlHandler});
-    - `wx.ListView` (only for selected items. For column sizes see L{ListCtrlHandler});
+    - `wx.ListCtrl` (only for selected items. For column sizes see :class:`~persist.persist_handlers.ListCtrlHandler`);
+    - `wx.ListView` (only for selected items. For column sizes see :class:`~persist.persist_handlers.ListCtrlHandler`);
     - `wx.VListBox`;
     - `wx.HtmlListBox`;
     - `wx.SimpleHtmlListBox`;
@@ -622,8 +622,8 @@ class ListCtrlHandler(ListBoxHandler):
 
     This class handles the following wxPython widgets:
     
-    - `wx.ListCtrl` (only for column sizes. For selected items see L{ListBoxHandler});
-    - `wx.ListView` (only for column sizes. For selected items see L{ListBoxHandler}).
+    - `wx.ListCtrl` (only for column sizes. For selected items see :class:`~persist.persist_handlers.ListBoxHandler`);
+    - `wx.ListView` (only for column sizes. For selected items see :class:`~persist.persist_handlers.ListBoxHandler`).
     """
     
     def __init__(self, pObject):
@@ -683,7 +683,7 @@ class CheckListBoxHandler(ListBoxHandler):
 
     This class handles the following wxPython widgets:
     
-    - `wx.CheckListBox` (only for checked items. For selected items see L{ListBoxHandler}).
+    - `wx.CheckListBox` (only for checked items. For selected items see :class:`~persist.persist_handlers.ListBoxHandler`).
 
     """
     
@@ -777,11 +777,11 @@ class ChoiceComboHandler(AbstractHandler):
 
 class FoldPanelBarHandler(AbstractHandler):
     """
-    Supports saving/restoring of L{foldpanelbar.FoldPanelBar}.
+    Supports saving/restoring of :class:`~foldpanelbar.FoldPanelBar`.
 
     This class handles the following wxPython widgets
 
-    - L{foldpanelbar.FoldPanelBar
+    - :class:`foldpanelbar.FoldPanelBar`
     """
   
     def __init__(self, pObject):
@@ -953,12 +953,12 @@ class ScrolledWindowHandler(AbstractHandler):
 
 class SliderHandler(AbstractHandler):
     """
-    Supports saving/restoring a `wx.Slider` / L{knobctrl.KnobCtrl} thumb position.
+    Supports saving/restoring a `wx.Slider` / :class:`~knobctrl.KnobCtrl` thumb position.
 
     This class handles the following wxPython widgets:
     
     - `wx.Slider`;
-    - L{knobctrl.KnobCtrl}.
+    - :class:`~knobctrl.KnobCtrl`.
     
     """
     
@@ -1158,9 +1158,9 @@ class ToggleButtonHandler(AbstractHandler):
     - `wx.lib.buttons.GenToggleButton`;
     - `wx.lib.buttons.GenBitmapToggleButton`;
     - `wx.lib.buttons.GenBitmapTextToggleButton`;
-    - L{shapedbutton.SToggleButton};
-    - L{shapedbutton.SBitmapToggleButton};
-    - L{shapedbutton.SBitmapTextToggleButton}.
+    - :class:`~shapedbutton.SToggleButton`;
+    - :class:`~shapedbutton.SBitmapToggleButton`;
+    - :class:`~shapedbutton.SBitmapTextToggleButton`.
     
     """
     
@@ -1197,14 +1197,14 @@ class ToggleButtonHandler(AbstractHandler):
 class TreeCtrlHandler(AbstractHandler):
     """
     Supports saving/restoring a `wx.TreeCtrl` expansion state, selections and
-    checked items state (meaningful only for L{customtreectrl.CustomTreeCtrl}).
+    checked items state (meaningful only for :class:`~customtreectrl.CustomTreeCtrl`).
 
     This class handles the following wxPython widgets:
 
     - `wx.TreeCtrl`;
     - `wx.GenericDirCtrl`;
-    - L{customtreectrl.CustomTreeCtrl};
-    - L{hypertreelist.HyperTreeList};    
+    - :class:`~customtreectrl.CustomTreeCtrl`;
+    - :class:`~hypertreelist.HyperTreeList`;    
 
     """
     
@@ -1218,7 +1218,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Return the children of item as a list.
 
-        :param `item`: a `wx.TreeCtrl` item or a L{customtreectrl.CustomTreeCtrl} item;
+        :param `item`: a `wx.TreeCtrl` item or a :class:`~customtreectrl.CustomTreeCtrl` item;
         :param `recursively`: whether to recurse into the item hierarchy or not.
         """
 
@@ -1243,7 +1243,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Return the index of item.
 
-        :param `item`: a `wx.TreeCtrl` item or a L{customtreectrl.CustomTreeCtrl} item;
+        :param `item`: a `wx.TreeCtrl` item or a :class:`~customtreectrl.CustomTreeCtrl` item;
         """
         
         parent = self._window.GetItemParent(item)
@@ -1264,7 +1264,7 @@ class TreeCtrlHandler(AbstractHandler):
         something that represents the underlying domain object, e.g. 
         a database key.
 
-        :param `item`: a `wx.TreeCtrl` item or a L{customtreectrl.CustomTreeCtrl} item;        
+        :param `item`: a `wx.TreeCtrl` item or a :class:`~customtreectrl.CustomTreeCtrl` item;        
         """
 
         return self.GetIndexOfItem(item)
@@ -1273,7 +1273,7 @@ class TreeCtrlHandler(AbstractHandler):
     def GetExpansionState(self):
         """
         Returns list of expanded items. Expanded items are coded as determined by
-        the result of L{TreeCtrlHandler.GetItemIdentity}.
+        the result of :meth:`TreeCtrlHandler.GetItemIdentity() <persist.persist_handlers.TreeCtrlHandler.GetItemIdentity>`.
         """
         
         root = self._window.GetRootItem()
@@ -1287,11 +1287,11 @@ class TreeCtrlHandler(AbstractHandler):
 
     def SetExpansionState(self, listOfExpandedItems):
         """
-        Expands all tree items whose identity, as determined by L{TreeCtrlHandler.GetItemIdentity},
+        Expands all tree items whose identity, as determined by :meth:`TreeCtrlHandler.GetItemIdentity() <persist.persist_handlers.TreeCtrlHandler.GetItemIdentity>`,
         is present in the list and collapses all other tree items.
 
         :param `listOfExpandedItems`: a list of expanded `wx.TreeCtrl` or
-         L{customtreectrl.CustomTreeCtrl} items.
+         :class:`~customtreectrl.CustomTreeCtrl` items.
         """
         
         root = self._window.GetRootItem()
@@ -1306,7 +1306,7 @@ class TreeCtrlHandler(AbstractHandler):
     def GetSelectionState(self):
         """
         Returns a list of selected items. Selected items are coded as determined by
-        the result of L{TreeCtrlHandler.GetItemIdentity}.
+        the result of :meth:`TreeCtrlHandler.GetItemIdentity() <persist.persist_handlers.TreeCtrlHandler.GetItemIdentity>`.
         """
         
         root = self._window.GetRootItem()
@@ -1320,11 +1320,11 @@ class TreeCtrlHandler(AbstractHandler):
 
     def SetSelectionState(self, listOfSelectedItems):
         """
-        Selects all tree items whose identity, as determined by L{TreeCtrlHandler.GetItemIdentity},
+        Selects all tree items whose identity, as determined by :meth:`TreeCtrlHandler.GetItemIdentity() <persist.persist_handlers.TreeCtrlHandler.GetItemIdentity>`,
         is present in the list and unselects all other tree items.
 
         :param `listOfSelectedItems`: a list of selected `wx.TreeCtrl` or
-         L{customtreectrl.CustomTreeCtrl} items.
+         :class:`~customtreectrl.CustomTreeCtrl` items.
         """
         
         root = self._window.GetRootItem()
@@ -1339,12 +1339,12 @@ class TreeCtrlHandler(AbstractHandler):
     def GetCheckedState(self):
         """
         Returns a list of checked items. Checked items are coded as determined by
-        the result of L{TreeCtrlHandler.GetItemIdentity}.
+        the result of :meth:`TreeCtrlHandler.GetItemIdentity() <persist.persist_handlers.TreeCtrlHandler.GetItemIdentity>`.
         
         :note:
 
-         This is meaningful only for L{customtreectrl.CustomTreeCtrl} and
-         L{hypertreelist.HyperTreeList}.
+         This is meaningful only for :class:`~customtreectrl.CustomTreeCtrl` and
+         :class:`~hypertreelist.HyperTreeList`.
         """
         
         root = self._window.GetRootItem()
@@ -1358,15 +1358,15 @@ class TreeCtrlHandler(AbstractHandler):
 
     def SetCheckedState(self, listOfCheckedItems):
         """
-        Checks all tree items whose identity, as determined by L{TreeCtrlHandler.GetItemIdentity}, is present
+        Checks all tree items whose identity, as determined by :meth:`TreeCtrlHandler.GetItemIdentity() <persist.persist_handlers.TreeCtrlHandler.GetItemIdentity>`, is present
         in the list and unchecks all other tree items.
         
-        :param `listOfCheckedItems`: a list of checked L{customtreectrl.CustomTreeCtrl} items.
+        :param `listOfCheckedItems`: a list of checked :class:`~customtreectrl.CustomTreeCtrl` items.
 
         :note:
 
-         This is meaningful only for L{customtreectrl.CustomTreeCtrl} and
-         L{hypertreelist.HyperTreeList}.
+         This is meaningful only for :class:`~customtreectrl.CustomTreeCtrl` and
+         :class:`~hypertreelist.HyperTreeList`.
         """
         
         root = self._window.GetRootItem()
@@ -1382,7 +1382,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Returns the expansion state of a tree item.
 
-        :param `item`: a `wx.TreeCtrl` item or a L{customtreectrl.CustomTreeCtrl} item.
+        :param `item`: a `wx.TreeCtrl` item or a :class:`~customtreectrl.CustomTreeCtrl` item.
         """
         
         listOfExpandedItems = []
@@ -1397,7 +1397,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Returns the expansion state of the children of a tree item.
 
-        :param `item`: a `wx.TreeCtrl` item or a L{customtreectrl.CustomTreeCtrl} item.
+        :param `item`: a `wx.TreeCtrl` item or a :class:`~customtreectrl.CustomTreeCtrl` item.
         """
         
         listOfExpandedItems = []
@@ -1411,7 +1411,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Returns the checked/unchecked state of a tree item.
 
-        :param `item`: a L{customtreectrl.CustomTreeCtrl} item.
+        :param `item`: a :class:`~customtreectrl.CustomTreeCtrl` item.
         """
         
         listOfCheckedItems = []
@@ -1427,7 +1427,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Returns the checked/unchecked state of the children of a tree item.
 
-        :param `item`: a L{customtreectrl.CustomTreeCtrl} item.
+        :param `item`: a :class:`~customtreectrl.CustomTreeCtrl` item.
         """
         
         listOfCheckedItems = []
@@ -1441,7 +1441,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Returns the selection state of a tree item.
 
-        :param `item`: a `wx.TreeCtrl` item or a L{customtreectrl.CustomTreeCtrl} item.
+        :param `item`: a `wx.TreeCtrl` item or a :class:`~customtreectrl.CustomTreeCtrl` item.
         """
         
         listOfSelectedItems = []
@@ -1456,7 +1456,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Returns the selection state of the children of a tree item.
 
-        :param `item`: a `wx.TreeCtrl` item or a L{customtreectrl.CustomTreeCtrl} item.
+        :param `item`: a `wx.TreeCtrl` item or a :class:`~customtreectrl.CustomTreeCtrl` item.
         """
         
         listOfSelectedItems = []
@@ -1471,8 +1471,8 @@ class TreeCtrlHandler(AbstractHandler):
         Sets the expansion state of a tree item (expanded or collapsed).
 
         :param `listOfExpandedItems`: a list of expanded `wx.TreeCtrl` or
-         L{customtreectrl.CustomTreeCtrl} items;
-        :param `item`: a `wx.TreeCtrl` item or a L{customtreectrl.CustomTreeCtrl} item.
+         :class:`~customtreectrl.CustomTreeCtrl` items;
+        :param `item`: a `wx.TreeCtrl` item or a :class:`~customtreectrl.CustomTreeCtrl` item.
         """
         
         if self.GetItemIdentity(item) in listOfExpandedItems:
@@ -1487,8 +1487,8 @@ class TreeCtrlHandler(AbstractHandler):
         Sets the expansion state of the children of a tree item (expanded or collapsed).
 
         :param `listOfExpandedItems`: a list of expanded `wx.TreeCtrl` or
-         L{customtreectrl.CustomTreeCtrl} items;
-        :param `item`: a `wx.TreeCtrl` item or a L{customtreectrl.CustomTreeCtrl} item.
+         :class:`~customtreectrl.CustomTreeCtrl` items;
+        :param `item`: a `wx.TreeCtrl` item or a :class:`~customtreectrl.CustomTreeCtrl` item.
         """
 
         for child in self.GetItemChildren(item):
@@ -1499,8 +1499,8 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Sets the checked/unchecked state of a tree item.
 
-        :param `listOfCheckedItems`: a list of checked L{customtreectrl.CustomTreeCtrl} items;
-        :param `item`: a L{customtreectrl.CustomTreeCtrl} item.
+        :param `listOfCheckedItems`: a list of checked :class:`~customtreectrl.CustomTreeCtrl` items;
+        :param `item`: a :class:`~customtreectrl.CustomTreeCtrl` item.
         """
 
         if self.GetItemIdentity(item) in listOfCheckedItems:
@@ -1515,8 +1515,8 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Sets the checked/unchecked state of the children of a tree item.
 
-        :param `listOfCheckedItems`: a list of checked L{customtreectrl.CustomTreeCtrl} items;
-        :param `item`: a L{customtreectrl.CustomTreeCtrl} item.
+        :param `listOfCheckedItems`: a list of checked :class:`~customtreectrl.CustomTreeCtrl` items;
+        :param `item`: a :class:`~customtreectrl.CustomTreeCtrl` item.
         """
 
         for child in self.GetItemChildren(item):
@@ -1528,8 +1528,8 @@ class TreeCtrlHandler(AbstractHandler):
         Sets the selection state of a tree item.
 
         :param `listOfSelectedItems`: a list of selected `wx.TreeCtrl` or
-         L{customtreectrl.CustomTreeCtrl} items;
-        :param `item`: a `wx.TreeCtrl` item or a L{customtreectrl.CustomTreeCtrl} item.
+         :class:`~customtreectrl.CustomTreeCtrl` items;
+        :param `item`: a `wx.TreeCtrl` item or a :class:`~customtreectrl.CustomTreeCtrl` item.
         """
 
         if self.GetItemIdentity(item) in listOfSelectedItems:
@@ -1546,8 +1546,8 @@ class TreeCtrlHandler(AbstractHandler):
         Sets the selection state of the children of a tree item.
 
         :param `listOfSelectedItems`: a list of selected `wx.TreeCtrl` or
-         L{customtreectrl.CustomTreeCtrl} items;
-        :param `item`: a `wx.TreeCtrl` item or a L{customtreectrl.CustomTreeCtrl} item.
+         :class:`~customtreectrl.CustomTreeCtrl` items;
+        :param `item`: a `wx.TreeCtrl` item or a :class:`~customtreectrl.CustomTreeCtrl` item.
         """
         
         for child in self.GetItemChildren(item):
@@ -1606,13 +1606,13 @@ class TreeCtrlHandler(AbstractHandler):
 
 class TreeListCtrlHandler(TreeCtrlHandler):
     """
-    Supports saving/restoring a `wx.gizmos.TreeListCtrl` / L{hypertreelist.HyperTreeList} expansion state,
-    selections, column widths and checked items state (meaningful only for L{hypertreelist.HyperTreeList}).
+    Supports saving/restoring a `wx.gizmos.TreeListCtrl` / :class:`~hypertreelist.HyperTreeList` expansion state,
+    selections, column widths and checked items state (meaningful only for :class:`~hypertreelist.HyperTreeList`).
 
     This class handles the following wxPython widgets:
 
     - `wx.gizmos.TreeListCtrl`;
-    - L{hypertreelist.HyperTreeList}.
+    - :class:`~hypertreelist.HyperTreeList`.
     
     """
     
@@ -2026,12 +2026,12 @@ class FileHistoryHandler(AbstractHandler):
 
 class MenuBarHandler(AbstractHandler):
     """
-    Supports saving/restoring the `wx.MenuBar` and L{flatmenu.FlatMenuBar} items state.
+    Supports saving/restoring the `wx.MenuBar` and :class:`~flatmenu.FlatMenuBar` items state.
 
     This class handles the following wxPython widgets:
 
     - `wx.MenuBar`;
-    - L{flatmenu.FlatMenuBar}.
+    - :class:`~flatmenu.FlatMenuBar`.
     
     """
     
@@ -2097,13 +2097,13 @@ class MenuBarHandler(AbstractHandler):
 
 class ToolBarHandler(AbstractHandler):
     """
-    Supports saving/restoring the L{auibar.AuiToolBar} items state.
+    Supports saving/restoring the :class:`~aui.auibar.AuiToolBar` items state.
 
     This class handles the following wxPython widgets:
 
-    - L{auibar.AuiToolBar}.
+    - :class:`~aui.auibar.AuiToolBar`.
 
-    :todo: Find a way to handle `wx.ToolBar` UI settings as it has been done for L{auibar.AuiToolBar}: currently `wx.ToolBar` doesn't seem to have easy access to the underlying toolbar tools.
+    :todo: Find a way to handle `wx.ToolBar` UI settings as it has been done for :class:`~aui.auibar.AuiToolBar`: currently `wx.ToolBar` doesn't seem to have easy access to the underlying toolbar tools.
     """
     
     def __init__(self, pObject):
@@ -2334,7 +2334,7 @@ class ColourDialogHandler(TLWHandler):
     This class handles the following wxPython widgets:
 
     - `wx.ColourDialog`;
-    - L{cubecolourdialog.CubeColourDialog}.
+    - :class:`~cubecolourdialog.CubeColourDialog`.
 
     :todo: Find a way to properly save and restore dialog data (`wx.ColourDialog`, `wx.FontDialog` etc...).
 
@@ -2543,7 +2543,7 @@ def FindHandler(pObject):
     Finds a suitable handler for the input Persistent Object depending on the
     widget kind.
 
-    :param `pObject`: an instance of L{persistencemanager.PersistentObject} class.
+    :param `pObject`: an instance of :class:`~persist.persistencemanager.PersistentObject` class.
     """
 
     window = pObject.GetWindow()

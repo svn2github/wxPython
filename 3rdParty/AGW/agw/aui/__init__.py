@@ -37,7 +37,7 @@ AUI adheres to the following principles:
 Usage
 =====
 
-The following example shows a simple implementation that uses L{AuiManager} to manage
+The following example shows a simple implementation that uses :class:`~aui.framemanager.AuiManager` to manage
 three text controls in a frame window::
 
     import wx

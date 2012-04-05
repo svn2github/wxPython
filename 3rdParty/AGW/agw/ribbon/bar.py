@@ -29,19 +29,19 @@ Top-level control in a ribbon user interface.
 Description
 ===========
 
-Serves as a tabbed container for L{RibbonPage} - a ribbon user interface typically
+Serves as a tabbed container for :class:`~ribbon.page.RibbonPage` - a ribbon user interface typically
 has a ribbon bar, which contains one or more RibbonPages, which in turn each contains
-one or more RibbonPanels, which in turn contain controls. While a L{RibbonBar} has
+one or more RibbonPanels, which in turn contain controls. While a :class:`~ribbon.bar.RibbonBar` has
 tabs similar to a `wx.Notebook`, it does not follow the same API for adding pages.
 Containers like `wx.Notebook` can contain any type of window as a page, hence the
 normal procedure is to create the sub-window and then call `wx.BookCtrlBase.AddPage()`.
 
-As L{RibbonBar} can only have L{RibbonPage} as children (and a L{RibbonPage} can only
-have a L{RibbonBar} as parent), when a page is created, it is automatically added to
+As :class:`~ribbon.bar.RibbonBar` can only have :class:`~ribbon.page.RibbonPage` as children (and a :class:`~ribbon.page.RibbonPage` can only
+have a :class:`~ribbon.bar.RibbonBar` as parent), when a page is created, it is automatically added to
 the bar - there is no `AddPage` equivalent to call.
 
 After all pages have been created, and all controls and panels placed on those pages,
-L{Realize} must be called.
+:meth:`~ribbon.RibbonBar.Realize` must be called.
 
 
 Window Styles
@@ -85,7 +85,7 @@ Event Name                        Description
 See Also
 ========
 
-L{RibbonPage}, L{RibbonPanel}
+:class:`~ribbon.page.RibbonPage`, :class:`~ribbon.panel.RibbonPanel`
 """
 
 
@@ -137,9 +137,9 @@ def UNSET_FLAG(variable, flag):
 
 class RibbonBarEvent(wx.NotifyEvent):
     """
-    Event used to indicate various actions relating to a L{RibbonBar}.
+    Event used to indicate various actions relating to a :class:`~ribbon.bar.RibbonBar`.
 
-    See L{RibbonBar} for available event types.
+    See :class:`~ribbon.bar.RibbonBar` for available event types.
     """
     
     def __init__(self, command_type=None, win_id=0, page=None):
@@ -148,7 +148,7 @@ class RibbonBarEvent(wx.NotifyEvent):
 
         :param integer `command_type`: the event type;
         :param integer `win_id`: the event identifier;
-        :param `page`: an instance of L{RibbonPage}.
+        :param `page`: an instance of :class:`~ribbon.page.RibbonPage`.
         """
 
         wx.NotifyEvent.__init__(self, command_type, win_id)
@@ -161,7 +161,7 @@ class RibbonBarEvent(wx.NotifyEvent):
         """
         Returns the page being changed to, or being clicked on.
 
-        :returns: An instance of L{RibbonPage}.
+        :returns: An instance of :class:`~ribbon.page.RibbonPage`.
         """
 
         return self._page
@@ -171,7 +171,7 @@ class RibbonBarEvent(wx.NotifyEvent):
         """
         Sets the page relating to this event.
 
-        :param `page`: an instance of L{RibbonPage}.
+        :param `page`: an instance of :class:`~ribbon.page.RibbonPage`.
         """
 
         self._page = page
@@ -179,7 +179,7 @@ class RibbonBarEvent(wx.NotifyEvent):
 
     def Allow(self):
         """
-        This is the opposite of L{Veto}: it explicitly allows the event to be processed.
+        This is the opposite of :meth:`~ribbon.bar.RibbonBarEvent.Veto`: it explicitly allows the event to be processed.
         For most events it is not necessary to call this method as the events are
         allowed anyhow but some are forbidden by default (this will be mentioned
         in the corresponding event description).
@@ -202,7 +202,7 @@ class RibbonBarEvent(wx.NotifyEvent):
 
     def IsAllowed(self):
         """
-        Returns ``True`` if the change is allowed (L{Veto} hasn't been called) or
+        Returns ``True`` if the change is allowed (:meth:`~ribbon.bar.RibbonBarEvent.Veto` hasn't been called) or
         ``False`` otherwise (if it was).
         """
 
@@ -287,9 +287,9 @@ class RibbonBar(RibbonControl):
 
     def AddPage(self, page):
         """
-        Adds a page to the L{RibbonBar}.
+        Adds a page to the :class:`~ribbon.bar.RibbonBar`.
 
-        :param `page`: an instance of L{RibbonPage}.
+        :param `page`: an instance of :class:`~ribbon.page.RibbonPage`.
         """
         
         info = RibbonPageTabInfo()
@@ -334,7 +334,7 @@ class RibbonBar(RibbonControl):
         """
         Dismiss the expanded panel of the currently active page.
 
-        Calls and returns the value from L{RibbonPage.DismissExpandedPanel} for the
+        Calls and returns the value from :meth:`RibbonPage.DismissExpandedPanel() <ribbon.page.RibbonPage.DismissExpandedPanel>` for the
         currently active page, or ``False`` if there is no active page.
         """
 
@@ -346,7 +346,7 @@ class RibbonBar(RibbonControl):
 
     def ShowPanels(self, show=True):
         """
-        Shows or hides the panels inside L{RibbonBar}.
+        Shows or hides the panels inside :class:`~ribbon.bar.RibbonBar`.
 
         :param bool `show`: ``True`` to show the panels, ``False`` to hide them.
         """
@@ -359,7 +359,7 @@ class RibbonBar(RibbonControl):
 
     def SetAGWWindowStyleFlag(self, agwStyle):
         """
-        Sets the window style for L{RibbonBar}.
+        Sets the window style for :class:`~ribbon.bar.RibbonBar`.
 
         :param integer `agwStyle`: can be a combination of the following bits:
 
@@ -390,9 +390,9 @@ class RibbonBar(RibbonControl):
 
     def GetAGWWindowStyleFlag(self):
         """
-        Returns the L{RibbonBar} window style flag.
+        Returns the :class:`~ribbon.bar.RibbonBar` window style flag.
 
-        :see: L{SetAGWWindowStyleFlag} for a list of valid window styles.
+        :see: :meth:`~ribbon.bar.RibbonBar.SetAGWWindowStyleFlag` for a list of valid window styles.
         """
 
         return self._flags
@@ -404,9 +404,9 @@ class RibbonBar(RibbonControl):
 
         This must be called after all of the bar's children have been created (and their
         children created, etc.) - if it is not, then windows may not be laid out or
-        sized correctly. Also calls L{RibbonPage.Realize} on each child page.
+        sized correctly. Also calls :meth:`RibbonPage.Realize() <ribbon.page.RibbonPage.Realize>` on each child page.
         
-        :note: Reimplemented from L{RibbonControl}.
+        :note: Reimplemented from :class:`~ribbon.control.RibbonControl`.
         """
 
         status = True
@@ -453,7 +453,7 @@ class RibbonBar(RibbonControl):
 
     def OnMouseMove(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for L{RibbonBar}.
+        Handles the ``wx.EVT_MOTION`` event for :class:`~ribbon.bar.RibbonBar`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -502,7 +502,7 @@ class RibbonBar(RibbonControl):
 
     def OnMouseLeave(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{RibbonBar}.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~ribbon.bar.RibbonBar`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -581,7 +581,7 @@ class RibbonBar(RibbonControl):
         """
         Set the active page, without triggering any events.
 
-        :param `page`: the page to activate, an instance of L{RibbonPage}.
+        :param `page`: the page to activate, an instance of :class:`~ribbon.page.RibbonPage`.
 
         :returns: ``True`` if the specified page is now active, ``False`` if it could
          not be activated (for example because the given page is not a child of the
@@ -596,7 +596,7 @@ class RibbonBar(RibbonControl):
 
 
     def SetActivePage(self, page):
-        """ See comments on L{SetActivePageByIndex} and L{SetActivePageByPage}. """
+        """ See comments on :meth:`~ribbon.bar.RibbonBar.SetActivePageByIndex` and :meth:`~ribbon.bar.RibbonBar.SetActivePageByPage`. """
 
         if isinstance(page, types.IntType):
             return self.SetActivePageByIndex(page)
@@ -641,7 +641,7 @@ class RibbonBar(RibbonControl):
 
 
     def RecalculateTabSizes(self):
-        """ Recalculates the L{RibbonBar} tab sizes. """
+        """ Recalculates the :class:`~ribbon.bar.RibbonBar` tab sizes. """
 
         numtabs = len(self._pages)
 
@@ -803,7 +803,7 @@ class RibbonBar(RibbonControl):
 
         :param integer `agwStyle`: the AGW-specific window style.         
 
-        :see: L{SetAGWWindowStyleFlag} for a list of valid window styles.
+        :see: :meth:`~ribbon.bar.RibbonBar.SetAGWWindowStyleFlag` for a list of valid window styles.
         """
         
         self.SetName("RibbonBar")
@@ -834,11 +834,11 @@ class RibbonBar(RibbonControl):
         """
         Set the art provider to be used be the ribbon bar.
 
-        Also sets the art provider on all current L{RibbonPage} children, and any
-        L{RibbonPage} children added in the future.
+        Also sets the art provider on all current :class:`~ribbon.page.RibbonPage` children, and any
+        :class:`~ribbon.page.RibbonPage` children added in the future.
 
         Note that unlike most other ribbon controls, the ribbon bar creates a default
-        art provider when initialised, so an explicit call to L{SetArtProvider} is
+        art provider when initialised, so an explicit call to :meth:`~ribbon.bar.RibbonBar.SetArtProvider` is
         not required if the default art provider is sufficient. Also unlike other
         ribbon controls, the ribbon bar takes ownership of the given pointer, and
         will delete it when the art provider is changed or the bar is destroyed.
@@ -848,7 +848,7 @@ class RibbonBar(RibbonControl):
 
         :param `art`: an art provider.
 
-        :note: Reimplemented from L{RibbonControl}.
+        :note: Reimplemented from :class:`~ribbon.control.RibbonControl`.
         """
 
         self._art = art
@@ -863,7 +863,7 @@ class RibbonBar(RibbonControl):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{RibbonBar}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~ribbon.bar.RibbonBar`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -933,7 +933,7 @@ class RibbonBar(RibbonControl):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{RibbonBar}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~ribbon.bar.RibbonBar`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
         """
@@ -944,7 +944,7 @@ class RibbonBar(RibbonControl):
 
     def DoEraseBackground(self, dc):
         """
-        Does the initial painting of stuff from the L{OnPaint} event.
+        Does the initial painting of stuff from the :meth:`~ribbon.bar.RibbonBar.OnPaint` event.
 
         :param `dc`: an instance of `wx.DC`.
         """
@@ -956,7 +956,7 @@ class RibbonBar(RibbonControl):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{RibbonBar}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~ribbon.bar.RibbonBar`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -977,12 +977,12 @@ class RibbonBar(RibbonControl):
 
     def HitTestTabs(self, position):
         """
-        Hit test method for L{RibbonBar}, testing where the given (in client coordinates)
+        Hit test method for :class:`~ribbon.bar.RibbonBar`, testing where the given (in client coordinates)
         point lies.
 
         :param `position`: an instance of `wx.Point` in client coordinates.
 
-        :return: a tuple containing the tab index and the L{RibbonPage} if the L{HitTestTabs}
+        :return: a tuple containing the tab index and the :class:`~ribbon.page.RibbonPage` if the :meth:`~ribbon.bar.RibbonBar.HitTestTabs`
          successfully found such combination, or a tuple `(-1, None)` if no tab has been hit.
         """
 
@@ -1002,7 +1002,7 @@ class RibbonBar(RibbonControl):
 
     def OnMouseLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for L{RibbonBar}.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~ribbon.bar.RibbonBar`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1031,7 +1031,7 @@ class RibbonBar(RibbonControl):
 
     def OnMouseDoubleClick(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DCLICK`` event for L{RibbonBar}.
+        Handles the ``wx.EVT_LEFT_DCLICK`` event for :class:`~ribbon.bar.RibbonBar`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1041,7 +1041,7 @@ class RibbonBar(RibbonControl):
         
     def OnMouseLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for L{RibbonBar}.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~ribbon.bar.RibbonBar`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1120,7 +1120,7 @@ class RibbonBar(RibbonControl):
 
 
     def RefreshTabBar(self):
-        """ Repaints the tab area in L{RibbonBar}. """
+        """ Repaints the tab area in :class:`~ribbon.bar.RibbonBar`. """
 
         tab_rect = wx.Rect(0, 0, self.GetClientSize().GetWidth(), self._tab_height)
         self.Refresh(False, tab_rect)
@@ -1128,7 +1128,7 @@ class RibbonBar(RibbonControl):
 
     def OnMouseMiddleDown(self, event):
         """
-        Handles the ``wx.EVT_MIDDLE_DOWN`` event for L{RibbonBar}.
+        Handles the ``wx.EVT_MIDDLE_DOWN`` event for :class:`~ribbon.bar.RibbonBar`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1138,7 +1138,7 @@ class RibbonBar(RibbonControl):
 
     def OnMouseMiddleUp(self, event):
         """
-        Handles the ``wx.EVT_MIDDLE_UP`` event for L{RibbonBar}.
+        Handles the ``wx.EVT_MIDDLE_UP`` event for :class:`~ribbon.bar.RibbonBar`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1148,7 +1148,7 @@ class RibbonBar(RibbonControl):
 
     def OnMouseRightDown(self, event):
         """
-        Handles the ``wx.EVT_RIGHT_DOWN`` event for L{RibbonBar}.
+        Handles the ``wx.EVT_RIGHT_DOWN`` event for :class:`~ribbon.bar.RibbonBar`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1158,7 +1158,7 @@ class RibbonBar(RibbonControl):
 
     def OnMouseRightUp(self, event):
         """
-        Handles the ``wx.EVT_RIGHT_UP`` event for L{RibbonBar}.
+        Handles the ``wx.EVT_RIGHT_UP`` event for :class:`~ribbon.bar.RibbonBar`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1171,7 +1171,7 @@ class RibbonBar(RibbonControl):
         Common methods for all the mouse move/click events.
 
         :param `event`: a `wx.MouseEvent` event to be processed;
-        :param integer `tab_event_type`: one of the L{RibbonBar} events.
+        :param integer `tab_event_type`: one of the :class:`~ribbon.bar.RibbonBar` events.
         """
 
         index, tab = self.HitTestTabs(event.GetPosition())
@@ -1183,7 +1183,7 @@ class RibbonBar(RibbonControl):
 
 
     def RecalculateMinSize(self):
-        """ Recalculates the L{RibbonBar} minimum size. """
+        """ Recalculates the :class:`~ribbon.bar.RibbonBar` minimum size. """
 
         min_size = wx.Size(-1, -1)
         numtabs = len(self._pages)
@@ -1245,7 +1245,7 @@ class RibbonBar(RibbonControl):
 
 
     def GetDefaultBorder(self):
-        """ Returns the default border style for L{RibbonBar}. """
+        """ Returns the default border style for :class:`~ribbon.bar.RibbonBar`. """
 
         return wx.BORDER_NONE
 

@@ -1,6 +1,6 @@
 """
 This module contains drawing routines and customizations for the AGW widgets
-L{LabelBook} and L{FlatMenu}.
+:class:`~labelbook.LabelBook` and :class:`~flatmenu.FlatMenu`.
 """
 
 import wx
@@ -764,7 +764,7 @@ class ArtManager(wx.EvtHandler):
         """
         Accessor to the unique art manager object.
 
-        :return: A unique instance of L{ArtManager}.
+        :return: A unique instance of :class:`~artmanager.ArtManager`.
         """
 
         if not hasattr(self, "_instance"):
@@ -792,7 +792,7 @@ class ArtManager(wx.EvtHandler):
 
     def OnSysColourChange(self, event):
         """
-        Handles the ``wx.EVT_SYS_COLOUR_CHANGED`` event for L{ArtManager}.
+        Handles the ``wx.EVT_SYS_COLOUR_CHANGED`` event for :class:`~artmanager.ArtManager`.
 
         :param `event`: a `wx.SysColourChangedEvent` event to be processed.        
         """
@@ -830,7 +830,7 @@ class ArtManager(wx.EvtHandler):
 
     def DarkColour(self, colour, percent):
         """
-        Like the L{LightColour} function, but create the colour darker by `percent`.
+        Like the :meth:`~artmanager.ArtManager.LightColour` function, but create the colour darker by `percent`.
 
         :param `colour`: the input colour to be darkened, an instance of `wx.Colour`;
         :param integer `percent`: determines how dark the colour will be. `percent` = ``100``
@@ -1549,7 +1549,7 @@ class ArtManager(wx.EvtHandler):
         :return: A tuple containining the top left `x` and `y` cordinates of the text drawing, plus
          the truncated version of the input `text`.
 
-        :see: L{GetBitmapStartLocation} for a list of valid button styles.
+        :see: :meth:`~artmanager.ArtManager.GetBitmapStartLocation` for a list of valid button styles.
         """
 
         alignmentBuffer = self.GetAlignBuffer()
@@ -1616,7 +1616,7 @@ class ArtManager(wx.EvtHandler):
          a disabled bitmap, an instance of `wx.Bitmap`;
         :param integer `style`: the button style. 
 
-        :see: L{GetBitmapStartLocation} for a list of valid button styles.
+        :see: :meth:`~artmanager.ArtManager.GetBitmapStartLocation` for a list of valid button styles.
         """
 
         # enable colours
@@ -1855,7 +1855,7 @@ class ArtManager(wx.EvtHandler):
         Adds a new theme to the stock.
 
         :param `render`: a rendering theme class, which must be derived from
-         L{RendererBase}.
+         :class:`~artmanager.RendererBase`.
 
         :return: An integer representing the size of the renderers dictionary.
         """

@@ -33,17 +33,17 @@
 # --------------------------------------------------------------------------- #
 
 """
-L{LabelBook} and L{FlatImageBook} are a quasi-full generic and owner-drawn
+:class:`~labelbook.LabelBook` and :class:`~labelbook.FlatImageBook` are a quasi-full generic and owner-drawn
 implementations of `wx.Notebook`.
 
 
 Description
 ===========
 
-L{LabelBook} and L{FlatImageBook} are quasi-full implementations of the `wx.Notebook`,
+:class:`~labelbook.LabelBook` and :class:`~labelbook.FlatImageBook` are quasi-full implementations of the `wx.Notebook`,
 and designed to be a drop-in replacement for `wx.Notebook`. The API functions are
 similar so one can expect the function to behave in the same way.
-L{LabelBook} anf L{FlatImageBook} share their appearance with `wx.Toolbook` and
+:class:`~labelbook.LabelBook` anf :class:`~labelbook.FlatImageBook` share their appearance with `wx.Toolbook` and
 `wx.Listbook`, while having more options for custom drawings, label positioning,
 mouse pointing and so on. Moreover, they retain also some visual characteristics
 of the Outlook address book.
@@ -51,19 +51,19 @@ of the Outlook address book.
 Some features:
 
 - They are generic controls;
-- Supports for left, right, top (L{FlatImageBook} only), bottom (L{FlatImageBook}
+- Supports for left, right, top (:class:`~labelbook.FlatImageBook` only), bottom (:class:`~labelbook.FlatImageBook`
   only) book styles;
-- Possibility to draw images only, text only or both (L{FlatImageBook} only);
+- Possibility to draw images only, text only or both (:class:`~labelbook.FlatImageBook` only);
 - Support for a "pin-button", that allows the user to shrink/expand the book
   tab area;
-- Shadows behind tabs (L{LabelBook} only);
-- Gradient shading of the tab area (L{LabelBook} only);
-- Web-like mouse pointing on tabs style (L{LabelBook} only);
+- Shadows behind tabs (:class:`~labelbook.LabelBook` only);
+- Gradient shading of the tab area (:class:`~labelbook.LabelBook` only);
+- Web-like mouse pointing on tabs style (:class:`~labelbook.LabelBook` only);
 - Many customizable colours (tab area, active tab text, tab borders, active
-  tab, highlight) - L{LabelBook} only.
+  tab, highlight) - :class:`~labelbook.LabelBook` only.
   
 And much more. See the demo for a quasi-complete review of all the functionalities
-of L{LabelBook} and L{FlatImageBook}.
+of :class:`~labelbook.LabelBook` and :class:`~labelbook.FlatImageBook`.
 
 
 Usage
@@ -110,7 +110,7 @@ Usage example::
 Supported Platforms
 ===================
 
-L{LabelBook} and L{FlatImageBook} have been tested on the following platforms:
+:class:`~labelbook.LabelBook` and :class:`~labelbook.FlatImageBook` have been tested on the following platforms:
   * Windows (Windows XP);
   * Linux Ubuntu (Dapper 6.06)
 
@@ -123,18 +123,18 @@ This class supports the following window styles:
 =========================== =========== ==================================================
 Window Styles               Hex Value   Description
 =========================== =========== ==================================================
-``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
-``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
+``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for :class:`~labelbook.FlatImageBook`.
+``INB_LEFT``                        0x2 Place labels on the left side. Available only for :class:`~labelbook.FlatImageBook`.
 ``INB_RIGHT``                       0x4 Place labels on the right side.
 ``INB_TOP``                         0x8 Place labels above the page area.
-``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
-``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
-``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
+``INB_BORDER``                     0x10 Draws a border around :class:`~labelbook.LabelBook` or :class:`~labelbook.FlatImageBook`.
+``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for :class:`~labelbook.LabelBook`.
+``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for :class:`~labelbook.LabelBook`.
 ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
+``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for :class:`~labelbook.LabelBook`.
 ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
-``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
+``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for :class:`~labelbook.LabelBook`.
+``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for :class:`~labelbook.LabelBook`.
 ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
 ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
 ``INB_BOLD_TAB_SELECTION``       0x4000 Show the selected tab text using a bold font. 
@@ -149,25 +149,25 @@ This class processes the following events:
 =================================== ==================================================
 Event Name                          Description
 =================================== ==================================================
-``EVT_IMAGENOTEBOOK_PAGE_CHANGED``  Notify client objects when the active page in L{FlatImageBook} or L{LabelBook} has changed.
-``EVT_IMAGENOTEBOOK_PAGE_CHANGING`` Notify client objects when the active page in L{FlatImageBook} or L{LabelBook} is about to change.
-``EVT_IMAGENOTEBOOK_PAGE_CLOSED``   Notify client objects when a page in L{FlatImageBook} or L{LabelBook} has been closed.
-``EVT_IMAGENOTEBOOK_PAGE_CLOSING``  Notify client objects when a page in L{FlatImageBook} or L{LabelBook} is closing.
+``EVT_IMAGENOTEBOOK_PAGE_CHANGED``  Notify client objects when the active page in :class:`~labelbook.FlatImageBook` or :class:`~labelbook.LabelBook` has changed.
+``EVT_IMAGENOTEBOOK_PAGE_CHANGING`` Notify client objects when the active page in :class:`~labelbook.FlatImageBook` or :class:`~labelbook.LabelBook` is about to change.
+``EVT_IMAGENOTEBOOK_PAGE_CLOSED``   Notify client objects when a page in :class:`~labelbook.FlatImageBook` or :class:`~labelbook.LabelBook` has been closed.
+``EVT_IMAGENOTEBOOK_PAGE_CLOSING``  Notify client objects when a page in :class:`~labelbook.FlatImageBook` or :class:`~labelbook.LabelBook` is closing.
 =================================== ==================================================
 
 
 TODOs
 =====
 
-- L{LabelBook}: support ``IMB_SHOW_ONLY_IMAGES``;
-- L{LabelBook}: an option to only draw the border between the controls and the pages so the background
+- :class:`~labelbook.LabelBook`: support ``IMB_SHOW_ONLY_IMAGES``;
+- :class:`~labelbook.LabelBook`: an option to only draw the border between the controls and the pages so the background
   colour can flow into the window background.
 
 
 License And Version
 ===================
 
-L{LabelBook} and L{FlatImageBook} are distributed under the wxPython license. 
+:class:`~labelbook.LabelBook` and :class:`~labelbook.FlatImageBook` are distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 07 Dec 2011, 21.00 GMT
 
@@ -194,29 +194,29 @@ if wx.VERSION_STRING < "2.7":
 
 # FlatImageBook and LabelBook styles
 INB_BOTTOM = 1
-""" Place labels below the page area. Available only for L{FlatImageBook}."""
+""" Place labels below the page area. Available only for :class:`~labelbook.FlatImageBook`."""
 INB_LEFT = 2
-""" Place labels on the left side. Available only for L{FlatImageBook}."""
+""" Place labels on the left side. Available only for :class:`~labelbook.FlatImageBook`."""
 INB_RIGHT = 4
 """ Place labels on the right side. """
 INB_TOP = 8
 """ Place labels above the page area. """
 INB_BORDER = 16
-""" Draws a border around L{LabelBook} or L{FlatImageBook}. """
+""" Draws a border around :class:`~labelbook.LabelBook` or :class:`~labelbook.FlatImageBook`. """
 INB_SHOW_ONLY_TEXT = 32
-""" Shows only text labels and no images. Available only for L{LabelBook}."""
+""" Shows only text labels and no images. Available only for :class:`~labelbook.LabelBook`."""
 INB_SHOW_ONLY_IMAGES = 64
-""" Shows only tab images and no label texts. Available only for L{LabelBook}."""
+""" Shows only tab images and no label texts. Available only for :class:`~labelbook.LabelBook`."""
 INB_FIT_BUTTON = 128
 """ Displays a pin button to show/hide the book control. """
 INB_DRAW_SHADOW = 256
-""" Draw shadows below the book tabs. Available only for L{LabelBook}."""
+""" Draw shadows below the book tabs. Available only for :class:`~labelbook.LabelBook`."""
 INB_USE_PIN_BUTTON = 512
 """ Displays a pin button to show/hide the book control. """
 INB_GRADIENT_BACKGROUND = 1024
-""" Draws a gradient shading on the tabs background. Available only for L{LabelBook}."""
+""" Draws a gradient shading on the tabs background. Available only for :class:`~labelbook.LabelBook`."""
 INB_WEB_HILITE = 2048
-""" On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}."""
+""" On mouse hovering, tabs behave like html hyperlinks. Available only for :class:`~labelbook.LabelBook`."""
 INB_NO_RESIZE = 4096
 """ Don't allow resizing of the tab area. """
 INB_FIT_LABELTEXT = 8192
@@ -234,13 +234,13 @@ wxEVT_IMAGENOTEBOOK_PAGE_CLOSED = wx.NewEventType()
 #-----------------------------------#
 
 EVT_IMAGENOTEBOOK_PAGE_CHANGED = wx.EVT_NOTEBOOK_PAGE_CHANGED
-""" Notify client objects when the active page in L{FlatImageBook} or L{LabelBook} has changed. """
+""" Notify client objects when the active page in :class:`~labelbook.FlatImageBook` or :class:`~labelbook.LabelBook` has changed. """
 EVT_IMAGENOTEBOOK_PAGE_CHANGING = wx.EVT_NOTEBOOK_PAGE_CHANGING
-""" Notify client objects when the active page in L{FlatImageBook} or L{LabelBook} is about to change. """
+""" Notify client objects when the active page in :class:`~labelbook.FlatImageBook` or :class:`~labelbook.LabelBook` is about to change. """
 EVT_IMAGENOTEBOOK_PAGE_CLOSING = wx.PyEventBinder(wxEVT_IMAGENOTEBOOK_PAGE_CLOSING, 1)
-""" Notify client objects when a page in L{FlatImageBook} or L{LabelBook} is closing. """
+""" Notify client objects when a page in :class:`~labelbook.FlatImageBook` or :class:`~labelbook.LabelBook` is closing. """
 EVT_IMAGENOTEBOOK_PAGE_CLOSED = wx.PyEventBinder(wxEVT_IMAGENOTEBOOK_PAGE_CLOSED, 1)
-""" Notify client objects when a page in L{FlatImageBook} or L{LabelBook} has been closed. """
+""" Notify client objects when a page in :class:`~labelbook.FlatImageBook` or :class:`~labelbook.LabelBook` has been closed. """
 
 
 # ---------------------------------------------------------------------------- #
@@ -317,7 +317,7 @@ class ImageNotebookEvent(wx.PyCommandEvent):
 
     def Allow(self):
         """
-        This is the opposite of L{Veto}: it explicitly allows the event to be processed.
+        This is the opposite of :meth:`~labelbook.ImageNotebookEvent.Veto`: it explicitly allows the event to be processed.
         For most events it is not necessary to call this method as the events are
         allowed anyhow but some are forbidden by default (this will be mentioned
         in the corresponding event description).
@@ -328,7 +328,7 @@ class ImageNotebookEvent(wx.PyCommandEvent):
 
     def IsAllowed(self):
         """
-        Returns ``True`` if the change is allowed (L{Veto} hasn't been called) or
+        Returns ``True`` if the change is allowed (:meth:`~labelbook.ImageNotebookEvent.Veto` hasn't been called) or
         ``False`` otherwise (if it was).
         """
 
@@ -342,7 +342,7 @@ class ImageNotebookEvent(wx.PyCommandEvent):
 class ImageInfo(object):
     """
     This class holds all the information (caption, image, etc...) belonging to a
-    single tab in L{LabelBook}.
+    single tab in :class:`~labelbook.LabelBook`.
     """
     def __init__(self, strCaption="", imageIndex=-1, enabled=True):    
         """
@@ -464,7 +464,7 @@ class ImageInfo(object):
 
 class ImageContainerBase(wx.Panel):
     """
-    Base class for L{FlatImageBook} image container.
+    Base class for :class:`~labelbook.FlatImageBook` image container.
     """
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=0, agwStyle=0, name="ImageContainerBase"):
@@ -484,18 +484,18 @@ class ImageContainerBase(wx.Panel):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for :class:`~labelbook.FlatImageBook`.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for :class:`~labelbook.FlatImageBook`.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
+         ``INB_BORDER``                     0x10 Draws a border around :class:`~labelbook.LabelBook` or :class:`~labelbook.FlatImageBook`.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for :class:`~labelbook.LabelBook`.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for :class:`~labelbook.LabelBook`.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for :class:`~labelbook.LabelBook`.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          ``INB_BOLD_TAB_SELECTION``       0x4000 Show the selected tab text using a bold font. 
@@ -526,18 +526,18 @@ class ImageContainerBase(wx.Panel):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for :class:`~labelbook.FlatImageBook`.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for :class:`~labelbook.FlatImageBook`.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
+         ``INB_BORDER``                     0x10 Draws a border around :class:`~labelbook.LabelBook` or :class:`~labelbook.FlatImageBook`.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for :class:`~labelbook.LabelBook`.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for :class:`~labelbook.LabelBook`.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for :class:`~labelbook.LabelBook`.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          ``INB_BOLD_TAB_SELECTION``       0x4000 Show the selected tab text using a bold font. 
@@ -555,7 +555,7 @@ class ImageContainerBase(wx.Panel):
 
         :param `flag`: a window style flag.
 
-        :see: L{HasAGWFlag} for a list of possible window style flags.        
+        :see: :meth:`~labelbook.ImageContainerBase.HasAGWFlag` for a list of possible window style flags.        
         """
 
         parent = self.GetParent()
@@ -566,7 +566,7 @@ class ImageContainerBase(wx.Panel):
 
     def AssignImageList(self, imglist):
         """
-        Assigns an image list to the L{ImageContainerBase}.
+        Assigns an image list to the :class:`~labelbook.ImageContainerBase`.
 
         :param `imglist`: an instance of `wx.ImageList`.
         """
@@ -581,13 +581,13 @@ class ImageContainerBase(wx.Panel):
         
 
     def GetImageList(self):
-        """ Return the image list for L{ImageContainerBase}. """
+        """ Return the image list for :class:`~labelbook.ImageContainerBase`. """
 
         return self._ImageList
 
 
     def GetImageSize(self):
-        """ Returns the image size inside the L{ImageContainerBase} image list. """
+        """ Returns the image size inside the :class:`~labelbook.ImageContainerBase` image list. """
 
         return self._nImgSize
 
@@ -609,7 +609,7 @@ class ImageContainerBase(wx.Panel):
     def CanDoBottomStyle(self):
         """
         Allows the parent to examine the children type. Some implementation
-        (such as L{LabelBook}), does not support top/bottom images, only left/right.
+        (such as :class:`~labelbook.LabelBook`), does not support top/bottom images, only left/right.
         """
         
         return False
@@ -765,7 +765,7 @@ class ImageContainerBase(wx.Panel):
             
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{ImageContainerBase}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~labelbook.ImageContainerBase`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -776,7 +776,7 @@ class ImageContainerBase(wx.Panel):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{ImageContainerBase}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~labelbook.ImageContainerBase`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
 
@@ -789,7 +789,7 @@ class ImageContainerBase(wx.Panel):
     def HitTest(self, pt):
         """
         Returns the index of the tab at the specified position or ``wx.NOT_FOUND``
-        if ``None``, plus the flag style of L{HitTest}.
+        if ``None``, plus the flag style of :meth:`~labelbook.ImageContainerBase.HitTest`.
 
         :param `pt`: an instance of `wx.Point`, to test for hits.
 
@@ -856,7 +856,7 @@ class ImageContainerBase(wx.Panel):
 
     def OnMouseLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for L{ImageContainerBase}.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~labelbook.ImageContainerBase`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -893,7 +893,7 @@ class ImageContainerBase(wx.Panel):
 
     def OnMouseLeaveWindow(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{ImageContainerBase}.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~labelbook.ImageContainerBase`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -920,7 +920,7 @@ class ImageContainerBase(wx.Panel):
 
     def OnMouseLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for L{ImageContainerBase}.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~labelbook.ImageContainerBase`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -973,7 +973,7 @@ class ImageContainerBase(wx.Panel):
 
     def OnMouseMove(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for L{ImageContainerBase}.
+        Handles the ``wx.EVT_MOTION`` event for :class:`~labelbook.ImageContainerBase`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1068,7 +1068,7 @@ class ImageContainerBase(wx.Panel):
 
 class ImageContainer(ImageContainerBase):
     """
-    Base class for L{FlatImageBook} image container.
+    Base class for :class:`~labelbook.FlatImageBook` image container.
     """
     
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
@@ -1089,18 +1089,18 @@ class ImageContainer(ImageContainerBase):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for :class:`~labelbook.FlatImageBook`.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for :class:`~labelbook.FlatImageBook`.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
+         ``INB_BORDER``                     0x10 Draws a border around :class:`~labelbook.LabelBook` or :class:`~labelbook.FlatImageBook`.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for :class:`~labelbook.LabelBook`.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for :class:`~labelbook.LabelBook`.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for :class:`~labelbook.LabelBook`.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          ``INB_BOLD_TAB_SELECTION``       0x4000 Show the selected tab text using a bold font. 
@@ -1122,7 +1122,7 @@ class ImageContainer(ImageContainerBase):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{ImageContainer}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~labelbook.ImageContainer`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -1133,7 +1133,7 @@ class ImageContainer(ImageContainerBase):
 
     def OnMouseLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for L{ImageContainer}.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~labelbook.ImageContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1144,7 +1144,7 @@ class ImageContainer(ImageContainerBase):
 
     def OnMouseLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for L{ImageContainer}.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~labelbook.ImageContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1155,7 +1155,7 @@ class ImageContainer(ImageContainerBase):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{ImageContainer}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~labelbook.ImageContainer`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
         """
@@ -1165,7 +1165,7 @@ class ImageContainer(ImageContainerBase):
 
     def OnMouseMove(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for L{ImageContainer}.
+        Handles the ``wx.EVT_MOTION`` event for :class:`~labelbook.ImageContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1176,7 +1176,7 @@ class ImageContainer(ImageContainerBase):
 
     def OnMouseLeaveWindow(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{ImageContainer}.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~labelbook.ImageContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1188,7 +1188,7 @@ class ImageContainer(ImageContainerBase):
     def CanDoBottomStyle(self):
         """
         Allows the parent to examine the children type. Some implementation
-        (such as L{LabelBook}), does not support top/bottom images, only left/right.
+        (such as :class:`~labelbook.LabelBook`), does not support top/bottom images, only left/right.
         """
 
         return True
@@ -1196,7 +1196,7 @@ class ImageContainer(ImageContainerBase):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{ImageContainer}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~labelbook.ImageContainer`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -1444,7 +1444,7 @@ class ImageContainer(ImageContainerBase):
 # ---------------------------------------------------------------------------- #
 
 class LabelContainer(ImageContainerBase):
-    """ Base class for L{LabelBook}. """
+    """ Base class for :class:`~labelbook.LabelBook`. """
     
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=0, agwStyle=0, name="LabelContainer"):
@@ -1464,18 +1464,18 @@ class LabelContainer(ImageContainerBase):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for :class:`~labelbook.FlatImageBook`.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for :class:`~labelbook.FlatImageBook`.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
+         ``INB_BORDER``                     0x10 Draws a border around :class:`~labelbook.LabelBook` or :class:`~labelbook.FlatImageBook`.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for :class:`~labelbook.LabelBook`.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for :class:`~labelbook.LabelBook`.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for :class:`~labelbook.LabelBook`.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          ``INB_BOLD_TAB_SELECTION``       0x4000 Show the selected tab text using a bold font. 
@@ -1502,7 +1502,7 @@ class LabelContainer(ImageContainerBase):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{LabelContainer}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~labelbook.LabelContainer`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -1513,7 +1513,7 @@ class LabelContainer(ImageContainerBase):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{LabelContainer}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~labelbook.LabelContainer`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
         """
@@ -1540,7 +1540,7 @@ class LabelContainer(ImageContainerBase):
     def CanDoBottomStyle(self):
         """
         Allows the parent to examine the children type. Some implementation
-        (such as L{LabelBook}), does not support top/bottom images, only left/right.
+        (such as :class:`~labelbook.LabelBook`), does not support top/bottom images, only left/right.
         """
 
         return False        
@@ -1558,7 +1558,7 @@ class LabelContainer(ImageContainerBase):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{LabelContainer}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~labelbook.LabelContainer`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -1724,7 +1724,7 @@ class LabelContainer(ImageContainerBase):
 
     def OnMouseLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for L{LabelContainer}.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~labelbook.LabelContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1792,7 +1792,7 @@ class LabelContainer(ImageContainerBase):
 
     def OnMouseMove(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for L{LabelContainer}.
+        Handles the ``wx.EVT_MOTION`` event for :class:`~labelbook.LabelContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1845,7 +1845,7 @@ class LabelContainer(ImageContainerBase):
 
     def OnMouseLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for L{LabelContainer}.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~labelbook.LabelContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1882,7 +1882,7 @@ class LabelContainer(ImageContainerBase):
 
     def OnMouseLeaveWindow(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{LabelContainer}.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~labelbook.LabelContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1994,7 +1994,7 @@ class LabelContainer(ImageContainerBase):
 
         :param `which`: the colour key.
 
-        :see: L{SetColour} for a list of valid colour keys.
+        :see: :meth:`~labelbook.LabelContainer.SetColour` for a list of valid colour keys.
         """
 
         if not self._coloursMap.has_key(which):
@@ -2029,7 +2029,7 @@ class LabelContainer(ImageContainerBase):
         :param `rect`: the text client rectangle;
         :param `text`: the actual text string;
         :param `bmp`: a bitmap to be drawn next to the text;
-        :param `imgInfo`: an instance of L{ImageInfo};
+        :param `imgInfo`: an instance of :class:`~labelbook.ImageInfo`;
         :param `orientationLeft`: ``True`` if the book has the ``INB_RIGHT`` or ``INB_LEFT``
          style set;
         :param `imgIdx`: the tab image index;
@@ -2172,7 +2172,7 @@ class LabelContainer(ImageContainerBase):
 # ---------------------------------------------------------------------------- #
 
 class FlatBookBase(wx.Panel):
-    """ Base class for the containing window for L{LabelBook} and L{FlatImageBook}. """
+    """ Base class for the containing window for :class:`~labelbook.LabelBook` and :class:`~labelbook.FlatImageBook`. """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=0, agwStyle=0, name="FlatBookBase"):
@@ -2192,18 +2192,18 @@ class FlatBookBase(wx.Panel):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for :class:`~labelbook.FlatImageBook`.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for :class:`~labelbook.FlatImageBook`.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
+         ``INB_BORDER``                     0x10 Draws a border around :class:`~labelbook.LabelBook` or :class:`~labelbook.FlatImageBook`.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for :class:`~labelbook.LabelBook`.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for :class:`~labelbook.LabelBook`.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for :class:`~labelbook.LabelBook`.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          ``INB_BOLD_TAB_SELECTION``       0x4000 Show the selected tab text using a bold font. 
@@ -2238,18 +2238,18 @@ class FlatBookBase(wx.Panel):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for :class:`~labelbook.FlatImageBook`.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for :class:`~labelbook.FlatImageBook`.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
+         ``INB_BORDER``                     0x10 Draws a border around :class:`~labelbook.LabelBook` or :class:`~labelbook.FlatImageBook`.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for :class:`~labelbook.LabelBook`.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for :class:`~labelbook.LabelBook`.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for :class:`~labelbook.LabelBook`.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          ``INB_BOLD_TAB_SELECTION``       0x4000 Show the selected tab text using a bold font. 
@@ -2306,9 +2306,9 @@ class FlatBookBase(wx.Panel):
 
     def GetAGWWindowStyleFlag(self):
         """
-        Returns the L{FlatBookBase} window style.
+        Returns the :class:`~labelbook.FlatBookBase` window style.
 
-        :see: L{SetAGWWindowStyleFlag} for a list of possible window style flags.
+        :see: :meth:`~labelbook.FlatBookBase.SetAGWWindowStyleFlag` for a list of possible window style flags.
         """
 
         return self._agwStyle
@@ -2316,11 +2316,11 @@ class FlatBookBase(wx.Panel):
 
     def HasAGWFlag(self, flag):
         """
-        Returns whether a flag is present in the L{FlatBookBase} style.
+        Returns whether a flag is present in the :class:`~labelbook.FlatBookBase` style.
 
-        :param `flag`: one of the possible L{FlatBookBase} window styles.
+        :param `flag`: one of the possible :class:`~labelbook.FlatBookBase` window styles.
 
-        :see: L{SetAGWWindowStyleFlag} for a list of possible window style flags.
+        :see: :meth:`~labelbook.FlatBookBase.SetAGWWindowStyleFlag` for a list of possible window style flags.
         """
 
         agwStyle = self.GetAGWWindowStyleFlag()
@@ -2775,7 +2775,7 @@ class FlatBookBase(wx.Panel):
 
     def OnNavigationKey(self, event):
         """
-        Handles the ``wx.EVT_NAVIGATION_KEY`` event for L{FlatBookBase}.
+        Handles the ``wx.EVT_NAVIGATION_KEY`` event for :class:`~labelbook.FlatBookBase`.
 
         :param `event`: a `wx.NavigationKeyEvent` event to be processed.
         """
@@ -2872,18 +2872,18 @@ class FlatImageBook(FlatBookBase):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for :class:`~labelbook.FlatImageBook`.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for :class:`~labelbook.FlatImageBook`.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
+         ``INB_BORDER``                     0x10 Draws a border around :class:`~labelbook.LabelBook` or :class:`~labelbook.FlatImageBook`.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for :class:`~labelbook.LabelBook`.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for :class:`~labelbook.LabelBook`.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for :class:`~labelbook.LabelBook`.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          ``INB_BOLD_TAB_SELECTION``       0x4000 Show the selected tab text using a bold font. 
@@ -2915,7 +2915,7 @@ class FlatImageBook(FlatBookBase):
         
         
     def CreateImageContainer(self):
-        """ Creates the image container class for L{FlatImageBook}. """
+        """ Creates the image container class for :class:`~labelbook.FlatImageBook`. """
 
         return ImageContainer(self, wx.ID_ANY, agwStyle=self.GetAGWWindowStyleFlag())
 
@@ -2948,18 +2948,18 @@ class LabelBook(FlatBookBase):
          =========================== =========== ==================================================
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
-         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for L{FlatImageBook}.
-         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for L{FlatImageBook}.
+         ``INB_BOTTOM``                      0x1 Place labels below the page area. Available only for :class:`~labelbook.FlatImageBook`.
+         ``INB_LEFT``                        0x2 Place labels on the left side. Available only for :class:`~labelbook.FlatImageBook`.
          ``INB_RIGHT``                       0x4 Place labels on the right side.
          ``INB_TOP``                         0x8 Place labels above the page area.
-         ``INB_BORDER``                     0x10 Draws a border around L{LabelBook} or L{FlatImageBook}.
-         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for L{LabelBook}.
-         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for L{LabelBook}.
+         ``INB_BORDER``                     0x10 Draws a border around :class:`~labelbook.LabelBook` or :class:`~labelbook.FlatImageBook`.
+         ``INB_SHOW_ONLY_TEXT``             0x20 Shows only text labels and no images. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_SHOW_ONLY_IMAGES``           0x40 Shows only tab images and no label texts. Available only for :class:`~labelbook.LabelBook`.
          ``INB_FIT_BUTTON``                 0x80 Displays a pin button to show/hide the book control.
-         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for L{LabelBook}.
+         ``INB_DRAW_SHADOW``               0x100 Draw shadows below the book tabs. Available only for :class:`~labelbook.LabelBook`.
          ``INB_USE_PIN_BUTTON``            0x200 Displays a pin button to show/hide the book control.
-         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for L{LabelBook}.
-         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for L{LabelBook}.
+         ``INB_GRADIENT_BACKGROUND``       0x400 Draws a gradient shading on the tabs background. Available only for :class:`~labelbook.LabelBook`.
+         ``INB_WEB_HILITE``                0x800 On mouse hovering, tabs behave like html hyperlinks. Available only for :class:`~labelbook.LabelBook`.
          ``INB_NO_RESIZE``                0x1000 Don't allow resizing of the tab area.
          ``INB_FIT_LABELTEXT``            0x2000 Will fit the tab area to the longest text (or text+image if you have images) in all the tabs.
          ``INB_BOLD_TAB_SELECTION``       0x4000 Show the selected tab text using a bold font. 
@@ -2987,7 +2987,7 @@ class LabelBook(FlatBookBase):
         
 
     def CreateImageContainer(self):
-        """ Creates the image container (LabelContainer) class for L{FlatImageBook}. """
+        """ Creates the image container (LabelContainer) class for :class:`~labelbook.FlatImageBook`. """
 
         return LabelContainer(self, wx.ID_ANY, agwStyle=self.GetAGWWindowStyleFlag())
 
@@ -2999,7 +2999,7 @@ class LabelBook(FlatBookBase):
         :param `which`: the colour key;
         :param `colour`: a valid `wx.Colour` instance.
 
-        :see: L{LabelContainer.SetColour} for a list of valid colour keys.
+        :see: :meth:`LabelContainer.SetColour() <labelbook.LabelContainer.SetColour>` for a list of valid colour keys.
         """
 
         self._pages.SetColour(which, colour)
@@ -3011,7 +3011,7 @@ class LabelBook(FlatBookBase):
 
         :param `which`: the colour key.
 
-        :see: L{LabelContainer.SetColour} for a list of valid colour keys.
+        :see: :meth:`LabelContainer.SetColour() <labelbook.LabelContainer.SetColour>` for a list of valid colour keys.
         """
 
         return self._pages.GetColour(which)
@@ -3019,7 +3019,7 @@ class LabelBook(FlatBookBase):
     
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{LabelBook}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~labelbook.LabelBook`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """

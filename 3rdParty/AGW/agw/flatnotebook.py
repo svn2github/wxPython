@@ -27,13 +27,13 @@
 # --------------------------------------------------------------------------- #
 
 """
-L{FlatNotebook} is a full, generic and owner-drawn implementation of `wx.Notebook`.
+:class:`~flatnotebook.FlatNotebook` is a full, generic and owner-drawn implementation of `wx.Notebook`.
 
 
 Description
 ===========
 
-L{FlatNotebook} is a full implementation of the `wx.Notebook`, and designed to be
+:class:`~flatnotebook.FlatNotebook` is a full implementation of the `wx.Notebook`, and designed to be
 a drop-in replacement for `wx.Notebook`. The API functions are similar so one can
 expect the function to behave in the same way.
 
@@ -45,7 +45,7 @@ Some features:
 - It is a generic control;
 - Currently there are 6 different styles - VC8, VC 71, Standard, Fancy, Firefox 2 and Ribbon;
 - Mouse middle click can be used to close tabs;
-- A function to add right click menu for tabs (simple as L{SetRightClickMenu});
+- A function to add right click menu for tabs (simple as :meth:`~FlatNotebook.SetRightClickMenu`);
 - All styles has bottom style as well (they can be drawn in the bottom of screen);
 - An option to hide 'X' button or navigation buttons (separately);
 - Gradient colouring of the selected tabs and border;
@@ -58,7 +58,7 @@ Some features:
 - Support for showing pages in "column/row mode", which means that all the pages will be
   shown in "tile" mode while the tabs are hidden;
 - Possibility to add a custom panel to show a logo or HTML documentation or
-  whatever you like when there are no pages left in L{FlatNotebook};
+  whatever you like when there are no pages left in :class:`~flatnotebook.FlatNotebook`;
 - Try setting the tab area colour for the Ribbon Style.
 
 
@@ -141,9 +141,9 @@ Window Styles                    Hex Value   Description
 ``FNB_DCLICK_CLOSES_TABS``            0x1000 Style to close tab using double click.
 ``FNB_SMART_TABS``                    0x2000 Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows.
 ``FNB_DROPDOWN_TABS_LIST``            0x4000 Use a dropdown menu on the left in place of the arrows.
-``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different L{FlatNotebook}.
+``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different :class:`~flatnotebook.FlatNotebook`.
 ``FNB_HIDE_ON_SINGLE_TAB``           0x10000 Hides the Page Container when there is one or fewer tabs.
-``FNB_DEFAULT_STYLE``                0x10020 L{FlatNotebook} default style.
+``FNB_DEFAULT_STYLE``                0x10020 :class:`~flatnotebook.FlatNotebook` default style.
 ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
 ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
 ``FNB_RIBBON_TABS``                  0x80000 Use the Ribbon Tabs style
@@ -160,10 +160,10 @@ This class processes the following events:
 ========================================= ==================================================
 Event Name                                Description
 ========================================= ==================================================
-``EVT_FLATNOTEBOOK_PAGE_CHANGED``         Notify client objects when the active page in L{FlatNotebook} has changed.
-``EVT_FLATNOTEBOOK_PAGE_CHANGING``        Notify client objects when the active page in L{FlatNotebook} is about to change.
-``EVT_FLATNOTEBOOK_PAGE_CLOSED``          Notify client objects when a page in L{FlatNotebook} has been closed.
-``EVT_FLATNOTEBOOK_PAGE_CLOSING``         Notify client objects when a page in L{FlatNotebook} is closing.
+``EVT_FLATNOTEBOOK_PAGE_CHANGED``         Notify client objects when the active page in :class:`~flatnotebook.FlatNotebook` has changed.
+``EVT_FLATNOTEBOOK_PAGE_CHANGING``        Notify client objects when the active page in :class:`~flatnotebook.FlatNotebook` is about to change.
+``EVT_FLATNOTEBOOK_PAGE_CLOSED``          Notify client objects when a page in :class:`~flatnotebook.FlatNotebook` has been closed.
+``EVT_FLATNOTEBOOK_PAGE_CLOSING``         Notify client objects when a page in :class:`~flatnotebook.FlatNotebook` is closing.
 ``EVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU``    Notify client objects when a pop-up menu should appear next to a tab.
 ``EVT_FLATNOTEBOOK_PAGE_DROPPED``         Notify client objects when a tab has been dropped and re-arranged (on the *same* notebook)
 ``EVT_FLATNOTEBOOK_PAGE_DROPPED_FOREIGN`` Notify client objects when a tab has been dropped and re-arranged (from a foreign notebook)
@@ -173,7 +173,7 @@ Event Name                                Description
 License And Version
 ===================
 
-L{FlatNotebook} is distributed under the wxPython license.
+:class:`~flatnotebook.FlatNotebook` is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
@@ -266,10 +266,10 @@ FNB_DROPDOWN_TABS_LIST = 16384
 """Use a dropdown menu on the left in place of the arrows"""
 
 FNB_ALLOW_FOREIGN_DND = 32768
-"""Allows drag and drop operations between different L{FlatNotebook}"""
+"""Allows drag and drop operations between different :class:`~flatnotebook.FlatNotebook`"""
 
 FNB_HIDE_ON_SINGLE_TAB = 65536
-"""Hides the L{PageContainer} when there is one or fewer tabs"""
+"""Hides the :class:`~flatnotebook.PageContainer` when there is one or fewer tabs"""
 
 FNB_NO_TAB_FOCUS = 262144
 """ Does not allow tabs to have focus"""
@@ -318,7 +318,7 @@ FNB_NOWHERE = 0         # Anywhere else
 """Indicates mouse coordinates not on any tab of the notebook"""
 
 FNB_DEFAULT_STYLE = FNB_MOUSE_MIDDLE_CLOSES_TABS | FNB_HIDE_ON_SINGLE_TAB
-"""L{FlatNotebook} default style"""
+""":class:`~flatnotebook.FlatNotebook` default style"""
 
 # FlatNotebook Events:
 # wxEVT_FLATNOTEBOOK_PAGE_CHANGED: Event Fired When You Switch Page;
@@ -345,13 +345,13 @@ wxEVT_FLATNOTEBOOK_PAGE_DROPPED_FOREIGN = wx.NewEventType()
 #-----------------------------------#
 
 EVT_FLATNOTEBOOK_PAGE_CHANGED = wx.EVT_NOTEBOOK_PAGE_CHANGED
-""" Notify client objects when the active page in L{FlatNotebook} has changed."""
+""" Notify client objects when the active page in :class:`~flatnotebook.FlatNotebook` has changed."""
 EVT_FLATNOTEBOOK_PAGE_CHANGING = wx.EVT_NOTEBOOK_PAGE_CHANGING
-""" Notify client objects when the active page in L{FlatNotebook} is about to change."""
+""" Notify client objects when the active page in :class:`~flatnotebook.FlatNotebook` is about to change."""
 EVT_FLATNOTEBOOK_PAGE_CLOSING = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_CLOSING, 1)
-""" Notify client objects when a page in L{FlatNotebook} is closing."""
+""" Notify client objects when a page in :class:`~flatnotebook.FlatNotebook` is closing."""
 EVT_FLATNOTEBOOK_PAGE_CLOSED = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_CLOSED, 1)
-""" Notify client objects when a page in L{FlatNotebook} has been closed."""
+""" Notify client objects when a page in :class:`~flatnotebook.FlatNotebook` has been closed."""
 EVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_CONTEXT_MENU, 1)
 """ Notify client objects when a pop-up menu should appear next to a tab."""
 EVT_FLATNOTEBOOK_PAGE_DROPPED = wx.PyEventBinder(wxEVT_FLATNOTEBOOK_PAGE_DROPPED, 1)
@@ -907,7 +907,7 @@ else:
 
 def DrawButton(dc, rect, focus, upperTabs):
     """
-    Draws a L{FlatNotebook} tab.
+    Draws a :class:`~flatnotebook.FlatNotebook` tab.
 
     :param `dc`: an instance of `wx.DC`;
     :param `rect`: the tab's client rectangle;
@@ -1018,7 +1018,7 @@ class FNBDropSource(wx.DropSource):
 class FNBDragInfo(object):
     """
     Stores all the information to allow drag and drop between different
-    L{FlatNotebook} instances.
+    :class:`~flatnotebook.FlatNotebook` instances.
     """
 
     _map = weakref.WeakValueDictionary()
@@ -1027,7 +1027,7 @@ class FNBDragInfo(object):
         """
         Default class constructor.
 
-        :param `container`: the drag and drop container, a page in L{FlatNotebook};
+        :param `container`: the drag and drop container, a page in :class:`~flatnotebook.FlatNotebook`;
         :param `pageindex`: the index of the tab that is actually being dragged.
         """
 
@@ -1037,7 +1037,7 @@ class FNBDragInfo(object):
 
 
     def GetContainer(self):
-        """ Returns the L{FlatNotebook} page (usually a panel). """
+        """ Returns the :class:`~flatnotebook.FlatNotebook` page (usually a panel). """
 
         return FNBDragInfo._map.get(self._id, None)
 
@@ -1056,8 +1056,8 @@ class FNBDragInfo(object):
 
 class FNBDropTarget(wx.DropTarget):
     """
-    Class used to handle the L{FlatNotebook.OnDropTarget} method when dragging and
-    dropping between different L{FlatNotebook} instances.
+    Class used to handle the :meth:`FlatNotebook.OnDropTarget() <flatnotebook.FlatNotebook.OnDropTarget>` method when dragging and
+    dropping between different :class:`~flatnotebook.FlatNotebook` instances.
     """
 
     def __init__(self, parent):
@@ -1065,7 +1065,7 @@ class FNBDropTarget(wx.DropTarget):
         Default class constructor.
 
         :param `parent`: the window handling the drag and drop, an instance of
-         L{FlatNotebook}.
+         :class:`~flatnotebook.FlatNotebook`.
         """
 
         wx.DropTarget.__init__(self)
@@ -1103,7 +1103,7 @@ class FNBDropTarget(wx.DropTarget):
 class PageInfo(object):
     """
     This class holds all the information (caption, image, etc...) belonging to a
-    single tab in L{FlatNotebook}.
+    single tab in :class:`~flatnotebook.FlatNotebook`.
     """
 
     def __init__(self, caption="", imageindex=-1, tabangle=0, enabled=True):
@@ -1199,7 +1199,7 @@ class PageInfo(object):
         """
         Sets the tab image index.
 
-        :param `value`: an index within the L{FlatNotebook} image list specifying
+        :param `value`: an index within the :class:`~flatnotebook.FlatNotebook` image list specifying
          the image to use for this tab.
         """
 
@@ -1339,7 +1339,7 @@ class FlatNotebookEvent(wx.PyCommandEvent):
 
     def IsAllowed(self):
         """
-        Returns ``True`` if the change is allowed (L{Veto} hasn't been called) or
+        Returns ``True`` if the change is allowed (:meth:`~flatnotebook.FlatNotebookEvent.Veto` hasn't been called) or
         ``False`` otherwise (if it was).
         """
 
@@ -1360,7 +1360,7 @@ class FlatNotebookEvent(wx.PyCommandEvent):
 
     def Allow(self):
         """
-        This is the opposite of L{Veto}: it explicitly allows the event to be processed.
+        This is the opposite of :meth:`~flatnotebook.FlatNotebookEvent.Veto`: it explicitly allows the event to be processed.
         For most events it is not necessary to call this method as the events are
         allowed anyhow but some are forbidden by default (this will be mentioned
         in the corresponding event description).
@@ -1445,7 +1445,7 @@ class FlatNotebookDragEvent(FlatNotebookEvent):
         """
         Sets the new notebook.
 
-        :param `notebook`: an instance of L{FlatNotebook}.
+        :param `notebook`: an instance of :class:`~flatnotebook.FlatNotebook`.
         """
 
         self._newnotebook = notebook
@@ -1455,7 +1455,7 @@ class FlatNotebookDragEvent(FlatNotebookEvent):
         """
         Sets the old notebook.
 
-        :param `notebook`: an instance of L{FlatNotebook}.
+        :param `notebook`: an instance of :class:`~flatnotebook.FlatNotebook`.
         """
 
         self._oldnotebook = old
@@ -1475,9 +1475,9 @@ class TabNavigatorWindow(wx.Dialog):
         Default class constructor.
         Used internally.
 
-        :param `parent`: the L{TabNavigatorWindow} parent window;
+        :param `parent`: the :class:`~flatnotebook.TabNavigatorWindow` parent window;
         :param `icon`: a valid `wx.Bitmap` object representing the icon to be displayed
-         in the L{TabNavigatorWindow}.
+         in the :class:`~flatnotebook.TabNavigatorWindow`.
         """
 
         wx.Dialog.__init__(self, parent, wx.ID_ANY, "", style=0)
@@ -1539,7 +1539,7 @@ class TabNavigatorWindow(wx.Dialog):
 
     def OnKeyUp(self, event):
         """
-        Handles the ``wx.EVT_KEY_UP`` for the L{TabNavigatorWindow}.
+        Handles the ``wx.EVT_KEY_UP`` for the :class:`~flatnotebook.TabNavigatorWindow`.
 
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
@@ -1550,7 +1550,7 @@ class TabNavigatorWindow(wx.Dialog):
 
     def OnNavigationKey(self, event):
         """
-        Handles the ``wx.EVT_NAVIGATION_KEY`` for the L{TabNavigatorWindow}.
+        Handles the ``wx.EVT_NAVIGATION_KEY`` for the :class:`~flatnotebook.TabNavigatorWindow`.
 
         :param `event`: a `wx.NavigationKeyEvent` event to be processed.
         """
@@ -1580,9 +1580,9 @@ class TabNavigatorWindow(wx.Dialog):
 
     def PopulateListControl(self, book):
         """
-        Populates the L{TabNavigatorWindow} listbox with a list of tabs.
+        Populates the :class:`~flatnotebook.TabNavigatorWindow` listbox with a list of tabs.
 
-        :param `book`: an instance of L{FlatNotebook} containing the tabs to be
+        :param `book`: an instance of :class:`~flatnotebook.FlatNotebook` containing the tabs to be
          displayed in the listbox.
         """
 
@@ -1622,7 +1622,7 @@ class TabNavigatorWindow(wx.Dialog):
 
     def OnItemSelected(self, event):
         """
-        Handles the ``wx.EVT_LISTBOX_DCLICK`` for the L{TabNavigatorWindow}.
+        Handles the ``wx.EVT_LISTBOX_DCLICK`` for the :class:`~flatnotebook.TabNavigatorWindow`.
 
         :param `event`: a `wx.ListEvent` event to be processed.
         """
@@ -1632,8 +1632,8 @@ class TabNavigatorWindow(wx.Dialog):
 
     def CloseDialog(self):
         """
-        Closes the L{TabNavigatorWindow} dialog, setting the new selection in
-        L{FlatNotebook}.
+        Closes the :class:`~flatnotebook.TabNavigatorWindow` dialog, setting the new selection in
+        :class:`~flatnotebook.FlatNotebook`.
         """
 
         bk = self.GetParent()
@@ -1645,7 +1645,7 @@ class TabNavigatorWindow(wx.Dialog):
 
     def OnPanelPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` for the L{TabNavigatorWindow} top panel.
+        Handles the ``wx.EVT_PAINT`` for the :class:`~flatnotebook.TabNavigatorWindow` top panel.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -1686,7 +1686,7 @@ class TabNavigatorWindow(wx.Dialog):
 
     def OnPanelEraseBg(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` for the L{TabNavigatorWindow} top panel.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` for the :class:`~flatnotebook.TabNavigatorWindow` top panel.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
 
@@ -1732,7 +1732,7 @@ class FNBRenderer(object):
         """
         Returns the left button position in the navigation area.
 
-        :param `pageContainer`: an instance of L{FlatNotebook}.
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`.
         """
 
         pc = pageContainer
@@ -1750,7 +1750,7 @@ class FNBRenderer(object):
         """
         Returns the right button position in the navigation area.
 
-        :param `pageContainer`: an instance of L{FlatNotebook}.
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`.
         """
 
         pc = pageContainer
@@ -1768,7 +1768,7 @@ class FNBRenderer(object):
         """
         Returns the drop down button position in the navigation area.
 
-        :param `pageContainer`: an instance of L{FlatNotebook}.
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`.
         """
 
         return self.GetRightButtonPos(pageContainer)
@@ -1778,7 +1778,7 @@ class FNBRenderer(object):
         """
         Returns the 'X' button position in the navigation area.
 
-        :param `pageContainer`: an instance of L{FlatNotebook}.
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`.
         """
 
         pc = pageContainer
@@ -1796,7 +1796,7 @@ class FNBRenderer(object):
         """
         Returns the navigation area width.
 
-        :param `pageContainer`: an instance of L{FlatNotebook}.
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`.
         """
 
         pc = pageContainer
@@ -1831,7 +1831,7 @@ class FNBRenderer(object):
         Draws the left and right scrolling arrows.
 
         :param `dc`: an instance of `wx.DC`;
-        :param `pc`: an instance of L{FlatNotebook};
+        :param `pc`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `rect`: the client rectangle containing the scrolling arrows.
         """
 
@@ -1843,7 +1843,7 @@ class FNBRenderer(object):
         """
         Draws the left navigation arrow.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`.
         """
 
@@ -1887,7 +1887,7 @@ class FNBRenderer(object):
         """
         Draws the right navigation arrow.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`.
         """
 
@@ -1932,7 +1932,7 @@ class FNBRenderer(object):
         """
         Draws the drop-down arrow in the navigation area.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`.
         """
 
@@ -1968,7 +1968,7 @@ class FNBRenderer(object):
         """
         Draw the 'X' navigation button in the navigation area.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`.
         """
 
@@ -2005,7 +2005,7 @@ class FNBRenderer(object):
         """
         Draws the 'X' in the selected tab.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`;
         :param `rect`: the current tab client rectangle;
         :param `tabIdx`: the index of the current tab;
@@ -2044,7 +2044,7 @@ class FNBRenderer(object):
         """
         Draws a line over the tabs.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`;
         :param `selTabX1`: first x coordinate of the tab line;
         :param `selTabX2`: second x coordinate of the tab line.
@@ -2125,7 +2125,7 @@ class FNBRenderer(object):
         """
         Calculates the width of the input tab.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `tabIdx`: the index of the input tab;
         :param `tabHeight`: the height of the tab.
         """
@@ -2183,7 +2183,7 @@ class FNBRenderer(object):
         """
         Calculates the height of the input tab.
 
-        :param `pageContainer`: an instance of L{FlatNotebook}.
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`.
         """
 
         if self._tabHeight:
@@ -2217,9 +2217,9 @@ class FNBRenderer(object):
 
     def DrawTabs(self, pageContainer, dc):
         """
-        Actually draws the tabs in L{FlatNotebook}.
+        Actually draws the tabs in :class:`~flatnotebook.FlatNotebook`.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`.
         """
 
@@ -2392,8 +2392,8 @@ class FNBRenderer(object):
         Draws a focus rectangle like the native `wx.Notebook`.
 
         :param `dc`: an instance of `wx.DC`;
-        :param `pageContainer`: an instance of L{FlatNotebook};
-        :param `page`: an instance of L{PageInfo}, representing a page in the notebook.
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
+        :param `page`: an instance of :class:`~flatnotebook.PageInfo`, representing a page in the notebook.
         """
 
         if not page._hasFocus:
@@ -2420,7 +2420,7 @@ class FNBRenderer(object):
         Draws tab drag hint, the default implementation is to do nothing.
         You can override this function to provide a nice feedback to user.
 
-        :param `pc`: an instance of L{FlatNotebook};
+        :param `pc`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `tabIdx`: the index of the tab we are dragging.
 
         :note: To show your own custom drag and drop UI feedback, you must override
@@ -2434,7 +2434,7 @@ class FNBRenderer(object):
         """
         Calculates the number of tabs that can fit on the available space on screen.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `fr`: the current first visible tab.
         """
 
@@ -2499,7 +2499,7 @@ class FNBRendererMgr(object):
         """
         Returns the current renderer based on the style selected.
 
-        :param `style`: represents one of the 6 implemented styles for L{FlatNotebook},
+        :param `style`: represents one of the 6 implemented styles for :class:`~flatnotebook.FlatNotebook`,
          namely one of these bits:
 
          ===================== ========= ======================
@@ -2552,7 +2552,7 @@ class FNBRendererDefault(FNBRenderer):
         """
         Draws a tab using the `Standard` style.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
@@ -2687,7 +2687,7 @@ class FNBRendererFirefox2(FNBRenderer):
         """
         Draws a tab using the `Firefox 2` style.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
@@ -2801,7 +2801,7 @@ class FNBRendererVC71(FNBRenderer):
         """
         Draws a tab using the `VC71` style.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
@@ -2926,7 +2926,7 @@ class FNBRendererFancy(FNBRenderer):
         """
         Draws a tab using the `Fancy` style, similar to the `VC71` one but with gradients.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
@@ -3044,7 +3044,7 @@ class FNBRendererVC8(FNBRenderer):
         """
         Draws all the tabs using `VC8` style.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`.
         """
 
@@ -3197,7 +3197,7 @@ class FNBRendererVC8(FNBRenderer):
         """
         Draws a tab using the `VC8` style.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
@@ -3344,7 +3344,7 @@ class FNBRendererVC8(FNBRenderer):
         """
         Fills a tab with a gradient shading.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`;
         :param `tabPoints`: a Python list of `wx.Point` representing the tab outline;
         :param `bSelectedTab`: ``True`` if the tab is selected, ``False`` otherwise;
@@ -3564,7 +3564,7 @@ class FNBRendererVC8(FNBRenderer):
         """
         Calculates the number of tabs that can fit on the available space on screen.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `fr`: the current first visible tab.
         """
 
@@ -3620,7 +3620,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
         """
         Calculates the width of the input tab.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `tabIdx`: the index of the input tab;
         :param `tabHeight`: the height of the tab.
         """
@@ -3675,7 +3675,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
         """
         Draws a tab using the `Ribbon Tabs` style.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
@@ -3753,9 +3753,9 @@ class FNBRendererRibbonTabs(FNBRenderer):
 
     def DrawTabs(self, pageContainer, dc):
         """
-        Actually draws the tabs in L{FlatNotebook}.
+        Actually draws the tabs in :class:`~flatnotebook.FlatNotebook`.
 
-        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `pageContainer`: an instance of :class:`~flatnotebook.FlatNotebook`;
         :param `dc`: an instance of `wx.DC`.
         """
 
@@ -3876,7 +3876,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
 
 class FlatNotebook(wx.PyPanel):
     """
-    The L{FlatNotebook} is a full implementation of the `wx.Notebook`, and designed to be
+    The :class:`~flatnotebook.FlatNotebook` is a full implementation of the `wx.Notebook`, and designed to be
     a drop-in replacement for `wx.Notebook`. The API functions are similar so one can
     expect the function to behave in the same way.
     """
@@ -3886,7 +3886,7 @@ class FlatNotebook(wx.PyPanel):
         """
         Default class constructor.
 
-        :param `parent`: the L{FlatNotebook} parent;
+        :param `parent`: the :class:`~flatnotebook.FlatNotebook` parent;
         :param `id`: an identifier for the control: a value of -1 is taken to mean a default;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
@@ -3914,9 +3914,9 @@ class FlatNotebook(wx.PyPanel):
          ``FNB_DCLICK_CLOSES_TABS``            0x1000 Style to close tab using double click.
          ``FNB_SMART_TABS``                    0x2000 Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows.
          ``FNB_DROPDOWN_TABS_LIST``            0x4000 Use a dropdown menu on the left in place of the arrows.
-         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different L{FlatNotebook}.
+         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different :class:`~flatnotebook.FlatNotebook`.
          ``FNB_HIDE_ON_SINGLE_TAB``           0x10000 Hides the Page Container when there is one or fewer tabs.
-         ``FNB_DEFAULT_STYLE``                0x10020 L{FlatNotebook} default style.
+         ``FNB_DEFAULT_STYLE``                0x10020 :class:`~flatnotebook.FlatNotebook` default style.
          ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
          ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
          ``FNB_RIBBON_TABS``                  0x80000 Use the Ribbon Tabs style.
@@ -4021,7 +4021,7 @@ class FlatNotebook(wx.PyPanel):
         :param `orient`: this parameter represents the orientation of the stacked
          panels. Pass ``wx.VERTICAL`` to get vertically stacked panels, ``wx.HORIZONTAL``
          to get horizontally stacked panels or ``None`` to return to the default
-         L{FlatNotebook} behaviour with tabs.
+         :class:`~flatnotebook.FlatNotebook` behaviour with tabs.
         """
 
         self.Freeze()
@@ -4077,7 +4077,7 @@ class FlatNotebook(wx.PyPanel):
         Returns the orientation when on tiling mode. This method can return
         ``wx.VERTICAL`` when the panels are vertically stacked, ``wx.HORIZONTAL``
         when they are horizontally stacked panels or ``None`` when there is no
-        stacking and L{FlatNotebook} behaves like a normal notebook.
+        stacking and :class:`~flatnotebook.FlatNotebook` behaves like a normal notebook.
         """
 
         return self._orientation
@@ -4085,7 +4085,7 @@ class FlatNotebook(wx.PyPanel):
 
     def SetCustomPage(self, panel):
         """
-        Sets a custom panel to show when there are no pages left in L{FlatNotebook}.
+        Sets a custom panel to show when there are no pages left in :class:`~flatnotebook.FlatNotebook`.
 
         :param `panel`: any subclass of `wx.Window` will do, as long as it is suitable
          to be used as a notebook page. Examples include `wx.Panel`, `wx.ScrolledWindow`,
@@ -4114,13 +4114,13 @@ class FlatNotebook(wx.PyPanel):
 
 
     def GetCustomPage(self):
-        """ Returns a custom panel to show when there are no pages left in L{FlatNotebook}. """
+        """ Returns a custom panel to show when there are no pages left in :class:`~flatnotebook.FlatNotebook`. """
 
         return self._customPanel
 
 
     def ShowCustomPage(self, show=True):
-        """ Hides the custom panel which is shown when there are no pages left in L{FlatNotebook}. """
+        """ Hides the custom panel which is shown when there are no pages left in :class:`~flatnotebook.FlatNotebook`. """
 
         if self._customPanel is None:
             return
@@ -4158,7 +4158,7 @@ class FlatNotebook(wx.PyPanel):
         :param `x`: the x position of the drop action;
         :param `y`: the y position of the drop action;
         :param `nTabPage`: the index of the tab being dropped;
-        :param `wnd_oldContainer`: the L{FlatNotebook} to which the dropped tab previously
+        :param `wnd_oldContainer`: the :class:`~flatnotebook.FlatNotebook` to which the dropped tab previously
          belonged to.
         """
 
@@ -4173,7 +4173,7 @@ class FlatNotebook(wx.PyPanel):
 
     def AddPage(self, page, text, select=False, imageId=-1):
         """
-        Adds a page to the L{FlatNotebook}.
+        Adds a page to the :class:`~flatnotebook.FlatNotebook`.
 
         :param `page`: specifies the new page;
         :param `text`: specifies the text for the new page;
@@ -4486,7 +4486,7 @@ class FlatNotebook(wx.PyPanel):
 
 
     def DeleteAllPages(self):
-        """ Deletes all the pages in the L{FlatNotebook}. """
+        """ Deletes all the pages in the :class:`~flatnotebook.FlatNotebook`. """
 
         if not self._windows:
             return False
@@ -4558,14 +4558,14 @@ class FlatNotebook(wx.PyPanel):
 
 
     def GetPageCount(self):
-        """ Returns the number of pages in the L{FlatNotebook} control. """
+        """ Returns the number of pages in the :class:`~flatnotebook.FlatNotebook` control. """
 
         return self._pages.GetPageCount()
 
 
     def SetNavigatorIcon(self, bmp):
         """
-        Set the icon used by the L{TabNavigatorWindow}.
+        Set the icon used by the :class:`~flatnotebook.TabNavigatorWindow`.
 
         :param `bmp`: a valid `wx.Bitmap` object.
         """
@@ -4583,7 +4583,7 @@ class FlatNotebook(wx.PyPanel):
 
     def OnNavigationKey(self, event):
         """
-        Handles the ``wx.EVT_NAVIGATION_KEY`` event for L{FlatNotebook}.
+        Handles the ``wx.EVT_NAVIGATION_KEY`` event for :class:`~flatnotebook.FlatNotebook`.
 
         :param `event`: a `wx.NavigationKeyEvent` event to be processed.
         """
@@ -4705,7 +4705,7 @@ class FlatNotebook(wx.PyPanel):
 
     def SetAGWWindowStyleFlag(self, agwStyle):
         """
-        Sets the L{FlatNotebook} window style flags.
+        Sets the :class:`~flatnotebook.FlatNotebook` window style flags.
 
         :param `agwStyle`: the AGW-specific window style. This can be a combination of the
          following bits:
@@ -4728,9 +4728,9 @@ class FlatNotebook(wx.PyPanel):
          ``FNB_DCLICK_CLOSES_TABS``            0x1000 Style to close tab using double click.
          ``FNB_SMART_TABS``                    0x2000 Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows.
          ``FNB_DROPDOWN_TABS_LIST``            0x4000 Use a dropdown menu on the left in place of the arrows.
-         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different L{FlatNotebook}.
+         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different :class:`~flatnotebook.FlatNotebook`.
          ``FNB_HIDE_ON_SINGLE_TAB``           0x10000 Hides the Page Container when there is one or fewer tabs.
-         ``FNB_DEFAULT_STYLE``                0x10020 L{FlatNotebook} default style.
+         ``FNB_DEFAULT_STYLE``                0x10020 :class:`~flatnotebook.FlatNotebook` default style.
          ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
          ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
          ``FNB_RIBBON_TABS``                  0x80000 Use the Ribbon Tabs style.
@@ -4763,9 +4763,9 @@ class FlatNotebook(wx.PyPanel):
 
     def GetAGWWindowStyleFlag(self):
         """
-        Returns the L{FlatNotebook} window style.
+        Returns the :class:`~flatnotebook.FlatNotebook` window style.
 
-        :see: L{SetAGWWindowStyleFlag} for a list of valid window styles.
+        :see: :meth:`~flatnotebook.FlatNotebook.SetAGWWindowStyleFlag` for a list of valid window styles.
         """
 
         return self._agwStyle
@@ -4773,11 +4773,11 @@ class FlatNotebook(wx.PyPanel):
 
     def HasAGWFlag(self, flag):
         """
-        Returns whether a flag is present in the L{FlatNotebook} style.
+        Returns whether a flag is present in the :class:`~flatnotebook.FlatNotebook` style.
 
-        :param `flag`: one of the possible L{FlatNotebook} window styles.
+        :param `flag`: one of the possible :class:`~flatnotebook.FlatNotebook` window styles.
 
-        :see: L{SetAGWWindowStyleFlag} for a list of possible window style flags.
+        :see: :meth:`~flatnotebook.FlatNotebook.SetAGWWindowStyleFlag` for a list of possible window style flags.
         """
 
         agwStyle = self.GetAGWWindowStyleFlag()
@@ -4943,7 +4943,7 @@ class FlatNotebook(wx.PyPanel):
         Sets the image index for the given page.
 
         :param `page`: an integer specifying the page index;
-        :param `image`: an index into the image list which was set with L{SetImageList}.
+        :param `image`: an index into the image list which was set with :meth:`~flatnotebook.FlatNotebook.SetImageList`.
         """
 
         self._pages.SetPageImage(page, image)
@@ -5075,7 +5075,7 @@ class FlatNotebook(wx.PyPanel):
 
 class PageContainer(wx.PyPanel):
     """
-    This class acts as a container for the pages you add to L{FlatNotebook}.
+    This class acts as a container for the pages you add to :class:`~flatnotebook.FlatNotebook`.
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
@@ -5085,7 +5085,7 @@ class PageContainer(wx.PyPanel):
 
         Used internally, do not call it in your code!
 
-        :param `parent`: the L{PageContainer} parent;
+        :param `parent`: the :class:`~flatnotebook.PageContainer` parent;
         :param `id`: an identifier for the control: a value of -1 is taken to mean a default;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
@@ -5167,7 +5167,7 @@ class PageContainer(wx.PyPanel):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{PageContainer}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
 
@@ -5189,7 +5189,7 @@ class PageContainer(wx.PyPanel):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{PageContainer}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -5210,7 +5210,7 @@ class PageContainer(wx.PyPanel):
 
     def AddPage(self, caption, selected=False, imgindex=-1):
         """
-        Adds a page to the L{PageContainer}.
+        Adds a page to the :class:`~flatnotebook.PageContainer`.
 
         :param `page`: specifies the new page;
         :param `text`: specifies the text for the new page;
@@ -5253,7 +5253,7 @@ class PageContainer(wx.PyPanel):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{PageContainer}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -5279,7 +5279,7 @@ class PageContainer(wx.PyPanel):
 
     def OnMiddleDown(self, event):
         """
-        Handles the ``wx.EVT_MIDDLE_DOWN`` event for L{PageContainer}.
+        Handles the ``wx.EVT_MIDDLE_DOWN`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -5300,7 +5300,7 @@ class PageContainer(wx.PyPanel):
 
     def OnMouseWheel(self, event):
         """
-        Handles the ``wx.EVT_MOUSEWHEEL`` event for L{PageContainer}.
+        Handles the ``wx.EVT_MOUSEWHEEL`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -5326,7 +5326,7 @@ class PageContainer(wx.PyPanel):
 
     def OnRightDown(self, event):
         """
-        Handles the ``wx.EVT_RIGHT_DOWN`` event for L{PageContainer}.
+        Handles the ``wx.EVT_RIGHT_DOWN`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -5355,7 +5355,7 @@ class PageContainer(wx.PyPanel):
 
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for L{PageContainer}.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -5440,7 +5440,7 @@ class PageContainer(wx.PyPanel):
 
     def OnLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for L{PageContainer}.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -5500,7 +5500,7 @@ class PageContainer(wx.PyPanel):
 
     def HitTest(self, pt):
         """
-        HitTest method for L{PageContainer}.
+        HitTest method for :class:`~flatnotebook.PageContainer`.
 
         :param `pt`: an instance of `wx.Point`, to test for hits.
 
@@ -5652,7 +5652,7 @@ class PageContainer(wx.PyPanel):
 
     def DeletePage(self, page):
         """
-        Delete the specified page from L{PageContainer}.
+        Delete the specified page from :class:`~flatnotebook.PageContainer`.
 
         :param `page`: an integer specifying the page index.
         """
@@ -5732,7 +5732,7 @@ class PageContainer(wx.PyPanel):
 
 
     def DeleteAllPages(self):
-        """ Deletes all the pages in the L{PageContainer}. """
+        """ Deletes all the pages in the :class:`~flatnotebook.PageContainer`. """
 
         self._iActivePage = -1
         self._iPreviousActivePage = -1
@@ -5746,7 +5746,7 @@ class PageContainer(wx.PyPanel):
 
     def OnMouseMove(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for L{PageContainer}.
+        Handles the ``wx.EVT_MOTION`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -5945,7 +5945,7 @@ class PageContainer(wx.PyPanel):
 
     def OnMouseLeave(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{PageContainer}.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -5986,7 +5986,7 @@ class PageContainer(wx.PyPanel):
 
     def OnMouseEnterWindow(self, event):
         """
-        Handles the ``wx.EVT_ENTER_WINDOW`` event for L{PageContainer}.
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -6020,7 +6020,7 @@ class PageContainer(wx.PyPanel):
         Sets the image index for the given page.
 
         :param `page`: an integer specifying the page index;
-        :param `image`: an index into the image list which was set with L{SetImageList}.
+        :param `image`: an index into the image list which was set with :meth:`~flatnotebook.PageContainer.SetImageList`.
         """
 
         if page < len(self._pagesInfoVec):
@@ -6076,7 +6076,7 @@ class PageContainer(wx.PyPanel):
         :param `x`: the x position of the drop action;
         :param `y`: the y position of the drop action;
         :param `nTabPage`: the index of the tab being dropped;
-        :param `wnd_oldContainer`: the L{FlatNotebook} to which the dropped tab previously
+        :param `wnd_oldContainer`: the :class:`~flatnotebook.FlatNotebook` to which the dropped tab previously
          belonged to.
         """
 
@@ -6153,7 +6153,7 @@ class PageContainer(wx.PyPanel):
 
     def MoveTabPage(self, nMove, nMoveTo):
         """
-        Moves a tab inside the same L{FlatNotebook}.
+        Moves a tab inside the same :class:`~flatnotebook.FlatNotebook`.
 
         :param `nMove`: the start index of the moved tab;
         :param `nMoveTo`: the destination index of the moved tab.
@@ -6278,11 +6278,11 @@ class PageContainer(wx.PyPanel):
 
     def HasAGWFlag(self, flag):
         """
-        Returns whether a flag is present in the L{FlatNotebook} style.
+        Returns whether a flag is present in the :class:`~flatnotebook.FlatNotebook` style.
 
-        :param `flag`: one of the possible L{FlatNotebook} window styles.
+        :param `flag`: one of the possible :class:`~flatnotebook.FlatNotebook` window styles.
 
-        :see: L{FlatNotebook.SetAGWWindowStyleFlag} for a list of possible window
+        :see: :meth:`FlatNotebook.SetAGWWindowStyleFlag() <flatnotebook.FlatNotebook.SetAGWWindowStyleFlag>` for a list of possible window
          style flags.
         """
 
@@ -6293,11 +6293,11 @@ class PageContainer(wx.PyPanel):
 
     def ClearAGWFlag(self, flag):
         """
-        Deletes a flag from the L{FlatNotebook} style.
+        Deletes a flag from the :class:`~flatnotebook.FlatNotebook` style.
 
-        :param `flag`: one of the possible L{FlatNotebook} window styles.
+        :param `flag`: one of the possible :class:`~flatnotebook.FlatNotebook` window styles.
 
-        :see: L{FlatNotebook.SetAGWWindowStyleFlag} for a list of possible window
+        :see: :meth:`FlatNotebook.SetAGWWindowStyleFlag() <flatnotebook.FlatNotebook.SetAGWWindowStyleFlag>` for a list of possible window
          style flags.
         """
 
@@ -6309,11 +6309,11 @@ class PageContainer(wx.PyPanel):
 
     def SetAGWWindowStyleFlag(self, agwStyle):
         """
-        Sets the L{FlatNotebook} window style.
+        Sets the :class:`~flatnotebook.FlatNotebook` window style.
 
-        :param `agwStyle`: the new L{FlatNotebook} window style.
+        :param `agwStyle`: the new :class:`~flatnotebook.FlatNotebook` window style.
 
-        :see: The L{FlatNotebook.__init__} method for the `agwStyle` parameter description.
+        :see: The :meth:`FlatNotebook.__init__() <flatnotebook.FlatNotebook.__init__>` method for the `agwStyle` parameter description.
         """
 
         self.GetParent().SetAGWWindowStyleFlag(agwStyle)
@@ -6321,9 +6321,9 @@ class PageContainer(wx.PyPanel):
 
     def GetAGWWindowStyleFlag(self):
         """
-        Returns the L{FlatNotebook} window style.
+        Returns the :class:`~flatnotebook.FlatNotebook` window style.
 
-        :see: The L{FlatNotebook.__init__} method for the `agwStyle` parameter description.
+        :see: The :meth:`FlatNotebook.__init__() <flatnotebook.FlatNotebook.__init__>` method for the `agwStyle` parameter description.
         """
 
         return self.GetParent().GetAGWWindowStyleFlag()
@@ -6344,7 +6344,7 @@ class PageContainer(wx.PyPanel):
 
     def OnLeftDClick(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DCLICK`` event for L{PageContainer}.
+        Handles the ``wx.EVT_LEFT_DCLICK`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -6371,7 +6371,7 @@ class PageContainer(wx.PyPanel):
 
     def OnSetFocus(self, event):
         """
-        Handles the ``wx.EVT_SET_FOCUS`` event for L{PageContainer}.
+        Handles the ``wx.EVT_SET_FOCUS`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.FocusEvent` event to be processed.
         """
@@ -6385,7 +6385,7 @@ class PageContainer(wx.PyPanel):
 
     def OnKillFocus(self, event):
         """
-        Handles the ``wx.EVT_KILL_FOCUS`` event for L{PageContainer}.
+        Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.FocusEvent` event to be processed.
         """
@@ -6395,11 +6395,11 @@ class PageContainer(wx.PyPanel):
 
     def OnKeyDown(self, event):
         """
-        Handles the ``wx.EVT_KEY_DOWN`` event for L{PageContainer}.
+        Handles the ``wx.EVT_KEY_DOWN`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.KeyEvent` event to be processed.
 
-        :note: When the L{PageContainer} has the focus tabs can be changed with
+        :note: When the :class:`~flatnotebook.PageContainer` has the focus tabs can be changed with
          the left/right arrow keys.
         """
 
@@ -6459,7 +6459,7 @@ class PageContainer(wx.PyPanel):
 
     def OnTabMenuSelection(self, event):
         """
-        Handles the ``wx.EVT_MENU`` event for L{PageContainer}.
+        Handles the ``wx.EVT_MENU`` event for :class:`~flatnotebook.PageContainer`.
 
         :param `event`: a `wx.MenuEvent` event to be processed.
         """
@@ -6475,7 +6475,7 @@ class PageContainer(wx.PyPanel):
 
         This is an utility function.
 
-        :param `selection`: the new selection inside L{FlatNotebook}.
+        :param `selection`: the new selection inside :class:`~flatnotebook.FlatNotebook`.
         """
 
         if selection == self._iActivePage:
@@ -6503,7 +6503,7 @@ class PageContainer(wx.PyPanel):
 
     def SetImageList(self, imglist):
         """
-        Sets the image list for the L{PageContainer}.
+        Sets the image list for the :class:`~flatnotebook.PageContainer`.
 
         :param `imageList`: an instance of `wx.ImageList`.
         """
@@ -6513,7 +6513,7 @@ class PageContainer(wx.PyPanel):
 
     def AssignImageList(self, imglist):
         """
-        Assigns the image list for the L{PageContainer}.
+        Assigns the image list for the :class:`~flatnotebook.PageContainer`.
 
         :param `imageList`: an instance of `wx.ImageList`.
         """
@@ -6534,7 +6534,7 @@ class PageContainer(wx.PyPanel):
 
 
     def GetPageCount(self):
-        """ Returns the number of tabs in the L{FlatNotebook} control. """
+        """ Returns the number of tabs in the :class:`~flatnotebook.FlatNotebook` control. """
 
         return len(self._pagesInfoVec)
 
@@ -6585,8 +6585,8 @@ class PageContainer(wx.PyPanel):
 class FlatNotebookCompatible(FlatNotebook):
     """
     This class is more compatible with the `wx.Notebook` API, especially regarding
-    page changing events. Use the L{FlatNotebookCompatible.SetSelection} method if you wish to send page
-    changing events, or L{FlatNotebookCompatible.ChangeSelection} otherwise.
+    page changing events. Use the :meth:`FlatNotebookCompatible.SetSelection() <flatnotebook.FlatNotebookCompatible.SetSelection>` method if you wish to send page
+    changing events, or :meth:`FlatNotebookCompatible.ChangeSelection() <flatnotebook.FlatNotebookCompatible.ChangeSelection>` otherwise.
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
@@ -6594,7 +6594,7 @@ class FlatNotebookCompatible(FlatNotebook):
         """
         Default class constructor.
 
-        :param `parent`: the L{FlatNotebook} parent;
+        :param `parent`: the :class:`~flatnotebook.FlatNotebook` parent;
         :param `id`: an identifier for the control: a value of -1 is taken to mean a default;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
@@ -6622,9 +6622,9 @@ class FlatNotebookCompatible(FlatNotebook):
          ``FNB_DCLICK_CLOSES_TABS``            0x1000 Style to close tab using double click.
          ``FNB_SMART_TABS``                    0x2000 Use `Smart Tabbing`, like ``Alt`` + ``Tab`` on Windows.
          ``FNB_DROPDOWN_TABS_LIST``            0x4000 Use a dropdown menu on the left in place of the arrows.
-         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different L{FlatNotebook}.
+         ``FNB_ALLOW_FOREIGN_DND``             0x8000 Allows drag 'n' drop operations between different :class:`~flatnotebook.FlatNotebook`.
          ``FNB_HIDE_ON_SINGLE_TAB``           0x10000 Hides the Page Container when there is one or fewer tabs.
-         ``FNB_DEFAULT_STYLE``                0x10020 L{FlatNotebook} default style.
+         ``FNB_DEFAULT_STYLE``                0x10020 :class:`~flatnotebook.FlatNotebook` default style.
          ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
          ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
          ``FNB_RIBBON_TABS``                  0x80000 Use the Ribbon Tabs style.

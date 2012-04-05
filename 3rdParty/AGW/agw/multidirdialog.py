@@ -36,7 +36,7 @@ Description
 This class represents a possible replacement for `wx.DirDialog`, with the additional
 ability of selecting multiple folders at once. It may be useful when you wish to
 present to the user a directory browser which allows multiple folder selections.
-L{MultiDirDialog} sports the following features:
+:class:`~multidirdialog.MultiDirDialog` sports the following features:
 
 * Ability to select a single or mutliple folders, depending on the style passed;
 * More colourful and eye-catching buttons;
@@ -79,7 +79,7 @@ Usage example::
 Supported Platforms
 ===================
 
-L{MultiDirDialog} has been tested on the following platforms:
+:class:`~multidirdialog.MultiDirDialog` has been tested on the following platforms:
   * Windows (Windows XP).
 
 
@@ -106,7 +106,7 @@ Events Processing
 License And Version
 ===================
 
-L{MultiDirDialog} is distributed under the wxPython license.
+:class:`~multidirdialog.MultiDirDialog` is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
@@ -346,7 +346,7 @@ class MultiDirDialog(wx.Dialog):
         """
         Setup the internal `wx.GenericDirCtrl` (icons, labels, etc...).
 
-        :param `defaultPath`: the default path for L{MultiDirDialog}, can be an
+        :param `defaultPath`: the default path for :class:`~multidirdialog.MultiDirDialog`, can be an
          empty string.
         """
 
@@ -558,7 +558,7 @@ class MultiDirDialog(wx.Dialog):
     def OnSelChanged(self, event):
         """
         Handles the ``wx.EVT_TREE_SEL_CHANGED`` event for the tree control associated
-        with L{MultiDirDialog}.
+        with :class:`~multidirdialog.MultiDirDialog`.
 
         :param `event`: a `wx.TreeEvent` event to be processed.        
         """

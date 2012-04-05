@@ -8,7 +8,7 @@ Container for related ribbon panels, and a tab within a ribbon bar.
 See Also
 ========
 
-L{RibbonBar}, L{RibbonPanel}
+:class:`~ribbon.bar.RibbonBar`, :class:`~ribbon.panel.RibbonPanel`
 
 """
 
@@ -111,9 +111,9 @@ class RibbonPage(RibbonControl):
         """
         Default class constructor.
 
-        :param `parent`: pointer to a parent window, an instance of L{RibbonBar};
+        :param `parent`: pointer to a parent window, an instance of :class:`~ribbon.bar.RibbonBar`;
         :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create an identifier;
-        :param `label`: label to be used in the L{RibbonBar}'s tab list for this page (if the
+        :param `label`: label to be used in the :class:`~ribbon.bar.RibbonBar`'s tab list for this page (if the
          ribbon bar is set to display labels);
         :param `icon`: the icon used for the page in the ribbon bar tab area (if the ribbon bar is
          set to display icons);
@@ -153,13 +153,13 @@ class RibbonPage(RibbonControl):
         """
         Set the art provider to be used.
 
-        Normally called automatically by L{RibbonBar} when the page is created, or the
+        Normally called automatically by :class:`~ribbon.bar.RibbonBar` when the page is created, or the
         art provider changed on the bar. The new art provider will be propagated to the
         children of the page.
 
         :param `art`: an art provider.
 
-        :note: Reimplemented from L{RibbonControl}.
+        :note: Reimplemented from :class:`~ribbon.control.RibbonControl`.
         """
 
         self._art = art
@@ -200,7 +200,7 @@ class RibbonPage(RibbonControl):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{RibbonPage}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~ribbon.page.RibbonPage`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
         """
@@ -211,7 +211,7 @@ class RibbonPage(RibbonControl):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{RibbonPage}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~ribbon.page.RibbonPage`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -228,7 +228,7 @@ class RibbonPage(RibbonControl):
         """
         Get the direction in which ribbon panels are stacked within the page.
 
-        This is controlled by the style of the containing L{RibbonBar}, meaning that all
+        This is controlled by the style of the containing :class:`~ribbon.bar.RibbonBar`, meaning that all
         pages within a bar will have the same major axis. As well as being the direction
         in which panels are stacked, it is also the axis in which scrolling will occur
         (when required).
@@ -259,7 +259,7 @@ class RibbonPage(RibbonControl):
 
         :note: Reimplemented from `wx.Window`.
 
-        :see: L{GetMajorAxis}, L{ScrollPixels}
+        :see: :meth:`~ribbon.page.RibbonPage.GetMajorAxis`, :meth:`~ribbon.page.RibbonPage.ScrollPixels`
         """
 
         return self.ScrollPixels(lines * 8)
@@ -279,7 +279,7 @@ class RibbonPage(RibbonControl):
         :returns: ``True`` if the page scrolled at least one pixel in the given direction,
          ``False`` if it did not scroll.
          
-        :see: L{GetMajorAxis}, L{ScrollLines}
+        :see: :meth:`~ribbon.page.RibbonPage.GetMajorAxis`, :meth:`~ribbon.page.RibbonPage.ScrollLines`
         """
 
         if pixels < 0:        
@@ -429,7 +429,7 @@ class RibbonPage(RibbonControl):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{RibbonPage}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~ribbon.page.RibbonPage`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -473,10 +473,10 @@ class RibbonPage(RibbonControl):
 
         Should be called after panels are added to the page, or the sizing behaviour of
         a panel on the page changes (i.e. due to children being added to it). Usually
-        called automatically when L{RibbonBar.Realize} is called. Will invoke
-        L{RibbonPanel.Realize} for all child panels.
+        called automatically when :meth:`RibbonBar.Realize() <ribbon.bar.RibbonBar.Realize>` is called. Will invoke
+        :meth:`RibbonPanel.Realize() <ribbon.panel.RibbonPanel.Realize>` for all child panels.
 
-        :note: Reimplemented from L{RibbonControl}.
+        :note: Reimplemented from :class:`~ribbon.control.RibbonControl`.
         """
 
         status = True
@@ -925,7 +925,7 @@ class RibbonPage(RibbonControl):
 
 
     def GetDefaultBorder(self):
-        """ Returns the default border style for L{RibbonBar}. """
+        """ Returns the default border style for :class:`~ribbon.bar.RibbonBar`. """
 
         return wx.BORDER_NONE
 

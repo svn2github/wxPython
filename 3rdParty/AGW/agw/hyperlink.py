@@ -26,14 +26,14 @@
 # --------------------------------------------------------------------------- #
 
 """
-L{HyperLinkCtrl} is a control for wxPython that acts like a hyper link
+:class:`~hyperlink.HyperLinkCtrl` is a control for wxPython that acts like a hyper link
 in a typical browser.
 
 
 Description
 ===========
 
-L{HyperLinkCtrl} is a control for wxPython that acts like a hyper link
+:class:`~hyperlink.HyperLinkCtrl` is a control for wxPython that acts like a hyper link
 in a typical browser. Latest features include the ability to capture
 your own left, middle, and right click events to perform your own
 custom event handling and ability to open link in a new or current
@@ -112,7 +112,7 @@ Event Name               Description
 License And Version
 ===================
 
-L{HyperLinkCtrl} is distributed under the wxPython license.
+:class:`~hyperlink.HyperLinkCtrl` is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
@@ -162,7 +162,7 @@ EVT_HYPERLINK_RIGHT = wx.PyEventBinder(wxEVT_HYPERLINK_RIGHT, 1)
 
 class HyperLinkEvent(wx.PyCommandEvent):
     """
-    Event object sent in response to clicking on a L{HyperLinkCtrl}.
+    Event object sent in response to clicking on a :class:`~hyperlink.HyperLinkCtrl`.
     """
 
     def __init__(self, eventType, eventId):
@@ -201,7 +201,7 @@ class HyperLinkEvent(wx.PyCommandEvent):
 
 class HyperLinkCtrl(StaticText):
     """
-    L{HyperLinkCtrl} is a control for wxPython that acts like a hyper
+    :class:`~hyperlink.HyperLinkCtrl` is a control for wxPython that acts like a hyper
     link in a typical browser. Latest features include the ability to
     capture your own left, middle, and right click events to perform
     your own custom event handling and ability to open link in a new
@@ -303,7 +303,7 @@ class HyperLinkCtrl(StaticText):
 
     def OnMouseEvent(self, event):
         """
-        Handles the ``wx.EVT_MOUSE_EVENTS`` events for L{HyperLinkCtrl}.
+        Handles the ``wx.EVT_MOUSE_EVENTS`` events for :class:`~hyperlink.HyperLinkCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.        
         """
@@ -381,11 +381,11 @@ class HyperLinkCtrl(StaticText):
 
     def OnPopUpCopy(self, event):
         """
-        Handles the ``wx.EVT_MENU`` event for L{HyperLinkCtrl}.
+        Handles the ``wx.EVT_MENU`` event for :class:`~hyperlink.HyperLinkCtrl`.
 
         :param `event`: a `wx.MenuEvent` event to be processed.
         
-        :note: This method copies the data from the L{HyperLinkCtrl} to the clipboard.
+        :note: This method copies the data from the :class:`~hyperlink.HyperLinkCtrl` to the clipboard.
         """
 
         wx.TheClipboard.UsePrimarySelection(False)
@@ -533,9 +533,9 @@ class HyperLinkCtrl(StaticText):
 
     def SetBold(self, Bold=False):
         """
-        Sets the L{HyperLinkCtrl} label in bold text.
+        Sets the :class:`~hyperlink.HyperLinkCtrl` label in bold text.
 
-        :param `Bold`: ``True`` to set the L{HyperLinkCtrl} label as bold, ``False``
+        :param `Bold`: ``True`` to set the :class:`~hyperlink.HyperLinkCtrl` label as bold, ``False``
          otherwise.
         """
         
@@ -543,23 +543,23 @@ class HyperLinkCtrl(StaticText):
 
         
     def GetBold(self):
-        """ Returns whether the L{HyperLinkCtrl} has text in bold or not. """
+        """ Returns whether the :class:`~hyperlink.HyperLinkCtrl` has text in bold or not. """
         
         return self._Bold
 
 
     def SetURL(self, URL):
         """
-        Sets the L{HyperLinkCtrl} text to the specified URL.
+        Sets the :class:`~hyperlink.HyperLinkCtrl` text to the specified URL.
 
-        :param `URL`: the new URL associated with L{HyperLinkCtrl}.
+        :param `URL`: the new URL associated with :class:`~hyperlink.HyperLinkCtrl`.
         """
         
         self._URL = URL
 
         
     def GetURL(self):
-        """ Retrieve the URL associated to the L{HyperLinkCtrl}. """
+        """ Retrieve the URL associated to the :class:`~hyperlink.HyperLinkCtrl`. """
         
         return self._URL
 

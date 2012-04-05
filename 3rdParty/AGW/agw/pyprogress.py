@@ -25,14 +25,14 @@
 # --------------------------------------------------------------------------------- #
 
 """
-L{PyProgress} is similar to `wx.ProgressDialog` in indeterminated mode, but with a
+:class:`~pyprogress.PyProgress` is similar to `wx.ProgressDialog` in indeterminated mode, but with a
 different gauge appearance and a different spinning behavior.
 
 
 Description
 ===========
 
-L{PyProgress} is similar to `wx.ProgressDialog` in indeterminated mode, but with a
+:class:`~pyprogress.PyProgress` is similar to `wx.ProgressDialog` in indeterminated mode, but with a
 different gauge appearance and a different spinning behavior. The moving gauge
 can be drawn with a single solid colour or with a shading gradient foreground.
 The gauge background colour is user customizable.
@@ -47,7 +47,7 @@ Other options include:
 - Modifying the number of steps the spinning bar performs before a forward
   (or backward) loop reverses.
     
-L{PyProgress} can optionally display a ``Cancel`` button, and a `wx.StaticText` which
+:class:`~pyprogress.PyProgress` can optionally display a ``Cancel`` button, and a `wx.StaticText` which
 outputs the elapsed time from the starting of the process.
 
 
@@ -94,7 +94,7 @@ Usage example::
 Supported Platforms
 ===================
 
-L{PyProgress} has been tested on the following platforms:
+:class:`~pyprogress.PyProgress` has been tested on the following platforms:
   * Windows (Windows XP);
   * Linux Ubuntu (Dapper 6.06)
 
@@ -123,7 +123,7 @@ Events Processing
 License And Version
 ===================
 
-L{PyProgress} is distributed under the wxPython license. 
+:class:`~pyprogress.PyProgress` is distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
@@ -138,13 +138,13 @@ import wx
 
 # Some constants, taken straight from wx.ProgressDialog
 Uncancelable = -1
-""" Classifies the L{PyProgress} as "uncancelable". """
+""" Classifies the :class:`~pyprogress.PyProgress` as "uncancelable". """
 Canceled = 0
-""" L{PyProgress} has been canceled. """
+""" :class:`~pyprogress.PyProgress` has been canceled. """
 Continue = 1
-""" L{PyProgress} can continue. """
+""" :class:`~pyprogress.PyProgress` can continue. """
 Finished = 2
-""" L{PyProgress} has finished. """
+""" :class:`~pyprogress.PyProgress` has finished. """
 
 # Margins between gauge and text/button
 LAYOUT_MARGIN = 8
@@ -306,7 +306,7 @@ class ProgressGauge(wx.PyWindow):
         
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{ProgressGauge}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~pyprogress.ProgressGauge`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
 
@@ -318,7 +318,7 @@ class ProgressGauge(wx.PyWindow):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{ProgressGauge}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~pyprogress.ProgressGauge`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -396,7 +396,7 @@ class ProgressGauge(wx.PyWindow):
 
 class PyProgress(wx.Dialog):
     """
-    L{PyProgress} is similar to `wx.ProgressDialog` in indeterminated mode, but with a
+    :class:`~pyprogress.PyProgress` is similar to `wx.ProgressDialog` in indeterminated mode, but with a
     different gauge appearance and a different spinning behavior. The moving gauge
     can be drawn with a single solid colour or with a shading gradient foreground.
     The gauge background colour is user customizable.
@@ -554,7 +554,7 @@ class PyProgress(wx.Dialog):
         Creates the `wx.StaticText` that holds the elapsed time label.
 
         :param `text`: the dialog message to be displayed above the gauge;
-        :param `sizer`: the main `wx.BoxSizer` for L{PyProgress}.
+        :param `sizer`: the main `wx.BoxSizer` for :class:`~pyprogress.PyProgress`.
         """
 
         locsizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -777,7 +777,7 @@ class PyProgress(wx.Dialog):
 
     def OnDestroy(self, event):
         """
-        Handles the ``wx.EVT_WINDOW_DESTROY`` event for L{PyProgress}.
+        Handles the ``wx.EVT_WINDOW_DESTROY`` event for :class:`~pyprogress.PyProgress`.
 
         :param `event`: a `wx.WindowDestroyEvent` event to be processed.
         """
@@ -788,7 +788,7 @@ class PyProgress(wx.Dialog):
         
     def OnClose(self, event):
         """
-        Handles the ``wx.EVT_CLOSE`` event for L{PyProgress}.
+        Handles the ``wx.EVT_CLOSE`` event for :class:`~pyprogress.PyProgress`.
 
         :param `event`: a `wx.CloseEvent` event to be processed.
         """

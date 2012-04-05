@@ -1,11 +1,11 @@
 """
 Tab art provider code - a tab provider provides all drawing functionality to
-the L{AuiNotebook}. This allows the L{AuiNotebook} to have a plugable look-and-feel.
+the :class:`~aui.auibook.AuiNotebook`. This allows the :class:`~aui.auibook.AuiNotebook` to have a plugable look-and-feel.
 
-By default, a L{AuiNotebook} uses an instance of this class called L{AuiDefaultTabArt}
+By default, a :class:`~aui.auibook.AuiNotebook` uses an instance of this class called :class:`~aui.tabart.AuiDefaultTabArt`
 which provides bitmap art and a colour scheme that is adapted to the major platforms'
 look. You can either derive from that class to alter its behaviour or write a
-completely new tab art class. Call L{AuiNotebook.SetArtProvider} to make use this
+completely new tab art class. Call :meth:`AuiNotebook.SetArtProvider() <aui.auibook.AuiNotebook.SetArtProvider>` to make use this
 new tab art.
 """
 
@@ -56,10 +56,10 @@ class AuiCommandCapture(wx.PyEvtHandler):
          a new control) where you define new event types, as opposed to allowing the
          user to override functions.
 
-         An instance where you might actually override the L{ProcessEvent} function is where
+         An instance where you might actually override the :meth:`~aui.tabart.AuiCommandCapture.ProcessEvent` function is where
          you want to direct event processing to event handlers not normally noticed by
          wxPython. For example, in the document/view architecture, documents and views
-         are potential event handlers. When an event reaches a frame, L{ProcessEvent} will
+         are potential event handlers. When an event reaches a frame, :meth:`~aui.tabart.AuiCommandCapture.ProcessEvent` will
          need to be called on the associated document and view in case event handler
          functions are associated with these objects. 
 
@@ -67,17 +67,17 @@ class AuiCommandCapture(wx.PyEvtHandler):
 
          1. If the object is disabled (via a call to `SetEvtHandlerEnabled`) the function
             skips to step (6).
-         2. If the object is a `wx.Window`, L{ProcessEvent} is recursively called on the window's 
+         2. If the object is a `wx.Window`, :meth:`~aui.tabart.AuiCommandCapture.ProcessEvent` is recursively called on the window's 
             `wx.Validator`. If this returns ``True``, the function exits.
          3. wxWidgets `SearchEventTable` is called for this event handler. If this fails, the
             base class table is tried, and so on until no more tables exist or an appropriate
             function was found, in which case the function exits.
          4. The search is applied down the entire chain of event handlers (usually the chain
             has a length of one). If this succeeds, the function exits.
-         5. If the object is a `wx.Window` and the event is a `wx.CommandEvent`, L{ProcessEvent} is
+         5. If the object is a `wx.Window` and the event is a `wx.CommandEvent`, :meth:`~aui.tabart.AuiCommandCapture.ProcessEvent` is
             recursively applied to the parent window's event handler. If this returns ``True``,
             the function exits.
-         6. Finally, L{ProcessEvent} is called on the `wx.App` object.
+         6. Finally, :meth:`~aui.tabart.AuiCommandCapture.ProcessEvent` is called on the `wx.App` object.
         """
         
         if event.GetEventType() == wx.wxEVT_COMMAND_MENU_SELECTED:
@@ -93,12 +93,12 @@ class AuiCommandCapture(wx.PyEvtHandler):
 class AuiDefaultTabArt(object):
     """
     Tab art provider code - a tab provider provides all drawing functionality to
-    the L{AuiNotebook}. This allows the L{AuiNotebook} to have a plugable look-and-feel.
+    the :class:`~aui.auibook.AuiNotebook`. This allows the :class:`~aui.auibook.AuiNotebook` to have a plugable look-and-feel.
 
-    By default, a L{AuiNotebook} uses an instance of this class called L{AuiDefaultTabArt}
+    By default, a :class:`~aui.auibook.AuiNotebook` uses an instance of this class called :class:`~aui.tabart.AuiDefaultTabArt`
     which provides bitmap art and a colour scheme that is adapted to the major platforms'
     look. You can either derive from that class to alter its behaviour or write a
-    completely new tab art class. Call L{AuiNotebook.SetArtProvider} to make use this
+    completely new tab art class. Call :meth:`AuiNotebook.SetArtProvider() <aui.auibook.AuiNotebook.SetArtProvider>` to make use this
     new tab art.
     """
     
@@ -228,8 +228,8 @@ class AuiDefaultTabArt(object):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close L{AuiNotebook} tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by L{AuiManager} to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~aui.auibook.AuiNotebook` tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -249,7 +249,7 @@ class AuiDefaultTabArt(object):
         """
         Returns the tab art flags.
 
-        :see: L{SetAGWFlags} for a list of possible return values.
+        :see: :meth:`~aui.tabart.AuiDefaultTabArt.SetAGWFlags` for a list of possible return values.
         """
 
         return self._agwFlags
@@ -1057,8 +1057,8 @@ class AuiSimpleTabArt(object):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close L{AuiNotebook} tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by L{AuiManager} to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~aui.auibook.AuiNotebook` tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -1078,7 +1078,7 @@ class AuiSimpleTabArt(object):
         """
         Returns the tab art flags.
 
-        :see: L{SetAGWFlags} for a list of possible return values.
+        :see: :meth:`~aui.tabart.AuiSimpleTabArt.SetAGWFlags` for a list of possible return values.
         """
 
         return self._agwFlags
@@ -2090,7 +2090,7 @@ class FF2TabArt(AuiDefaultTabArt):
     def DrawTabBackground(self, dc, rect, focus, upperTabs):
         """
         Draws the tab background for the Firefox 2 style.
-        This is more consistent with L{FlatNotebook} than before.
+        This is more consistent with :class:`~flatnotebook.FlatNotebook` than before.
 
         :param `dc`: a `wx.DC` device context;
         :param `rect`: rectangle the tab should be confined to;
@@ -2506,8 +2506,8 @@ class ChromeTabArt(AuiDefaultTabArt):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close L{AuiNotebook} tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by L{AuiManager} to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~aui.auibook.AuiNotebook` tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -2518,7 +2518,7 @@ class ChromeTabArt(AuiDefaultTabArt):
          ``AUI_NB_NO_TAB_FOCUS``              Don't draw tab focus rectangle
          ==================================== ==================================
 
-        :note: Overridden from L{AuiDefaultTabArt}.
+        :note: Overridden from :class:`~aui.tabart.AuiDefaultTabArt`.
         """
 
         if agwFlags & AUI_NB_TOP:

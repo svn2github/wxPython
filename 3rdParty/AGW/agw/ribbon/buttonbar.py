@@ -6,7 +6,7 @@ Description
 ===========
 
 It contains one or more buttons (button bar buttons, not `wx.Button`), each of which
-has a label and an icon. It differs from a L{RibbonToolBar} in several ways:
+has a label and an icon. It differs from a :class:`~ribbon.toolbar.RibbonToolBar` in several ways:
 
 - Individual buttons can grow and contract.
 - Buttons have labels as well as bitmaps.
@@ -26,7 +26,7 @@ This class processes the following events:
 Event Name                               Description
 ======================================== ========================================
 ``EVT_RIBBONBUTTONBAR_CLICKED``          Triggered when the normal (non-dropdown) region of a button on the button bar is clicked.
-``EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED`` Triggered when the dropdown region of a button on the button bar is clicked. L{RibbonButtonBarEvent.PopupMenu} should be called by the event handler if it wants to display a popup menu (which is what most dropdown buttons should be doing).
+``EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED`` Triggered when the dropdown region of a button on the button bar is clicked. :meth:`RibbonButtonBarEvent.PopupMenu() <ribbon.buttonbar.RibbonButtonBarEvent.PopupMenu>` should be called by the event handler if it wants to display a popup menu (which is what most dropdown buttons should be doing).
 ======================================== ========================================
 
 """
@@ -149,9 +149,9 @@ class RibbonButtonBarLayout(object):
 
 class RibbonButtonBarEvent(wx.PyCommandEvent):
     """
-    Event used to indicate various actions relating to a button on a L{RibbonButtonBar}.
+    Event used to indicate various actions relating to a button on a :class:`~ribbon.buttonbar.RibbonButtonBar`.
 
-    See L{RibbonButtonBar} for available event types.
+    See :class:`~ribbon.buttonbar.RibbonButtonBar` for available event types.
     """
     
     def __init__(self, command_type=None, win_id=0, bar=None):
@@ -160,7 +160,7 @@ class RibbonButtonBarEvent(wx.PyCommandEvent):
 
         :param integer `command_type`: the event type;
         :param integer `win_id`: the event identifier;
-        :param `bar`: an instance of L{RibbonButtonBar}.
+        :param `bar`: an instance of :class:`~ribbon.buttonbar.RibbonButtonBar`.
         """
 
         wx.PyCommandEvent.__init__(self, command_type, win_id)
@@ -171,7 +171,7 @@ class RibbonButtonBarEvent(wx.PyCommandEvent):
         """
         Returns the bar which contains the button which the event relates to.
 
-        :returns: An instance of L{RibbonButtonBar}.
+        :returns: An instance of :class:`~ribbon.buttonbar.RibbonButtonBar`.
         """
 
         return self._bar
@@ -181,7 +181,7 @@ class RibbonButtonBarEvent(wx.PyCommandEvent):
         """
         Sets the button bar relating to this event.
 
-        :param `bar`: an instance of L{RibbonButtonBar}.
+        :param `bar`: an instance of :class:`~ribbon.buttonbar.RibbonButtonBar`.
 
         """
 
@@ -215,7 +215,7 @@ class RibbonButtonBar(RibbonControl):
         """
         Default class constructor.
 
-        :param `parent`: pointer to a parent window, typically a L{RibbonPanel};
+        :param `parent`: pointer to a parent window, typically a :class:`~ribbon.panel.RibbonPanel`;
         :type `parent`: `wx.Window`
         :param integer `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
@@ -277,7 +277,7 @@ class RibbonButtonBar(RibbonControl):
 
         :returns: An opaque pointer which can be used only with other button bar methods.
         
-        :see: L{InsertButton}, L{AddDropdownButton}, L{AddHybridButton}
+        :see: :meth:`~ribbon.buttonbar.RibbonButtonBar.InsertButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.AddDropdownButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.AddHybridButton`
         """
 
         return self.InsertButton(self.GetButtonCount(), button_id, label, bitmap,
@@ -298,7 +298,7 @@ class RibbonButtonBar(RibbonControl):
 
         :returns: An opaque pointer which can be used only with other button bar methods.
 
-        :see: L{AddButton} for a list of valid button `kind` values.        
+        :see: :meth:`~ribbon.buttonbar.RibbonButtonBar.AddButton` for a list of valid button `kind` values.        
         """
 
         return self.AddButton(button_id, label, bitmap, wx.NullBitmap, wx.NullBitmap,
@@ -332,7 +332,7 @@ class RibbonButtonBar(RibbonControl):
         :raise: `Exception` if both `bitmap` and `bitmap_small` are invalid or if the input `help_string` is not
          a valid Python `basestring`.
          
-        :see: L{AddDropdownButton}, L{AddHybridButton} and L{AddButton} for a list of valid button `kind` values.
+        :see: :meth:`~ribbon.buttonbar.RibbonButtonBar.AddDropdownButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.AddHybridButton` and :meth:`~ribbon.buttonbar.RibbonButtonBar.AddButton` for a list of valid button `kind` values.
 
         .. versionadded:: 0.9.5
         """
@@ -415,7 +415,7 @@ class RibbonButtonBar(RibbonControl):
 
         :returns: An opaque pointer which can be used only with other button bar methods.
 
-        :see: L{AddButton}, L{InsertDropdownButton}, L{InsertButton}
+        :see: :meth:`~ribbon.buttonbar.RibbonButtonBar.AddButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.InsertDropdownButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.InsertButton`
         """
 
         return self.AddSimpleButton(button_id, label, bitmap, help_string, RIBBON_BUTTON_DROPDOWN)
@@ -434,7 +434,7 @@ class RibbonButtonBar(RibbonControl):
 
         :returns: An opaque pointer which can be used only with other button bar methods.
 
-        :see: L{AddButton}, L{InsertButton}, L{AddDropdownButton}
+        :see: :meth:`~ribbon.buttonbar.RibbonButtonBar.AddButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.InsertButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.AddDropdownButton`
 
         .. versionadded:: 0.9.5
         """
@@ -454,7 +454,7 @@ class RibbonButtonBar(RibbonControl):
 
         :returns: An opaque pointer which can be used only with other button bar methods.
 
-        :see: L{AddButton}, L{InsertButton}, L{InsertToggleButton}
+        :see: :meth:`~ribbon.buttonbar.RibbonButtonBar.AddButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.InsertButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.InsertToggleButton`
         """
 
         return self.AddButton(button_id, label, bitmap, help_string, RIBBON_BUTTON_TOGGLE)
@@ -473,7 +473,7 @@ class RibbonButtonBar(RibbonControl):
 
         :returns: An opaque pointer which can be used only with other button bar methods.
 
-        :see: L{AddButton}, L{InsertButton}, L{AddToggleButton}
+        :see: :meth:`~ribbon.buttonbar.RibbonButtonBar.AddButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.InsertButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.AddToggleButton`
 
         .. versionadded:: 0.9.5
         """
@@ -493,7 +493,7 @@ class RibbonButtonBar(RibbonControl):
 
         :returns: An opaque pointer which can be used only with other button bar methods.
 
-        :see: L{AddButton}, L{InsertButton}, L{InsertHybridButton}
+        :see: :meth:`~ribbon.buttonbar.RibbonButtonBar.AddButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.InsertButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.InsertHybridButton`
         """
 
         return self.AddSimpleButton(button_id, label, bitmap, help_string, RIBBON_BUTTON_HYBRID)
@@ -512,7 +512,7 @@ class RibbonButtonBar(RibbonControl):
 
         :returns: An opaque pointer which can be used only with other button bar methods.
 
-        :see: L{AddButton}, L{InsertButton}, L{AddHybridButton}
+        :see: :meth:`~ribbon.buttonbar.RibbonButtonBar.AddButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.InsertButton`, :meth:`~ribbon.buttonbar.RibbonButtonBar.AddHybridButton`
 
         .. versionadded:: 0.9.5
         """
@@ -568,9 +568,9 @@ class RibbonButtonBar(RibbonControl):
 
         Must be called after buttons are added to the button bar, as otherwise the newly
         added buttons will not be displayed. In normal situations, it will be called
-        automatically when L{RibbonBar.Realize} is called.
+        automatically when :meth:`RibbonBar.Realize() <ribbon.bar.RibbonBar.Realize>` is called.
 
-        :note: Reimplemented from L{RibbonControl}.
+        :note: Reimplemented from :class:`~ribbon.control.RibbonControl`.
         """
 
         if not self._layouts_valid:
@@ -584,7 +584,7 @@ class RibbonButtonBar(RibbonControl):
         """
         Delete all buttons from the button bar.
 
-        :see: L{DeleteButton}
+        :see: :meth:`~ribbon.buttonbar.RibbonButtonBar.DeleteButton`
         """
 
         self._layouts_valid = False
@@ -600,7 +600,7 @@ class RibbonButtonBar(RibbonControl):
 
         :return: ``True`` if the button has been found and successfully deleted, ``False`` otherwise.
         
-        :see: L{ClearButtons}
+        :see: :meth:`~ribbon.buttonbar.RibbonButtonBar.ClearButtons`
         """
 
         for button in self._buttons:
@@ -622,7 +622,7 @@ class RibbonButtonBar(RibbonControl):
         :param bool `enable`: ``True`` to enable the button, ``False`` to disable it.
 
         :raise: `Exception` when the input `button_id` could not be associated
-         with a L{RibbonButtonBar} button.
+         with a :class:`~ribbon.buttonbar.RibbonButtonBar` button.
         """
 
         for button in self._buttons:
@@ -643,13 +643,13 @@ class RibbonButtonBar(RibbonControl):
 
     def ToggleButton(self, button_id, checked=True):
         """
-        Toggles/untoggles a L{RibbonButtonBar} toggle button.
+        Toggles/untoggles a :class:`~ribbon.buttonbar.RibbonButtonBar` toggle button.
 
         :param integer `button_id`: id of the button to be toggles/untoggled;
         :param bool `checked`: ``True`` to toggle the button, ``False`` to untoggle it.
 
         :raise: `Exception` when the input `button_id` could not be associated
-         with a L{RibbonButtonBar} button.
+         with a :class:`~ribbon.buttonbar.RibbonButtonBar` button.
         """
 
         for button in self._buttons:
@@ -677,7 +677,7 @@ class RibbonButtonBar(RibbonControl):
         :return: ``True`` if the button is enabled, ``False`` otherwise.
 
         :raise: `Exception` when the input `button_id` could not be associated
-         with a L{RibbonButtonBar} button.
+         with a :class:`~ribbon.buttonbar.RibbonButtonBar` button.
         """
 
         for button in self._buttons:
@@ -691,7 +691,7 @@ class RibbonButtonBar(RibbonControl):
 
     def GetButtonCount(self):
         """
-        Returns the number of buttons in this L{RibbonButtonBar}.
+        Returns the number of buttons in this :class:`~ribbon.buttonbar.RibbonButtonBar`.
 
         .. versionadded:: 0.9.5
         """
@@ -704,9 +704,9 @@ class RibbonButtonBar(RibbonControl):
         Set the art provider to be used.
 
         In many cases, setting the art provider will also set the art provider on all
-        child windows which extend L{RibbonControl}. In most cases, controls will not
+        child windows which extend :class:`~ribbon.control.RibbonControl`. In most cases, controls will not
         take ownership of the given pointer, with the notable exception being
-        L{RibbonBar.SetArtProvider}.
+        :meth:`RibbonBar.SetArtProvider() <ribbon.bar.RibbonBar.SetArtProvider>`.
 
         :param `art`: an art provider.
         """
@@ -731,7 +731,7 @@ class RibbonButtonBar(RibbonControl):
         Returns ``True`` if this window can take any size (greater than its minimum size),
         ``False`` if it can only take certain sizes.
         
-        :see: L{RibbonControl.GetNextSmallerSize}, L{RibbonControl.GetNextLargerSize}
+        :see: :meth:`RibbonControl.GetNextSmallerSize() <ribbon.control.RibbonControl.GetNextSmallerSize>`, :meth:`RibbonControl.GetNextLargerSize() <ribbon.control.RibbonControl.GetNextLargerSize>`
         """
 
         return False
@@ -739,10 +739,10 @@ class RibbonButtonBar(RibbonControl):
 
     def DoGetNextSmallerSize(self, direction, _result):
         """
-        Implementation of L{RibbonControl.GetNextSmallerSize}.
+        Implementation of :meth:`RibbonControl.GetNextSmallerSize() <ribbon.control.RibbonControl.GetNextSmallerSize>`.
 
         Controls which have non-continuous sizing must override this virtual function
-        rather than L{RibbonControl.GetNextSmallerSize}.
+        rather than :meth:`RibbonControl.GetNextSmallerSize() <ribbon.control.RibbonControl.GetNextSmallerSize>`.
 
         :return: An instance of `wx.Size`.
         """
@@ -772,10 +772,10 @@ class RibbonButtonBar(RibbonControl):
 
     def DoGetNextLargerSize(self, direction, _result):
         """
-        Implementation of L{RibbonControl.GetNextLargerSize}.
+        Implementation of :meth:`RibbonControl.GetNextLargerSize() <ribbon.control.RibbonControl.GetNextLargerSize>`.
 
         Controls which have non-continuous sizing must override this virtual function
-        rather than L{RibbonControl.GetNextLargerSize}.
+        rather than :meth:`RibbonControl.GetNextLargerSize() <ribbon.control.RibbonControl.GetNextLargerSize>`.
 
         :return: An instance of `wx.Size`.
         """
@@ -811,7 +811,7 @@ class RibbonButtonBar(RibbonControl):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{RibbonButtonBar}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~ribbon.buttonbar.RibbonButtonBar`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
         """
@@ -822,7 +822,7 @@ class RibbonButtonBar(RibbonControl):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{RibbonButtonBar}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~ribbon.buttonbar.RibbonButtonBar`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -848,7 +848,7 @@ class RibbonButtonBar(RibbonControl):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{RibbonButtonBar}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~ribbon.buttonbar.RibbonButtonBar`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -890,7 +890,7 @@ class RibbonButtonBar(RibbonControl):
         you pass the ``wx.UPDATE_UI_FROMIDLE`` flag, since this tells the window to only update
         the UI elements that need to be updated in idle time. Some windows update their elements
         only when necessary, for example when a menu is about to be shown. The following is an
-        example of how to call L{UpdateWindowUI} from an idle function::
+        example of how to call :meth:`~ribbon.buttonbar.RibbonButtonBar.UpdateWindowUI` from an idle function::
 
             def OnInternalIdle(self):
 
@@ -1121,7 +1121,7 @@ class RibbonButtonBar(RibbonControl):
 
     def OnMouseMove(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for L{RibbonButtonBar}.
+        Handles the ``wx.EVT_MOTION`` event for :class:`~ribbon.buttonbar.RibbonButtonBar`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1195,7 +1195,7 @@ class RibbonButtonBar(RibbonControl):
 
     def OnMouseDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for L{RibbonButtonBar}.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~ribbon.buttonbar.RibbonButtonBar`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1227,7 +1227,7 @@ class RibbonButtonBar(RibbonControl):
 
     def OnMouseUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for L{RibbonButtonBar}.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~ribbon.buttonbar.RibbonButtonBar`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1275,7 +1275,7 @@ class RibbonButtonBar(RibbonControl):
 
     def OnMouseEnter(self, event):
         """
-        Handles the ``wx.EVT_ENTER_WINDOW`` event for L{RibbonButtonBar}.
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`~ribbon.buttonbar.RibbonButtonBar`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1286,7 +1286,7 @@ class RibbonButtonBar(RibbonControl):
 
     def OnMouseLeave(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{RibbonButtonBar}.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~ribbon.buttonbar.RibbonButtonBar`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1306,7 +1306,7 @@ class RibbonButtonBar(RibbonControl):
 
 
     def GetDefaultBorder(self):
-        """ Returns the default border style for L{RibbonButtonBar}. """
+        """ Returns the default border style for :class:`~ribbon.buttonbar.RibbonButtonBar`. """
 
         return wx.BORDER_NONE
 

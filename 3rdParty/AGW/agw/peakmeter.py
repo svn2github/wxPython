@@ -25,14 +25,14 @@
 # --------------------------------------------------------------------------------- #
 
 """
-L{PeakMeterCtrl} mimics the behaviour of equalizers that are usually found in stereos
+:class:`~peakmeter.PeakMeterCtrl` mimics the behaviour of equalizers that are usually found in stereos
 and MP3 players.
 
 
 Description
 ===========
 
-L{PeakMeterCtrl} mimics the behaviour of equalizers that are usually found in stereos
+:class:`~peakmeter.PeakMeterCtrl` mimics the behaviour of equalizers that are usually found in stereos
 and MP3 players. This widgets supports:
 
 * Vertical and horizontal led bands;
@@ -95,7 +95,7 @@ Usage example::
 
         def OnTimer(self, event):
             '''
-            Handles the ``wx.EVT_TIMER`` event for L{PeakMeterCtrl}.
+            Handles the ``wx.EVT_TIMER`` event for :class:`~peakmeter.PeakMeterCtrl`.
 
             :param `event`: a `wx.TimerEvent` event to be processed.
             '''
@@ -127,7 +127,7 @@ Usage example::
 Supported Platforms
 ===================
 
-L{PeakMeterCtrl} has been tested on the following platforms:
+:class:`~peakmeter.PeakMeterCtrl` has been tested on the following platforms:
   * Windows (Windows XP).
 
 
@@ -139,8 +139,8 @@ This class supports the following window styles:
 ================= =========== ==================================================
 Window Styles     Hex Value   Description
 ================= =========== ==================================================
-``PM_HORIZONTAL``         0x0 Shows horizontal bands in L{PeakMeterCtrl}.
-``PM_VERTICAL``           0x1 Shows vertical bands in L{PeakMeterCtrl}.
+``PM_HORIZONTAL``         0x0 Shows horizontal bands in :class:`~peakmeter.PeakMeterCtrl`.
+``PM_VERTICAL``           0x1 Shows vertical bands in :class:`~peakmeter.PeakMeterCtrl`.
 ================= =========== ==================================================
 
 
@@ -153,7 +153,7 @@ Events Processing
 License And Version
 ===================
 
-L{PeakMeterCtrl} is distributed under the wxPython license.
+:class:`~peakmeter.PeakMeterCtrl` is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
@@ -165,15 +165,15 @@ import wx
 
 # Horizontal or vertical PeakMeterCtrl
 PM_HORIZONTAL = 0
-""" Shows horizontal bands in L{PeakMeterCtrl}. """
+""" Shows horizontal bands in :class:`~peakmeter.PeakMeterCtrl`. """
 PM_VERTICAL = 1
-""" Shows vertical bands in L{PeakMeterCtrl}. """
+""" Shows vertical bands in :class:`~peakmeter.PeakMeterCtrl`. """
 
 # Some useful constants...
 BAND_DEFAULT = 8
-""" Number of bands in the L{PeakMeterCtrl}. """
+""" Number of bands in the :class:`~peakmeter.PeakMeterCtrl`. """
 LEDS_DEFAULT = 8
-""" Number of leds per band in the L{PeakMeterCtrl}. """
+""" Number of leds per band in the :class:`~peakmeter.PeakMeterCtrl`. """
 BAND_PERCENT = 10       # 10% of Max Range (Auto Decrease)
 """ 10% of max range (auto decrease). """
 GRID_INCREASEBY = 15    # Increase Grid colour based on Background colour
@@ -237,13 +237,13 @@ def DarkenColour(crColour, byReduceVal):
 
 
 class PeakMeterData(object):
-    """ A simple class which holds data for our L{PeakMeterCtrl}. """
+    """ A simple class which holds data for our :class:`~peakmeter.PeakMeterCtrl`. """
 
     def __init__(self, value=0, falloff=0, peak=0):
         """
         Default class constructor.
 
-        :param `value`: the current L{PeakMeterCtrl} value;
+        :param `value`: the current :class:`~peakmeter.PeakMeterCtrl` value;
         :param `falloff`: the falloff effect. ``True`` to enable it, ``False`` to
          disable it;
         :param `peak`: the peak value.
@@ -256,9 +256,9 @@ class PeakMeterData(object):
         
     def IsEqual(self, pm):
         """
-        Returns whether 2 instances of L{PeakMeterData} are the same.
+        Returns whether 2 instances of :class:`~peakmeter.PeakMeterData` are the same.
 
-        :param `pm`: another instance of L{PeakMeterData}.
+        :param `pm`: another instance of :class:`~peakmeter.PeakMeterData`.
         """
 
         return self._value == pm._value
@@ -266,9 +266,9 @@ class PeakMeterData(object):
 
     def IsGreater(self, pm):
         """
-        Returns whether one L{PeakMeterData} is greater than another.
+        Returns whether one :class:`~peakmeter.PeakMeterData` is greater than another.
 
-        :param `pm`: another instance of L{PeakMeterData}.
+        :param `pm`: another instance of :class:`~peakmeter.PeakMeterData`.
         """
 
         return self._value > pm._value
@@ -276,23 +276,23 @@ class PeakMeterData(object):
 
     def IsLower(self, pm):
         """
-        Returns whether one L{PeakMeterData} is smaller than another.
+        Returns whether one :class:`~peakmeter.PeakMeterData` is smaller than another.
 
-        :param `pm`: another instance of L{PeakMeterData}.
+        :param `pm`: another instance of :class:`~peakmeter.PeakMeterData`.
         """
 
         return self._value < pm._value
 
 
 class PeakMeterCtrl(wx.PyControl):
-    """ The main L{PeakMeterCtrl} implementation. """
+    """ The main :class:`~peakmeter.PeakMeterCtrl` implementation. """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=0, agwStyle=PM_VERTICAL):
         """
         Default class constructor.
 
-        :param parent: the L{PeakMeterCtrl} parent. Must not be ``None``
+        :param parent: the :class:`~peakmeter.PeakMeterCtrl` parent. Must not be ``None``
         :param `id`: window identifier. A value of -1 indicates a default value;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
@@ -304,8 +304,8 @@ class PeakMeterCtrl(wx.PyControl):
          ================= =========== ==================================================
          Window Styles     Hex Value   Description
          ================= =========== ==================================================
-         ``PM_HORIZONTAL``         0x0 Shows horizontal bands in L{PeakMeterCtrl}.
-         ``PM_VERTICAL``           0x1 Shows vertical bands in L{PeakMeterCtrl}.
+         ``PM_HORIZONTAL``         0x0 Shows horizontal bands in :class:`~peakmeter.PeakMeterCtrl`.
+         ``PM_VERTICAL``           0x1 Shows vertical bands in :class:`~peakmeter.PeakMeterCtrl`.
          ================= =========== ==================================================
         
         """
@@ -351,7 +351,7 @@ class PeakMeterCtrl(wx.PyControl):
 
     def SetAGWWindowStyleFlag(self, agwStyle):
         """
-        Sets the L{PeakMeterCtrl} window style flags.
+        Sets the :class:`~peakmeter.PeakMeterCtrl` window style flags.
 
         :param `agwStyle`: the AGW-specific window style. This can be a combination of the
          following bits:
@@ -359,8 +359,8 @@ class PeakMeterCtrl(wx.PyControl):
          ================= =========== ==================================================
          Window Styles     Hex Value   Description
          ================= =========== ==================================================
-         ``PM_HORIZONTAL``         0x0 Shows horizontal bands in L{PeakMeterCtrl}.
-         ``PM_VERTICAL``           0x1 Shows vertical bands in L{PeakMeterCtrl}.
+         ``PM_HORIZONTAL``         0x0 Shows horizontal bands in :class:`~peakmeter.PeakMeterCtrl`.
+         ``PM_VERTICAL``           0x1 Shows vertical bands in :class:`~peakmeter.PeakMeterCtrl`.
          ================= =========== ==================================================
 
         """
@@ -371,16 +371,16 @@ class PeakMeterCtrl(wx.PyControl):
 
     def GetAGWWindowStyleFlag(self):
         """
-        Returns the L{PeakMeterCtrl} window style.
+        Returns the :class:`~peakmeter.PeakMeterCtrl` window style.
 
-        :see: L{SetAGWWindowStyleFlag} for a list of possible window style flags.        
+        :see: :meth:`~peakmeter.PeakMeterCtrl.SetAGWWindowStyleFlag` for a list of possible window style flags.        
         """
 
         return self._agwStyle
 
     
     def ResetControl(self):
-        """ Resets the L{PeakMeterCtrl}. """
+        """ Resets the :class:`~peakmeter.PeakMeterCtrl`. """
 
         # Initialize vector
         for i in xrange(self._numBands):
@@ -392,7 +392,7 @@ class PeakMeterCtrl(wx.PyControl):
         
     def SetBackgroundColour(self, colourBgnd):
         """
-        Changes the background colour of L{PeakMeterCtrl}.
+        Changes the background colour of :class:`~peakmeter.PeakMeterCtrl`.
 
         :param `colourBgnd`: the colour to be used as the background colour, pass
          `wx.NullColour` to reset to the default colour.
@@ -414,7 +414,7 @@ class PeakMeterCtrl(wx.PyControl):
 
     def SetBandsColour(self, colourNormal, colourMedium, colourHigh):
         """
-        Set bands colour for L{PeakMeterCtrl}.
+        Set bands colour for :class:`~peakmeter.PeakMeterCtrl`.
 
         :param `colourNormal`: the colour for normal (low) bands, a valid `wx.Colour`
          object;
@@ -473,7 +473,7 @@ class PeakMeterCtrl(wx.PyControl):
 
 
     def GetRangeValue(self):
-        """ Get range value of L{PeakMeterCtrl}. """
+        """ Get range value of :class:`~peakmeter.PeakMeterCtrl`. """
 
         return self._minValue, self._medValue, self._maxValue
 
@@ -533,7 +533,7 @@ class PeakMeterCtrl(wx.PyControl):
         a set of values. All bands can be changed or only 1 band,
         depending on the application.
 
-        :param `arrayValue`: a Python list containing the L{PeakMeterData} values;
+        :param `arrayValue`: a Python list containing the :class:`~peakmeter.PeakMeterData` values;
         :param `offset`: the (optional) offset where to start applying the new data;
         :param `size`: the size of the input data.
         """
@@ -604,7 +604,7 @@ class PeakMeterCtrl(wx.PyControl):
 
 
     def DoTimerProcessing(self):
-        """ L{PeakMeterCtrl} animation, does the ``wx.EVT_TIMER`` processing. """
+        """ :class:`~peakmeter.PeakMeterCtrl` animation, does the ``wx.EVT_TIMER`` processing. """
 
         self.Refresh()
 
@@ -655,7 +655,7 @@ class PeakMeterCtrl(wx.PyControl):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{PeakMeterCtrl}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~peakmeter.PeakMeterCtrl`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -677,7 +677,7 @@ class PeakMeterCtrl(wx.PyControl):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{PeakMeterCtrl}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~peakmeter.PeakMeterCtrl`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
 
@@ -690,7 +690,7 @@ class PeakMeterCtrl(wx.PyControl):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{PeakMeterCtrl}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~peakmeter.PeakMeterCtrl`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -701,7 +701,7 @@ class PeakMeterCtrl(wx.PyControl):
 
     def OnTimer(self, event):
         """
-        Handles the ``wx.EVT_TIMER`` event for L{PeakMeterCtrl}.
+        Handles the ``wx.EVT_TIMER`` event for :class:`~peakmeter.PeakMeterCtrl`.
 
         :param `event`: a `wx.TimerEvent` event to be processed.
         """

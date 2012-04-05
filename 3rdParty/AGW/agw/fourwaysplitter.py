@@ -22,23 +22,23 @@
 # --------------------------------------------------------------------------------- #
 
 """
-L{FourWaySplitter} is a layout manager which manages 4 children like 4 panes in a
+:class:`~fourwaysplitter.FourWaySplitter` is a layout manager which manages 4 children like 4 panes in a
 window.
 
 
 Description
 ===========
 
-The L{FourWaySplitter} is a layout manager which manages four children like four
+The :class:`~fourwaysplitter.FourWaySplitter` is a layout manager which manages four children like four
 panes in a window. You can use a four-way splitter for example in a CAD program
 where you may want to maintain three orthographic views, and one oblique view of
 a model.
 
-The L{FourWaySplitter} allows interactive repartitioning of the panes by
-means of moving the central splitter bars. When the L{FourWaySplitter} is itself
+The :class:`~fourwaysplitter.FourWaySplitter` allows interactive repartitioning of the panes by
+means of moving the central splitter bars. When the :class:`~fourwaysplitter.FourWaySplitter` is itself
 resized, each child is proportionally resized, maintaining the same split-percentage.
 
-The main characteristics of L{FourWaySplitter} are:
+The main characteristics of :class:`~fourwaysplitter.FourWaySplitter` are:
 
 - Handles horizontal, vertical or four way sizing via the sashes;
 - Delayed or live update when resizing;
@@ -89,7 +89,7 @@ Usage example::
 Supported Platforms
 ===================
 
-L{FourWaySplitter} has been tested on the following platforms:
+:class:`~fourwaysplitter.FourWaySplitter` has been tested on the following platforms:
   * Windows (Windows XP);
   * Linux Ubuntu (Dapper 6.06)
 
@@ -102,7 +102,7 @@ This class supports the following window styles:
 ================== =========== ==================================================
 Window Styles      Hex Value   Description
 ================== =========== ==================================================
-``SP_NOSASH``             0x10 No sash will be drawn on L{FourWaySplitter}.
+``SP_NOSASH``             0x10 No sash will be drawn on :class:`~fourwaysplitter.FourWaySplitter`.
 ``SP_LIVE_UPDATE``        0x80 Don't draw XOR line but resize the child windows immediately.
 ``SP_3DBORDER``          0x200 Draws a 3D effect border.
 ================== =========== ==================================================
@@ -124,7 +124,7 @@ Event Name                         Description
 License And Version
 ===================
 
-L{FourWaySplitter} is distributed under the wxPython license. 
+:class:`~fourwaysplitter.FourWaySplitter` is distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
@@ -152,7 +152,7 @@ FLAG_PRESSED = 2
 
 # FourWaySplitter styles
 SP_NOSASH = wx.SP_NOSASH
-""" No sash will be drawn on L{FourWaySplitter}. """
+""" No sash will be drawn on :class:`~fourwaysplitter.FourWaySplitter`. """
 SP_LIVE_UPDATE = wx.SP_LIVE_UPDATE
 """ Don't draw XOR line but resize the child windows immediately. """
 SP_3DBORDER = wx.SP_3DBORDER
@@ -185,7 +185,7 @@ class FourWaySplitterEvent(wx.PyCommandEvent):
         Default class constructor.
 
         :param `evtType`: the event type;
-        :param `splitter`: the associated L{FourWaySplitter} window.
+        :param `splitter`: the associated :class:`~fourwaysplitter.FourWaySplitter` window.
         """
         
         wx.PyCommandEvent.__init__(self, evtType)
@@ -259,7 +259,7 @@ class FourWaySplitterEvent(wx.PyCommandEvent):
 
     def Allow(self):
         """
-        This is the opposite of L{Veto}: it explicitly allows the event to be processed.
+        This is the opposite of :meth:`~fourwaysplitter.FourWaySplitterEvent.Veto`: it explicitly allows the event to be processed.
         For most events it is not necessary to call this method as the events are
         allowed anyhow but some are forbidden by default (this will be mentioned
         in the corresponding event description).
@@ -270,7 +270,7 @@ class FourWaySplitterEvent(wx.PyCommandEvent):
 
     def IsAllowed(self):
         """
-        Returns ``True`` if the change is allowed (L{Veto} hasn't been called) or
+        Returns ``True`` if the change is allowed (:meth:`~fourwaysplitter.FourWaySplitterEvent.Veto` hasn't been called) or
         ``False`` otherwise (if it was).
         """
 
@@ -294,7 +294,7 @@ class FourWaySplitter(wx.PyPanel):
     
      * Minimum pane size (minimum of what? Width? Height?);
      * Using negative sash positions to indicate a position offset from the end;
-     * User controlled unsplitting with double clicks on the sash (but supported via the L{FourWaySplitter.SetExpanded} method);
+     * User controlled unsplitting with double clicks on the sash (but supported via the :meth:`FourWaySplitter.SetExpanded() <fourwaysplitter.FourWaySplitter.SetExpanded>` method);
      * Sash gravity.
 
      
@@ -318,7 +318,7 @@ class FourWaySplitter(wx.PyPanel):
          ================== =========== ==================================================
          Window Styles      Hex Value   Description
          ================== =========== ==================================================
-         ``SP_NOSASH``             0x10 No sash will be drawn on L{FourWaySplitter}.
+         ``SP_NOSASH``             0x10 No sash will be drawn on :class:`~fourwaysplitter.FourWaySplitter`.
          ``SP_LIVE_UPDATE``        0x80 Don't draw XOR line but resize the child windows immediately.
          ``SP_3DBORDER``          0x200 Draws a 3D effect border.
          ================== =========== ==================================================
@@ -369,7 +369,7 @@ class FourWaySplitter(wx.PyPanel):
 
     def SetAGWWindowStyleFlag(self, agwStyle):
         """
-        Sets the L{FourWaySplitter} window style flags.
+        Sets the :class:`~fourwaysplitter.FourWaySplitter` window style flags.
 
         :param `agwStyle`: the AGW-specific window style. This can be a combination of the
          following bits:
@@ -377,7 +377,7 @@ class FourWaySplitter(wx.PyPanel):
          ================== =========== ==================================================
          Window Styles      Hex Value   Description
          ================== =========== ==================================================
-         ``SP_NOSASH``             0x10 No sash will be drawn on L{FourWaySplitter}.
+         ``SP_NOSASH``             0x10 No sash will be drawn on :class:`~fourwaysplitter.FourWaySplitter`.
          ``SP_LIVE_UPDATE``        0x80 Don't draw XOR line but resize the child windows immediately.
          ``SP_3DBORDER``          0x200 Draws a 3D effect border.
          ================== =========== ==================================================         
@@ -389,9 +389,9 @@ class FourWaySplitter(wx.PyPanel):
 
     def GetAGWWindowStyleFlag(self):
         """
-        Returns the L{FourWaySplitter} window style.
+        Returns the :class:`~fourwaysplitter.FourWaySplitter` window style.
 
-        :see: L{SetAGWWindowStyleFlag} for a list of possible window styles.        
+        :see: :meth:`~fourwaysplitter.FourWaySplitter.SetAGWWindowStyleFlag` for a list of possible window styles.        
         """
 
         return self._agwStyle
@@ -563,7 +563,7 @@ class FourWaySplitter(wx.PyPanel):
         """
         Recalculate the layout based on split positions and split fractions.
 
-        :see: L{SetHSplit} and L{SetVSplit} for more information about split fractions.
+        :see: :meth:`~fourwaysplitter.FourWaySplitter.SetHSplit` and :meth:`~fourwaysplitter.FourWaySplitter.SetVSplit` for more information about split fractions.
         """
             
         win0 = self.GetTopLeft()
@@ -609,7 +609,7 @@ class FourWaySplitter(wx.PyPanel):
     # Determine split mode
     def GetMode(self, pt):
         """
-        Determines the split mode for L{FourWaySplitter}.
+        Determines the split mode for :class:`~fourwaysplitter.FourWaySplitter`.
 
         :param `pt`: the point at which the mouse has been clicked, an instance of
          `wx.Point`.
@@ -668,7 +668,7 @@ class FourWaySplitter(wx.PyPanel):
     # Adjust layout
     def AdjustLayout(self):
         """
-        Adjust layout of L{FourWaySplitter}. Mainly used to recalculate the
+        Adjust layout of :class:`~fourwaysplitter.FourWaySplitter`. Mainly used to recalculate the
         correct values for split fractions.
         """
 
@@ -690,7 +690,7 @@ class FourWaySplitter(wx.PyPanel):
     # Button being pressed
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for L{FourWaySplitter}.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~fourwaysplitter.FourWaySplitter`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -715,7 +715,7 @@ class FourWaySplitter(wx.PyPanel):
     # Button being released
     def OnLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for L{FourWaySplitter}.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~fourwaysplitter.FourWaySplitter`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -749,7 +749,7 @@ class FourWaySplitter(wx.PyPanel):
 
     def OnLeaveWindow(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{FourWaySplitter}.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~fourwaysplitter.FourWaySplitter`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -760,7 +760,7 @@ class FourWaySplitter(wx.PyPanel):
 
     def OnEnterWindow(self, event):
         """
-        Handles the ``wx.EVT_ENTER_WINDOW`` event for L{FourWaySplitter}.
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`~fourwaysplitter.FourWaySplitter`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -786,7 +786,7 @@ class FourWaySplitter(wx.PyPanel):
         
     def OnMotion(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for L{FourWaySplitter}.
+        Handles the ``wx.EVT_MOTION`` event for :class:`~fourwaysplitter.FourWaySplitter`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -846,7 +846,7 @@ class FourWaySplitter(wx.PyPanel):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{FourWaySplitter}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~fourwaysplitter.FourWaySplitter`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -857,7 +857,7 @@ class FourWaySplitter(wx.PyPanel):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{FourWaySplitter}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~fourwaysplitter.FourWaySplitter`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """

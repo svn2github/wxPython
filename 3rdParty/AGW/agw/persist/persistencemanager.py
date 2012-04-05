@@ -43,16 +43,16 @@ from persist_constants import PM_DEFAULT_STYLE, PM_PERSIST_CONTROL_VALUE
 
 class PersistentObject(object):
     """
-    L{PersistentObject}: ABC for anything persistent.
+    :class:`~persist.persistencemanager.PersistentObject`: ABC for anything persistent.
 
     This is the base class for persistent object adapters.
     wxPython persistence framework is non-intrusive, i.e. can work with the
     classes which have no relationship to nor knowledge of it. To allow this,
     an intermediate persistence adapter is used: this is just a simple object
-    which provides the methods used by L{PersistenceManager} to save and restore
+    which provides the methods used by :class:`~persist.persistencemanager.PersistenceManager` to save and restore
     the object properties and implements them using the concrete class methods.
 
-    You may derive your own classes from L{PersistentObject} to implement persistence
+    You may derive your own classes from :class:`~persist.persistencemanager.PersistentObject` to implement persistence
     support for your common classes, see :ref:`persistent-windows` in the
     `__init__.py` file.
     """
@@ -63,7 +63,7 @@ class PersistentObject(object):
 
         :param `window`: an instance of `wx.Window`;
         :param `persistenceHandler`: if not ``None``, this should a custom handler derived
-         from L{persist_handlers.AbstractHandler}.
+         from :class:`~persist.persist_handlers.AbstractHandler`.
         """
 
         self._name = window.GetName()
@@ -93,7 +93,7 @@ class PersistentObject(object):
         Returns the string uniquely identifying the window we're associated with
         among all the other objects of the same type.
         
-        :note: This method is used together with L{GetKind} to construct the unique
+        :note: This method is used together with :meth:`~persist.persistencemanager.PersistentObject.GetKind` to construct the unique
          full name of the object in e.g. a configuration file.
         """
 
@@ -110,7 +110,7 @@ class PersistentObject(object):
         """
         Returns the string uniquely identifying the objects supported by this adapter.
 
-        :note: This method is called from L{SaveValue} and L{RestoreValue} and normally
+        :note: This method is called from :meth:`~persist.persistencemanager.PersistentObject.SaveValue` and :meth:`~persist.persistencemanager.PersistentObject.RestoreValue` and normally
          returns some short (but not too cryptic) strings, e.g. "Checkbox".
         """
 
@@ -122,7 +122,7 @@ class PersistentObject(object):
         Saves the corresponding window settings. 
 
         :note: This method shouldn't be used directly as it doesn't respect the
-         global L{PersistenceManager.DisableSaving} settings, use L{PersistenceManager}
+         global :meth:`PersistenceManager.DisableSaving() <persist.persistencemanager.PersistenceManager.DisableSaving>` settings, use :class:`~persist.persistencemanager.PersistenceManager`
          methods with the same name instead.
         """
 
@@ -134,7 +134,7 @@ class PersistentObject(object):
         Restores the corresponding window settings. 
 
         :note: This method shouldn't be used directly as it doesn't respect the
-         global L{PersistenceManager.DisableRestoring} settings, use L{PersistenceManager}
+         global :meth:`PersistenceManager.DisableRestoring() <persist.persistencemanager.PersistenceManager.DisableRestoring>` settings, use :class:`~persist.persistencemanager.PersistenceManager`
          methods with the same name instead.
         """
 
@@ -170,9 +170,9 @@ class PersistentObject(object):
 
     def RestoreValue(self, name):
         """
-        Restore the value saved by L{SaveValue}.
+        Restore the value saved by :meth:`~persist.persistencemanager.PersistentObject.SaveValue`.
         
-        :param `name`: the same name as was used by L{SaveValue}.
+        :param `name`: the same name as was used by :meth:`~persist.persistencemanager.PersistentObject.SaveValue`.
 
         :returns: ``True`` if the value was successfully read or ``False`` if
          it was not found or an error occurred.
@@ -183,10 +183,10 @@ class PersistentObject(object):
 
     def RestoreCtrlValue(self, name):
         """
-        Restore the value saved by L{SaveCtrlValue}, should be used only for
+        Restore the value saved by :meth:`~persist.persistencemanager.PersistentObject.SaveCtrlValue`, should be used only for
         controls data value.
         
-        :param `name`: the same name as was used by L{SaveCtrlValue}.
+        :param `name`: the same name as was used by :meth:`~persist.persistencemanager.PersistentObject.SaveCtrlValue`.
 
         :returns: ``True`` if the value was successfully read or ``False`` if
          it was not found or an error occurred.
@@ -199,7 +199,7 @@ class PersistentObject(object):
 
 class PersistenceManager(object):
     """
-    L{PersistenceManager}: global aspects of persistent windows.
+    :class:`~persist.persistencemanager.PersistenceManager`: global aspects of persistent windows.
 
     Provides support for automatically saving and restoring object properties
     to persistent storage.
@@ -207,7 +207,7 @@ class PersistenceManager(object):
     This class is the central element of wxPython persistence framework, see
     the :ref:`persistent-overview` in the `__init__.py` file for its overview.
 
-    This is a singleton class and its unique instance can be retrieved using L{PersistenceManager.Get}
+    This is a singleton class and its unique instance can be retrieved using :meth:`PersistenceManager.Get() <persist.persistencemanager.PersistenceManager.Get>`
     method.
     """
     
@@ -216,18 +216,18 @@ class PersistenceManager(object):
         Default class constructor.
 
         This method should **not** be called directly: you should use the object
-        obtained by L{PersistenceManager.Get} and assign manager styles, custom
+        obtained by :meth:`PersistenceManager.Get() <persist.persistencemanager.PersistenceManager.Get>` and assign manager styles, custom
         configuration files and custom configuration handlers using the appropriate
         methods in this class.
 
         Interesting attributes you can set for this class are:
         
-        - `configFile`: the persistent configuration file for L{PersistenceManager},
+        - `configFile`: the persistent configuration file for :class:`~persist.persistencemanager.PersistenceManager`,
           a custom file name to which `wx.FileConfig` will access to store and
           retrieve UI settings;
         - `configKey`: the persistent key name inside the configuration file for
-          L{PersistenceManager};
-        - `customConfigHandler`: the persistent configuration handler for L{PersistenceManager};
+          :class:`~persist.persistencemanager.PersistenceManager`;
+        - `customConfigHandler`: the persistent configuration handler for :class:`~persist.persistencemanager.PersistenceManager`;
           this attribute is an object capable of saving/restoring UI settings. This
           can be a cPickle object or a ConfigObj one, for example.
         - `style`: a combination of the following values:
@@ -295,9 +295,9 @@ class PersistenceManager(object):
 
     def GetManagerStyle(self):
         """
-        Returns the L{PersistenceManager} style.
+        Returns the :class:`~persist.persistencemanager.PersistenceManager` style.
 
-        :see: L{SetManagerStyle} for a list of possible styles.
+        :see: :meth:`~persist.persistencemanager.PersistenceManager.SetManagerStyle` for a list of possible styles.
         """
         
         return self._style        
@@ -305,7 +305,7 @@ class PersistenceManager(object):
 
     def SetManagerStyle(self, style):
         """
-        Sets the L{PersistenceManager} style.
+        Sets the :class:`~persist.persistencemanager.PersistenceManager` style.
 
         :param `style`: a combination of the following values:
 
@@ -324,7 +324,7 @@ class PersistenceManager(object):
         
     def SetPersistenceKey(self, key):
         """
-        Sets the persistent key name inside the configuration file for L{PersistenceManager}.
+        Sets the persistent key name inside the configuration file for :class:`~persist.persistencemanager.PersistenceManager`.
 
         :param `key`: a short meaningful name for your unique preferences key.
 
@@ -337,7 +337,7 @@ class PersistenceManager(object):
 
     def GetPersistenceKey(self):
         """
-        Returns the persistent key name inside the configuration file for L{PersistenceManager}.
+        Returns the persistent key name inside the configuration file for :class:`~persist.persistencemanager.PersistenceManager`.
 
         :note: The return value of this method is not used if you are using your own
          custom configuration handler (i.e., by using ConfigObj/ConfigParser/cPickle etc...).
@@ -348,7 +348,7 @@ class PersistenceManager(object):
 
     def SetPersistenceFile(self, fileName):
         """
-        Sets the persistent configuration file for L{PersistenceManager}.
+        Sets the persistent configuration file for :class:`~persist.persistencemanager.PersistenceManager`.
 
         :param `fileName`: the file name where to store the persistent options.
 
@@ -361,7 +361,7 @@ class PersistenceManager(object):
 
     def GetPersistenceFile(self):
         """
-        Returns the persistent configuration file for L{PersistenceManager}.
+        Returns the persistent configuration file for :class:`~persist.persistencemanager.PersistenceManager`.
 
         :note: The return value of this method is not used if you are using your own
          custom configuration handler (i.e., by using ConfigObj/ConfigParser/cPickle etc...).
@@ -386,7 +386,7 @@ class PersistenceManager(object):
 
     def SetConfigurationHandler(self, handler):
         """
-        Sets the persistent configuration handler for L{PersistenceManager}.
+        Sets the persistent configuration handler for :class:`~persist.persistencemanager.PersistenceManager`.
 
         :param `handler`: an object capable of saving/restoring UI settings. This
          can be a cPickle object or a ConfigObj one, for example.
@@ -401,7 +401,7 @@ class PersistenceManager(object):
 
     def GetConfigurationHandler(self):
         """
-        Returns the persistent configuration handler for L{PersistenceManager}.
+        Returns the persistent configuration handler for :class:`~persist.persistencemanager.PersistenceManager`.
         """
 
         return self._customConfigHandler        
@@ -409,7 +409,7 @@ class PersistenceManager(object):
 
     def GetPersistenceDirectory(self):
         """
-        Returns a default persistent option directory for L{PersistenceManager}.
+        Returns a default persistent option directory for :class:`~persist.persistencemanager.PersistenceManager`.
 
         :note: The return value of this method is not used if you are using your own
          custom configuration handler (i.e., by using ConfigObj/ConfigParser/cPickle etc...)
@@ -422,7 +422,7 @@ class PersistenceManager(object):
 
     def Find(self, window):
         """
-        Checks if the object is registered and return the associated L{PersistentObject}
+        Checks if the object is registered and return the associated :class:`~persist.persistencemanager.PersistentObject`
         if it is or ``None`` otherwise.
 
         :param `window`: an instance of `wx.Window`.
@@ -438,16 +438,16 @@ class PersistenceManager(object):
 
         :param `window`: an instance of `wx.Window`;
         :param `persistenceHandler`: if not ``None``, this should a custom handler derived
-         from L{persist_handlers.AbstractHandler}.
+         from :class:`~persist.persist_handlers.AbstractHandler`.
 
         :note:
 
          Note that registering the object doesn't do anything except allowing to call
-         L{Restore} for it later. If you want to register the object and restore its
-         properties, use L{RegisterAndRestore}.
+         :meth:`~persist.persistencemanager.PersistenceManager.Restore` for it later. If you want to register the object and restore its
+         properties, use :meth:`~persist.persistencemanager.PersistenceManager.RegisterAndRestore`.
          
 
-        :note: The manager takes ownership of the L{PersistentObject} and will delete it when
+        :note: The manager takes ownership of the :class:`~persist.persistencemanager.PersistentObject` and will delete it when
          it is unregistered.         
         """
     
@@ -462,18 +462,18 @@ class PersistenceManager(object):
 
     def Unregister(self, window):
         """
-        Unregister the object, this is called by L{PersistentObject} itself so there is
+        Unregister the object, this is called by :class:`~persist.persistencemanager.PersistentObject` itself so there is
         usually no need to do it explicitly.
 
         :param `window`: an instance of `wx.Window`, which must have been previously
-         registered with L{Register}.
+         registered with :meth:`~persist.persistencemanager.PersistenceManager.Register`.
 
-        :note: For the persistent windows this is done automatically (via L{SaveAndUnregister})
+        :note: For the persistent windows this is done automatically (via :meth:`~persist.persistencemanager.PersistenceManager.SaveAndUnregister`)
          when the window is destroyed so you only need to call this function explicitly if you
          are using custom persistent objects or if you want to prevent the object properties
          from being saved.
          
-        :note: This deletes the associated L{PersistentObject}.
+        :note: This deletes the associated :class:`~persist.persistencemanager.PersistentObject`.
         """
     
         if not self.Find(window):
@@ -491,7 +491,7 @@ class PersistenceManager(object):
 
         :param `window`: an instance of `wx.Window`.
         
-        :note: This methods does nothing if L{DisableSaving} was called.
+        :note: This methods does nothing if :meth:`~persist.persistencemanager.PersistenceManager.DisableSaving` was called.
         """
     
         if not self._doSave:
@@ -515,7 +515,7 @@ class PersistenceManager(object):
         :returns: ``True`` if the object properties were restored or ``False`` if nothing
          was found to restore or the saved settings were invalid.
 
-        :note: This methods does nothing if L{DisableRestoring} was called.
+        :note: This methods does nothing if :meth:`~persist.persistencemanager.PersistenceManager.DisableRestoring` was called.
         """
 
         if not self._doRestore:
@@ -534,7 +534,7 @@ class PersistenceManager(object):
         """
         Globally disables saving the persistent properties (enabled by default).
 
-        :note: By default, saving properties in L{Save} is enabled but the program
+        :note: By default, saving properties in :meth:`~persist.persistencemanager.PersistenceManager.Save` is enabled but the program
          may wish to disable if, for example, it detects that it is running on a
          system which shouldn't be modified in any way and so configuration file
          (or Windows registry) shouldn't be written to.
@@ -547,7 +547,7 @@ class PersistenceManager(object):
         """
         Globally disables restoring the persistent properties (enabled by default).
 
-        :note: By default, restoring properties in L{Restore} is enabled but this
+        :note: By default, restoring properties in :meth:`~persist.persistencemanager.PersistenceManager.Restore` is enabled but this
          function allows to disable it. This is mostly useful for testing.
         """
         
@@ -558,7 +558,7 @@ class PersistenceManager(object):
         """
         Globally enables saving the persistent properties (enabled by default).
 
-        :note: By default, saving properties in L{Save} is enabled but the program
+        :note: By default, saving properties in :meth:`~persist.persistencemanager.PersistenceManager.Save` is enabled but the program
          may wish to disable if, for example, it detects that it is running on a
          system which shouldn't be modified in any way and so configuration file
          (or Windows registry) shouldn't be written to.        
@@ -571,7 +571,7 @@ class PersistenceManager(object):
         """
         Globally enables restoring the persistent properties (enabled by default).
 
-        :note: By default, restoring properties in L{Restore} is enabled but this
+        :note: By default, restoring properties in :meth:`~persist.persistencemanager.PersistenceManager.Restore` is enabled but this
          function allows to disable it. This is mostly useful for testing.
         """
         
@@ -580,7 +580,7 @@ class PersistenceManager(object):
 
     def SaveAndUnregister(self, window=None):
         """
-        Combines both L{Save} and L{Unregister} calls.
+        Combines both :meth:`~persist.persistencemanager.PersistenceManager.Save` and :meth:`~persist.persistencemanager.PersistenceManager.Unregister` calls.
 
         :param `window`: an instance of `wx.Window`. If it is ``None``, all the
          windows previously registered are saved and then unregistered.
@@ -598,7 +598,7 @@ class PersistenceManager(object):
 
     def RegisterAndRestore(self, window):
         """
-        Combines both L{Register} and L{Restore} calls.
+        Combines both :meth:`~persist.persistencemanager.PersistenceManager.Register` and :meth:`~persist.persistencemanager.PersistenceManager.Restore` calls.
 
         :param `window`: an instance of `wx.Window`.
         """
@@ -636,7 +636,7 @@ class PersistenceManager(object):
         """
         Returns a correctly formatted key name for the object `obj` and `keyName` parameters.
 
-        :param `obj`: an instance of L{PersistentObject};
+        :param `obj`: an instance of :class:`~persist.persistencemanager.PersistentObject`;
         :param `keyName`: a string specifying the key name.
         """
 
@@ -651,9 +651,9 @@ class PersistenceManager(object):
 
     def SaveCtrlValue(self, obj, keyName, value):
         """
-        Check if we persist the widget value, if so pass it to L{DoSaveValue}.
+        Check if we persist the widget value, if so pass it to :meth:`~persist.persistencemanager.PersistenceManager.DoSaveValue`.
 
-        :param `obj`: an instance of L{PersistentObject};
+        :param `obj`: an instance of :class:`~persist.persistencemanager.PersistentObject`;
         :param `keyName`: a string specifying the key name;
         :param `value`: the value to store in the configuration file.
         """
@@ -664,9 +664,9 @@ class PersistenceManager(object):
 
     def SaveValue(self, obj, keyName, value):
         """
-        Convenience method, all the action is done in L{DoSaveValue}.
+        Convenience method, all the action is done in :meth:`~persist.persistencemanager.PersistenceManager.DoSaveValue`.
 
-        :param `obj`: an instance of L{PersistentObject};
+        :param `obj`: an instance of :class:`~persist.persistencemanager.PersistentObject`;
         :param `keyName`: a string specifying the key name;
         :param `value`: the value to store in the configuration file.
         """
@@ -679,10 +679,10 @@ class PersistenceManager(object):
         Method used by the persistent objects to save the data.
 
         By default this method simply use `wx.FileConfig` but this behaviour may be
-        overridden by passing a custom configuration handler in the L{PersistenceManager}
+        overridden by passing a custom configuration handler in the :class:`~persist.persistencemanager.PersistenceManager`
         constructor.
 
-        :param `obj`: an instance of L{PersistentObject};
+        :param `obj`: an instance of :class:`~persist.persistencemanager.PersistentObject`;
         :param `keyName`: a string specifying the key name;
         :param `value`: the value to store in the configuration file.
         """
@@ -701,9 +701,9 @@ class PersistenceManager(object):
 
     def RestoreCtrlValue(self, obj, keyName):
         """
-        Check if we persist the widget value, if so pass it to L{DoRestoreValue}.
+        Check if we persist the widget value, if so pass it to :meth:`~persist.persistencemanager.PersistenceManager.DoRestoreValue`.
 
-        :param `obj`: an instance of L{PersistentObject};
+        :param `obj`: an instance of :class:`~persist.persistencemanager.PersistentObject`;
         :param `keyName`: a string specifying the key name.
         """
         
@@ -713,9 +713,9 @@ class PersistenceManager(object):
 
     def RestoreValue(self, obj, keyName):
         """
-        Convenience method, all the action is done in L{DoRestoreValue}.
+        Convenience method, all the action is done in :meth:`~persist.persistencemanager.PersistenceManager.DoRestoreValue`.
 
-        :param `obj`: an instance of L{PersistentObject};
+        :param `obj`: an instance of :class:`~persist.persistencemanager.PersistentObject`;
         :param `keyName`: a string specifying the key name.
         """
 
@@ -730,7 +730,7 @@ class PersistenceManager(object):
         overridden by passing a custom config handler in the PersistenceManager
         constructor.
 
-        :param `obj`: an instance of L{PersistentObject};
+        :param `obj`: an instance of :class:`~persist.persistencemanager.PersistentObject`;
         :param `keyName`: a string specifying the key name.
         """
 

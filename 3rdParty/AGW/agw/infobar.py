@@ -37,7 +37,7 @@ non-critical information to the user.
 
 :note:
 
-    The Python implementation of L{InfoBar} is a direct translation of the generic C++
+    The Python implementation of :class:`~infobar.InfoBar` is a direct translation of the generic C++
     implementation of `wx.InfoBar`.
 
  
@@ -51,7 +51,7 @@ Info bar may show an icon (on the left), text message and, optionally, buttons a
 user to react to the information presented. It always has a close button at the right allowing
 the user to dismiss it so it isn't necessary to provide a button just to close it.
 
-L{InfoBar} calls its parent `Layout()` method (if its parent is **not** managed by L{AuiManager}
+:class:`~infobar.InfoBar` calls its parent `Layout()` method (if its parent is **not** managed by :class:`~aui.framemanager.AuiManager`
 or `wx.aui.AuiManager`) and assumes that it will change the parent layout appropriately depending
 on whether the info bar itself is shown or hidden. Usually this is achieved by simply using a
 sizer for the parent window layout and adding wxInfoBar to this sizer as one of the items.
@@ -62,8 +62,8 @@ Considering the usual placement of the info bars, normally this sizer should be 
 Base Functionalities
 ====================
 
-L{InfoBar} supports all the `wx.InfoBar` generic implementation functionalities, and in addition
-it using L{AddButton} it is possible to add a button with a bitmap (and not only a plain `wx.Button`).
+:class:`~infobar.InfoBar` supports all the `wx.InfoBar` generic implementation functionalities, and in addition
+it using :meth:`~InfoBar.AddButton` it is possible to add a button with a bitmap (and not only a plain `wx.Button`).
 
 For example::
 
@@ -122,7 +122,7 @@ The simplest possible example of using this class would be::
 Supported Platforms
 ===================
 
-L{InfoBar} has been tested on the following platforms:
+:class:`~infobar.InfoBar` has been tested on the following platforms:
   * Windows (Vista/7).
 
 
@@ -147,7 +147,7 @@ Event Name        Description
 License And Version
 ===================
 
-L{InfoBar} control is distributed under the wxPython license.
+:class:`~infobar.InfoBar` control is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 22 Mar 2012, 21.00 GMT
 
@@ -178,11 +178,11 @@ _ = wx.GetTranslation
 # Determine the placement of the bar from its position in the containing
 # sizer
 BarPlacement_Unknown = 0
-""" Unknown L{InfoBar} placement (not good). """
+""" Unknown :class:`~infobar.InfoBar` placement (not good). """
 BarPlacement_Top     = 1
-""" L{InfoBar} is placed at the top of its parent. """
+""" :class:`~infobar.InfoBar` is placed at the top of its parent. """
 BarPlacement_Bottom  = 2
-""" L{InfoBar} is placed at the bottom of its parent. """
+""" :class:`~infobar.InfoBar` is placed at the bottom of its parent. """
 
 # This dictionary is here because wx.ArtProvider.GetMessageBoxIconId(flags)
 # doesn't do what I think it should do in wxPython
@@ -201,10 +201,10 @@ FLAGS2ART = {wx.ICON_NONE        : wx.ART_MISSING_IMAGE,
 def GetCloseButtonBitmap(win, size, colBg, flags=0):
     """
     For platforms supporting it (namely wxMSW and wxMAC), this method uses `wx.RendererNative`
-    to draw a natively-looking close button on the L{InfoBar} itself.
+    to draw a natively-looking close button on the :class:`~infobar.InfoBar` itself.
 
     :param `win`: the window in which we wish to draw the close button (an instance of
-     L{InfoBar});
+     :class:`~infobar.InfoBar`);
     :param tuple `size`: the close button size, a tuple of `(width, height)` dimensions in pixels;
     :param `colBg`: the background colour of the parent window, an instance of `wx.Colour`;
     :param integer `flags`: may have the ``wx.CONTROL_PRESSED``, ``wx.CONTROL_CURRENT`` or
@@ -240,7 +240,7 @@ class AutoWrapStaticText(StaticText):
         Defsult class constructor.
 
         :param `wx.Window` parent: a subclass of `wx.Window`, must not be ``None``;
-        :param string `label`: the L{AutoWrapStaticText} text label.
+        :param string `label`: the :class:`~infobar.AutoWrapStaticText` text label.
         """
 
         StaticText.__init__(self, parent, -1, label, style=wx.ST_NO_AUTORESIZE)
@@ -256,7 +256,7 @@ class AutoWrapStaticText(StaticText):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{AutoWrapStaticText}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~infobar.AutoWrapStaticText`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -294,16 +294,16 @@ class AutoWrapStaticText(StaticText):
 
     def SetLabel(self, label, wrapped=False):
         """
-        Sets the L{AutoWrapStaticText} label.
+        Sets the :class:`~infobar.AutoWrapStaticText` label.
 
         All "&" characters in the label are special and indicate that the following character is
         a mnemonic for this control and can be used to activate it from the keyboard (typically
         by using ``Alt`` key in combination with it). To insert a literal ampersand character, you
         need to double it, i.e. use "&&". If this behaviour is undesirable, use `SetLabelText` instead.
 
-        :param string `label`: the new L{AutoWrapStaticText} text label;
-        :param bool `wrapped`: ``True`` if this method was called by the developer using L{SetLabel},
-         ``False`` if it comes from the L{OnSize} event handler.
+        :param string `label`: the new :class:`~infobar.AutoWrapStaticText` text label;
+        :param bool `wrapped`: ``True`` if this method was called by the developer using :meth:`~infobar.AutoWrapStaticText.SetLabel`,
+         ``False`` if it comes from the :meth:`~infobar.AutoWrapStaticText.OnSize` event handler.
          
         :note: Reimplemented from `wx.PyControl`.
         """
@@ -339,7 +339,7 @@ class InfoBar(wx.PyControl):
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
         :type `size`: tuple or `wx.Size`
-        :param integer `style`: the L{InfoBar} style (unused at present);
+        :param integer `style`: the :class:`~infobar.InfoBar` style (unused at present);
         :param string `name`: the control name.
         """
 
@@ -413,7 +413,7 @@ class InfoBar(wx.PyControl):
         """
         Overridden base class methods changes the font of the text message.
 
-        L{InfoBar} overrides this method to use the font passed to it for its text
+        :class:`~infobar.InfoBar` overrides this method to use the font passed to it for its text
         message part. By default a larger and bold version of the standard font is used.
 
         :param `font`: a valid instance of `wx.Font`.
@@ -441,9 +441,9 @@ class InfoBar(wx.PyControl):
          ========================== =========== ==================================================
          Placement Flag             Hex Value   Description
          ========================== =========== ==================================================
-         ``BarPlacement_Unknown``           0x0 Unknown placement of L{InfoBar} (not good).
-         ``BarPlacement_Top``               0x1 L{InfoBar} is placed at the top of its parent.
-         ``BarPlacement_Bottom``            0x2 L{InfoBar} is placed at the bottom of its parent.
+         ``BarPlacement_Unknown``           0x0 Unknown placement of :class:`~infobar.InfoBar` (not good).
+         ``BarPlacement_Top``               0x1 :class:`~infobar.InfoBar` is placed at the top of its parent.
+         ``BarPlacement_Bottom``            0x2 :class:`~infobar.InfoBar` is placed at the bottom of its parent.
          ========================== =========== ==================================================
         
         """
@@ -474,8 +474,8 @@ class InfoBar(wx.PyControl):
          `ShowEffect` Flag                  Hex Value   Description
          ================================== =========== ==================================================
          ``wx.SHOW_EFFECT_NONE``                    0x0 No effect, equivalent to normal `Show()` or `Hide()` call.
-         ``wx.SHOW_EFFECT_SLIDE_TO_TOP``            0x7 Slide the L{InfoBar} window to the top. 
-         ``wx.SHOW_EFFECT_SLIDE_TO_BOTTOM``         0x8 Slide the L{InfoBar} window to the bottom. 
+         ``wx.SHOW_EFFECT_SLIDE_TO_TOP``            0x7 Slide the :class:`~infobar.InfoBar` window to the top. 
+         ``wx.SHOW_EFFECT_SLIDE_TO_BOTTOM``         0x8 Slide the :class:`~infobar.InfoBar` window to the bottom. 
          ================================== =========== ==================================================
         
         """
@@ -508,8 +508,8 @@ class InfoBar(wx.PyControl):
          `ShowEffect` Flag                  Hex Value   Description
          ================================== =========== ==================================================
          ``wx.SHOW_EFFECT_NONE``                    0x0 No effect, equivalent to normal `Show()` or `Hide()` call.
-         ``wx.SHOW_EFFECT_SLIDE_TO_TOP``            0x7 Slide the L{InfoBar} window to the top. 
-         ``wx.SHOW_EFFECT_SLIDE_TO_BOTTOM``         0x8 Slide the L{InfoBar} window to the bottom. 
+         ``wx.SHOW_EFFECT_SLIDE_TO_TOP``            0x7 Slide the :class:`~infobar.InfoBar` window to the top. 
+         ``wx.SHOW_EFFECT_SLIDE_TO_BOTTOM``         0x8 Slide the :class:`~infobar.InfoBar` window to the bottom. 
          ================================== =========== ==================================================
         
         """
@@ -533,15 +533,15 @@ class InfoBar(wx.PyControl):
 
 
     def GetDefaultBorder(self):
-        """ Returns the default border style for L{InfoBar}. """
+        """ Returns the default border style for :class:`~infobar.InfoBar`. """
 
         return wx.BORDER_NONE
     
         
     def UpdateParent(self):
         """
-        Updates the parent layout appearance, but only if this L{InfoBar} parent is **not** managed
-        by L{AuiManager} or `wx.aui.AuiManager`.
+        Updates the parent layout appearance, but only if this :class:`~infobar.InfoBar` parent is **not** managed
+        by :class:`~aui.framemanager.AuiManager` or `wx.aui.AuiManager`.
         """
         
         parent = self.GetParent()
@@ -550,7 +550,7 @@ class InfoBar(wx.PyControl):
         
 
     def DoHide(self):
-        """ Hides this L{InfoBar} with whatever hiding effect has been chosen. """
+        """ Hides this :class:`~infobar.InfoBar` with whatever hiding effect has been chosen. """
 
         self.HideWithEffect(self.GetHideEffect(), self.GetEffectDuration())
 
@@ -566,7 +566,7 @@ class InfoBar(wx.PyControl):
 
 
     def DoShow(self):
-        """ Shows this L{InfoBar} with whatever showing effect has been chosen. """
+        """ Shows this :class:`~infobar.InfoBar` with whatever showing effect has been chosen. """
 
         # re-layout the parent first so that the window expands into an already
         # unoccupied by the other controls area: for this we need to change our
@@ -645,11 +645,11 @@ class InfoBar(wx.PyControl):
 
     def Dismiss(self):
         """
-        Hides the L{InfoBar} window.
+        Hides the :class:`~infobar.InfoBar` window.
 
         This method hides the window and lays out the parent window to account for
-        its disappearance (unlike a simple `Hide()`), but only if this L{InfoBar}
-        parent is **not** managed by L{AuiManager} or `wx.aui.AuiManager`.
+        its disappearance (unlike a simple `Hide()`), but only if this :class:`~infobar.InfoBar`
+        parent is **not** managed by :class:`~aui.framemanager.AuiManager` or `wx.aui.AuiManager`.
         """
         
         self.DoHide()
@@ -665,10 +665,10 @@ class InfoBar(wx.PyControl):
         as it is assumed that the extra buttons already allow the user to close it.
 
         Clicking the button will generate a normal ``wx.wxEVT_COMMAND_BUTTON_CLICKED`` event which
-        can be handled as usual. The default handler in L{InfoBar} itself closes the window
+        can be handled as usual. The default handler in :class:`~infobar.InfoBar` itself closes the window
         whenever a button in it is clicked so if you wish the info bar to be hidden when the button
         is clicked, simply call `event.Skip()` in the button handler to let the base class handler
-        do it (calling L{Dismiss} explicitly works too, of course). On the other hand, if you don't
+        do it (calling :meth:`~infobar.InfoBar.Dismiss` explicitly works too, of course). On the other hand, if you don't
         skip the event, the info bar will remain opened so make sure to do it for at least some
         buttons to allow the user to close it.
 
@@ -681,9 +681,9 @@ class InfoBar(wx.PyControl):
 
         :note:
 
-             Notice that the generic L{InfoBar} implementation handles the button events itself
+             Notice that the generic :class:`~infobar.InfoBar` implementation handles the button events itself
              and so they are not propagated to the info bar parent and you need to either inherit from
-             L{InfoBar} and handle them in your derived class or use `self.Bind(...)` to handle the
+             :class:`~infobar.InfoBar` and handle them in your derived class or use `self.Bind(...)` to handle the
              button events in the parent frame.
 
         """
@@ -717,10 +717,10 @@ class InfoBar(wx.PyControl):
 
     def RemoveButton(self, btnid):
         """
-        Remove a button previously added by L{AddButton}.
+        Remove a button previously added by :meth:`~infobar.InfoBar.AddButton`.
 
         :param integer `btnid`: id of the button to remove. If more than one button with the
-         same id is used in the L{InfoBar} (which is in any case not recommended), the last,
+         same id is used in the :class:`~infobar.InfoBar` (which is in any case not recommended), the last,
          i.e. most recently added, button with this `id` is removed.
         """
         
@@ -757,15 +757,15 @@ class InfoBar(wx.PyControl):
 
     def OnButton(self, event):
         """
-        Default event handler for the `Close` button in L{InfoBar}.
+        Default event handler for the `Close` button in :class:`~infobar.InfoBar`.
 
         :param `event`: a `wx.CommandEvent` to be processed.
 
         :note:
 
-             Notice that the generic L{InfoBar} implementation handles the button events itself
+             Notice that the generic :class:`~infobar.InfoBar` implementation handles the button events itself
              and so they are not propagated to the info bar parent and you need to either inherit from
-             L{InfoBar} and handle them in your derived class or use `self.Bind(...)` to handle the
+             :class:`~infobar.InfoBar` and handle them in your derived class or use `self.Bind(...)` to handle the
              button events in the parent frame.
         """
         

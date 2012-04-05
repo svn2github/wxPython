@@ -24,15 +24,15 @@
 # --------------------------------------------------------------------------------- #
 
 """
-L{PyGauge} is a generic `wx.Gauge` implementation.
+:class:`~pygauge.PyGauge` is a generic `wx.Gauge` implementation.
 
 
 Description
 ===========
 
-L{PyGauge} supports the determinate mode functions as `wx.Gauge` and adds an L{Update} function
-which takes a value and a time parameter. The `value` is added to the current value over 
-a period of `time` milliseconds.
+:class:`~pygauge.PyGauge` supports the determinate mode functions as `wx.Gauge` and adds an
+:meth:`~PyGauge.Update` function which takes a value and a time parameter. The `value` is
+added to the current value over a period of `time` milliseconds.
 
 
 Usage
@@ -93,16 +93,16 @@ Usage example::
 Supported Platforms
 ===================
 
-L{PyGauge} has been tested on the following platforms:
+:class:`~pygauge.PyGauge` has been tested on the following platforms:
   * Windows (Windows XP);
   
 
 License And Version
 ===================
 
-L{PyGauge} is distributed under the wxPython license.
+:class:`~pygauge.PyGauge` is distributed under the wxPython license.
 
-L{PyGauge} has been kindly contributed to the AGW library by Mark Reed.
+:class:`~pygauge.PyGauge` has been kindly contributed to the AGW library by Mark Reed.
 
 Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
@@ -117,7 +117,7 @@ import copy
 class PyGauge(wx.PyWindow):
     """ 
     This class provides a visual alternative for `wx.Gauge`. It currently 
-    only support determinate mode (see L{PyGauge.SetValue} and L{PyGauge.SetRange})
+    only support determinate mode (see :meth:`PyGauge.SetValue() <pygauge.PyGauge.SetValue>` and :meth:`PyGauge.SetRange() <pygauge.PyGauge.SetRange>`)
     """
     
     def __init__(self, parent, id=wx.ID_ANY, range=100, pos=wx.DefaultPosition,
@@ -157,7 +157,7 @@ class PyGauge(wx.PyWindow):
         
     def DoGetBestSize(self):
         """
-        Gets the size which best suits L{PyGauge}: for a control, it would be
+        Gets the size which best suits :class:`~pygauge.PyGauge`: for a control, it would be
         the minimal size which doesn't truncate the control, for a panel - the
         same size as it would have after a call to `Fit()`.
 
@@ -168,14 +168,14 @@ class PyGauge(wx.PyWindow):
        
         
     def GetBorderColour(self):
-        """ Returns the L{PyGauge} border colour. """
+        """ Returns the :class:`~pygauge.PyGauge` border colour. """
         
         return self._border_colour
 
     
     def SetBorderColour(self, colour):
         """
-        Sets the L{PyGauge} border colour.
+        Sets the :class:`~pygauge.PyGauge` border colour.
 
         :param `colour`: an instance of `wx.Colour`.
         """
@@ -187,14 +187,14 @@ class PyGauge(wx.PyWindow):
     
 
     def GetBarColour(self):
-        """ Returns the L{PyGauge} main bar colour. """
+        """ Returns the :class:`~pygauge.PyGauge` main bar colour. """
 
         return self._barColour[0]
     
 
     def SetBarColour(self, colour):
         """
-        Sets the L{PyGauge} main bar colour.
+        Sets the :class:`~pygauge.PyGauge` main bar colour.
 
         :param `colour`: an instance of `wx.Colour`.
         """
@@ -225,7 +225,7 @@ class PyGauge(wx.PyWindow):
        
         :param `gradient`: a tuple containing the gradient start and end colours.
 
-        :note: This overrides the bar colour previously set with L{SetBarColour}.        
+        :note: This overrides the bar colour previously set with :meth:`~pygauge.PyGauge.SetBarColour`.        
         """
         
         if type(gradient) != type([]):
@@ -299,7 +299,7 @@ class PyGauge(wx.PyWindow):
         
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{PyGauge}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~pygauge.PyGauge`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
 
@@ -311,7 +311,7 @@ class PyGauge(wx.PyWindow):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{PyGauge}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~pygauge.PyGauge`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -353,7 +353,7 @@ class PyGauge(wx.PyWindow):
         
     def OnTimer(self,event):
         """
-        Handles the ``wx.EVT_TIMER`` event for L{PyGauge}.
+        Handles the ``wx.EVT_TIMER`` event for :class:`~pygauge.PyGauge`.
 
         :param `event`: a `wx.TimerEvent` event to be processed.
         """

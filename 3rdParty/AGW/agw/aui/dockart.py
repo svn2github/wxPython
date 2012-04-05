@@ -2,10 +2,10 @@
 Dock art provider code - a dock provider provides all drawing functionality to
 the AUI dock manager. This allows the dock manager to have a plugable look-and-feel.
 
-By default, a L{AuiManager} uses an instance of this class called L{AuiDefaultDockArt}
+By default, a :class:`~aui.framemanager.AuiManager` uses an instance of this class called :class:`~aui.dockart.AuiDefaultDockArt`
 which provides bitmap art and a colour scheme that is adapted to the major platforms'
 look. You can either derive from that class to alter its behaviour or write a
-completely new dock art class. Call L{AuiManager.SetArtProvider} to make use this
+completely new dock art class. Call :meth:`AuiManager.SetArtProvider() <aui.framemanager.AuiManager.SetArtProvider>` to make use this
 new dock art.
 """
 
@@ -43,17 +43,17 @@ class AuiDefaultDockArt(object):
     to the AUI dock manager. This allows the dock manager to have a plugable
     look-and-feel.
 
-    By default, a L{AuiManager} uses an instance of this class called L{AuiDefaultDockArt}
+    By default, a :class:`~aui.framemanager.AuiManager` uses an instance of this class called :class:`~aui.dockart.AuiDefaultDockArt`
     which provides bitmap art and a colour scheme that is adapted to the major
     platforms' look. You can either derive from that class to alter its behaviour or
     write a completely new dock art class.
     
-    Call L{AuiManager.SetArtProvider} to make use this new dock art.
+    Call :meth:`AuiManager.SetArtProvider() <aui.framemanager.AuiManager.SetArtProvider>` to make use this new dock art.
 
 
     **Metric Ordinals**
 
-    These are the possible pane dock art settings for L{AuiManager}:
+    These are the possible pane dock art settings for :class:`~aui.framemanager.AuiManager`:
 
     ================================================  ======================================
     Metric Ordinal Constant                           Description
@@ -82,7 +82,7 @@ class AuiDefaultDockArt(object):
 
     **Gradient Types**
 
-    These are the possible gradient dock art settings for L{AuiManager}:
+    These are the possible gradient dock art settings for :class:`~aui.framemanager.AuiManager`:
 
     ============================================  ======================================
     Gradient Constant                             Description 
@@ -95,7 +95,7 @@ class AuiDefaultDockArt(object):
 
     **Button States**
 
-    These are the possible pane button / L{AuiNotebook} button / L{AuiToolBar} button states:
+    These are the possible pane button / :class:`~aui.auibook.AuiNotebook` button / :class:`~aui.auibar.AuiToolBar` button states:
 
     ============================================  ======================================
     Button State Constant                         Description     
@@ -111,7 +111,7 @@ class AuiDefaultDockArt(object):
 
     **Button Identifiers**
 
-    These are the possible pane button / L{AuiNotebook} button / L{AuiToolBar} button identifiers:
+    These are the possible pane button / :class:`~aui.auibook.AuiNotebook` button / :class:`~aui.auibar.AuiToolBar` button identifiers:
 
     ============================================  ======================================
     Button Identifier                             Description     
@@ -121,9 +121,9 @@ class AuiDefaultDockArt(object):
     ``AUI_BUTTON_MINIMIZE``                       Shows a minimize button on the pane
     ``AUI_BUTTON_PIN``                            Shows a pin button on the pane
     ``AUI_BUTTON_OPTIONS``                        Shows an option button on the pane (not implemented)
-    ``AUI_BUTTON_WINDOWLIST``                     Shows a window list button on the pane (for L{AuiNotebook})
-    ``AUI_BUTTON_LEFT``                           Shows a left button on the pane (for L{AuiNotebook})
-    ``AUI_BUTTON_RIGHT``                          Shows a right button on the pane (for L{AuiNotebook})
+    ``AUI_BUTTON_WINDOWLIST``                     Shows a window list button on the pane (for :class:`~aui.auibook.AuiNotebook`)
+    ``AUI_BUTTON_LEFT``                           Shows a left button on the pane (for :class:`~aui.auibook.AuiNotebook`)
+    ``AUI_BUTTON_RIGHT``                          Shows a right button on the pane (for :class:`~aui.auibook.AuiNotebook`)
     ``AUI_BUTTON_UP``                             Shows an up button on the pane (not implemented)
     ``AUI_BUTTON_DOWN``                           Shows a down button on the pane (not implemented)
     ``AUI_BUTTON_CUSTOM1``                        Shows a custom button on the pane (not implemented)
@@ -892,7 +892,7 @@ class AuiDefaultDockArt(object):
 
 if _ctypes:
     class RECT(ctypes.Structure):
-        """ Used to handle L{ModernDockArt} on Windows XP/Vista/7. """
+        """ Used to handle :class:`~aui.dockart.ModernDockArt` on Windows XP/Vista/7. """
         _fields_ = [('left', ctypes.c_ulong),('top', ctypes.c_ulong),('right', ctypes.c_ulong),('bottom', ctypes.c_ulong)]
 
         def dump(self):
@@ -901,7 +901,7 @@ if _ctypes:
 
 
     class SIZE(ctypes.Structure):
-        """ Used to handle L{ModernDockArt} on Windows XP/Vista/7. """
+        """ Used to handle :class:`~aui.dockart.ModernDockArt` on Windows XP/Vista/7. """
         _fields_ = [('x', ctypes.c_long),('y', ctypes.c_long)]
 
 
@@ -921,7 +921,7 @@ class ModernDockArt(AuiDefaultDockArt):
         """
         Default class constructor. 
 
-        :param `win`: the window managed by L{AuiManager}. 
+        :param `win`: the window managed by :class:`~aui.framemanager.AuiManager`. 
         """
         
         AuiDefaultDockArt.__init__(self)

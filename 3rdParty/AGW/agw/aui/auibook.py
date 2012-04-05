@@ -1,14 +1,14 @@
 """
 auibook contains a notebook control which implements many features common in
-applications with dockable panes. Specifically, L{AuiNotebook} implements functionality
+applications with dockable panes. Specifically, :class:`~aui.auibook.AuiNotebook` implements functionality
 which allows the user to rearrange tab order via drag-and-drop, split the tab window
 into many different splitter configurations, and toggle through different themes to
 customize the control's look and feel.
 
 An effort has been made to try to maintain an API as similar to that of `wx.Notebook`.
 
-The default theme that is used is L{AuiDefaultTabArt}, which provides a modern, glossy
-look and feel. The theme can be changed by calling L{AuiNotebook.SetArtProvider}.
+The default theme that is used is :class:`~aui.tabart.AuiDefaultTabArt`, which provides a modern, glossy
+look and feel. The theme can be changed by calling :meth:`AuiNotebook.SetArtProvider() <aui.auibook.AuiNotebook.SetArtProvider>`.
 """
 
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
@@ -120,9 +120,9 @@ class TabTextCtrl(ExpandoTextCtrl):
         Default class constructor.
         For internal use: do not call it in your code!
 
-        :param `owner`: the L{AuiTabCtrl} owning the tab;
-        :param `tab`: the actual L{AuiNotebookPage} tab;
-        :param `page_index`: the L{AuiNotebook} page index for the tab.
+        :param `owner`: the :class:`~aui.auibook.AuiTabCtrl` owning the tab;
+        :param `tab`: the actual :class:`~aui.auibook.AuiNotebookPage` tab;
+        :param `page_index`: the :class:`~aui.auibook.AuiNotebook` page index for the tab.
         """
 
         self._owner = owner
@@ -220,7 +220,7 @@ class TabTextCtrl(ExpandoTextCtrl):
 
     def OnChar(self, event):
         """
-        Handles the ``wx.EVT_CHAR`` event for L{TabTextCtrl}.
+        Handles the ``wx.EVT_CHAR`` event for :class:`~aui.auibook.TabTextCtrl`.
 
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
@@ -248,7 +248,7 @@ class TabTextCtrl(ExpandoTextCtrl):
 
     def OnKeyUp(self, event):
         """
-        Handles the ``wx.EVT_KEY_UP`` event for L{TabTextCtrl}.
+        Handles the ``wx.EVT_KEY_UP`` event for :class:`~aui.auibook.TabTextCtrl`.
 
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
@@ -269,7 +269,7 @@ class TabTextCtrl(ExpandoTextCtrl):
 
     def OnKillFocus(self, event):
         """
-        Handles the ``wx.EVT_KILL_FOCUS`` event for L{TabTextCtrl}.
+        Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`~aui.auibook.TabTextCtrl`.
 
         :param `event`: a `wx.FocusEvent` event to be processed.
         """
@@ -361,7 +361,7 @@ class AuiTabContainerButton(object):
 # ----------------------------------------------------------------------
 
 class CommandNotebookEvent(wx.PyCommandEvent):
-    """ A specialized command event class for events sent by L{AuiNotebook} . """
+    """ A specialized command event class for events sent by :class:`~aui.auibook.AuiNotebook` . """
 
     def __init__(self, command_type=None, win_id=0):
         """
@@ -438,7 +438,7 @@ class CommandNotebookEvent(wx.PyCommandEvent):
 
     def SetDispatched(self, b):
         """
-        Sets the event as dispatched (used for automatic L{AuiNotebook} ).
+        Sets the event as dispatched (used for automatic :class:`~aui.auibook.AuiNotebook` ).
 
         :param `b`: whether the event was dispatched or not.
         """
@@ -447,7 +447,7 @@ class CommandNotebookEvent(wx.PyCommandEvent):
 
 
     def GetDispatched(self):
-        """ Returns whether the event was dispatched (used for automatic L{AuiNotebook} ). """
+        """ Returns whether the event was dispatched (used for automatic :class:`~aui.auibook.AuiNotebook` ). """
 
         return self.dispatched
 
@@ -491,7 +491,7 @@ class CommandNotebookEvent(wx.PyCommandEvent):
 # ----------------------------------------------------------------------
 
 class AuiNotebookEvent(CommandNotebookEvent):
-    """ A specialized command event class for events sent by L{AuiNotebook}. """
+    """ A specialized command event class for events sent by :class:`~aui.auibook.AuiNotebook`. """
 
     def __init__(self, command_type=None, win_id=0):
         """
@@ -535,7 +535,7 @@ class AuiNotebookEvent(CommandNotebookEvent):
 
     def Allow(self):
         """
-        This is the opposite of L{Veto}: it explicitly allows the event to be
+        This is the opposite of :meth:`~aui.auibook.AuiNotebookEvent.Veto`: it explicitly allows the event to be
         processed. For most events it is not necessary to call this method as the
         events are allowed anyhow but some are forbidden by default (this will
         be mentioned in the corresponding event description).
@@ -550,7 +550,7 @@ class AuiNotebookEvent(CommandNotebookEvent):
 
 class TabNavigatorProps(object):
     """
-    Data storage class for managing and providing access to L{TabNavigatorWindow}.
+    Data storage class for managing and providing access to :class:`~flatnotebook.TabNavigatorWindow`.
     properties.
     """
 
@@ -567,13 +567,13 @@ class TabNavigatorProps(object):
     # Accessors
     Icon = property(lambda self: self._icon,
                     lambda self, icon: setattr(self, '_icon', icon),
-                    doc='Sets/Gets the icon for the L{TabNavigatorWindow}, an instance of `wx.Bitmap`.')
+                    doc='Sets/Gets the icon for the :class:`~auibook.TabNavigatorWindow`, an instance of `wx.Bitmap`.')
     Font = property(lambda self: self._font,
                     lambda self, font: setattr(self, '_font', font),
-                    doc='Sets/Gets the font for the L{TabNavigatorWindow}, an instance of `wx.Font`.')
+                    doc='Sets/Gets the font for the :class:`~auibook.TabNavigatorWindow`, an instance of `wx.Font`.')
     MinSize = property(lambda self: self._minsize,
                        lambda self, size: setattr(self, '_minsize', size),
-                       doc='Sets/Gets the minimum size for the L{TabNavigatorWindow}, an instance of `wx.Size`.')
+                       doc='Sets/Gets the minimum size for the :class:`~auibook.TabNavigatorWindow`, an instance of `wx.Size`.')
 
 # ---------------------------------------------------------------------------- #
 # Class TabNavigatorWindow
@@ -589,8 +589,8 @@ class TabNavigatorWindow(wx.Dialog):
         """
         Default class constructor. Used internally.
 
-        :param `parent`: the L{TabNavigatorWindow} parent;
-        :param `props`: the L{TabNavigatorProps} object.
+        :param `parent`: the :class:`~flatnotebook.TabNavigatorWindow` parent;
+        :param `props`: the :class:`~aui.auibook.TabNavigatorProps` object.
         """
 
         wx.Dialog.__init__(self, parent, wx.ID_ANY, "", size=props.MinSize, style=0)
@@ -661,7 +661,7 @@ class TabNavigatorWindow(wx.Dialog):
 
     def OnKeyUp(self, event):
         """
-        Handles the ``wx.EVT_KEY_UP`` for the L{TabNavigatorWindow}.
+        Handles the ``wx.EVT_KEY_UP`` for the :class:`~flatnotebook.TabNavigatorWindow`.
 
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
@@ -672,7 +672,7 @@ class TabNavigatorWindow(wx.Dialog):
 
     def OnNavigationKey(self, event):
         """
-        Handles the ``wx.EVT_NAVIGATION_KEY`` for the L{TabNavigatorWindow}.
+        Handles the ``wx.EVT_NAVIGATION_KEY`` for the :class:`~flatnotebook.TabNavigatorWindow`.
 
         :param `event`: a `wx.NavigationKeyEvent` event to be processed.
         """
@@ -702,9 +702,9 @@ class TabNavigatorWindow(wx.Dialog):
 
     def PopulateListControl(self, book):
         """
-        Populates the L{TabNavigatorWindow} listbox with a list of tabs.
+        Populates the :class:`~flatnotebook.TabNavigatorWindow` listbox with a list of tabs.
 
-        :param `book`: the actual L{AuiNotebook}.
+        :param `book`: the actual :class:`~aui.auibook.AuiNotebook`.
         """
         # Index of currently selected page
         selection = book.GetSelection()
@@ -739,7 +739,7 @@ class TabNavigatorWindow(wx.Dialog):
 
     def OnItemSelected(self, event):
         """
-        Handles the ``wx.EVT_LISTBOX_DCLICK`` event for the `wx.ListBox` inside L{TabNavigatorWindow}.
+        Handles the ``wx.EVT_LISTBOX_DCLICK`` event for the `wx.ListBox` inside :class:`~flatnotebook.TabNavigatorWindow`.
 
         :param `event`: a `wx.ListEvent` event to be processed.
         """
@@ -748,7 +748,7 @@ class TabNavigatorWindow(wx.Dialog):
 
 
     def CloseDialog(self):
-        """ Closes the L{TabNavigatorWindow} dialog, setting selection in L{AuiNotebook}. """
+        """ Closes the :class:`~flatnotebook.TabNavigatorWindow` dialog, setting selection in :class:`~aui.auibook.AuiNotebook`. """
 
         bk = self.GetParent()
         self._selectedItem = self._listBox.GetSelection()
@@ -763,7 +763,7 @@ class TabNavigatorWindow(wx.Dialog):
 
     def OnPanelPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{TabNavigatorWindow} top panel.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~flatnotebook.TabNavigatorWindow` top panel.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -804,7 +804,7 @@ class TabNavigatorWindow(wx.Dialog):
 
     def OnPanelEraseBg(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{TabNavigatorWindow} top panel.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~flatnotebook.TabNavigatorWindow` top panel.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
 
@@ -822,10 +822,10 @@ class AuiTabContainer(object):
     AuiTabContainer is a class which contains information about each
     tab. It also can render an entire tab control to a specified DC.
     It's not a window class itself, because this code will be used by
-    the L{AuiManager}, where it is disadvantageous to have separate
+    the :class:`~aui.framemanager.AuiManager`, where it is disadvantageous to have separate
     windows for each tab control in the case of "docked tabs".
 
-    A derived class, L{AuiTabCtrl}, is an actual `wx.Window` - derived window
+    A derived class, :class:`~aui.auibook.AuiTabCtrl`, is an actual `wx.Window` - derived window
     which can be used as a tab control in the normal sense.
     """
 
@@ -834,7 +834,7 @@ class AuiTabContainer(object):
         Default class constructor.
         Used internally, do not call it in your code!
 
-        :param `auiNotebook`: the parent L{AuiNotebook} window.
+        :param `auiNotebook`: the parent :class:`~aui.auibook.AuiNotebook` window.
         """
 
         self._tab_offset = 0
@@ -856,12 +856,12 @@ class AuiTabContainer(object):
 
     def SetArtProvider(self, art):
         """
-        Instructs L{AuiTabContainer} to use art provider specified by parameter `art`
+        Instructs :class:`~aui.auibook.AuiTabContainer` to use art provider specified by parameter `art`
         for all drawing calls. This allows plugable look-and-feel features.
 
         :param `art`: an art provider.
 
-        :note: The previous art provider object, if any, will be deleted by L{AuiTabContainer}.
+        :note: The previous art provider object, if any, will be deleted by :class:`~aui.auibook.AuiTabContainer`.
         """
 
         del self._art
@@ -899,8 +899,8 @@ class AuiTabContainer(object):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close L{AuiNotebook} tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by L{AuiManager} to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~aui.auibook.AuiNotebook` tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -941,9 +941,9 @@ class AuiTabContainer(object):
         """
         Returns the tab art flags.
 
-        See L{SetAGWFlags} for a list of possible return values.
+        See :meth:`~aui.auibook.AuiTabContainer.SetAGWFlags` for a list of possible return values.
 
-        :see: L{SetAGWFlags}
+        :see: :meth:`~aui.auibook.AuiTabContainer.SetAGWFlags`
         """
 
         return self._agwFlags
@@ -983,7 +983,7 @@ class AuiTabContainer(object):
         """
         Sets the tab area rectangle.
 
-        :param `rect`: an instance of `wx.Rect`, specifying the available area for L{AuiTabContainer}.
+        :param `rect`: an instance of `wx.Rect`, specifying the available area for :class:`~aui.auibook.AuiTabContainer`.
         """
 
         self._rect = rect
@@ -998,7 +998,7 @@ class AuiTabContainer(object):
         Adds a page to the tab control.
 
         :param `page`: the window associated with this tab;
-        :param `info`: an instance of L{AuiNotebookPage}.
+        :param `info`: an instance of :class:`~aui.auibook.AuiNotebookPage`.
         """
 
         page_info = info
@@ -1019,7 +1019,7 @@ class AuiTabContainer(object):
         Inserts a page in the tab control in the position specified by `idx`.
 
         :param `page`: the window associated with this tab;
-        :param `info`: an instance of L{AuiNotebookPage};
+        :param `info`: an instance of :class:`~aui.auibook.AuiNotebookPage`;
         :param `idx`: the page insertion index.
         """
 
@@ -1088,7 +1088,7 @@ class AuiTabContainer(object):
 
     def SetActivePage(self, wndOrInt):
         """
-        Sets the L{AuiTabContainer} active page.
+        Sets the :class:`~aui.auibook.AuiTabContainer` active page.
 
         :param `wndOrInt`: an instance of `wx.Window` or an integer specifying a tab index.
         """
@@ -1173,13 +1173,13 @@ class AuiTabContainer(object):
 
 
     def GetPages(self):
-        """ Returns a list of all the pages in this L{AuiTabContainer}. """
+        """ Returns a list of all the pages in this :class:`~aui.auibook.AuiTabContainer`. """
 
         return self._pages
 
 
     def GetPageCount(self):
-        """ Returns the number of pages in the L{AuiTabContainer}. """
+        """ Returns the number of pages in the :class:`~aui.auibook.AuiTabContainer`. """
 
         return len(self._pages)
 
@@ -1199,7 +1199,7 @@ class AuiTabContainer(object):
 
     def EnableTab(self, idx, enable=True):
         """
-        Enables/disables a tab in the L{AuiTabContainer}.
+        Enables/disables a tab in the :class:`~aui.auibook.AuiTabContainer`.
 
         :param `idx`: the tab index;
         :param `enable`: ``True`` to enable a tab, ``False`` to disable it.
@@ -1245,11 +1245,11 @@ class AuiTabContainer(object):
 
     def CloneButtons(self):
         """
-        Clones the tab area buttons when the L{AuiNotebook} is being split.
+        Clones the tab area buttons when the :class:`~aui.auibook.AuiNotebook` is being split.
 
-        :see: L{AddButton}
+        :see: :meth:`~aui.auibook.AuiTabContainer.AddButton`
 
-        :note: Standard buttons for L{AuiNotebook} are not cloned, only custom ones.
+        :note: Standard buttons for :class:`~aui.auibook.AuiNotebook` are not cloned, only custom ones.
         """
 
         singleton_list = [AUI_BUTTON_CLOSE, AUI_BUTTON_WINDOWLIST, AUI_BUTTON_LEFT, AUI_BUTTON_RIGHT]
@@ -1271,9 +1271,9 @@ class AuiTabContainer(object):
         """
         Removes a button from the tab area.
 
-        :param `id`: the button identifier. See L{AddButton} for a list of button identifiers.
+        :param `id`: the button identifier. See :meth:`~aui.auibook.AuiTabContainer.AddButton` for a list of button identifiers.
 
-        :see: L{AddButton}
+        :see: :meth:`~aui.auibook.AuiTabContainer.AddButton`
         """
 
         for button in self._buttons:
@@ -1731,7 +1731,7 @@ class AuiTabContainer(object):
         :param `x`: the mouse `x` position;
         :param `y`: the mouse `y` position.
 
-        :returns: and instance of L{AuiTabContainerButton} if a button was hit, ``None`` otherwise.
+        :returns: and instance of :class:`~aui.auibook.AuiTabContainerButton` if a button was hit, ``None`` otherwise.
         """
 
         if not self._rect.Contains((x,y)):
@@ -1785,7 +1785,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         Default class constructor.
         Used internally, do not call it in your code!
 
-        :param `parent`: the L{AuiTabCtrl} parent;
+        :param `parent`: the :class:`~aui.auibook.AuiTabCtrl` parent;
         :param `id`: an identifier for the control: a value of -1 is taken to mean a default;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
@@ -1831,14 +1831,14 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
 
     def GetDefaultBorder(self):
-        """ Returns the default border style for L{AuiTabCtrl}. """
+        """ Returns the default border style for :class:`~aui.auibook.AuiTabCtrl`. """
 
         return wx.BORDER_NONE
 
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_PAINT`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -1852,7 +1852,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
 
@@ -1876,7 +1876,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -1887,7 +1887,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1939,7 +1939,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnCaptureLost(self, event):
         """
-        Handles the ``wx.EVT_MOUSE_CAPTURE_LOST`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_MOUSE_CAPTURE_LOST`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.MouseCaptureLostEvent` event to be processed.
         """
@@ -1962,7 +1962,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2033,7 +2033,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnMiddleUp(self, event):
         """
-        Handles the ``wx.EVT_MIDDLE_UP`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_MIDDLE_UP`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2060,7 +2060,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnMiddleDown(self, event):
         """
-        Handles the ``wx.EVT_MIDDLE_DOWN`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_MIDDLE_DOWN`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2087,7 +2087,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnRightUp(self, event):
         """
-        Handles the ``wx.EVT_RIGHT_UP`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_RIGHT_UP`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2109,7 +2109,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnRightDown(self, event):
         """
-        Handles the ``wx.EVT_RIGHT_DOWN`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_RIGHT_DOWN`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2131,7 +2131,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnLeftDClick(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DCLICK`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_LEFT_DCLICK`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2153,7 +2153,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnMotion(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_MOTION`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2262,7 +2262,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnLeaveWindow(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2276,9 +2276,9 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnButton(self, event):
         """
-        Handles the ``EVT_AUINOTEBOOK_BUTTON`` event for L{AuiTabCtrl}.
+        Handles the ``EVT_AUINOTEBOOK_BUTTON`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
-        :param `event`: a L{AuiNotebookEvent} event to be processed.
+        :param `event`: a :class:`~aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         button = event.GetInt()
@@ -2312,7 +2312,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnSetFocus(self, event):
         """
-        Handles the ``wx.EVT_SET_FOCUS`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_SET_FOCUS`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.FocusEvent` event to be processed.
         """
@@ -2322,7 +2322,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnKillFocus(self, event):
         """
-        Handles the ``wx.EVT_KILL_FOCUS`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.FocusEvent` event to be processed.
         """
@@ -2332,7 +2332,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
     def OnKeyDown(self, event):
         """
-        Handles the ``wx.EVT_KEY_DOWN`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_KEY_DOWN`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
@@ -2399,11 +2399,11 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         """
         Deprecated.
 
-        Handles the ``wx.EVT_KEY_DOWN`` event for L{AuiTabCtrl}.
+        Handles the ``wx.EVT_KEY_DOWN`` event for :class:`~aui.auibook.AuiTabCtrl`.
 
         :param `event`: a `wx.KeyEvent` event to be processed.
 
-        :warning: This method implementation is now deprecated. Refer to L{OnKeyDown}
+        :warning: This method implementation is now deprecated. Refer to :meth:`~aui.auibook.AuiTabCtrl.OnKeyDown`
          for the correct one.
         """
 
@@ -2605,7 +2605,7 @@ class TabFrame(wx.PyWindow):
         :note:
 
          Overridden from `wx.PyControl`, this method always returns ``False`` as
-         L{TabFrame} should never be phisically shown on screen.
+         :class:`~aui.auibook.TabFrame` should never be phisically shown on screen.
         """
 
         return False
@@ -2705,8 +2705,8 @@ class AuiNotebook(wx.PyPanel):
 
     An effort has been made to try to maintain an API as similar to that of `wx.Notebook`.
 
-    The default theme that is used is L{AuiDefaultTabArt}, which provides a modern, glossy
-    look and feel. The theme can be changed by calling L{AuiNotebook.SetArtProvider}.
+    The default theme that is used is :class:`~aui.tabart.AuiDefaultTabArt`, which provides a modern, glossy
+    look and feel. The theme can be changed by calling :meth:`AuiNotebook.SetArtProvider() <aui.auibook.AuiNotebook.SetArtProvider>`.
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
@@ -2714,7 +2714,7 @@ class AuiNotebook(wx.PyPanel):
         """
         Default class constructor.
 
-        :param `parent`: the L{AuiNotebook} parent;
+        :param `parent`: the :class:`~aui.auibook.AuiNotebook` parent;
         :param `id`: an identifier for the control: a value of -1 is taken to mean a default;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
@@ -2739,8 +2739,8 @@ class AuiNotebook(wx.PyPanel):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close L{AuiNotebook} tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by L{AuiManager} to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~aui.auibook.AuiNotebook` tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -2797,7 +2797,7 @@ class AuiNotebook(wx.PyPanel):
         
 
     def GetTabContainer(self):
-        """ Returns the instance of L{AuiTabContainer}. """
+        """ Returns the instance of :class:`~aui.auibook.AuiTabContainer`. """
 
         return self._tabs
 
@@ -2808,7 +2808,7 @@ class AuiNotebook(wx.PyPanel):
 
         :param `agwStyle`: the notebook style.
 
-        :see: L{__init__}
+        :see: :meth:`~aui.auibook.AuiNotebook.__init__`
         """
 
         self._agwFlags = agwStyle
@@ -2880,7 +2880,7 @@ class AuiNotebook(wx.PyPanel):
         """
         Saves the entire user interface layout into an encoded string, which can then
         be stored by the application (probably using `wx.Config`). When a perspective
-        is restored using L{LoadPerspective}, the entire user interface will return
+        is restored using :meth:`~aui.auibook.AuiNotebook.LoadPerspective`, the entire user interface will return
         to the state it was when the perspective was saved.
         """
 
@@ -2928,9 +2928,9 @@ class AuiNotebook(wx.PyPanel):
 
     def LoadPerspective(self, layout):
         """
-        Loads a layout which was saved with L{SavePerspective}.
+        Loads a layout which was saved with :meth:`~aui.auibook.AuiNotebook.SavePerspective`.
 
-        :param `layout`: a string which contains a saved L{AuiNotebook} layout.
+        :param `layout`: a string which contains a saved :class:`~aui.auibook.AuiNotebook` layout.
         """
 
         # Remove all tab ctrls (but still keep them in main index)
@@ -3050,7 +3050,7 @@ class AuiNotebook(wx.PyPanel):
 
         Calling this method will override that calculation and set the tab control
         to the specified height parameter. A call to this method will override
-        any call to L{SetUniformBitmapSize}. Specifying -1 as the height will
+        any call to :meth:`~aui.auibook.AuiNotebook.SetUniformBitmapSize`. Specifying -1 as the height will
         return the control to its default auto-sizing behaviour.
 
         :param `height`: the tab control area height.
@@ -3114,7 +3114,7 @@ class AuiNotebook(wx.PyPanel):
 
 
     def UpdateHintWindowSize(self):
-        """ Updates the L{AuiManager} hint window size. """
+        """ Updates the :class:`~aui.framemanager.AuiManager` hint window size. """
 
         size = self.CalculateNewSplitSize()
 
@@ -3199,8 +3199,8 @@ class AuiNotebook(wx.PyPanel):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close L{AuiNotebook} tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by L{AuiManager} to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~aui.auibook.AuiNotebook` tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -3242,7 +3242,7 @@ class AuiNotebook(wx.PyPanel):
         """
         Returns the AGW-specific style of the window.
 
-        :see: L{SetAGWWindowStyleFlag} for a list of possible AGW-specific window styles.
+        :see: :meth:`~aui.auibook.AuiNotebook.SetAGWWindowStyleFlag` for a list of possible AGW-specific window styles.
         """
 
         return self._agwFlags
@@ -3267,7 +3267,7 @@ class AuiNotebook(wx.PyPanel):
     def InsertPage(self, page_idx, page, caption, select=False, bitmap=wx.NullBitmap, disabled_bitmap=wx.NullBitmap,
                    control=None):
         """
-        This is similar to L{AddPage}, but allows the ability to specify the insert location.
+        This is similar to :meth:`~aui.auibook.AuiNotebook.AddPage`, but allows the ability to specify the insert location.
 
         :param `page_idx`: specifies the position for the new page;
         :param `page`: the page to be added;
@@ -3349,9 +3349,9 @@ class AuiNotebook(wx.PyPanel):
 
         :note:
 
-         L{DeletePage} removes a tab from the multi-notebook, and destroys the window as well.
+         :meth:`~aui.auibook.AuiNotebook.DeletePage` removes a tab from the multi-notebook, and destroys the window as well.
 
-        :see: L{RemovePage}
+        :see: :meth:`~aui.auibook.AuiNotebook.RemovePage`
         """
 
         if page_idx >= self._tabs.GetPageCount():
@@ -3380,9 +3380,9 @@ class AuiNotebook(wx.PyPanel):
 
         :note:
 
-         L{RemovePage} removes a tab from the multi-notebook, but does not destroy the window.
+         :meth:`~aui.auibook.AuiNotebook.RemovePage` removes a tab from the multi-notebook, but does not destroy the window.
 
-        :see: L{DeletePage}
+        :see: :meth:`~aui.auibook.AuiNotebook.DeletePage`
         """
 
         # save active window pointer
@@ -3466,11 +3466,11 @@ class AuiNotebook(wx.PyPanel):
 
     def FindNextActiveTab(self, ctrl_idx, ctrl):
         """
-        Finds the next active tab (used mainly when L{AuiNotebook} has inactive/disabled
+        Finds the next active tab (used mainly when :class:`~aui.auibook.AuiNotebook` has inactive/disabled
         tabs in it).
 
         :param `ctrl_idx`: the index of the first (most obvious) tab to check for active status;
-        :param `ctrl`: an instance of L{AuiTabCtrl}.
+        :param `ctrl`: an instance of :class:`~aui.auibook.AuiTabCtrl`.
         """
 
         if self.GetEnabled(ctrl_idx):
@@ -3489,7 +3489,7 @@ class AuiNotebook(wx.PyPanel):
 
     def HideAllTabs(self, hidden=True):
         """
-        Hides all tabs on the L{AuiNotebook} control.
+        Hides all tabs on the :class:`~aui.auibook.AuiNotebook` control.
 
         :param `hidden`: if ``True`` hides all tabs.
         """
@@ -3499,7 +3499,7 @@ class AuiNotebook(wx.PyPanel):
 
     def SetSashDClickUnsplit(self, unsplit=True):
         """
-        Sets whether to unsplit a splitted L{AuiNotebook} when double-clicking on a sash.
+        Sets whether to unsplit a splitted :class:`~aui.auibook.AuiNotebook` when double-clicking on a sash.
 
         :param `unsplit`: ``True`` to unsplit on sash double-clicking, ``False`` otherwise.
         """
@@ -3509,7 +3509,7 @@ class AuiNotebook(wx.PyPanel):
 
     def GetSashDClickUnsplit(self):
         """
-        Returns whether a splitted L{AuiNotebook} can be unsplitted by double-clicking
+        Returns whether a splitted :class:`~aui.auibook.AuiNotebook` can be unsplitted by double-clicking
         on the splitter sash.
         """
 
@@ -3518,11 +3518,11 @@ class AuiNotebook(wx.PyPanel):
 
     def SetMinMaxTabWidth(self, minTabWidth, maxTabWidth):
         """
-        Sets the minimum and/or the maximum tab widths for L{AuiNotebook} when the
+        Sets the minimum and/or the maximum tab widths for :class:`~aui.auibook.AuiNotebook` when the
         ``AUI_NB_TAB_FIXED_WIDTH`` style is defined.
 
         Pass -1 to either `minTabWidth` or `maxTabWidth` to reset to the default tab
-        width behaviour for L{AuiNotebook}.
+        width behaviour for :class:`~aui.auibook.AuiNotebook`.
 
         :param `minTabWidth`: the minimum allowed tab width, in pixels;
         :param `maxTabWidth`: the maximum allowed tab width, in pixels.
@@ -3540,13 +3540,13 @@ class AuiNotebook(wx.PyPanel):
 
     def GetMinMaxTabWidth(self):
         """
-        Returns the minimum and the maximum tab widths for L{AuiNotebook} when the
+        Returns the minimum and the maximum tab widths for :class:`~aui.auibook.AuiNotebook` when the
         ``AUI_NB_TAB_FIXED_WIDTH`` style is defined.
 
         :note: Minimum and maximum tabs widths are used only when the ``AUI_NB_TAB_FIXED_WIDTH``
          style is present.
 
-        :see: L{SetMinMaxTabWidth} for more information.
+        :see: :meth:`~aui.auibook.AuiNotebook.SetMinMaxTabWidth` for more information.
         """
 
         return self._tabBounds
@@ -3664,7 +3664,7 @@ class AuiNotebook(wx.PyPanel):
 
     def SetImageList(self, imageList):
         """
-        Sets the image list for the L{AuiNotebook} control.
+        Sets the image list for the :class:`~aui.auibook.AuiNotebook` control.
 
         :param `imageList`: an instance of `wx.ImageList`.
         """
@@ -3674,7 +3674,7 @@ class AuiNotebook(wx.PyPanel):
 
     def AssignImageList(self, imageList):
         """
-        Sets the image list for the L{AuiNotebook} control.
+        Sets the image list for the :class:`~aui.auibook.AuiNotebook` control.
 
         :param `imageList`: an instance of `wx.ImageList`.
         """
@@ -3693,7 +3693,7 @@ class AuiNotebook(wx.PyPanel):
         Sets the image index for the given page.
 
         :param `page`: the page index;
-        :param `image`: an index into the image list which was set with L{SetImageList}.
+        :param `image`: an index into the image list which was set with :meth:`~aui.auibook.AuiNotebook.SetImageList`.
         """
 
         if page >= self._tabs.GetPageCount():
@@ -4037,7 +4037,7 @@ class AuiNotebook(wx.PyPanel):
         """
         Sets the selection based on the input page.
 
-        :param `page`: an instance of L{AuiNotebookPage}.
+        :param `page`: an instance of :class:`~aui.auibook.AuiNotebookPage`.
         """
 
         self.SetSelectionToWindow(page.window)
@@ -4064,7 +4064,7 @@ class AuiNotebook(wx.PyPanel):
 
     def GetPageInfo(self, page_idx):
         """
-        Returns the L{AuiNotebookPage} info structure specified by the given index.
+        Returns the :class:`~aui.auibook.AuiNotebookPage` info structure specified by the given index.
 
         :param `page_idx`: the page index.
         """
@@ -4110,7 +4110,7 @@ class AuiNotebook(wx.PyPanel):
 
 
     def GetAuiManager(self):
-        """ Returns the associated L{AuiManager}. """
+        """ Returns the associated :class:`~aui.framemanager.AuiManager`. """
 
         return self._mgr
 
@@ -4159,7 +4159,7 @@ class AuiNotebook(wx.PyPanel):
         as the index of the window in the tab control. It returns ``True`` if the
         window was found, otherwise ``False``.
 
-        :param `page`: an instance of L{AuiNotebookPage}.
+        :param `page`: an instance of :class:`~aui.auibook.AuiNotebookPage`.
         """
 
         all_panes = self._mgr.GetAllPanes()
@@ -4323,7 +4323,7 @@ class AuiNotebook(wx.PyPanel):
         Reparents a control added inside a tab.
 
         :param `control`: an instance of `wx.Window`;
-        :param `dest_tabs`: the destination L{AuiTabCtrl}.
+        :param `dest_tabs`: the destination :class:`~aui.auibook.AuiTabCtrl`.
         """
 
         control.Hide()
@@ -4332,7 +4332,7 @@ class AuiNotebook(wx.PyPanel):
 
     def UnsplitDClick(self, part, sash_size, pos):
         """
-        Unsplit the L{AuiNotebook} on sash double-click.
+        Unsplit the :class:`~aui.auibook.AuiNotebook` on sash double-click.
 
         :param `part`: an UI part representing the sash;
         :param `sash_size`: the sash size;
@@ -4434,7 +4434,7 @@ class AuiNotebook(wx.PyPanel):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for L{AuiNotebook}.
+        Handles the ``wx.EVT_SIZE`` event for :class:`~aui.auibook.AuiNotebook`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -4445,9 +4445,9 @@ class AuiNotebook(wx.PyPanel):
 
     def OnTabClicked(self, event):
         """
-        Handles the ``EVT_AUINOTEBOOK_PAGE_CHANGING`` event for L{AuiNotebook}.
+        Handles the ``EVT_AUINOTEBOOK_PAGE_CHANGING`` event for :class:`~aui.auibook.AuiNotebook`.
 
-        :param `event`: a L{AuiNotebookEvent} event to be processed.
+        :param `event`: a :class:`~aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         if self._textCtrl is not None:
@@ -4464,9 +4464,9 @@ class AuiNotebook(wx.PyPanel):
 
     def OnTabBgDClick(self, event):
         """
-        Handles the ``EVT_AUINOTEBOOK_BG_DCLICK`` event for L{AuiNotebook}.
+        Handles the ``EVT_AUINOTEBOOK_BG_DCLICK`` event for :class:`~aui.auibook.AuiNotebook`.
 
-        :param `event`: a L{AuiNotebookEvent} event to be processed.
+        :param `event`: a :class:`~aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         if self._textCtrl is not None:
@@ -4480,9 +4480,9 @@ class AuiNotebook(wx.PyPanel):
 
     def OnTabDClick(self, event):
         """
-        Handles the ``EVT_AUINOTEBOOK_TAB_DCLICK`` event for L{AuiNotebook}.
+        Handles the ``EVT_AUINOTEBOOK_TAB_DCLICK`` event for :class:`~aui.auibook.AuiNotebook`.
 
-        :param `event`: a L{AuiNotebookEvent} event to be processed.
+        :param `event`: a :class:`~aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         # notify owner that the tabbar background has been double-clicked
@@ -4502,9 +4502,9 @@ class AuiNotebook(wx.PyPanel):
 
     def OnTabBeginDrag(self, event):
         """
-        Handles the ``EVT_AUINOTEBOOK_BEGIN_DRAG`` event for L{AuiNotebook}.
+        Handles the ``EVT_AUINOTEBOOK_BEGIN_DRAG`` event for :class:`~aui.auibook.AuiNotebook`.
 
-        :param `event`: a L{AuiNotebookEvent} event to be processed.
+        :param `event`: a :class:`~aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         tabs = event.GetEventObject()
@@ -4516,9 +4516,9 @@ class AuiNotebook(wx.PyPanel):
 
     def OnTabDragMotion(self, event):
         """
-        Handles the ``EVT_AUINOTEBOOK_DRAG_MOTION`` event for L{AuiNotebook}.
+        Handles the ``EVT_AUINOTEBOOK_DRAG_MOTION`` event for :class:`~aui.auibook.AuiNotebook`.
 
-        :param `event`: a L{AuiNotebookEvent} event to be processed.
+        :param `event`: a :class:`~aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         self._curpage = event.GetSelection()
@@ -4659,9 +4659,9 @@ class AuiNotebook(wx.PyPanel):
 
     def OnTabEndDrag(self, event):
         """
-        Handles the ``EVT_AUINOTEBOOK_END_DRAG`` event for L{AuiNotebook}.
+        Handles the ``EVT_AUINOTEBOOK_END_DRAG`` event for :class:`~aui.auibook.AuiNotebook`.
 
-        :param `event`: a L{AuiNotebookEvent} event to be processed.
+        :param `event`: a :class:`~aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         tabs = event.GetEventObject()
@@ -4882,9 +4882,9 @@ class AuiNotebook(wx.PyPanel):
 
     def OnTabCancelDrag(self, event):
         """
-        Handles the ``EVT_AUINOTEBOOK_CANCEL_DRAG`` event for L{AuiNotebook}.
+        Handles the ``EVT_AUINOTEBOOK_CANCEL_DRAG`` event for :class:`~aui.auibook.AuiNotebook`.
 
-        :param `event`: a L{AuiNotebookEvent} event to be processed.
+        :param `event`: a :class:`~aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         tabs = event.GetEventObject()
@@ -4899,7 +4899,7 @@ class AuiNotebook(wx.PyPanel):
 
 
     def IsMouseWellOutsideWindow(self):
-        """ Returns whether the mouse is well outside the L{AuiNotebook} screen rectangle. """
+        """ Returns whether the mouse is well outside the :class:`~aui.auibook.AuiNotebook` screen rectangle. """
 
         screen_rect = self.GetScreenRect()
         screen_rect.Inflate(50, 50)
@@ -4982,7 +4982,7 @@ class AuiNotebook(wx.PyPanel):
 
     def OnCloseFloatingPage(self, event):
         """
-        Handles the ``wx.EVT_CLOSE`` event for a floating page in L{AuiNotebook}.
+        Handles the ``wx.EVT_CLOSE`` event for a floating page in :class:`~aui.auibook.AuiNotebook`.
 
         :param `event`: a `wx.CloseEvent` event to be processed.
         """
@@ -5014,9 +5014,9 @@ class AuiNotebook(wx.PyPanel):
 
     def ReDockPage(self, pane):
         """
-        Re-docks a floating L{AuiNotebook} tab in the original position, when possible.
+        Re-docks a floating :class:`~aui.auibook.AuiNotebook` tab in the original position, when possible.
 
-        :param `pane`: an instance of L{framemanager.AuiPaneInfo}.
+        :param `pane`: an instance of :class:`~aui.framemanager.AuiPaneInfo`.
         """
 
         root_manager = framemanager.GetManager(self)
@@ -5064,7 +5064,7 @@ class AuiNotebook(wx.PyPanel):
         """
         Returns the tab frame associated with a tab control.
 
-        :param `tab_ctrl`: an instance of L{AuiTabCtrl}.
+        :param `tab_ctrl`: an instance of :class:`~aui.auibook.AuiTabCtrl`.
         """
 
         # if we've just removed the last tab from the source
@@ -5144,7 +5144,7 @@ class AuiNotebook(wx.PyPanel):
 
     def OnChildFocusNotebook(self, event):
         """
-        Handles the ``wx.EVT_CHILD_FOCUS`` event for L{AuiNotebook}.
+        Handles the ``wx.EVT_CHILD_FOCUS`` event for :class:`~aui.auibook.AuiNotebook`.
 
         :param `event`: a `wx.ChildFocusEvent` event to be processed.
         """
@@ -5174,7 +5174,7 @@ class AuiNotebook(wx.PyPanel):
 
     def SetNavigatorIcon(self, bmp):
         """
-        Sets the icon used by the L{TabNavigatorWindow}.
+        Sets the icon used by the :class:`~flatnotebook.TabNavigatorWindow`.
 
         :param `bmp`: an instance of `wx.Bitmap`.
         """
@@ -5187,7 +5187,7 @@ class AuiNotebook(wx.PyPanel):
 
     def OnNavigationKeyNotebook(self, event):
         """
-        Handles the ``wx.EVT_NAVIGATION_KEY`` event for L{AuiNotebook}.
+        Handles the ``wx.EVT_NAVIGATION_KEY`` event for :class:`~aui.auibook.AuiNotebook`.
 
         :param `event`: a `wx.NavigationKeyEvent` event to be processed.
         """
@@ -5273,9 +5273,9 @@ class AuiNotebook(wx.PyPanel):
 
     def OnTabButton(self, event):
         """
-        Handles the ``EVT_AUINOTEBOOK_BUTTON`` event for L{AuiNotebook}.
+        Handles the ``EVT_AUINOTEBOOK_BUTTON`` event for :class:`~aui.auibook.AuiNotebook`.
 
-        :param `event`: a L{AuiNotebookEvent} event to be processed.
+        :param `event`: a :class:`~aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         tabs = event.GetEventObject()
@@ -5360,9 +5360,9 @@ class AuiNotebook(wx.PyPanel):
 
     def OnTabMiddleDown(self, event):
         """
-        Handles the ``EVT_AUINOTEBOOK_TAB_MIDDLE_DOWN`` event for L{AuiNotebook}.
+        Handles the ``EVT_AUINOTEBOOK_TAB_MIDDLE_DOWN`` event for :class:`~aui.auibook.AuiNotebook`.
 
-        :param `event`: a L{AuiNotebookEvent} event to be processed.
+        :param `event`: a :class:`~aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         tabs = event.GetEventObject()
@@ -5380,9 +5380,9 @@ class AuiNotebook(wx.PyPanel):
 
     def OnTabMiddleUp(self, event):
         """
-        Handles the ``EVT_AUINOTEBOOK_TAB_MIDDLE_UP`` event for L{AuiNotebook}.
+        Handles the ``EVT_AUINOTEBOOK_TAB_MIDDLE_UP`` event for :class:`~aui.auibook.AuiNotebook`.
 
-        :param `event`: a L{AuiNotebookEvent} event to be processed.
+        :param `event`: a :class:`~aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         tabs = event.GetEventObject()
@@ -5415,9 +5415,9 @@ class AuiNotebook(wx.PyPanel):
 
     def OnTabRightDown(self, event):
         """
-        Handles the ``EVT_AUINOTEBOOK_TAB_RIGHT_DOWN`` event for L{AuiNotebook}.
+        Handles the ``EVT_AUINOTEBOOK_TAB_RIGHT_DOWN`` event for :class:`~aui.auibook.AuiNotebook`.
 
-        :param `event`: a L{AuiNotebookEvent} event to be processed.
+        :param `event`: a :class:`~aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         tabs = event.GetEventObject()
@@ -5435,9 +5435,9 @@ class AuiNotebook(wx.PyPanel):
 
     def OnTabRightUp(self, event):
         """
-        Handles the ``EVT_AUINOTEBOOK_TAB_RIGHT_UP`` event for L{AuiNotebook}.
+        Handles the ``EVT_AUINOTEBOOK_TAB_RIGHT_UP`` event for :class:`~aui.auibook.AuiNotebook`.
 
-        :param `event`: a L{AuiNotebookEvent} event to be processed.
+        :param `event`: a :class:`~aui.auibook.AuiNotebookEvent` event to be processed.
         """
 
         tabs = event.GetEventObject()
@@ -5646,9 +5646,9 @@ class AuiNotebook(wx.PyPanel):
         """
         Removes a button from the tab area.
 
-        :param `id`: the button identifier. See L{AddTabAreaButton} for a list of button identifiers.
+        :param `id`: the button identifier. See :meth:`~aui.auibook.AuiNotebook.AddTabAreaButton` for a list of button identifiers.
 
-        :see: L{AddTabAreaButton}
+        :see: :meth:`~aui.auibook.AuiNotebook.AddTabAreaButton`
         """
 
         active_tabctrl = self.GetActiveTabCtrl()
@@ -5657,11 +5657,11 @@ class AuiNotebook(wx.PyPanel):
 
     def CloneTabAreaButtons(self):
         """
-        Clones the tab area buttons when the L{AuiNotebook} is being split.
+        Clones the tab area buttons when the :class:`~aui.auibook.AuiNotebook` is being split.
 
-        :see: L{AddTabAreaButton}
+        :see: :meth:`~aui.auibook.AuiNotebook.AddTabAreaButton`
 
-        :note: Standard buttons for L{AuiNotebook} are not cloned, only custom ones.
+        :note: Standard buttons for :class:`~aui.auibook.AuiNotebook` are not cloned, only custom ones.
         """
 
         active_tabctrl = self.GetActiveTabCtrl()
@@ -5684,7 +5684,7 @@ class AuiNotebook(wx.PyPanel):
 
 
     def GetDefaultBorder(self):
-        """ Returns the default border style for L{AuiNotebook}. """
+        """ Returns the default border style for :class:`~aui.auibook.AuiNotebook`. """
 
         return wx.BORDER_NONE
 
@@ -5786,7 +5786,7 @@ class AuiNotebook(wx.PyPanel):
 
     def OnRenameCancelled(self, page_index):
         """
-        Called by L{TabTextCtrl}, to cancel the changes and to send the
+        Called by :class:`~aui.auibook.TabTextCtrl`, to cancel the changes and to send the
         `EVT_AUINOTEBOOK_END_LABEL_EDIT` event.
 
         :param `page_index`: the page index in the notebook.
@@ -5804,7 +5804,7 @@ class AuiNotebook(wx.PyPanel):
 
     def OnRenameAccept(self, page_index, value):
         """
-        Called by L{TabTextCtrl}, to accept the changes and to send the
+        Called by :class:`~aui.auibook.TabTextCtrl`, to accept the changes and to send the
         `EVT_AUINOTEBOOK_END_LABEL_EDIT` event.
 
         :param `page_index`: the page index in the notebook;
@@ -5821,7 +5821,7 @@ class AuiNotebook(wx.PyPanel):
 
 
     def ResetTextControl(self):
-        """ Called by L{TabTextCtrl} when it marks itself for deletion. """
+        """ Called by :class:`~aui.auibook.TabTextCtrl` when it marks itself for deletion. """
 
         if not self._textCtrl:
             return

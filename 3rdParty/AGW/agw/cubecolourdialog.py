@@ -28,13 +28,13 @@
 # --------------------------------------------------------------------------- #
 
 """
-L{CubeColourDialog} is an alternative implementation of `wx.ColourDialog`.
+:class:`~cubecolourdialog.CubeColourDialog` is an alternative implementation of `wx.ColourDialog`.
 
 
 Description
 ===========
 
-The L{CubeColourDialog} is an alternative implementation of `wx.ColourDialog`, and it
+The :class:`~cubecolourdialog.CubeColourDialog` is an alternative implementation of `wx.ColourDialog`, and it
 offers different functionalities with respect to the default wxPython one. It
 can be used as a replacement of `wx.ColourDialog` with exactly the same syntax and
 methods.
@@ -53,7 +53,7 @@ Some features:
   dialog, via a simple `wx.CheckBox`;
 - The "old colour" and "new colour" are displayed in two small custom panel,
   which support alpha transparency and texture;
-- L{CubeColourDialog} displays also the HTML colour code in hexadecimal format;
+- :class:`~cubecolourdialog.CubeColourDialog` displays also the HTML colour code in hexadecimal format;
 - When available, a corresponding "Web Safe" colour is generated using a 500
   web colours "database" (a dictionary inside the widget source code). Web Safe
   colours are recognized by all the browsers;
@@ -109,7 +109,7 @@ This class supports the following window styles:
 ================== =========== ==================================================
 Window Styles      Hex Value   Description
 ================== =========== ==================================================
-``CCD_SHOW_ALPHA``         0x1 Show the widget used to control colour alpha channels in L{CubeColourDialog}.
+``CCD_SHOW_ALPHA``         0x1 Show the widget used to control colour alpha channels in :class:`~cubecolourdialog.CubeColourDialog`.
 ================== =========== ==================================================
 
 
@@ -122,7 +122,7 @@ Events Processing
 License And Version
 ===================
 
-L{CubeColourDialog} is distributed under the wxPython license. 
+:class:`~cubecolourdialog.CubeColourDialog` is distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 26 Feb 2012, 15.00 GMT
 
@@ -149,7 +149,7 @@ _ = wx.GetTranslation
 
 # Show the alpha control in the dialog
 CCD_SHOW_ALPHA = 1
-""" Show the widget used to control colour alpha channels in L{CubeColourDialog}. """
+""" Show the widget used to control colour alpha channels in :class:`~cubecolourdialog.CubeColourDialog`. """
 
 # Radius of the HSB colour wheel
 RADIUS = 100
@@ -1274,8 +1274,8 @@ def Intersection(line1, line2):
     """
     Calculates the intersection point between 2 lines.
 
-    :param `line1`: an instance of L{LineDescription};
-    :param `line2`: another instance of L{LineDescription}.
+    :param `line1`: an instance of :class:`~cubecolourdialog.LineDescription`;
+    :param `line2`: another instance of :class:`~cubecolourdialog.LineDescription`.
     """
 
     if line1.slope == line2.slope:
@@ -1654,7 +1654,7 @@ class BasePyControl(wx.PyControl):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` for L{BasePyControl}.
+        Handles the ``wx.EVT_PAINT`` for :class:`~cubecolourdialog.BasePyControl`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -1671,7 +1671,7 @@ class BasePyControl(wx.PyControl):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` for L{BasePyControl}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` for :class:`~cubecolourdialog.BasePyControl`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
 
@@ -1735,7 +1735,7 @@ class BasePyControl(wx.PyControl):
     
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` for L{BasePyControl}.
+        Handles the ``wx.EVT_LEFT_DOWN`` for :class:`~cubecolourdialog.BasePyControl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         
@@ -1747,7 +1747,7 @@ class BasePyControl(wx.PyControl):
 
     def OnLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` for L{BasePyControl}.
+        Handles the ``wx.EVT_LEFT_UP`` for :class:`~cubecolourdialog.BasePyControl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         
@@ -1759,7 +1759,7 @@ class BasePyControl(wx.PyControl):
 
     def OnMotion(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` for L{BasePyControl}.
+        Handles the ``wx.EVT_MOTION`` for :class:`~cubecolourdialog.BasePyControl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         
@@ -1771,7 +1771,7 @@ class BasePyControl(wx.PyControl):
     
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` for L{BasePyControl}.
+        Handles the ``wx.EVT_SIZE`` for :class:`~cubecolourdialog.BasePyControl`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.        
         """
@@ -1870,7 +1870,7 @@ class RGBCube(BasePyControl):
 
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` for L{RGBCube}.
+        Handles the ``wx.EVT_LEFT_DOWN`` for :class:`~cubecolourdialog.RGBCube`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1896,7 +1896,7 @@ class RGBCube(BasePyControl):
         
     def OnLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` for L{RGBCube}.
+        Handles the ``wx.EVT_LEFT_UP`` for :class:`~cubecolourdialog.RGBCube`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -1908,7 +1908,7 @@ class RGBCube(BasePyControl):
 
     def OnMotion(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` for L{RGBCube}.
+        Handles the ``wx.EVT_MOTION`` for :class:`~cubecolourdialog.RGBCube`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2037,7 +2037,7 @@ class HSVWheel(BasePyControl):
 
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` for L{HSVWheel}.
+        Handles the ``wx.EVT_LEFT_DOWN`` for :class:`~cubecolourdialog.HSVWheel`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2055,7 +2055,7 @@ class HSVWheel(BasePyControl):
 
     def OnLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` for L{HSVWheel}.
+        Handles the ``wx.EVT_LEFT_UP`` for :class:`~cubecolourdialog.HSVWheel`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2067,7 +2067,7 @@ class HSVWheel(BasePyControl):
 
     def OnMotion(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` for L{HSVWheel}.
+        Handles the ``wx.EVT_MOTION`` for :class:`~cubecolourdialog.HSVWheel`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2150,7 +2150,7 @@ class BaseLineCtrl(wx.PyControl):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` for L{BaseLineCtrl}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` for :class:`~cubecolourdialog.BaseLineCtrl`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
 
@@ -2162,7 +2162,7 @@ class BaseLineCtrl(wx.PyControl):
     
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` for L{BaseLineCtrl}.
+        Handles the ``wx.EVT_LEFT_DOWN`` for :class:`~cubecolourdialog.BaseLineCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2180,7 +2180,7 @@ class BaseLineCtrl(wx.PyControl):
 
     def OnLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` for L{BaseLineCtrl}.
+        Handles the ``wx.EVT_LEFT_UP`` for :class:`~cubecolourdialog.BaseLineCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2191,7 +2191,7 @@ class BaseLineCtrl(wx.PyControl):
 
     def OnMotion(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` for L{BaseLineCtrl}.
+        Handles the ``wx.EVT_MOTION`` for :class:`~cubecolourdialog.BaseLineCtrl`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2204,7 +2204,7 @@ class BaseLineCtrl(wx.PyControl):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` for L{BaseLineCtrl}.
+        Handles the ``wx.EVT_SIZE`` for :class:`~cubecolourdialog.BaseLineCtrl`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -2283,7 +2283,7 @@ class BrightCtrl(BaseLineCtrl):
         
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` for L{BrightCtrl}.
+        Handles the ``wx.EVT_PAINT`` for :class:`~cubecolourdialog.BrightCtrl`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -2395,7 +2395,7 @@ class AlphaCtrl(BaseLineCtrl):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` for L{AlphaCtrl}.
+        Handles the ``wx.EVT_PAINT`` for :class:`~cubecolourdialog.AlphaCtrl`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -2435,7 +2435,7 @@ class AlphaCtrl(BaseLineCtrl):
         Draws the alpha shading on top of the checkerboard.
 
         :param `dc`: an instance of `wx.DC`;
-        :param `rect`: the L{AlphaCtrl} client rectangle.
+        :param `rect`: the :class:`~cubecolourdialog.AlphaCtrl` client rectangle.
         """
 
         gcdc = wx.GCDC(dc)
@@ -2515,7 +2515,7 @@ class ColourPanel(wx.PyPanel):
         Used internally. Do not call it in your code!
 
         :param `parent`: the control parent window;
-        :param `style`: the L{ColourPanel} window style.
+        :param `style`: the :class:`~cubecolourdialog.ColourPanel` window style.
         """
 
         wx.PyPanel.__init__(self, parent, style=style)
@@ -2530,7 +2530,7 @@ class ColourPanel(wx.PyPanel):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` for L{ColourPanel}.
+        Handles the ``wx.EVT_PAINT`` for :class:`~cubecolourdialog.ColourPanel`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -2564,7 +2564,7 @@ class ColourPanel(wx.PyPanel):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` for L{ColourPanel}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` for :class:`~cubecolourdialog.ColourPanel`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
 
@@ -2576,7 +2576,7 @@ class ColourPanel(wx.PyPanel):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` for L{ColourPanel}.
+        Handles the ``wx.EVT_SIZE`` for :class:`~cubecolourdialog.ColourPanel`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
@@ -2588,7 +2588,7 @@ class ColourPanel(wx.PyPanel):
         """
         Refresh the panel after a colour/alpha change.
 
-        :param `colour`: the new background colour of L{ColourPanel}.
+        :param `colour`: the new background colour of :class:`~cubecolourdialog.ColourPanel`.
         """
 
         self._colour = colour
@@ -2659,7 +2659,7 @@ class CustomPanel(wx.PyControl):
         
 
     def InitializeColours(self):
-        """ Initializes the 16 custom colours in L{CustomPanel}. """
+        """ Initializes the 16 custom colours in :class:`~cubecolourdialog.CustomPanel`. """
 
         curr = self._colourData.GetColour()
         self._colourSelection = -1
@@ -2687,7 +2687,7 @@ class CustomPanel(wx.PyControl):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` for L{CustomPanel}.
+        Handles the ``wx.EVT_PAINT`` for :class:`~cubecolourdialog.CustomPanel`.
 
         :param `event`: a `wx.PaintEvent` event to be processed.
         """
@@ -2702,7 +2702,7 @@ class CustomPanel(wx.PyControl):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` for L{CustomPanel}.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` for :class:`~cubecolourdialog.CustomPanel`.
 
         :param `event`: a `wx.EraseEvent` event to be processed.
 
@@ -2714,7 +2714,7 @@ class CustomPanel(wx.PyControl):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` for L{CustomPanel}.
+        Handles the ``wx.EVT_SIZE`` for :class:`~cubecolourdialog.CustomPanel`.
 
         :param `event`: a `wx.SizeEvent` event to be processed.        
         """
@@ -2724,7 +2724,7 @@ class CustomPanel(wx.PyControl):
 
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` for L{CustomPanel}.
+        Handles the ``wx.EVT_LEFT_DOWN`` for :class:`~cubecolourdialog.CustomPanel`.
 
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
@@ -2939,7 +2939,7 @@ class CubeColourDialog(wx.Dialog):
         
         
     def SetProperties(self):
-        """ Sets some initial properties for L{CubeColourDialog} (sizes, values). """
+        """ Sets some initial properties for :class:`~cubecolourdialog.CubeColourDialog` (sizes, values). """
 
         self.okButton.SetDefault()
         self.oldColourPanel.SetMinSize((-1, 50))
@@ -2958,7 +2958,7 @@ class CubeColourDialog(wx.Dialog):
 
 
     def DoLayout(self):
-        """ Layouts all the controls in the L{CubeColourDialog}. """
+        """ Layouts all the controls in the :class:`~cubecolourdialog.CubeColourDialog`. """
 
         dialogSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer = wx.GridBagSizer(10, 5)
@@ -3080,7 +3080,7 @@ class CubeColourDialog(wx.Dialog):
         
 
     def InitDialog(self):
-        """ Initialize the L{CubeColourDialog}. """
+        """ Initialize the :class:`~cubecolourdialog.CubeColourDialog`. """
 
         hsvRect = self.hsvBitmap.GetClientRect()
         self._centre = wx.Point(hsvRect.x + hsvRect.width/2, hsvRect.y + hsvRect.height/2)
@@ -3272,7 +3272,7 @@ class CubeColourDialog(wx.Dialog):
         
     def OnCloseWindow(self, event):
         """
-        Handles the ``wx.EVT_CLOSE`` event for L{CubeColourDialog}.
+        Handles the ``wx.EVT_CLOSE`` event for :class:`~cubecolourdialog.CubeColourDialog`.
         
         :param `event`: a `wx.CloseEvent` event to be processed.
         """
@@ -3282,7 +3282,7 @@ class CubeColourDialog(wx.Dialog):
 
     def OnKeyUp(self, event):
         """
-        Handles the ``wx.EVT_CHAR_HOOK`` event for L{CubeColourDialog}.
+        Handles the ``wx.EVT_CHAR_HOOK`` event for :class:`~cubecolourdialog.CubeColourDialog`.
         
         :param `event`: a `wx.KeyEvent` event to be processed.
         """
@@ -3295,7 +3295,7 @@ class CubeColourDialog(wx.Dialog):
 
     def ShowModal(self):
         """
-        Shows L{CubeColourDialog} as a modal dialog. Program flow does
+        Shows :class:`~cubecolourdialog.CubeColourDialog` as a modal dialog. Program flow does
         not return until the dialog has been dismissed with `EndModal`.
 
         :note: Overridden from `wx.Dialog`. 
@@ -3306,7 +3306,7 @@ class CubeColourDialog(wx.Dialog):
 
     def SetAGWWindowStyleFlag(self, agwStyle):
         """
-        Sets the L{CubeColourDialog} window style flags.
+        Sets the :class:`~cubecolourdialog.CubeColourDialog` window style flags.
 
         :param `agwStyle`: can only be ``CCD_SHOW_ALPHA`` or ``None``.
         """
@@ -3330,9 +3330,9 @@ class CubeColourDialog(wx.Dialog):
 
     def GetAGWWindowStyleFlag(self):
         """
-        Returns the L{CubeColourDialog} window style flags.
+        Returns the :class:`~cubecolourdialog.CubeColourDialog` window style flags.
 
-        :see: L{SetAGWWindowStyleFlag} for a list of possible flags.        
+        :see: :meth:`~cubecolourdialog.CubeColourDialog.SetAGWWindowStyleFlag` for a list of possible flags.        
         """
 
         return self._agwStyle        
@@ -3340,7 +3340,7 @@ class CubeColourDialog(wx.Dialog):
             
     def OnOk(self, event):
         """
-        Handles the Ok ``wx.EVT_BUTTON`` event for L{CubeColourDialog}.
+        Handles the Ok ``wx.EVT_BUTTON`` event for :class:`~cubecolourdialog.CubeColourDialog`.
 
         :param `event`: a `wx.CommandEvent` event to be processed.
         """
@@ -3350,7 +3350,7 @@ class CubeColourDialog(wx.Dialog):
 
     def OnCancel(self, event):
         """
-        Handles the Cancel ``wx.EVT_BUTTON`` event for L{CubeColourDialog}.
+        Handles the Cancel ``wx.EVT_BUTTON`` event for :class:`~cubecolourdialog.CubeColourDialog`.
 
         :param `event`: a `wx.CommandEvent` event to be processed.
         """
@@ -3360,7 +3360,7 @@ class CubeColourDialog(wx.Dialog):
 
     def OnAddCustom(self, event):
         """
-        Handles the Add Custom ``wx.EVT_BUTTON`` event for L{CubeColourDialog}.
+        Handles the Add Custom ``wx.EVT_BUTTON`` event for :class:`~cubecolourdialog.CubeColourDialog`.
 
         :param `event`: a `wx.CommandEvent` event to be processed.
         """
@@ -3371,7 +3371,7 @@ class CubeColourDialog(wx.Dialog):
   
     def OnShowAlpha(self, event):
         """
-        Shows/hides the alpha channel control in L{CubeColourDialog}.
+        Shows/hides the alpha channel control in :class:`~cubecolourdialog.CubeColourDialog`.
 
         :param `event`: a `wx.CommandEvent` event to be processed.
         """

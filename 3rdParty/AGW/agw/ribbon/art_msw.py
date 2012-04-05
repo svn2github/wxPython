@@ -1,5 +1,5 @@
 """
-L{RibbonMSWArtProvider} is responsible for drawing all the components of the ribbon
+:class:`~ribbon.art_msw.RibbonMSWArtProvider` is responsible for drawing all the components of the ribbon
 interface using a Windows appearance.
 
 
@@ -10,19 +10,19 @@ This allows a ribbon bar to have a pluggable look-and-feel, while retaining the 
 underlying behaviour. As a single art provider is used for all ribbon components, a
 ribbon bar usually has a consistent (though unique) appearance.
 
-By default, a L{RibbonBar} uses an instance of a class called L{RibbonDefaultArtProvider},
-which resolves to L{RibbonAUIArtProvider}, L{RibbonMSWArtProvider}, or L{RibbonOSXArtProvider}
+By default, a :class:`~ribbon.bar.RibbonBar` uses an instance of a class called :class:`~ribbon.art_default.RibbonDefaultArtProvider`,
+which resolves to :class:`~ribbon.art_aui.RibbonAUIArtProvider`, :class:`~ribbon.art_msw.RibbonMSWArtProvider`, or :class:`~ribbon.art_osx.RibbonOSXArtProvider`
 - whichever is most appropriate to the current platform. These art providers are all
 slightly configurable with regard to colours and fonts, but for larger modifications,
 you can derive from one of these classes, or write a completely new art provider class.
 
-Call L{RibbonBar.SetArtProvider} to change the art provider being used.
+Call :meth:`RibbonBar.SetArtProvider() <ribbon.bar.RibbonBar.SetArtProvider>` to change the art provider being used.
 
 
 See Also
 ========
 
-L{RibbonBar}
+:class:`~ribbon.bar.RibbonBar`
 """
 
 import wx
@@ -99,19 +99,19 @@ class RibbonMSWArtProvider(object):
         """
         Get the current colour scheme.
 
-        Returns three colours such that if L{SetColourScheme} were called with them, the
-        colour scheme would be restored to what it was when L{SetColourScheme} was last
+        Returns three colours such that if :meth:`~ribbon.art_msw.RibbonMSWArtProvider.SetColourScheme` were called with them, the
+        colour scheme would be restored to what it was when :meth:`~ribbon.art_msw.RibbonMSWArtProvider.SetColourScheme` was last
         called. In practice, this usually means that the returned values are the three
-        colours given in the last call to L{SetColourScheme}, however if
-        L{SetColourScheme} performs an idempotent operation upon the colours it is given
+        colours given in the last call to :meth:`~ribbon.art_msw.RibbonMSWArtProvider.SetColourScheme`, however if
+        :meth:`~ribbon.art_msw.RibbonMSWArtProvider.SetColourScheme` performs an idempotent operation upon the colours it is given
         (like clamping a component of the colour), then the returned values may not be
-        the three colours given in the last call to L{SetColourScheme}.
+        the three colours given in the last call to :meth:`~ribbon.art_msw.RibbonMSWArtProvider.SetColourScheme`.
 
-        If L{SetColourScheme} has not been called, then the returned values should result
+        If :meth:`~ribbon.art_msw.RibbonMSWArtProvider.SetColourScheme` has not been called, then the returned values should result
         in a colour scheme similar to, if not identical to, the default colours of the
-        art provider. Note that if L{SetColour} is called, then L{GetColourScheme} does
+        art provider. Note that if :meth:`~ribbon.art_msw.RibbonMSWArtProvider.SetColour` is called, then :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetColourScheme` does
         not try and return a colour scheme similar to colours being used - it's return
-        values are dependant upon the last values given to L{SetColourScheme}, as
+        values are dependant upon the last values given to :meth:`~ribbon.art_msw.RibbonMSWArtProvider.SetColourScheme`, as
         described above.
 
         :param `primary`: Pointer to a location to store the primary colour, or ``None``;
@@ -143,7 +143,7 @@ class RibbonMSWArtProvider(object):
         :param `secondary`: MISSING DESCRIPTION;
         :param `tertiary`: MISSING DESCRIPTION.
 
-        :see: L{SetColour}, L{GetColourScheme}
+        :see: :meth:`~ribbon.art_msw.RibbonMSWArtProvider.SetColour`, :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetColourScheme`
         """
 
         self._primary_scheme_colour = primary
@@ -387,7 +387,7 @@ class RibbonMSWArtProvider(object):
         """
         Set the style flags.
 
-        Normally called automatically by L{RibbonBar.SetArtProvider} with the ribbon
+        Normally called automatically by :meth:`RibbonBar.SetArtProvider() <ribbon.bar.RibbonBar.SetArtProvider>` with the ribbon
         bar's style flags, so that the art provider has the same flags as the bar which
         it is serving.
 
@@ -695,7 +695,7 @@ class RibbonMSWArtProvider(object):
         :param `id`: the colour id;
         :param `colour`: the colour.
 
-        :see: L{SetColourScheme}
+        :see: :meth:`~ribbon.art_msw.RibbonMSWArtProvider.SetColourScheme`
         """
     
         if id == RIBBON_ART_BUTTON_BAR_LABEL_COLOUR:
@@ -907,13 +907,13 @@ class RibbonMSWArtProvider(object):
         Draw a single tab in the tab region of a ribbon bar.
 
         :param `dc`: The device context to draw onto;
-        :param `wnd`: The window which is being drawn onto (not the L{RibbonPage} associated
+        :param `wnd`: The window which is being drawn onto (not the :class:`~ribbon.page.RibbonPage` associated
          with the tab being drawn);
         :param `tab`: The rectangle within which to draw, and also the tab label, icon, and
          state (active and/or hovered). The drawing rectangle will be entirely within a
-         rectangle on the same device context previously painted with L{DrawTabCtrlBackground}.
-         The rectangle's width will be at least the minimum value returned by L{GetBarTabWidth},
-         and height will be the value returned by L{GetTabCtrlHeight}.
+         rectangle on the same device context previously painted with :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawTabCtrlBackground`.
+         The rectangle's width will be at least the minimum value returned by :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetBarTabWidth`,
+         and height will be the value returned by :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetTabCtrlHeight`.
 
         """
 
@@ -1018,7 +1018,7 @@ class RibbonMSWArtProvider(object):
         :param `wnd`: The window which is being drawn onto;
         :param `rect`: The rectangle within which to draw, which will be entirely
          within a rectangle on the same device context previously painted with
-         L{DrawTabCtrlBackground};
+         :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawTabCtrlBackground`;
         :param `visibility`: The opacity with which to draw the separator. Values
          are in the range [0, 1], with 0 being totally transparent, and 1 being totally
          opaque.
@@ -1160,10 +1160,10 @@ class RibbonMSWArtProvider(object):
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto (which is commonly the
-         L{RibbonPage} whose background is being drawn, but doesn't have to be);
+         :class:`~ribbon.page.RibbonPage` whose background is being drawn, but doesn't have to be);
         :param `rect`: The rectangle within which to draw.
 
-        :see: L{GetPageBackgroundRedrawArea}
+        :see: :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetPageBackgroundRedrawArea`
         """
 
         dc.SetPen(wx.TRANSPARENT_PEN)
@@ -1217,12 +1217,12 @@ class RibbonMSWArtProvider(object):
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto;
         :param `rect`: The rectangle within which to draw. The size of this rectangle
-         will be at least the size returned by L{GetScrollButtonMinimumSize} for a
+         will be at least the size returned by :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetScrollButtonMinimumSize` for a
          scroll button with the same style. For tab scroll buttons, this rectangle
          will be entirely within a rectangle on the same device context previously
-         painted with L{DrawTabCtrlBackground}, but this is not guaranteed for other
+         painted with :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawTabCtrlBackground`, but this is not guaranteed for other
          types of button (for example, page scroll buttons will not be painted on an
-         area previously painted with L{DrawPageBackground} );
+         area previously painted with :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawPageBackground` );
         :param `style`: A combination of flags from `RibbonScrollButtonStyle`,
          including a direction, a for flag, and one or more states.
 
@@ -1384,7 +1384,7 @@ class RibbonMSWArtProvider(object):
 
         This should draw the border, background, label, and any other items of a panel
         which are outside the client area of a panel. Note that when a panel is
-        minimised, this function is not called - only L{DrawMinimisedPanel} is called,
+        minimised, this function is not called - only :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawMinimisedPanel` is called,
         so a background should be explicitly painted by that if required.
 
         :param `dc`: The device context to draw onto;
@@ -1462,7 +1462,7 @@ class RibbonMSWArtProvider(object):
 
     def DrawGalleryBackground(self, dc, wnd, rect):
         """
-        Draw the background and chrome for a L{RibbonGallery} control.
+        Draw the background and chrome for a :class:`~ribbon.gallery.RibbonGallery` control.
 
         This should draw the border, brackground, scroll buttons, extension button, and
         any other UI elements which are not attached to a specific gallery item.
@@ -1471,8 +1471,8 @@ class RibbonMSWArtProvider(object):
         :param `wnd`: The window which is being drawn onto, which is always the gallery
          whose background and chrome is being drawn. Attributes used during drawing like
          the gallery hover state and individual button states can be queried from this
-         parameter by L{RibbonGallery.IsHovered}, L{RibbonGallery.GetExtensionButtonState},
-         L{RibbonGallery.GetUpButtonState}, and L{RibbonGallery.GetDownButtonState};
+         parameter by :meth:`RibbonGallery.IsHovered() <ribbon.gallery.RibbonGallery.IsHovered>`, :meth:`RibbonGallery.GetExtensionButtonState() <ribbon.gallery.RibbonGallery.GetExtensionButtonState>`,
+         :meth:`RibbonGallery.GetUpButtonState() <ribbon.gallery.RibbonGallery.GetUpButtonState>`, and :meth:`RibbonGallery.GetDownButtonState() <ribbon.gallery.RibbonGallery.GetDownButtonState>`;
         :param `rect`: The rectangle within which to draw. This rectangle is the entire
          area of the gallery control, not just the client rectangle.
 
@@ -1572,10 +1572,10 @@ class RibbonMSWArtProvider(object):
 
     def DrawGalleryItemBackground(self, dc, wnd, rect, item):
         """
-        Draw the background of a single item in a L{RibbonGallery} control.
+        Draw the background of a single item in a :class:`~ribbon.gallery.RibbonGallery` control.
 
         This is painted on top of a gallery background, and behind the items bitmap.
-        Unlike L{DrawButtonBarButton} and L{DrawTool}, it is not expected to draw the
+        Unlike :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawButtonBarButton` and :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawTool`, it is not expected to draw the
         item bitmap - that is done by the gallery control itself.
 
         :param `dc`: The device context to draw onto;
@@ -1586,10 +1586,10 @@ class RibbonMSWArtProvider(object):
          (``RIBBON_ART_GALLERY_BITMAP_PADDING_LEFT_SIZE``, ``RIBBON_ART_GALLERY_BITMAP_PADDING_RIGHT_SIZE``,
          ``RIBBON_ART_GALLERY_BITMAP_PADDING_TOP_SIZE``, and ``RIBBON_ART_GALLERY_BITMAP_PADDING_BOTTOM_SIZE``).
          The drawing rectangle will be entirely within a rectangle on the same device
-         context previously painted with L{DrawGalleryBackground};
+         context previously painted with :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawGalleryBackground`;
         :param `item`: The item whose background is being painted. Typically the background
-         will vary if the item is hovered, active, or selected; L{RibbonGallery.GetSelection},
-         L{RibbonGallery.GetActiveItem}, and L{RibbonGallery.GetHoveredItem} can be
+         will vary if the item is hovered, active, or selected; :meth:`RibbonGallery.GetSelection() <ribbon.gallery.RibbonGallery.GetSelection>`,
+         :meth:`RibbonGallery.GetActiveItem() <ribbon.gallery.RibbonGallery.GetActiveItem>`, and :meth:`RibbonGallery.GetHoveredItem() <ribbon.gallery.RibbonGallery.GetHoveredItem>` can be
          called to test if the given item is in one of these states.
 
         """
@@ -1667,12 +1667,12 @@ class RibbonMSWArtProvider(object):
         :param `wnd`: The window which is being drawn onto, which is always the panel
          which is minimised. The panel label can be obtained from this window. The
          minimised icon obtained from querying the window may not be the size requested
-         by L{GetMinimisedPanelMinimumSize} - the argument contains the icon in the
+         by :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetMinimisedPanelMinimumSize` - the argument contains the icon in the
          requested size;
         :param `rect`: The rectangle within which to draw. The size of the rectangle
-         will be at least the size returned by L{GetMinimisedPanelMinimumSize};
+         will be at least the size returned by :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetMinimisedPanelMinimumSize`;
         :param `bitmap`: A copy of the panel's minimised bitmap rescaled to the size
-         returned by L{GetMinimisedPanelMinimumSize}.
+         returned by :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetMinimisedPanelMinimumSize`.
 
         """
 
@@ -1796,7 +1796,7 @@ class RibbonMSWArtProvider(object):
 
     def DrawButtonBarBackground(self, dc, wnd, rect):
         """
-        Draw the background for a L{RibbonButtonBar} control.
+        Draw the background for a :class:`~ribbon.buttonbar.RibbonButtonBar` control.
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto (which will typically be
@@ -1856,14 +1856,14 @@ class RibbonMSWArtProvider(object):
 
     def DrawButtonBarButton(self, dc, wnd, rect, kind, state, label, bitmap_large, bitmap_small):
         """
-        Draw a single button for a L{RibbonButtonBar} control.
+        Draw a single button for a :class:`~ribbon.buttonbar.RibbonButtonBar` control.
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto;
         :param `rect`: The rectangle within which to draw. The size of this rectangle
-         will be a size previously returned by L{GetButtonBarButtonSize}, and the
+         will be a size previously returned by :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetButtonBarButtonSize`, and the
          rectangle will be entirely within a rectangle on the same device context
-         previously painted with L{DrawButtonBarBackground};
+         previously painted with :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawButtonBarBackground`;
         :param `kind`: The kind of button to draw (normal, dropdown or hybrid);
         :param `state`: Combination of a size flag and state flags from the
          `RibbonButtonBarButtonState` enumeration;
@@ -2028,14 +2028,14 @@ class RibbonMSWArtProvider(object):
 
     def DrawToolBarBackground(self, dc, wnd, rect):
         """
-        Draw the background for a L{RibbonToolBar} control.
+        Draw the background for a :class:`~ribbon.toolbar.RibbonToolBar` control.
 
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The which is being drawn onto. In most cases this will be a
-         L{RibbonToolBar}, but it doesn't have to be;
+         :class:`~ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
         :param `rect`: The rectangle within which to draw. Some of this rectangle
-         will later be drawn over using L{DrawToolGroupBackground} and L{DrawTool},
+         will later be drawn over using :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawToolGroupBackground` and :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawTool`,
          but not all of it will (unless there is only a single group of tools).
 
         """
@@ -2045,18 +2045,18 @@ class RibbonMSWArtProvider(object):
 
     def DrawToolGroupBackground(self, dc, wnd, rect):
         """
-        Draw the background for a group of tools on a L{RibbonToolBar} control.
+        Draw the background for a group of tools on a :class:`~ribbon.toolbar.RibbonToolBar` control.
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto. In most cases this will
-         be a L{RibbonToolBar}, but it doesn't have to be;
+         be a :class:`~ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
         :param `rect`: The rectangle within which to draw. This rectangle is a union
          of the individual tools' rectangles. As there are no gaps between tools,
-         this rectangle will be painted over exactly once by calls to L{DrawTool}.
-         The group background could therefore be painted by L{DrawTool}, though it
+         this rectangle will be painted over exactly once by calls to :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawTool`.
+         The group background could therefore be painted by :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawTool`, though it
          can be conceptually easier and more efficient to draw it all at once here.
          The rectangle will be entirely within a rectangle on the same device context
-         previously painted with L{DrawToolBarBackground}.
+         previously painted with :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawToolBarBackground`.
 
         """
 
@@ -2077,16 +2077,16 @@ class RibbonMSWArtProvider(object):
 
     def DrawTool(self, dc, wnd, rect, bitmap, kind, state):
         """
-        Draw a single tool (for a L{RibbonToolBar} control).
+        Draw a single tool (for a :class:`~ribbon.toolbar.RibbonToolBar` control).
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto. In most cases this will
-         be a L{RibbonToolBar}, but it doesn't have to be;
+         be a :class:`~ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
         :param `rect`: The rectangle within which to draw. The size of this rectangle
-         will at least the size returned by L{GetToolSize}, and the height of it will
+         will at least the size returned by :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetToolSize`, and the height of it will
          be equal for all tools within the same group. The rectangle will be entirely
          within a rectangle on the same device context previously painted with
-         L{DrawToolGroupBackground};
+         :meth:`~ribbon.art_msw.RibbonMSWArtProvider.DrawToolGroupBackground`;
         :param `bitmap`: The bitmap to use as the tool's foreground. If the tool is a
          hybrid or dropdown tool, then the foreground should also contain a standard
          dropdown button;
@@ -2282,7 +2282,7 @@ class RibbonMSWArtProvider(object):
         :param `client_offset`: The offset where the client rectangle begins within the
          panel (may be ``None``).
 
-        :see: L{GetPanelClientSize}
+        :see: :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetPanelClientSize`
         """
 
         dc.SetFont(self._panel_label_font)
@@ -2308,7 +2308,7 @@ class RibbonMSWArtProvider(object):
         """
         Calculate the client size of a panel for a given overall size.
 
-        This should act as the inverse to L{GetPanelSize}, and decrement the given size
+        This should act as the inverse to :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetPanelSize`, and decrement the given size
         by enough to fit the panel label and other chrome.
 
         :param `dc`: A device context to use if one is required for size calculations;
@@ -2317,7 +2317,7 @@ class RibbonMSWArtProvider(object):
         :param `client_offset`: The offset where the returned client size begins within
          the given (may be ``None``).
 
-        :see: L{GetPanelSize}
+        :see: :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetPanelSize`
         """
 
         dc.SetFont(self._panel_label_font)
@@ -2346,7 +2346,7 @@ class RibbonMSWArtProvider(object):
 
     def GetGallerySize(self, dc, wnd, client_size):
         """
-        Calculate the size of a L{RibbonGallery} control for a given client size.
+        Calculate the size of a :class:`~ribbon.gallery.RibbonGallery` control for a given client size.
 
         This should increment the given size by enough to fit the gallery border,
         buttons, and any other chrome.
@@ -2355,7 +2355,7 @@ class RibbonMSWArtProvider(object):
         :param `wnd`: The gallery in question;
         :param `client_size`: The client size.
 
-        :see: L{GetGalleryClientSize}
+        :see: :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetGalleryClientSize`
         """
 
         client_size.IncBy(2, 1) # Left / top padding
@@ -2372,9 +2372,9 @@ class RibbonMSWArtProvider(object):
                              scroll_down_button=None, extension_button=None):
 
         """
-        Calculate the client size of a L{RibbonGallery} control for a given size.
+        Calculate the client size of a :class:`~ribbon.gallery.RibbonGallery` control for a given size.
 
-        This should act as the inverse to L{GetGallerySize}, and decrement the given
+        This should act as the inverse to :meth:`~ribbon.art_msw.RibbonMSWArtProvider.GetGallerySize`, and decrement the given
         size by enough to fir the gallery border, buttons, and other chrome.
 
         :param `dc`: A device context to use if one is required for size calculations;
@@ -2482,11 +2482,11 @@ class RibbonMSWArtProvider(object):
     def GetButtonBarButtonSize(self, dc, wnd, kind, size, label, bitmap_size_large, bitmap_size_small,
                                button_size=None, normal_region=None, dropdown_region=None):
         """
-        Calculate the size of a button within a L{RibbonButtonBar}.
+        Calculate the size of a button within a :class:`~ribbon.buttonbar.RibbonButtonBar`.
 
         :param `dc`: A device context to use when one is required for size calculations;
         :param `wnd`: The window onto which the button will eventually be drawn
-         (which is normally a L{RibbonButtonBar}, though this is not guaranteed);
+         (which is normally a :class:`~ribbon.buttonbar.RibbonButtonBar`, though this is not guaranteed);
         :param `kind`: The kind of button;
         :param `size`: The size-class to calculate the size for. Buttons on a button
          bar can have three distinct sizes: ``RIBBON_BUTTONBAR_BUTTON_SMALL``,
@@ -2628,7 +2628,7 @@ class RibbonMSWArtProvider(object):
 
     def GetToolSize(self, dc, wnd, bitmap_size, kind, is_first, is_last, dropdown_region=None):
         """
-        Calculate the size of a tool within a L{RibbonToolBar}.
+        Calculate the size of a tool within a :class:`~ribbon.toolbar.RibbonToolBar`.
 
         :param `dc`: A device context to use when one is required for size calculations;
         :param `wnd`: The window onto which the tool will eventually be drawn;
