@@ -31,7 +31,7 @@ import wx.lib.agw.foldpanelbar as FPB
 import wx.lib.agw.hypertreelist as HTL
 import wx.lib.agw.knobctrl as KC
 import wx.lib.agw.labelbook as LBK
-import wx.lib.pycollapsiblepane as PCP
+import wx.lib.agw.pycollapsiblepane as PCP
 
 try:
     import wx.lib.agw.shapedbutton as SB
@@ -93,11 +93,14 @@ class AbstractHandler(object):
     Base class for persistent windows, uses the window name as persistent name by
     default and automatically reacts to the window destruction.
 
-    :note: This is an abstract class. If you wish to add another (custom) handler
-           for your widgets, you should derive from :class:`AbstractHandler` and override
-           the :meth:`Save() <AbstractHandler.Save>`,
-           :meth:`Restore() <AbstractHandler.Restore>` and
-           :meth:`GetKind() <AbstractHandler.GetKind>` methods.
+    .. note::
+
+       This is an abstract class. If you wish to add another (custom) handler
+       for your widgets, you should derive from :class:`AbstractHandler` and override
+       the :meth:`Save() <AbstractHandler.Save>`,
+       :meth:`Restore() <AbstractHandler.Restore>` and
+       :meth:`GetKind() <AbstractHandler.GetKind>` methods.
+       
     """
     
     def __init__(self, pObject):
