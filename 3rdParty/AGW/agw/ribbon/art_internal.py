@@ -1,5 +1,5 @@
 """
-This module contains methods used throughout the :class:`~ribbon.bar.RibbonBar` library.
+This module contains methods used throughout the :class:`bar` library.
 """
 
 import wx

@@ -8,8 +8,8 @@ At the most generic level, this is a combination of a tab control with a toolbar
 At a more functional level, it is similar to the user interface present in recent
 versions of Microsoft Office.
 
-A ribbon user interface typically has a :class:`~ribbon.bar.RibbonBar`, which contains one or more
-:class:`~ribbon.page.RibbonPage`, which in turn each contains one or more :class:`~ribbon.panel.RibbonPanel`, which in turn
+A ribbon user interface typically has a :class:`bar.RibbonBar`, which contains one or more
+:class:`page.RibbonPage`, which in turn each contains one or more :class:`panel.RibbonPanel`, which in turn
 contain controls.
 
 
@@ -136,10 +136,10 @@ Current wxRibbon version tracked: wxWidgets 2.9.4 (SVN HEAD)
 
 New features recently implemented:
 
-- Possibility to hide panels in the :class:`~ribbon.bar.RibbonBar`;
+- Possibility to hide panels in the :class:`bar.RibbonBar`;
 - Added the ``EVT_RIBBONBAR_TAB_LEFT_DCLICK`` event, which generates a special event
   when a ribbon bar tab is double-clicked;
-- Added support for toggle buttons in the :class:`~ribbon.bar.RibbonBar`;
+- Added support for toggle buttons in the :class:`bar.RibbonBar`;
 - Improved support for ribbon panel sizers: panels with sizers should now automatically
   minimise at small sizes, and behave properly when popping up from a minimised state;
 - Added tooltips via `SetToolTip` for those buttons which have the `help_string` attribute set.

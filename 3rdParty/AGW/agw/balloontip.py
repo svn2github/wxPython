@@ -40,41 +40,41 @@
 # --------------------------------------------------------------------------- #
 
 """
-:class:`~balloontip.BalloonTip` is a class that allows you to display tooltips in a balloon style
+:class:`BalloonTip` is a class that allows you to display tooltips in a balloon style
 window.
 
 
 Description
 ===========
 
-:class:`~balloontip.BalloonTip` is a class that allows you to display tooltips in a balloon style
+:class:`BalloonTip` is a class that allows you to display tooltips in a balloon style
 window (actually a frame), similarly to the windows XP balloon help. There is
 also an arrow that points to the center of the control designed as a "target"
-for the :class:`~balloontip.BalloonTip`.
+for the :class:`BalloonTip`.
 
 What it can do:
 
 - Set the balloon shape as a rectangle or a rounded rectangle;
-- Set an icon to the top-left of the :class:`~balloontip.BalloonTip` frame;
-- Set a title at the top of the :class:`~balloontip.BalloonTip` frame;
-- Automatic "best" placement of :class:`~balloontip.BalloonTip` frame depending on the target
+- Set an icon to the top-left of the :class:`BalloonTip` frame;
+- Set a title at the top of the :class:`BalloonTip` frame;
+- Automatic "best" placement of :class:`BalloonTip` frame depending on the target
   control/window position;
 - Runtime customization of title/tip fonts and foreground colours;
-- Runtime change of :class:`~balloontip.BalloonTip` frame shape;
+- Runtime change of :class:`BalloonTip` frame shape;
 - Set the balloon background colour;
-- Possibility to set the delay after which the :class:`~balloontip.BalloonTip` is displayed;
-- Possibility to set the delay after which the :class:`~balloontip.BalloonTip` is destroyed;
-- Three different behaviors for the :class:`~balloontip.BalloonTip` window (regardless the delay
+- Possibility to set the delay after which the :class:`BalloonTip` is displayed;
+- Possibility to set the delay after which the :class:`BalloonTip` is destroyed;
+- Three different behaviors for the :class:`BalloonTip` window (regardless the delay
   destruction time set):
   
-  a) Destroy by leave: the :class:`~balloontip.BalloonTip` is destroyed when the mouse leaves the
+  a) Destroy by leave: the :class:`BalloonTip` is destroyed when the mouse leaves the
      target control/window;
-  b) Destroy by click: the :class:`~balloontip.BalloonTip` is destroyed when you click on any area
+  b) Destroy by click: the :class:`BalloonTip` is destroyed when you click on any area
      of the target control/window;
-  c) Destroy by button: the :class:`~balloontip.BalloonTip` is destroyed when you click on the
+  c) Destroy by button: the :class:`BalloonTip` is destroyed when you click on the
      top-right close button;
-- Possibility to enable/disable globally the :class:`~balloontip.BalloonTip` on you application;
-- Set the :class:`~balloontip.BalloonTip` also for the taskbar icon.
+- Possibility to enable/disable globally the :class:`BalloonTip` on you application;
+- Set the :class:`BalloonTip` also for the taskbar icon.
 
 
 Usage
@@ -138,11 +138,11 @@ This class supports the following window styles:
 ================ =========== ==================================================
 Window Styles    Hex Value   Description
 ================ =========== ==================================================
-``BT_ROUNDED``           0x1 :class:`~balloontip.BalloonTip` will have a rounded rectangular shape.
-``BT_RECTANGLE``         0x2 :class:`~balloontip.BalloonTip` will have a rectangular shape.
-``BT_LEAVE``             0x3 :class:`~balloontip.BalloonTip` will be destroyed when the user moves the mouse outside the target window.
-``BT_CLICK``             0x4 :class:`~balloontip.BalloonTip` will be destroyed when the user click on :class:`~balloontip.BalloonTip`.
-``BT_BUTTON``            0x5 :class:`~balloontip.BalloonTip` will be destroyed when the user click on the close button.
+``BT_ROUNDED``           0x1 :class:`BalloonTip` will have a rounded rectangular shape.
+``BT_RECTANGLE``         0x2 :class:`BalloonTip` will have a rectangular shape.
+``BT_LEAVE``             0x3 :class:`BalloonTip` will be destroyed when the user moves the mouse outside the target window.
+``BT_CLICK``             0x4 :class:`BalloonTip` will be destroyed when the user click on :class:`BalloonTip`.
+``BT_BUTTON``            0x5 :class:`BalloonTip` will be destroyed when the user click on the close button.
 ================ =========== ==================================================
 
 
@@ -170,17 +170,17 @@ from wx.lib.buttons import GenButton
 
 # Define The Values For The BalloonTip Frame Shape
 BT_ROUNDED = 1
-""" :class:`~balloontip.BalloonTip` will have a rounded rectangular shape. """
+""" :class:`BalloonTip` will have a rounded rectangular shape. """
 BT_RECTANGLE = 2
-""" :class:`~balloontip.BalloonTip` will have a rectangular shape. """
+""" :class:`BalloonTip` will have a rectangular shape. """
 
 # Define The Value For The BalloonTip Destruction Behavior
 BT_LEAVE = 3
-""" :class:`~balloontip.BalloonTip` will be destroyed when the user moves the mouse outside the target window. """
+""" :class:`BalloonTip` will be destroyed when the user moves the mouse outside the target window. """
 BT_CLICK = 4
-""" :class:`~balloontip.BalloonTip` will be destroyed when the user click on :class:`~balloontip.BalloonTip`. """
+""" :class:`BalloonTip` will be destroyed when the user click on :class:`BalloonTip`. """
 BT_BUTTON = 5
-""" :class:`~balloontip.BalloonTip` will be destroyed when the user click on the close button. """
+""" :class:`BalloonTip` will be destroyed when the user click on the close button. """
 
 
 # ---------------------------------------------------------------
@@ -197,7 +197,7 @@ BT_BUTTON = 5
 
 class BalloonFrame(wx.Frame):
     """
-    This class is called by the main :class:`~balloontip.BalloonTip` class, and it is
+    This class is called by the main :class:`BalloonTip` class, and it is
     responsible for the frame creation/positioning on screen
     depending on target control/window, the frame can position
     itself to NW (default), NE, SW, SE. The switch on positioning
@@ -333,7 +333,7 @@ class BalloonFrame(wx.Frame):
         """
         Sets the balloon shape.
 
-        :param `event`: on wxGTK, a `wx.WindowCreateEvent` event to process.
+        :param `event`: on wxGTK, a :class:`WindowCreateEvent` event to process.
         """
 
         size = self.GetSize()
@@ -419,12 +419,12 @@ class BalloonFrame(wx.Frame):
 
     def OnEnterButton(self, event):
         """
-        Handles the ``wx.EVT_ENTER_WINDOW`` for the :class:`~balloontip.BalloonTip` button.
+        Handles the ``wx.EVT_ENTER_WINDOW`` for the :class:`BalloonTip` button.
 
-        When the :class:`~balloontip.BalloonTip` is created with the `tipstyle` = ``BT_BUTTON``, this event
+        When the :class:`BalloonTip` is created with the `tipstyle` = ``BT_BUTTON``, this event
         provide some kind of 3D effect when the mouse enters the button area.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         button = event.GetEventObject()
@@ -449,12 +449,12 @@ class BalloonFrame(wx.Frame):
 
     def OnLeaveButton(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` for the :class:`~balloontip.BalloonTip` button.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` for the :class:`BalloonTip` button.
 
-        When the :class:`~balloontip.BalloonTip` is created with the `tipstyle` = ``BT_BUTTON``, this event
+        When the :class:`BalloonTip` is created with the `tipstyle` = ``BT_BUTTON``, this event
         provide some kind of 3D effect when the mouse enters the button area.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.        
+        :param `event`: a :class:`MouseEvent` event to be processed.        
         """
 
         button = event.GetEventObject()
@@ -467,9 +467,9 @@ class BalloonFrame(wx.Frame):
 
     def OnClose(self, event):
         """
-        Handles the ``wx.EVT_CLOSE`` event for :class:`~balloontip.BalloonTip`.
+        Handles the ``wx.EVT_CLOSE`` event for :class:`BalloonTip`.
 
-        :param `event`: a `wx.CloseEvent` event to be processed.
+        :param `event`: a :class:`CloseEvent` event to be processed.
         """
 
         if isinstance(self._parent._widget, wx.TaskBarIcon):
@@ -489,7 +489,7 @@ class BalloonFrame(wx.Frame):
 
 class BalloonTip(object):
     """
-    :class:`~balloontip.BalloonTip` is a class that allows you to display tooltips in a balloon style
+    :class:`BalloonTip` is a class that allows you to display tooltips in a balloon style
     window.
 
     This is the main class implementation.
@@ -500,29 +500,29 @@ class BalloonTip(object):
         Default class constructor.
 
         :param `topicon`: an icon that will be displayed on the top-left part of the
-         :class:`~balloontip.BalloonTip` frame. If set to ``None``, no icon will be displayed;
-        :type `topicon`: `wx.Bitmap` or ``None``
+         :class:`BalloonTip` frame. If set to ``None``, no icon will be displayed;
+        :type `topicon`: :class:`Bitmap` or ``None``
         :param string `toptitle`: a title that will be displayed on the top part of the
-         :class:`~balloontip.BalloonTip` frame. If set to an empty string, no title will be displayed;
+         :class:`BalloonTip` frame. If set to an empty string, no title will be displayed;
         :param string `message`: the tip message that will be displayed. It can not be set to
          an empty string;
-        :param integer `shape`: the :class:`~balloontip.BalloonTip` shape. It can be one of the following:
+        :param integer `shape`: the :class:`BalloonTip` shape. It can be one of the following:
 
          ======================= ========= ====================================
          Shape Flag              Hex Value  Description
          ======================= ========= ====================================
-         ``BT_ROUNDED``           0x1      :class:`~balloontip.BalloonTip` will have a rounded rectangular shape.
-         ``BT_RECTANGLE``         0x2      :class:`~balloontip.BalloonTip` will have a rectangular shape.
+         ``BT_ROUNDED``           0x1      :class:`BalloonTip` will have a rounded rectangular shape.
+         ``BT_RECTANGLE``         0x2      :class:`BalloonTip` will have a rectangular shape.
          ======================= ========= ====================================
          
-        :param integer `tipstyle`: the :class:`~balloontip.BalloonTip` destruction behavior. It can be one of:
+        :param integer `tipstyle`: the :class:`BalloonTip` destruction behavior. It can be one of:
 
          ======================= ========= ====================================
          Tip Flag                Hex Value  Description
          ======================= ========= ====================================
-         ``BT_LEAVE``                  0x3 :class:`~balloontip.BalloonTip` will be destroyed when the user moves the mouse outside the target window.
-         ``BT_CLICK``                  0x4 :class:`~balloontip.BalloonTip` will be destroyed when the user click on :class:`~balloontip.BalloonTip`.
-         ``BT_BUTTON``                 0x5 :class:`~balloontip.BalloonTip` will be destroyed when the user click on the close button.
+         ``BT_LEAVE``                  0x3 :class:`BalloonTip` will be destroyed when the user moves the mouse outside the target window.
+         ``BT_CLICK``                  0x4 :class:`BalloonTip` will be destroyed when the user click on :class:`BalloonTip`.
+         ``BT_BUTTON``                 0x5 :class:`BalloonTip` will be destroyed when the user click on the close button.
          ======================= ========= ====================================
 
         :raise: `Exception` in the following cases:
@@ -570,9 +570,9 @@ class BalloonTip(object):
 
     def SetTarget(self, widget):
         """
-        Sets the target control/window for the :class:`~balloontip.BalloonTip`.
+        Sets the target control/window for the :class:`BalloonTip`.
 
-        :param `widget`: any subclass of `wx.Window`.
+        :param `widget`: any subclass of :class:`Window`.
         """
 
         self._widget = widget
@@ -590,11 +590,11 @@ class BalloonTip(object):
 
     def GetTarget(self):
         """
-        Returns the target window for the :class:`~balloontip.BalloonTip`.
+        Returns the target window for the :class:`BalloonTip`.
 
-        :return: An instance of `wx.Window`.
+        :return: An instance of :class:`Window`.
 
-        :raise: `Exception` if the :meth:`~balloontip.BalloonTip.SetTarget` method has not previously called.        
+        :raise: `Exception` if the :meth:`~BalloonTip.SetTarget` method has not previously called.        
         """
 
         if not hasattr(self, "_widget"):
@@ -605,9 +605,9 @@ class BalloonTip(object):
 
     def SetStartDelay(self, delay=1):
         """
-        Sets the delay time after which the :class:`~balloontip.BalloonTip` is created.
+        Sets the delay time after which the :class:`BalloonTip` is created.
 
-        :param integer `delay`: the number of milliseconds after which :class:`~balloontip.BalloonTip` is created.
+        :param integer `delay`: the number of milliseconds after which :class:`BalloonTip` is created.
 
         :raise: `Exception` if `delay` is less than ``1`` milliseconds.
         """
@@ -620,7 +620,7 @@ class BalloonTip(object):
 
     def GetStartDelay(self):
         """
-        Returns the delay time after which the :class:`~balloontip.BalloonTip` is created.
+        Returns the delay time after which the :class:`BalloonTip` is created.
 
         :return: the delay time, in milliseconds.
         """
@@ -632,7 +632,7 @@ class BalloonTip(object):
         """
         Sets the delay time after which the BalloonTip is destroyed.
 
-        :param integer `delay`: the number of milliseconds after which :class:`~balloontip.BalloonTip` is destroyed.
+        :param integer `delay`: the number of milliseconds after which :class:`BalloonTip` is destroyed.
 
         :raise: `Exception` if `delay` is less than ``1`` milliseconds.
         """
@@ -645,7 +645,7 @@ class BalloonTip(object):
 
     def GetEndDelay(self):
         """
-        Returns the delay time after which the :class:`~balloontip.BalloonTip` is destroyed.
+        Returns the delay time after which the :class:`BalloonTip` is destroyed.
 
         :return: the delay time, in milliseconds.
         """
@@ -656,9 +656,9 @@ class BalloonTip(object):
     def OnWidgetEnter(self, event):
         """
         Handles the ``wx.EVT_ENTER_WINDOW`` for the target control/window and
-        starts the :class:`~balloontip.BalloonTip` timer for creation.
+        starts the :class:`BalloonTip` timer for creation.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if hasattr(self, "BalloonFrame"):
@@ -678,9 +678,9 @@ class BalloonTip(object):
         """
         Handles the ``wx.EVT_LEAVE_WINDOW`` for the target control/window.
         
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
 
-        :note: If the BalloonTip `tipstyle` is set to ``BT_LEAVE``, the :class:`~balloontip.BalloonTip` is destroyed.
+        :note: If the BalloonTip `tipstyle` is set to ``BT_LEAVE``, the :class:`BalloonTip` is destroyed.
         """
 
         if hasattr(self, "showtime"):
@@ -709,7 +709,7 @@ class BalloonTip(object):
         """
         Handles the mouse motion inside the taskbar icon area.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if not hasattr(self, "BalloonFrame"):
@@ -733,11 +733,11 @@ class BalloonTip(object):
         """
         Handle the mouse motion inside the target.
 
-        This prevents the annoying behavior of :class:`~balloontip.BalloonTip` to display when the
-        user does something else inside the window. The :class:`~balloontip.BalloonTip` window is
+        This prevents the annoying behavior of :class:`BalloonTip` to display when the
+        user does something else inside the window. The :class:`BalloonTip` window is
         displayed only when the mouse does *not* move for the start delay time.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if hasattr(self, "BalloonFrame"):
@@ -752,7 +752,7 @@ class BalloonTip(object):
 
 
     def NotifyTimer(self):
-        """ The creation timer has expired. Creates the :class:`~balloontip.BalloonTip` frame."""
+        """ The creation timer has expired. Creates the :class:`BalloonTip` frame."""
 
         self.BalloonFrame = BalloonFrame(self._widget, classparent=self)
         self.BalloonFrame.Show(True)
@@ -770,8 +770,8 @@ class BalloonTip(object):
         This timer check periodically the mouse position.
 
         If the current mouse position is sufficiently far from the coordinates
-        it had when entered the taskbar icon and the :class:`~balloontip.BalloonTip` style is
-        ``BT_LEAVE``, the :class:`~balloontip.BalloonTip` frame is destroyed.
+        it had when entered the taskbar icon and the :class:`BalloonTip` style is
+        ``BT_LEAVE``, the :class:`BalloonTip` frame is destroyed.
         """
 
         self.currentmousepos = wx.GetMousePosition()
@@ -792,7 +792,7 @@ class BalloonTip(object):
 
 
     def DestroyTimer(self):
-        """ The destruction timer has expired. Destroys the :class:`~balloontip.BalloonTip` frame."""
+        """ The destruction timer has expired. Destroys the :class:`BalloonTip` frame."""
 
         self.destroytime.Stop()
         del self.destroytime
@@ -805,7 +805,7 @@ class BalloonTip(object):
 
     def SetBalloonShape(self, shape=BT_ROUNDED):
         """
-        Sets the :class:`~balloontip.BalloonTip` frame shape.
+        Sets the :class:`BalloonTip` frame shape.
 
         :param integer `shape`: should be one of ``BT_ROUNDED`` or ``BT_RECTANGLE``.
 
@@ -821,7 +821,7 @@ class BalloonTip(object):
 
     def GetBalloonShape(self):
         """
-        Returns the :class:`~balloontip.BalloonTip` frame shape.
+        Returns the :class:`BalloonTip` frame shape.
 
         :return: An integer, one of ``BT_ROUNDED``, ``BT_RECTANGLE``.
         """
@@ -831,11 +831,11 @@ class BalloonTip(object):
 
     def SetBalloonIcon(self, icon):
         """
-        Sets the :class:`~balloontip.BalloonTip` top-left icon.
+        Sets the :class:`BalloonTip` top-left icon.
 
-        :param `icon`: an instance of `wx.Bitmap`.
+        :param `icon`: an instance of :class:`Bitmap`.
 
-        :raise: `Exception` if the `icon` bitmap is not a valid `wx.Bitmap`.
+        :raise: `Exception` if the `icon` bitmap is not a valid :class:`Bitmap`.
         """
 
         if icon.Ok():
@@ -846,9 +846,9 @@ class BalloonTip(object):
 
     def GetBalloonIcon(self):
         """
-        Returns the :class:`~balloontip.BalloonTip` top-left icon.
+        Returns the :class:`BalloonTip` top-left icon.
 
-        :return: An instance of `wx.Bitmap`.
+        :return: An instance of :class:`Bitmap`.
         """
 
         return self._topicon
@@ -856,9 +856,9 @@ class BalloonTip(object):
 
     def SetBalloonTitle(self, title=""):
         """
-        Sets the :class:`~balloontip.BalloonTip` top title.
+        Sets the :class:`BalloonTip` top title.
 
-        :param string `title`: a string to use as a :class:`~balloontip.BalloonTip` title.
+        :param string `title`: a string to use as a :class:`BalloonTip` title.
         """
 
         self._toptitle = title
@@ -866,7 +866,7 @@ class BalloonTip(object):
 
     def GetBalloonTitle(self):
         """
-        Returns the :class:`~balloontip.BalloonTip` top title.
+        Returns the :class:`BalloonTip` top title.
 
         :return: A string containing the top title.
         """
@@ -876,13 +876,13 @@ class BalloonTip(object):
 
     def SetBalloonMessage(self, message):
         """
-        Sets the :class:`~balloontip.BalloonTip` tip message. 
+        Sets the :class:`BalloonTip` tip message. 
 
-        :param string `message`: a string identifying the main message body of :class:`~balloontip.BalloonTip`.
+        :param string `message`: a string identifying the main message body of :class:`BalloonTip`.
 
         :raise: `Exception` if the message is an empty string.
 
-        :note: The :class:`~balloontip.BalloonTip` message should never be empty.        
+        :note: The :class:`BalloonTip` message should never be empty.        
         """
 
         if len(message.strip()) < 1:
@@ -893,7 +893,7 @@ class BalloonTip(object):
 
     def GetBalloonMessage(self):
         """
-        Returns the :class:`~balloontip.BalloonTip` tip message.
+        Returns the :class:`BalloonTip` tip message.
 
         :return: A string containing the main message.
         """
@@ -903,16 +903,16 @@ class BalloonTip(object):
 
     def SetBalloonTipStyle(self, tipstyle=BT_LEAVE):
         """
-        Sets the :class:`~balloontip.BalloonTip` `tipstyle` parameter.
+        Sets the :class:`BalloonTip` `tipstyle` parameter.
 
         :param integer `tipstyle`: one of the following bit set:
 
          ============== ========== =====================================
          Tip Style      Hex Value  Description
          ============== ========== =====================================
-         ``BT_LEAVE``          0x3 :class:`~balloontip.BalloonTip` will be destroyed when the user moves the mouse outside the target window.
-         ``BT_CLICK``          0x4 :class:`~balloontip.BalloonTip` will be destroyed when the user click on :class:`~balloontip.BalloonTip`.
-         ``BT_BUTTON``         0x5 :class:`~balloontip.BalloonTip` will be destroyed when the user click on the close button.
+         ``BT_LEAVE``          0x3 :class:`BalloonTip` will be destroyed when the user moves the mouse outside the target window.
+         ``BT_CLICK``          0x4 :class:`BalloonTip` will be destroyed when the user click on :class:`BalloonTip`.
+         ``BT_BUTTON``         0x5 :class:`BalloonTip` will be destroyed when the user click on the close button.
          ============== ========== =====================================
 
         :raise: `Exception` if the `tipstyle` parameter has an invalid value
@@ -928,11 +928,11 @@ class BalloonTip(object):
 
     def GetBalloonTipStyle(self):
         """
-        Returns the :class:`~balloontip.BalloonTip` `tipstyle` parameter.
+        Returns the :class:`BalloonTip` `tipstyle` parameter.
 
         :return: An integer representing the style.
         
-        :see: :meth:`~balloontip.BalloonTip.SetBalloonTipStyle`
+        :see: :meth:`~BalloonTip.SetBalloonTipStyle`
         """
 
         return self._tipstyle
@@ -940,9 +940,9 @@ class BalloonTip(object):
 
     def SetBalloonColour(self, colour=None):
         """
-        Sets the :class:`~balloontip.BalloonTip` background colour.
+        Sets the :class:`BalloonTip` background colour.
 
-        :param `colour`: a valid `wx.Colour` instance.
+        :param `colour`: a valid :class:`Colour` instance.
         """
 
         if colour is None:
@@ -953,9 +953,9 @@ class BalloonTip(object):
 
     def GetBalloonColour(self):
         """
-        Returns the :class:`~balloontip.BalloonTip` background colour.
+        Returns the :class:`BalloonTip` background colour.
 
-        :return: An instance of `wx.Colour`.
+        :return: An instance of :class:`Colour`.
         """
 
         return self._ballooncolour
@@ -965,7 +965,7 @@ class BalloonTip(object):
         """
         Sets the font for the top title.
 
-        :param `font`: a valid `wx.Font` instance.
+        :param `font`: a valid :class:`Font` instance.
         """
 
         if font is None:
@@ -978,7 +978,7 @@ class BalloonTip(object):
         """
         Returns the font for the top title.
 
-        :return: An instance of `wx.Font`.
+        :return: An instance of :class:`Font`.
         """
 
         return self._balloontitlefont
@@ -988,7 +988,7 @@ class BalloonTip(object):
         """
         Sets the font for the tip message.
 
-        :param `font`: a valid `wx.Font` instance.
+        :param `font`: a valid :class:`Font` instance.
         """
 
         if font is None:
@@ -1001,7 +1001,7 @@ class BalloonTip(object):
         """
         Returns the font for the tip message.
 
-        :return: An instance of `wx.Font`.
+        :return: An instance of :class:`Font`.
         """
 
         return self._balloonmsgfont
@@ -1011,7 +1011,7 @@ class BalloonTip(object):
         """
         Sets the colour for the top title.
 
-        :param `colour`: a valid `wx.Colour` instance.
+        :param `colour`: a valid :class:`Colour` instance.
         """
 
         if colour is None:
@@ -1024,7 +1024,7 @@ class BalloonTip(object):
         """
         Returns the colour for the top title.
 
-        :return: An instance of `wx.Colour`.
+        :return: An instance of :class:`Colour`.
         """
 
         return self._balloontitlecolour
@@ -1034,7 +1034,7 @@ class BalloonTip(object):
         """
         Sets the colour for the tip message.
 
-        :param `colour`: a valid `wx.Colour` instance.
+        :param `colour`: a valid :class:`Colour` instance.
         """
 
         if colour is None:
@@ -1047,7 +1047,7 @@ class BalloonTip(object):
         """
         Returns the colour for the tip message.
 
-        :return: An instance of `wx.Colour`.
+        :return: An instance of :class:`Colour`.
         """
 
         return self._balloonmsgcolour
@@ -1058,7 +1058,7 @@ class BalloonTip(object):
         Handles the target destruction, specifically handling the ``wx.EVT_WINDOW_DESTROY``
         event.
 
-        :param `event`: a `wx.WindowDestroyEvent` event to be processed.        
+        :param `event`: a :class:`WindowDestroyEvent` event to be processed.        
         """
         
         if hasattr(self, "BalloonFrame"):
@@ -1083,9 +1083,9 @@ class BalloonTip(object):
 
     def EnableTip(self, enable=True):
         """
-        Enable/disable globally the :class:`~balloontip.BalloonTip`.
+        Enable/disable globally the :class:`BalloonTip`.
 
-        :param bool `enable`: ``True`` to enable :class:`~balloontip.BalloonTip`, ``False`` otherwise.
+        :param bool `enable`: ``True`` to enable :class:`BalloonTip`, ``False`` otherwise.
         """
 
         self._runningapp.__tooltipenabled__ = enable

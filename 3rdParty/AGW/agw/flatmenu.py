@@ -23,17 +23,17 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`~flatmenu.FlatMenu` is a generic menu implementation.
+:class:`FlatMenu` is a generic menu implementation.
 
 
 Description
 ===========
 
-:class:`~flatmenu.FlatMenu`, like the name implies, it is a generic menu implementation. 
+:class:`FlatMenu`, like the name implies, it is a generic menu implementation. 
 I tried to provide a full functionality for menus, menubar and toolbar.
 
 
-:class:`~flatmenu.FlatMenu` supports the following features:
+:class:`FlatMenu` supports the following features:
 
 - Fires all the events (UI & Cmd);
 - Check items;
@@ -66,15 +66,15 @@ I tried to provide a full functionality for menus, menubar and toolbar.
 - 4 different colour schemes for the menu bar (more can easily added);
 - Scrolling is available if the menu height is greater than the screen height;
 - Context menus for menu items;
-- Show/hide the drop down arrow which allows the customization of :class:`~flatmenu.FlatMenu`;
+- Show/hide the drop down arrow which allows the customization of :class:`FlatMenu`;
 - Multiple columns menu window;
-- Tooltips for menus and toolbar items on a `wx.StatusBar` (if present);
+- Tooltips for menus and toolbar items on a :class:`StatusBar` (if present);
 - Transparency (alpha channel) for menu windows (for platforms supporting it);
-- FileHistory support through a pure-Python `wx.FileHistory` implementation;
-- Possibility to set a background bitmap for a :class:`~flatmenu.FlatMenu`;
+- FileHistory support through a pure-Python :class:`FileHistory` implementation;
+- Possibility to set a background bitmap for a :class:`FlatMenu`;
 - First attempt in adding controls to FlatToolbar;
 - Added a MiniBar (thanks to Vladiuz);
-- Added `wx.ToolBar` methods AddCheckTool/AddRadioTool (thanks to Vladiuz).
+- Added :class:`ToolBar` methods AddCheckTool/AddRadioTool (thanks to Vladiuz).
   
 
 Usage
@@ -144,7 +144,7 @@ Usage example::
 Supported Platforms
 ===================
 
-:class:`~flatmenu.FlatMenu` has been tested on the following platforms:
+:class:`FlatMenu` has been tested on the following platforms:
   * Windows (Windows XP, Vista);
   * Linux Ubuntu (Dapper 6.06)
 
@@ -174,16 +174,16 @@ This class processes the following events:
 Event Name                        Description
 ================================= ==================================================
 ``EVT_FLAT_MENU_DISMISSED``       Used internally.
-``EVT_FLAT_MENU_ITEM_MOUSE_OUT``  Fires an event when the mouse leaves a :class:`~flatmenu.FlatMenuItem`.
-``EVT_FLAT_MENU_ITEM_MOUSE_OVER`` Fires an event when the mouse enters a :class:`~flatmenu.FlatMenuItem`.
-``EVT_FLAT_MENU_SELECTED``        Fires the `wx.EVT_MENU` event for :class:`~flatmenu.FlatMenu`.
+``EVT_FLAT_MENU_ITEM_MOUSE_OUT``  Fires an event when the mouse leaves a :class:`FlatMenuItem`.
+``EVT_FLAT_MENU_ITEM_MOUSE_OVER`` Fires an event when the mouse enters a :class:`FlatMenuItem`.
+``EVT_FLAT_MENU_SELECTED``        Fires the :class:`EVT_MENU` event for :class:`FlatMenu`.
 ================================= ==================================================
 
 
 License And Version
 ===================
 
-:class:`~flatmenu.FlatMenu` is distributed under the wxPython license.
+:class:`FlatMenu` is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
@@ -263,12 +263,12 @@ if wx.Platform == "__WXMSW__":
 
 import wx.aui as AUI
 AuiPaneInfo = AUI.AuiPaneInfo
-""" Default AuiPaneInfo as in `wx.aui.AuiPaneInfo`. """
+""" Default AuiPaneInfo as in :class:`~lib.agw.aui.AuiPaneInfo`. """
 
 try:
     import aui as PyAUI
     PyAuiPaneInfo = PyAUI.AuiPaneInfo
-    """ Default AuiPaneInfo as in :class:`~aui.framemanager.AuiPaneInfo`. """
+    """ Default AuiPaneInfo as in :class:`framemanager`. """
 except ImportError:
     pass
 
@@ -285,13 +285,13 @@ wxEVT_FLAT_MENU_ITEM_MOUSE_OUT = wx.NewEventType()
 EVT_FLAT_MENU_DISMISSED = wx.PyEventBinder(wxEVT_FLAT_MENU_DISMISSED, 1)
 """ Used internally. """
 EVT_FLAT_MENU_SELECTED = wx.PyEventBinder(wxEVT_FLAT_MENU_SELECTED, 2)
-""" Fires the wx.EVT_MENU event for :class:`~flatmenu.FlatMenu`. """
+""" Fires the wx.EVT_MENU event for :class:`FlatMenu`. """
 EVT_FLAT_MENU_RANGE = wx.PyEventBinder(wxEVT_FLAT_MENU_SELECTED, 2)
-""" Fires the wx.EVT_MENU event for a series of :class:`~flatmenu.FlatMenu`. """
+""" Fires the wx.EVT_MENU event for a series of :class:`FlatMenu`. """
 EVT_FLAT_MENU_ITEM_MOUSE_OUT = wx.PyEventBinder(wxEVT_FLAT_MENU_ITEM_MOUSE_OUT, 1)
-""" Fires an event when the mouse leaves a :class:`~flatmenu.FlatMenuItem`. """
+""" Fires an event when the mouse leaves a :class:`FlatMenuItem`. """
 EVT_FLAT_MENU_ITEM_MOUSE_OVER = wx.PyEventBinder(wxEVT_FLAT_MENU_ITEM_MOUSE_OVER, 1)
-""" Fires an event when the mouse enters a :class:`~flatmenu.FlatMenuItem`. """
+""" Fires an event when the mouse enters a :class:`FlatMenuItem`. """
 
 
 def GetAccelIndex(label):
@@ -322,7 +322,7 @@ def ConvertToMonochrome(bmp):
     """
     Converts a bitmap to monochrome colour.
 
-    :param `bmp`: a valid `wx.Bitmap` object.
+    :param `bmp`: a valid :class:`Bitmap` object.
     """
 
     mem_dc = wx.MemoryDC()
@@ -399,7 +399,7 @@ class FMRendererMgr(object):
         """
         Adds a user defined custom renderer.
 
-        :param `renderer`: a class derived from :class:`~flatmenu.FMRenderer`.
+        :param `renderer`: a class derived from :class:`FMRenderer`.
         """
         
         lastRenderer = len(self._renderers)
@@ -427,7 +427,7 @@ class FMRendererMgr(object):
 
 class FMRenderer(object):
     """
-    Base class for the :class:`~flatmenu.FlatMenu` renderers. This class implements the common 
+    Base class for the :class:`FlatMenu` renderers. This class implements the common 
     methods of all the renderers.
     """
     
@@ -487,7 +487,7 @@ class FMRenderer(object):
         """
         Set the colour to highlight focus on the menu bar.
 
-        :param `colour`: a valid instance of `wx.Colour`.
+        :param `colour`: a valid instance of :class:`Colour`.
         """
         
         self.menuBarFocusFaceColour    = colour
@@ -500,7 +500,7 @@ class FMRenderer(object):
         """
         Set the colour to highlight focus on the menu.
 
-        :param `colour`: a valid instance of `wx.Colour`.
+        :param `colour`: a valid instance of :class:`Colour`.
         """
         
         self.menuFocusFaceColour    = colour
@@ -511,7 +511,7 @@ class FMRenderer(object):
         
     def GetColoursAccordingToState(self, state):
         """
-        Returns a `wx.Colour` according to the menu item state.
+        Returns a :class:`Colour` according to the menu item state.
 
         :param integer `state`: one of the following bits:
 
@@ -594,9 +594,9 @@ class FMRenderer(object):
         """
         Draws the menu left margin.
 
-        :param `item`: an instance of :class:`~flatmenu.FlatMenuItem`;
-        :param `dc`: an instance of `wx.DC`;
-        :param `menuRect`: an instance of `wx.Rect`, representing the menu client rectangle.
+        :param `item`: an instance of :class:`FlatMenuItem`;
+        :param `dc`: an instance of :class:`DC`;
+        :param `menuRect`: an instance of :class:`Rect`, representing the menu client rectangle.
         """
 
         raise Exception("This style doesn't support Drawing a Left Margin")
@@ -604,10 +604,10 @@ class FMRenderer(object):
     
     def DrawToolbarSeparator(self, dc, rect):
         """
-        Draws a separator inside the toolbar in :class:`~flatmenu.FlatMenuBar`.
+        Draws a separator inside the toolbar in :class:`FlatMenuBar`.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the bitmap client rectangle.
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the bitmap client rectangle.
         """
         
         # Place a separator bitmap
@@ -640,8 +640,8 @@ class FMRenderer(object):
         """
         Draws a shadow using background bitmap.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the bitmap client rectangle;
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the bitmap client rectangle;
         :param integer `where`: where to draw the shadow. This can be any combination of the
          following bits:
 
@@ -699,8 +699,8 @@ class FMRenderer(object):
         """
         Draws the toolbar background
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the toolbar client rectangle.
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the toolbar client rectangle.
         """
 
         if not self.raiseToolbar:
@@ -720,9 +720,9 @@ class FMRenderer(object):
         
     def DrawSeparator(self, dc, xCoord, yCoord, textX, sepWidth):
         """
-        Draws a separator inside a :class:`~flatmenu.FlatMenu`.
+        Draws a separator inside a :class:`FlatMenu`.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param integer `xCoord`: the current x position where to draw the separator;
         :param integer `yCoord`: the current y position where to draw the separator;
         :param integer `textX`: the menu item label x position;
@@ -745,8 +745,8 @@ class FMRenderer(object):
         """
         Draws the menu item.
 
-        :param `item`: a :class:`~flatmenu.FlatMenuItem` instance;
-        :param `dc`: an instance of `wx.DC`;
+        :param `item`: a :class:`FlatMenuItem` instance;
+        :param `dc`: an instance of :class:`DC`;
         :param integer `xCoord`: the current x position where to draw the menu;
         :param integer `yCoord`: the current y position where to draw the menu;
         :param integer `imageMarginX`: the spacing between the image and the menu border;
@@ -756,8 +756,8 @@ class FMRenderer(object):
         :param integer `rightMarginX`: the right margin between the text and the menu border;
         :param bool `selected`: ``True`` if this menu item is currentl hovered by the mouse,
          ``False`` otherwise.
-        :param `backgroundImage`: if not ``None``, an instance of `wx.Bitmap` which will
-         become the background image for this :class:`~flatmenu.FlatMenu`.
+        :param `backgroundImage`: if not ``None``, an instance of :class:`Bitmap` which will
+         become the background image for this :class:`FlatMenu`.
         """
  
         borderXSize = item._parentMenu.GetBorderXWidth()
@@ -931,10 +931,10 @@ class FMRenderer(object):
         
     def DrawMenuBarButton(self, dc, rect, state):
         """
-        Draws the highlight on a :class:`~flatmenu.FlatMenuBar`.
+        Draws the highlight on a :class:`FlatMenuBar`.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
         :param integer `state`: the button state.
         """
         
@@ -956,8 +956,8 @@ class FMRenderer(object):
         """
         Draws the highlight on a FlatMenu
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
         :param integer `state`: the button state.
         """
         
@@ -979,8 +979,8 @@ class FMRenderer(object):
         """
         Draws the scroll button
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
         :param integer `state`: the button state.
         """
         
@@ -1035,11 +1035,11 @@ class FMRenderer(object):
         """
         Draws a button.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
         :param integer `state`: the button state;
-        :param `colour`: if not ``None``, an instance of `wx.Colour` to be used to draw
-         the :class:`~flatmenu.FlatMenuItem` background.
+        :param `colour`: if not ``None``, an instance of :class:`Colour` to be used to draw
+         the :class:`FlatMenuItem` background.
         """
         
         # switch according to the status
@@ -1076,8 +1076,8 @@ class FMRenderer(object):
         """
         Draws the menu bar background colour according to the menubar.GetBackgroundColour
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the menubar client rectangle.
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the menubar client rectangle.
         """
 
         dcsaver = DCSaver(dc)
@@ -1092,10 +1092,10 @@ class FMRenderer(object):
 
     def DrawMenuBar(self, menubar, dc):
         """
-        Draws everything for :class:`~flatmenu.FlatMenuBar`.
+        Draws everything for :class:`FlatMenuBar`.
 
-        :param `menubar`: an instance of :class:`~flatmenu.FlatMenuBar`.
-        :param `dc`: an instance of `wx.DC`.
+        :param `menubar`: an instance of :class:`FlatMenuBar`.
+        :param `dc`: an instance of :class:`DC`.
         """
 
         #artMgr = ArtManager.Get()
@@ -1290,8 +1290,8 @@ class FMRenderer(object):
         """
         Draws the menu.
 
-        :param `flatmenu`: the :class:`~flatmenu.FlatMenu` instance we need to paint;
-        :param `dc`: an instance of `wx.DC`.
+        :param `flatmenu`: the :class:`FlatMenu` instance we need to paint;
+        :param `dc`: an instance of :class:`DC`.
         """
         
         menuRect = flatmenu.GetClientRect()
@@ -1413,9 +1413,9 @@ class FMRendererMSOffice2007(FMRenderer):
         """
         Draws the menu left margin.
 
-        :param `item`: the :class:`~flatmenu.FlatMenuItem` to paint;
-        :param `dc`: an instance of `wx.DC`;
-        :param `menuRect`: an instance of `wx.Rect`, representing the menu client rectangle.
+        :param `item`: the :class:`FlatMenuItem` to paint;
+        :param `dc`: an instance of :class:`DC`;
+        :param `menuRect`: an instance of :class:`Rect`, representing the menu client rectangle.
         """
 
         # Construct the margin rectangle
@@ -1441,10 +1441,10 @@ class FMRendererMSOffice2007(FMRenderer):
 
     def DrawMenuButton(self, dc, rect, state):
         """
-        Draws the highlight on a :class:`~flatmenu.FlatMenu`.
+        Draws the highlight on a :class:`FlatMenu`.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
         :param integer `state`: the button state.
         """
         
@@ -1453,10 +1453,10 @@ class FMRendererMSOffice2007(FMRenderer):
         
     def DrawMenuBarButton(self, dc, rect, state):
         """
-        Draws the highlight on a :class:`~flatmenu.FlatMenuBar`.
+        Draws the highlight on a :class:`FlatMenuBar`.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
         :param integer `state`: the button state.
         """
         
@@ -1467,11 +1467,11 @@ class FMRendererMSOffice2007(FMRenderer):
         """
         Draws a button using the Office 2007 theme.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
         :param integer `state`: the button state;
-        :param `colour`: if not ``None``, an instance of `wx.Colour` to be used to draw
-         the :class:`~flatmenu.FlatMenuItem` background.
+        :param `colour`: if not ``None``, an instance of :class:`Colour` to be used to draw
+         the :class:`FlatMenuItem` background.
         """
 
         colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
@@ -1483,10 +1483,10 @@ class FMRendererMSOffice2007(FMRenderer):
         """
         Draws a button using the Office 2007 theme.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
         :param integer `state`: the button state;
-        :param `colour`: a valid `wx.Colour` instance.
+        :param `colour`: a valid :class:`Colour` instance.
         """
 
         artMgr = ArtManager.Get()
@@ -1534,8 +1534,8 @@ class FMRendererMSOffice2007(FMRenderer):
         """
         Draws the menu bar background according to the active theme.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the menubar client rectangle.
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the menubar client rectangle.
         """
 
         # Keep old pen and brush
@@ -1604,8 +1604,8 @@ class FMRendererMSOffice2007(FMRenderer):
         """
         Draws the toolbar background according to the active theme.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the toolbar client rectangle.
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the toolbar client rectangle.
         """
 
         artMgr = ArtManager.Get()
@@ -1701,10 +1701,10 @@ class FMRendererVista(FMRendererMSOffice2007):
         """
         Draws a button using the Vista theme.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: the an instance of `wx.Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: the an instance of :class:`Rect`, representing the button client rectangle;
         :param integer `state`: the button state;
-        :param `colour`: a valid `wx.Colour` instance.
+        :param `colour`: a valid :class:`Colour` instance.
         """
 
         artMgr = ArtManager.Get()
@@ -1772,9 +1772,9 @@ class FMRendererXP(FMRenderer):
         """
         Draws the menu left margin.
 
-        :param `item`: the :class:`~flatmenu.FlatMenuItem` to paint;
-        :param `dc`: an instance of `wx.DC`;
-        :param `menuRect`: an instance of `wx.Rect`, representing the menu client rectangle.
+        :param `item`: the :class:`FlatMenuItem` to paint;
+        :param `dc`: an instance of :class:`DC`;
+        :param `menuRect`: an instance of :class:`Rect`, representing the menu client rectangle.
         """
 
         # Construct the margin rectangle
@@ -1793,8 +1793,8 @@ class FMRendererXP(FMRenderer):
         """
         Draws the menu bar background according to the active theme.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the menubar client rectangle.
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the menubar client rectangle.
         """
 
         # For office style, we simple draw a rectangle with a gradient colouring
@@ -1823,8 +1823,8 @@ class FMRendererXP(FMRenderer):
         """
         Draws the toolbar background according to the active theme.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: an instance of `wx.Rect`, representing the toolbar client rectangle.
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: an instance of :class:`Rect`, representing the toolbar client rectangle.
         """
 
         artMgr = ArtManager.Get()
@@ -1880,10 +1880,10 @@ def GetMRUEntryLabel(n, path):
 
 class FileHistory(object):
     """
-    The :class:`~flatmenu.FileHistory` encapsulates a user interface convenience, the list of most
+    The :class:`FileHistory` encapsulates a user interface convenience, the list of most
     recently visited files as shown on a menu (usually the File menu).
 
-    :class:`~flatmenu.FileHistory` can manage one or more file menus. More than one menu may be
+    :class:`FileHistory` can manage one or more file menus. More than one menu may be
     required in an MDI application, where the file history should appear on each MDI
     child menu as well as the MDI parent frame.
     """
@@ -1897,7 +1897,7 @@ class FileHistory(object):
          history menu item.
 
         :note: Since menu items can't share the same ID you should change `idBase` to one of
-         your own defined IDs when using more than one :class:`~flatmenu.FileHistory` in your application.
+         your own defined IDs when using more than one :class:`FileHistory` in your application.
         """
 
         # The ID of the first history menu item (Doesn't have to be wxID_FILE1)
@@ -1940,7 +1940,7 @@ class FileHistory(object):
         """
         Returns the list of menus that are managed by this file history object.
 
-        :see: :meth:`~flatmenu.FileHistory.UseMenu`.
+        :see: :meth:`~FileHistory.UseMenu`.
         """
 
         return self._fileMenus
@@ -2062,9 +2062,9 @@ class FileHistory(object):
         Adds this menu to the list of those menus that are managed by this file history
         object.
 
-        :param `menu`: an instance of :class:`~flatmenu.FlatMenu`.        
+        :param `menu`: an instance of :class:`FlatMenu`.        
 
-        :see: :meth:`~flatmenu.FileHistory.AddFilesToMenu` for initializing the menu with filenames that are already
+        :see: :meth:`~FileHistory.AddFilesToMenu` for initializing the menu with filenames that are already
          in the history when this function is called, as this is not done automatically.
         """
         
@@ -2076,7 +2076,7 @@ class FileHistory(object):
         """
         Removes this menu from the list of those managed by this object.
 
-        :param `menu`: an instance of :class:`~flatmenu.FlatMenu`.        
+        :param `menu`: an instance of :class:`FlatMenu`.        
         """
         
         self._fileMenus.remove(menu)
@@ -2086,11 +2086,11 @@ class FileHistory(object):
         """
         Loads the file history from the given `config` object.
 
-        :param `config`: an instance of `wx.Config`.
+        :param `config`: an instance of :class:`Config`.
         
         :note: This function should be called explicitly by the application.
 
-        :see: :meth:`~flatmenu.FileHistory.Save`.
+        :see: :meth:`~FileHistory.Save`.
         """
 
         self._fileHistory = []
@@ -2112,11 +2112,11 @@ class FileHistory(object):
         """
         Saves the file history to the given `config` object.
 
-        :param `config`: an instance of `wx.Config`.
+        :param `config`: an instance of :class:`Config`.
         
         :note: This function should be called explicitly by the application.
 
-        :see: :meth:`~flatmenu.FileHistory.Load`.
+        :see: :meth:`~FileHistory.Load`.
         """
 
         buffer = "file%d"
@@ -2132,9 +2132,9 @@ class FileHistory(object):
     def AddFilesToMenu(self, menu=None):
         """
         Appends the files in the history list, to all menus managed by the file history object
-        if `menu` is ``None``. Otherwise it calls the auxiliary method :meth:`~flatmenu.FileHistory.AddFilesToMenu2`.
+        if `menu` is ``None``. Otherwise it calls the auxiliary method :meth:`~FileHistory.AddFilesToMenu2`.
 
-        :param `menu`: if not ``None``, an instance of :class:`~flatmenu.FlatMenu`.        
+        :param `menu`: if not ``None``, an instance of :class:`FlatMenu`.        
         """        
 
         if not self._fileHistory:
@@ -2152,7 +2152,7 @@ class FileHistory(object):
         """
         Appends the files in the history list, to the given menu only.
 
-        :param `menu`: an instance of :class:`~flatmenu.FlatMenu`.        
+        :param `menu`: an instance of :class:`FlatMenu`.        
         """
         
         if not self._fileHistory:
@@ -2171,7 +2171,7 @@ class FileHistory(object):
 
 class FlatMenuEvent(wx.PyCommandEvent):
     """
-    Event class that supports the :class:`~flatmenu.FlatMenu`-compatible event called
+    Event class that supports the :class:`FlatMenu`-compatible event called
     ``EVT_FLAT_MENU_SELECTED``.
     """
         
@@ -2203,9 +2203,9 @@ class MenuEntryInfo(object):
         Used internally. Do not call it in your code!
 
         :param `titleOrMenu`: if it is a string, it represents the new menu label,
-         otherwise it is another instance of :class:`~flatmenu.MenuEntryInfo` from which the attributes
+         otherwise it is another instance of :class:`MenuEntryInfo` from which the attributes
          are copied;
-        :param `menu`: the associated :class:`~flatmenu.FlatMenu` object;
+        :param `menu`: the associated :class:`FlatMenu` object;
         :param integer `state`: the menu item state. This can be one of the following:
 
          ==================== ======= ==========================
@@ -2260,7 +2260,7 @@ class MenuEntryInfo(object):
         """
         Sets the associated menu client rectangle.
 
-        :param `rect`: an instance of `wx.Rect`, representing the menu client rectangle.
+        :param `rect`: an instance of :class:`Rect`, representing the menu client rectangle.
         """
 
         self._rect = rect
@@ -2295,7 +2295,7 @@ class MenuEntryInfo(object):
         """
         Returns the associated menu state.
 
-        :see: :meth:`~flatmenu.MenuEntryInfo.SetState` for a list of valid menu states.
+        :see: :meth:`~MenuEntryInfo.SetState` for a list of valid menu states.
         """
 
         return self._state
@@ -2305,7 +2305,7 @@ class MenuEntryInfo(object):
         """
         Sets the associated menu bitmap.
 
-        :param `bmp`: a valid `wx.Bitmap` object.
+        :param `bmp`: a valid :class:`Bitmap` object.
         """
 
         self._textBmp = bmp
@@ -2315,7 +2315,7 @@ class MenuEntryInfo(object):
         """
         Sets the associated selected menu bitmap.
 
-        :param `bmp`: a valid `wx.Bitmap` object.
+        :param `bmp`: a valid :class:`Bitmap` object.
         """
 
         self._textSelectedBmp = bmp
@@ -2344,14 +2344,14 @@ class MenuEntryInfo(object):
 # ---------------------------------------------------------------------------- #
 
 class StatusBarTimer(wx.Timer):
-    """ Timer used for deleting `wx.StatusBar` long help after ``_DELAY`` seconds. """
+    """ Timer used for deleting :class:`StatusBar` long help after ``_DELAY`` seconds. """
 
     def __init__(self, owner):
         """
         Default class constructor.
         For internal use: do not call it in your code!
 
-        :param `owner`: the `wx.Timer` owner (:class:`~flatmenu.FlatMenuBar`).
+        :param `owner`: the :class:`Timer` owner (:class:`FlatMenuBar`).
         """
         
         wx.Timer.__init__(self)
@@ -2370,7 +2370,7 @@ class StatusBarTimer(wx.Timer):
 
 class FlatMenuBar(wx.Panel):
     """
-    Implements the generic owner-drawn menu bar for :class:`~flatmenu.FlatMenu`.
+    Implements the generic owner-drawn menu bar for :class:`FlatMenu`.
     """
 
     def __init__(self, parent, id=wx.ID_ANY, iconSize=SmallIcons,
@@ -2467,10 +2467,10 @@ class FlatMenuBar(wx.Panel):
         """
         Adds the item to the end of the menu bar.
 
-        :param `menu`: the menu to which we are appending a new item, an instance of :class:`~flatmenu.FlatMenu`;
+        :param `menu`: the menu to which we are appending a new item, an instance of :class:`FlatMenu`;
         :param string `title`: the menu item label, must not be empty.
 
-        :see: :meth:`~flatmenu.FlatMenuBar.Insert`.        
+        :see: :meth:`~FlatMenuBar.Insert`.        
         """
 
         menu._menuBarFullTitle = title
@@ -2482,9 +2482,9 @@ class FlatMenuBar(wx.Panel):
 
     def OnIdle(self, event):
         """
-        Handles the ``wx.EVT_IDLE`` event for :class:`~flatmenu.FlatMenuBar`.
+        Handles the ``wx.EVT_IDLE`` event for :class:`FlatMenuBar`.
 
-        :param `event`: a `wx.IdleEvent` event to be processed.
+        :param `event`: a :class:`IdleEvent` event to be processed.
         """
 
         refresh = False
@@ -2514,7 +2514,7 @@ class FlatMenuBar(wx.Panel):
 
 
     def SetBarHeight(self):
-        """ Recalculates the :class:`~flatmenu.FlatMenuBar` height when its settings change. """
+        """ Recalculates the :class:`FlatMenuBar` height when its settings change. """
 
         mem_dc = wx.MemoryDC()
         mem_dc.SelectObject(wx.EmptyBitmap(1, 1))
@@ -2543,7 +2543,7 @@ class FlatMenuBar(wx.Panel):
         
     def SetOptions(self, options):
         """
-        Sets the :class:`~flatmenu.FlatMenuBar` options, whether to show a toolbar, to use LCD screen settings etc...
+        Sets the :class:`FlatMenuBar` options, whether to show a toolbar, to use LCD screen settings etc...
 
         :param integer `options`: a combination of the following bits:
         
@@ -2573,9 +2573,9 @@ class FlatMenuBar(wx.Panel):
 
     def GetOptions(self):
         """
-        Returns the :class:`~flatmenu.FlatMenuBar` options, whether to show a toolbar, to use LCD screen settings etc...
+        Returns the :class:`FlatMenuBar` options, whether to show a toolbar, to use LCD screen settings etc...
 
-        :see: :meth:`~flatmenu.FlatMenuBar.SetOptions` for a list of valid options.        
+        :see: :meth:`~FlatMenuBar.SetOptions` for a list of valid options.        
         """
 
         return self._options
@@ -2583,7 +2583,7 @@ class FlatMenuBar(wx.Panel):
     
     def GetRendererManager(self):
         """
-        Returns the :class:`~flatmenu.FlatMenuBar` renderer manager.
+        Returns the :class:`FlatMenuBar` renderer manager.
         """
         
         return self._rendererMgr
@@ -2599,10 +2599,10 @@ class FlatMenuBar(wx.Panel):
 
     def UpdateItem(self, item):
         """
-        An item was modified. This function is called by :class:`~flatmenu.FlatMenu` in case
-        an item was modified directly and not via a `wx.UpdateUIEvent` event.
+        An item was modified. This function is called by :class:`FlatMenu` in case
+        an item was modified directly and not via a :class:`UpdateUIEvent` event.
 
-        :param `item`: an instance of :class:`~flatmenu.FlatMenu`.        
+        :param `item`: an instance of :class:`FlatMenu`.        
         """
 
         if not self._showToolbar:
@@ -2625,9 +2625,9 @@ class FlatMenuBar(wx.Panel):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`~flatmenu.FlatMenuBar`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`FlatMenuBar`.
 
-        :param `event`: a `wx.PaintEvent` event to be processed.
+        :param `event`: a :class:`PaintEvent` event to be processed.
         """
 
         # on GTK, dont use the bitmap for drawing, 
@@ -2644,8 +2644,8 @@ class FlatMenuBar(wx.Panel):
         """
         Draws the toolbar (if present).
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `rect`: the toolbar client rectangle, an instance of `wx.Rect`.
+        :param `dc`: an instance of :class:`DC`;
+        :param `rect`: the toolbar client rectangle, an instance of :class:`Rect`.
         """
 
         highlight_width = self._tbIconSize + self._toolbarSpacer
@@ -2777,7 +2777,7 @@ class FlatMenuBar(wx.Panel):
 
 
     def GetMoreMenuButtonRect(self):
-        """ Returns a rectangle region, as an instance of `wx.Rect`, surrounding the menu button. """
+        """ Returns a rectangle region, as an instance of :class:`Rect`, surrounding the menu button. """
 
         clientRect = self.GetClientRect()
         rect = wx.Rect(*clientRect)
@@ -2793,7 +2793,7 @@ class FlatMenuBar(wx.Panel):
         """
         Draws 'more' button to the right side of the menu bar.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param integer `state`: the 'more' button state.
 
         :see: :meth:`MenuEntryInfo.SetState() <flatmenu.MenuEntryInfo.SetState>` for a list of valid menu states.
@@ -2830,16 +2830,16 @@ class FlatMenuBar(wx.Panel):
 
     def HitTest(self, pt):
         """
-        HitTest method for :class:`~flatmenu.FlatMenuBar`.
+        HitTest method for :class:`FlatMenuBar`.
 
-        :param `pt`: an instance of `wx.Point`, specifying the hit test position.
+        :param `pt`: an instance of :class:`Point`, specifying the hit test position.
 
         :return: A tuple representing one of the following combinations:
 
          ========================= ==================================================
          Return Tuple              Description
          ========================= ==================================================
-         (-1, 0)                   The :meth:`~flatmenu.FlatMenuBar.HitTest` method didn't find any item with the specified input point `pt` (``NoWhere`` = 0)
+         (-1, 0)                   The :meth:`~FlatMenuBar.HitTest` method didn't find any item with the specified input point `pt` (``NoWhere`` = 0)
          (`integer`, 1)            A menu item has been hit, its position specified by the tuple item `integer` (``MenuItem`` = 1)
          (`integer`, 2)            A toolbar item has ben hit, its position specified by the tuple item `integer` (``ToolbarItem`` = 2)
          (-1, 3)                   The drop-down area button has been hit (``DropDownArrowButton`` = 3)
@@ -2874,7 +2874,7 @@ class FlatMenuBar(wx.Panel):
         """
         Finds the menu item object associated with the given menu item identifier.
 
-        :param integer `id`: the identifier for the sought :class:`~flatmenu.FlatMenuItem`.
+        :param integer `id`: the identifier for the sought :class:`FlatMenuItem`.
 
         :return: The found menu item object, or ``None`` if one was not found.        
         """
@@ -2888,9 +2888,9 @@ class FlatMenuBar(wx.Panel):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for :class:`~flatmenu.FlatMenuBar`.
+        Handles the ``wx.EVT_SIZE`` event for :class:`FlatMenuBar`.
 
-        :param `event`: a `wx.SizeEvent` event to be processed.
+        :param `event`: a :class:`SizeEvent` event to be processed.
         """
 
         self.ClearBitmaps(0)
@@ -2899,9 +2899,9 @@ class FlatMenuBar(wx.Panel):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~flatmenu.FlatMenuBar`.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`FlatMenuBar`.
 
-        :param `event`: a `wx.EraseEvent` event to be processed.
+        :param `event`: a :class:`EraseEvent` event to be processed.
 
         :note: This method is intentionally empty to reduce flicker.        
         """
@@ -2911,7 +2911,7 @@ class FlatMenuBar(wx.Panel):
 
     def ShowCustomize(self, show=True):
         """
-        Shows/hides the drop-down arrow which allows customization of :class:`~flatmenu.FlatMenu`.
+        Shows/hides the drop-down arrow which allows customization of :class:`FlatMenu`.
 
         :param bool `show`: ``True`` to show the customize menu, ``False`` to hide it.
         """
@@ -2983,7 +2983,7 @@ class FlatMenuBar(wx.Panel):
         This function is called from child menus, this allow a child menu to
         pass the mouse movement event to the menu bar.
 
-        :param `pt`: an instance of `wx.Point`.
+        :param `pt`: an instance of :class:`Point`.
         """
 
         idx, where = self.HitTest(pt)
@@ -2995,7 +2995,7 @@ class FlatMenuBar(wx.Panel):
         """
         Handles mouse move event.
 
-        :param `pt`: an instance of `wx.Point`;
+        :param `pt`: an instance of :class:`Point`;
         :param bool `leftIsDown`: ``True`` is the left mouse button is down, ``False`` otherwise.
         """
         
@@ -3075,9 +3075,9 @@ class FlatMenuBar(wx.Panel):
 
     def OnMouseMove(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for :class:`~flatmenu.FlatMenuBar`.
+        Handles the ``wx.EVT_MOTION`` event for :class:`FlatMenuBar`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         pt = event.GetPosition()
@@ -3086,9 +3086,9 @@ class FlatMenuBar(wx.Panel):
 
     def OnLeaveMenuBar(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~flatmenu.FlatMenuBar`.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`FlatMenuBar`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
 
         :note: This method is for MSW only.
         """
@@ -3125,7 +3125,7 @@ class FlatMenuBar(wx.Panel):
         """
         Sets the menu bar background colour.
 
-        :param `colour`: a valid `wx.Colour`.
+        :param `colour`: a valid :class:`Colour`.
         """
         
         self.GetRenderer().menuBarFaceColour = colour
@@ -3133,9 +3133,9 @@ class FlatMenuBar(wx.Panel):
 
     def OnLeaveWindow(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~flatmenu.FlatMenuBar`.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`FlatMenuBar`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
 
         :note: This method is for GTK only.
         """
@@ -3155,9 +3155,9 @@ class FlatMenuBar(wx.Panel):
 
     def OnMenuDismissed(self, event):
         """
-        Handles the ``EVT_FLAT_MENU_DISMISSED`` event for :class:`~flatmenu.FlatMenuBar`.
+        Handles the ``EVT_FLAT_MENU_DISMISSED`` event for :class:`FlatMenuBar`.
 
-        :param `event`: a :class:`~flatmenu.FlatMenuEvent` event to be processed.
+        :param `event`: a :class:`FlatMenuEvent` event to be processed.
         """
 
         pt = wx.GetMousePosition()
@@ -3177,9 +3177,9 @@ class FlatMenuBar(wx.Panel):
 
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~flatmenu.FlatMenuBar`.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`FlatMenuBar`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         pt = event.GetPosition()
@@ -3228,9 +3228,9 @@ class FlatMenuBar(wx.Panel):
 
     def OnLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~flatmenu.FlatMenuBar`.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`FlatMenuBar`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         pt = event.GetPosition()
@@ -3246,7 +3246,7 @@ class FlatMenuBar(wx.Panel):
         """
         Draws a toolbar item button.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param integer `idx`: the tool index in the toolbar;
         :param integer `state`: the button state.
 
@@ -3284,7 +3284,7 @@ class FlatMenuBar(wx.Panel):
         """
         Activates a menu.
 
-        :param `menuInfo`: an instance of :class:`~flatmenu.MenuEntryInfo`.                
+        :param `menuInfo`: an instance of :class:`MenuEntryInfo`.                
         """
 
         # first make sure all other menus are not popedup
@@ -3380,11 +3380,11 @@ class FlatMenuBar(wx.Panel):
         Inserts the menu at the given position into the menu bar.
 
         :param integer `pos`: the position of the new menu in the menu bar;
-        :param `menu`: the menu to add, an instance of :class:`~flatmenu.FlatMenu`. :class:`~flatmenu.FlatMenuBar` owns the menu and will free it;
+        :param `menu`: the menu to add, an instance of :class:`FlatMenu`. :class:`FlatMenuBar` owns the menu and will free it;
         :param string `title`: the title of the menu.
 
         :note: Inserting menu at position 0 will insert it in the very beginning of it,
-         inserting at position :meth:`~flatmenu.FlatMenuBar.GetMenuCount` is the same as calling :meth:`~flatmenu.FlatMenuBar.Append`.
+         inserting at position :meth:`~FlatMenuBar.GetMenuCount` is the same as calling :meth:`~FlatMenuBar.Append`.
         """
 
         menu.SetMenuBar(self)
@@ -3403,7 +3403,7 @@ class FlatMenuBar(wx.Panel):
 
         :param integer `pos`: the position of the menu in the menu bar.
         
-        :note: This function may be used together with :meth:`~flatmenu.FlatMenuBar.Insert` to change the menubar
+        :note: This function may be used together with :meth:`~FlatMenuBar.Insert` to change the menubar
          dynamically.
         """
 
@@ -3471,7 +3471,7 @@ class FlatMenuBar(wx.Panel):
 
     def ClearBitmaps(self, start=0):
         """
-        Restores a `wx.NullBitmap` for all the items in the menu.
+        Restores a :class:`NullBitmap` for all the items in the menu.
 
         :param integer `start`: the index at which to start resetting the bitmaps.
         """
@@ -3488,7 +3488,7 @@ class FlatMenuBar(wx.Panel):
         """
         Single function to handle any accelerator key used inside the menubar.
 
-        :param `event`: a :class:`~flatmenu.FlatMenuEvent` event to be processed.
+        :param `event`: a :class:`FlatMenuEvent` event to be processed.
         """
 
         for item in self._items:
@@ -3596,7 +3596,7 @@ class FlatMenuBar(wx.Panel):
         """
         Returns the number of invisible menu items.
 
-        :note: Valid only after the `wx.PaintEvent` has been processed after a resize.
+        :note: Valid only after the :class:`PaintEvent` has been processed after a resize.
         """
         
         return len(self._items) - self.GetLastVisibleMenu()
@@ -3606,7 +3606,7 @@ class FlatMenuBar(wx.Panel):
         """
         Returns the number of invisible toolbar items.
 
-        :note: Valid only after the `wx.PaintEvent` has been processed after a resize.
+        :note: Valid only after the :class:`PaintEvent` has been processed after a resize.
         """
         
         count = 0
@@ -3636,7 +3636,7 @@ class FlatMenuBar(wx.Panel):
         """
         Handles the customize dialog here.
 
-        :param `event`: a :class:`~flatmenu.FlatMenuEvent` event to be processed.
+        :param `event`: a :class:`FlatMenuEvent` event to be processed.
         """
 
         if not self._dlg:
@@ -3657,11 +3657,11 @@ class FlatMenuBar(wx.Panel):
 
     def AppendToolbarItem(self, item):
         """
-        Appends a tool to the :class:`~flatmenu.FlatMenuBar`.
+        Appends a tool to the :class:`FlatMenuBar`.
 
-        :warning: This method is now deprecated.
+        .. deprecated:: This method is now deprecated.
 
-        :see: :meth:`~flatmenu.FlatMenuBar.AddTool`        
+        :see: :meth:`~FlatMenuBar.AddTool`        
         """
 
         newItem = ToolBarItem(item, wx.Rect(), ControlNormal)
@@ -3681,12 +3681,12 @@ class FlatMenuBar(wx.Panel):
          toggled) or ``wx.ITEM_RADIO`` for a checkable tool which makes part of a radio
          group of tools each of which is automatically unchecked whenever another button
          in the group is checked;
-        :param `bitmap1`: the primary tool bitmap, an instance of `wx.Bitmap`;
+        :param `bitmap1`: the primary tool bitmap, an instance of :class:`Bitmap`;
         :param `bitmap2`: the bitmap used when the tool is disabled. If it is equal to
-         `wx.NullBitmap`, the disabled bitmap is automatically generated by greing out
+         :class:`NullBitmap`, the disabled bitmap is automatically generated by greing out
          the normal one;
         :param string `shortHelp`: a string used for the tools tooltip;
-        :param string `longHelp`: this string is shown in the `wx.StatusBar` (if any) of the
+        :param string `longHelp`: this string is shown in the :class:`StatusBar` (if any) of the
          parent frame when the mouse pointer is inside the tool.
         """
         
@@ -3704,7 +3704,7 @@ class FlatMenuBar(wx.Panel):
         """
         Adds any control to the toolbar, typically e.g. a combobox.
         
-        :param `control`: the control to be added, a subclass of `wx.Window` (but no `wx.TopLevelWindow`).
+        :param `control`: the control to be added, a subclass of :class:`Window` (but no :class:`TopLevelWindow`).
         """
         
         self._tbButtons.append(ToolBarItem(FlatToolbarItem(control), wx.Rect(), ControlNormal))
@@ -3714,7 +3714,7 @@ class FlatMenuBar(wx.Panel):
         """
         Adds a new check (or toggle) tool to the toolbar.
 
-        :see: :meth:`~flatmenu.FlatMenuBar.AddTool` for parameter descriptions.
+        :see: :meth:`~FlatMenuBar.AddTool` for parameter descriptions.
         """
         
         self.AddTool(toolId, label, bitmap1, bitmap2, kind=wx.ITEM_CHECK, shortHelp=shortHelp, longHelp=longHelp)
@@ -3733,7 +3733,7 @@ class FlatMenuBar(wx.Panel):
 
         By default, the first button in the radio group is initially pressed, the others are not.
         
-        :see: :meth:`~flatmenu.FlatMenuBar.AddTool` for parameter descriptions.
+        :see: :meth:`~FlatMenuBar.AddTool` for parameter descriptions.
         """
         
         self.AddTool(toolId, label, bitmap1, bitmap2, kind=wx.ITEM_RADIO, shortHelp=shortHelp, longHelp=longHelp)
@@ -3748,7 +3748,7 @@ class FlatMenuBar(wx.Panel):
     def SetUpdateInterval(self, interval):
         """
         Sets the UpdateUI interval for toolbar items. All UpdateUI events are
-        sent from within :meth:`~flatmenu.FlatMenuBar.OnIdle` handler, the default is 20 milliseconds.
+        sent from within :meth:`~FlatMenuBar.OnIdle` handler, the default is 20 milliseconds.
 
         :param integer `interval`: the updateUI interval in milliseconds.        
         """
@@ -3760,8 +3760,8 @@ class FlatMenuBar(wx.Panel):
         """
         Positions the control inside a wxAUI / PyAUI frame manager.
 
-        :param `mgr`: an instance of `wx.aui.AuiManager` or :class:`~aui.framemanager.AuiManager`;
-        :param bool `fixToolbar`: ``True`` if :class:`~flatmenu.FlatMenuBar` can not be floated.
+        :param `mgr`: an instance of :class:`~lib.agw.aui.AuiManager` or :class:`framemanager`;
+        :param bool `fixToolbar`: ``True`` if :class:`FlatMenuBar` can not be floated.
         """
 
         if isinstance(mgr, wx.aui.AuiManager):
@@ -3802,7 +3802,7 @@ class FlatMenuBar(wx.Panel):
 
     def DoGiveHelp(self, hit):
         """
-        Gives tooltips and help in `wx.StatusBar`.
+        Gives tooltips and help in :class:`StatusBar`.
 
         :param `hit`: the toolbar tool currently hovered by the mouse.
         """
@@ -3846,7 +3846,7 @@ class FlatMenuBar(wx.Panel):
 
 
     def OnStatusBarTimer(self):
-        """ Handles the timer expiring to delete the `longHelp` string in the `wx.StatusBar`. """
+        """ Handles the timer expiring to delete the `longHelp` string in the :class:`StatusBar`. """
 
         topLevel = wx.GetTopLevelParent(self)
         statusBar = topLevel.GetStatusBar()        
@@ -3855,13 +3855,13 @@ class FlatMenuBar(wx.Panel):
 
 
 class mcPopupWindow(wx.MiniFrame):
-    """ Since Max OS does not support `wx.PopupWindow`, this is an alternative. """
+    """ Since Max OS does not support :class:`PopupWindow`, this is an alternative. """
 
     def __init__(self, parent):
         """
         Default class constructor.
 
-        :param `parent`: the :class:`~flatmenu.mcPopupWindow` parent window.
+        :param `parent`: the :class:`mcPopupWindow` parent window.
         """
 
         wx.MiniFrame.__init__(self, parent, style = wx.POPUP_WINDOW)
@@ -3872,16 +3872,16 @@ class mcPopupWindow(wx.MiniFrame):
 
     def OnLeaveWindow(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~flatmenu.mcPopupWindow`.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`mcPopupWindow`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         event.Skip()
 
 
 havePopupWindow = 1
-""" Flag used to indicate whether the platform supports the native `wx.PopupWindow`. """
+""" Flag used to indicate whether the platform supports the native :class:`PopupWindow`. """
 
 if wx.Platform == '__WXMAC__':
     havePopupWindow = 0
@@ -3893,13 +3893,13 @@ if wx.Platform == '__WXMAC__':
 # ---------------------------------------------------------------------------- #
     
 class ShadowPopupWindow(wx.PopupWindow):
-    """ Base class for generic :class:`~flatmenu.FlatMenu` derived from `wx.PopupWindow`. """
+    """ Base class for generic :class:`FlatMenu` derived from :class:`PopupWindow`. """
     
     def __init__(self, parent=None):
         """
         Default class constructor.
 
-        :param `parent`: the :class:`~flatmenu.ShadowPopupWindow` parent (tipically your main frame).
+        :param `parent`: the :class:`ShadowPopupWindow` parent (tipically your main frame).
         """
         
         if not parent:
@@ -3928,8 +3928,8 @@ class ShadowPopupWindow(wx.PopupWindow):
 
 class FlatMenuButton(object):
     """
-    A nice small class that functions like `wx.BitmapButton`, the reason I did
-    not used `wx.BitmapButton` is that on Linux, it has some extra margins that
+    A nice small class that functions like :class:`BitmapButton`, the reason I did
+    not used :class:`BitmapButton` is that on Linux, it has some extra margins that
     I can't seem to be able to remove.
     """
 
@@ -3937,10 +3937,10 @@ class FlatMenuButton(object):
         """
         Default class constructor.
 
-        :param `menu`: the parent menu associated with this button, an instance of :class:`~flatmenu.FlatMenu`;
+        :param `menu`: the parent menu associated with this button, an instance of :class:`FlatMenu`;
         :param bool `up`: ``True`` for up arrow or ``False`` for down arrow;
-        :param `normalBmp`: normal state bitmap, an instance of `wx.Bitmap`;
-        :param `disabledBmp`: disabled state bitmap, an instance of `wx.Bitmap`.
+        :param `normalBmp`: normal state bitmap, an instance of :class:`Bitmap`;
+        :param `disabledBmp`: disabled state bitmap, an instance of :class:`Bitmap`.
         """
 
         self._normalBmp = normalBmp
@@ -3985,7 +3985,7 @@ class FlatMenuButton(object):
         """
         Draws self at rect using dc.
 
-        :param `dc`: an instance of `wx.DC`.
+        :param `dc`: an instance of :class:`DC`.
         """
 
         rect = wx.RectPS(self._pos, self._size)
@@ -4000,7 +4000,7 @@ class FlatMenuButton(object):
         """
         Handles left down mouse events.
 
-        :param `pt`: an instance of `wx.Point` where the left mouse button was pressed.
+        :param `pt`: an instance of :class:`Point` where the left mouse button was pressed.
         """
 
         if not self.Contains(pt):
@@ -4022,7 +4022,7 @@ class FlatMenuButton(object):
         """
         Handles left up mouse events.
 
-        :param `pt`: an instance of `wx.Point` where the left mouse button was released.
+        :param `pt`: an instance of :class:`Point` where the left mouse button was released.
         """
 
         # always stop the timer
@@ -4042,7 +4042,7 @@ class FlatMenuButton(object):
         Handles mouse motion events. This is called any time the mouse moves in the parent menu, 
         so we must check to see if the mouse is over the button.
 
-        :param `pt`: an instance of `wx.Point` where the mouse pointer was moved.
+        :param `pt`: an instance of :class:`Point` where the mouse pointer was moved.
         """
 
         if not self.Contains(pt):
@@ -4081,9 +4081,9 @@ class FlatMenuButton(object):
 
     def Move(self, input1, input2=None):
         """
-        Moves :class:`~flatmenu.FlatMenuButton` to the specified position.
+        Moves :class:`FlatMenuButton` to the specified position.
 
-        :param `input1`: if it is an instance of `wx.Point`, it represents the :class:`~flatmenu.FlatMenuButton`
+        :param `input1`: if it is an instance of :class:`Point`, it represents the :class:`FlatMenuButton`
          position and the `input2` parameter is not used. Otherwise it is an integer representing
          the button `x` position;
         :param `input2`: if not ``None``, it is an integer representing the button `y` position.
@@ -4097,9 +4097,9 @@ class FlatMenuButton(object):
 
     def SetSize(self, input1, input2=None):
         """
-        Sets the size for :class:`~flatmenu.FlatMenuButton`.
+        Sets the size for :class:`FlatMenuButton`.
 
-        :param `input1`: if it is an instance of `wx.Size`, it represents the :class:`~flatmenu.FlatMenuButton`
+        :param `input1`: if it is an instance of :class:`Size`, it represents the :class:`FlatMenuButton`
          size and the `input2` parameter is not used. Otherwise it is an integer representing
          the button width;
         :param `input2`: if not ``None``, it is an integer representing the button height.
@@ -4112,7 +4112,7 @@ class FlatMenuButton(object):
                 
 
     def GetClientRect(self):
-        """ Returns the client rectangle for :class:`~flatmenu.FlatMenuButton`. """
+        """ Returns the client rectangle for :class:`FlatMenuButton`. """
 
         return wx.RectPS(self._pos, self._size)
 
@@ -4146,7 +4146,7 @@ class FlatMenuItemGroup(object):
         """
         Adds a new item to the group.
 
-        :param `item`: an instance of :class:`~flatmenu.FlatMenu`.
+        :param `item`: an instance of :class:`FlatMenu`.
         """
 
         if item.IsChecked():
@@ -4161,7 +4161,7 @@ class FlatMenuItemGroup(object):
         """
         Checks if an item is in the group.
 
-        :param `item`: an instance of :class:`~flatmenu.FlatMenu`.
+        :param `item`: an instance of :class:`FlatMenu`.
         """
 
         if item in self._items:
@@ -4174,7 +4174,7 @@ class FlatMenuItemGroup(object):
         """
         Selects a particular item.
 
-        :param `item`: an instance of :class:`~flatmenu.FlatMenu`.
+        :param `item`: an instance of :class:`FlatMenu`.
         """
 
         # make sure this item exist in our group
@@ -4192,7 +4192,7 @@ class FlatMenuItemGroup(object):
         """
         Removes a particular item.
 
-        :param `item`: an instance of :class:`~flatmenu.FlatMenu`.
+        :param `item`: an instance of :class:`FlatMenu`.
         """
 
         if item not in self._items:
@@ -4212,14 +4212,14 @@ class FlatMenuItemGroup(object):
 
 class FlatMenuBase(ShadowPopupWindow):
     """
-    Base class for generic flat menu derived from `wx.PopupWindow`.
+    Base class for generic flat menu derived from :class:`PopupWindow`.
     """
 
     def __init__(self, parent=None):
         """
         Default class constructor.
 
-        :param `parent`: the :class:`~flatmenu.ShadowPopupWindow` parent window.
+        :param `parent`: the :class:`ShadowPopupWindow` parent window.
         """
 
         self._rendererMgr = FMRendererMgr()
@@ -4261,10 +4261,10 @@ class FlatMenuBase(ShadowPopupWindow):
         """
         Popups menu at the specified point.
 
-        :param `pt`: an instance of `wx.Point`, assumed to be in screen coordinates. However,
+        :param `pt`: an instance of :class:`Point`, assumed to be in screen coordinates. However,
          if `parent` is not ``None``, `pt` is translated into the screen coordinates using
          `parent.ClientToScreen()`;
-        :param `parent`: if not ``None``, an instance of `wx.Window`.
+        :param `parent`: if not ``None``, an instance of :class:`Window`.
         """
 
         # some controls update themselves from OnIdle() call - let them do it
@@ -4335,7 +4335,7 @@ class FlatMenuBase(ShadowPopupWindow):
         """
         Adjusts position so the menu will be fully visible on screen.
 
-        :param `pos`: an instance of `wx.Point` specifying the menu position.
+        :param `pos`: an instance of :class:`Point` specifying the menu position.
         """
 
         # Check that the menu can fully appear in the screen
@@ -4508,8 +4508,8 @@ class ToolBarItem(object):
         """
         Default class constructor.
 
-        :param `tbItem`: an instance of :class:`~flatmenu.FlatToolbarItem`;
-        :param `rect`: the client rectangle for the toolbar item, an instance of `wx.Rect`;
+        :param `tbItem`: an instance of :class:`FlatToolbarItem`;
+        :param `rect`: the client rectangle for the toolbar item, an instance of :class:`Rect`;
         :param integer `state`: the toolbar item state.
 
         :see: :meth:`MenuEntryInfo.SetState() <flatmenu.MenuEntryInfo.SetState>` for a list of valid item states.        
@@ -4536,14 +4536,14 @@ class FlatToolbarItem(object):
         Default class constructor.
 
         :param `controlType`: can be ``None`` for a toolbar separator, an instance
-         of `wx.Window` for a control or an instance of `wx.Bitmap` for a standard
+         of :class:`Window` for a control or an instance of :class:`Bitmap` for a standard
          toolbar tool;
         :param integer `id`: the toolbar tool id. If set to ``wx.ID_ANY``, a new id is
          automatically assigned;
         :param string `label`: the toolbar tool label;
         :param `disabledBmp`: the bitmap used when the tool is disabled. If the tool
          is a standard one (i.e., not a control or a separator), and `disabledBmp`
-         is equal to `wx.NullBitmap`, the disabled bitmap is automatically generated
+         is equal to :class:`NullBitmap`, the disabled bitmap is automatically generated
          by greing the normal one;
         :param integer `kind`: may be ``wx.ITEM_NORMAL`` for a normal button (default),
          ``wx.ITEM_CHECK`` for a checkable tool (such tool stays pressed after it had been
@@ -4551,7 +4551,7 @@ class FlatToolbarItem(object):
          group of tools each of which is automatically unchecked whenever another button
          in the group is checked;
         :param string `shortHelp`: a string used for the tool's tooltip;
-        :param string `longHelp`: this string is shown in the `wx.StatusBar` (if any) of the
+        :param string `longHelp`: this string is shown in the :class:`StatusBar` (if any) of the
          parent frame when the mouse pointer is inside the tool.
         """
         
@@ -4623,7 +4623,7 @@ class FlatToolbarItem(object):
         """
         Sets the tool bitmap.
 
-        :param `bmp`: the new tool bitmap, a valid `wx.Bitmap` object.
+        :param `bmp`: the new tool bitmap, a valid :class:`Bitmap` object.
         """
 
         self._normalBmp = bmp
@@ -4639,7 +4639,7 @@ class FlatToolbarItem(object):
         """
         Sets the tool disabled bitmap.
 
-        :param `bmp`: the new tool disabled bitmap, a valid `wx.Bitmap` object.
+        :param `bmp`: the new tool disabled bitmap, a valid :class:`Bitmap` object.
         """
 
         self._disabledImg = bmp
@@ -4694,7 +4694,7 @@ class FlatToolbarItem(object):
 
 
     def IsChecked(self):
-        """ Same as :meth:`~flatmenu.FlatToolbarItem.IsSelected`. More intuitive for check items though. """
+        """ Same as :meth:`~FlatToolbarItem.IsSelected`. More intuitive for check items though. """
         
         return self._selected
 
@@ -4721,7 +4721,7 @@ class FlatToolbarItem(object):
         """
         Sets group id for a radio item, for other items does nothing.
 
-        :param `group`: an instance of :class:`~flatmenu.FlatMenuItemGroup`.
+        :param `group`: an instance of :class:`FlatMenuItemGroup`.
         """
         
         if self.IsRadioItem():
@@ -4772,7 +4772,7 @@ class FlatToolbarItem(object):
 
     def SetLongHelp(self, help):
         """
-        Sets the tool long help string (displayed in the parent frame `wx.StatusBar`).
+        Sets the tool long help string (displayed in the parent frame :class:`StatusBar`).
 
         :param string `help`: the new tool long help string.
         """
@@ -4782,7 +4782,7 @@ class FlatToolbarItem(object):
 
 
     def GetLongHelp(self):
-        """ Returns the tool long help string (displayed in the parent frame `wx.StatusBar`). """
+        """ Returns the tool long help string (displayed in the parent frame :class:`StatusBar`). """
 
         if self._kind == wx.ITEM_NORMAL:
             return self._longHelp
@@ -4806,7 +4806,7 @@ class FlatMenuItem(object):
         """
         Default class constructor.
 
-        :param `parent`: menu that the menu item belongs to, an instance of :class:`~flatmenu.FlatMenu`;
+        :param `parent`: menu that the menu item belongs to, an instance of :class:`FlatMenu`;
         :param integer `id`: the menu item identifier;
         :param string `label`: text for the menu item, as shown on the menu. An accelerator
          key can be specified using the ampersand '&' character. In order to embed
@@ -4814,13 +4814,13 @@ class FlatMenuItem(object):
         :param string `helpString`: optional help string that will be shown on the status bar;
         :param integer `kind`: may be ``wx.ITEM_SEPARATOR``, ``wx.ITEM_NORMAL``, ``wx.ITEM_CHECK``
          or ``wx.ITEM_RADIO``;
-        :param `subMenu`: if not ``None``, the sub menu this item belongs to (an instance of :class:`~flatmenu.FlatMenu`);
+        :param `subMenu`: if not ``None``, the sub menu this item belongs to (an instance of :class:`FlatMenu`);
         :param `normalBmp`: normal bitmap to draw to the side of the text, this bitmap
-         is used when the menu is enabled (an instance of `wx.Bitmap`);
+         is used when the menu is enabled (an instance of :class:`Bitmap`);
         :param `disabledBmp`: 'greyed' bitmap to draw to the side of the text, this
-         bitmap is used when the menu is disabled, if none supplied normal is used (an instance of `wx.Bitmap`);
+         bitmap is used when the menu is disabled, if none supplied normal is used (an instance of :class:`Bitmap`);
         :param `hotBmp`: hot bitmap to draw to the side of the text, this bitmap is
-         used when the menu is hovered, if non supplied, normal is used (an instance of `wx.Bitmap`).
+         used when the menu is hovered, if non supplied, normal is used (an instance of :class:`Bitmap`).
         """
 
         self._text = label
@@ -4859,7 +4859,7 @@ class FlatMenuItem(object):
                 
     def SetLongHelp(self, help):
         """
-        Sets the item long help string (displayed in the parent frame `wx.StatusBar`).
+        Sets the item long help string (displayed in the parent frame :class:`StatusBar`).
 
         :param string `help`: the new item long help string.
         """
@@ -4868,7 +4868,7 @@ class FlatMenuItem(object):
         
 
     def GetLongHelp(self):
-        """ Returns the item long help string (displayed in the parent frame `wx.StatusBar`). """
+        """ Returns the item long help string (displayed in the parent frame :class:`StatusBar`). """
 
         return self._helpString
 
@@ -4893,7 +4893,7 @@ class FlatMenuItem(object):
 
     def GetBitmap(self):
         """
-        Returns the normal bitmap associated to the menu item or `wx.NullBitmap` if
+        Returns the normal bitmap associated to the menu item or :class:`NullBitmap` if
         none has been supplied.
         """
 
@@ -4902,7 +4902,7 @@ class FlatMenuItem(object):
 
     def GetDisabledBitmap(self):
         """
-        Returns the disabled bitmap associated to the menu item or `wx.NullBitmap`
+        Returns the disabled bitmap associated to the menu item or :class:`NullBitmap`
         if none has been supplied.
         """
 
@@ -4911,7 +4911,7 @@ class FlatMenuItem(object):
 
     def GetHotBitmap(self):
         """
-        Returns the hot bitmap associated to the menu item or `wx.NullBitmap` if
+        Returns the hot bitmap associated to the menu item or :class:`NullBitmap` if
         none has been supplied.
         """
 
@@ -4961,7 +4961,7 @@ class FlatMenuItem(object):
         """
         Assigns a context menu to this item.
 
-        :param `context_menu`: an instance of :class:`~flatmenu.FlatMenu`.
+        :param `context_menu`: an instance of :class:`FlatMenu`.
         """
 
         self._contextMenu = context_menu
@@ -5024,7 +5024,7 @@ class FlatMenuItem(object):
         """
         Sets the menu item normal bitmap.
 
-        :param `bmp`: an instance of `wx.Bitmap`.
+        :param `bmp`: an instance of :class:`Bitmap`.
         """
 
         self._normalBmp = bmp 
@@ -5034,7 +5034,7 @@ class FlatMenuItem(object):
         """
         Sets the menu item disabled bitmap.
 
-        :param `bmp`: an instance of `wx.Bitmap`.
+        :param `bmp`: an instance of :class:`Bitmap`.
         """
 
         self._disabledBmp = bmp 
@@ -5044,7 +5044,7 @@ class FlatMenuItem(object):
         """
         Sets the menu item hot bitmap.
 
-        :param `bmp`: an instance of `wx.Bitmap`.
+        :param `bmp`: an instance of :class:`Bitmap`.
         """
 
         self._hotBmp = bmp 
@@ -5064,7 +5064,7 @@ class FlatMenuItem(object):
         """
         Sets the menu item parent menu.
 
-        :param `menu`: an instance of :class:`~flatmenu.FlatMenu`.
+        :param `menu`: an instance of :class:`FlatMenu`.
         """
 
         self._parentMenu = menu 
@@ -5074,7 +5074,7 @@ class FlatMenuItem(object):
         """
         Sets the menu item sub-menu.
 
-        :param `menu`: an instance of :class:`~flatmenu.FlatMenu`.
+        :param `menu`: an instance of :class:`FlatMenu`.
         """
 
         self._subMenu = menu
@@ -5093,7 +5093,7 @@ class FlatMenuItem(object):
         """
         Sets the menu item client rectangle.
 
-        :param `rect`: the menu item client rectangle, an instance of `wx.Rect`.
+        :param `rect`: the menu item client rectangle, an instance of :class:`Rect`.
         """
 
         self._rect = rect 
@@ -5190,7 +5190,7 @@ class FlatMenuItem(object):
 
 
     def SetMenuBar(self):
-        """ Links the current menu item with the main :class:`~flatmenu.FlatMenuBar`. """
+        """ Links the current menu item with the main :class:`FlatMenuBar`. """
 
         # Fix toolbar update
         if self._subMenu and self._parentMenu:
@@ -5241,9 +5241,9 @@ class FlatMenuItem(object):
 
     def SetFont(self, font=None):
         """
-        Sets the :class:`~flatmenu.FlatMenuItem` font.
+        Sets the :class:`FlatMenuItem` font.
 
-        :param `font`: an instance of a valid `wx.Font`.
+        :param `font`: an instance of a valid :class:`Font`.
         """
 
         self._font = font
@@ -5253,23 +5253,23 @@ class FlatMenuItem(object):
 
 
     def GetFont(self):
-        """ Returns this :class:`~flatmenu.FlatMenuItem` font. """
+        """ Returns this :class:`FlatMenuItem` font. """
 
         return self._font
     
 
     def SetTextColour(self, colour=None):
         """
-        Sets the :class:`~flatmenu.FlatMenuItem` foreground colour for the menu label.
+        Sets the :class:`FlatMenuItem` foreground colour for the menu label.
 
-        :param `colour`: an instance of a valid `wx.Colour`.
+        :param `colour`: an instance of a valid :class:`Colour`.
         """
 
         self._textColour = colour
 
 
     def GetTextColour(self):
-        """ Returns this :class:`~flatmenu.FlatMenuItem` foreground text colour. """
+        """ Returns this :class:`FlatMenuItem` foreground text colour. """
 
         return self._textColour        
 
@@ -5287,8 +5287,8 @@ class FlatMenu(FlatMenuBase):
         """
         Default class constructor.
 
-        :param `parent`: the :class:`~flatmenu.FlatMenu` parent window (used to initialize the
-         underlying :class:`~flatmenu.ShadowPopupWindow`).
+        :param `parent`: the :class:`FlatMenu` parent window (used to initialize the
+         underlying :class:`ShadowPopupWindow`).
         """
                         
         self._menuWidth = 2*26
@@ -5343,7 +5343,7 @@ class FlatMenu(FlatMenuBase):
         """
         Attaches this menu to a menubar.
 
-        :param `mb`: an instance of :class:`~flatmenu.FlatMenuBar`.
+        :param `mb`: an instance of :class:`FlatMenuBar`.
         """
 
         self._mb = mb
@@ -5353,7 +5353,7 @@ class FlatMenu(FlatMenuBase):
         """
         Attaches this menu to a menubar.
 
-        :param `mb`: an instance of :class:`~flatmenu.FlatMenuBar`.
+        :param `mb`: an instance of :class:`FlatMenuBar`.
         """
 
         self._mb_submenu = mb
@@ -5379,7 +5379,7 @@ class FlatMenu(FlatMenuBase):
         Pops up the menu.
 
         :param `pt`: the point at which the menu should be popped up (an instance
-         of `wx.Point`);
+         of :class:`Point`);
         :param `owner`: the owner of the menu. The owner does not necessarly mean the
          menu parent, it can also be the window that popped up it;
         :param `parent`: the menu parent window.
@@ -5475,9 +5475,9 @@ class FlatMenu(FlatMenuBase):
         """
         Adds a pull-right submenu to the end of the menu.
         
-        This function is added to duplicate the API of `wx.Menu`.
+        This function is added to duplicate the API of :class:`Menu`.
 
-        :see: :meth:`~flatmenu.FlatMenu.AppendMenu` for an explanation of the input parameters.        
+        :see: :meth:`~FlatMenu.AppendMenu` for an explanation of the input parameters.        
         """
         
         return self.AppendMenu(wx.ID_ANY, item, subMenu, helpString)
@@ -5489,7 +5489,7 @@ class FlatMenu(FlatMenuBase):
 
         :param integer `id`: the menu item identifier;
         :param string `item`: the string to appear on the menu item;
-        :param `subMenu`: an instance of :class:`~flatmenu.FlatMenu`, the submenu to append;
+        :param `subMenu`: an instance of :class:`FlatMenu`, the submenu to append;
         :param string `helpString`: an optional help string associated with the item. By default,
          the handler for the ``EVT_FLAT_MENU_ITEM_MOUSE_OVER`` event displays this string
          in the status line.
@@ -5503,7 +5503,7 @@ class FlatMenu(FlatMenuBase):
         """
         Appends an item to this menu.
 
-        :param `menuItem`: an instance of :class:`~flatmenu.FlatMenuItem`.
+        :param `menuItem`: an instance of :class:`FlatMenuItem`.
         """
         
         self._itemsArr.append(menuItem)
@@ -5514,7 +5514,7 @@ class FlatMenu(FlatMenuBase):
         """
         Prepends an item to this menu.
 
-        :param `menuItem`: an instance of :class:`~flatmenu.FlatMenuItem`.
+        :param `menuItem`: an instance of :class:`FlatMenuItem`.
         """
         
         self._itemsArr.insert(0,menuItem)
@@ -5526,7 +5526,7 @@ class FlatMenu(FlatMenuBase):
         Internal function to add the item to this menu. The item must
         already be in the `self._itemsArr` attribute.
 
-        :param `menuItem`: an instance of :class:`~flatmenu.FlatMenuItem`.
+        :param `menuItem`: an instance of :class:`FlatMenuItem`.
         """
 
         if not menuItem:
@@ -5587,7 +5587,7 @@ class FlatMenu(FlatMenuBase):
         """
         Returns the width of a particular item.
 
-        :param `menuItem`: an instance of :class:`~flatmenu.FlatMenuItem`.
+        :param `menuItem`: an instance of :class:`FlatMenuItem`.
         """
 
         menuItemWidth = 0
@@ -5696,7 +5696,7 @@ class FlatMenu(FlatMenuBase):
         """
         Adds a checkable item to the end of the menu.
 
-        :see: :meth:`~flatmenu.FlatMenu.Append` for the explanation of the input parameters.        
+        :see: :meth:`~FlatMenu.Append` for the explanation of the input parameters.        
         """
 
         newItem = FlatMenuItem(self, id, item, helpString, wx.ITEM_CHECK)
@@ -5710,7 +5710,7 @@ class FlatMenu(FlatMenuBase):
         All consequent radio items form a group and when an item in the group is
         checked, all the others are automatically unchecked.
 
-        :see: :meth:`~flatmenu.FlatMenu.Append` for the explanation of the input parameters.        
+        :see: :meth:`~FlatMenu.Append` for the explanation of the input parameters.        
         """
         
         newItem = FlatMenuItem(self, id, item, helpString, wx.ITEM_RADIO)
@@ -5764,9 +5764,9 @@ class FlatMenu(FlatMenuBase):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`~flatmenu.FlatMenu`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`FlatMenu`.
 
-        :param `event`: a `wx.PaintEvent` event to be processed.
+        :param `event`: a :class:`PaintEvent` event to be processed.
         """
         
         dc = wx.PaintDC(self)
@@ -5780,7 +5780,7 @@ class FlatMenu(FlatMenuBase):
         """
         Updates an item.
 
-        :param `item`: an instance of :class:`~flatmenu.FlatMenuItem`.
+        :param `item`: an instance of :class:`FlatMenuItem`.
         """
 
         # notify menu bar that an item was modified directly
@@ -5790,9 +5790,9 @@ class FlatMenu(FlatMenuBase):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~flatmenu.FlatMenu`.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`FlatMenu`.
 
-        :param `event`: a `wx.EraseEvent` event to be processed.
+        :param `event`: a :class:`EraseEvent` event to be processed.
 
         :note: This method is intentionally empty to avoid flicker.        
         """
@@ -5804,7 +5804,7 @@ class FlatMenu(FlatMenuBase):
         """
         Redraws the menu.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param integer `oldSelection`: if non-negative, the index representing the previous selected
          menu item.
         """
@@ -5835,9 +5835,9 @@ class FlatMenu(FlatMenuBase):
 
     def OnKeyDown(self, event):
         """
-        Handles the ``wx.EVT_KEY_DOWN`` event for :class:`~flatmenu.FlatMenu`.
+        Handles the ``wx.EVT_KEY_DOWN`` event for :class:`FlatMenu`.
 
-        :param `event`: a `wx.KeyEvent` event to be processed.
+        :param `event`: a :class:`KeyEvent` event to be processed.
         """
 
         self.OnChar(event.GetKeyCode())
@@ -5845,7 +5845,7 @@ class FlatMenu(FlatMenuBase):
 
     def OnChar(self, key):
         """
-        Handles key events for :class:`~flatmenu.FlatMenu`.
+        Handles key events for :class:`FlatMenu`.
 
         :param `key`: the keyboard key integer code.
         """
@@ -6039,16 +6039,16 @@ class FlatMenu(FlatMenuBase):
 
     def HitTest(self, pos):
         """
-        HitTest method for :class:`~flatmenu.FlatMenu`.
+        HitTest method for :class:`FlatMenu`.
 
-        :param `pos`: an instance of `wx.Point`, a point to test for hits.
+        :param `pos`: an instance of :class:`Point`, a point to test for hits.
 
         :return: A tuple representing one of the following combinations:
 
          ========================= ==================================================
          Return Tuple              Description
          ========================= ==================================================
-         (0, -1)                   The :meth:`~flatmenu.FlatMenu.HitTest` method didn't find any item with the specified input point `pt` (``MENU_HT_NONE`` = 0)
+         (0, -1)                   The :meth:`~FlatMenu.HitTest` method didn't find any item with the specified input point `pt` (``MENU_HT_NONE`` = 0)
          (1, `integer`)            A menu item has been hit (``MENU_HT_ITEM`` = 1)
          (2, -1)                   The `Scroll Up` button has been hit (``MENU_HT_SCROLL_UP`` = 2)
          (3, -1)                   The `Scroll Down` button has been hit (``MENU_HT_SCROLL_DOWN`` = 3)
@@ -6074,9 +6074,9 @@ class FlatMenu(FlatMenuBase):
 
     def OnMouseMove(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for :class:`~flatmenu.FlatMenu`.
+        Handles the ``wx.EVT_MOTION`` event for :class:`FlatMenu`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if "__WXMSW__" in wx.Platform:
@@ -6108,9 +6108,9 @@ class FlatMenu(FlatMenuBase):
 
     def OnMouseLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~flatmenu.FlatMenu`.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`FlatMenu`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if self.TryScrollButtons(event):
@@ -6122,9 +6122,9 @@ class FlatMenu(FlatMenuBase):
 
     def OnMouseLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~flatmenu.FlatMenu`.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`FlatMenu`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if self.TryScrollButtons(event):
@@ -6170,9 +6170,9 @@ class FlatMenu(FlatMenuBase):
 
     def OnMouseRightDown(self, event):
         """
-        Handles the ``wx.EVT_RIGHT_DOWN`` event for :class:`~flatmenu.FlatMenu`.
+        Handles the ``wx.EVT_RIGHT_DOWN`` event for :class:`FlatMenu`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if self.TryScrollButtons(event):
@@ -6187,7 +6187,7 @@ class FlatMenu(FlatMenuBase):
         Processes mouse right clicks.
 
         :param `pos`: the position at which the mouse right button was pressed,
-         an instance of `wx.Point`.
+         an instance of :class:`Point`.
         """
 
         rect = self.GetClientRect()
@@ -6256,7 +6256,7 @@ class FlatMenu(FlatMenuBase):
         Processes mouse left clicks.
 
         :param `pos`: the position at which the mouse left button was pressed,
-         an instance of `wx.Point`.
+         an instance of :class:`Point`.
         """
         
         rect = self.GetClientRect()
@@ -6293,7 +6293,7 @@ class FlatMenu(FlatMenuBase):
         Processes mouse left clicks.
 
         :param `pos`: the position at which the mouse left button was pressed,
-         an instance of `wx.Point`.
+         an instance of :class:`Point`.
         """
 
         self.ProcessMouseLClick(pos)
@@ -6320,7 +6320,7 @@ class FlatMenu(FlatMenuBase):
         """
         Processes mouse movements.
 
-        :param `pos`: the position at which the mouse was moved, an instance of `wx.Point`.
+        :param `pos`: the position at which the mouse was moved, an instance of :class:`Point`.
         """
 
         rect = self.GetClientRect()
@@ -6432,9 +6432,9 @@ class FlatMenu(FlatMenuBase):
 
     def OnMouseLeaveWindow(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~flatmenu.FlatMenu`.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`FlatMenu`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if self._mb:
@@ -6465,9 +6465,9 @@ class FlatMenu(FlatMenuBase):
 
     def OnMouseEnterWindow(self, event):
         """
-        Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`~flatmenu.FlatMenu`.
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`FlatMenu`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if "__WXMSW__" in wx.Platform:
@@ -6479,9 +6479,9 @@ class FlatMenu(FlatMenuBase):
 
     def OnKillFocus(self, event):
         """
-        Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`~flatmenu.FlatMenu`.
+        Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`FlatMenu`.
 
-        :param `event`: a `wx.FocusEvent` event to be processed.
+        :param `event`: a :class:`FocusEvent` event to be processed.
         """
         
         self.Dismiss(True, True)
@@ -6626,7 +6626,7 @@ class FlatMenu(FlatMenuBase):
         object. This allows to reuse the same item later by adding it back to the
         menu (especially useful with submenus).
 
-        :param `item`: can be either a menu item identifier or a plain :class:`~flatmenu.FlatMenuItem`.
+        :param `item`: can be either a menu item identifier or a plain :class:`FlatMenuItem`.
         """
 
         if type(item) != type(1):
@@ -6650,10 +6650,10 @@ class FlatMenu(FlatMenuBase):
     def Destroy(self, item):
         """
         Deletes the menu item from the menu. If the item is a submenu, it will be
-        deleted. Use :meth:`~flatmenu.FlatMenu.Remove` if you want to keep the submenu (for example, to reuse
+        deleted. Use :meth:`~FlatMenu.Remove` if you want to keep the submenu (for example, to reuse
         it later).
 
-        :param `item`: can be either a menu item identifier or a plain :class:`~flatmenu.FlatMenuItem`.        
+        :param `item`: can be either a menu item identifier or a plain :class:`FlatMenuItem`.        
         """
 
         if type(item) != type(1):
@@ -6688,7 +6688,7 @@ class FlatMenu(FlatMenuBase):
         Inserts an item into the menu.
 
         :param integer `pos`: the position at which to insert the new menu item;
-        :param `item`: an instance of :class:`~flatmenu.FlatMenuItem`.
+        :param `item`: an instance of :class:`FlatMenuItem`.
         """
 
         if pos == len(self._itemsArr):
@@ -6712,7 +6712,7 @@ class FlatMenu(FlatMenuBase):
         """
         Updates a group of radio items.
 
-        :param `item`: an instance of :class:`~flatmenu.FlatMenuItem`.
+        :param `item`: an instance of :class:`FlatMenuItem`.
         """
 
         if item.IsRadioItem():
@@ -6767,7 +6767,7 @@ class FlatMenu(FlatMenuBase):
         """
         Sets the number of columns for a menu window.
 
-        :param integer `numCols`: the number of columns for this :class:`~flatmenu.FlatMenu` window.
+        :param integer `numCols`: the number of columns for this :class:`FlatMenu` window.
         """
 
         if self._numCols == numCols:
@@ -6817,10 +6817,10 @@ class FlatMenu(FlatMenuBase):
 
     def SetItemFont(self, itemId, font=None):
         """
-        Sets the :class:`~flatmenu.FlatMenuItem` font.
+        Sets the :class:`FlatMenuItem` font.
 
         :param integer `itemId`: the menu item identifier;
-        :param `font`: an instance of a valid `wx.Font`.
+        :param `font`: an instance of a valid :class:`Font`.
         """
         
         item = self.FindItem(itemId)
@@ -6829,7 +6829,7 @@ class FlatMenu(FlatMenuBase):
 
     def GetItemFont(self, itemId):
         """
-        Returns this :class:`~flatmenu.FlatMenuItem` font.
+        Returns this :class:`FlatMenuItem` font.
 
         :param integer `itemId`: the menu item identifier.
         """
@@ -6840,10 +6840,10 @@ class FlatMenu(FlatMenuBase):
 
     def SetItemTextColour(self, itemId, colour=None):
         """
-        Sets the :class:`~flatmenu.FlatMenuItem` foreground text colour.
+        Sets the :class:`FlatMenuItem` foreground text colour.
 
         :param integer `itemId`: the menu item identifier;
-        :param `colour`: an instance of a valid `wx.Colour`.
+        :param `colour`: an instance of a valid :class:`Colour`.
         """
         
         item = self.FindItem(itemId)
@@ -6852,7 +6852,7 @@ class FlatMenu(FlatMenuBase):
 
     def GetItemTextColour(self, itemId):
         """
-        Returns this :class:`~flatmenu.FlatMenuItem` foreground text colour.
+        Returns this :class:`FlatMenuItem` foreground text colour.
 
         :param integer `itemId`: the menu item identifier.
         """
@@ -6863,12 +6863,12 @@ class FlatMenu(FlatMenuBase):
 
     def SetLabel(self, itemId, label):
         """
-        Sets the label of a :class:`~flatmenu.FlatMenuItem`.
+        Sets the label of a :class:`FlatMenuItem`.
 
         :param integer `itemId`: the menu item identifier;
         :param string `label`: the menu item label to set.
 
-        :see: :meth:`~flatmenu.FlatMenu.GetLabel`.
+        :see: :meth:`~FlatMenu.GetLabel`.
         """
 
         item = self.FindItem(itemId)
@@ -6880,11 +6880,11 @@ class FlatMenu(FlatMenuBase):
 
     def GetLabel(self, itemId):
         """
-        Returns the label of a :class:`~flatmenu.FlatMenuItem`.
+        Returns the label of a :class:`FlatMenuItem`.
 
         :param integer `id`: the menu item identifier;
 
-        :see: :meth:`~flatmenu.FlatMenu.SetLabel`.
+        :see: :meth:`~FlatMenu.SetLabel`.
         """        
 
         item = self.FindItem(itemId)
@@ -6931,7 +6931,7 @@ class FlatMenu(FlatMenuBase):
 
 
     def GetAccelTable(self):
-        """ Returns the menu accelerator table, an instance of `wx.AcceleratorTable`. """
+        """ Returns the menu accelerator table, an instance of :class:`AcceleratorTable`. """
         
         n = len(self._accelArray)
         if n == 0:
@@ -6949,7 +6949,7 @@ class FlatMenu(FlatMenuBase):
 
 
     def GetMenuItemCount(self):
-        """ Returns the number of items in the :class:`~flatmenu.FlatMenu`. """
+        """ Returns the number of items in the :class:`FlatMenu`. """
 
         return len(self._itemsArr)
     
@@ -7065,7 +7065,7 @@ class FlatMenu(FlatMenuBase):
         """
         Finds an item and its position inside the menu based on its id.
 
-        :param `item`: an instance of :class:`~flatmenu.FlatMenuItem`.
+        :param `item`: an instance of :class:`FlatMenuItem`.
 
         :return: An integer specifying the index found menu item object, or
          ``wx.NOT_FOUND`` if one was not found.
@@ -7083,9 +7083,9 @@ class FlatMenu(FlatMenuBase):
 
     def SetBackgroundBitmap(self, bitmap=None):
         """
-        Sets a background bitmap for this particular :class:`~flatmenu.FlatMenu`.
+        Sets a background bitmap for this particular :class:`FlatMenu`.
 
-        :param `bitmap`: an instance of `wx.Bitmap`. Set `bitmap` to ``None`` if you
+        :param `bitmap`: an instance of :class:`Bitmap`. Set `bitmap` to ``None`` if you
          wish to remove the background bitmap altogether.
 
         :note: the bitmap is rescaled to fit the menu width and height.
@@ -7098,7 +7098,7 @@ class FlatMenu(FlatMenuBase):
         
 
     def GetBackgroundBitmap(self):
-        """ Returns the background bitmap for this particular :class:`~flatmenu.FlatMenu`, if any. """
+        """ Returns the background bitmap for this particular :class:`FlatMenu`, if any. """
 
         return self._originalBackgroundImage
 
@@ -7110,7 +7110,7 @@ class FlatMenu(FlatMenuBase):
         :param `menu`: the menu from which we start accumulating items;
         :param list `items`: the array which is recursively filled with menu items.
 
-        :return: a list of :class:`~flatmenu.FlatMenuItem`.        
+        :return: a list of :class:`FlatMenuItem`.        
         """
 
         # first copy the current menu items
@@ -7131,7 +7131,7 @@ class FlatMenu(FlatMenuBase):
         """
         Used internally.
 
-        :param `item`: an instance of :class:`~flatmenu.FlatMenuItem`.
+        :param `item`: an instance of :class:`FlatMenuItem`.
         """
 
         pos = self.FindMenuItemPosSimple(item)
@@ -7186,9 +7186,9 @@ class FlatMenu(FlatMenuBase):
 
     def OnTimer(self, event):
         """
-        Handles the ``wx.EVT_TIMER`` event for :class:`~flatmenu.FlatMenu`.
+        Handles the ``wx.EVT_TIMER`` event for :class:`FlatMenu`.
 
-        :param `event`: a `wx.TimerEvent` event to be processed.        
+        :param `event`: a :class:`TimerEvent` event to be processed.        
         """
 
         if self._upButton and self._upButton.GetTimerId() == event.GetId():
@@ -7215,9 +7215,9 @@ class MenuKbdRedirector(wx.EvtHandler):
         """
         Default class constructor.
 
-        :param `menu`: an instance of :class:`~flatmenu.FlatMenu` for which we want to redirect
+        :param `menu`: an instance of :class:`FlatMenu` for which we want to redirect
          keyboard inputs;
-        :param `oldHandler`: a previous (if any) `wx.EvtHandler` associated with
+        :param `oldHandler`: a previous (if any) :class:`EvtHandler` associated with
          the menu.
         """
 
@@ -7230,7 +7230,7 @@ class MenuKbdRedirector(wx.EvtHandler):
         """
         Sets the listener menu.
 
-        :param `menu`: an instance of :class:`~flatmenu.FlatMenu`.
+        :param `menu`: an instance of :class:`FlatMenu`.
         """
 
         self._menu = menu
@@ -7260,7 +7260,7 @@ class FocusHandler(wx.EvtHandler):
         """
         Default class constructor.
 
-        :param `menu`: an instance of :class:`~flatmenu.FlatMenu` for which we want to redirect
+        :param `menu`: an instance of :class:`FlatMenu` for which we want to redirect
          focus inputs.
         """
 
@@ -7275,7 +7275,7 @@ class FocusHandler(wx.EvtHandler):
         """
         Sets the listener menu.
 
-        :param `menu`: an instance of :class:`~flatmenu.FlatMenu`.
+        :param `menu`: an instance of :class:`FlatMenu`.
         """
 
         self._menu = menu
@@ -7283,9 +7283,9 @@ class FocusHandler(wx.EvtHandler):
 
     def OnKeyDown(self, event):
         """
-        Handles the ``wx.EVT_KEY_DOWN`` event for :class:`~flatmenu.FocusHandler`.
+        Handles the ``wx.EVT_KEY_DOWN`` event for :class:`FocusHandler`.
 
-        :param `event`: a `wx.KeyEvent` event to be processed.
+        :param `event`: a :class:`KeyEvent` event to be processed.
         """
 
         # Let parent process it
@@ -7294,9 +7294,9 @@ class FocusHandler(wx.EvtHandler):
 
     def OnKillFocus(self, event):
         """
-        Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`~flatmenu.FocusHandler`.
+        Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`FocusHandler`.
 
-        :param `event`: a `wx.FocusEvent` event to be processed.
+        :param `event`: a :class:`FocusEvent` event to be processed.
         """
         
         wx.PostEvent(self._menu, event)

@@ -53,7 +53,7 @@ def GetSizeInOrientation(size, orientation):
 
 
 class RibbonToolBarEvent(wx.PyCommandEvent):
-    """ Handles events related to :class:`~ribbon.toolbar.RibbonToolBar`. """
+    """ Handles events related to :class:`RibbonToolBar`. """
 
     def __init__(self, command_type=None, win_id=0, bar=None):
         """
@@ -61,7 +61,7 @@ class RibbonToolBarEvent(wx.PyCommandEvent):
 
         :param integer `command_type`: the event type;
         :param integer `win_id`: the event identifier;
-        :param `bar`: an instance of :class:`~ribbon.toolbar.RibbonToolBar`.
+        :param `bar`: an instance of :class:`RibbonToolBar`.
         """
 
         wx.PyCommandEvent.__init__(self, command_type, win_id)
@@ -69,16 +69,16 @@ class RibbonToolBarEvent(wx.PyCommandEvent):
 
 
     def GetBar(self):
-        """ Returns an instance of :class:`~ribbon.toolbar.RibbonToolBar`. """
+        """ Returns an instance of :class:`RibbonToolBar`. """
         
         return self._bar
 
     
     def SetBar(self, bar):
         """
-        Sets the current :class:`~ribbon.toolbar.RibbonToolBar` for this event.
+        Sets the current :class:`RibbonToolBar` for this event.
 
-        :param `bar`: an instance of :class:`~ribbon.toolbar.RibbonToolBar`.
+        :param `bar`: an instance of :class:`RibbonToolBar`.
         """
         
         self._bar = bar
@@ -91,9 +91,9 @@ class RibbonToolBarEvent(wx.PyCommandEvent):
         If a menu item is selected, the corresponding menu event is generated and will
         be processed as usual. 
 
-        :param `menu`: the menu to pop up, an instance of `wx.Menu`.
+        :param `menu`: the menu to pop up, an instance of :class:`Menu`.
 
-        :note: Just before the menu is popped up, `wx.Menu.UpdateUI` is called to ensure
+        :note: Just before the menu is popped up, :meth:`Menu.UpdateUI` is called to ensure
          that the menu items are in the correct state. The menu does not get deleted by
          the window.
         """
@@ -161,7 +161,7 @@ class RibbonToolBar(RibbonControl):
         """
         Default class constructor.
         
-        :param `parent`: pointer to a parent window, typically a :class:`~ribbon.panel.RibbonPanel`;
+        :param `parent`: pointer to a parent window, typically a :class:`~lib.agw.ribbon.panel.RibbonPanel`;
         :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
         :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
@@ -212,7 +212,7 @@ class RibbonToolBar(RibbonControl):
         :param `help_string`: the UI help string to associate with the new button;
         :param `kind`: the kind of button to add.
 
-        :see: :meth:`~ribbon.toolbar.RibbonToolBar.AddDropdownTool`, :meth:`~ribbon.toolbar.RibbonToolBar.AddHybridTool`, :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`
+        :see: :meth:`~RibbonToolBar.AddDropdownTool`, :meth:`~RibbonToolBar.AddHybridTool`, :meth:`~RibbonToolBar.AddTool`
 
         """
 
@@ -228,7 +228,7 @@ class RibbonToolBar(RibbonControl):
          other large bitmaps used on the button bar;
         :param `help_string`: the UI help string to associate with the new button.
 
-        :see: :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`
+        :see: :meth:`~RibbonToolBar.AddTool`
         """
 
         return self.AddTool(tool_id, bitmap, wx.NullBitmap, help_string, RIBBON_BUTTON_DROPDOWN, None)
@@ -244,7 +244,7 @@ class RibbonToolBar(RibbonControl):
          other large bitmaps used on the button bar;
         :param `help_string`: the UI help string to associate with the new button.
 
-        :see: :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`, :meth:`~ribbon.toolbar.RibbonToolBar.InsertTool`
+        :see: :meth:`~RibbonToolBar.AddTool`, :meth:`~RibbonToolBar.InsertTool`
 
         .. versionadded:: 0.9.5
         """
@@ -261,7 +261,7 @@ class RibbonToolBar(RibbonControl):
          other large bitmaps used on the button bar;
         :param `help_string`: the UI help string to associate with the new button.
 
-        :see: :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`
+        :see: :meth:`~RibbonToolBar.AddTool`
         """
 
         return self.AddTool(tool_id, bitmap, wx.NullBitmap, help_string, RIBBON_BUTTON_HYBRID, None)
@@ -277,7 +277,7 @@ class RibbonToolBar(RibbonControl):
          other large bitmaps used on the button bar;
         :param `help_string`: the UI help string to associate with the new button.
 
-        :see: :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`, :meth:`~ribbon.toolbar.RibbonToolBar.InsertTool`
+        :see: :meth:`~RibbonToolBar.AddTool`, :meth:`~RibbonToolBar.InsertTool`
 
         .. versionadded:: 0.9.5
         """
@@ -294,7 +294,7 @@ class RibbonToolBar(RibbonControl):
          other large bitmaps used on the button bar;
         :param `help_string`: the UI help string to associate with the new button.
 
-        :see: :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`
+        :see: :meth:`~RibbonToolBar.AddTool`
         """
         
         return self.AddTool(tool_id, bitmap, wx.NullBitmap, help_string, RIBBON_BUTTON_TOGGLE, None)
@@ -310,7 +310,7 @@ class RibbonToolBar(RibbonControl):
          other large bitmaps used on the button bar;
         :param `help_string`: the UI help string to associate with the new button.
 
-        :see: :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`, :meth:`~ribbon.toolbar.RibbonToolBar.InsertTool`
+        :see: :meth:`~RibbonToolBar.AddTool`, :meth:`~RibbonToolBar.InsertTool`
 
         .. versionadded:: 0.9.5
         """
@@ -327,14 +327,14 @@ class RibbonToolBar(RibbonControl):
          have to be the same size as other tool bitmaps, but should be similar as
          otherwise it will look visually odd;
         :param `bitmap_disabled`: bitmap to use when the tool is disabled. If left
-         as `wx.NullBitmap`, then a bitmap will be automatically generated from `bitmap`;
+         as :class:`NullBitmap`, then a bitmap will be automatically generated from `bitmap`;
         :param `help_string`: the UI help string to associate with the new tool;
         :param `kind`: the kind of tool to add;
         :param `client_data`: client data to associate with the new tool.
 
         :returns: An opaque pointer which can be used only with other tool bar methods.
         
-        :see: :meth:`~ribbon.toolbar.RibbonToolBar.AddDropdownTool`, :meth:`~ribbon.toolbar.RibbonToolBar.AddHybridTool`, :meth:`~ribbon.toolbar.RibbonToolBar.AddSeparator`
+        :see: :meth:`~RibbonToolBar.AddDropdownTool`, :meth:`~RibbonToolBar.AddHybridTool`, :meth:`~RibbonToolBar.AddSeparator`
         """
 
         return self.InsertTool(self.GetToolCount(), tool_id, bitmap, bitmap_disabled,
@@ -351,14 +351,14 @@ class RibbonToolBar(RibbonControl):
          have to be the same size as other tool bitmaps, but should be similar as
          otherwise it will look visually odd;
         :param `bitmap_disabled`: bitmap to use when the tool is disabled. If left
-         as `wx.NullBitmap`, then a bitmap will be automatically generated from `bitmap`;
+         as :class:`NullBitmap`, then a bitmap will be automatically generated from `bitmap`;
         :param `help_string`: the UI help string to associate with the new tool;
         :param `kind`: the kind of tool to add;
         :param `client_data`: client data to associate with the new tool.
 
         :returns: An opaque pointer which can be used only with other tool bar methods.
         
-        :see: :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`, :meth:`~ribbon.toolbar.RibbonToolBar.AddDropdownTool`, :meth:`~ribbon.toolbar.RibbonToolBar.AddHybridTool`, :meth:`~ribbon.toolbar.RibbonToolBar.AddSeparator`
+        :see: :meth:`~RibbonToolBar.AddTool`, :meth:`~RibbonToolBar.AddDropdownTool`, :meth:`~RibbonToolBar.AddHybridTool`, :meth:`~RibbonToolBar.AddSeparator`
 
         .. versionadded:: 0.9.5
         """
@@ -499,7 +499,7 @@ class RibbonToolBar(RibbonControl):
         
         :returns: ``True`` if the tool was deleted, ``False`` otherwise.
 
-        :see: :meth:`~ribbon.toolbar.RibbonToolBar.DeleteToolByPos`
+        :see: :meth:`~RibbonToolBar.DeleteToolByPos`
         
         .. versionadded:: 0.9.5
         """
@@ -515,7 +515,7 @@ class RibbonToolBar(RibbonControl):
 
     def DeleteToolByPos(self, pos):
         """
-        This function behaves like :meth:`~ribbon.toolbar.RibbonToolBar.DeleteTool` but it deletes the tool at the
+        This function behaves like :meth:`~RibbonToolBar.DeleteTool` but it deletes the tool at the
         specified position `pos` and not the one with the given id.
 
         Useful to delete separators.
@@ -524,7 +524,7 @@ class RibbonToolBar(RibbonControl):
         
         :returns: ``True`` if the tool was deleted, ``False`` otherwise.
 
-        :see: :meth:`~ribbon.toolbar.RibbonToolBar.DeleteTool`
+        :see: :meth:`~RibbonToolBar.DeleteTool`
         
         .. versionadded:: 0.9.5
         """
@@ -578,7 +578,7 @@ class RibbonToolBar(RibbonControl):
 
         :param `pos`: zero-based position of the tool to retrieve.
 
-        :returns: An instance of :class:`~ribbon.toolbar.RibbonToolBarToolBase` if the tool was found,
+        :returns: An instance of :class:`RibbonToolBarToolBase` if the tool was found,
          ``None`` if it was not found.
 
         .. versionadded:: 0.9.5
@@ -598,7 +598,7 @@ class RibbonToolBar(RibbonControl):
 
     def GetToolCount(self):
         """
-        Returns the number of tools in this :class:`~ribbon.toolbar.RibbonToolBar`.
+        Returns the number of tools in this :class:`RibbonToolBar`.
 
         .. versionadded:: 0.9.5
         """
@@ -619,7 +619,7 @@ class RibbonToolBar(RibbonControl):
         """
         Returns the tool id for the specified input `tool`.
 
-        :param `tool`: an instance of :class:`~ribbon.toolbar.RibbonToolBarToolBase`.
+        :param `tool`: an instance of :class:`RibbonToolBarToolBase`.
 
         .. versionadded:: 0.9.5
         """
@@ -631,7 +631,7 @@ class RibbonToolBar(RibbonControl):
         """
         Get any client data associated with the tool.
 
-        :param `tool_id`: id of the tool in question, as passed to :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`.
+        :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`.
 
         :return: Client data (any Python object), or ``None`` if there is none.
 
@@ -649,7 +649,7 @@ class RibbonToolBar(RibbonControl):
         """
         Called to determine whether a tool is enabled (responds to user input).
 
-        :param `tool_id`: id of the tool in question, as passed to :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`.
+        :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`.
 
         :return: ``True`` if the tool was found and it is enabled, ``False`` otherwise.
 
@@ -667,7 +667,7 @@ class RibbonToolBar(RibbonControl):
         """
         Returns the tool short help string.
 
-        :param `tool_id`: id of the tool in question, as passed to :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`.
+        :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`.
 
         .. versionadded:: 0.9.5
         """
@@ -683,7 +683,7 @@ class RibbonToolBar(RibbonControl):
         """
         Returns the kind of the given tool.
 
-        :param `tool_id`: id of the tool in question, as passed to :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`.
+        :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`.
 
         .. versionadded:: 0.9.5
         """
@@ -699,7 +699,7 @@ class RibbonToolBar(RibbonControl):
         """
         Returns the tool position in the toolbar, or ``wx.NOT_FOUND`` if the tool is not found.
         
-        :param `tool_id`: id of the tool in question, as passed to :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`.
+        :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`.
 
         .. versionadded:: 0.9.5
         """
@@ -723,11 +723,11 @@ class RibbonToolBar(RibbonControl):
         """
         Gets the on/off state of a toggle tool.
 
-        :param `tool_id`: id of the tool in question, as passed to :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`.
+        :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`.
 
         :return: ``True`` if the tool is toggled on, ``False`` otherwise.
 
-        :see: :meth:`~ribbon.toolbar.RibbonToolBar.ToggleTool`
+        :see: :meth:`~RibbonToolBar.ToggleTool`
 
         .. versionadded:: 0.9.5
         """
@@ -743,7 +743,7 @@ class RibbonToolBar(RibbonControl):
         """
         Sets the client data associated with the tool.
 
-        :param `tool_id`: id of the tool in question, as passed to :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`;
+        :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`;
         :param `clientData`: any Python object.
 
         .. versionadded:: 0.9.5
@@ -760,8 +760,8 @@ class RibbonToolBar(RibbonControl):
         """
         Sets the bitmap to be used by the tool with the given ID when the tool is in a disabled state.
 
-        :param `tool_id`: id of the tool in question, as passed to :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`;
-        :param `bitmap`: an instance of `wx.Bitmap`.
+        :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`;
+        :param `bitmap`: an instance of :class:`Bitmap`.
 
         .. versionadded:: 0.9.5
         """
@@ -777,7 +777,7 @@ class RibbonToolBar(RibbonControl):
         """
         Sets the tool short help string.
 
-        :param `tool_id`: id of the tool in question, as passed to :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`;
+        :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`;
         :param `helpString`: a string for the help.
 
         .. versionadded:: 0.9.5
@@ -794,8 +794,8 @@ class RibbonToolBar(RibbonControl):
         """
         Sets the bitmap to be used by the tool with the given ID when the tool is enabled.
 
-        :param `tool_id`: id of the tool in question, as passed to :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`;
-        :param `bitmap`: an instance of `wx.Bitmap`.
+        :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`;
+        :param `bitmap`: an instance of :class:`Bitmap`.
 
         .. versionadded:: 0.9.5
         """
@@ -811,7 +811,7 @@ class RibbonToolBar(RibbonControl):
         """
         Enables or disables a single tool on the bar.
         
-        :param `tool_id`: id of the tool in question, as passed to :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`;
+        :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`;
         :param `enable`: ``True`` to enable the tool, ``False`` to disable it.
 
         .. versionadded:: 0.9.5
@@ -838,7 +838,7 @@ class RibbonToolBar(RibbonControl):
         """
         Toggles on or off a single tool on the bar.
         
-        :param `tool_id`: id of the tool in question, as passed to :meth:`~ribbon.toolbar.RibbonToolBar.AddTool`;
+        :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`;
         :param `checked`: ``True`` to toggle on the tool, ``False`` to toggle it off.
 
         .. versionadded:: 0.9.5
@@ -863,7 +863,7 @@ class RibbonToolBar(RibbonControl):
         Returns ``True`` if this window can take any size (greater than its minimum size),
         ``False`` if it can only take certain sizes.
         
-        :see: :meth:`RibbonControl.GetNextSmallerSize() <ribbon.control.RibbonControl.GetNextSmallerSize>`, :meth:`RibbonControl.GetNextLargerSize() <ribbon.control.RibbonControl.GetNextLargerSize>`
+        :see: :meth:`RibbonControl.GetNextSmallerSize() <RibbonControl.GetNextSmallerSize>`, :meth:`RibbonControl.GetNextLargerSize() <RibbonControl.GetNextLargerSize>`
         """
 
         return False
@@ -871,10 +871,10 @@ class RibbonToolBar(RibbonControl):
 
     def DoGetNextSmallerSize(self, direction, relative_to):
         """
-        Implementation of :meth:`RibbonControl.GetNextSmallerSize() <ribbon.control.RibbonControl.GetNextSmallerSize>`.
+        Implementation of :meth:`RibbonControl.GetNextSmallerSize() <RibbonControl.GetNextSmallerSize>`.
 
         Controls which have non-continuous sizing must override this virtual function
-        rather than :meth:`RibbonControl.GetNextSmallerSize() <ribbon.control.RibbonControl.GetNextSmallerSize>`.
+        rather than :meth:`RibbonControl.GetNextSmallerSize() <RibbonControl.GetNextSmallerSize>`.
         """
 
         result = wx.Size(*relative_to)
@@ -911,10 +911,10 @@ class RibbonToolBar(RibbonControl):
 
     def DoGetNextLargerSize(self, direction, relative_to):
         """
-        Implementation of :meth:`RibbonControl.GetNextLargerSize() <ribbon.control.RibbonControl.GetNextLargerSize>`.
+        Implementation of :meth:`RibbonControl.GetNextLargerSize() <RibbonControl.GetNextLargerSize>`.
 
         Controls which have non-continuous sizing must override this virtual function
-        rather than :meth:`RibbonControl.GetNextLargerSize() <ribbon.control.RibbonControl.GetNextLargerSize>`.
+        rather than :meth:`RibbonControl.GetNextLargerSize() <RibbonControl.GetNextLargerSize>`.
         """
 
         # Pick the smallest of our sizes which are larger than the given size
@@ -988,7 +988,7 @@ class RibbonToolBar(RibbonControl):
         Must be called after tools are added to the tool bar, as otherwise the newly
         added tools will not be displayed.
 
-        :note: Reimplemented from :class:`~ribbon.control.RibbonControl`.
+        :note: Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
         """
 
         if self._art == None:
@@ -1105,9 +1105,9 @@ class RibbonToolBar(RibbonControl):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for :class:`~ribbon.toolbar.RibbonToolBar`.
+        Handles the ``wx.EVT_SIZE`` event for :class:`RibbonToolBar`.
 
-        :param `event`: a `wx.SizeEvent` event to be processed.
+        :param `event`: a :class:`SizeEvent` event to be processed.
         """
 
         if self._art == None:
@@ -1209,9 +1209,9 @@ class RibbonToolBar(RibbonControl):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :return: An instance of `wx.Size`.
+        :return: An instance of :class:`Size`.
         
-        :note: Overridden from `wx.PyControl`.
+        :note: Overridden from :class:`PyControl`.
         """
 
         return self.GetMinSize()
@@ -1219,9 +1219,9 @@ class RibbonToolBar(RibbonControl):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~ribbon.toolbar.RibbonToolBar`.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`RibbonToolBar`.
 
-        :param `event`: a `wx.EraseEvent` event to be processed.
+        :param `event`: a :class:`EraseEvent` event to be processed.
         """
 
         # All painting done in main paint handler to minimise flicker
@@ -1230,9 +1230,9 @@ class RibbonToolBar(RibbonControl):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`~ribbon.toolbar.RibbonToolBar`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`RibbonToolBar`.
 
-        :param `event`: a `wx.PaintEvent` event to be processed.
+        :param `event`: a :class:`PaintEvent` event to be processed.
         """
 
         dc = wx.AutoBufferedPaintDC(self)
@@ -1259,9 +1259,9 @@ class RibbonToolBar(RibbonControl):
 
     def OnMouseMove(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for :class:`~ribbon.toolbar.RibbonToolBar`.
+        Handles the ``wx.EVT_MOTION`` event for :class:`RibbonToolBar`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         pos = event.GetPosition()
@@ -1326,9 +1326,9 @@ class RibbonToolBar(RibbonControl):
 
     def OnMouseDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~ribbon.toolbar.RibbonToolBar`.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`RibbonToolBar`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         self.OnMouseMove(event)
@@ -1341,9 +1341,9 @@ class RibbonToolBar(RibbonControl):
 
     def OnMouseLeave(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~ribbon.toolbar.RibbonToolBar`.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`RibbonToolBar`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if self._hover_tool:        
@@ -1354,9 +1354,9 @@ class RibbonToolBar(RibbonControl):
 
     def OnMouseUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~ribbon.toolbar.RibbonToolBar`.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`RibbonToolBar`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if self._active_tool:        
@@ -1384,9 +1384,9 @@ class RibbonToolBar(RibbonControl):
 
     def OnMouseEnter(self, event):
         """
-        Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`~ribbon.toolbar.RibbonToolBar`.
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`RibbonToolBar`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if self._active_tool and not event.LeftIsDown():
@@ -1394,22 +1394,22 @@ class RibbonToolBar(RibbonControl):
         
 
     def GetDefaultBorder(self):
-        """ Returns the default border style for :class:`~ribbon.panel.RibbonPanel`. """
+        """ Returns the default border style for :class:`RibbonToolBar`. """
 
         return wx.BORDER_NONE
 
 
     def UpdateWindowUI(self, flags):
         """
-        This function sends one or more `wx.UpdateUIEvent` to the window.
+        This function sends one or more :class:`UpdateUIEvent` to the window.
 
-        The particular implementation depends on the window; for example a `wx.ToolBar` will
-        send an update UI event for each toolbar button, and a `wx.Frame` will send an
+        The particular implementation depends on the window; for example a :class:`ToolBar` will
+        send an update UI event for each toolbar button, and a :class:`Frame` will send an
         update UI event for each menubar menu item.
 
         You can call this function from your application to ensure that your UI is up-to-date
-        at this point (as far as your `wx.UpdateUIEvent` handlers are concerned). This may be
-        necessary if you have called `wx.UpdateUIEvent.SetMode` or `wx.UpdateUIEvent.SetUpdateInterval`
+        at this point (as far as your :class:`UpdateUIEvent` handlers are concerned). This may be
+        necessary if you have called :meth:`UpdateUIEvent.SetMode` or :meth:`UpdateUIEvent.SetUpdateInterval`
         to limit the overhead that wxWidgets incurs by sending update UI events in idle time.
 
         :param integer `flags`: should be a bitlist of one or more of ``wx.UPDATE_UI_NONE``,
@@ -1419,7 +1419,7 @@ class RibbonToolBar(RibbonControl):
         you pass the ``wx.UPDATE_UI_FROMIDLE`` flag, since this tells the window to only update
         the UI elements that need to be updated in idle time. Some windows update their elements
         only when necessary, for example when a menu is about to be shown. The following is an
-        example of how to call :meth:`~ribbon.toolbar.RibbonToolBar.UpdateWindowUI` from an idle function::
+        example of how to call :meth:`~RibbonToolBar.UpdateWindowUI` from an idle function::
 
             def OnInternalIdle(self):
 

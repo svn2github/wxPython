@@ -1,5 +1,5 @@
 """
-A ribbon gallery is like a `wx.ListBox`, but for bitmaps rather than strings.
+A ribbon gallery is like a :class:`ListBox`, but for bitmaps rather than strings.
 
 
 Description
@@ -45,7 +45,7 @@ EVT_RIBBONGALLERY_CLICKED = wx.PyEventBinder(wxEVT_COMMAND_RIBBONGALLERY_CLICKED
 
 
 class RibbonGalleryEvent(wx.PyCommandEvent):
-    """ Handles events related to :class:`~ribbon.gallery.RibbonGallery`. """
+    """ Handles events related to :class:`RibbonGallery`. """
 
     def __init__(self, command_type=None, win_id=0, gallery=None, item=None):
         """
@@ -53,8 +53,8 @@ class RibbonGalleryEvent(wx.PyCommandEvent):
 
         :param integer `command_type`: the event type;
         :param integer `win_id`: the event identifier;
-        :param `gallery`: an instance of :class:`~ribbon.gallery.RibbonGallery`;
-        :param `item`: an instance of :class:`~ribbon.gallery.RibbonGalleryItem`.
+        :param `gallery`: an instance of :class:`RibbonGallery`;
+        :param `item`: an instance of :class:`RibbonGalleryItem`.
         """
         
         wx.PyCommandEvent.__init__(self, command_type, win_id)
@@ -78,7 +78,7 @@ class RibbonGalleryEvent(wx.PyCommandEvent):
         """
         Sets the gallery relating to this event.
 
-        :param `gallery`: an instance of :class:`~ribbon.gallery.RibbonGallery`.
+        :param `gallery`: an instance of :class:`RibbonGallery`.
         """
 
         self._gallery = gallery
@@ -88,7 +88,7 @@ class RibbonGalleryEvent(wx.PyCommandEvent):
         """
         Sets the gallery item relating to this event.
 
-        :param `item`: an instance of :class:`~ribbon.gallery.RibbonGalleryItem`.
+        :param `item`: an instance of :class:`RibbonGalleryItem`.
         """
 
         self._item = item
@@ -151,7 +151,7 @@ class RibbonGalleryItem(object):
 
 class RibbonGallery(RibbonControl):
     """
-    A ribbon gallery is like a `wx.ListBox`, but for bitmaps rather than strings.
+    A ribbon gallery is like a :class:`ListBox`, but for bitmaps rather than strings.
     """
     
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, agwStyle=0,
@@ -160,7 +160,7 @@ class RibbonGallery(RibbonControl):
         """
         Default class constructor.
 
-        :param `parent`: pointer to a parent window, typically a :class:`~ribbon.panel.RibbonPanel`;
+        :param `parent`: pointer to a parent window, typically a :class:`panel`;
         :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create an
          identifier;
         :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
@@ -214,9 +214,9 @@ class RibbonGallery(RibbonControl):
 
     def OnMouseEnter(self, event):
         """
-        Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`~ribbon.gallery.RibbonGallery`.
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`RibbonGallery`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         self._hovered = True
@@ -230,9 +230,9 @@ class RibbonGallery(RibbonControl):
 
     def OnMouseMove(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for :class:`~ribbon.gallery.RibbonGallery`.
+        Handles the ``wx.EVT_MOTION`` event for :class:`RibbonGallery`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         refresh = False
@@ -304,9 +304,9 @@ class RibbonGallery(RibbonControl):
 
     def OnMouseLeave(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~ribbon.gallery.RibbonGallery`.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`RibbonGallery`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         self._hovered = False
@@ -330,9 +330,9 @@ class RibbonGallery(RibbonControl):
 
     def OnMouseDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~ribbon.gallery.RibbonGallery`.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`RibbonGallery`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         pos = event.GetPosition()
@@ -375,9 +375,9 @@ class RibbonGallery(RibbonControl):
 
     def OnMouseUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~ribbon.gallery.RibbonGallery`.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`RibbonGallery`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if self._mouse_active_rect != None:
@@ -426,9 +426,9 @@ class RibbonGallery(RibbonControl):
 
     def OnMouseDClick(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DCLICK`` event for :class:`~ribbon.gallery.RibbonGallery`.
+        Handles the ``wx.EVT_LEFT_DCLICK`` event for :class:`RibbonGallery`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         # The 2nd click of a double-click should be handled as a click in the
@@ -442,7 +442,7 @@ class RibbonGallery(RibbonControl):
         """
         Set the client data associated with a gallery item.
         
-        :param `item`: an instance of :class:`~ribbon.gallery.RibbonGalleryItem`;
+        :param `item`: an instance of :class:`RibbonGalleryItem`;
         :param `data`: any Python object.
 
         """
@@ -454,7 +454,7 @@ class RibbonGallery(RibbonControl):
         """
         Get the client data associated with a gallery item.
 
-        :param `item`: an instance of :class:`~ribbon.gallery.RibbonGalleryItem`.
+        :param `item`: an instance of :class:`RibbonGalleryItem`.
         """
 
         return item.GetClientData()
@@ -470,7 +470,7 @@ class RibbonGallery(RibbonControl):
         :returns: ``True`` if the gallery scrolled at least one pixel in the given
          direction, ``False`` if it did not scroll.
 
-        :note: Reimplemented from `wx.Window`.
+        :note: Reimplemented from :class:`Window`.
         """
 
         if self._scroll_limit == 0 or self._art == None:
@@ -520,7 +520,7 @@ class RibbonGallery(RibbonControl):
         """
         Scroll the gallery to ensure that the given item is visible.
         
-        :param `item`: an instance of :class:`~ribbon.gallery.RibbonGalleryItem`.
+        :param `item`: an instance of :class:`RibbonGalleryItem`.
         """
 
         if item is None or not item.IsVisible() or self.IsEmpty():
@@ -545,9 +545,9 @@ class RibbonGallery(RibbonControl):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~ribbon.gallery.RibbonGallery`.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`RibbonGallery`.
 
-        :param `event`: a `wx.EraseEvent` event to be processed.
+        :param `event`: a :class:`EraseEvent` event to be processed.
         """
 
         # All painting done in main paint handler to minimise flicker
@@ -556,9 +556,9 @@ class RibbonGallery(RibbonControl):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`~ribbon.gallery.RibbonGallery`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`RibbonGallery`.
 
-        :param `event`: a `wx.PaintEvent` event to be processed.
+        :param `event`: a :class:`PaintEvent` event to be processed.
         """
 
         dc = wx.AutoBufferedPaintDC(self)
@@ -596,9 +596,9 @@ class RibbonGallery(RibbonControl):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for :class:`~ribbon.gallery.RibbonGallery`.
+        Handles the ``wx.EVT_SIZE`` event for :class:`RibbonGallery`.
 
-        :param `event`: a `wx.SizeEvent` event to be processed.
+        :param `event`: a :class:`SizeEvent` event to be processed.
         """
 
         self.Layout()
@@ -650,7 +650,7 @@ class RibbonGallery(RibbonControl):
         Returns ``True`` if this window can take any size (greater than its minimum size),
         ``False`` if it can only take certain sizes.
         
-        :see: :meth:`RibbonControl.GetNextSmallerSize() <ribbon.control.RibbonControl.GetNextSmallerSize>`, :meth:`RibbonControl.GetNextLargerSize() <ribbon.control.RibbonControl.GetNextLargerSize>`
+        :see: :meth:`RibbonControl.GetNextSmallerSize() <RibbonControl.GetNextSmallerSize>`, :meth:`RibbonControl.GetNextLargerSize() <RibbonControl.GetNextLargerSize>`
         """
 
         return False
@@ -759,9 +759,9 @@ class RibbonGallery(RibbonControl):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :return: An instance of `wx.Size`.
+        :return: An instance of :class:`Size`.
         
-        :note: Overridden from `wx.PyControl`.
+        :note: Overridden from :class:`PyControl`.
         """
 
         return self._best_size
@@ -769,10 +769,10 @@ class RibbonGallery(RibbonControl):
 
     def DoGetNextSmallerSize(self, direction, relative_to):
         """
-        Implementation of :meth:`RibbonControl.GetNextSmallerSize() <ribbon.control.RibbonControl.GetNextSmallerSize>`.
+        Implementation of :meth:`RibbonControl.GetNextSmallerSize() <RibbonControl.GetNextSmallerSize>`.
 
         Controls which have non-continuous sizing must override this virtual function
-        rather than :meth:`RibbonControl.GetNextSmallerSize() <ribbon.control.RibbonControl.GetNextSmallerSize>`.
+        rather than :meth:`RibbonControl.GetNextSmallerSize() <RibbonControl.GetNextSmallerSize>`.
         """
 
         if self._art == None:
@@ -810,10 +810,10 @@ class RibbonGallery(RibbonControl):
 
     def DoGetNextLargerSize(self, direction, relative_to):
         """
-        Implementation of :meth:`RibbonControl.GetNextLargerSize() <ribbon.control.RibbonControl.GetNextLargerSize>`.
+        Implementation of :meth:`RibbonControl.GetNextLargerSize() <RibbonControl.GetNextLargerSize>`.
 
         Controls which have non-continuous sizing must override this virtual function
-        rather than :meth:`RibbonControl.GetNextLargerSize() <ribbon.control.RibbonControl.GetNextLargerSize>`.
+        rather than :meth:`RibbonControl.GetNextLargerSize() <RibbonControl.GetNextLargerSize>`.
         """
 
         if self._art == None:
@@ -872,7 +872,7 @@ class RibbonGallery(RibbonControl):
         """
         Get an item by index.
 
-        :param `n`: the zero-based item in the gallery, which is an instance of :class:`~ribbon.gallery.RibbonGalleryItem`.
+        :param `n`: the zero-based item in the gallery, which is an instance of :class:`RibbonGalleryItem`.
         """
 
         if n >= self.GetCount():
@@ -887,7 +887,7 @@ class RibbonGallery(RibbonControl):
 
         Note that this not cause any events to be emitted.
 
-        :param `item`: an instance of :class:`~ribbon.gallery.RibbonGalleryItem`, can also be ``None`` to remove the selection.
+        :param `item`: an instance of :class:`RibbonGalleryItem`, can also be ``None`` to remove the selection.
 
         """
 
@@ -900,7 +900,7 @@ class RibbonGallery(RibbonControl):
         """
         Get the currently selected item, or ``None`` if there is none.
 
-        The selected item is set by :meth:`~ribbon.gallery.RibbonGallery.SetSelection`, or by the user clicking on an item.
+        The selected item is set by :meth:`~RibbonGallery.SetSelection`, or by the user clicking on an item.
         """
 
         return self._selected_item
@@ -952,7 +952,7 @@ class RibbonGallery(RibbonControl):
 
 
     def GetDefaultBorder(self):
-        """ Returns the default border style for :class:`~ribbon.gallery.RibbonGallery`. """
+        """ Returns the default border style for :class:`RibbonGallery`. """
 
         return wx.BORDER_NONE
 

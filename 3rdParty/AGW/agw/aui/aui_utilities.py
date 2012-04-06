@@ -98,7 +98,7 @@ def ChopText(dc, text, max_size):
     Chops the input `text` if its size does not fit in `max_size`, by cutting the
     text and adding ellipsis at the end.
 
-    :param `dc`: a `wx.DC` device context;
+    :param `dc`: a :class:`DC` device context;
     :param `text`: the text to chop;
     :param `max_size`: the maximum size in which the text should fit.
     """
@@ -149,8 +149,8 @@ def IndentPressedBitmap(rect, button_state):
     """
     Indents the input rectangle `rect` based on the value of `button_state`.
 
-    :param `rect`: an instance of `wx.Rect`;
-    :param `button_state`: an :class:`~aui.auibook.AuiNotebook` button state.
+    :param `rect`: an instance of :class:`Rect`;
+    :param `button_state`: the button state.
     """
 
     if button_state == AUI_BUTTON_STATE_PRESSED:
@@ -276,7 +276,7 @@ def LightColour(colour, percent):
 
 def PaneCreateStippleBitmap():
     """
-    Creates a stipple bitmap to be used in a `wx.Brush`.
+    Creates a stipple bitmap to be used in a :class:`Brush`.
     This is used to draw sash resize hints.
     """
 
@@ -294,7 +294,7 @@ def PaneCreateStippleBitmap():
 
 def DrawMACCloseButton(colour, backColour=None):
     """
-    Draws the wxMAC tab close button using `wx.GraphicsContext`.
+    Draws the wxMAC tab close button using :class:`GraphicsContext`.
 
     :param `colour`: the colour to use to draw the circle;
     :param `backColour`: the optional background colour for the circle.
@@ -352,7 +352,7 @@ def DrawGradientRectangle(dc, rect, start_colour, end_colour, direction, offset=
     """
     Draws a gradient-shaded rectangle.
 
-    :param `dc`: a `wx.DC` device context;
+    :param `dc`: a :class:`DC` device context;
     :param `rect`: the rectangle in which to draw the gradient;
     :param `start_colour`: the first colour of the gradient;
     :param `end_colour`: the second colour of the gradient;
@@ -393,7 +393,7 @@ def FindFocusDescendant(ancestor):
 
 def GetLabelSize(dc, label, vertical):
     """
-    Returns the :class:`~aui.auibar.AuiToolBar` item label size.
+    Returns the :class:`~lib.agw.aui.auibar.AuiToolBar` item label size.
 
     :param `label`: the toolbar tool label;
     :param `vertical`: whether the toolbar tool orientation is vertical or not.
@@ -433,10 +433,10 @@ class TabDragImage(wx.DragImage):
         
         For internal use: do not call it in your code!
 
-        :param `notebook`: an instance of :class:`~aui.auibook.AuiNotebook`;
-        :param `page`: the dragged :class:`~aui.auibook.AuiNotebook` page;
+        :param `notebook`: an instance of :class:`~lib.agw.aui.auibook.AuiNotebook`;
+        :param `page`: the dragged :class:`~lib.agw.aui.auibook.AuiNotebookPage` page;
         :param `button_state`: the state of the close button on the tab;
-        :param `tabArt`: an instance of :class:`~aui.tabart.AuiDefaultTabArt` or one of its derivations.
+        :param `tabArt`: an instance of :class:`~lib.agw.aui.tabart.AuiDefaultTabArt` or one of its derivations.
         """
 
         self._backgroundColour = wx.NamedColour("pink")        
@@ -448,10 +448,10 @@ class TabDragImage(wx.DragImage):
         """
         Actually creates the drag and drop bitmap.
 
-        :param `notebook`: an instance of :class:`~aui.auibook.AuiNotebook`;
-        :param `page`: the dragged :class:`~aui.auibook.AuiNotebook` page;
+        :param `notebook`: an instance of :class:`~lib.agw.aui.auibook.AuiNotebook`;
+        :param `page`: the dragged :class:`~lib.agw.aui.auibook.AuiNotebookPage` page;
         :param `button_state`: the state of the close button on the tab;
-        :param `tabArt`: an instance of :class:`~aui.tabart.AuiDefaultTabArt` or one of its derivations.
+        :param `tabArt`: an instance of :class:`~lib.agw.aui.tabart.AuiDefaultTabArt` or one of its derivations.
         """
 
         control = page.control
@@ -505,7 +505,7 @@ def GetDockingImage(direction, useAero, center):
     """
     Returns the correct name of the docking bitmap depending on the input parameters.
 
-    :param `useAero`: whether :class:`~aui.framemanager.AuiManager` is using Aero-style or Whidbey-style docking
+    :param `useAero`: whether :class:`~lib.agw.aui.framemanager.AuiManager` is using Aero-style or Whidbey-style docking
      images or not;
     :param `center`: whether we are looking for the center diamond-shaped bitmap or not. 
     """
@@ -632,7 +632,7 @@ def GetSlidingPoints(rect, size, direction):
     """
     Returns the point at which the sliding in and out of a minimized pane begins.
 
-    :param `rect`: the :class:`~aui.auibar.AuiToolBar` tool screen rectangle;
+    :param `rect`: the :class:`~lib.agw.aui.auibar.AuiToolBar` tool screen rectangle;
     :param `size`: the pane window size;
     :param `direction`: the pane docking direction.
     """
@@ -662,8 +662,8 @@ def CopyAttributes(newArt, oldArt):
     """
     Copies pens, brushes, colours and fonts from the old tab art to the new one.
 
-    :param `newArt`: the new instance of :class:`~aui.tabart.AuiDefaultTabArt`;
-    :param `oldArt`: the old instance of :class:`~aui.tabart.AuiDefaultTabArt`.
+    :param `newArt`: the new instance of :class:`~lib.agw.aui.tabart.AuiDefaultTabArt`;
+    :param `oldArt`: the old instance of :class:`~lib.agw.aui.tabart.AuiDefaultTabArt`.
     """    
     
     attrs = dir(oldArt)

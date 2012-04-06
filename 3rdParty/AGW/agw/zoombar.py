@@ -1,15 +1,15 @@
 """
-:class:`~zoombar.ZoomBar` is a class that *appoximatively* mimics the behaviour of the Mac Dock,
-inside a `wx.Panel`.
+:class:`ZoomBar` is a class that *appoximatively* mimics the behaviour of the Mac Dock,
+inside a :class:`Panel`.
 
 
 Description
 ===========
 
-:class:`~zoombar.ZoomBar` is a class that *appoximatively* mimics the behaviour of the Mac Dock,
-inside a `wx.Panel`.
+:class:`ZoomBar` is a class that *appoximatively* mimics the behaviour of the Mac Dock,
+inside a :class:`Panel`.
 
-Once you hover mouse over the :class:`~zoombar.ZoomBar` correct button will bubble up, grow to
+Once you hover mouse over the :class:`ZoomBar` correct button will bubble up, grow to
 predefined size, so you can easily see the button you are about to click and
 have larger area to click. Difference this makes is amazing.
 
@@ -78,7 +78,7 @@ Usage example::
 Supported Platforms
 ===================
 
-:class:`~zoombar.ZoomBar` has been tested on the following platforms:
+:class:`ZoomBar` has been tested on the following platforms:
   * Windows (Windows XP).
 
 
@@ -96,14 +96,14 @@ This class processes the following events:
 ============================== ==================================================
 Event Name                     Description
 ============================== ==================================================
-``EVT_ZOOMBAR``                Process a ``wxEVT_ZOOMBAR`` event, when a :class:`~zoombar.ZoomBar` button is clicked.
+``EVT_ZOOMBAR``                Process a ``wxEVT_ZOOMBAR`` event, when a :class:`ZoomBar` button is clicked.
 ============================== ==================================================
 
 
 License And Version
 ===================
 
-:class:`~zoombar.ZoomBar` is distributed under the wxPython license.
+:class:`ZoomBar` is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
@@ -301,7 +301,7 @@ zoombackgrey = PyEmbeddedImage(
 
 wxEVT_ZOOMBAR = wx.NewEventType()
 EVT_ZOOMBAR = wx.PyEventBinder(wxEVT_ZOOMBAR, 1)
-""" Process a `wxEVT_ZOOMBAR` event, when a :class:`~zoombar.ZoomBar` button is clicked. """
+""" Process a `wxEVT_ZOOMBAR` event, when a :class:`ZoomBar` button is clicked. """
 
 # ----------------------------------------------------------------------------
 
@@ -309,7 +309,7 @@ def MakeDisabledBitmap(original):
     """
     Creates a disabled-looking bitmap starting from the input one.
 
-    :param `original`: an instance of `wx.Bitmap` to be greyed-out.
+    :param `original`: an instance of :class:`Bitmap` to be greyed-out.
     """
     
     img = original.ConvertToImage()
@@ -319,7 +319,7 @@ def MakeDisabledBitmap(original):
 
 class ZoomBarImage(object):
     """
-    This simple class holds information about a :class:`~zoombar.ZoomBar` button, such as normal
+    This simple class holds information about a :class:`ZoomBar` button, such as normal
     bitmaps, disabled bitmap, button label, etc...
     """
     
@@ -327,8 +327,8 @@ class ZoomBarImage(object):
         """
         Default class constructor.
 
-        :param `parent`: the main :class:`~zoombar.ZoomBar` window;
-        :param `bitmap`: the button bitmap, an instance of `wx.Bitmap`;
+        :param `parent`: the main :class:`ZoomBar` window;
+        :param `bitmap`: the button bitmap, an instance of :class:`Bitmap`;
         :param `disabledBmp`: the button bitmap when the button is in a disabled
          state;
         :param `label`: the button label.
@@ -561,7 +561,7 @@ class ImageBar(object):
         Default class constructor.
 
         :param `bitmap`: if not ``None``, the bitmap to use as a background button
-         bar on which the buttons float. It should be an instance of `wx.Image`.
+         bar on which the buttons float. It should be an instance of :class:`Image`.
         """
 
         if bitmap and bitmap.IsOk():
@@ -578,13 +578,13 @@ class ImageBar(object):
 
 
     def GetPosition(self):
-        """ Returns the position of :class:`~zoombar.ImageBar`, as a `wx.Point`. """
+        """ Returns the position of :class:`ImageBar`, as a :class:`Point`. """
 
         return wx.Point(self._left, self._top)
 
 
     def GetSize(self):
-        """ Returns the size of :class:`~zoombar.ImageBar`, as a `wx.Size`. """
+        """ Returns the size of :class:`ImageBar`, as a :class:`Size`. """
 
         return wx.Size(self._bitmap.GetWidth(), self._bitmap.GetHeight())
     
@@ -597,7 +597,7 @@ class ImageBar(object):
 
     def SetPosition(self, xpos, ypos):
         """
-        Sets the position of :class:`~zoombar.ImageBar`.
+        Sets the position of :class:`ImageBar`.
 
         :param `xpos`: the `x` position of the bar;
         :param `ypos`: the `y` position of the bar.
@@ -609,7 +609,7 @@ class ImageBar(object):
 
     def SetSize(self, xSize, ySize):
         """
-        Sets the size of :class:`~zoombar.ImageBar`.
+        Sets the size of :class:`ImageBar`.
 
         :param `xSize`: the width of the bar, in pixels;
         :param `ySize`: the height of the bar, in pixels.
@@ -622,9 +622,9 @@ class ImageBar(object):
         """
         Sets the background button bar colour.
 
-        :param `colour`: an instance of `wx.Colour`;
-        :param `xSize`: if not ``None``, the new :class:`~zoombar.ImageBar` width;
-        :param `ySize`: if not ``None``, the new :class:`~zoombar.ImageBar` height.
+        :param `colour`: an instance of :class:`Colour`;
+        :param `xSize`: if not ``None``, the new :class:`ImageBar` width;
+        :param `ySize`: if not ``None``, the new :class:`ImageBar` height.
         """        
 
         if not isinstance(colour, wx.Colour):
@@ -659,7 +659,7 @@ class ImageBar(object):
     
 
 class ZoomBarEvent(wx.PyCommandEvent):
-    """ Event sent from the :class:`~zoombar.ZoomBar` when a button is activated. """
+    """ Event sent from the :class:`ZoomBar` when a button is activated. """
 
     def __init__(self, eventType, eventId=1):
         """
@@ -707,8 +707,8 @@ class ZoomBarEvent(wx.PyCommandEvent):
 
 class ZoomBar(wx.PyControl):
     """
-    :class:`~zoombar.ZoomBar` is a class that *appoximatively* mimics the behaviour of the Mac Dock,
-    inside a `wx.Panel`.
+    :class:`ZoomBar` is a class that *appoximatively* mimics the behaviour of the Mac Dock,
+    inside a :class:`Panel`.
 
     This is the main class implementation.
     """
@@ -718,7 +718,7 @@ class ZoomBar(wx.PyControl):
         """
         Default class constructor.
 
-        :param `parent`: the :class:`~zoombar.ZoomBar` parent. Must not be ``None``;
+        :param `parent`: the :class:`ZoomBar` parent. Must not be ``None``;
         :param `id`: window identifier. A value of -1 indicates a default value;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
@@ -771,7 +771,7 @@ class ZoomBar(wx.PyControl):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :note: Overridden from `wx.PyControl`.
+        :note: Overridden from :class:`PyControl`.
         """
 
         xSize = self._buttonSize*len(self._buttons) + len(self._buttons) + self._buttonSize
@@ -787,7 +787,7 @@ class ZoomBar(wx.PyControl):
     # reposition the buttons
     def Reposition(self, toButton):
         """
-        Repositions all the buttons inside the :class:`~zoombar.ZoomBar`.
+        Repositions all the buttons inside the :class:`ZoomBar`.
 
         :param `toButton`: the button currently hovered by the mouse (and hence zoomed).
         """
@@ -827,16 +827,16 @@ class ZoomBar(wx.PyControl):
     def AddButton(self, normalBmp, reflectionBmp=wx.NullBitmap, label="", disabledBmp=wx.NullBitmap, 
                   disabledReflectionBmp=wx.NullBitmap):
         """
-        Adds a button to :class:`~zoombar.ZoomBar`.
+        Adds a button to :class:`ZoomBar`.
 
-        :param `normalBmp`: the button main bitmap, an instance of `wx.Bitmap`;
+        :param `normalBmp`: the button main bitmap, an instance of :class:`Bitmap`;
         :param `reflectionBmp`: a bitmap representing a reflection of the main bitmap,
-         an instance of `wx.Bitmap`;
+         an instance of :class:`Bitmap`;
         :param `label`: the button label;
         :param `disabledBmp`: the button main bitmap when the button is in a disabled
-         state, an instance of `wx.Bitmap`;
+         state, an instance of :class:`Bitmap`;
         :param `disabledReflectionBmp`: a bitmap representing a reflection of the main bitmap,
-         when the button is in a disabled state, an instance of `wx.Bitmap`.
+         when the button is in a disabled state, an instance of :class:`Bitmap`.
         """
 
         button = ZoomBarImage(self, normalBmp, disabledBmp, label)
@@ -860,11 +860,11 @@ class ZoomBar(wx.PyControl):
 
     def AddSeparator(self, normalBmp, reflectionBmp=wx.NullBitmap):
         """
-        Adds a separator to :class:`~zoombar.ZoomBar`.
+        Adds a separator to :class:`ZoomBar`.
 
-        :param `normalBmp`: the separator main bitmap, an instance of `wx.Bitmap`;
+        :param `normalBmp`: the separator main bitmap, an instance of :class:`Bitmap`;
         :param `reflectionBmp`: a bitmap representing a reflection of the main bitmap,
-         an instance of `wx.Bitmap`.
+         an instance of :class:`Bitmap`.
         """
 
         button = self.AddButton(normalBmp, reflectionBmp)
@@ -954,7 +954,7 @@ class ZoomBar(wx.PyControl):
         """
         Sets the background button bar colour.
 
-        :param `colour`: an instance of `wx.Colour`;
+        :param `colour`: an instance of :class:`Colour`;
         """        
 
         self._imgBar.SetBarColour(colour)
@@ -1016,7 +1016,7 @@ class ZoomBar(wx.PyControl):
 
 
     def DoLayout(self):
-        """ Common method to re-layout :class:`~zoombar.ZoomBar`. """
+        """ Common method to re-layout :class:`ZoomBar`. """
 
         self.ResetSize()
         self.GetContainingSizer().Layout()
@@ -1025,7 +1025,7 @@ class ZoomBar(wx.PyControl):
 
     def ResetSize(self):
         """
-        Resets all the button sizes and positions, recalculating the optimal :class:`~zoombar.ZoomBar`
+        Resets all the button sizes and positions, recalculating the optimal :class:`ZoomBar`
         size.
         """
 
@@ -1098,9 +1098,9 @@ class ZoomBar(wx.PyControl):
 
     def OnLeaveWindow(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~zoombar.ZoomBar`.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`ZoomBar`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if self.GetScreenRect().Contains(wx.GetMousePosition()):
@@ -1115,9 +1115,9 @@ class ZoomBar(wx.PyControl):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for :class:`~zoombar.ZoomBar`.
+        Handles the ``wx.EVT_SIZE`` event for :class:`ZoomBar`.
 
-        :param `event`: a `wx.SizeEvent` event to be processed.
+        :param `event`: a :class:`SizeEvent` event to be processed.
         """
 
         self.SnapToBottom(event.GetSize())
@@ -1128,9 +1128,9 @@ class ZoomBar(wx.PyControl):
     def SnapToBottom(self, size):
         """
         Snaps the background button bar bitmap and all the buttons to the bottom
-        of :class:`~zoombar.ZoomBar`.
+        of :class:`ZoomBar`.
 
-        :param `size`: the current :class:`~zoombar.ZoomBar` size.
+        :param `size`: the current :class:`ZoomBar` size.
         """
         
         backgroundSize = self._imgBar.GetSize()
@@ -1143,9 +1143,9 @@ class ZoomBar(wx.PyControl):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`~zoombar.ZoomBar`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`ZoomBar`.
 
-        :param `event`: a `wx.PaintEvent` event to be processed.
+        :param `event`: a :class:`PaintEvent` event to be processed.
         """
 
         dc = wx.AutoBufferedPaintDC(self)
@@ -1168,9 +1168,9 @@ class ZoomBar(wx.PyControl):
 
     def DrawButtons(self, dc):
         """
-        Draws all the main button bitmaps on the :class:`~zoombar.ZoomBar` client window.
+        Draws all the main button bitmaps on the :class:`ZoomBar` client window.
 
-        :param `dc`: an instance of `wx.DC`.
+        :param `dc`: an instance of :class:`DC`.
         """
         
         for button in self._buttons:
@@ -1182,9 +1182,9 @@ class ZoomBar(wx.PyControl):
 
     def DrawReflections(self, dc):            
         """
-        Draws all the reflection button bitmaps on the :class:`~zoombar.ZoomBar` client window.
+        Draws all the reflection button bitmaps on the :class:`ZoomBar` client window.
 
-        :param `dc`: an instance of `wx.DC`.
+        :param `dc`: an instance of :class:`DC`.
         """
 
         if self._showReflections:
@@ -1197,9 +1197,9 @@ class ZoomBar(wx.PyControl):
 
     def DrawLabels(self, dc):
         """
-        Draws all the button labels on the :class:`~zoombar.ZoomBar` client window.
+        Draws all the button labels on the :class:`ZoomBar` client window.
 
-        :param `dc`: an instance of `wx.DC`.
+        :param `dc`: an instance of :class:`DC`.
         """
 
         if not self._showLabels:
@@ -1227,9 +1227,9 @@ class ZoomBar(wx.PyControl):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~zoombar.ZoomBar`.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`ZoomBar`.
 
-        :param `event`: a `wx.EraseEvent` event to be processed.
+        :param `event`: a :class:`EraseEvent` event to be processed.
 
         :note: This method is intentionally empty to avoid flicker.        
         """
@@ -1239,9 +1239,9 @@ class ZoomBar(wx.PyControl):
 
     def OnMotion(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for :class:`~zoombar.ZoomBar`.
+        Handles the ``wx.EVT_MOTION`` event for :class:`ZoomBar`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         pos = event.GetPosition()
@@ -1269,9 +1269,9 @@ class ZoomBar(wx.PyControl):
             
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` and ``wx.EVT_LEFT_DCLICK`` events for :class:`~zoombar.ZoomBar`.
+        Handles the ``wx.EVT_LEFT_DOWN`` and ``wx.EVT_LEFT_DCLICK`` events for :class:`ZoomBar`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         self._currentHit = self.HitTest(event.GetPosition())
@@ -1279,9 +1279,9 @@ class ZoomBar(wx.PyControl):
 
     def OnLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~zoombar.ZoomBar`.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`ZoomBar`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if self.HitTest(event.GetPosition()) != self._currentHit:
@@ -1299,7 +1299,7 @@ class ZoomBar(wx.PyControl):
 
     def HitTest(self, pos):
         """
-        HitTest method for :class:`~zoombar.ZoomBar`.
+        HitTest method for :class:`ZoomBar`.
 
         :param `pos`: the current mouse position.
 

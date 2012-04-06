@@ -26,14 +26,14 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`~supertooltip.SuperToolTip` is a class that mimics the behaviour of `wx.TipWindow` and generic tooltip
+:class:`SuperToolTip` is a class that mimics the behaviour of :class:`TipWindow` and generic tooltip
 windows, although it is a custom-drawn widget.
 
 
 Description
 ===========
 
-:class:`~supertooltip.SuperToolTip` is a class that mimics the behaviour of `wx.TipWindow` and generic tooltip
+:class:`SuperToolTip` is a class that mimics the behaviour of :class:`TipWindow` and generic tooltip
 windows, although it is a custom-drawn widget.
 
 This class supports:
@@ -96,7 +96,7 @@ Usage example::
 Supported Platforms
 ===================
 
-:class:`~supertooltip.SuperToolTip` has been tested on the following platforms:
+:class:`SuperToolTip` has been tested on the following platforms:
   * Windows (Windows XP).
 
 
@@ -115,7 +115,7 @@ Events Processing
 License And Version
 ===================
 
-:class:`~supertooltip.SuperToolTip` is distributed under the wxPython license.
+:class:`SuperToolTip` is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 20 Mar 2012, 21.00 GMT
 
@@ -239,8 +239,8 @@ class ToolTipWindowBase(object):
         """
         Default class constructor.
 
-        :param `parent`: the :class:`~supertooltip.SuperToolTip` parent widget;
-        :param `classParent`: the :class:`~supertooltip.SuperToolTip` class object.
+        :param `parent`: the :class:`SuperToolTip` parent widget;
+        :param `classParent`: the :class:`SuperToolTip` class object.
         """
 
         self._spacing = 6
@@ -263,9 +263,9 @@ class ToolTipWindowBase(object):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`~supertooltip.SuperToolTip`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`SuperToolTip`.
 
-        :param `event`: a `wx.PaintEvent` event to be processed.
+        :param `event`: a :class:`PaintEvent` event to be processed.
         """
 
         # Go with double buffering...
@@ -415,9 +415,9 @@ class ToolTipWindowBase(object):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~supertooltip.SuperToolTip`.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`SuperToolTip`.
 
-        :param `event`: a `wx.EraseEvent` event to be processed.
+        :param `event`: a :class:`EraseEvent` event to be processed.
 
         :note: This method is intentionally empty to reduce flicker.
         """
@@ -428,9 +428,9 @@ class ToolTipWindowBase(object):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for :class:`~supertooltip.SuperToolTip`.
+        Handles the ``wx.EVT_SIZE`` event for :class:`SuperToolTip`.
 
-        :param `event`: a `wx.SizeEvent` event to be processed.
+        :param `event`: a :class:`SizeEvent` event to be processed.
         """
 
         self.Refresh()
@@ -439,9 +439,9 @@ class ToolTipWindowBase(object):
 
     def OnMouseMotion(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for :class:`~supertooltip.SuperToolTip`.
+        Handles the ``wx.EVT_MOTION`` event for :class:`SuperToolTip`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         x, y = event.GetPosition()
@@ -461,10 +461,10 @@ class ToolTipWindowBase(object):
     def OnDestroy(self, event):
         """
         Handles the ``wx.EVT_LEFT_DOWN``, ``wx.EVT_LEFT_DCLICK`` and ``wx.EVT_KILL_FOCUS``
-        events for :class:`~supertooltip.SuperToolTip`. All these events destroy the :class:`~supertooltip.SuperToolTip`,
+        events for :class:`SuperToolTip`. All these events destroy the :class:`SuperToolTip`,
         unless the user clicked on one hyperlink.
 
-        :param `event`: a `wx.MouseEvent` or a `wx.FocusEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` or a :class:`FocusEvent` event to be processed.
         """
 
         if not isinstance(event, wx.MouseEvent):
@@ -488,9 +488,9 @@ class ToolTipWindowBase(object):
 
     def StartAlpha(self, isShow):
         """
-        Start the timer which set the alpha channel for :class:`~supertooltip.SuperToolTip`.
+        Start the timer which set the alpha channel for :class:`SuperToolTip`.
 
-        :param `isShow`: whether :class:`~supertooltip.SuperToolTip` is being shown or deleted.
+        :param `isShow`: whether :class:`SuperToolTip` is being shown or deleted.
 
         :note: This method is available only on Windows and requires Mark Hammond's
          pywin32 package.
@@ -508,7 +508,7 @@ class ToolTipWindowBase(object):
 
     def SetFont(self, font):
         """
-        Sets the :class:`~supertooltip.SuperToolTip` font globally.
+        Sets the :class:`SuperToolTip` font globally.
 
         :param `font`: the font to set.
         """
@@ -519,7 +519,7 @@ class ToolTipWindowBase(object):
 
 
     def Invalidate(self):
-        """ Invalidate :class:`~supertooltip.SuperToolTip` size and repaint it. """
+        """ Invalidate :class:`SuperToolTip` size and repaint it. """
 
         if not self._classParent.GetMessage():
             # No message yet...
@@ -582,9 +582,9 @@ class ToolTipWindowBase(object):
 
     def AlphaCycle(self, event):
         """
-        Handles the ``wx.EVT_TIMER`` event for :class:`~supertooltip.SuperToolTip`.
+        Handles the ``wx.EVT_TIMER`` event for :class:`SuperToolTip`.
 
-        :param `event`: a `wx.TimerEvent` event to be processed.
+        :param `event`: a :class:`TimerEvent` event to be processed.
         """
 
         # Increase (or decrease) the alpha channel
@@ -606,7 +606,7 @@ class ToolTipWindowBase(object):
 
     def MakeWindowTransparent(self, amount):
         """
-        Makes the :class:`~supertooltip.SuperToolTip` window transparent.
+        Makes the :class:`SuperToolTip` window transparent.
 
         :param `amount`: the alpha channel value.
 
@@ -642,7 +642,7 @@ class ToolTipWindowBase(object):
 
 
     def CalculateBestSize(self):
-        """ Calculates the :class:`~supertooltip.SuperToolTip` window best size. """
+        """ Calculates the :class:`SuperToolTip` window best size. """
 
         # See the OnPaint method for explanations...
         maxWidth = maxHeight = 0
@@ -756,8 +756,8 @@ if wx.Platform == "__WXMAC__":
             """
             Default class constructor.
 
-            :param `parent`: the :class:`~supertooltip.SuperToolTip` parent widget;
-            :param `classParent`: the :class:`~supertooltip.SuperToolTip` class object.
+            :param `parent`: the :class:`SuperToolTip` parent widget;
+            :param `classParent`: the :class:`SuperToolTip` class object.
             """
 
             wx.Frame.__init__(self, parent, style=wx.NO_BORDER|wx.FRAME_FLOAT_ON_PARENT|wx.FRAME_NO_TASKBAR|wx.POPUP_WINDOW)
@@ -768,16 +768,16 @@ else:
 
     class ToolTipWindow(ToolTipWindowBase, wx.PopupWindow):
         """
-        A simple `wx.PopupWindow` that holds fancy tooltips.
-        Not available on Mac as `wx.PopupWindow` is not implemented there.
+        A simple :class:`PopupWindow` that holds fancy tooltips.
+        Not available on Mac as :class:`PopupWindow` is not implemented there.
         """
 
         def __init__(self, parent, classParent):
             """
             Default class constructor.
 
-            :param `parent`: the :class:`~supertooltip.SuperToolTip` parent widget;
-            :param `classParent`: the :class:`~supertooltip.SuperToolTip` class object.
+            :param `parent`: the :class:`SuperToolTip` parent widget;
+            :param `classParent`: the :class:`SuperToolTip` class object.
             """
 
             wx.PopupWindow.__init__(self, parent)
@@ -787,7 +787,7 @@ else:
 
 class SuperToolTip(object):
     """
-    The main class for :class:`~supertooltip.SuperToolTip`, which holds all the methods
+    The main class for :class:`SuperToolTip`, which holds all the methods
     and setters/getters available to the user.
     """
 
@@ -796,8 +796,8 @@ class SuperToolTip(object):
         """
         Default class constructor.
 
-        :param `message`: the main message in :class:`~supertooltip.SuperToolTip` body;
-        :param `bodyImage`: the image in the :class:`~supertooltip.SuperToolTip` body;
+        :param `message`: the main message in :class:`SuperToolTip` body;
+        :param `bodyImage`: the image in the :class:`SuperToolTip` body;
         :param `header`: the header text;
         :param `headerBmp`: the header bitmap;
         :param `footer`: the footer text;
@@ -836,9 +836,9 @@ class SuperToolTip(object):
 
     def SetTarget(self, widget):
         """
-        Sets the target window for :class:`~supertooltip.SuperToolTip`.
+        Sets the target window for :class:`SuperToolTip`.
 
-        :param `widget`: the widget to which :class:`~supertooltip.SuperToolTip` is associated.
+        :param `widget`: the widget to which :class:`SuperToolTip` is associated.
         """
 
         self._widget = widget
@@ -848,17 +848,17 @@ class SuperToolTip(object):
 
 
     def GetTarget(self):
-        """ Returns the target window for :class:`~supertooltip.SuperToolTip`. """
+        """ Returns the target window for :class:`SuperToolTip`. """
 
         if not hasattr(self, "_widget"):
-            raise Exception("\nError: the widget target for SuperToolTip has not been set.")
+            raise Exception("\nError: the widget target for L{SuperToolTip} has not been set.")
 
         return self._widget
 
 
     def SetStartDelay(self, delay=1):
         """
-        Sets the time delay (in seconds) after which the :class:`~supertooltip.SuperToolTip` is created.
+        Sets the time delay (in seconds) after which the :class:`SuperToolTip` is created.
 
         :param `delay`: the delay in seconds.
         """
@@ -867,14 +867,14 @@ class SuperToolTip(object):
 
 
     def GetStartDelay(self):
-        """ Returns the tim delay (in seconds) after which the :class:`~supertooltip.SuperToolTip` is created."""
+        """ Returns the tim delay (in seconds) after which the :class:`SuperToolTip` is created."""
 
         return self._startDelayTime
 
 
     def SetEndDelay(self, delay=1e6):
         """
-        Sets the delay time (in seconds) after which the :class:`~supertooltip.SuperToolTip` is destroyed.
+        Sets the delay time (in seconds) after which the :class:`SuperToolTip` is destroyed.
 
         :param `delay`: the delay in seconds.
         """
@@ -883,16 +883,16 @@ class SuperToolTip(object):
 
 
     def GetEndDelay(self):
-        """ Returns the delay time (in seconds) after which the :class:`~supertooltip.SuperToolTip` is destroyed."""
+        """ Returns the delay time (in seconds) after which the :class:`SuperToolTip` is destroyed."""
 
         return self._endDelayTime
 
 
     def OnWidgetEnter(self, event):
         """
-        Starts the :class:`~supertooltip.SuperToolTip` timer for creation, handles the ``wx.EVT_ENTER_WINDOW`` event.
+        Starts the :class:`SuperToolTip` timer for creation, handles the ``wx.EVT_ENTER_WINDOW`` event.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if self._superToolTip:
@@ -916,7 +916,7 @@ class SuperToolTip(object):
         """
         Handles the ``wx.EVT_LEAVE_WINDOW`` event for the target widgets.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         pos = wx.GetMousePosition()
@@ -947,7 +947,7 @@ class SuperToolTip(object):
 
 
     def OnStartTimer(self):
-        """ The creation time has expired, create the :class:`~supertooltip.SuperToolTip`. """
+        """ The creation time has expired, create the :class:`SuperToolTip`. """
 
         # target widget might already be destroyed
         if not self._widget:
@@ -970,7 +970,7 @@ class SuperToolTip(object):
 
 
     def OnEndTimer(self):
-        """ The show time for :class:`~supertooltip.SuperToolTip` has expired, destroy the :class:`~supertooltip.SuperToolTip`. """
+        """ The show time for :class:`SuperToolTip` has expired, destroy the :class:`SuperToolTip`. """
 
         if self._superToolTip:
             if self.GetUseFade():
@@ -982,7 +982,7 @@ class SuperToolTip(object):
 
 
     def DoShowNow(self):
-        """ Create the :class:`~supertooltip.SuperToolTip` immediately. """
+        """ Create the :class:`SuperToolTip` immediately. """
 
         if self._superToolTip:
             # need to destroy it if already exists,
@@ -1011,16 +1011,19 @@ class SuperToolTip(object):
         Shows or hides the window.
 
         You may need to call `Raise` for a top level window if you want to bring it to
-        top, although this is not needed if :meth:`~supertooltip.SuperToolTip.Show` is called immediately after the frame creation.
+        top, although this is not needed if :meth:`~SuperToolTip.Show` is called immediately after the frame creation.
 
-        :param bool `show`: ``True`` to show the :class:`~supertooltip.SuperToolTip` window, ``False`` to hide it.
+        :param bool `show`: ``True`` to show the :class:`SuperToolTip` window, ``False`` to hide it.
         
         :return: ``True`` if the window has been shown or hidden or ``False`` if nothing was done
          because it already was in the requested state.
 
-        :note: Notice that the default state of newly created top level windows is hidden (to allow
-         you to create their contents without flicker) unlike for all the other, not derived from
-         `wx.TopLevelWindow`, windows that are by default created in the shown state.
+        .. note::
+
+           Notice that the default state of newly created top level windows is hidden (to allow
+           you to create their contents without flicker) unlike for all the other, not derived from
+           :class:`TopLevelWindow`, windows that are by default created in the shown state.
+
 
         .. versionadded:: 0.9.5
         """
@@ -1046,7 +1049,7 @@ class SuperToolTip(object):
 
 
     def OnDestroy(self, event):
-        """ Handles the :class:`~supertooltip.SuperToolTip` target destruction. """
+        """ Handles the :class:`SuperToolTip` target destruction. """
 
         if self._superToolTip:
             # Unbind the events!
@@ -1060,9 +1063,9 @@ class SuperToolTip(object):
 
     def SetHeaderBitmap(self, bmp):
         """
-        Sets the header bitmap for :class:`~supertooltip.SuperToolTip`.
+        Sets the header bitmap for :class:`SuperToolTip`.
 
-        :param `bmp`: the header bitmap, a valid `wx.Bitmap` object.
+        :param `bmp`: the header bitmap, a valid :class:`Bitmap` object.
         """
 
         self._headerBmp = bmp
@@ -1115,9 +1118,9 @@ class SuperToolTip(object):
 
     def SetBodyImage(self, bmp):
         """
-        Sets the main body bitmap for :class:`~supertooltip.SuperToolTip`.
+        Sets the main body bitmap for :class:`SuperToolTip`.
 
-        :param `bmp`: the body bitmap, a valid `wx.Bitmap` object.
+        :param `bmp`: the body bitmap, a valid :class:`Bitmap` object.
         """
 
         self._embeddedImage = bmp
@@ -1126,7 +1129,7 @@ class SuperToolTip(object):
 
 
     def GetBodyImage(self):
-        """ Returns the main body bitmap used in :class:`~supertooltip.SuperToolTip`. """
+        """ Returns the main body bitmap used in :class:`SuperToolTip`. """
 
         return self._embeddedImage
 
@@ -1152,9 +1155,9 @@ class SuperToolTip(object):
 
     def SetFooterBitmap(self, bmp):
         """
-        Sets the footer bitmap for :class:`~supertooltip.SuperToolTip`.
+        Sets the footer bitmap for :class:`SuperToolTip`.
 
-        :param `bmp`: the footer bitmap, a valid `wx.Bitmap` object.
+        :param `bmp`: the footer bitmap, a valid :class:`Bitmap` object.
         """
 
         self._footerBmp = bmp
@@ -1188,7 +1191,7 @@ class SuperToolTip(object):
 
     def SetMessage(self, message):
         """
-        Sets the main body message for :class:`~supertooltip.SuperToolTip`.
+        Sets the main body message for :class:`SuperToolTip`.
 
         :param `message`: the message to display in the body.
         """
@@ -1199,16 +1202,16 @@ class SuperToolTip(object):
 
 
     def GetMessage(self):
-        """ Returns the main body message in :class:`~supertooltip.SuperToolTip`. """
+        """ Returns the main body message in :class:`SuperToolTip`. """
 
         return self._message
 
 
     def SetTopGradientColour(self, colour):
         """
-        Sets the top gradient colour for :class:`~supertooltip.SuperToolTip`.
+        Sets the top gradient colour for :class:`SuperToolTip`.
 
-        :param `colour`: the colour to use as top colour, a valid `wx.Colour` object.
+        :param `colour`: the colour to use as top colour, a valid :class:`Colour` object.
         """
 
         self._topColour = colour
@@ -1218,9 +1221,9 @@ class SuperToolTip(object):
 
     def SetMiddleGradientColour(self, colour):
         """
-        Sets the middle gradient colour for :class:`~supertooltip.SuperToolTip`.
+        Sets the middle gradient colour for :class:`SuperToolTip`.
 
-        :param `colour`: the colour to use as middle colour, a valid `wx.Colour` object.
+        :param `colour`: the colour to use as middle colour, a valid :class:`Colour` object.
         """
 
         self._middleColour = colour
@@ -1230,9 +1233,9 @@ class SuperToolTip(object):
 
     def SetBottomGradientColour(self, colour):
         """
-        Sets the bottom gradient colour for :class:`~supertooltip.SuperToolTip`.
+        Sets the bottom gradient colour for :class:`SuperToolTip`.
 
-        :param `colour`: the colour to use as bottom colour, a valid `wx.Colour` object.
+        :param `colour`: the colour to use as bottom colour, a valid :class:`Colour` object.
         """
 
         self._bottomColour = colour
@@ -1242,9 +1245,9 @@ class SuperToolTip(object):
 
     def SetTextColour(self, colour):
         """
-        Sets the text colour for :class:`~supertooltip.SuperToolTip`.
+        Sets the text colour for :class:`SuperToolTip`.
 
-        :param `colour`: the colour to use as text colour, a valid `wx.Colour` object.
+        :param `colour`: the colour to use as text colour, a valid :class:`Colour` object.
         """
 
         self._textColour = colour
@@ -1287,7 +1290,7 @@ class SuperToolTip(object):
 
 
     def InitFont(self):
-        """ Initalizes the fonts for :class:`~supertooltip.SuperToolTip`. """
+        """ Initalizes the fonts for :class:`SuperToolTip`. """
 
         self._messageFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._headerFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
@@ -1303,7 +1306,7 @@ class SuperToolTip(object):
         """
         Sets the font for the main body message.
 
-        :param `font`: the font to use for the main body message, a valid `wx.Font`
+        :param `font`: the font to use for the main body message, a valid :class:`Font`
          object.
         """
 
@@ -1316,7 +1319,7 @@ class SuperToolTip(object):
         """
         Sets the font for the header text.
 
-        :param `font`: the font to use for the header text, a valid `wx.Font`
+        :param `font`: the font to use for the header text, a valid :class:`Font`
          object.
         """
 
@@ -1329,7 +1332,7 @@ class SuperToolTip(object):
         """
         Sets the font for the footer text.
 
-        :param `font`: the font to use for the footer text, a valid `wx.Font`
+        :param `font`: the font to use for the footer text, a valid :class:`Font`
          object.
         """
 
@@ -1342,7 +1345,7 @@ class SuperToolTip(object):
         """
         Sets the font for the hyperlink text.
 
-        :param `font`: the font to use for the hyperlink text, a valid `wx.Font`
+        :param `font`: the font to use for the hyperlink text, a valid :class:`Font`
          object.
         """
 
@@ -1377,7 +1380,7 @@ class SuperToolTip(object):
 
     def SetDropShadow(self, drop):
         """
-        Whether to draw a shadow below :class:`~supertooltip.SuperToolTip` or not.
+        Whether to draw a shadow below :class:`SuperToolTip` or not.
 
         :param `drop`: ``True`` to drop a shadow below the control, ``False`` otherwise.
 
@@ -1392,7 +1395,7 @@ class SuperToolTip(object):
 
     def GetDropShadow(self):
         """
-        Returns whether a shadow below :class:`~supertooltip.SuperToolTip` is drawn or not.
+        Returns whether a shadow below :class:`SuperToolTip` is drawn or not.
 
         :note: This method is available only on Windows and requires Mark Hammond's
          pywin32 package.
@@ -1448,9 +1451,9 @@ class SuperToolTip(object):
 
     def EnableTip(self, enable=True):
         """
-        Globally (application-wide) enables/disables :class:`~supertooltip.SuperToolTip`.
+        Globally (application-wide) enables/disables :class:`SuperToolTip`.
 
-        :param `enable`: ``True`` to enable :class:`~supertooltip.SuperToolTip` globally, ``False`` otherwise.
+        :param `enable`: ``True`` to enable :class:`SuperToolTip` globally, ``False`` otherwise.
         """
 
         wx.GetApp().__superToolTip = enable

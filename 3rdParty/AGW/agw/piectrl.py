@@ -28,18 +28,18 @@
 
 
 """
-:class:`~piectrl.PieCtrl` and :class:`~piectrl.ProgressPie` are simple classes that reproduce the behavior of a pie
+:class:`PieCtrl` and :class:`ProgressPie` are simple classes that reproduce the behavior of a pie
 chart.
 
 
 Description
 ===========
 
-:class:`~piectrl.PieCtrl` and :class:`~piectrl.ProgressPie` are simple classes that reproduce the behavior of a pie
+:class:`PieCtrl` and :class:`ProgressPie` are simple classes that reproduce the behavior of a pie
 chart. They use only pure wxPython classes/methods, without external dependencies.
-:class:`~piectrl.PieCtrl` is somewhat a "static" control, that you may create in order to display
-a simple pie chart on a `wx.Panel` or similar. :class:`~piectrl.ProgressPie` tries to emulate the
-behavior of `wx.ProgressDialog`, but using a pie chart instead of a gauge.
+:class:`PieCtrl` is somewhat a "static" control, that you may create in order to display
+a simple pie chart on a :class:`Panel` or similar. :class:`ProgressPie` tries to emulate the
+behavior of :class:`ProgressDialog`, but using a pie chart instead of a gauge.
 
 
 Usage
@@ -115,13 +115,13 @@ Usage example::
 Methods and Settings
 ====================
 
-With :class:`~piectrl.PieCtrl` you can:
+With :class:`PieCtrl` you can:
 
-- Create a :class:`~piectrl.PieCtrl` with different sectors;
+- Create a :class:`PieCtrl` with different sectors;
 - Set the sector values, colours and labels;
-- Assign a legend to the :class:`~piectrl.PieCtrl`;
-- Use an image as the :class:`~piectrl.PieCtrl` background;
-- Change the vertical rotation (perspective) of the :class:`~piectrl.PieCtrl`;
+- Assign a legend to the :class:`PieCtrl`;
+- Use an image as the :class:`PieCtrl` background;
+- Change the vertical rotation (perspective) of the :class:`PieCtrl`;
 - Show/hide the segment edges.
 
 
@@ -140,7 +140,7 @@ Events Processing
 License And Version
 ===================
 
-:class:`~piectrl.PieCtrl` is distributed under the wxPython license.
+:class:`PieCtrl` is distributed under the wxPython license.
 
 Latest revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
@@ -165,7 +165,7 @@ from math import pi, sin, cos
 
 class PieCtrlLegend(wx.Window):
     """
-    This class displays a legend window for the classic :class:`~piectrl.PieCtrl`.
+    This class displays a legend window for the classic :class:`PieCtrl`.
     """
 
     def __init__(self, parent, title, id=wx.ID_ANY, pos=wx.DefaultPosition,
@@ -173,7 +173,7 @@ class PieCtrlLegend(wx.Window):
         """
         Default class constructor.
 
-        :param `parent`: the :class:`~piectrl.PieCtrlLegend` parent;
+        :param `parent`: the :class:`PieCtrlLegend` parent;
         :param `title`: the legend title;
         :param `id`: window identifier. A value of -1 indicates a default value;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
@@ -214,7 +214,7 @@ class PieCtrlLegend(wx.Window):
         """
         Recreates the legend background.
 
-        :param `parentdc`: an instance of `wx.DC`.
+        :param `parentdc`: an instance of :class:`DC`.
         """
 
         w, h = self.GetSize()
@@ -272,7 +272,7 @@ class PieCtrlLegend(wx.Window):
         """
         Sets the legend label colour.
 
-        :param `colour`: a valid `wx.Colour` object.
+        :param `colour`: a valid :class:`Colour` object.
         """
 
         self._labelcolour = colour
@@ -289,7 +289,7 @@ class PieCtrlLegend(wx.Window):
         """
         Sets the legend label font.
 
-        :param `font`: a valid `wx.Font` object.
+        :param `font`: a valid :class:`Font` object.
         """
 
         self._labelfont = font
@@ -306,7 +306,7 @@ class PieCtrlLegend(wx.Window):
         """
         Sets the legend background colour.
 
-        :param `colour`: a valid `wx.Colour` object.
+        :param `colour`: a valid :class:`Colour` object.
         """
 
         self._backcolour = colour
@@ -327,9 +327,9 @@ class PieCtrlLegend(wx.Window):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`~piectrl.PieCtrlLegend`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`PieCtrlLegend`.
 
-        :param `event`: a `wx.PaintEvent` event to be processed.
+        :param `event`: a :class:`PaintEvent` event to be processed.
         """
 
         pdc = wx.PaintDC(self)
@@ -400,7 +400,7 @@ class PiePart(object):
         """
         Sets the segment absolute value.
 
-        :param `value`: a floating point number representing the :class:`~piectrl.PiePart` value.
+        :param `value`: a floating point number representing the :class:`PiePart` value.
         """
 
         self._value = value
@@ -416,7 +416,7 @@ class PiePart(object):
         """
         Sets the segment colour.
 
-        :param `colour`: a valid `wx.Colour` object.
+        :param `colour`: a valid :class:`Colour` object.
         """
 
         self._colour = colour
@@ -451,8 +451,8 @@ class PiePart(object):
 
 class PieCtrl(wx.Window):
     """
-    :class:`~piectrl.PieCtrl` is somewhat a "static" control, that you may create in order to display
-    a simple pie chart on a `wx.Panel` or similar.
+    :class:`PieCtrl` is somewhat a "static" control, that you may create in order to display
+    a simple pie chart on a :class:`Panel` or similar.
     """
     
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
@@ -460,7 +460,7 @@ class PieCtrl(wx.Window):
         """
         Default class constructor.
 
-        :param `parent`: the :class:`~piectrl.PieCtrl` parent. Must not be ``None``;
+        :param `parent`: the :class:`PieCtrl` parent. Must not be ``None``;
         :param `id`: window identifier. A value of -1 indicates a default value;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
@@ -492,9 +492,9 @@ class PieCtrl(wx.Window):
 
     def SetBackground(self, bmp):
         """
-        Sets the :class:`~piectrl.PieCtrl` background image.
+        Sets the :class:`PieCtrl` background image.
 
-        :param `bmp`: a valid `wx.Bitmap` object.
+        :param `bmp`: a valid :class:`Bitmap` object.
         """
 
         self._background = bmp
@@ -502,16 +502,16 @@ class PieCtrl(wx.Window):
 
 
     def GetBackground(self):
-        """ Returns the :class:`~piectrl.PieCtrl` background image. """
+        """ Returns the :class:`PieCtrl` background image. """
 
         return self._background
 
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for :class:`~piectrl.PieCtrl`.
+        Handles the ``wx.EVT_SIZE`` event for :class:`PieCtrl`.
 
-        :param `event`: a `wx.SizeEvent` event to be processed.
+        :param `event`: a :class:`SizeEvent` event to be processed.
         """
 
         self.RecreateCanvas()
@@ -520,7 +520,7 @@ class PieCtrl(wx.Window):
 
 
     def RecreateCanvas(self):
-        """ Recreates the :class:`~piectrl.PieCtrl` container (canvas). """
+        """ Recreates the :class:`PieCtrl` container (canvas). """
 
         self._canvasbitmap = wx.EmptyBitmap(self.GetSize().GetWidth(),
                                             self.GetSize().GetHeight())
@@ -549,9 +549,9 @@ class PieCtrl(wx.Window):
 
     def SetAngle(self, angle):
         """
-        Sets the orientation angle for :class:`~piectrl.PieCtrl`.
+        Sets the orientation angle for :class:`PieCtrl`.
 
-        :param `angle`: the orientation angle for :class:`~piectrl.PieCtrl`, in radians.
+        :param `angle`: the orientation angle for :class:`PieCtrl`, in radians.
         """
 
         if angle < 0:
@@ -564,7 +564,7 @@ class PieCtrl(wx.Window):
 
 
     def GetAngle(self):
-        """ Returns the orientation angle for :class:`~piectrl.PieCtrl`, in radians. """
+        """ Returns the orientation angle for :class:`PieCtrl`, in radians. """
 
         return self._angle
 
@@ -593,7 +593,7 @@ class PieCtrl(wx.Window):
 
     def SetShowEdges(self, value=True):
         """
-        Sets whether the :class:`~piectrl.PieCtrl` edges are visible or not.
+        Sets whether the :class:`PieCtrl` edges are visible or not.
 
         :param `value`: ``True`` to show the edges, ``False`` to hide them.
         """
@@ -603,16 +603,16 @@ class PieCtrl(wx.Window):
 
 
     def GetShowEdges(self):
-        """ Returns whether the :class:`~piectrl.PieCtrl` edges are visible or not. """
+        """ Returns whether the :class:`PieCtrl` edges are visible or not. """
 
         return self._showedges
 
 
     def SetBackColour(self, colour):
         """
-        Sets the :class:`~piectrl.PieCtrl` background colour.
+        Sets the :class:`PieCtrl` background colour.
 
-        :param `colour`: a valid `wx.Colour` object.
+        :param `colour`: a valid :class:`Colour` object.
         """
 
         self._backcolour = colour
@@ -620,14 +620,14 @@ class PieCtrl(wx.Window):
 
 
     def GetBackColour(self):
-        """ Returns the :class:`~piectrl.PieCtrl` background colour. """
+        """ Returns the :class:`PieCtrl` background colour. """
 
         return self._backcolour
 
 
     def SetHeight(self, value):
         """
-        Sets the height (in pixels) of the :class:`~piectrl.PieCtrl`.
+        Sets the height (in pixels) of the :class:`PieCtrl`.
 
         :param `value`: the new height of the widget, in pixels.
         """
@@ -636,22 +636,22 @@ class PieCtrl(wx.Window):
 
 
     def GetHeight(self):
-        """ Returns the height (in pixels) of the :class:`~piectrl.PieCtrl`. """
+        """ Returns the height (in pixels) of the :class:`PieCtrl`. """
 
         return self._height
 
 
     def GetLegend(self):
-        """ Returns the :class:`~piectrl.PieCtrl` legend. """
+        """ Returns the :class:`PieCtrl` legend. """
 
         return self._legend
 
 
     def DrawParts(self, dc, cx, cy, w, h):
         """
-        Draws the :class:`~piectrl.PieCtrl` external edges.
+        Draws the :class:`PieCtrl` external edges.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param `cx`: the part `x` coordinate;
         :param `cy`: the part `y` coordinate;
         :param `w`: the control's width;
@@ -691,9 +691,9 @@ class PieCtrl(wx.Window):
 
     def Draw(self, pdc):
         """
-        Draws all the sectors of :class:`~piectrl.PieCtrl`.
+        Draws all the sectors of :class:`PieCtrl`.
 
-        :param `dc`: an instance of `wx.DC`.        
+        :param `dc`: an instance of :class:`DC`.        
         """
 
         w, h = self.GetSize()
@@ -857,9 +857,9 @@ class PieCtrl(wx.Window):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`~piectrl.PieCtrl`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`PieCtrl`.
 
-        :param `event`: a `wx.PaintEvent` event to be processed.
+        :param `event`: a :class:`PaintEvent` event to be processed.
         """
 
         pdc = wx.PaintDC(self)
@@ -874,7 +874,7 @@ class PieCtrl(wx.Window):
 
 class ProgressPie(PieCtrl):
     """
-    :class:`~piectrl.ProgressPie` tries to emulate the behavior of `wx.ProgressDialog`, but
+    :class:`ProgressPie` tries to emulate the behavior of :class:`ProgressDialog`, but
     using a pie chart instead of a gauge.
     """
     
@@ -883,7 +883,7 @@ class ProgressPie(PieCtrl):
         """
         Default class constructor.
 
-        :param `parent`: the :class:`~piectrl.PieCtrl` parent. Must not be ``None``;
+        :param `parent`: the :class:`PieCtrl` parent. Must not be ``None``;
         :param `id`: window identifier. A value of -1 indicates a default value;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
@@ -914,7 +914,7 @@ class ProgressPie(PieCtrl):
 
     def SetValue(self, value):
         """
-        Sets the :class:`~piectrl.ProgressPie` value.
+        Sets the :class:`ProgressPie` value.
 
         :param `value`: a floating point number representing the new value.
         """
@@ -926,14 +926,14 @@ class ProgressPie(PieCtrl):
 
 
     def GetValue(self):
-        """ Returns the :class:`~piectrl.ProgressPie` value. """
+        """ Returns the :class:`ProgressPie` value. """
 
         return self._value
 
 
     def SetMaxValue(self, value):
         """
-        Sets the :class:`~piectrl.ProgressPie` maximum value.
+        Sets the :class:`ProgressPie` maximum value.
 
         :param `value`: a floating point number representing the maximum value.
         """
@@ -946,16 +946,16 @@ class ProgressPie(PieCtrl):
 
 
     def GetMaxValue(self):
-        """ Returns the :class:`~piectrl.ProgressPie`  maximum value. """
+        """ Returns the :class:`ProgressPie`  maximum value. """
 
         return self._maxvalue
 
 
     def SetFilledColour(self, colour):
         """
-        Sets the colour that progressively fills the :class:`~piectrl.ProgressPie` .
+        Sets the colour that progressively fills the :class:`ProgressPie` .
 
-        :param `colour`: a valid `wx.Colour` object.
+        :param `colour`: a valid :class:`Colour` object.
         """
 
         self._filledcolour = colour
@@ -967,7 +967,7 @@ class ProgressPie(PieCtrl):
         """
         Sets the colour that is filled.
 
-        :param `colour`: a valid `wx.Colour` object.
+        :param `colour`: a valid :class:`Colour` object.
         """
 
         self._unfilledcolour= colour
@@ -976,7 +976,7 @@ class ProgressPie(PieCtrl):
 
 
     def GetFilledColour(self):
-        """ Returns the colour that progressively fills the :class:`~piectrl.ProgressPie`. """
+        """ Returns the colour that progressively fills the :class:`ProgressPie`. """
 
         return self._filledcolour
 

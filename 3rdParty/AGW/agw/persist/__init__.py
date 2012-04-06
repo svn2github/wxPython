@@ -37,31 +37,31 @@ wxPython has built-in support for a (constantly growing) number of controls. Cur
 following classes are supported:
 
 * wx.TopLevelWindow (and hence wx.Frame and wx.Dialog, together with their own AUI perspectives);
-* wx.MenuBar, :class:`~flatmenu.FlatMenuBar`;
-* :class:`~aui.auibar.AuiToolBar`;
+* wx.MenuBar, FlatMenuBar;
+* AuiToolBar;
 * wx.Notebook, wx.Toolbook, wx.Treebook, wx.Choicebook, wx.aui.AuiNotebook,
-  :class:`~aui.auibook.AuiNotebook` (together with its own AUI perspective),
-  :class:`~flatnotebook.FlatNotebook`, :class:`~labelbook.LabelBook`,
-  :class:`~labelbook.FlatImageBook`;
+  AuiNotebook (together with its own AUI perspective),
+  FlatNotebook, LabelBook,
+  FlatImageBook;
 * wx.CheckBox;
 * wx.ListBox, wx.VListBox, wx.HtmlListBox, wx.SimpleHtmlListBox, wx.gizmos.EditableListBox;
-* wx.ListCtrl, wx.ListView, :class:`~ultimatelistctrl.UltimateListCtrl`;
+* wx.ListCtrl, wx.ListView, UltimateListCtrl;
 * wx.CheckListBox;
 * wx.Choice, wx.ComboBox, wx.combo.OwnerDrawnComboBox;
 * wx.RadioBox;
 * wx.RadioButton;
 * wx.ScrolledWindow, wx.lib.scrolledpanel.ScrolledPanel;
-* wx.Slider, :class:`~knobctrl.KnobCtrl`;
-* wx.SpinButton, wx.SpinCtrl, :class:`~floatspin.FloatSpin`;
+* wx.Slider, KnobCtrl;
+* wx.SpinButton, wx.SpinCtrl, FloatSpin;
 * wx.SplitterWindow;
 * wx.TextCtrl, wx.SearchCtrl, wx.lib.expando.ExpandoTextCtrl, wx.lib.masked.Ctrl;
 * wx.ToggleButton, wx.lib.buttons.GenToggleButton, wx.lib.buttons.GenBitmapToggleButton,
-  wx.lib.buttons.GenBitmapTextToggleButton, :class:`~shapedbutton.SToggleButton`,
-  :class:`~shapedbutton.SBitmapToggleButton`, :class:`~shapedbutton.SBitmapTextToggleButton`;
-* wx.TreeCtrl, wx.GenericDirCtrl, :class:`~customtreectrl.CustomTreeCtrl`;
-* wx.gizmos.TreeListCtrl, :class:`~hypertreelist.HyperTreeList`;
+  wx.lib.buttons.GenBitmapTextToggleButton, SToggleButton,
+  SBitmapToggleButton, SBitmapTextToggleButton;
+* wx.TreeCtrl, wx.GenericDirCtrl, CustomTreeCtrl;
+* wx.gizmos.TreeListCtrl, HyperTreeList;
 * wx.lib.calendar.CalendarCtrl;
-* wx.CollapsiblePane;
+* wx.CollapsiblePane, PyCollapsiblePane;
 * wx.DatePickerCtrl, wx.GenericDatePickerCtrl;
 * wx.media.MediaCtrl;
 * wx.ColourPickerCtrl, wx.lib.colourselect.ColourSelect;
@@ -71,8 +71,8 @@ following classes are supported:
 * wx.DirDialog, wx.FileDialog;
 * wx.FindReplaceDialog;
 * wx.FontDialog;
-* wx.ColourDialog, :class:`~cubecolourdialog.CubeColourDialog`;
-* :class:`~foldpanelbar.FoldPanelBar`;
+* wx.ColourDialog, CubeColourDialog;
+* FoldPanelBar;
 * wx.SingleChoiceDialog, wx.MultiChoiceDialog;
 * wx.TextEntryDialog, wx.PasswordEntryDialog.
 
@@ -156,14 +156,14 @@ can be only done automatically for windows.
 TODOs
 =====
 
-* Find a way to handle `wx.ToolBar` UI settings as it has been done for :class:`~aui.auibar.AuiToolBar`:
-  current `wx.ToolBar` doesn't seem to have easy access to the underlying toolbar tools;
-* Implement handler(s) for `wx.grid.Grid` for row/columns sizes (possibly adding another style
-  to `PersistenceManager` as `wx.grid.Grid` sets up arrays to store individual row and column
+* Find a way to handle :class:`ToolBar` UI settings as it has been done for :class:`~lib.agw.aui.auibar.AuiToolBar`:
+  current :class:`ToolBar` doesn't seem to have easy access to the underlying toolbar tools;
+* Implement handler(s) for :class:`grid.Grid` for row/columns sizes (possibly adding another style
+  to `PersistenceManager` as :class:`grid.Grid` sets up arrays to store individual row and column
   sizes when non-default sizes are used. The memory requirements for this could become prohibitive
   if the grid is very large);
-* Find a way to properly save and restore dialog data (`wx.ColourDialog`, `wx.FontDialog` etc...);
-* Add handlers for the remaining widgets not yet wrapped (mostly in `wx.lib`).
+* Find a way to properly save and restore dialog data (:class:`ColourDialog`, :class:`FontDialog` etc...);
+* Add handlers for the remaining widgets not yet wrapped (mostly in :mod:`lib`).
 
 
 License And Version

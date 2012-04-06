@@ -5,7 +5,7 @@ Serves as a container for a group of (ribbon) controls.
 Description
 ===========
 
-A :class:`~ribbon.page.RibbonPage` will typically have panels for children, with the controls for that
+A :class:`RibbonPanel` will typically have panels for children, with the controls for that
 page placed on the panels. A panel adds a border and label to a group of controls,
 and can be minimised (either automatically to conserve space, or manually by the user).
 
@@ -30,7 +30,7 @@ Window Styles                     Hex Value   Description
 See Also
 ========
 
-:class:`~ribbon.page.RibbonPage`
+:class:`~lib.agw.ribbon.page.RibbonPage`
 
 """
 
@@ -53,7 +53,7 @@ def IsAncestorOf(ancestor, window):
 
 
 class RibbonPanel(RibbonControl):
-    """ This is the main implementation of :class:`~ribbon.panel.RibbonPanel`. """
+    """ This is the main implementation of :class:`RibbonPanel`. """
 
     def __init__(self, parent, id=wx.ID_ANY, label="", minimised_icon=wx.NullBitmap,
                  pos=wx.DefaultPosition, size=wx.DefaultSize, agwStyle=RIBBON_PANEL_DEFAULT_STYLE,
@@ -61,7 +61,7 @@ class RibbonPanel(RibbonControl):
         """
         Default class constructor.
 
-        :param `parent`: pointer to a parent window, typically a :class:`~ribbon.page.RibbonPage`, though
+        :param `parent`: pointer to a parent window, typically a :class:`~lib.agw.ribbon.page.RibbonPage`, though
          it can be any window;
         :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
@@ -114,11 +114,11 @@ class RibbonPanel(RibbonControl):
         """
         Set the art provider to be used.
 
-        Normally called automatically by :class:`~ribbon.page.RibbonPage` when the panel is created, or the
+        Normally called automatically by :class:`~lib.agw.ribbon.page.RibbonPage` when the panel is created, or the
         art provider changed on the page. The new art provider will be propagated to the
         children of the panel.
 
-        Reimplemented from :class:`~ribbon.control.RibbonControl`.
+        Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
 
         :param `art`: an art provider.
 
@@ -162,7 +162,7 @@ class RibbonPanel(RibbonControl):
         """
         Query if the panel would be minimised at a given size.
 
-        :param `at_size`: an instance of `wx.Size`, giving the size at which the
+        :param `at_size`: an instance of :class:`Size`, giving the size at which the
          panel should be tested for minimisation.
         """
         
@@ -191,9 +191,9 @@ class RibbonPanel(RibbonControl):
 
     def OnMouseEnter(self, event):
         """
-        Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`~ribbon.panel.RibbonPanel`.
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`RibbonPanel`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         self.TestPositionForHover(event.GetPosition())
@@ -201,9 +201,9 @@ class RibbonPanel(RibbonControl):
 
     def OnMouseEnterChild(self, event):
         """
-        Handles the ``wx.EVT_ENTER_WINDOW`` event for children of :class:`~ribbon.panel.RibbonPanel`.
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for children of :class:`RibbonPanel`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         pos = event.GetPosition()
@@ -218,9 +218,9 @@ class RibbonPanel(RibbonControl):
 
     def OnMouseLeave(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~ribbon.panel.RibbonPanel`.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`RibbonPanel`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         self.TestPositionForHover(event.GetPosition())
@@ -228,9 +228,9 @@ class RibbonPanel(RibbonControl):
 
     def OnMouseLeaveChild(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for children of :class:`~ribbon.panel.RibbonPanel`.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for children of :class:`RibbonPanel`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         pos = event.GetPosition()
@@ -279,9 +279,9 @@ class RibbonPanel(RibbonControl):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for :class:`~ribbon.panel.RibbonPanel`.
+        Handles the ``wx.EVT_SIZE`` event for :class:`RibbonPanel`.
 
-        :param `event`: a `wx.SizeEvent` event to be processed.
+        :param `event`: a :class:`SizeEvent` event to be processed.
         """
 
         if self.GetAutoLayout():
@@ -344,7 +344,7 @@ class RibbonPanel(RibbonControl):
         """
         Query if the panel would be minimised at a given size.
 
-        :param `at_size`: an instance of `wx.Size`, giving the size at which the
+        :param `at_size`: an instance of :class:`Size`, giving the size at which the
          panel should be tested for minimisation.
         """
 
@@ -368,9 +368,9 @@ class RibbonPanel(RibbonControl):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~ribbon.panel.RibbonPanel`.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`RibbonPanel`.
 
-        :param `event`: a `wx.EraseEvent` event to be processed.
+        :param `event`: a :class:`EraseEvent` event to be processed.
         """
 
         # All painting done in main paint handler to minimise flicker
@@ -379,9 +379,9 @@ class RibbonPanel(RibbonControl):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`~ribbon.panel.RibbonPanel`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`RibbonPanel`.
 
-        :param `event`: a `wx.PaintEvent` event to be processed.
+        :param `event`: a :class:`PaintEvent` event to be processed.
         """
 
         dc = wx.AutoBufferedPaintDC(self)
@@ -398,7 +398,7 @@ class RibbonPanel(RibbonControl):
         Returns ``True`` if this window can take any size (greater than its minimum size),
         ``False`` if it can only take certain sizes.
         
-        :see: :meth:`RibbonControl.GetNextSmallerSize() <ribbon.control.RibbonControl.GetNextSmallerSize>`, :meth:`RibbonControl.GetNextLargerSize() <ribbon.control.RibbonControl.GetNextLargerSize>`
+        :see: :meth:`RibbonControl.GetNextSmallerSize() <RibbonControl.GetNextSmallerSize>`, :meth:`RibbonControl.GetNextLargerSize() <RibbonControl.GetNextLargerSize>`
         """
 
         # A panel never sizes continuously, even if all of its children can,
@@ -429,10 +429,10 @@ class RibbonPanel(RibbonControl):
 
     def DoGetNextSmallerSize(self, direction, relative_to):
         """
-        Implementation of :meth:`RibbonControl.GetNextSmallerSize() <ribbon.control.RibbonControl.GetNextSmallerSize>`.
+        Implementation of :meth:`RibbonControl.GetNextSmallerSize() <RibbonControl.GetNextSmallerSize>`.
 
         Controls which have non-continuous sizing must override this virtual function
-        rather than :meth:`RibbonControl.GetNextSmallerSize() <ribbon.control.RibbonControl.GetNextSmallerSize>`.
+        rather than :meth:`RibbonControl.GetNextSmallerSize() <RibbonControl.GetNextSmallerSize>`.
         """
 
         if self._expanded_panel != None:
@@ -506,10 +506,10 @@ class RibbonPanel(RibbonControl):
 
     def DoGetNextLargerSize(self, direction, relative_to):
         """
-        Implementation of :meth:`RibbonControl.GetNextLargerSize() <ribbon.control.RibbonControl.GetNextLargerSize>`.
+        Implementation of :meth:`RibbonControl.GetNextLargerSize() <RibbonControl.GetNextLargerSize>`.
 
         Controls which have non-continuous sizing must override this virtual function
-        rather than :meth:`RibbonControl.GetNextLargerSize() <ribbon.control.RibbonControl.GetNextLargerSize>`.
+        rather than :meth:`RibbonControl.GetNextLargerSize() <RibbonControl.GetNextLargerSize>`.
         """
 
         if self._expanded_panel != None:        
@@ -660,9 +660,9 @@ class RibbonPanel(RibbonControl):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :return: An instance of `wx.Size`.
+        :return: An instance of :class:`Size`.
         
-        :note: Overridden from `wx.PyControl`.
+        :note: Overridden from :class:`PyControl`.
         """
 
         # Ask sizer if present
@@ -683,7 +683,7 @@ class RibbonPanel(RibbonControl):
         """
         Realize all children of the panel.
 
-        :note: Reimplemented from :class:`~ribbon.control.RibbonControl`.
+        :note: Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
         """
 
         status = True
@@ -756,9 +756,9 @@ class RibbonPanel(RibbonControl):
 
     def OnMouseClick(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~ribbon.panel.RibbonPanel`.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`RibbonPanel`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if self.IsMinimised():        
@@ -775,7 +775,7 @@ class RibbonPanel(RibbonControl):
         :note: This should be called on an expanded panel to get the dummy associated
          with it - it will return ``None`` when called on the dummy itself.
 
-        :see: :meth:`~ribbon.panel.RibbonPanel.ShowExpanded`, :meth:`~ribbon.panel.RibbonPanel.GetExpandedPanel`
+        :see: :meth:`~RibbonPanel.ShowExpanded`, :meth:`~RibbonPanel.GetExpandedPanel`
         """
 
         return self._expanded_dummy
@@ -789,7 +789,7 @@ class RibbonPanel(RibbonControl):
          associated with it - it will return ``None`` when called on the expanded panel
          itself.
 
-        :see: :meth:`~ribbon.panel.RibbonPanel.ShowExpanded`, :meth:`~ribbon.panel.RibbonPanel.GetExpandedDummy`
+        :see: :meth:`~RibbonPanel.ShowExpanded`, :meth:`~RibbonPanel.GetExpandedDummy`
         """
 
         return self._expanded_panel
@@ -810,7 +810,7 @@ class RibbonPanel(RibbonControl):
          is termed a dummy as it sits in the ribbon bar doing nothing, while the expanded
          panel holds the panel children.
          
-        :see: :meth:`~ribbon.panel.RibbonPanel.HideExpanded`, :meth:`~ribbon.panel.RibbonPanel.GetExpandedPanel`
+        :see: :meth:`~RibbonPanel.HideExpanded`, :meth:`~RibbonPanel.GetExpandedPanel`
         """
 
         if not self.IsMinimised():        
@@ -880,9 +880,9 @@ class RibbonPanel(RibbonControl):
 
     def OnKillFocus(self, event):
         """
-        Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`~ribbon.panel.RibbonPanel`.
+        Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`RibbonPanel`.
 
-        :param `event`: a `wx.FocusEvent` event to be processed.
+        :param `event`: a :class:`FocusEvent` event to be processed.
         """
 
         if self._expanded_dummy:
@@ -898,9 +898,9 @@ class RibbonPanel(RibbonControl):
 
     def OnChildKillFocus(self, event):
         """
-        Handles the ``wx.EVT_KILL_FOCUS`` event for children of :class:`~ribbon.panel.RibbonPanel`.
+        Handles the ``wx.EVT_KILL_FOCUS`` event for children of :class:`RibbonPanel`.
 
-        :param `event`: a `wx.FocusEvent` event to be processed.
+        :param `event`: a :class:`FocusEvent` event to be processed.
         """
 
         if self._child_with_focus == None:
@@ -932,7 +932,7 @@ class RibbonPanel(RibbonControl):
         :returns: ``True`` if the panel was un-expanded, ``False`` if it was not
          (normally due to it not being expanded in the first place).
          
-        :see: :meth:`~ribbon.panel.RibbonPanel.HideExpanded`, :meth:`~ribbon.panel.RibbonPanel.GetExpandedPanel`
+        :see: :meth:`~RibbonPanel.HideExpanded`, :meth:`~RibbonPanel.GetExpandedPanel`
         """
 
         if self._expanded_dummy == None:        
@@ -1057,13 +1057,13 @@ class RibbonPanel(RibbonControl):
 
 
     def GetDefaultBorder(self):
-        """ Returns the default border style for :class:`~ribbon.panel.RibbonPanel`. """
+        """ Returns the default border style for :class:`RibbonPanel`. """
 
         return wx.BORDER_NONE
 
 
     def GetFlags(self):
-        """ Returns the AGW-specific window style for :class:`~ribbon.panel.RibbonPanel`. """
+        """ Returns the AGW-specific window style for :class:`RibbonPanel`. """
 
         return self._flags
 

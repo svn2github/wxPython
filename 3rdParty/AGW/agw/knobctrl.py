@@ -22,13 +22,13 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`~knobctrl.KnobCtrl` lets the user select a numerical value by rotating it.
+:class:`KnobCtrl` lets the user select a numerical value by rotating it.
 
 
 Description
 ===========
 
-:class:`~knobctrl.KnobCtrl` lets the user select a numerical value by rotating it. It works like a
+:class:`KnobCtrl` lets the user select a numerical value by rotating it. It works like a
 scrollbar: just set the ticks range property and read the value property in the
 associated ``EVT_KC_ANGLE_CHANGING``/``EVT_KC_ANGLE_CHANGED`` events. Simple but
 effective.
@@ -87,7 +87,7 @@ Usage example::
 Events
 ======
 
-:class:`~knobctrl.KnobCtrl` implements two events that can be intercepted by the user:
+:class:`KnobCtrl` implements two events that can be intercepted by the user:
 
 - ``EVT_KC_ANGLE_CHANGING``;
 - ``EVT_KC_ANGLE_CHANGED``.
@@ -99,7 +99,7 @@ event handler.
 Supported Platforms
 ===================
 
-:class:`~knobctrl.KnobCtrl` has been tested on the following platforms:
+:class:`KnobCtrl` has been tested on the following platforms:
   * Windows (Windows XP);
   * Linux Ubuntu (Dapper 6.06)
 
@@ -132,7 +132,7 @@ Event Name                Description
 License And Version
 ===================
 
-:class:`~knobctrl.KnobCtrl` is distributed under the wxPython license. 
+:class:`KnobCtrl` is distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
@@ -165,7 +165,7 @@ EVT_KC_ANGLE_CHANGED = wx.PyEventBinder(wxEVT_KC_ANGLE_CHANGED, 1)
 
 class KnobCtrlEvent(wx.PyCommandEvent):
     """
-    Represent details of the events that the :class:`~knobctrl.KnobCtrl` object sends.
+    Represent details of the events that the :class:`KnobCtrl` object sends.
     """
 
     def __init__(self, eventType, eventId=1):
@@ -182,7 +182,7 @@ class KnobCtrlEvent(wx.PyCommandEvent):
 
     def SetOldValue(self, oldValue):
         """
-        Sets the old :class:`~knobctrl.KnobCtrl` value for this event.
+        Sets the old :class:`KnobCtrl` value for this event.
 
         :param `oldValue`: an integer representing the old value.
         """
@@ -191,14 +191,14 @@ class KnobCtrlEvent(wx.PyCommandEvent):
 
 
     def GetOldValue(self):
-        """ Returns the old :class:`~knobctrl.KnobCtrl` value for this event. """
+        """ Returns the old :class:`KnobCtrl` value for this event. """
 
         return self._oldValue
 
 
     def SetValue(self, value):
         """
-        Sets the new :class:`~knobctrl.KnobCtrl` value for this event.
+        Sets the new :class:`KnobCtrl` value for this event.
 
         :param `value`: an integer representing the new value.
         """
@@ -207,7 +207,7 @@ class KnobCtrlEvent(wx.PyCommandEvent):
 
 
     def GetValue(self):
-        """ Returns the new :class:`~knobctrl.KnobCtrl` value for this event. """
+        """ Returns the new :class:`KnobCtrl` value for this event. """
 
         return self._value
 
@@ -232,7 +232,7 @@ class BufferedWindow(wx.Window):
     screen will be automatically updated when a Paint event is received.
 
     When the drawing needs to change, you app needs to call the
-    :meth:`BufferedWindow.UpdateDrawing() <knobctrl.BufferedWindow.UpdateDrawing>` method. Since the drawing is stored in a bitmap, you
+    :meth:`BufferedWindow.UpdateDrawing() <BufferedWindow.UpdateDrawing>` method. Since the drawing is stored in a bitmap, you
     can also save the drawing to file by calling the
     `SaveToFile(self, file_name, file_type)` method.
     """
@@ -269,7 +269,7 @@ class BufferedWindow(wx.Window):
         """
         This method should be overridden when sub-classed.
 
-        :param `dc`: an instance of `wx.DC`.        
+        :param `dc`: an instance of :class:`DC`.        
         """
         
         pass
@@ -277,9 +277,9 @@ class BufferedWindow(wx.Window):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`~knobctrl.BufferedWindow`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`BufferedWindow`.
 
-        :param `event`: a `wx.PaintEvent` event to be processed.
+        :param `event`: a :class:`PaintEvent` event to be processed.
         """
         
         # All that is needed here is to draw the buffer to screen        
@@ -292,9 +292,9 @@ class BufferedWindow(wx.Window):
 
     def OnSize(self,event):
         """
-        Handles the ``wx.EVT_SIZE`` event for :class:`~knobctrl.BufferedWindow`.
+        Handles the ``wx.EVT_SIZE`` event for :class:`BufferedWindow`.
 
-        :param `event`: a `wx.SizeEvent` event to be processed.
+        :param `event`: a :class:`SizeEvent` event to be processed.
         """
 
         # The Buffer init is done here, to make sure the buffer is always
@@ -408,9 +408,9 @@ class KnobCtrl(BufferedWindow):
         
     def OnMouseEvents(self, event):
         """
-        Handles the ``wx.EVT_MOUSE_EVENTS`` event for :class:`~knobctrl.KnobCtrl`.
+        Handles the ``wx.EVT_MOUSE_EVENTS`` event for :class:`KnobCtrl`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if self._state == 0 and event.Entering():
@@ -430,7 +430,7 @@ class KnobCtrl(BufferedWindow):
 
     def SetTags(self, tags):
         """
-        Sets the tags for :class:`~knobctrl.KnobCtrl`.
+        Sets the tags for :class:`KnobCtrl`.
 
         :param `tags`: a list of integers ranging from `minvalue` to `maxvalue`.
         """
@@ -446,13 +446,13 @@ class KnobCtrl(BufferedWindow):
 
 
     def GetMinValue(self):
-        """ Returns the minimum value for :class:`~knobctrl.KnobCtrl`. """
+        """ Returns the minimum value for :class:`KnobCtrl`. """
 
         return self._minvalue
 
 
     def GetMaxValue(self):
-        """ Returns the maximum value for :class:`~knobctrl.KnobCtrl`. """
+        """ Returns the maximum value for :class:`KnobCtrl`. """
 
         return self._maxvalue
 
@@ -478,7 +478,7 @@ class KnobCtrl(BufferedWindow):
 
         
     def GetTags(self):
-        """ Returns the :class:`~knobctrl.KnobCtrl` tags. """
+        """ Returns the :class:`KnobCtrl` tags. """
 
         return self._tags        
 
@@ -487,7 +487,7 @@ class KnobCtrl(BufferedWindow):
         """
         Sets the tags colour.
 
-        :param `colour`: a valid `wx.Colour` object.
+        :param `colour`: a valid :class:`Colour` object.
         """
 
         self._tagscolour = colour
@@ -504,7 +504,7 @@ class KnobCtrl(BufferedWindow):
         """
         Sets the bounding circle colour.
 
-        :param `colour`: a valid `wx.Colour` object.
+        :param `colour`: a valid :class:`Colour` object.
         """
 
         self._boundingcolour = colour
@@ -521,7 +521,7 @@ class KnobCtrl(BufferedWindow):
         """
         Sets the first gradient colour for shading.
 
-        :param `colour`: a valid `wx.Colour` object.
+        :param `colour`: a valid :class:`Colour` object.
         """
 
         self._startcolour = colour
@@ -538,7 +538,7 @@ class KnobCtrl(BufferedWindow):
         """
         Sets the second gradient colour for shading.
 
-        :param `colour`: a valid `wx.Colour` object.
+        :param `colour`: a valid :class:`Colour` object.
         """
 
         self._endcolour = colour
@@ -553,7 +553,7 @@ class KnobCtrl(BufferedWindow):
 
     def SetAngularRange(self, start, end):
         """
-        Sets the angular range for :class:`~knobctrl.KnobCtrl`.
+        Sets the angular range for :class:`KnobCtrl`.
 
         :param `start`: the starting angle, in degrees, clockwise;
         :param `start`: the ending angle, in degrees, clockwise.
@@ -566,7 +566,7 @@ class KnobCtrl(BufferedWindow):
 
     def GetAngularRange(self):
         """
-        Returns the angular range for :class:`~knobctrl.KnobCtrl` as a tuple. The `start` and `end`
+        Returns the angular range for :class:`KnobCtrl` as a tuple. The `start` and `end`
         angles in the returned tuple are given in degrees, clockwise.
         """
 
@@ -578,7 +578,7 @@ class KnobCtrl(BufferedWindow):
         Draws everything on the empty bitmap.
         Here all the chosen styles are applied.
 
-        :param `dc`: an instance of `wx.DC`.
+        :param `dc`: an instance of :class:`DC`.
         """
         
         size  = self.GetClientSize()
@@ -600,7 +600,7 @@ class KnobCtrl(BufferedWindow):
         """
         Draws the tags.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param `size`: the control size.
         """
 
@@ -650,9 +650,9 @@ class KnobCtrl(BufferedWindow):
 
     def DrawDiagonalGradient(self, dc, size):
         """
-        Draw a shading of diagonal gradient to :class:`~knobctrl.KnobCtrl`.
+        Draw a shading of diagonal gradient to :class:`KnobCtrl`.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param `size`: the control size.
         """
 
@@ -694,7 +694,7 @@ class KnobCtrl(BufferedWindow):
         """
         Changes the input colour by the `offset` value. Used internally.
 
-        :param `colour`: a valid `wx.Colour` object;
+        :param `colour`: a valid :class:`Colour` object;
         :param `offset`: an integer value for offsetting the input colour.
         """
 
@@ -745,7 +745,7 @@ class KnobCtrl(BufferedWindow):
         """
         Draws the small knob.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param `pencolour`: the colour to use for drawing the inset circle.
         """
 
@@ -769,9 +769,9 @@ class KnobCtrl(BufferedWindow):
 
     def DrawBoundingCircle(self, dc, size):
         """
-        Draws the :class:`~knobctrl.KnobCtrl` bounding circle.
+        Draws the :class:`KnobCtrl` bounding circle.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param `size`: the control size.
         """
 
@@ -785,10 +785,10 @@ class KnobCtrl(BufferedWindow):
         """
         Converts the input values into logical `x` and `y` coordinates.
 
-        :param `radius`: the :class:`~knobctrl.KnobCtrl` radius;
+        :param `radius`: the :class:`KnobCtrl` radius;
         :param `angle`: the angular position of the mouse;
-        :param `centerX`: the `x` position of the :class:`~knobctrl.KnobCtrl` center;
-        :param `centerX`: the `y` position of the :class:`~knobctrl.KnobCtrl` center.        
+        :param `centerX`: the `x` position of the :class:`KnobCtrl` center;
+        :param `centerX`: the `y` position of the :class:`KnobCtrl` center.        
         """
         
         x = radius*math.cos(angle) + centerX
@@ -840,11 +840,11 @@ class KnobCtrl(BufferedWindow):
 
     def SetValue(self, val):
         """
-        Sets programmatically the value of :class:`~knobctrl.KnobCtrl`.
+        Sets programmatically the value of :class:`KnobCtrl`.
 
-        :param `val`: an integer specifying the new :class:`~knobctrl.KnobCtrl` value.
+        :param `val`: an integer specifying the new :class:`KnobCtrl` value.
 
-        :note: This method does not send a :class:`~knobctrl.KnobCtrlEvent`.        
+        :note: This method does not send a :class:`KnobCtrlEvent`.        
         """
 
         if val < self._minvalue or val > self._maxvalue:
@@ -867,7 +867,7 @@ class KnobCtrl(BufferedWindow):
 
 
     def GetValue(self):
-        """ Returns the value of :class:`~knobctrl.KnobCtrl`. """
+        """ Returns the value of :class:`KnobCtrl`. """
 
         return self._trackposition
 

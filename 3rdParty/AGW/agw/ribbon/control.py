@@ -1,5 +1,5 @@
 """
-:class:`~ribbon.control.RibbonControl` serves as a base class for all controls which share the ribbon
+`RibbonControl` serves as a base class for all controls which share the ribbon
 charactertics of having a ribbon art provider, and (optionally) non-continous
 resizing.
 
@@ -8,14 +8,14 @@ Description
 ===========
 
 Despite what the name may imply, it is not the top-level control for creating a
-ribbon interface - that is :class:`~ribbon.bar.RibbonBar`. Ribbon controls often have a region which
+ribbon interface - that is :class:`~lib.agw.ribbon.bar.RibbonBar`. Ribbon controls often have a region which
 is "transparent", and shows the contents of the ribbon page or panel behind it.
 
 If implementing a new ribbon control, then it may be useful to realise that this
 effect is done by the art provider when painting the background of the control,
 and hence in the paint handler for the new control, you should call a draw background
-method on the art provider (:meth:`RibbonMSWArtProvider.DrawButtonBarBackground() <ribbon.art_msw.RibbonMSWArtProvider.DrawButtonBarBackground>` and
-:meth:`RibbonMSWArtProvider.DrawToolBarBackground() <ribbon.art_msw.RibbonMSWArtProvider.DrawToolBarBackground>` typically just redraw what is behind the
+method on the art provider (:meth:`RibbonMSWArtProvider.DrawButtonBarBackground() <RibbonMSWArtProvider.DrawButtonBarBackground>` and
+:meth:`RibbonMSWArtProvider.DrawToolBarBackground() <RibbonMSWArtProvider.DrawToolBarBackground>` typically just redraw what is behind the
 rectangle being painted) if you want transparent regions. 
 
 """
@@ -30,19 +30,19 @@ class RibbonControl(wx.PyControl):
         """
         Default class constructor.
 
-        :param `wx.Window` `parent`: pointer to a parent window;
+        :param Window `parent`: pointer to a parent window;
         :param integer `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
         :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
          should generate a default position for the window;
-        :type `pos`: tuple or `wx.Point`
+        :type `pos`: tuple or :class:`Point`
         :param `size`: window size. ``wx.DefaultSize`` indicates that wxPython should
          generate a default size for the window. If no suitable size can be found, the
          window will be sized to 20x20 pixels so that the window is visible but obviously
          not correctly sized;
-        :type `size`: tuple or `wx.Point`
+        :type `size`: tuple or :class:`Point`
         :param integer `style`: the window style;
-        :param `wx.Validator` `validator`: window validator;
+        :param Validator `validator`: window validator;
         :param string `name`: window name.
         """
 
@@ -58,9 +58,9 @@ class RibbonControl(wx.PyControl):
         Set the art provider to be used.
 
         In many cases, setting the art provider will also set the art provider on all
-        child windows which extend :class:`~ribbon.control.RibbonControl`. In most cases, controls will not
+        child windows which extend :class:`RibbonControl`. In most cases, controls will not
         take ownership of the given pointer, with the notable exception being
-        :meth:`RibbonBar.SetArtProvider() <ribbon.bar.RibbonBar.SetArtProvider>`.
+        :meth:`RibbonBar.SetArtProvider() <RibbonBar.SetArtProvider>`.
 
         :param `art`: an art provider.
         """
@@ -84,7 +84,7 @@ class RibbonControl(wx.PyControl):
         Returns ``True`` if this window can take any size (greater than its minimum size),
         ``False`` if it can only take certain sizes.
         
-        :see: :meth:`~ribbon.control.RibbonControl.GetNextSmallerSize`, :meth:`~ribbon.control.RibbonControl.GetNextLargerSize`
+        :see: :meth:`~RibbonControl.GetNextSmallerSize`, :meth:`~RibbonControl.GetNextLargerSize`
         """
 
         return True
@@ -92,13 +92,13 @@ class RibbonControl(wx.PyControl):
     
     def DoGetNextSmallerSize(self, direction, size):
         """
-        Implementation of :meth:`~ribbon.control.RibbonControl.GetNextSmallerSize`.
+        Implementation of :meth:`~RibbonControl.GetNextSmallerSize`.
 
         Controls which have non-continuous sizing must override this virtual function
-        rather than :meth:`~ribbon.control.RibbonControl.GetNextSmallerSize`.
+        rather than :meth:`~RibbonControl.GetNextSmallerSize`.
 
         :param integer `direction`: the direction(s) in which the size should increase;
-        :param `wx.Size` `size`: the size for which a larger size should be found.
+        :param Size `size`: the size for which a larger size should be found.
         """
 
         # Dummy implementation for code which doesn't check for IsSizingContinuous() == true
@@ -114,13 +114,13 @@ class RibbonControl(wx.PyControl):
 
     def DoGetNextLargerSize(self, direction, size):
         """
-        Implementation of :meth:`~ribbon.control.RibbonControl.GetNextLargerSize`.
+        Implementation of :meth:`~RibbonControl.GetNextLargerSize`.
 
         Controls which have non-continuous sizing must override this virtual function
-        rather than :meth:`~ribbon.control.RibbonControl.GetNextLargerSize`.
+        rather than :meth:`~RibbonControl.GetNextLargerSize`.
 
         :param integer `direction`: the direction(s) in which the size should increase;
-        :param `wx.Size` `size`: the size for which a larger size should be found.
+        :param Size `size`: the size for which a larger size should be found.
         """
 
         # Dummy implementation for code which doesn't check for IsSizingContinuous() == true
@@ -138,12 +138,12 @@ class RibbonControl(wx.PyControl):
         is smaller than the given size.
 
         :param integer `direction`: The direction(s) in which the size should reduce;
-        :param `wx.Size` `relative_to`: The size for which a smaller size should be found.
+        :param Size `relative_to`: The size for which a smaller size should be found.
 
         :returns: if there is no smaller size, otherwise a suitable size which is smaller
          in the given direction(s), and the same as in the other direction (if any).
          
-        :see: :meth:`~ribbon.control.RibbonControl.IsSizingContinuous`, :meth:`~ribbon.control.RibbonControl.DoGetNextSmallerSize`
+        :see: :meth:`~RibbonControl.IsSizingContinuous`, :meth:`~RibbonControl.DoGetNextSmallerSize`
         """
 
         if relative_to is not None:
@@ -158,12 +158,12 @@ class RibbonControl(wx.PyControl):
         is larger then the given size.
 
         :param integer `direction`: The direction(s) in which the size should reduce;
-        :param `wx.Size` `relative_to`: The size for which a smaller size should be found.
+        :param Size `relative_to`: The size for which a smaller size should be found.
 
         :returns: if there is no larger size, otherwise a suitable size which is larger
          in the given direction(s), and the same as in the other direction (if any).
          
-        :see: :meth:`~ribbon.control.RibbonControl.IsSizingContinuous`, :meth:`~ribbon.control.RibbonControl.DoGetNextLargerSize`
+        :see: :meth:`~RibbonControl.IsSizingContinuous`, :meth:`~RibbonControl.DoGetNextLargerSize`
         """
 
         if relative_to is not None:
@@ -183,7 +183,7 @@ class RibbonControl(wx.PyControl):
 
     def Realise(self):
         """
-        Alias for :meth:`~ribbon.control.RibbonControl.Realize`.
+        Alias for :meth:`~RibbonControl.Realize`.
         """
 
         pass

@@ -51,13 +51,13 @@ Description
 (that depends on the same lack in wxWidgets). It can be used to build round
 buttons or elliptic buttons.
 
-I have stolen some code from `wx.lib.buttons` in order to recreate the same
+I have stolen some code from :mod:`lib.buttons` in order to recreate the same
 classes (`GenButton`, `GenBitmapButton`, `GenBitmapTextButton`, `GenToggleButton`,
 `GenBitmapToggleButton`, `GenBitmapTextToggleButton`). Here you have the same
 classes (with "Gen" replaced by "S"), with the same event handling, but they
 are rounded/elliptical buttons.
 
-`ShapedButton` is based on a `wx.Window`, in which 2 images are drawn depending
+`ShapedButton` is based on a :class:`Window`, in which 2 images are drawn depending
 on the button state (pressed or not pressed). The 2 images have been stolen
 from Audacity (written with wxWidgets) and rearranged/reshaped/restyled
 using adobe PhotoShop.
@@ -105,7 +105,7 @@ Usage example::
     app.MainLoop()
 
 
-The `ShapedButton` construction and usage is quite similar to the `wx.lib.buttons`
+The `ShapedButton` construction and usage is quite similar to the :mod:`lib.buttons`
 implementation.
 
 
@@ -140,7 +140,7 @@ This class processes the following events:
 ================= ==================================================
 Event Name        Description
 ================= ==================================================
-``wx.EVT_BUTTON`` Process a `wx.wxEVT_COMMAND_BUTTON_CLICKED` event, when the button is clicked. 
+``wx.EVT_BUTTON`` Process a `wxEVT_COMMAND_BUTTON_CLICKED` event, when the button is clicked. 
 ================= ==================================================
 
 
@@ -277,7 +277,7 @@ class SButton(wx.Window):
         """
         Default class constructor.
 
-        :param `parent`: the :class:`~shapedbutton.SButton` parent. Must not be ``None``;
+        :param `parent`: the :class:`SButton` parent. Must not be ``None``;
         :param `id`: window identifier. A value of -1 indicates a default value;
         :param `label`: the button text label;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
@@ -329,7 +329,7 @@ class SButton(wx.Window):
         """
         Sets the button colour, for all button states.
 
-        :param `colour`: an instance of `wx.Colour`.
+        :param `colour`: an instance of :class:`Colour`.
         
         :note: The original button images are greyscale with a lot of pixels with
          different colours. Changing smoothly the button colour in order to
@@ -358,7 +358,7 @@ class SButton(wx.Window):
         """
         Sets the button label colour.
 
-        :param `colour`: an instance of `wx.Colour`.
+        :param `colour`: an instance of :class:`Colour`.
         """
 
         if colour is None:
@@ -396,7 +396,7 @@ class SButton(wx.Window):
         """
         Given the current font settings, calculate and set a good size.
 
-        :param `size`: if not ``None``, an instance of `wx.Size` to pass to
+        :param `size`: if not ``None``, an instance of :class:`Size` to pass to
          `SetInitialSize`.
         """
 
@@ -411,7 +411,7 @@ class SButton(wx.Window):
         Overridden base class virtual. Determines the best size of the button
         based on the label size.
 
-        :note: Overridden from `wx.Window`.
+        :note: Overridden from :class:`Window`.
         """
 
         w, h, usemin = self._GetLabelSize()
@@ -433,7 +433,7 @@ class SButton(wx.Window):
         """
         Can this window be given focus by mouse click?
 
-        :note: Overridden from `wx.Window`.
+        :note: Overridden from :class:`Window`.
         """
 
         return self.IsShown() and self.IsEnabled()
@@ -454,7 +454,7 @@ class SButton(wx.Window):
 
         :param `enable`: ``True`` to enable the button, ``False`` to disable it.
         
-        :note: Overridden from `wx.Window`.
+        :note: Overridden from :class:`Window`.
         """
 
         self._enabled = enable
@@ -531,7 +531,7 @@ class SButton(wx.Window):
         """
         Draws the main button, in whichever state it is.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param `width`: the button width;
         :param `height`: the button height.
         """
@@ -611,7 +611,7 @@ class SButton(wx.Window):
         """
         Draws the label on the button.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param `width`: the button width;
         :param `height`: the button height;
         :param `dw`: width differential, to show a 3D effect;
@@ -654,7 +654,7 @@ class SButton(wx.Window):
         drawn with a dotted-style pen, to let the user know which button has
         the focus.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param `width`: the button width;
         :param `height`: the button height.        
         """
@@ -682,9 +682,9 @@ class SButton(wx.Window):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for :class:`~shapedbutton.SButton`.
+        Handles the ``wx.EVT_SIZE`` event for :class:`SButton`.
 
-        :param `event`: a `wx.SizeEvent` event to be processed.
+        :param `event`: a :class:`SizeEvent` event to be processed.
         """
 
         self.Refresh()
@@ -693,9 +693,9 @@ class SButton(wx.Window):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`~shapedbutton.SButton`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`SButton`.
 
-        :param `event`: a `wx.PaintEvent` event to be processed.
+        :param `event`: a :class:`PaintEvent` event to be processed.
         """
 
         (width, height) = self.GetClientSizeTuple()
@@ -749,9 +749,9 @@ class SButton(wx.Window):
 
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~shapedbutton.SButton`.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`SButton`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if not self.IsEnabled():
@@ -775,9 +775,9 @@ class SButton(wx.Window):
 
     def OnLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~shapedbutton.SButton`.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`SButton`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if not self.IsEnabled() or not self.HasCapture():
@@ -796,9 +796,9 @@ class SButton(wx.Window):
 
     def OnMotion(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for :class:`~shapedbutton.SButton`.
+        Handles the ``wx.EVT_MOTION`` event for :class:`SButton`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if not self.IsEnabled() or not self.HasCapture():
@@ -822,9 +822,9 @@ class SButton(wx.Window):
 
     def OnGainFocus(self, event):
         """
-        Handles the ``wx.EVT_SET_FOCUS`` event for :class:`~shapedbutton.SButton`.
+        Handles the ``wx.EVT_SET_FOCUS`` event for :class:`SButton`.
 
-        :param `event`: a `wx.FocusEvent` event to be processed.
+        :param `event`: a :class:`FocusEvent` event to be processed.
         """
 
         self._hasfocus = True
@@ -837,9 +837,9 @@ class SButton(wx.Window):
 
     def OnLoseFocus(self, event):
         """
-        Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`~shapedbutton.SButton`.
+        Handles the ``wx.EVT_KILL_FOCUS`` event for :class:`SButton`.
 
-        :param `event`: a `wx.FocusEvent` event to be processed.
+        :param `event`: a :class:`FocusEvent` event to be processed.
         """
 
         self._hasfocus = False
@@ -854,9 +854,9 @@ class SButton(wx.Window):
 
     def OnKeyDown(self, event):
         """
-        Handles the ``wx.EVT_KEY_DOWN`` event for :class:`~shapedbutton.SButton`.
+        Handles the ``wx.EVT_KEY_DOWN`` event for :class:`SButton`.
 
-        :param `event`: a `wx.KeyEvent` event to be processed.
+        :param `event`: a :class:`KeyEvent` event to be processed.
         """
 
         if self._hasfocus and event.GetKeyCode() == ord(" "):
@@ -869,9 +869,9 @@ class SButton(wx.Window):
 
     def OnKeyUp(self, event):
         """
-        Handles the ``wx.EVT_KEY_UP`` event for :class:`~shapedbutton.SButton`.
+        Handles the ``wx.EVT_KEY_UP`` event for :class:`SButton`.
 
-        :param `event`: a `wx.KeyEvent` event to be processed.
+        :param `event`: a :class:`KeyEvent` event to be processed.
         """
 
         if self._hasfocus and event.GetKeyCode() == ord(" "):
@@ -901,9 +901,9 @@ class SButton(wx.Window):
 
     def ConvertWXToPIL(self, bmp):
         """
-        Converts a `wx.Image` into a PIL image.
+        Converts a :class:`Image` into a PIL image.
 
-        :param `bmp`: an instance of `wx.Image`.    
+        :param `bmp`: an instance of :class:`Image`.    
         """
 
         width = bmp.GetWidth()
@@ -915,7 +915,7 @@ class SButton(wx.Window):
 
     def ConvertPILToWX(self, pil, alpha=True):
         """
-        Converts a PIL image into a `wx.Image`.
+        Converts a PIL image into a :class:`Image`.
 
         :param `pil`: a PIL image;
         :param `alpha`: ``True`` if the image contains alpha transparency, ``False``
@@ -989,15 +989,15 @@ class SButton(wx.Window):
 
 class SBitmapButton(SButton):
     """
-    Subclass of :class:`~shapedbutton.SButton` which displays a bitmap, acting like a
-    `wx.BitmapButton`.
+    Subclass of :class:`SButton` which displays a bitmap, acting like a
+    :class:`BitmapButton`.
     """
 
     def __init__(self, parent, id, bitmap, pos=wx.DefaultPosition, size=wx.DefaultSize):
         """
         Default class constructor.
 
-        :param `parent`: the :class:`~shapedbutton.SBitmapButton` parent. Must not be ``None``;
+        :param `parent`: the :class:`SBitmapButton` parent. Must not be ``None``;
         :param `id`: window identifier. A value of -1 indicates a default value;
         :param `bitmap`: the button bitmap (if any);
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
@@ -1043,7 +1043,7 @@ class SBitmapButton(SButton):
         """
         Sets the bitmap to display when the button is disabled.
 
-        :param `bitmap`: a valid `wx.Bitmap` object.
+        :param `bitmap`: a valid :class:`Bitmap` object.
         """
 
         self._bmpdisabled = bitmap
@@ -1053,7 +1053,7 @@ class SBitmapButton(SButton):
         """
         Sets the bitmap to display when the button has the focus.
 
-        :param `bitmap`: a valid `wx.Bitmap` object.
+        :param `bitmap`: a valid :class:`Bitmap` object.
         """
 
         self._bmpfocus = bitmap
@@ -1064,7 +1064,7 @@ class SBitmapButton(SButton):
         """
         Sets the bitmap to display when the button is selected (pressed).
 
-        :param `bitmap`: a valid `wx.Bitmap` object.
+        :param `bitmap`: a valid :class:`Bitmap` object.
         """
 
         self._bmpselected = bitmap
@@ -1075,7 +1075,7 @@ class SBitmapButton(SButton):
         Sets the bitmap to display normally. This is the only one that is
         required.
 
-        :param `bitmap`: a valid `wx.Bitmap` object;
+        :param `bitmap`: a valid :class:`Bitmap` object;
         :param `createothers`: if set to ``True``, then the other bitmaps will be
          generated on the fly. Currently, only the disabled bitmap is generated.
         """
@@ -1100,7 +1100,7 @@ class SBitmapButton(SButton):
         """
         Draws the bitmap in the middle of the button.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param `width`: the button width;
         :param `height`: the button height;
         :param `dw`: width differential, to show a 3D effect;
@@ -1137,7 +1137,7 @@ class SBitmapButton(SButton):
 
 class SBitmapTextButton(SBitmapButton):
     """
-    Subclass of :class:`~shapedbutton.SButton` which displays a bitmap and a label.
+    Subclass of :class:`SButton` which displays a bitmap and a label.
     """
 
     def __init__(self, parent, id, bitmap, label,
@@ -1145,7 +1145,7 @@ class SBitmapTextButton(SBitmapButton):
         """
         Default class constructor.
 
-        :param `parent`: the :class:`~shapedbutton.SBitmapTextButton` parent. Must not be ``None``;
+        :param `parent`: the :class:`SBitmapTextButton` parent. Must not be ``None``;
         :param `id`: window identifier. A value of -1 indicates a default value;
         :param `bitmap`: the button bitmap (if any);
         :param `label`: the button text label;
@@ -1183,7 +1183,7 @@ class SBitmapTextButton(SBitmapButton):
         """
         Draws the bitmap and the text label.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param `width`: the button width;
         :param `height`: the button height;
         :param `dw`: width differential, to show a 3D effect;
@@ -1257,8 +1257,8 @@ class SBitmapTextButton(SBitmapButton):
 
 class __SToggleMixin(object):
     """
-    A mixin that allows to transform any of :class:`~shapedbutton.SButton`, :class:`~shapedbutton.SBitmapButton` and
-    :class:`~shapedbutton.SBitmapTextButton` in the corresponding toggle buttons.
+    A mixin that allows to transform any of :class:`SButton`, :class:`SBitmapButton` and
+    :class:`SBitmapTextButton` in the corresponding toggle buttons.
     """
 
     def SetToggle(self, flag):
@@ -1286,7 +1286,7 @@ class __SToggleMixin(object):
         """
         Handles the ``wx.EVT_LEFT_DOWN`` event for the button.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if not self.IsEnabled():
@@ -1311,7 +1311,7 @@ class __SToggleMixin(object):
         """
         Handles the ``wx.EVT_LEFT_UP`` event for the button.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
 
@@ -1330,7 +1330,7 @@ class __SToggleMixin(object):
         """
         Handles the ``wx.EVT_KEY_DOWN`` event for the button.
 
-        :param `event`: a `wx.KeyEvent` event to be processed.
+        :param `event`: a :class:`KeyEvent` event to be processed.
         """
 
         event.Skip()
@@ -1340,7 +1340,7 @@ class __SToggleMixin(object):
         """
         Handles the ``wx.EVT_MOTION`` event for the button.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         if not self.IsEnabled():
@@ -1368,7 +1368,7 @@ class __SToggleMixin(object):
         """
         Handles the ``wx.EVT_KEY_UP`` event for the button.
 
-        :param `event`: a `wx.KeyEvent` event to be processed.
+        :param `event`: a :class:`KeyEvent` event to be processed.
         """
 
         if self._hasfocus and event.GetKeyCode() == ord(" "):

@@ -1,14 +1,14 @@
 """
-:class:`~pybusyinfo.PyBusyInfo` constructs a busy info window and displays a message in it.
+:class:`PyBusyInfo` constructs a busy info window and displays a message in it.
 
 
 Description
 ===========
 
-:class:`~pybusyinfo.PyBusyInfo` constructs a busy info window and displays a message in it.
+:class:`PyBusyInfo` constructs a busy info window and displays a message in it.
 
 This class makes it easy to tell your user that the program is temporarily busy.
-Just create a :class:`~pybusyinfo.PyBusyInfo` object, and within the current scope, a message window
+Just create a :class:`PyBusyInfo` object, and within the current scope, a message window
 will be shown.
 
 For example::
@@ -22,7 +22,7 @@ For example::
 
 
 It works by creating a window in the constructor, and deleting it in the destructor.
-You may also want to call `wx.Yield()` to refresh the window periodically (in case
+You may also want to call :func:`Yield` () to refresh the window periodically (in case
 it had been obscured by other windows, for example).
 
 
@@ -74,7 +74,7 @@ Usage example::
 Supported Platforms
 ===================
 
-:class:`~pybusyinfo.PyBusyInfo` has been tested on the following platforms:
+:class:`PyBusyInfo` has been tested on the following platforms:
   * Windows (Windows XP).
 
 
@@ -93,7 +93,7 @@ Events Processing
 License And Version
 ===================
 
-:class:`~pybusyinfo.PyBusyInfo` is distributed under the wxPython license.
+:class:`PyBusyInfo` is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 20 Mar 2012, 21.00 GMT
 
@@ -110,16 +110,16 @@ _ = wx.GetTranslation
 
 
 class PyInfoFrame(wx.Frame):
-    """ Base class for :class:`~pybusyinfo.PyBusyInfo`. """
+    """ Base class for :class:`PyBusyInfo`. """
 
     def __init__(self, parent, message, title, icon):
         """
         Default class constructor.
         
         :param `parent`: the frame parent;
-        :param `message`: the message to display in the :class:`~pybusyinfo.PyBusyInfo`;
-        :param `title`: the main :class:`~pybusyinfo.PyBusyInfo` title;
-        :param `icon`: an icon to draw as the frame icon, an instance of `wx.Bitmap`.
+        :param `message`: the message to display in the :class:`PyBusyInfo`;
+        :param `title`: the main :class:`PyBusyInfo` title;
+        :param `icon`: an icon to draw as the frame icon, an instance of :class:`Bitmap`.
         """
         
         wx.Frame.__init__(self, parent, wx.ID_ANY, title, wx.DefaultPosition,
@@ -168,9 +168,9 @@ class PyInfoFrame(wx.Frame):
 
     def SetBusyShape(self, event=None):
         """
-        Sets :class:`~pybusyinfo.PyInfoFrame` shape using the region created from the bitmap.
+        Sets :class:`PyInfoFrame` shape using the region created from the bitmap.
 
-        :param `event`: a `wx.WindowCreateEvent` event (GTK only, as GTK supports setting
+        :param `event`: a :class:`WindowCreateEvent` event (GTK only, as GTK supports setting
          the window shape only during window creation).
         """
 
@@ -182,9 +182,9 @@ class PyInfoFrame(wx.Frame):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`~pybusyinfo.PyInfoFrame`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`PyInfoFrame`.
 
-        :param `event`: a `wx.PaintEvent` to be processed.
+        :param `event`: a :class:`PaintEvent` to be processed.
         """
 
         panel = event.GetEventObject()
@@ -233,9 +233,9 @@ class PyInfoFrame(wx.Frame):
 
     def OnErase(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~pybusyinfo.PyInfoFrame`.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`PyInfoFrame`.
 
-        :param `event`: a `wx.EraseEvent` event to be processed.
+        :param `event`: a :class:`EraseEvent` event to be processed.
 
         :note: This method is intentionally empty to reduce flicker.        
         """
@@ -257,10 +257,10 @@ class PyBusyInfo(object):
         """
         Default class constructor.
         
-        :param `parent`: the :class:`~pybusyinfo.PyBusyInfo` parent;
-        :param `message`: the message to display in the :class:`~pybusyinfo.PyBusyInfo`;
-        :param `title`: the main :class:`~pybusyinfo.PyBusyInfo` title;
-        :param `icon`: an icon to draw as the frame icon, an instance of `wx.Bitmap`.
+        :param `parent`: the :class:`PyBusyInfo` parent;
+        :param `message`: the message to display in the :class:`PyBusyInfo`;
+        :param `title`: the main :class:`PyBusyInfo` title;
+        :param `icon`: an icon to draw as the frame icon, an instance of :class:`Bitmap`.
 
         :note: If `parent` is not ``None`` you must ensure that it is not closed
          while the busy info is shown.
@@ -288,16 +288,19 @@ class PyBusyInfo(object):
         Shows or hides the window.
 
         You may need to call `Raise` for a top level window if you want to bring it to
-        top, although this is not needed if :meth:`~pybusyinfo.PyBusyInfo.Show` is called immediately after the frame creation.
+        top, although this is not needed if :meth:`PyBusyInfo.Show` is called immediately after the frame creation.
 
-        :param bool `show`: ``True`` to show the :class:`~pybusyinfo.PyBusyInfo` frame, ``False`` to hide it.
+        :param bool `show`: ``True`` to show the :class:`PyBusyInfo` frame, ``False`` to hide it.
         
         :return: ``True`` if the window has been shown or hidden or ``False`` if nothing was done
          because it already was in the requested state.
 
-        :note: Notice that the default state of newly created top level windows is hidden (to allow
-         you to create their contents without flicker) unlike for all the other, not derived from
-         `wx.TopLevelWindow`, windows that are by default created in the shown state.
+        .. note::
+
+           Notice that the default state of newly created top level windows is hidden (to allow
+           you to create their contents without flicker) unlike for all the other, not derived from
+           :class:`TopLevelWindow`, windows that are by default created in the shown state.
+
 
         .. versionadded:: 0.9.5
         """

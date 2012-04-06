@@ -34,9 +34,9 @@ add buttons and controls still respecting the gradient background.
 Description
 ===========
 
-With :class:`~buttonpanel.ButtonPanel` class you have a panel with gradient colouring
+With :class:`ButtonPanel` class you have a panel with gradient colouring
 on it and with the possibility to place some buttons on it. Using a
-standard panel with normal `wx.Buttons` leads to an ugly result: the
+standard panel with normal :class:`Buttons` leads to an ugly result: the
 buttons are placed correctly on the panel - but with grey area around
 them. Gradient colouring is kept behind the images - this was achieved
 due to the PNG format and the transparency of the bitmaps.
@@ -56,32 +56,32 @@ classic look).
 Usage
 =====
 
-:class:`~buttonpanel.ButtonPanel` supports 4 alignments: left, right, top, bottom, which have a
-different meaning and behavior with respect to `wx.Toolbar`. The easiest
+:class:`ButtonPanel` supports 4 alignments: left, right, top, bottom, which have a
+different meaning and behavior with respect to :class:`Toolbar`. The easiest
 thing is to try the demo to understand, but I'll try to explain how it works.
 
-**CASE 1**: :class:`~buttonpanel.ButtonPanel` has a main caption text.
+**CASE 1**: :class:`ButtonPanel` has a main caption text.
 
-- Left alignment means :class:`~buttonpanel.ButtonPanel` is horizontal, with the text aligned to the
+- Left alignment means :class:`ButtonPanel` is horizontal, with the text aligned to the
   left. When you shrink the demo frame, if there is not enough room for all
   the controls to be shown, the controls closest to the text are hidden;
 
-- Right alignment means :class:`~buttonpanel.ButtonPanel` is horizontal, with the text aligned to the
+- Right alignment means :class:`ButtonPanel` is horizontal, with the text aligned to the
   right. Item layout as above;
 
-- Top alignment means :class:`~buttonpanel.ButtonPanel` is vertical, with the text aligned to the top.
+- Top alignment means :class:`ButtonPanel` is vertical, with the text aligned to the top.
   Item layout as above;
 
-- Bottom alignment means :class:`~buttonpanel.ButtonPanel` is vertical, with the text aligned to the
+- Bottom alignment means :class:`ButtonPanel` is vertical, with the text aligned to the
   bottom. Item layout as above.
 
 
-**CASE 2**: :class:`~buttonpanel.ButtonPanel` has **no** main caption text.
+**CASE 2**: :class:`ButtonPanel` has **no** main caption text.
 
 - In this case, left and right alignment are the same (as top and bottom are the same),
   but the layout strategy changes: now if there is not enough room for all the controls
   to be shown, the last added items are hidden ("last" means on the far right for an
-  horizontal :class:`~buttonpanel.ButtonPanel` and far bottom for a vertical :class:`~buttonpanel.ButtonPanel`).
+  horizontal :class:`ButtonPanel` and far bottom for a vertical :class:`ButtonPanel`).
 
 
 Usage example::
@@ -157,8 +157,8 @@ This class supports the following window styles:
 ==================== =========== ==================================================
 Window Styles        Hex Value   Description
 ==================== =========== ==================================================
-``BP_DEFAULT_STYLE``         0x1 :class:`~buttonpanel.ButtonPanel` has a plain solid background.
-``BP_USE_GRADIENT``          0x2 :class:`~buttonpanel.ButtonPanel` has a gradient shading background.
+``BP_DEFAULT_STYLE``         0x1 :class:`ButtonPanel` has a plain solid background.
+``BP_USE_GRADIENT``          0x2 :class:`ButtonPanel` has a gradient shading background.
 ==================== =========== ==================================================
 
 
@@ -170,14 +170,14 @@ This class processes the following events:
 ================= ==================================================
 Event Name        Description
 ================= ==================================================
-``wx.EVT_BUTTON`` Process a `wx.wxEVT_COMMAND_BUTTON_CLICKED` event, when a button is clicked. 
+``wx.EVT_BUTTON`` Process a `wxEVT_COMMAND_BUTTON_CLICKED` event, when a button is clicked. 
 ================= ==================================================
 
 
 License And Version
 ===================
 
-:class:`~buttonpanel.ButtonPanel` is distributed under the wxPython license. 
+:class:`ButtonPanel` is distributed under the wxPython license. 
 
 Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
@@ -196,9 +196,9 @@ BP_GRADIENT_COLOUR_FROM = 1
 BP_GRADIENT_COLOUR_TO = 2
 """ Ending gradient colour, used only when ``BP_USE_GRADIENT`` style is applied. """
 BP_BORDER_COLOUR = 3
-""" Pen colour to paint the border of :class:`~buttonpanel.ButtonPanel`. """
+""" Pen colour to paint the border of :class:`ButtonPanel`. """
 BP_TEXT_COLOUR = 4
-""" Main :class:`~buttonpanel.ButtonPanel` caption colour. """
+""" Main :class:`ButtonPanel` caption colour. """
 BP_BUTTONTEXT_COLOUR = 5
 """ Text colour for buttons with text. """
 BP_BUTTONTEXT_INACTIVE_COLOUR = 6
@@ -210,7 +210,7 @@ BP_SELECTION_PEN_COLOUR = 8
 BP_SEPARATOR_COLOUR = 9
 """ Pen colour used to paint the separators. """
 BP_TEXT_FONT = 10
-""" Font of the :class:`~buttonpanel.ButtonPanel` main caption. """
+""" Font of the :class:`ButtonPanel` main caption. """
 BP_BUTTONTEXT_FONT = 11
 """ Text font for the buttons with text. """
 
@@ -222,7 +222,7 @@ BP_BUTTONTEXT_ALIGN_RIGHT = 13
 BP_SEPARATOR_SIZE = 14
 """ Separator size. NB: This is not the line width, but the sum of the space before and after the separator line plus the width of the line. """
 BP_MARGINS_SIZE = 15
-""" Size of the left/right margins in :class:`~buttonpanel.ButtonPanel` (top/bottom for vertically aligned :class:`~buttonpanel.ButtonPanel`)."""
+""" Size of the left/right margins in :class:`ButtonPanel` (top/bottom for vertically aligned :class:`ButtonPanel`)."""
 BP_BORDER_SIZE = 16
 """ Size of the border. """
 BP_PADDING_SIZE = 17
@@ -238,25 +238,25 @@ BP_GRADIENT_HORIZONTAL = 2
 
 # Flags for HitTest() method
 BP_HT_BUTTON = 200
-""" This flag indicates that the user has hit a button inside :class:`~buttonpanel.ButtonPanel`. """
+""" This flag indicates that the user has hit a button inside :class:`ButtonPanel`. """
 BP_HT_NONE = 201
-""" This flag indicates that no buttons were hit inside :class:`~buttonpanel.ButtonPanel`. """
+""" This flag indicates that no buttons were hit inside :class:`ButtonPanel`. """
 
 # Alignment of buttons in the panel
 BP_ALIGN_RIGHT = 1
-""" Aligns the buttons to the right (for an horizontal :class:`~buttonpanel.ButtonPanel`). """
+""" Aligns the buttons to the right (for an horizontal :class:`ButtonPanel`). """
 BP_ALIGN_LEFT = 2
-""" Aligns the buttons to the left (for an horizontal :class:`~buttonpanel.ButtonPanel`). """
+""" Aligns the buttons to the left (for an horizontal :class:`ButtonPanel`). """
 BP_ALIGN_TOP = 4
-""" Aligns the buttons at the top (for a vertical :class:`~buttonpanel.ButtonPanel`). """
+""" Aligns the buttons at the top (for a vertical :class:`ButtonPanel`). """
 BP_ALIGN_BOTTOM = 8
-""" Aligns the buttons at the bottom (for a vertical :class:`~buttonpanel.ButtonPanel`). """
+""" Aligns the buttons at the bottom (for a vertical :class:`ButtonPanel`). """
 
 # ButtonPanel styles
 BP_DEFAULT_STYLE = 1
-""" :class:`~buttonpanel.ButtonPanel` has a plain solid background. """
+""" :class:`ButtonPanel` has a plain solid background. """
 BP_USE_GRADIENT = 2
-""" :class:`~buttonpanel.ButtonPanel` has a gradient shading background. """
+""" :class:`ButtonPanel` has a gradient shading background. """
 
 # Delay used to cancel the longHelp in the statusbar field
 _DELAY = 3000
@@ -271,10 +271,10 @@ def BrightenColour(colour, factor):
     """
     Brighten the input colour by a factor.
 
-    :param `colour`: a valid `wx.Colour` instance;
+    :param `colour`: a valid :class:`Colour` instance;
     :param integer `factor`: the factor by which the input colour should be brightened.
 
-    :return: An instance of `wx.Colour`, a brightened version of the input `colour`.    
+    :return: An instance of :class:`Colour`, a brightened version of the input `colour`.    
     """
 
     val = colour.Red()*factor
@@ -304,9 +304,9 @@ def MakeDisabledBitmap(original):
     """
     Creates a disabled-looking bitmap starting from the input one.
 
-    :param `original`: an instance of `wx.Bitmap` to be greyed-out.
+    :param `original`: an instance of :class:`Bitmap` to be greyed-out.
 
-    :return: A greyed-out representation of the input bitmap, an instance of `wx.Bitmap`.
+    :return: A greyed-out representation of the input bitmap, an instance of :class:`Bitmap`.
     """
     
     img = original.ConvertToImage()
@@ -321,8 +321,8 @@ def MakeDisabledBitmap(original):
 
 class BPArt(object):
     """
-    :class:`~buttonpanel.BPArt` is an art provider class which does all of the drawing for :class:`~buttonpanel.ButtonPanel`.
-    This allows the library caller to customize the :class:`~buttonpanel.BPArt` or to completely replace
+    :class:`BPArt` is an art provider class which does all of the drawing for :class:`ButtonPanel`.
+    This allows the library caller to customize the :class:`BPArt` or to completely replace
     all drawing with custom BPArts.
     """
 
@@ -330,7 +330,7 @@ class BPArt(object):
         """
         Default class constructor.
 
-        :param integer `parentStyle`: the window style for :class:`~buttonpanel.ButtonPanel`.
+        :param integer `parentStyle`: the window style for :class:`ButtonPanel`.
         """
 
         base_colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
@@ -379,7 +379,7 @@ class BPArt(object):
          Size Id                         Value  Description
          ============================== ======= =====================================
          ``BP_SEPARATOR_SIZE``               14 Separator size. Note: This is not the line width, but the sum of the space before and after the separator line plus the width of the line
-         ``BP_MARGINS_SIZE``                 15 Size of the left/right margins in :class:`~buttonpanel.ButtonPanel` (top/bottom for vertically aligned :class:`~buttonpanel.ButtonPanel`)
+         ``BP_MARGINS_SIZE``                 15 Size of the left/right margins in :class:`ButtonPanel` (top/bottom for vertically aligned :class:`ButtonPanel`)
          ``BP_BORDER_SIZE``                  16 Size of the border
          ``BP_PADDING_SIZE``                 17 Inter-tool separator size
          ============================== ======= =====================================
@@ -410,7 +410,7 @@ class BPArt(object):
 
         :raise: `Exception` if the `id` is not recognized.        
 
-        :see: :meth:`~buttonpanel.BPArt.GetMetric` for a list of meaningful size ids.        
+        :see: :meth:`~BPArt.GetMetric` for a list of meaningful size ids.        
         """
 
         if id == BP_SEPARATOR_SIZE:
@@ -439,8 +439,8 @@ class BPArt(object):
          ``BP_BACKGROUND_COLOUR``                 0 Background brush colour when no gradient shading exists
          ``BP_GRADIENT_COLOUR_FROM``              1 Starting gradient colour, used only when ``BP_USE_GRADIENT`` style is applied
          ``BP_GRADIENT_COLOUR_TO``                2 Ending gradient colour, used only when ``BP_USE_GRADIENT`` style is applied
-         ``BP_BORDER_COLOUR``                     3 Pen colour to paint the border of :class:`~buttonpanel.ButtonPanel`
-         ``BP_TEXT_COLOUR``                       4 Main :class:`~buttonpanel.ButtonPanel` caption colour
+         ``BP_BORDER_COLOUR``                     3 Pen colour to paint the border of :class:`ButtonPanel`
+         ``BP_TEXT_COLOUR``                       4 Main :class:`ButtonPanel` caption colour
          ``BP_BUTTONTEXT_COLOUR``                 5 Text colour for buttons with text
          ``BP_BUTTONTEXT_INACTIVE_COLOUR``        6 Text colour for inactive buttons with text
          ``BP_SELECTION_BRUSH_COLOUR``            7 Brush colour to be used when hovering or selecting a button
@@ -448,7 +448,7 @@ class BPArt(object):
          ``BP_SEPARATOR_COLOUR``                  9 Pen colour used to paint the separators
          ================================== ======= =====================================
 
-        :return: An instance of `wx.Colour` for the input `id`.
+        :return: An instance of :class:`Colour` for the input `id`.
 
         :raise: `Exception` if the `id` is not recognized.
         """
@@ -482,11 +482,11 @@ class BPArt(object):
         Sets the option value for the specified colour `id`.
 
         :param integer `id`: the identification bit for the colour value;
-        :param `colour`: the new value for the colour (a valid `wx.Colour` instance).
+        :param `colour`: the new value for the colour (a valid :class:`Colour` instance).
 
         :raise: `Exception` if the `id` is not recognized.
 
-        :see: :meth:`~buttonpanel.BPArt.GetColour` for a list of meaningful colour ids. 
+        :see: :meth:`~BPArt.GetColour` for a list of meaningful colour ids. 
         """
 
         if id == BP_BACKGROUND_COLOUR:
@@ -527,11 +527,11 @@ class BPArt(object):
          ============================== ======= =====================================
          Size Id                         Value  Description
          ============================== ======= =====================================
-         ``BP_TEXT_FONT``                    10 Font of the :class:`~buttonpanel.ButtonPanel` main caption
+         ``BP_TEXT_FONT``                    10 Font of the :class:`ButtonPanel` main caption
          ``BP_BUTTONTEXT_FONT``              11 Text font for the buttons with text
          ============================== ======= =====================================
 
-        :return: An instance of `wx.Font` for the input `id`.
+        :return: An instance of :class:`Font` for the input `id`.
 
         :raise: `Exception` if the `id` is not recognized.         
         """
@@ -549,11 +549,11 @@ class BPArt(object):
         Sets the option value for the specified font `id`.
 
         :param integer `id`: the identification bit for the font value;
-        :param `colour`: the new value for the font (a valid `wx.Font` instance).
+        :param `colour`: the new value for the font (a valid :class:`Font` instance).
 
         :raise: `Exception` if the `id` is not recognized.
 
-        :see: :meth:`~buttonpanel.BPArt.GetFont` for a list of meaningful font ids. 
+        :see: :meth:`~BPArt.GetFont` for a list of meaningful font ids. 
         """
         
         if id == BP_TEXT_FONT:
@@ -564,7 +564,7 @@ class BPArt(object):
 
     def SetGradientType(self, gradient):
         """
-        Sets the gradient type for :class:`~buttonpanel.BPArt` drawings.
+        Sets the gradient type for :class:`BPArt` drawings.
 
         :param integer `gradient`: can be one of the following bits:
 
@@ -583,11 +583,11 @@ class BPArt(object):
 
     def GetGradientType(self):
         """
-        Returns the gradient type for :class:`~buttonpanel.BPArt` drawings.
+        Returns the gradient type for :class:`BPArt` drawings.
 
         :return: An integer representing the gradient type.
         
-        :see: :meth:`~buttonpanel.BPArt.SetGradientType` for a list of possible gradient types.
+        :see: :meth:`~BPArt.SetGradientType` for a list of possible gradient types.
         """
 
         return self._gradient_type        
@@ -595,11 +595,11 @@ class BPArt(object):
         
     def DrawSeparator(self, dc, rect, isVertical):
         """
-        Draws a separator in :class:`~buttonpanel.ButtonPanel`.
+        Draws a separator in :class:`ButtonPanel`.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `wx.Rect` `rect`: the separator client rectangle;
-        :param bool `isVertical`: ``True`` if :class:`~buttonpanel.ButtonPanel` is in vertical orientation,
+        :param `dc`: an instance of :class:`DC`;
+        :param Rect `rect`: the separator client rectangle;
+        :param bool `isVertical`: ``True`` if :class:`ButtonPanel` is in vertical orientation,
          ``False`` otherwise.
         """
                     
@@ -619,10 +619,10 @@ class BPArt(object):
 
     def DrawCaption(self, dc, rect, captionText):
         """
-        Draws the main caption text in :class:`~buttonpanel.ButtonPanel`.
+        Draws the main caption text in :class:`ButtonPanel`.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `wx.Rect` `rect`: the main caption text rectangle;
+        :param `dc`: an instance of :class:`DC`;
+        :param Rect `rect`: the main caption text rectangle;
         :param string `captionText`: the caption text string.
         """
 
@@ -639,12 +639,12 @@ class BPArt(object):
     def DrawButton(self, dc, rect, buttonBitmap, isVertical, buttonStatus,
                    isToggled, textAlignment, text=""):
         """
-        Draws a button in :class:`~buttonpanel.ButtonPanel`, together with its text (if any).
+        Draws a button in :class:`ButtonPanel`, together with its text (if any).
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `wx.Rect` `rect`: the button client rectangle;
-        :param `wx.Bitmap` `buttonBitmap`: the bitmap associated with the button;
-        :param bool `isVertical`: ``True`` if :class:`~buttonpanel.ButtonPanel` is in vertical orientation,
+        :param `dc`: an instance of :class:`DC`;
+        :param Rect `rect`: the button client rectangle;
+        :param Bitmap `buttonBitmap`: the bitmap associated with the button;
+        :param bool `isVertical`: ``True`` if :class:`ButtonPanel` is in vertical orientation,
          ``False`` otherwise;
         :param string `buttonStatus`: one of "Normal", "Toggled", "Pressed", "Disabled" or "Hover";
         :param bool `isToggled`: whether the button is toggled or not;
@@ -732,7 +732,7 @@ class BPArt(object):
         """
         Draws the label for a button.
 
-        :param `dc`: an instance of `wx.DC`;
+        :param `dc`: an instance of :class:`DC`;
         :param string `text`: the button label;
         :param bool `isEnabled`: ``True`` if the button is enabled, ``False`` otherwise;
         :param integer `xpos`: the text `x` position inside the button;
@@ -749,11 +749,11 @@ class BPArt(object):
 
     def DrawButtonPanel(self, dc, rect, style):
         """
-        Paint the :class:`~buttonpanel.ButtonPanel`'s background.
+        Paint the :class:`ButtonPanel`'s background.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `wx.Rect` `rect`: the :class:`~buttonpanel.ButtonPanel` client rectangle;
-        :param integer `style`: the :class:`~buttonpanel.ButtonPanel` window style.
+        :param `dc`: an instance of :class:`DC`;
+        :param Rect `rect`: the :class:`ButtonPanel` client rectangle;
+        :param integer `style`: the :class:`ButtonPanel` window style.
         """
 
         if style & BP_USE_GRADIENT:
@@ -773,8 +773,8 @@ class BPArt(object):
         """
         Gradient fill from colour 1 to colour 2 with top to bottom or left to right.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `wx.Rect` `rect`: the :class:`~buttonpanel.ButtonPanel` client rectangle.        
+        :param `dc`: an instance of :class:`DC`;
+        :param Rect `rect`: the :class:`ButtonPanel` client rectangle.        
         """
 
         if rect.height < 1 or rect.width < 1: 
@@ -810,14 +810,14 @@ class BPArt(object):
                 
 
 class StatusBarTimer(wx.Timer):
-    """ Timer used for deleting `wx.StatusBar` long help after ``_DELAY`` seconds."""
+    """ Timer used for deleting :class:`StatusBar` long help after ``_DELAY`` seconds."""
 
     def __init__(self, owner):
         """
         Default class constructor.
         For internal use: do not call it in your code!
 
-        :param `owner`: an instance of :class:`~buttonpanel.ButtonPanel`.        
+        :param `owner`: an instance of :class:`ButtonPanel`.        
         """
         
         wx.Timer.__init__(self)
@@ -833,17 +833,17 @@ class StatusBarTimer(wx.Timer):
 class Control(wx.EvtHandler):
     """
     This class represents a base class for all pseudo controls used in
-    :class:`~buttonpanel.ButtonPanel`.
+    :class:`ButtonPanel`.
     """
 
     def __init__(self, parent, size=wx.Size(-1, -1), id=wx.ID_ANY):
         """
         Default class constructor.
         
-        :param `wx.Window` `parent`: the control parent object. Must not be ``None``;
+        :param Window `parent`: the control parent object. Must not be ``None``;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `size`: tuple or `wx.Size`
+        :type `size`: tuple or :class:`Size`
         :param integer `id`: window identifier. A value of -1 indicates a default value.
         """
 
@@ -875,7 +875,7 @@ class Control(wx.EvtHandler):
         """
         Hides the control.
 
-        :note: This is functionally equivalent of calling :meth:`~buttonpanel.Control.Show` with a ``False`` input.
+        :note: This is functionally equivalent of calling :meth:`~Control.Show` with a ``False`` input.
         """
 
         self.Show(False)
@@ -905,11 +905,11 @@ class Control(wx.EvtHandler):
         """
         This functions returns the best acceptable minimal size for the window. For
         example, for a static control, it will be the minimal size such that the control
-        label is not truncated. For windows containing subwindows (typically `wx.Panel`),
+        label is not truncated. For windows containing subwindows (typically :class:`Panel`),
         the size returned by this function will be the same as the size the window would
         have had after calling `Fit()`.
 
-        :return: An instance of `wx.Size`.
+        :return: An instance of :class:`Size`.
         """
 
         return self._size
@@ -922,7 +922,7 @@ class Control(wx.EvtHandler):
         :returns: ``True`` if the window has been disabled, ``False`` if it had been
          already disabled before the call to this function.
          
-        :note: This is functionally equivalent of calling :meth:`~buttonpanel.Control.Enable` with a ``False`` flag.
+        :note: This is functionally equivalent of calling :meth:`~Control.Enable` with a ``False`` flag.
         """
 
         return self.Enable(False)
@@ -971,7 +971,7 @@ class Control(wx.EvtHandler):
 
         :param integer `x`: the mouse `x` position;
         :param integer `y`: the mouse `y` position;
-        :param `event`: the `wx.MouseEvent` event to be processed.
+        :param `event`: the :class:`MouseEvent` event to be processed.
         """
         
         pass
@@ -981,7 +981,7 @@ class Control(wx.EvtHandler):
         """
         Handles the drawing of the control.
 
-        :param `wx.Rect` `rect`: the control client rectangle.
+        :param Rect `rect`: the control client rectangle.
         """
         
         pass
@@ -989,8 +989,8 @@ class Control(wx.EvtHandler):
 
 class Sizer(object):
     """
-    This is a mix-in class to add pseudo support to `wx.Sizer`. Just create
-    a new class that derives from this class and `wx.Sizer` and intercepts
+    This is a mix-in class to add pseudo support to :class:`Sizer`. Just create
+    a new class that derives from this class and :class:`Sizer` and intercepts
     any methods that add to the wx sizer.
     """
     
@@ -1018,7 +1018,7 @@ class Sizer(object):
         """
         This functions returns the best acceptable minimal size for the sizer object.
 
-        :return: An instance of `wx.Size`.        
+        :return: An instance of :class:`Size`.        
         """
 
         # this should be handled by the wx.Sizer based class
@@ -1027,11 +1027,11 @@ class Sizer(object):
 
 # Pseudo BoxSizer
 class BoxSizer(Sizer, wx.BoxSizer):
-    """ Pseudo-class that imitates `wx.BoxSizer`. """
+    """ Pseudo-class that imitates :class:`BoxSizer`. """
     
     def __init__(self, orient=wx.HORIZONTAL):
         """
-        Constructor for :class:`~buttonpanel.BoxSizer`.
+        Constructor for :class:`BoxSizer`.
 
         :param integer `orient`: may be one of ``wx.VERTICAL`` or ``wx.HORIZONTAL`` for creating
          either a column sizer or a row sizer.
@@ -1049,13 +1049,13 @@ class BoxSizer(Sizer, wx.BoxSizer):
         """
         Appends a child item to the sizer.
 
-        :param `item`: the item to be added to :class:`~buttonpanel.BoxSizer`. Can be an instance of `wx.Window`,
-         `wx.Sizer` or a spacer;
-        :param integer `proportion`: this parameter is used in :class:`~buttonpanel.BoxSizer` to indicate if a child of
-         a sizer can change its size in the main orientation of the :class:`~buttonpanel.BoxSizer` - where 0
+        :param `item`: the item to be added to :class:`BoxSizer`. Can be an instance of :class:`Window`,
+         :class:`Sizer` or a spacer;
+        :param integer `proportion`: this parameter is used in :class:`BoxSizer` to indicate if a child of
+         a sizer can change its size in the main orientation of the :class:`BoxSizer` - where 0
          stands for not changeable and a value of more than zero is interpreted relative
-         to the value of other children of the same :class:`~buttonpanel.BoxSizer`. For example, you might have
-         a horizontal :class:`~buttonpanel.BoxSizer` with three children, two of which are supposed to change their
+         to the value of other children of the same :class:`BoxSizer`. For example, you might have
+         a horizontal :class:`BoxSizer` with three children, two of which are supposed to change their
          size with the sizer. Then the two stretchable windows would get a value of 1 each to
          make them grow and shrink equally with the sizer's horizontal dimension.
         :param integer `flag`: this parameter can be used to set a number of flags which can be combined using the binary OR operator ``|``. 
@@ -1082,14 +1082,14 @@ class BoxSizer(Sizer, wx.BoxSizer):
          | ``wx.SHAPED``                                                       | The item will be expanded as much as possible while also                    |
          |                                                                     | maintaining its aspect ratio                                                |
          +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | ``wx.FIXED_MINSIZE``                                                | Normally `wx.Sizers` will use                                               |
-         |                                                                     | `wx.Window.GetAdjustedBestSize` to                                          |
+         | ``wx.FIXED_MINSIZE``                                                | Normally :class:`Sizer` will use                                            |
+         |                                                                     | :meth:`Window.GetAdjustedBestSize` to                                       |
          |                                                                     | determine what the minimal size of window items should be, and will use that| 
          |                                                                     | size to calculate the layout. This allows layouts to adjust when an item    |
          |                                                                     | changes and its best size becomes different. If you would rather have a     |
          |                                                                     | window item stay the size it started with then use ``wx.FIXED_MINSIZE``.    |
          +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | ``wx.RESERVE_SPACE_EVEN_IF_HIDDEN``                                 | Normally `wx.Sizers` don't allocate space for hidden windows or other items.| 
+         | ``wx.RESERVE_SPACE_EVEN_IF_HIDDEN``                                 | Normally `Sizers` don't allocate space for hidden windows or other items.   | 
          |                                                                     | This flag overrides this behavior so that sufficient space is allocated for |
          |                                                                     | the window even if it isn't visible. This makes it possible to dynamically  |
          |                                                                     | show and hide controls without resizing parent dialog, for example. This    |
@@ -1137,7 +1137,7 @@ class BoxSizer(Sizer, wx.BoxSizer):
         """
         Prepends a child item to the sizer.
 
-        :see: :meth:`~buttonpanel.BoxSizer.Add` method for an explanation of the input parameters.
+        :see: :meth:`BoxSizer.Add` method for an explanation of the input parameters.
         """
 
         # check to see if it's a pseudo object or sizer
@@ -1157,7 +1157,7 @@ class BoxSizer(Sizer, wx.BoxSizer):
         """
         Inserts a child item into the sizer.
 
-        :see: :meth:`~buttonpanel.BoxSizer.Add` method for an explanation of the input parameters.
+        :see: :meth:`BoxSizer.Add` method for an explanation of the input parameters.
         """
 
         # check to see if it's a pseudo object or sizer
@@ -1182,7 +1182,7 @@ class BoxSizer(Sizer, wx.BoxSizer):
         Removes an item from the sizer and destroys it.
 
         This method does not cause any layout or resizing to take place, call
-        :meth:`BoxSizer.Layout() <buttonpanel.BoxSizer.Layout>` to update the layout on screen after removing a child from
+        :meth:`BoxSizer.Layout() <BoxSizer.Layout>` to update the layout on screen after removing a child from
         the sizer.
 
         :param integer `indx`: the zero-based index of an item to remove;
@@ -1234,14 +1234,14 @@ class BoxSizer(Sizer, wx.BoxSizer):
 class Separator(Control):
     """
     This class holds all the information to size and draw a separator inside
-    :class:`~buttonpanel.ButtonPanel`.
+    :class:`ButtonPanel`.
     """
     
     def __init__(self, parent):
         """
         Default class constructor.
         
-        :param `parent`: the separator parent object, an instance of :class:`~buttonpanel.ButtonPanel`.
+        :param `parent`: the separator parent object, an instance of :class:`ButtonPanel`.
         """
         
         self._isshown = True
@@ -1253,7 +1253,7 @@ class Separator(Control):
         """
         Returns the separator best size.
 
-        :return: An instance of `wx.Size`.
+        :return: An instance of :class:`Size`.
         """
 
         # 10 is completely arbitrary, but it works anyhow
@@ -1265,10 +1265,10 @@ class Separator(Control):
     
     def Draw(self, dc, rect):
         """
-        Draws the separator. Actually the drawing is done in :class:`~buttonpanel.BPArt`.
+        Draws the separator. Actually the drawing is done in :class:`BPArt`.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `wx.Rect` `rect`: the separator client rectangle.
+        :param `dc`: an instance of :class:`DC`;
+        :param Rect `rect`: the separator client rectangle.
         """
 
         if not self.IsShown():
@@ -1284,13 +1284,13 @@ class Separator(Control):
 # ---------------------------------------------------------------------------- #
 
 class ButtonPanelText(Control):
-    """ This class is used to hold data about the main caption in :class:`~buttonpanel.ButtonPanel`. """
+    """ This class is used to hold data about the main caption in :class:`ButtonPanel`. """
 
     def __init__(self, parent, text=""):
         """
         Default class constructor.
         
-        :param `parent`: the text parent object, an instance of :class:`~buttonpanel.ButtonPanel`;
+        :param `parent`: the text parent object, an instance of :class:`ButtonPanel`;
         :param string `text`: the actual main caption string.
         """
 
@@ -1322,7 +1322,7 @@ class ButtonPanelText(Control):
 
 
     def CreateDC(self):
-        """ Convenience function to create a `wx.DC`. """
+        """ Convenience function to create a :class:`DC`. """
 
         dc = wx.ClientDC(self._parent)
         textFont = self._parent._art.GetFont(BP_TEXT_FONT)
@@ -1333,9 +1333,9 @@ class ButtonPanelText(Control):
         
     def GetBestSize(self):
         """
-        Returns the best size for the main caption in :class:`~buttonpanel.ButtonPanel`.
+        Returns the best size for the main caption in :class:`ButtonPanel`.
 
-        :return: An instance of `wx.Size`.
+        :return: An instance of :class:`Size`.
         """
 
         if self._text == "":
@@ -1353,10 +1353,10 @@ class ButtonPanelText(Control):
     
     def Draw(self, dc, rect):
         """
-        Draws the main caption. Actually the drawing is done in :class:`~buttonpanel.BPArt`.
+        Draws the main caption. Actually the drawing is done in :class:`BPArt`.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `wx.Rect` `rect`: the main caption text client rectangle.
+        :param `dc`: an instance of :class:`DC`;
+        :param Rect `rect`: the main caption text client rectangle.
         """
 
         if not self.IsShown():
@@ -1374,7 +1374,7 @@ class ButtonPanelText(Control):
 class ButtonInfo(Control):
     """
     This class holds information about every button that is added to
-    :class:`~buttonpanel.ButtonPanel`. It is an auxiliary class that you should use
+    :class:`ButtonPanel`. It is an auxiliary class that you should use
     every time you add a button.
     """
     def __init__(self, parent, id=wx.ID_ANY, bmp=wx.NullBitmap,
@@ -1383,9 +1383,9 @@ class ButtonInfo(Control):
         """
         Default class constructor.
 
-        :param `parent`: the parent window (:class:`~buttonpanel.ButtonPanel`);
+        :param `parent`: the parent window (:class:`ButtonPanel`);
         :param integer `id`: the button id;
-        :param `wx.Bitmap` `bmp`: the associated bitmap;
+        :param Bitmap `bmp`: the associated bitmap;
         :param string `status`: button status ("Pressed", "Hover", "Normal", "Toggled", "Disabled");
         :param string `text`: text to be displayed either below of to the right of the button;
         :param integer `kind`: button kind, may be ``wx.ITEM_NORMAL`` for standard buttons or
@@ -1422,7 +1422,7 @@ class ButtonInfo(Control):
         """
         Returns the best size for the button.
 
-        :return: An instance of `wx.Size`.
+        :return: An instance of :class:`Size`.
         """
 
         xsize = self.GetBitmap().GetWidth()
@@ -1457,10 +1457,10 @@ class ButtonInfo(Control):
     
     def Draw(self, dc, rect):
         """
-        Draws the button on :class:`~buttonpanel.ButtonPanel`. Actually the drawing is done in :class:`~buttonpanel.BPArt`.
+        Draws the button on :class:`ButtonPanel`. Actually the drawing is done in :class:`BPArt`.
 
-        :param `dc`: an instance of `wx.DC`;
-        :param `wx.Rect` `rect`: the main caption text client rectangle.
+        :param `dc`: an instance of :class:`DC`;
+        :param Rect `rect`: the main caption text client rectangle.
         """
 
         if not self.IsShown():
@@ -1481,10 +1481,10 @@ class ButtonInfo(Control):
         
     def CheckRefresh(self, status):
         """
-        Checks whether a :class:`~buttonpanel.ButtonPanel` repaint is needed or not. This is a convenience function.
+        Checks whether a :class:`ButtonPanel` repaint is needed or not. This is a convenience function.
 
-        :param bool `status`: the status of a newly added :class:`~buttonpanel.ButtonInfo` or a change in the
-         :class:`~buttonpanel.ButtonInfo` status.
+        :param bool `status`: the status of a newly added :class:`ButtonInfo` or a change in the
+         :class:`ButtonInfo` status.
         """
 
         if status == self._status:
@@ -1493,10 +1493,10 @@ class ButtonInfo(Control):
         
     def SetBitmap(self, bmp, status="Normal"):
         """
-        Sets the bitmap associated with this instance of :class:`~buttonpanel.ButtonInfo`.
+        Sets the bitmap associated with this instance of :class:`ButtonInfo`.
 
-        :param `bmp`: a valid `wx.Bitmap` object;
-        :param string `status`: the :class:`~buttonpanel.ButtonInfo` status ("Pressed", "Hover", "Normal",
+        :param `bmp`: a valid :class:`Bitmap` object;
+        :param string `status`: the :class:`ButtonInfo` status ("Pressed", "Hover", "Normal",
          "Toggled", "Disabled").
         """
 
@@ -1506,12 +1506,12 @@ class ButtonInfo(Control):
 
     def GetBitmap(self, status=None):
         """
-        Returns the bitmap associated with this instance of :class:`~buttonpanel.ButtonInfo`.
+        Returns the bitmap associated with this instance of :class:`ButtonInfo`.
 
-        :param string `status`: the :class:`~buttonpanel.ButtonInfo` status ("Pressed", "Hover", "Normal",
+        :param string `status`: the :class:`ButtonInfo` status ("Pressed", "Hover", "Normal",
          "Toggled", "Disabled").
 
-        :return: An instance of `wx.Bitmap`.         
+        :return: An instance of :class:`Bitmap`.         
         """
 
         if status is None:
@@ -1531,9 +1531,9 @@ class ButtonInfo(Control):
 
     def GetRect(self):
         """
-        Returns the :class:`~buttonpanel.ButtonInfo` client rectangle.
+        Returns the :class:`ButtonInfo` client rectangle.
 
-        :return: An instance of `wx.Rect`.
+        :return: An instance of :class:`Rect`.
         """
 
         return self._rect
@@ -1541,9 +1541,9 @@ class ButtonInfo(Control):
 
     def GetStatus(self):
         """
-        Returns the :class:`~buttonpanel.ButtonInfo` status.
+        Returns the :class:`ButtonInfo` status.
 
-        :return: A string containing the :class:`~buttonpanel.ButtonInfo` status (one of "Pressed", "Hover", "Normal",
+        :return: A string containing the :class:`ButtonInfo` status (one of "Pressed", "Hover", "Normal",
          "Toggled", "Disabled").
         """
 
@@ -1552,7 +1552,7 @@ class ButtonInfo(Control):
 
     def GetId(self):
         """
-        Returns the :class:`~buttonpanel.ButtonInfo` id.
+        Returns the :class:`ButtonInfo` id.
 
         :return: An integer representing the button id.
         """
@@ -1562,9 +1562,9 @@ class ButtonInfo(Control):
 
     def SetRect(self, rect):
         """
-        Sets the :class:`~buttonpanel.ButtonInfo` client rectangle.
+        Sets the :class:`ButtonInfo` client rectangle.
 
-        :param `rect`: an instance of `wx.Rect`.
+        :param `rect`: an instance of :class:`Rect`.
         """
 
         self._rect = rect
@@ -1572,7 +1572,7 @@ class ButtonInfo(Control):
 
     def SetStatus(self, status):
         """
-        Sets the :class:`~buttonpanel.ButtonInfo` status.
+        Sets the :class:`ButtonInfo` status.
 
         :param string `status`: one of "Pressed", "Hover", "Normal", "Toggled", "Disabled".
         """
@@ -1591,7 +1591,7 @@ class ButtonInfo(Control):
         """
         Returns the text alignment in the button (bottom or right).
 
-        :return: An integer representing the :class:`~buttonpanel.ButtonInfo` text alignment.
+        :return: An integer representing the :class:`ButtonInfo` text alignment.
         """
 
         return self._textAlignment
@@ -1601,7 +1601,7 @@ class ButtonInfo(Control):
         """
         Sets the text alignment in the button (bottom or right).
 
-        :param integer `alignment`: the text alignment in this :class:`~buttonpanel.ButtonInfo` instance.
+        :param integer `alignment`: the text alignment in this :class:`ButtonInfo` instance.
         """
 
         if alignment == self._textAlignment:
@@ -1638,7 +1638,7 @@ class ButtonInfo(Control):
 
     def SetId(self, id):
         """
-        Sets the :class:`~buttonpanel.ButtonInfo` identifier.
+        Sets the :class:`ButtonInfo` identifier.
 
         :param integer `id`: the identifier of the window.
         """
@@ -1657,7 +1657,7 @@ class ButtonInfo(Control):
          - Toggled.
 
         :param string `name`: the new status name;
-        :param `wx.Bitmap` `bmp`: the bitmap associated with the new status.
+        :param Bitmap `bmp`: the bitmap associated with the new status.
         """
 
         self._bitmaps.update({name: bmp})
@@ -1665,7 +1665,7 @@ class ButtonInfo(Control):
 
     def Enable(self, enable=True):
         """
-        Enables/disables this instance of :class:`~buttonpanel.ButtonInfo`.
+        Enables/disables this instance of :class:`ButtonInfo`.
 
         :param bool `enable`: ``True`` to enable the button, ``False`` otherwise.
         """
@@ -1678,7 +1678,7 @@ class ButtonInfo(Control):
 
     def IsEnabled(self):
         """
-        Returns ``True`` if this instance of :class:`~buttonpanel.ButtonInfo` is enabled for input,
+        Returns ``True`` if this instance of :class:`ButtonInfo` is enabled for input,
         ``False`` otherwise.
         """
         
@@ -1699,7 +1699,7 @@ class ButtonInfo(Control):
         """
         Returns the text associated to the button.
 
-        :return: A string containing the :class:`~buttonpanel.ButtonInfo` text.
+        :return: A string containing the :class:`ButtonInfo` text.
         """
 
         return self._text
@@ -1709,7 +1709,7 @@ class ButtonInfo(Control):
         """
         Returns whether the button has text or not.
 
-        :return: ``True`` if this :class:`~buttonpanel.ButtonInfo` instance has a label, ``False`` otherwise.
+        :return: ``True`` if this :class:`ButtonInfo` instance has a label, ``False`` otherwise.
         """
 
         return self._text != ""
@@ -1749,7 +1749,7 @@ class ButtonInfo(Control):
         """
         Returns the help string shown in a tooltip.
 
-        :return: A string containing the :class:`~buttonpanel.ButtonInfo` short help string.
+        :return: A string containing the :class:`ButtonInfo` short help string.
         """
 
         return self._shortHelp
@@ -1769,7 +1769,7 @@ class ButtonInfo(Control):
         """
         Returns the help string shown in the statusbar.
 
-        :return: A string containing the :class:`~buttonpanel.ButtonInfo` long help string.
+        :return: A string containing the :class:`ButtonInfo` long help string.
         """
 
         return self._longHelp
@@ -1795,9 +1795,9 @@ class ButtonPanel(wx.PyPanel):
         """
         Default class constructor.
 
-        :param `wx.Window` `parent`: the parent window. Must not be ``None``;
+        :param Window `parent`: the parent window. Must not be ``None``;
         :param integer `id`: window identifier. If ``wx.ID_ANY``, will automatically create an identifier;
-        :param string `text`: the main caption text for :class:`~buttonpanel.ButtonPanel`;
+        :param string `text`: the main caption text for :class:`ButtonPanel`;
         :param integer `agwStyle`: the AGW-specific window style (one of ``BP_DEFAULT_STYLE``, ``BP_USE_GRADIENT``);
         :param integer `alignment`: alignment of buttons (left or right);
         :param string `name`: window class name.
@@ -1921,9 +1921,9 @@ class ButtonPanel(wx.PyPanel):
 
     def HasBarText(self):
         """
-        Returns whether :class:`~buttonpanel.ButtonPanel` has a main caption text or not.
+        Returns whether :class:`ButtonPanel` has a main caption text or not.
 
-        :return: ``True`` if :class:`~buttonpanel.ButtonPanel` has a main caption text, ``False`` otherwise.
+        :return: ``True`` if :class:`ButtonPanel` has a main caption text, ``False`` otherwise.
         """
 
         return hasattr(self, "_text") and self._text.GetText() != ""
@@ -1931,12 +1931,12 @@ class ButtonPanel(wx.PyPanel):
             
     def AddButton(self, btnInfo):
         """
-        Adds a button to :class:`~buttonpanel.ButtonPanel`.
+        Adds a button to :class:`ButtonPanel`.
 
-        :param `btnInfo`: an instance of :class:`~buttonpanel.ButtonInfo`.
+        :param `btnInfo`: an instance of :class:`ButtonInfo`.
         
-        :note: Remember to pass a :class:`~buttonpanel.ButtonInfo` instance to this method, and not a
-         standard `wx.Button` or a `wx.ToolBar` tool.
+        :note: Remember to pass a :class:`ButtonInfo` instance to this method, and not a
+         standard :class:`Button` or a :class:`ToolBar` tool.
         """
 
         lenChildren = len(self._mainsizer.GetChildren())
@@ -1947,12 +1947,12 @@ class ButtonPanel(wx.PyPanel):
 
     def AddSpacer(self, size=(0, 0), proportion=1, flag=wx.EXPAND):
         """
-        Adds a spacer (stretchable or fixed-size) to :class:`~buttonpanel.ButtonPanel`.
+        Adds a spacer (stretchable or fixed-size) to :class:`ButtonPanel`.
 
         :param tuple `size`: the spacer size as a tuple;
         :param integer `proportion`: the spacer proportion (0 for fixed-size, 1 or more for a
          stretchable one);
-        :param integer `flag`: one of the `wx.BoxSizer` flags. 
+        :param integer `flag`: one of the :class:`BoxSizer` flags. 
         """
 
         lenChildren = len(self._mainsizer.GetChildren())
@@ -1961,12 +1961,12 @@ class ButtonPanel(wx.PyPanel):
 
     def AddControl(self, control, proportion=0, flag=wx.ALIGN_CENTER|wx.ALL, border=None):
         """
-        Adds a wxPython control to :class:`~buttonpanel.ButtonPanel`.
+        Adds a wxPython control to :class:`ButtonPanel`.
 
-        :param `control`: an instance of `wx.Window`;
+        :param `control`: an instance of :class:`Window`;
         :param integer `proportion`: the control proportion (0 for fixed-size, 1 or more for a
          stretchable one);
-        :param integer `flag`: one of the `wx.BoxSizer` flags;
+        :param integer `flag`: one of the :class:`BoxSizer` flags;
         :param integer `border`: the control border width (in pixels), if the `flag` parameter
          is set to include any border flag.        
         """
@@ -1981,7 +1981,7 @@ class ButtonPanel(wx.PyPanel):
         
 
     def AddSeparator(self):
-        """ Adds a separator line to :class:`~buttonpanel.ButtonPanel`. """
+        """ Adds a separator line to :class:`ButtonPanel`. """
 
         lenChildren = len(self._mainsizer.GetChildren())
         separator = Separator(self)
@@ -1992,11 +1992,11 @@ class ButtonPanel(wx.PyPanel):
 
     def RemoveAllButtons(self):
         """
-        Remove all the buttons from :class:`~buttonpanel.ButtonPanel`.
+        Remove all the buttons from :class:`ButtonPanel`.
         
         :note: This function is for internal use only. If you are interested in
-         manipulating a :class:`~buttonpanel.ButtonPanel` in real time (ie. removing things on it)
-         have a look at the :meth:`~buttonpanel.ButtonPanel.Clear` method.
+         manipulating a :class:`ButtonPanel` in real time (ie. removing things on it)
+         have a look at the :meth:`~ButtonPanel.Clear` method.
         """
 
         self._vButtons = []
@@ -2004,11 +2004,11 @@ class ButtonPanel(wx.PyPanel):
         
     def RemoveAllSeparators(self):
         """
-        Remove all the separators from :class:`~buttonpanel.ButtonPanel`.
+        Remove all the separators from :class:`ButtonPanel`.
         
         :note: This function is for internal use only. If you are interested in
-         manipulating a :class:`~buttonpanel.ButtonPanel` in real time (ie. removing things on it)
-         have a look at the :meth:`~buttonpanel.ButtonPanel.Clear` method.
+         manipulating a :class:`ButtonPanel` in real time (ie. removing things on it)
+         have a look at the :meth:`~ButtonPanel.Clear` method.
         """
 
         self._vSeparators = []
@@ -2016,9 +2016,9 @@ class ButtonPanel(wx.PyPanel):
 
     def Clear(self):
         """
-        Clears the :class:`~buttonpanel.ButtonPanel`.
+        Clears the :class:`ButtonPanel`.
         
-        Can be used to reset the :class:`~buttonpanel.ButtonPanel` if you'd like have a new set of
+        Can be used to reset the :class:`ButtonPanel` if you'd like have a new set of
         buttons on the panel.
         """
         
@@ -2040,7 +2040,7 @@ class ButtonPanel(wx.PyPanel):
 
         :return: An integer specifying the buttons alignment.
         
-        :see: :meth:`~buttonpanel.ButtonPanel.SetAlignment` for a set of valid alignment bits.
+        :see: :meth:`~ButtonPanel.SetAlignment` for a set of valid alignment bits.
         """
 
         return self._alignment
@@ -2084,9 +2084,9 @@ class ButtonPanel(wx.PyPanel):
 
     def IsVertical(self):
         """
-        Returns whether :class:`~buttonpanel.ButtonPanel` is vertically aligned or not.
+        Returns whether :class:`ButtonPanel` is vertically aligned or not.
 
-        :return: ``True`` if :class:`~buttonpanel.ButtonPanel` is vertically aligned, ``False`` otherwise.
+        :return: ``True`` if :class:`ButtonPanel` is vertically aligned, ``False`` otherwise.
         """
 
         return self._alignment not in [BP_ALIGN_RIGHT, BP_ALIGN_LEFT]
@@ -2094,9 +2094,9 @@ class ButtonPanel(wx.PyPanel):
 
     def IsStandard(self):
         """
-        Returns whether :class:`~buttonpanel.ButtonPanel` is aligned "Standard" (left/top) or not.
+        Returns whether :class:`ButtonPanel` is aligned "Standard" (left/top) or not.
 
-        :return: ``True`` if :class:`~buttonpanel.ButtonPanel` is aligned "standard", ``False`` otherwise.
+        :return: ``True`` if :class:`ButtonPanel` is aligned "standard", ``False`` otherwise.
         """
 
         return self._alignment in [BP_ALIGN_LEFT, BP_ALIGN_TOP]
@@ -2104,7 +2104,7 @@ class ButtonPanel(wx.PyPanel):
 
     def DoLayout(self):
         """
-        Do the Layout for :class:`~buttonpanel.ButtonPanel`.
+        Do the Layout for :class:`ButtonPanel`.
         
         :note: Call this method every time you make a modification to the layout
          or to the customizable sizes of the pseudo controls.
@@ -2131,7 +2131,7 @@ class ButtonPanel(wx.PyPanel):
 
     def ReCreateSizer(self, text=None):
         """
-        Recreates the :class:`~buttonpanel.ButtonPanel` sizer accordingly to the alignment specified.
+        Recreates the :class:`ButtonPanel` sizer accordingly to the alignment specified.
 
         :param string `text`: the text to display as main caption. If `text` is set to ``None``,
          the main caption will not be displayed.
@@ -2186,13 +2186,13 @@ class ButtonPanel(wx.PyPanel):
 
     def DoGetBestSize(self):
         """
-        Gets the size which best suits :class:`~buttonpanel.ButtonPanel`: for a control, it would be
+        Gets the size which best suits :class:`ButtonPanel`: for a control, it would be
         the minimal size which doesn't truncate the control, for a panel - the
         same size as it would have after a call to `Fit()`.
 
-        :return: An instance of `wx.Size`.
+        :return: An instance of :class:`Size`.
 
-        :note: Overridden from `wx.PyPanel`.        
+        :note: Overridden from :class:`PyPanel`.        
         """
 
         w = h = btnWidth = btnHeight = 0
@@ -2249,9 +2249,9 @@ class ButtonPanel(wx.PyPanel):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`~buttonpanel.ButtonPanel`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`ButtonPanel`.
 
-        :param `event`: a `wx.PaintEvent` event to be processed.
+        :param `event`: a :class:`PaintEvent` event to be processed.
         """
 
         dc = wx.BufferedPaintDC(self) 
@@ -2263,9 +2263,9 @@ class ButtonPanel(wx.PyPanel):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~buttonpanel.ButtonPanel`.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`ButtonPanel`.
 
-        :param `event`: a `wx.EraseEvent` event to be processed.
+        :param `event`: a :class:`EraseEvent` event to be processed.
 
         :note: This is intentionally empty to reduce flicker.
         """
@@ -2275,12 +2275,12 @@ class ButtonPanel(wx.PyPanel):
  
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for :class:`~buttonpanel.ButtonPanel`.
+        Handles the ``wx.EVT_SIZE`` event for :class:`ButtonPanel`.
 
-        :param `event`: a `wx.SizeEvent` event to be processed.
+        :param `event`: a :class:`SizeEvent` event to be processed.
 
-        :todo: Improve the chain of methods :meth:`~buttonpanel.ButtonPanel.OnSize` ==> :meth:`~buttonpanel.ButtonPanel.DoLayout` ==> :meth:`~buttonpanel.ButtonPanel.LayoutItems`
-         to avoid multiple calls to :meth:`~buttonpanel.ButtonPanel.LayoutItems`.
+        :todo: Improve the chain of methods :meth:`~ButtonPanel.OnSize` ==> :meth:`~ButtonPanel.DoLayout` ==> :meth:`~ButtonPanel.LayoutItems`
+         to avoid multiple calls to :meth:`~ButtonPanel.LayoutItems`.
         """
 
         # NOTE: It seems like LayoutItems number of calls can be optimized in some way.
@@ -2313,7 +2313,7 @@ class ButtonPanel(wx.PyPanel):
         Layout the items when no main caption exists.
 
         :param list `nonspacers`: a list of items which are not spacers;
-        :param list `children`: a list of all the children of :class:`~buttonpanel.ButtonPanel`.
+        :param list `children`: a list of all the children of :class:`ButtonPanel`.
         """
 
         size = self.GetSize()
@@ -2336,13 +2336,13 @@ class ButtonPanel(wx.PyPanel):
 
     def GetItemSize(self, item, isVertical):
         """
-        Returns the size of an item in the main :class:`~buttonpanel.ButtonPanel` sizer.
+        Returns the size of an item in the main :class:`ButtonPanel` sizer.
 
-        :param `item`: an instance of :class:`~buttonpanel.ButtonInfo`;
-        :param bool `isVertical`: ``True`` if :class:`~buttonpanel.ButtonPanel` is in vertical orientation,
+        :param `item`: an instance of :class:`ButtonInfo`;
+        :param bool `isVertical`: ``True`` if :class:`ButtonPanel` is in vertical orientation,
          ``False`` otherwise.
 
-        :return: An instance of `wx.Size`.
+        :return: An instance of :class:`Size`.
         """
         
         if item.GetUserData():
@@ -2356,7 +2356,7 @@ class ButtonPanel(wx.PyPanel):
         Layout the items when the main caption exists.
 
         :param list `nonspacers`: a list of items which are not spacers;
-        :param list `allchildren`: a list of all the children of :class:`~buttonpanel.ButtonPanel`.
+        :param list `allchildren`: a list of all the children of :class:`ButtonPanel`.
         """
 
         if len(nonspacers) < 2:
@@ -2400,10 +2400,10 @@ class ButtonPanel(wx.PyPanel):
         
     def GetNonFlexibleChildren(self):
         """
-        Returns all the :class:`~buttonpanel.ButtonPanel` main sizer's children that are not
+        Returns all the :class:`ButtonPanel` main sizer's children that are not
         flexible spacers.
 
-        :return: A list of items inside :class:`~buttonpanel.ButtonPanel` that are not flexible spacers.
+        :return: A list of items inside :class:`ButtonPanel` that are not flexible spacers.
         """
 
         children1 = []
@@ -2421,9 +2421,9 @@ class ButtonPanel(wx.PyPanel):
 
     def GetControls(self):
         """
-        Returns the wxPython controls that belongs to :class:`~buttonpanel.ButtonPanel`.
+        Returns the wxPython controls that belongs to :class:`ButtonPanel`.
 
-        :return: A list of items inside :class:`~buttonpanel.ButtonPanel` that are wxPython controls.
+        :return: A list of items inside :class:`ButtonPanel` that are wxPython controls.
         """
     
         children2 = self._mainsizer.GetChildren()
@@ -2434,15 +2434,15 @@ class ButtonPanel(wx.PyPanel):
 
     def SetStyle(self, agwStyle):
         """
-        Sets the :class:`~buttonpanel.ButtonPanel` window style.
+        Sets the :class:`ButtonPanel` window style.
 
         :param integer `agwStyle`: one of the following bits:
 
          ==================== =========== ==================================================
          Window Styles        Hex Value   Description
          ==================== =========== ==================================================
-         ``BP_DEFAULT_STYLE``         0x1 :class:`~buttonpanel.ButtonPanel` has a plain solid background.
-         ``BP_USE_GRADIENT``          0x2 :class:`~buttonpanel.ButtonPanel` has a gradient shading background.
+         ``BP_DEFAULT_STYLE``         0x1 :class:`ButtonPanel` has a plain solid background.
+         ``BP_USE_GRADIENT``          0x2 :class:`ButtonPanel` has a gradient shading background.
          ==================== =========== ==================================================
 
         """
@@ -2456,9 +2456,9 @@ class ButtonPanel(wx.PyPanel):
 
     def GetStyle(self):
         """
-        Returns the :class:`~buttonpanel.ButtonPanel` window style.
+        Returns the :class:`ButtonPanel` window style.
 
-        :see: :meth:`~buttonpanel.ButtonPanel.SetStyle` for a list of valid window styles.        
+        :see: :meth:`~ButtonPanel.SetStyle` for a list of valid window styles.        
         """
 
         return self._agwStyle
@@ -2466,9 +2466,9 @@ class ButtonPanel(wx.PyPanel):
         
     def OnMouseMove(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for :class:`~buttonpanel.ButtonPanel`.
+        Handles the ``wx.EVT_MOTION`` event for :class:`ButtonPanel`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.        
+        :param `event`: a :class:`MouseEvent` event to be processed.        
         """
 
         # Check to see if we are hovering a button
@@ -2507,9 +2507,9 @@ class ButtonPanel(wx.PyPanel):
 
     def OnLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`~buttonpanel.ButtonPanel`.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`ButtonPanel`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.        
+        :param `event`: a :class:`MouseEvent` event to be processed.        
         """
  
         tabId, hit = self.HitTest(event.GetPosition())
@@ -2523,9 +2523,9 @@ class ButtonPanel(wx.PyPanel):
 
     def OnLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for :class:`~buttonpanel.ButtonPanel`.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`ButtonPanel`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.        
+        :param `event`: a :class:`MouseEvent` event to be processed.        
         """
         
         tabId, flags = self.HitTest(event.GetPosition())
@@ -2558,9 +2558,9 @@ class ButtonPanel(wx.PyPanel):
 
     def OnMouseLeave(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`~buttonpanel.ButtonPanel`.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`ButtonPanel`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.        
+        :param `event`: a :class:`MouseEvent` event to be processed.        
         """
 
         # Reset all buttons statuses
@@ -2576,9 +2576,9 @@ class ButtonPanel(wx.PyPanel):
 
     def OnMouseEnterWindow(self, event):
         """
-        Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`~buttonpanel.ButtonPanel`.
+        Handles the ``wx.EVT_ENTER_WINDOW`` event for :class:`ButtonPanel`.
 
-        :param `event`: a `wx.MouseEvent` event to be processed.        
+        :param `event`: a :class:`MouseEvent` event to be processed.        
         """
 
         tabId, flags = self.HitTest(event.GetPosition())
@@ -2599,9 +2599,9 @@ class ButtonPanel(wx.PyPanel):
 
     def DoGiveHelp(self, hit):
         """
-        Shows tooltips and long help strings in `wx.StatusBar`.
+        Shows tooltips and long help strings in :class:`StatusBar`.
 
-        :param `hit`: an instance of :class:`~buttonpanel.ButtonInfo` where the mouse is hovering.
+        :param `hit`: an instance of :class:`ButtonInfo` where the mouse is hovering.
         """
 
         if not self.GetUseHelp():
@@ -2664,7 +2664,7 @@ class ButtonPanel(wx.PyPanel):
 
                 
     def OnStatusBarTimer(self):
-        """ Handles the timer expiring to delete the long help string in `wx.StatusBar`. """
+        """ Handles the timer expiring to delete the long help string in :class:`StatusBar`. """
 
         topLevel = wx.GetTopLevelParent(self)
         statusBar = topLevel.GetStatusBar()        
@@ -2674,10 +2674,10 @@ class ButtonPanel(wx.PyPanel):
     def SetUseHelp(self, useHelp=True):
         """
         Sets whether or not short and long help strings should be displayed as tooltips
-        and `wx.StatusBar` items respectively.
+        and :class:`StatusBar` items respectively.
 
         :param bool `useHelp`: ``True`` to display short and long help strings as tooltips
-         and `wx.StatusBar` items respectively, ``False`` otherwise.
+         and :class:`StatusBar` items respectively, ``False`` otherwise.
         """
 
         self._useHelp = useHelp
@@ -2686,10 +2686,10 @@ class ButtonPanel(wx.PyPanel):
     def GetUseHelp(self):
         """
         Returns whether or not short and long help strings should be displayed as tooltips
-        and `wx.StatusBar` items respectively.
+        and :class:`StatusBar` items respectively.
 
         :return: ``True`` if the short and long help strings should be displayed as tooltips
-         and `wx.StatusBar` items respectively, ``False`` otherwise.
+         and :class:`StatusBar` items respectively, ``False`` otherwise.
         """
         
         return self._useHelp
@@ -2697,11 +2697,11 @@ class ButtonPanel(wx.PyPanel):
     
     def HitTest(self, pt):
         """
-        HitTest method for :class:`~buttonpanel.ButtonPanel`.
+        HitTest method for :class:`ButtonPanel`.
 
-        :param `pt`: the mouse position, an instance of `wx.Point`.
+        :param `pt`: the mouse position, an instance of :class:`Point`.
         
-        :returns: an instance of :class:`~buttonpanel.ButtonInfo` and the hit flag ``BP_HT_BUTTON`` if a button
+        :returns: an instance of :class:`ButtonInfo` and the hit flag ``BP_HT_BUTTON`` if a button
          client rectangle contains the input point `pt`, or ``wx.NOT_FOUND`` and ``BP_HT_NONE``.
         """
          
@@ -2715,16 +2715,16 @@ class ButtonPanel(wx.PyPanel):
  
 
     def GetBPArt(self):
-        """ Returns the associated :class:`~buttonpanel.BPArt` art provider. """
+        """ Returns the associated :class:`BPArt` art provider. """
 
         return self._art
     
 
     def SetBPArt(self, art):
         """
-        Sets a new :class:`~buttonpanel.BPArt` art provider to :class:`~buttonpanel.ButtonPanel`.
+        Sets a new :class:`BPArt` art provider to :class:`ButtonPanel`.
 
-        :param `art`: an instance of :class:`~buttonpanel.BPArt`.
+        :param `art`: an instance of :class:`BPArt`.
         """
         
         self._art = art
@@ -2735,7 +2735,7 @@ class ButtonPanel(wx.PyPanel):
         def Freeze(self):
             """
             Freezes the window or, in other words, prevents any updates from taking place
-            on screen, the window is not redrawn at all. :meth:`~buttonpanel.ButtonPanel.Thaw` must be called to reenable
+            on screen, the window is not redrawn at all. :meth:`~ButtonPanel.Thaw` must be called to reenable
             window redrawing. Calls to these two functions may be nested.
 
             :note: This method is useful for visual appearance optimization.
@@ -2747,8 +2747,8 @@ class ButtonPanel(wx.PyPanel):
 
         def Thaw(self):
             """
-            Reenables window updating after a previous call to :meth:`~buttonpanel.ButtonPanel.Freeze`. To really thaw the
-            control, it must be called exactly the same number of times as :meth:`~buttonpanel.ButtonPanel.Freeze`.
+            Reenables window updating after a previous call to :meth:`~ButtonPanel.Freeze`. To really thaw the
+            control, it must be called exactly the same number of times as :meth:`~ButtonPanel.Freeze`.
             """
 
             if self._freezeCount == 0:
@@ -2759,7 +2759,7 @@ class ButtonPanel(wx.PyPanel):
         
 
         def IsFrozen(self):
-            """ Returns ``True`` if the window is currently frozen by a call to :meth:`~buttonpanel.ButtonPanel.Freeze`. """
+            """ Returns ``True`` if the window is currently frozen by a call to :meth:`~ButtonPanel.Freeze`. """
 
             return self._freezeCount != 0
 

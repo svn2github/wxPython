@@ -23,7 +23,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-This class is a possible, fancy replacement for `wx.MessageDialog`.
+This class is a possible, fancy replacement for :class:`MessageDialog`.
 
 
 Description
@@ -31,7 +31,7 @@ Description
 
 This class represents a dialog that shows a single or multi-line message,
 with a choice of ``OK``, ``Yes``, ``No``, ``Cancel`` and ``Help`` buttons. It is a possible
-replacement for the standard `wx.MessageDialog`, with these extra functionalities:
+replacement for the standard :class:`MessageDialog`, with these extra functionalities:
 
 * Possibility to modify the dialog position;
 * Custom themed generic bitmap & text buttons;
@@ -40,8 +40,8 @@ replacement for the standard `wx.MessageDialog`, with these extra functionalitie
 * Custom icons for the ``OK``, ``Yes``, ``No``, ``Cancel`` and ``Help`` buttons;
 * Possibility to set an icon to the dialog;
 * More visibility to the button getting the focus;
-* Support for Aqua buttons or Gradient buttons instead of themed ones (see :class:`~aquabutton.AquaButton`
-  and :class:`~gradientbutton.GradientButton`);
+* Support for Aqua buttons or Gradient buttons instead of themed ones (see :class:`AquaButton`
+  and :class:`GradientButton`);
 * Possibility to automatically wrap long lines of text;
 * Good old Python code :-D .
 
@@ -74,7 +74,7 @@ Usage example::
 Supported Platforms
 ===================
 
-:class:`~genericmessagedialog.GenericMessageDialog` has been tested on the following platforms:
+:class:`GenericMessageDialog` has been tested on the following platforms:
   * Windows (Windows XP).
 
 
@@ -87,8 +87,8 @@ This class supports the following window styles:
 Window Styles               Hex Value   Description
 =========================== =========== ==================================================
 ``GMD_DEFAULT``                     0x0 Uses generic buttons.
-``GMD_USE_AQUABUTTONS``            0x20 Uses `wx.lib.agw.aquabutton` buttons instead of generic buttons.
-``GMD_USE_GRADIENTBUTTONS``        0x40 Uses `wx.lib.agw.gradientbutton` buttons instead of generic buttons.
+``GMD_USE_AQUABUTTONS``            0x20 Uses :mod:`lib.agw.aquabutton` buttons instead of generic buttons.
+``GMD_USE_GRADIENTBUTTONS``        0x40 Uses :mod:`lib.agw.gradientbutton` buttons instead of generic buttons.
 =========================== =========== ==================================================
 
 The styles above are mutually exclusive. The style chosen above can be combined with a
@@ -119,7 +119,7 @@ Events Processing
 License And Version
 ===================
 
-:class:`~genericmessagedialog.GenericMessageDialog` is distributed under the wxPython license.
+:class:`GenericMessageDialog` is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
 
@@ -141,13 +141,13 @@ import gradientbutton as GB
 GMD_DEFAULT = 0
 """ Uses generic buttons. """
 GMD_USE_AQUABUTTONS = 32
-""" Uses `wx.lib.agw.aquabutton` buttons instead of generic buttons. """
+""" Uses :mod:`lib.agw.aquabutton` buttons instead of generic buttons. """
 GMD_USE_GRADIENTBUTTONS = 64
-""" Uses `wx.lib.agw.gradientbutton` buttons instead of generic buttons. """
+""" Uses :mod:`lib.agw.gradientbutton` buttons instead of generic buttons. """
 
 # Avoid 2.9 errors
 BUTTON_SIZER_FLAGS = wx.OK | wx.CANCEL | wx.YES | wx.NO | wx.HELP | wx.NO_DEFAULT
-""" Flag used to mask the :class:`~genericmessagedialog.GenericMessageDialog` AGW-specific style. """
+""" Flag used to mask the :class:`GenericMessageDialog` AGW-specific style. """
 
 _ = wx.GetTranslation
 
@@ -599,8 +599,8 @@ class StdDialogButtonSizer(wx.BoxSizer):
 
 class GenericMessageDialog(wx.Dialog):
     """
-    Main class implementation, :class:`~genericmessagedialog.GenericMessageDialog` is a possible replacement
-    for the standard `wx.MessageDialog`.
+    Main class implementation, :class:`GenericMessageDialog` is a possible replacement
+    for the standard :class:`MessageDialog`.
     """
 
     def __init__(self, parent, message, caption, agwStyle,
@@ -608,9 +608,9 @@ class GenericMessageDialog(wx.Dialog):
                  style=wx.DEFAULT_DIALOG_STYLE|wx.WANTS_CHARS,
                  wrap=-1):
         """
-        Default class constructor. Use :meth:`~genericmessagedialog.GenericMessageDialog.ShowModal` to show the dialog.
+        Default class constructor. Use :meth:`~GenericMessageDialog.ShowModal` to show the dialog.
 
-        :param `parent`: the :class:`~genericmessagedialog.GenericMessageDialog` parent (if any);
+        :param `parent`: the :class:`GenericMessageDialog` parent (if any);
         :param `message`: the message in the main body of the dialog;
         :param `caption`: the dialog title;
         :param `agwStyle`: the AGW-specific dialog style; it can be one of the
@@ -620,8 +620,8 @@ class GenericMessageDialog(wx.Dialog):
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
          ``GMD_DEFAULT``                       0 Uses normal generic buttons
-         ``GMD_USE_AQUABUTTONS``            0x20 Uses :class:`~aquabutton.AquaButton` buttons instead of generic buttons.
-         ``GMD_USE_GRADIENTBUTTONS``        0x40 Uses :class:`~gradientbutton.GradientButton` buttons instead of generic buttons.
+         ``GMD_USE_AQUABUTTONS``            0x20 Uses :class:`AquaButton` buttons instead of generic buttons.
+         ``GMD_USE_GRADIENTBUTTONS``        0x40 Uses :class:`GradientButton` buttons instead of generic buttons.
          =========================== =========== ==================================================
 
          The styles above are mutually exclusive. The style chosen above can be combined with a
@@ -644,7 +644,7 @@ class GenericMessageDialog(wx.Dialog):
 
         :param `pos`: the dialog position on screen;
         :param `size`: the dialog size;
-        :param `style`: the underlying `wx.Dialog` style;
+        :param `style`: the underlying :class:`Dialog` style;
         :param `wrap`: if set greater than zero, wraps the string in `message` so that
          every line is at most `wrap` pixels long.
 
@@ -674,7 +674,7 @@ class GenericMessageDialog(wx.Dialog):
     
 
     def CreateMessageDialog(self):
-        """ Actually creates the :class:`~genericmessagedialog.GenericMessageDialog`, just before showing it on screen. """
+        """ Actually creates the :class:`GenericMessageDialog`, just before showing it on screen. """
 
         message = self.GetMessage()
         
@@ -772,7 +772,7 @@ class GenericMessageDialog(wx.Dialog):
 
     def EndDialog(self, rc):
         """
-        Ends the :class:`~genericmessagedialog.GenericMessageDialog` life. This will be done differently depending on
+        Ends the :class:`GenericMessageDialog` life. This will be done differently depending on
         the dialog modal/non-modal behaviour.
 
         :param `rc`: one of the ``wx.ID_YES``, ``wx.ID_NO``, ``wx.ID_OK``, ``wx.ID_CANCEL`` constants.
@@ -787,25 +787,25 @@ class GenericMessageDialog(wx.Dialog):
                     
         
     def OnYes(self, event):
-        """ :class:`~genericmessagedialog.GenericMessageDialog` had received a ``wx.ID_YES`` answer. """
+        """ :class:`GenericMessageDialog` had received a ``wx.ID_YES`` answer. """
 
         self.EndDialog(wx.ID_YES)
 
 
     def OnOk(self, event):
-        """ :class:`~genericmessagedialog.GenericMessageDialog` had received a ``wx.ID_OK`` answer. """
+        """ :class:`GenericMessageDialog` had received a ``wx.ID_OK`` answer. """
 
         self.EndDialog(wx.ID_OK)
 
 
     def OnNo(self, event):
-        """ :class:`~genericmessagedialog.GenericMessageDialog` had received a ``wx.ID_NO`` answer. """
+        """ :class:`GenericMessageDialog` had received a ``wx.ID_NO`` answer. """
 
         self.EndDialog(wx.ID_NO)
 
 
     def OnCancel(self, event):
-        """ :class:`~genericmessagedialog.GenericMessageDialog` had received a ``wx.ID_CANCEL`` answer. """
+        """ :class:`GenericMessageDialog` had received a ``wx.ID_CANCEL`` answer. """
 
         # Allow cancellation via ESC/Close button except if
         # only YES and NO are specified.
@@ -815,16 +815,16 @@ class GenericMessageDialog(wx.Dialog):
 
 
     def OnHelp(self, event):
-        """ :class:`~genericmessagedialog.GenericMessageDialog` had received a ``wx.ID_HELP`` answer. """
+        """ :class:`GenericMessageDialog` had received a ``wx.ID_HELP`` answer. """
 
         self.EndDialog(wx.ID_HELP)
 
 
     def OnKeyDown(self, event):
         """
-        Handles the ``wx.EVT_KEY_DOWN`` event for :class:`~genericmessagedialog.GenericMessageDialog`.
+        Handles the ``wx.EVT_KEY_DOWN`` event for :class:`GenericMessageDialog`.
 
-        :param `event`: a `wx.KeyEvent` event to be processed.
+        :param `event`: a :class:`KeyEvent` event to be processed.
         """
 
         key = event.GetKeyCode()
@@ -853,9 +853,9 @@ class GenericMessageDialog(wx.Dialog):
 
     def OnNavigation(self, event):
         """
-        Handles the ``wx.EVT_NAVIGATION_KEY`` event for :class:`~genericmessagedialog.GenericMessageDialog`.
+        Handles the ``wx.EVT_NAVIGATION_KEY`` event for :class:`GenericMessageDialog`.
 
-        :param `event`: a `wx.NavigationKeyEvent` event to be processed.
+        :param `event`: a :class:`NavigationKeyEvent` event to be processed.
         """
 
         # Switch the focus between buttons...
@@ -920,12 +920,12 @@ class GenericMessageDialog(wx.Dialog):
 
     def CreateSeparatedButtonSizer(self, flags):
         """
-        Creates a sizer with standard buttons using :meth:`~genericmessagedialog.GenericMessageDialog.CreateButtonSizer` separated
-        from the rest of the dialog contents by a horizontal `wx.StaticLine`.
+        Creates a sizer with standard buttons using :meth:`~GenericMessageDialog.CreateButtonSizer` separated
+        from the rest of the dialog contents by a horizontal :class:`StaticLine`.
 
         :param `flags`: the button sizer flags.
 
-        :see: :meth:`~genericmessagedialog.GenericMessageDialog.CreateButtonSizer` for a list of valid flags.
+        :see: :meth:`~GenericMessageDialog.CreateButtonSizer` for a list of valid flags.
         """
 
         sizer = self.CreateButtonSizer(flags)
@@ -943,11 +943,11 @@ class GenericMessageDialog(wx.Dialog):
 
     def CreateStdDialogButtonSizer(self, flags):
         """
-        Creates a :class:`~genericmessagedialog.StdDialogButtonSizer` with standard buttons.
+        Creates a :class:`StdDialogButtonSizer` with standard buttons.
 
         :param `flags`: the button sizer flags.
 
-        :see: :meth:`~genericmessagedialog.GenericMessageDialog.CreateButtonSizer` for a list of valid flags.
+        :see: :meth:`~GenericMessageDialog.CreateButtonSizer` for a list of valid flags.
 
         :note: The sizer lays out the buttons in a manner appropriate to the platform.
         """
@@ -1075,7 +1075,7 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomOKLabel(self):
         """
         If a custom label has been used for the ``OK`` button, this method will return
-        it as a string. Otherwise, the default one (as defined in :meth:`~genericmessagedialog.GenericMessageDialog.GetDefaultOKLabel`)
+        it as a string. Otherwise, the default one (as defined in :meth:`~GenericMessageDialog.GetDefaultOKLabel`)
         is returned.
 
         .. versionadded:: 0.9.3
@@ -1087,7 +1087,7 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomYesLabel(self):
         """
         If a custom label has been used for the ``Yes`` button, this method will return
-        it as a string. Otherwise, the default one (as defined in :meth:`~genericmessagedialog.GenericMessageDialog.GetDefaultYesLabel`)
+        it as a string. Otherwise, the default one (as defined in :meth:`~GenericMessageDialog.GetDefaultYesLabel`)
         is returned.
 
         .. versionadded:: 0.9.3
@@ -1099,7 +1099,7 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomNoLabel(self):
         """
         If a custom label has been used for the ``No`` button, this method will return
-        it as a string. Otherwise, the default one (as defined in :meth:`~genericmessagedialog.GenericMessageDialog.GetDefaultNoLabel`)
+        it as a string. Otherwise, the default one (as defined in :meth:`~GenericMessageDialog.GetDefaultNoLabel`)
         is returned.
 
         .. versionadded:: 0.9.3
@@ -1111,7 +1111,7 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomCancelLabel(self):
         """
         If a custom label has been used for the ``Cancel`` button, this method will return
-        it as a string. Otherwise, the default one (as defined in :meth:`~genericmessagedialog.GenericMessageDialog.GetDefaultCancelLabel`)
+        it as a string. Otherwise, the default one (as defined in :meth:`~GenericMessageDialog.GetDefaultCancelLabel`)
         is returned.
 
         .. versionadded:: 0.9.3
@@ -1123,7 +1123,7 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomHelpLabel(self):
         """
         If a custom label has been used for the ``Help`` button, this method will return
-        it as a string. Otherwise, the default one (as defined in :meth:`~genericmessagedialog.GenericMessageDialog.GetDefaultHelpLabel`)
+        it as a string. Otherwise, the default one (as defined in :meth:`~GenericMessageDialog.GetDefaultHelpLabel`)
         is returned.
 
         .. versionadded:: 0.9.3
@@ -1169,7 +1169,7 @@ class GenericMessageDialog(wx.Dialog):
         :param `no`: the new label for the ``No`` button;
         :param `cancel`: the new label for the ``Cancel`` button.
 
-        :see: The remarks in the :meth:`~genericmessagedialog.GenericMessageDialog.SetYesNoLabels` documentation.
+        :see: The remarks in the :meth:`~GenericMessageDialog.SetYesNoLabels` documentation.
 
         .. versionadded:: 0.9.3
         """
@@ -1184,7 +1184,7 @@ class GenericMessageDialog(wx.Dialog):
 
         :param `ok`: the new label for the ``OK`` button.
 
-        :see: The remarks in the :meth:`~genericmessagedialog.GenericMessageDialog.SetYesNoLabels` documentation.
+        :see: The remarks in the :meth:`~GenericMessageDialog.SetYesNoLabels` documentation.
 
         .. versionadded:: 0.9.3
         """
@@ -1200,7 +1200,7 @@ class GenericMessageDialog(wx.Dialog):
         :param `ok`: the new label for the ``OK`` button;
         :param `cancel`: the new label for the ``Cancel`` button.
 
-        :see: The remarks in the :meth:`~genericmessagedialog.GenericMessageDialog.SetYesNoLabels` documentation.
+        :see: The remarks in the :meth:`~GenericMessageDialog.SetYesNoLabels` documentation.
 
         .. versionadded:: 0.9.3
         """
@@ -1215,7 +1215,7 @@ class GenericMessageDialog(wx.Dialog):
 
         :param `help`: the new label for the ``Help`` button.
 
-        :see: The remarks in the :meth:`~genericmessagedialog.GenericMessageDialog.SetYesNoLabels` documentation.
+        :see: The remarks in the :meth:`~GenericMessageDialog.SetYesNoLabels` documentation.
 
         .. versionadded:: 0.9.3
         """
@@ -1307,8 +1307,8 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomOKBitmap(self):
         """
         If a custom icon has been used for the ``OK`` button, this method will return
-        it as an instance of `wx.Bitmap`. Otherwise, the default one (as defined in
-        :meth:`~genericmessagedialog.GenericMessageDialog.GetDefaultOKBitmap`) is returned.
+        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        :meth:`~GenericMessageDialog.GetDefaultOKBitmap`) is returned.
 
         .. versionadded:: 0.9.3
         """
@@ -1319,8 +1319,8 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomYesBitmap(self):
         """
         If a custom icon has been used for the ``Yes`` button, this method will return
-        it as an instance of `wx.Bitmap`. Otherwise, the default one (as defined in
-        :meth:`~genericmessagedialog.GenericMessageDialog.GetDefaultYesBitmap`) is returned.
+        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        :meth:`~GenericMessageDialog.GetDefaultYesBitmap`) is returned.
 
         .. versionadded:: 0.9.3
         """
@@ -1331,8 +1331,8 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomNoBitmap(self):
         """
         If a custom icon has been used for the ``No`` button, this method will return
-        it as an instance of `wx.Bitmap`. Otherwise, the default one (as defined in
-        :meth:`~genericmessagedialog.GenericMessageDialog.GetDefaultNoBitmap`) is returned.
+        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        :meth:`~GenericMessageDialog.GetDefaultNoBitmap`) is returned.
 
         .. versionadded:: 0.9.3
         """
@@ -1343,8 +1343,8 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomCancelBitmap(self):
         """
         If a custom icon been used for the ``Cancel`` button, this method will return
-        it as an instance of `wx.Bitmap`. Otherwise, the default one (as defined in
-        :meth:`~genericmessagedialog.GenericMessageDialog.GetDefaultCancelBitmap`) is returned.
+        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        :meth:`~GenericMessageDialog.GetDefaultCancelBitmap`) is returned.
 
         .. versionadded:: 0.9.3
         """
@@ -1355,8 +1355,8 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomHelpBitmap(self):
         """
         If a custom icon has been used for the ``Help`` button, this method will return
-        it as an instance of `wx.Bitmap`. Otherwise, the default one (as defined in
-        :meth:`~genericmessagedialog.GenericMessageDialog.GetDefaultHelpBitmap`) is returned.
+        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        :meth:`~GenericMessageDialog.GetDefaultHelpBitmap`) is returned.
 
         .. versionadded:: 0.9.3
         """
@@ -1369,8 +1369,8 @@ class GenericMessageDialog(wx.Dialog):
         """
         Overrides the default icons of the ``Yes`` and ``No`` buttons.
 
-        :param `yesBitmap`: the new icon for the ``Yes`` button, an instance of `wx.Bitmap`;
-        :param `noBitmap`: the new icon for the ``No`` button, an instance of `wx.Bitmap`.
+        :param `yesBitmap`: the new icon for the ``Yes`` button, an instance of :class:`Bitmap`;
+        :param `noBitmap`: the new icon for the ``No`` button, an instance of :class:`Bitmap`.
 
         .. versionadded:: 0.9.3
         """
@@ -1383,9 +1383,9 @@ class GenericMessageDialog(wx.Dialog):
         """
         Overrides the default icons of the ``Yes`` and ``No`` buttons.
 
-        :param `yesBitmap`: the new icon for the ``Yes`` button, an instance of `wx.Bitmap`;
-        :param `noBitmap`: the new icon for the ``No`` button, an instance of `wx.Bitmap`;
-        :param `cancelBitmap`: the new icon for the ``Cancel`` button, an instance of `wx.Bitmap`.
+        :param `yesBitmap`: the new icon for the ``Yes`` button, an instance of :class:`Bitmap`;
+        :param `noBitmap`: the new icon for the ``No`` button, an instance of :class:`Bitmap`;
+        :param `cancelBitmap`: the new icon for the ``Cancel`` button, an instance of :class:`Bitmap`.
 
         .. versionadded:: 0.9.3
         """
@@ -1398,7 +1398,7 @@ class GenericMessageDialog(wx.Dialog):
         """
         Overrides the default icon of the ``OK`` button.
 
-        :param `yesBitmap`: the new icon for the ``OK`` button, an instance of `wx.Bitmap`;
+        :param `yesBitmap`: the new icon for the ``OK`` button, an instance of :class:`Bitmap`;
 
         .. versionadded:: 0.9.3
         """
@@ -1411,8 +1411,8 @@ class GenericMessageDialog(wx.Dialog):
         """
         Overrides the default icons of the ``OK`` and ``Cancel`` buttons.
 
-        :param `okBitmap`: the new icon for the ``OK`` button, an instance of `wx.Bitmap`;
-        :param `cancelBitmap`: the new icon for the ``Cancel`` button, an instance of `wx.Bitmap`.
+        :param `okBitmap`: the new icon for the ``OK`` button, an instance of :class:`Bitmap`;
+        :param `cancelBitmap`: the new icon for the ``Cancel`` button, an instance of :class:`Bitmap`.
 
         .. versionadded:: 0.9.3
         """
@@ -1425,7 +1425,7 @@ class GenericMessageDialog(wx.Dialog):
         """
         Overrides the default icon of the ``Help`` button.
 
-        :param `helpBitmap`: the new icon for the ``Help`` button, an instance of `wx.Bitmap`.
+        :param `helpBitmap`: the new icon for the ``Help`` button, an instance of :class:`Bitmap`.
 
         .. versionadded:: 0.9.3
         """
@@ -1458,13 +1458,13 @@ class GenericMessageDialog(wx.Dialog):
         :param `message`: the original input message;
         :param `wrap`: wraps the string in `message` so that every line is at most
          `wrap` pixels long;
-        :param `font`: if not ``None``, it should be an instance of `wx.Font` to be
+        :param `font`: if not ``None``, it should be an instance of :class:`Font` to be
          used to measure and then wrap the input `message`.
 
         :return: a new message wrapped at maximum `wrap` pixels wide.
         
         :todo: Estabilish if wrapping all messages by default is a better idea than
-         provide a keyword parameter to :class:`~genericmessagedialog.GenericMessageDialog`. A default maximum
+         provide a keyword parameter to :class:`GenericMessageDialog`. A default maximum
          line width might be the wxMac one, at 360 pixels.
         """
         
@@ -1485,9 +1485,9 @@ class GenericMessageDialog(wx.Dialog):
         ``wx.ID_NO`` or ``wx.ID_HELP``.
 
         :note: Notice that this method returns the identifier of the button which was
-         clicked unlike the `wx.MessageBox()` function.
+         clicked unlike the :class:`MessageBox` () function.
 
-        :note: Reimplemented from `wx.Dialog`.
+        :note: Reimplemented from :class:`Dialog`.
         """
         
         if not self._created:
@@ -1500,7 +1500,7 @@ class GenericMessageDialog(wx.Dialog):
 
     def GetCaption(self):
         """
-        Returns the main caption (the title) for :class:`~genericmessagedialog.GenericMessageDialog`.
+        Returns the main caption (the title) for :class:`GenericMessageDialog`.
 
         .. versionadded:: 0.9.3
         """
@@ -1512,7 +1512,7 @@ class GenericMessageDialog(wx.Dialog):
         """
         Sets the message shown by the dialog.
 
-        :param `message`: a string representing the main :class:`~genericmessagedialog.GenericMessageDialog` message.
+        :param `message`: a string representing the main :class:`GenericMessageDialog` message.
 
         .. versionadded:: 0.9.3
         """
@@ -1522,7 +1522,7 @@ class GenericMessageDialog(wx.Dialog):
 
     def GetMessage(self):
         """
-        Returns a string representing the main :class:`~genericmessagedialog.GenericMessageDialog` message.
+        Returns a string representing the main :class:`GenericMessageDialog` message.
 
         .. versionadded:: 0.9.3
         """
@@ -1533,12 +1533,12 @@ class GenericMessageDialog(wx.Dialog):
     def SetExtendedMessage(self, extendedMessage):
         """
         Sets the extended message for the dialog: this message is usually an extension of the
-        short message specified in the constructor or set with :meth:`~genericmessagedialog.GenericMessageDialog.SetMessage`.
+        short message specified in the constructor or set with :meth:`~GenericMessageDialog.SetMessage`.
 
         If it is set, the main message appears highlighted and this message appears beneath
         it in normal font.
 
-        :param `extendedMessage`: a string representing the extended :class:`~genericmessagedialog.GenericMessageDialog` message.
+        :param `extendedMessage`: a string representing the extended :class:`GenericMessageDialog` message.
 
         .. versionadded:: 0.9.3
         """
@@ -1548,7 +1548,7 @@ class GenericMessageDialog(wx.Dialog):
         
     def GetExtendedMessage(self):
         """
-        Returns a string representing the extended :class:`~genericmessagedialog.GenericMessageDialog` message.
+        Returns a string representing the extended :class:`GenericMessageDialog` message.
 
         .. versionadded:: 0.9.3
         """
@@ -1558,7 +1558,7 @@ class GenericMessageDialog(wx.Dialog):
     
     def GetMessageDialogStyle(self):
         """
-        Returns the AGW-specific window style for :class:`~genericmessagedialog.GenericMessageDialog`.
+        Returns the AGW-specific window style for :class:`GenericMessageDialog`.
 
         .. versionadded:: 0.9.3
         """
@@ -1569,7 +1569,7 @@ class GenericMessageDialog(wx.Dialog):
     # To combine the separate main and extended messages in a single string
     def GetFullMessage(self):
         """
-        Returns a string representing the combination of the main :class:`~genericmessagedialog.GenericMessageDialog`
+        Returns a string representing the combination of the main :class:`GenericMessageDialog`
         message and the extended message, separated by an empty line.
 
         .. versionadded:: 0.9.3

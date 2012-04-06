@@ -24,15 +24,15 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`~pygauge.PyGauge` is a generic `wx.Gauge` implementation.
+:class:`PyGauge` is a generic :class:`Gauge` implementation.
 
 
 Description
 ===========
 
-:class:`~pygauge.PyGauge` supports the determinate mode functions as `wx.Gauge` and adds an
-:meth:`~PyGauge.Update` function which takes a value and a time parameter. The `value` is
-added to the current value over a period of `time` milliseconds.
+:class:`PyGauge` supports the determinate mode functions as :class:`Gauge` and adds an meth:~PyGauge.Update` function
+which takes a value and a time parameter. The `value` is added to the current value over 
+a period of `time` milliseconds.
 
 
 Usage
@@ -93,16 +93,16 @@ Usage example::
 Supported Platforms
 ===================
 
-:class:`~pygauge.PyGauge` has been tested on the following platforms:
+:class:`PyGauge` has been tested on the following platforms:
   * Windows (Windows XP);
   
 
 License And Version
 ===================
 
-:class:`~pygauge.PyGauge` is distributed under the wxPython license.
+:class:`PyGauge` is distributed under the wxPython license.
 
-:class:`~pygauge.PyGauge` has been kindly contributed to the AGW library by Mark Reed.
+:class:`PyGauge` has been kindly contributed to the AGW library by Mark Reed.
 
 Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
 
@@ -116,8 +116,9 @@ import copy
 
 class PyGauge(wx.PyWindow):
     """ 
-    This class provides a visual alternative for `wx.Gauge`. It currently 
-    only support determinate mode (see :meth:`PyGauge.SetValue() <pygauge.PyGauge.SetValue>` and :meth:`PyGauge.SetRange() <pygauge.PyGauge.SetRange>`)
+    This class provides a visual alternative for :class:`Gauge`. It currently 
+    only support determinate mode (see :meth:`PyGauge.SetValue() <PyGauge.SetValue>` and
+    :meth:`PyGauge.SetRange() <PyGauge.SetRange>`).
     """
     
     def __init__(self, parent, id=wx.ID_ANY, range=100, pos=wx.DefaultPosition,
@@ -131,7 +132,7 @@ class PyGauge(wx.PyWindow):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the underlying `wx.PyWindow` window style.
+        :param `style`: the underlying :class:`PyWindow` window style.
         """
 
         wx.PyWindow.__init__(self, parent, id, pos, size, style)
@@ -157,27 +158,27 @@ class PyGauge(wx.PyWindow):
         
     def DoGetBestSize(self):
         """
-        Gets the size which best suits :class:`~pygauge.PyGauge`: for a control, it would be
+        Gets the size which best suits :class:`PyGauge`: for a control, it would be
         the minimal size which doesn't truncate the control, for a panel - the
         same size as it would have after a call to `Fit()`.
 
-        :note: Overridden from `wx.PyWindow`.        
+        :note: Overridden from :class:`PyWindow`.        
         """
         
         return wx.Size(self._size[0], self._size[1])
        
         
     def GetBorderColour(self):
-        """ Returns the :class:`~pygauge.PyGauge` border colour. """
+        """ Returns the :class:`PyGauge` border colour. """
         
         return self._border_colour
 
     
     def SetBorderColour(self, colour):
         """
-        Sets the :class:`~pygauge.PyGauge` border colour.
+        Sets the :class:`PyGauge` border colour.
 
-        :param `colour`: an instance of `wx.Colour`.
+        :param `colour`: an instance of :class:`Colour`.
         """
         
         self._border_colour = colour
@@ -187,16 +188,16 @@ class PyGauge(wx.PyWindow):
     
 
     def GetBarColour(self):
-        """ Returns the :class:`~pygauge.PyGauge` main bar colour. """
+        """ Returns the :class:`PyGauge` main bar colour. """
 
         return self._barColour[0]
     
 
     def SetBarColour(self, colour):
         """
-        Sets the :class:`~pygauge.PyGauge` main bar colour.
+        Sets the :class:`PyGauge` main bar colour.
 
-        :param `colour`: an instance of `wx.Colour`.
+        :param `colour`: an instance of :class:`Colour`.
         """
 
         if type(colour) != type([]):
@@ -225,7 +226,7 @@ class PyGauge(wx.PyWindow):
        
         :param `gradient`: a tuple containing the gradient start and end colours.
 
-        :note: This overrides the bar colour previously set with :meth:`~pygauge.PyGauge.SetBarColour`.        
+        :note: This overrides the bar colour previously set with :meth:`PyGauge.SetBarColour`.        
         """
         
         if type(gradient) != type([]):
@@ -299,9 +300,9 @@ class PyGauge(wx.PyWindow):
         
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`~pygauge.PyGauge`.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`PyGauge`.
 
-        :param `event`: a `wx.EraseEvent` event to be processed.
+        :param `event`: a :class:`EraseEvent` event to be processed.
 
         :note: This method is intentionally empty to reduce flicker.        
         """
@@ -311,9 +312,9 @@ class PyGauge(wx.PyWindow):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`~pygauge.PyGauge`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`PyGauge`.
 
-        :param `event`: a `wx.PaintEvent` event to be processed.
+        :param `event`: a :class:`PaintEvent` event to be processed.
         """
 
         dc = wx.BufferedPaintDC(self)
@@ -353,9 +354,9 @@ class PyGauge(wx.PyWindow):
         
     def OnTimer(self,event):
         """
-        Handles the ``wx.EVT_TIMER`` event for :class:`~pygauge.PyGauge`.
+        Handles the ``wx.EVT_TIMER`` event for :class:`PyGauge`.
 
-        :param `event`: a `wx.TimerEvent` event to be processed.
+        :param `event`: a :class:`TimerEvent` event to be processed.
         """
         
         if self._timerId == event.GetId():

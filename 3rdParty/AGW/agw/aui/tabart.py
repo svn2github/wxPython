@@ -1,12 +1,14 @@
 """
 Tab art provider code - a tab provider provides all drawing functionality to
-the :class:`~aui.auibook.AuiNotebook`. This allows the :class:`~aui.auibook.AuiNotebook` to have a plugable look-and-feel.
+the :class:`~lib.agw.aui.auibook.AuiNotebook`. This allows the
+:class:`~lib.agw.aui.auibook.AuiNotebook` to have a plugable look-and-feel.
 
-By default, a :class:`~aui.auibook.AuiNotebook` uses an instance of this class called :class:`~aui.tabart.AuiDefaultTabArt`
-which provides bitmap art and a colour scheme that is adapted to the major platforms'
-look. You can either derive from that class to alter its behaviour or write a
-completely new tab art class. Call :meth:`AuiNotebook.SetArtProvider() <aui.auibook.AuiNotebook.SetArtProvider>` to make use this
-new tab art.
+By default, a :class:`~lib.agw.aui.auibook.AuiNotebook` uses an instance of this class
+called :class:`AuiDefaultTabArt` which provides bitmap art and a colour scheme that is
+adapted to the major platforms' look. You can either derive from that class to alter its
+behaviour or write a completely new tab art class.
+Call :meth:`AuiNotebook.SetArtProvider() <lib.agw.aui.auibook.AuiNotebook.SetArtProvider>`
+to make use this new tab art.
 """
 
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
@@ -56,10 +58,10 @@ class AuiCommandCapture(wx.PyEvtHandler):
          a new control) where you define new event types, as opposed to allowing the
          user to override functions.
 
-         An instance where you might actually override the :meth:`~aui.tabart.AuiCommandCapture.ProcessEvent` function is where
+         An instance where you might actually override the :meth:`~AuiCommandCapture.ProcessEvent` function is where
          you want to direct event processing to event handlers not normally noticed by
          wxPython. For example, in the document/view architecture, documents and views
-         are potential event handlers. When an event reaches a frame, :meth:`~aui.tabart.AuiCommandCapture.ProcessEvent` will
+         are potential event handlers. When an event reaches a frame, :meth:`~AuiCommandCapture.ProcessEvent` will
          need to be called on the associated document and view in case event handler
          functions are associated with these objects. 
 
@@ -67,17 +69,17 @@ class AuiCommandCapture(wx.PyEvtHandler):
 
          1. If the object is disabled (via a call to `SetEvtHandlerEnabled`) the function
             skips to step (6).
-         2. If the object is a `wx.Window`, :meth:`~aui.tabart.AuiCommandCapture.ProcessEvent` is recursively called on the window's 
-            `wx.Validator`. If this returns ``True``, the function exits.
+         2. If the object is a :class:`Window`, :meth:`~AuiCommandCapture.ProcessEvent` is recursively called on the window's 
+            :class:`Validator`. If this returns ``True``, the function exits.
          3. wxWidgets `SearchEventTable` is called for this event handler. If this fails, the
             base class table is tried, and so on until no more tables exist or an appropriate
             function was found, in which case the function exits.
          4. The search is applied down the entire chain of event handlers (usually the chain
             has a length of one). If this succeeds, the function exits.
-         5. If the object is a `wx.Window` and the event is a `wx.CommandEvent`, :meth:`~aui.tabart.AuiCommandCapture.ProcessEvent` is
+         5. If the object is a :class:`Window` and the event is a :class:`CommandEvent`, :meth:`~AuiCommandCapture.ProcessEvent` is
             recursively applied to the parent window's event handler. If this returns ``True``,
             the function exits.
-         6. Finally, :meth:`~aui.tabart.AuiCommandCapture.ProcessEvent` is called on the `wx.App` object.
+         6. Finally, :meth:`~AuiCommandCapture.ProcessEvent` is called on the :class:`App` object.
         """
         
         if event.GetEventType() == wx.wxEVT_COMMAND_MENU_SELECTED:
@@ -93,12 +95,12 @@ class AuiCommandCapture(wx.PyEvtHandler):
 class AuiDefaultTabArt(object):
     """
     Tab art provider code - a tab provider provides all drawing functionality to
-    the :class:`~aui.auibook.AuiNotebook`. This allows the :class:`~aui.auibook.AuiNotebook` to have a plugable look-and-feel.
+    the :class:`~lib.agw.aui.auibook.AuiNotebook`. This allows the :class:`~lib.agw.aui.auibook.AuiNotebook` to have a plugable look-and-feel.
 
-    By default, a :class:`~aui.auibook.AuiNotebook` uses an instance of this class called :class:`~aui.tabart.AuiDefaultTabArt`
+    By default, a :class:`~lib.agw.aui.auibook.AuiNotebook` uses an instance of this class called :class:`~lib.agw.aui.tabart.AuiDefaultTabArt`
     which provides bitmap art and a colour scheme that is adapted to the major platforms'
     look. You can either derive from that class to alter its behaviour or write a
-    completely new tab art class. Call :meth:`AuiNotebook.SetArtProvider() <aui.auibook.AuiNotebook.SetArtProvider>` to make use this
+    completely new tab art class. Call :meth:`AuiNotebook.SetArtProvider() <lib.agw.aui.auibook.AuiNotebook.SetArtProvider>` to make use this
     new tab art.
     """
     
@@ -157,7 +159,7 @@ class AuiDefaultTabArt(object):
         """
         Sets a new base colour.
 
-        :param `base_colour`: an instance of `wx.Colour`.
+        :param `base_colour`: an instance of :class:`Colour`.
         """
         
         self._base_colour = base_colour
@@ -169,7 +171,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the default colours, which are calculated from the given base colour.
 
-        :param `base_colour`: an instance of `wx.Colour`. If defaulted to ``None``, a colour
+        :param `base_colour`: an instance of :class:`Colour`. If defaulted to ``None``, a colour
          is generated accordingly to the platform and theme.
         """
 
@@ -228,8 +230,8 @@ class AuiDefaultTabArt(object):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~aui.auibook.AuiNotebook` tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~aui.framemanager.AuiManager` to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~lib.agw.aui.auibook.AuiNotebook` tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -249,7 +251,7 @@ class AuiDefaultTabArt(object):
         """
         Returns the tab art flags.
 
-        :see: :meth:`~aui.tabart.AuiDefaultTabArt.SetAGWFlags` for a list of possible return values.
+        :see: :meth:`~AuiDefaultTabArt.SetAGWFlags` for a list of possible return values.
         """
 
         return self._agwFlags
@@ -300,8 +302,8 @@ class AuiDefaultTabArt(object):
         """
         Draws the tab area background.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `rect`: the tab control rectangle.
         """
 
@@ -341,12 +343,12 @@ class AuiDefaultTabArt(object):
         """
         Draws a single tab.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `page`: the tab control page associated with the tab;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a `wx.MemoryDC`.
+        :param `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
 
         # if the caption is empty, measure some temporary text
@@ -657,13 +659,13 @@ class AuiDefaultTabArt(object):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `caption`: the tab text caption;
         :param `bitmap`: the bitmap displayed on the tab;
         :param `active`: whether the tab is selected or not;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a `wx.Window` instance inside a tab (or ``None``).
+        :param `control`: a :class:`Window` instance inside a tab (or ``None``).
         """
 
         dc.SetFont(self._measuring_font)
@@ -703,8 +705,8 @@ class AuiDefaultTabArt(object):
         """
         Draws a button on the tab or on the tab area, depending on the button identifier. 
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `button`: an instance of the button class;
         :param `orientation`: the tab orientation.
@@ -779,9 +781,9 @@ class AuiDefaultTabArt(object):
         """
         Draws the focus rectangle on a tab.
 
-        :param `dc`: a `wx.DC` device context;
+        :param `dc`: a :class:`DC` device context;
         :param `page`: the page associated with the tab;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `wnd`: a :class:`Window` instance object;
         :param `draw_text`: the text that has been drawn on the tab;
         :param `text_offset`: the text offset on the tab;
         :param `bitmap_offset`: the bitmap offset on the tab;
@@ -821,7 +823,7 @@ class AuiDefaultTabArt(object):
         """
         Returns the best tab control size.
 
-        :param `wnd`: a `wx.Window` instance object;
+        :param `wnd`: a :class:`Window` instance object;
         :param `pages`: the pages associated with the tabs;
         :param `required_bmp_size`: the size of the bitmap on the tabs.
         """
@@ -866,7 +868,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the normal font for drawing tab labels.
 
-        :param `font`: a `wx.Font` object.
+        :param `font`: a :class:`Font` object.
         """
 
         self._normal_font = font
@@ -876,7 +878,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the selected tab font for drawing tab labels.
 
-        :param `font`: a `wx.Font` object.
+        :param `font`: a :class:`Font` object.
         """
 
         self._selected_font = font
@@ -886,7 +888,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the font for calculating text measurements.
 
-        :param `font`: a `wx.Font` object.
+        :param `font`: a :class:`Font` object.
         """
 
         self._measuring_font = font
@@ -914,7 +916,7 @@ class AuiDefaultTabArt(object):
         """
         Shows the drop-down window menu on the tab area.
 
-        :param `wnd`: a `wx.Window` derived window instance;
+        :param `wnd`: a :class:`Window` derived window instance;
         :param `pages`: the pages associated with the tabs;
         :param `active_idx`: the active tab index.
         """
@@ -1057,8 +1059,8 @@ class AuiSimpleTabArt(object):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~aui.auibook.AuiNotebook` tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~aui.framemanager.AuiManager` to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~lib.agw.aui.auibook.AuiNotebook` tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -1078,7 +1080,7 @@ class AuiSimpleTabArt(object):
         """
         Returns the tab art flags.
 
-        :see: :meth:`~aui.tabart.AuiSimpleTabArt.SetAGWFlags` for a list of possible return values.
+        :see: :meth:`~AuiSimpleTabArt.SetAGWFlags` for a list of possible return values.
         """
 
         return self._agwFlags
@@ -1128,8 +1130,8 @@ class AuiSimpleTabArt(object):
         """
         Draws the tab area background.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `rect`: the tab control rectangle.
         """
         
@@ -1147,12 +1149,12 @@ class AuiSimpleTabArt(object):
         """
         Draws a single tab.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `page`: the tab control page associated with the tab;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a `wx.MemoryDC`.
+        :param `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
         
         # if the caption is empty, measure some temporary text
@@ -1325,7 +1327,7 @@ class AuiSimpleTabArt(object):
         """
         Convenience method to draw tab buttons.
 
-        :param `dc`: a `wx.DC` device context;
+        :param `dc`: a :class:`DC` device context;
         :param `_rect`: the tab rectangle;
         :param `bmp`: the tab bitmap;
         :param `bkcolour`: the tab background colour;
@@ -1359,13 +1361,13 @@ class AuiSimpleTabArt(object):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `caption`: the tab text caption;
         :param `bitmap`: the bitmap displayed on the tab;
         :param `active`: whether the tab is selected or not;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a `wx.Window` instance inside a tab (or ``None``).
+        :param `control`: a :class:`Window` instance inside a tab (or ``None``).
         """
         
         dc.SetFont(self._measuring_font)
@@ -1393,8 +1395,8 @@ class AuiSimpleTabArt(object):
         """
         Draws a button on the tab or on the tab area, depending on the button identifier. 
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `button`: an instance of the button class;
         :param `orientation`: the tab orientation.
@@ -1460,7 +1462,7 @@ class AuiSimpleTabArt(object):
         """
         Shows the drop-down window menu on the tab area.
 
-        :param `wnd`: a `wx.Window` derived window instance;
+        :param `wnd`: a :class:`Window` derived window instance;
         :param `pages`: the pages associated with the tabs;
         :param `active_idx`: the active tab index.
         """
@@ -1517,7 +1519,7 @@ class AuiSimpleTabArt(object):
         """
         Returns the best tab control size.
 
-        :param `wnd`: a `wx.Window` instance object;
+        :param `wnd`: a :class:`Window` instance object;
         :param `pages`: the pages associated with the tabs;
         :param `required_bmp_size`: the size of the bitmap on the tabs.
         """
@@ -1544,7 +1546,7 @@ class AuiSimpleTabArt(object):
         """
         Sets the normal font for drawing tab labels.
 
-        :param `font`: a `wx.Font` object.
+        :param `font`: a :class:`Font` object.
         """
         
         self._normal_font = font
@@ -1554,7 +1556,7 @@ class AuiSimpleTabArt(object):
         """
         Sets the selected tab font for drawing tab labels.
 
-        :param `font`: a `wx.Font` object.
+        :param `font`: a :class:`Font` object.
         """
         
         self._selected_font = font
@@ -1564,7 +1566,7 @@ class AuiSimpleTabArt(object):
         """
         Sets the font for calculating text measurements.
 
-        :param `font`: a `wx.Font` object.
+        :param `font`: a :class:`Font` object.
         """
         
         self._measuring_font = font
@@ -1656,12 +1658,12 @@ class VC71TabArt(AuiDefaultTabArt):
         """
         Draws a single tab.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `page`: the tab control page associated with the tab;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a `wx.MemoryDC`.
+        :param `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
         
         # Visual studio 7.1 style
@@ -1876,13 +1878,13 @@ class FF2TabArt(AuiDefaultTabArt):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `caption`: the tab text caption;
         :param `bitmap`: the bitmap displayed on the tab;
         :param `active`: whether the tab is selected or not;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a `wx.Window` instance inside a tab (or ``None``).
+        :param `control`: a :class:`Window` instance inside a tab (or ``None``).
         """
         
         tab_size, x_extent = AuiDefaultTabArt.GetTabSize(self, dc, wnd, caption, bitmap,
@@ -1900,12 +1902,12 @@ class FF2TabArt(AuiDefaultTabArt):
         """
         Draws a single tab.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `page`: the tab control page associated with the tab;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a `wx.MemoryDC`.
+        :param `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
         
         # Firefox 2 style
@@ -2090,9 +2092,9 @@ class FF2TabArt(AuiDefaultTabArt):
     def DrawTabBackground(self, dc, rect, focus, upperTabs):
         """
         Draws the tab background for the Firefox 2 style.
-        This is more consistent with :class:`~flatnotebook.FlatNotebook` than before.
+        This is more consistent with :class:`~lib.agw.flatnotebook.FlatNotebook` than before.
 
-        :param `dc`: a `wx.DC` device context;
+        :param `dc`: a :class:`DC` device context;
         :param `rect`: rectangle the tab should be confined to;
         :param `focus`: whether the tab has focus or not;
         :param `upperTabs`: whether the style is ``AUI_NB_TOP`` or ``AUI_NB_BOTTOM``.
@@ -2192,13 +2194,13 @@ class VC8TabArt(AuiDefaultTabArt):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `caption`: the tab text caption;
         :param `bitmap`: the bitmap displayed on the tab;
         :param `active`: whether the tab is selected or not;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a `wx.Window` instance inside a tab (or ``None``).
+        :param `control`: a :class:`Window` instance inside a tab (or ``None``).
         """
         
         tab_size, x_extent = AuiDefaultTabArt.GetTabSize(self, dc, wnd, caption, bitmap,
@@ -2221,12 +2223,12 @@ class VC8TabArt(AuiDefaultTabArt):
         """
         Draws a single tab.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `page`: the tab control page associated with the tab;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a `wx.MemoryDC`.
+        :param `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
         
         # Visual Studio 8 style
@@ -2431,8 +2433,8 @@ class VC8TabArt(AuiDefaultTabArt):
         """
         Fills the tab with the Visual Studio 2005 gradient background.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `tabPoints`: a list of `wx.Point` objects describing the tab shape;
+        :param `dc`: a :class:`DC` device context;
+        :param `tabPoints`: a list of :class:`Point` objects describing the tab shape;
         :param `active`: whether the tab is selected or not.
         """
 
@@ -2506,8 +2508,8 @@ class ChromeTabArt(AuiDefaultTabArt):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~aui.auibook.AuiNotebook` tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~aui.framemanager.AuiManager` to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~lib.agw.aui.auibook.AuiNotebook` tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -2518,7 +2520,7 @@ class ChromeTabArt(AuiDefaultTabArt):
          ``AUI_NB_NO_TAB_FOCUS``              Don't draw tab focus rectangle
          ==================================== ==================================
 
-        :note: Overridden from :class:`~aui.tabart.AuiDefaultTabArt`.
+        :note: Overridden from :class:`AuiDefaultTabArt`.
         """
 
         if agwFlags & AUI_NB_TOP:
@@ -2591,13 +2593,13 @@ class ChromeTabArt(AuiDefaultTabArt):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `caption`: the tab text caption;
         :param `bitmap`: the bitmap displayed on the tab;
         :param `active`: whether the tab is selected or not;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a `wx.Window` instance inside a tab (or ``None``).
+        :param `control`: a :class:`Window` instance inside a tab (or ``None``).
         """
         
         tab_size, x_extent = AuiDefaultTabArt.GetTabSize(self, dc, wnd, caption, bitmap,
@@ -2618,12 +2620,12 @@ class ChromeTabArt(AuiDefaultTabArt):
         """
         Draws a single tab.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `wnd`: a `wx.Window` instance object;
+        :param `dc`: a :class:`DC` device context;
+        :param `wnd`: a :class:`Window` instance object;
         :param `page`: the tab control page associated with the tab;
         :param `in_rect`: rectangle the tab should be confined to;
         :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a `wx.MemoryDC`.
+        :param `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
         
         # Chrome tab style
