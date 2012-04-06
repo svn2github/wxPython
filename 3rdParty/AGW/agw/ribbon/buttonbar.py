@@ -568,7 +568,7 @@ class RibbonButtonBar(RibbonControl):
 
         Must be called after buttons are added to the button bar, as otherwise the newly
         added buttons will not be displayed. In normal situations, it will be called
-        automatically when :meth:`RibbonBar.Realize() <RibbonBar.Realize>` is called.
+        automatically when :meth:`RibbonBar.Realize() <lib.agw.ribbon.bar.RibbonBar.Realize>` is called.
 
         :note: Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
         """
@@ -706,7 +706,7 @@ class RibbonButtonBar(RibbonControl):
         In many cases, setting the art provider will also set the art provider on all
         child windows which extend :class:`~lib.agw.ribbon.control.RibbonControl`. In most cases, controls will not
         take ownership of the given pointer, with the notable exception being
-        :meth:`RibbonBar.SetArtProvider() <RibbonBar.SetArtProvider>`.
+        :meth:`RibbonBar.SetArtProvider() <lib.agw.ribbon.bar.RibbonBar.SetArtProvider>`.
 
         :param `art`: an art provider.
         """
@@ -731,7 +731,8 @@ class RibbonButtonBar(RibbonControl):
         Returns ``True`` if this window can take any size (greater than its minimum size),
         ``False`` if it can only take certain sizes.
         
-        :see: :meth:`RibbonControl.GetNextSmallerSize() <RibbonControl.GetNextSmallerSize>`, :meth:`RibbonControl.GetNextLargerSize() <RibbonControl.GetNextLargerSize>`
+        :see: :meth:`RibbonControl.GetNextSmallerSize() <lib.agw.ribbon.control.RibbonControl.GetNextSmallerSize>`,
+         :meth:`RibbonControl.GetNextLargerSize() <lib.agw.ribbon.control.RibbonControl.GetNextLargerSize>`
         """
 
         return False
@@ -739,7 +740,7 @@ class RibbonButtonBar(RibbonControl):
 
     def DoGetNextSmallerSize(self, direction, _result):
         """
-        Implementation of :meth:`RibbonControl.GetNextSmallerSize() <RibbonControl.GetNextSmallerSize>`.
+        Implementation of :meth:`RibbonControl.GetNextSmallerSize() <lib.agw.ribbon.control.RibbonControl.GetNextSmallerSize>`.
 
         Controls which have non-continuous sizing must override this virtual function
         rather than :meth:`RibbonControl.GetNextSmallerSize() <RibbonControl.GetNextSmallerSize>`.
@@ -772,7 +773,7 @@ class RibbonButtonBar(RibbonControl):
 
     def DoGetNextLargerSize(self, direction, _result):
         """
-        Implementation of :meth:`RibbonControl.GetNextLargerSize() <RibbonControl.GetNextLargerSize>`.
+        Implementation of :meth:`RibbonControl.GetNextLargerSize() <lib.agw.ribbon.control.RibbonControl.GetNextLargerSize>`.
 
         Controls which have non-continuous sizing must override this virtual function
         rather than :meth:`RibbonControl.GetNextLargerSize() <RibbonControl.GetNextLargerSize>`.

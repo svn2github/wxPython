@@ -2279,8 +2279,10 @@ class ButtonPanel(wx.PyPanel):
 
         :param `event`: a :class:`SizeEvent` event to be processed.
 
-        :todo: Improve the chain of methods :meth:`~ButtonPanel.OnSize` ==> :meth:`~ButtonPanel.DoLayout` ==> :meth:`~ButtonPanel.LayoutItems`
-         to avoid multiple calls to :meth:`~ButtonPanel.LayoutItems`.
+        .. todo::
+
+           Improve the chain of methods :meth:`~ButtonPanel.OnSize` ==> :meth:`~ButtonPanel.DoLayout` ==> :meth:`~ButtonPanel.LayoutItems`
+           to avoid multiple calls to :meth:`~ButtonPanel.LayoutItems`.
         """
 
         # NOTE: It seems like LayoutItems number of calls can be optimized in some way.

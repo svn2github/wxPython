@@ -4161,7 +4161,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         :note: At present, the background image can only be used in "tile" mode.
 
-        :todo: Support background images also in stretch and centered modes.        
+        .. todo:: Support background images also in stretch and centered modes.        
         """
 
         self._backgroundImage = image
@@ -4176,7 +4176,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         
         :note: At present, the background image can only be used in "tile" mode.
 
-        :todo: Support background images also in stretch and centered modes.        
+        .. todo:: Support background images also in stretch and centered modes.        
         """
 
         return self._backgroundImage        
@@ -7025,7 +7025,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         :param `dc`: an instance of :class:`DC`.
 
-        :todo: Support background images also in stretch and centered modes.        
+        .. todo:: Support background images also in stretch and centered modes.        
         """
 
         sz = self.GetClientSize()

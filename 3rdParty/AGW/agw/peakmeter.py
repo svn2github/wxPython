@@ -716,7 +716,7 @@ class PeakMeterCtrl(wx.PyControl):
         :param `dc`: an instance of :class:`DC`;
         :param `rect`: the horizontal bands client rectangle.
 
-        :todo: Implement falloff effect for horizontal bands.        
+        .. todo:: Implement falloff effect for horizontal bands.        
         """
 
         horzBands = (self._ledBands > 1 and [self._ledBands] or [self._maxValue*BAND_PERCENT/100])[0]

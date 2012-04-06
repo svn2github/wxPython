@@ -2204,7 +2204,10 @@ class AuiToolBar(wx.PyControl):
         :note: Note that this is the size of the bitmap you pass to :meth:`~AuiToolBar.AddTool`,
          and not the eventual size of the tool button.
 
-        :todo: Add :class:`ToolBar` compatibility, actually implementing this method.
+        .. todo::
+
+           Add :class:`ToolBar` compatibility, actually implementing this method.
+           
         """
 
         # TODO: wx.ToolBar compatibility
@@ -2219,7 +2222,10 @@ class AuiToolBar(wx.PyControl):
         :note: Note that this is the size of the bitmap you pass to :meth:`~AuiToolBar.AddTool`,
          and not the eventual size of the tool button.
 
-        :todo: Add :class:`ToolBar` compatibility, actually implementing this method.
+        .. todo::
+
+           Add :class:`ToolBar` compatibility, actually implementing this method.
+           
         """
         
         # TODO: wx.ToolBar compatibility

@@ -1334,7 +1334,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
         :param `orient`: one of ``THUMB_VERTICAL``, ``THUMB_HORIZONTAL``.
 
-        :todo: Correctly implement the ``THUMB_HORIZONTAL`` orientation.        
+        .. todo:: Correctly implement the ``THUMB_HORIZONTAL`` orientation.        
         """
         
         self._orient = orient
@@ -1574,7 +1574,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         :param `filter`: filter images, video audio (currently implemented only for
          images).
 
-        :todo: Find a way to create thumbnails of video, audio and other formats.
+        .. todo:: Find a way to create thumbnails of video, audio and other formats.
         """
         
         self._dir = folder
@@ -1663,7 +1663,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
         :param `fname`: a file name.
         
-        :todo: Find a way to create thumbnails of video, audio and other formats.
+        .. todo:: Find a way to create thumbnails of video, audio and other formats.
         """
 
         return os.path.splitext(fname)[1].lower() in \
@@ -1677,7 +1677,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
         :param `fname`: a file name.
 
-        :todo: Find a way to create thumbnails of video, audio and other formats.
+        .. todo:: Find a way to create thumbnails of video, audio and other formats.
         """
 
         return os.path.splitext(fname)[1].lower() in \
@@ -1691,7 +1691,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
         :param `fname`: a file name.
 
-        :todo: Find a way to create thumbnails of video, audio and other formats.
+        .. todo:: Find a way to create thumbnails of video, audio and other formats.
         """
 
         return os.path.splitext(fname)[1].lower() in \

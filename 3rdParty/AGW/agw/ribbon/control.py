@@ -14,8 +14,8 @@ is "transparent", and shows the contents of the ribbon page or panel behind it.
 If implementing a new ribbon control, then it may be useful to realise that this
 effect is done by the art provider when painting the background of the control,
 and hence in the paint handler for the new control, you should call a draw background
-method on the art provider (:meth:`RibbonMSWArtProvider.DrawButtonBarBackground() <RibbonMSWArtProvider.DrawButtonBarBackground>` and
-:meth:`RibbonMSWArtProvider.DrawToolBarBackground() <RibbonMSWArtProvider.DrawToolBarBackground>` typically just redraw what is behind the
+method on the art provider (:meth:`RibbonMSWArtProvider.DrawButtonBarBackground() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.DrawButtonBarBackground>` and
+:meth:`RibbonMSWArtProvider.DrawToolBarBackground() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.DrawToolBarBackground>` typically just redraw what is behind the
 rectangle being painted) if you want transparent regions. 
 
 """

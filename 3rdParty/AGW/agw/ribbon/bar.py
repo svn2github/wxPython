@@ -31,17 +31,17 @@ Description
 
 Serves as a tabbed container for :class:`~lib.agw.ribbon.page.RibbonPage` - a ribbon user interface typically
 has a ribbon bar, which contains one or more RibbonPages, which in turn each contains
-one or more RibbonPanels, which in turn contain controls. While a :class:`~lib.agw.ribbon.bar.RibbnBar` has
+one or more RibbonPanels, which in turn contain controls. While a :class:`RibbonBar` has
 tabs similar to a :class:`Notebook`, it does not follow the same API for adding pages.
 Containers like :class:`Notebook` can contain any type of window as a page, hence the
 normal procedure is to create the sub-window and then call :meth:`BookCtrlBase.AddPage` ().
 
-As :class:`~lib.agw.ribbon.bar.RibbnBar` can only have :class:`~lib.agw.ribbon.page.RibbonPage` as children
-(and a :class:`~lib.agw.ribbon.page.RibbonPage` can only have a :class:`~lib.agw.ribbon.bar.RibbnBar` as parent),
+As :class:`RibbonBar` can only have :class:`~lib.agw.ribbon.page.RibbonPage` as children
+(and a :class:`~lib.agw.ribbon.page.RibbonPage` can only have a :class:`RibbonBar` as parent),
 when a page is created, it is automatically added to the bar - there is no `AddPage` equivalent to call.
 
 After all pages have been created, and all controls and panels placed on those pages,
-meth:~RibbonBar.Realize` must be called.
+meth:`~RibbonBar.Realize` must be called.
 
 
 Window Styles
@@ -404,7 +404,8 @@ class RibbonBar(RibbonControl):
 
         This must be called after all of the bar's children have been created (and their
         children created, etc.) - if it is not, then windows may not be laid out or
-        sized correctly. Also calls :meth:`RibbonPage.Realize() <RibbonPage.Realize>` on each child page.
+        sized correctly. Also calls :meth:`RibbonPage.Realize() <lib.agw.ribbon.page.RibbonPage.Realize>`
+        on each child page.
         
         :note: Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
         """

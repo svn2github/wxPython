@@ -1118,7 +1118,7 @@ class TextCtrlHandler(AbstractHandler):
     - :class:`lib.masked.combobox.ComboBox`;
     - :class:`lib.masked.ipaddrctrl.IpAddrCtrl`;
     - :class:`lib.masked.timectrl.TimeCtrl`;
-    - :class:`lib.masked..numctrl.NumCtrl`;
+    - :class:`lib.masked.numctrl.NumCtrl`;
     
     """
     
@@ -1223,7 +1223,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Return the children of item as a list.
 
-        :param `item`: a :class:`TreeCtrl` item or a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item;
+        :param `item`: a :class:`TreeCtrl` item or a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item;
         :param `recursively`: whether to recurse into the item hierarchy or not.
         """
 
@@ -1248,7 +1248,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Return the index of item.
 
-        :param `item`: a :class:`TreeCtrl` item or a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item;
+        :param `item`: a :class:`TreeCtrl` item or a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item;
         """
         
         parent = self._window.GetItemParent(item)
@@ -1269,7 +1269,7 @@ class TreeCtrlHandler(AbstractHandler):
         something that represents the underlying domain object, e.g. 
         a database key.
 
-        :param `item`: a :class:`TreeCtrl` item or a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item;        
+        :param `item`: a :class:`TreeCtrl` item or a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item;        
         """
 
         return self.GetIndexOfItem(item)
@@ -1296,7 +1296,7 @@ class TreeCtrlHandler(AbstractHandler):
         is present in the list and collapses all other tree items.
 
         :param `listOfExpandedItems`: a list of expanded :class:`TreeCtrl` or
-         :class:`lib.agw.customtreectrl.CustomTreeCtrl` items.
+         :class:`~lib.agw.customtreectrl.CustomTreeCtrl` items.
         """
         
         root = self._window.GetRootItem()
@@ -1329,7 +1329,7 @@ class TreeCtrlHandler(AbstractHandler):
         is present in the list and unselects all other tree items.
 
         :param `listOfSelectedItems`: a list of selected :class:`TreeCtrl` or
-         :class:`lib.agw.customtreectrl.CustomTreeCtrl` items.
+         :class:`~lib.agw.customtreectrl.CustomTreeCtrl` items.
         """
         
         root = self._window.GetRootItem()
@@ -1348,8 +1348,8 @@ class TreeCtrlHandler(AbstractHandler):
         
         :note:
 
-         This is meaningful only for :class:`lib.agw.customtreectrl.CustomTreeCtrl` and
-         :class:`lib.agw.hypertreelist.HyperTreeList`.
+         This is meaningful only for :class:`~lib.agw.customtreectrl.CustomTreeCtrl` and
+         :class:`~lib.agw.hypertreelist.HyperTreeList`.
         """
         
         root = self._window.GetRootItem()
@@ -1366,12 +1366,12 @@ class TreeCtrlHandler(AbstractHandler):
         Checks all tree items whose identity, as determined by :meth:`TreeCtrlHandler.GetItemIdentity() <TreeCtrlHandler.GetItemIdentity>`, is present
         in the list and unchecks all other tree items.
         
-        :param `listOfCheckedItems`: a list of checked :class:`lib.agw.customtreectrl.CustomTreeCtrl` items.
+        :param `listOfCheckedItems`: a list of checked :class:`~lib.agw.customtreectrl.CustomTreeCtrl` items.
 
         :note:
 
-         This is meaningful only for :class:`lib.agw.customtreectrl.CustomTreeCtrl` and
-         :class:`lib.agw.hypertreelist.HyperTreeList`.
+         This is meaningful only for :class:`~lib.agw.customtreectrl.CustomTreeCtrl` and
+         :class:`~lib.agw.hypertreelist.HyperTreeList`.
         """
         
         root = self._window.GetRootItem()
@@ -1387,7 +1387,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Returns the expansion state of a tree item.
 
-        :param `item`: a :class:`TreeCtrl` item or a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item.
+        :param `item`: a :class:`TreeCtrl` item or a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item.
         """
         
         listOfExpandedItems = []
@@ -1402,7 +1402,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Returns the expansion state of the children of a tree item.
 
-        :param `item`: a :class:`TreeCtrl` item or a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item.
+        :param `item`: a :class:`TreeCtrl` item or a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item.
         """
         
         listOfExpandedItems = []
@@ -1416,7 +1416,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Returns the checked/unchecked state of a tree item.
 
-        :param `item`: a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item.
+        :param `item`: a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item.
         """
         
         listOfCheckedItems = []
@@ -1432,7 +1432,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Returns the checked/unchecked state of the children of a tree item.
 
-        :param `item`: a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item.
+        :param `item`: a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item.
         """
         
         listOfCheckedItems = []
@@ -1446,7 +1446,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Returns the selection state of a tree item.
 
-        :param `item`: a :class:`TreeCtrl` item or a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item.
+        :param `item`: a :class:`TreeCtrl` item or a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item.
         """
         
         listOfSelectedItems = []
@@ -1461,7 +1461,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Returns the selection state of the children of a tree item.
 
-        :param `item`: a :class:`TreeCtrl` item or a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item.
+        :param `item`: a :class:`TreeCtrl` item or a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item.
         """
         
         listOfSelectedItems = []
@@ -1476,8 +1476,8 @@ class TreeCtrlHandler(AbstractHandler):
         Sets the expansion state of a tree item (expanded or collapsed).
 
         :param `listOfExpandedItems`: a list of expanded :class:`TreeCtrl` or
-         :class:`lib.agw.customtreectrl.CustomTreeCtrl` items;
-        :param `item`: a :class:`TreeCtrl` item or a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item.
+         :class:`~lib.agw.customtreectrl.CustomTreeCtrl` items;
+        :param `item`: a :class:`TreeCtrl` item or a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item.
         """
         
         if self.GetItemIdentity(item) in listOfExpandedItems:
@@ -1492,8 +1492,8 @@ class TreeCtrlHandler(AbstractHandler):
         Sets the expansion state of the children of a tree item (expanded or collapsed).
 
         :param `listOfExpandedItems`: a list of expanded :class:`TreeCtrl` or
-         :class:`lib.agw.customtreectrl.CustomTreeCtrl` items;
-        :param `item`: a :class:`TreeCtrl` item or a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item.
+         :class:`~lib.agw.customtreectrl.CustomTreeCtrl` items;
+        :param `item`: a :class:`TreeCtrl` item or a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item.
         """
 
         for child in self.GetItemChildren(item):
@@ -1504,8 +1504,8 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Sets the checked/unchecked state of a tree item.
 
-        :param `listOfCheckedItems`: a list of checked :class:`lib.agw.customtreectrl.CustomTreeCtrl` items;
-        :param `item`: a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item.
+        :param `listOfCheckedItems`: a list of checked :class:`~lib.agw.customtreectrl.CustomTreeCtrl` items;
+        :param `item`: a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item.
         """
 
         if self.GetItemIdentity(item) in listOfCheckedItems:
@@ -1520,8 +1520,8 @@ class TreeCtrlHandler(AbstractHandler):
         """
         Sets the checked/unchecked state of the children of a tree item.
 
-        :param `listOfCheckedItems`: a list of checked :class:`lib.agw.customtreectrl.CustomTreeCtrl` items;
-        :param `item`: a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item.
+        :param `listOfCheckedItems`: a list of checked :class:`~lib.agw.customtreectrl.CustomTreeCtrl` items;
+        :param `item`: a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item.
         """
 
         for child in self.GetItemChildren(item):
@@ -1533,8 +1533,8 @@ class TreeCtrlHandler(AbstractHandler):
         Sets the selection state of a tree item.
 
         :param `listOfSelectedItems`: a list of selected :class:`TreeCtrl` or
-         :class:`lib.agw.customtreectrl.CustomTreeCtrl` items;
-        :param `item`: a :class:`TreeCtrl` item or a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item.
+         :class:`~lib.agw.customtreectrl.CustomTreeCtrl` items;
+        :param `item`: a :class:`TreeCtrl` item or a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item.
         """
 
         if self.GetItemIdentity(item) in listOfSelectedItems:
@@ -1551,8 +1551,8 @@ class TreeCtrlHandler(AbstractHandler):
         Sets the selection state of the children of a tree item.
 
         :param `listOfSelectedItems`: a list of selected :class:`TreeCtrl` or
-         :class:`lib.agw.customtreectrl.CustomTreeCtrl` items;
-        :param `item`: a :class:`TreeCtrl` item or a :class:`lib.agw.customtreectrl.CustomTreeCtrl` item.
+         :class:`~lib.agw.customtreectrl.CustomTreeCtrl` items;
+        :param `item`: a :class:`TreeCtrl` item or a :class:`~lib.agw.customtreectrl.CustomTreeCtrl` item.
         """
         
         for child in self.GetItemChildren(item):
@@ -2223,7 +2223,7 @@ class FindReplaceHandler(TLWHandler):
 
     - :class:`FindReplaceDialog`.
 
-    :todo: Find a way to properly save and restore dialog data (:class:`ColourDialog`, :class:`FontDialog` etc...).
+    .. todo:: Find a way to properly save and restore dialog data (:class:`ColourDialog`, :class:`FontDialog` etc...).
 
     """
     
@@ -2280,7 +2280,7 @@ class FontDialogHandler(TLWHandler):
 
     - :class:`FontDialog`.
     
-    :todo: Find a way to properly save and restore dialog data (:class:`ColourDialog`, :class:`FontDialog` etc...).
+    .. todo:: Find a way to properly save and restore dialog data (:class:`ColourDialog`, :class:`FontDialog` etc...).
 
     """
     
@@ -2344,9 +2344,9 @@ class ColourDialogHandler(TLWHandler):
     This class handles the following wxPython widgets:
 
     - :class:`ColourDialog`;
-    - :class:`CubeColourDialog`.
+    - :class:`lib.agw.cubecolourdialog.CubeColourDialog`.
 
-    :todo: Find a way to properly save and restore dialog data (:class:`ColourDialog`, :class:`FontDialog` etc...).
+    .. todo:: Find a way to properly save and restore dialog data (:class:`ColourDialog`, :class:`FontDialog` etc...).
 
     """
     

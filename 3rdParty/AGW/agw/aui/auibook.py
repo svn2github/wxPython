@@ -911,7 +911,7 @@ class AuiTabContainer(object):
          ``AUI_NB_NO_TAB_FOCUS``              Don't draw tab focus rectangle
          ==================================== ==================================
 
-        :todo: Implementation of flags ``AUI_NB_RIGHT`` and ``AUI_NB_LEFT``.
+        .. todo:: Implementation of flags ``AUI_NB_RIGHT`` and ``AUI_NB_LEFT``.
 
         """
 
@@ -3214,7 +3214,7 @@ class AuiNotebook(wx.PyPanel):
          creation and that `Refresh` might need to be be called after changing the
          others for the change to take place immediately.
 
-        :todo: Implementation of flags ``AUI_NB_RIGHT`` and ``AUI_NB_LEFT``.
+        .. todo:: Implementation of flags ``AUI_NB_RIGHT`` and ``AUI_NB_LEFT``.
         """
 
         self._agwFlags = agwStyle

@@ -6203,7 +6203,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         """
         Returns ``True`` if the window is in tile mode (partially implemented).
 
-        :todo: Fully implement tile view for :class:`UltimateListCtrl`.        
+        .. todo:: Fully implement tile view for :class:`UltimateListCtrl`.        
         """
 
         return self.HasAGWFlag(ULC_TILE)        
@@ -7193,7 +7193,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         :param `dc`: an instance of :class:`DC`.
 
-        :todo: Support background images also in stretch and centered modes.
+        .. todo:: Support background images also in stretch and centered modes.
         """
 
         if not self._backgroundImage:
@@ -7227,7 +7227,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         :param `dc`: an instance of :class:`DC`.
 
-        :todo: Better support for this is needed.
+        .. todo:: Better support for this is needed.
         """
 
         if not self._waterMark:
@@ -8020,8 +8020,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         :param `oldEvent`: the original :class:`KeyEvent` event to be processed;
         :param `newEvent`: the new :class:`KeyEvent` event to be processed.
 
-        :todo: Find out why getting `m_rawFlags` returns a Python ``long`` but the setter
-         expects to receive an ``unsigned int``.
+        .. todo::
+
+           Find out why getting `m_rawFlags` returns a Python ``long`` but the setter
+           expects to receive an ``unsigned int``.
+
 
         .. versionadded:: 0.9.5
         """
@@ -10682,7 +10685,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         :note: At present, the background image can only be used in "tile" mode.
 
-        :todo: Support background images also in stretch and centered modes.
+        .. todo:: Support background images also in stretch and centered modes.
         """
 
         self._backgroundImage = image
@@ -10695,7 +10698,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         :note: At present, the background image can only be used in "tile" mode.
 
-        :todo: Support background images also in stretch and centered modes.        
+        .. todo:: Support background images also in stretch and centered modes.        
         """
 
         return self._backgroundImage
@@ -10708,7 +10711,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         :param `watermark`: if not ``None``, an instance of :class:`Bitmap`.
 
-        :todo: Better support for this is needed.        
+        .. todo:: Better support for this is needed.        
         """        
 
         self._waterMark = watermark
@@ -10720,7 +10723,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         Returns the :class:`UltimateListCtrl` watermark image (if any), displayed in the
         bottom right part of the window.
 
-        :todo: Better support for this is needed.        
+        .. todo:: Better support for this is needed.        
         """
 
         return self._waterMark
@@ -13192,7 +13195,7 @@ class UltimateListCtrl(wx.PyControl):
 
         :note: At present, the background image can only be used in "tile" mode.
 
-        :todo: Support background images also in stretch and centered modes.
+        .. todo:: Support background images also in stretch and centered modes.
         """
 
         self._mainWin.SetBackgroundImage(image)
@@ -13204,7 +13207,7 @@ class UltimateListCtrl(wx.PyControl):
 
         :note: At present, the background image can only be used in "tile" mode.
 
-        :todo: Support background images also in stretch and centered modes.        
+        .. todo:: Support background images also in stretch and centered modes.        
         """
 
         return self._mainWin.GetBackgroundImage()
@@ -13217,7 +13220,7 @@ class UltimateListCtrl(wx.PyControl):
 
         :param `watermark`: if not ``None``, an instance of :class:`Bitmap`.
 
-        :todo: Better support for this is needed.        
+        .. todo:: Better support for this is needed.        
         """        
 
         self._mainWin.SetWaterMark(watermark)
@@ -13228,7 +13231,7 @@ class UltimateListCtrl(wx.PyControl):
         Returns the :class:`UltimateListCtrl` watermark image (if any), displayed in the
         bottom right part of the window.
 
-        :todo: Better support for this is needed.        
+        .. todo:: Better support for this is needed.        
         """
 
         return self._mainWin.GetWaterMark()
