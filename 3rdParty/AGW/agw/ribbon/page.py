@@ -473,8 +473,8 @@ class RibbonPage(RibbonControl):
 
         Should be called after panels are added to the page, or the sizing behaviour of
         a panel on the page changes (i.e. due to children being added to it). Usually
-        called automatically when :meth:`RibbonBar.Realize() <RibbonBar.Realize>` is called. Will invoke
-        :meth:`RibbonPanel.Realize() <RibbonPanel.Realize>` for all child panels.
+        called automatically when :meth:`RibbonBar.Realize() <lib.agw.ribbon.bar.RibbonBar.Realize>` is called. Will invoke
+        :meth:`RibbonPanel.Realize() <lib.agw.ribbon.panel.RibbonPanel.Realize>` for all child panels.
 
         :note: Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
         """
