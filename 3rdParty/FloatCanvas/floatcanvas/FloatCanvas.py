@@ -65,8 +65,7 @@ EVT_MOUSEWHEEL = wx.PyEventBinder(EVT_FC_MOUSEWHEEL)
 
 class _MouseEvent(wx.PyCommandEvent):
 
-    """!
-
+    """
     This event class takes a regular wxWindows mouse event as a parameter,
     and wraps it so that there is access to all the original methods. This
     is similar to subclassing, but you can't subclass a wxWindows event
@@ -150,7 +149,7 @@ def _colorGenerator():
     return _cycleidxs(indexcount=3, maxvalue=256, step=1)
 
 class DrawObject:
-    """!
+    """
     This is the base class for all the objects that can be drawn.
 
     One must subclass from this (and an assortment of Mixins) to create
@@ -670,21 +669,24 @@ class Spline(Line):
 
 class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
     """
+    Arrow class definition.
+    
+    API definition::
 
-    Arrow(XY, # coords of origin of arrow (x,y)
-          Length, # length of arrow in pixels
-          theta, # angle of arrow in degrees: zero is straight up
-                 # +angle is to the right
-          LineColor = "Black",
-          LineStyle = "Solid",
-          LineWidth    = 1,
-          ArrowHeadSize = 4, # size of arrowhead in pixels
-          ArrowHeadAngle = 45, # angle of arrow head in degrees
-          InForeground = False):
+        Arrow(XY, # coords of origin of arrow (x,y)
+              Length, # length of arrow in pixels
+              theta, # angle of arrow in degrees: zero is straight up
+                     # +angle is to the right
+              LineColor = "Black",
+              LineStyle = "Solid",
+              LineWidth    = 1,
+              ArrowHeadSize = 4, # size of arrowhead in pixels
+              ArrowHeadAngle = 45, # angle of arrow head in degrees
+              InForeground = False):
+
 
     It will draw an arrow , starting at the point, (X,Y) pointing in
     direction, theta.
-
 
     """
     def __init__(self,
@@ -775,14 +777,18 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
 
 class ArrowLine(PointsObjectMixin, LineOnlyMixin, DrawObject):
     """
+    ArrowLine class definition.
+    
+    API definition::
+    
+        ArrowLine(Points, # coords of points
+                  LineColor = "Black",
+                  LineStyle = "Solid",
+                  LineWidth    = 1,
+                  ArrowHeadSize = 4, # in pixels
+                  ArrowHeadAngle = 45,
+                  InForeground = False):
 
-    ArrowLine(Points, # coords of points
-              LineColor = "Black",
-              LineStyle = "Solid",
-              LineWidth    = 1,
-              ArrowHeadSize = 4, # in pixels
-              ArrowHeadAngle = 45,
-              InForeground = False):
 
     It will draw a set of arrows from point to point.
 
@@ -1245,23 +1251,23 @@ class Text(TextObjectMixin, DrawObject, ):
     (if it ever gets implimented). Those will be the same, If you assume
     72 PPI.
 
-    Family:
-        Font family, a generic way of referring to fonts without
-        specifying actual facename. One of:
-            wx.DEFAULT:  Chooses a default font.
-            wx.DECORATIVE: A decorative font.
-            wx.ROMAN: A formal, serif font.
-            wx.SCRIPT: A handwriting font.
-            wx.SWISS: A sans-serif font.
-            wx.MODERN: A fixed pitch font.
-        NOTE: these are only as good as the wxWindows defaults, which aren't so good.
-    Style:
-        One of wx.NORMAL, wx.SLANT and wx.ITALIC.
-    Weight:
-        One of wx.NORMAL, wx.LIGHT and wx.BOLD.
-    Underlined:
-        The value can be True or False. At present this may have an an
-        effect on Windows only.
+    * Family: Font family, a generic way of referring to fonts without
+      specifying actual facename. One of:
+      
+            * wx.DEFAULT:  Chooses a default font.
+            * wx.DECORATI: A decorative font.
+            * wx.ROMAN: A formal, serif font.
+            * wx.SCRIPT: A handwriting font.
+            * wx.SWISS: A sans-serif font.
+            * wx.MODERN: A fixed pitch font.
+            
+      .. note:: these are only as good as the wxWindows defaults, which aren't so good.
+      
+    * Style: One of wx.NORMAL, wx.SLANT and wx.ITALIC.
+    * Weight: One of wx.NORMAL, wx.LIGHT and wx.BOLD.
+    * Underlined: The value can be True or False. At present this may have an an
+      effect on Windows only.
+
 
     Alternatively, you can set the kw arg: Font, to a wx.Font, and the
     above will be ignored.
@@ -1347,23 +1353,23 @@ class ScaledText(TextObjectMixin, DrawObject, ):
 
     Size is the size of the font in world coordinates.
 
-    Family:
-        Font family, a generic way of referring to fonts without
-        specifying actual facename. One of:
-            wx.DEFAULT:  Chooses a default font.
-            wx.DECORATI: A decorative font.
-            wx.ROMAN: A formal, serif font.
-            wx.SCRIPT: A handwriting font.
-            wx.SWISS: A sans-serif font.
-            wx.MODERN: A fixed pitch font.
-        NOTE: these are only as good as the wxWindows defaults, which aren't so good.
-    Style:
-        One of wx.NORMAL, wx.SLANT and wx.ITALIC.
-    Weight:
-        One of wx.NORMAL, wx.LIGHT and wx.BOLD.
-    Underlined:
-        The value can be True or False. At present this may have an an
-        effect on Windows only.
+    * Family: Font family, a generic way of referring to fonts without
+      specifying actual facename. One of:
+      
+            * wx.DEFAULT:  Chooses a default font.
+            * wx.DECORATI: A decorative font.
+            * wx.ROMAN: A formal, serif font.
+            * wx.SCRIPT: A handwriting font.
+            * wx.SWISS: A sans-serif font.
+            * wx.MODERN: A fixed pitch font.
+            
+      .. note:: these are only as good as the wxWindows defaults, which aren't so good.
+      
+    * Style: One of wx.NORMAL, wx.SLANT and wx.ITALIC.
+    * Weight: One of wx.NORMAL, wx.LIGHT and wx.BOLD.
+    * Underlined: The value can be True or False. At present this may have an an
+      effect on Windows only.
+
 
     Alternatively, you can set the kw arg: Font, to a wx.Font, and the
     above will be ignored. The size of the font you specify will be
@@ -1521,23 +1527,23 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
 
     Size is the size of the font in world coordinates.
 
-    Family:
-        Font family, a generic way of referring to fonts without
-        specifying actual facename. One of:
-            wx.DEFAULT:  Chooses a default font.
-            wx.DECORATIVE: A decorative font.
-            wx.ROMAN: A formal, serif font.
-            wx.SCRIPT: A handwriting font.
-            wx.SWISS: A sans-serif font.
-            wx.MODERN: A fixed pitch font.
-        NOTE: these are only as good as the wxWindows defaults, which aren't so good.
-    Style:
-        One of wx.NORMAL, wx.SLANT and wx.ITALIC.
-    Weight:
-        One of wx.NORMAL, wx.LIGHT and wx.BOLD.
-    Underlined:
-        The value can be True or False. At present this may have an an
-        effect on Windows only.
+    * Family: Font family, a generic way of referring to fonts without
+      specifying actual facename. One of:
+      
+            * wx.DEFAULT:  Chooses a default font.
+            * wx.DECORATI: A decorative font.
+            * wx.ROMAN: A formal, serif font.
+            * wx.SCRIPT: A handwriting font.
+            * wx.SWISS: A sans-serif font.
+            * wx.MODERN: A fixed pitch font.
+            
+      .. note:: these are only as good as the wxWindows defaults, which aren't so good.
+      
+    * Style: One of wx.NORMAL, wx.SLANT and wx.ITALIC.
+    * Weight: One of wx.NORMAL, wx.LIGHT and wx.BOLD.
+    * Underlined: The value can be True or False. At present this may have an an
+      effect on Windows only.
+
 
     Alternatively, you can set the kw arg: Font, to a wx.Font, and the
     above will be ignored. The size of the font you specify will be
