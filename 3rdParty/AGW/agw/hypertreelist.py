@@ -52,14 +52,14 @@ Description
 almost the same base functionalities plus some more enhancements. This class does
 not rely on the native control, as it is a full owner-drawn tree-list control.
 
-:class:`HyperTreeList` is somewhat an hybrid between :class:`CustomTreeCtrl` and :class:`gizmos.TreeListCtrl`.
+:class:`HyperTreeList` is somewhat an hybrid between :class:`~lib.agw.customtreectrl.CustomTreeCtrl` and :class:`gizmos.TreeListCtrl`.
 
 In addition to the standard :class:`gizmos.TreeListCtrl` behaviour this class supports:
 
 * CheckBox-type items: checkboxes are easy to handle, just selected or unselected
   state with no particular issues in handling the item's children;
 * Added support for 3-state value checkbox items;
-* RadioButton-type items: since I elected to put radiobuttons in :class:`CustomTreeCtrl`, I
+* RadioButton-type items: since I elected to put radiobuttons in :class:`~lib.agw.customtreectrl.CustomTreeCtrl`, I
   needed some way to handle them, that made sense. So, I used the following approach:
   
   - All peer-nodes that are radiobuttons will be mutually exclusive. In other words,
@@ -2005,7 +2005,7 @@ class TreeListMainWindow(CustomTreeCtrl):
     """
     This class represents the main window (and thus the main column) in :class:`HyperTreeList`.
 
-    :note: This is a subclass of :class:`CustomTreeCtrl`.
+    :note: This is a subclass of :class:`~lib.agw.customtreectrl.CustomTreeCtrl`.
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
@@ -2046,7 +2046,7 @@ class TreeListMainWindow(CustomTreeCtrl):
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
          ``TR_NO_HEADER``                   0x40000 Use this style to hide the columns header.
-         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for :class:`CustomTreeCtrl` is low.
+         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for :class:`~lib.agw.customtreectrl.CustomTreeCtrl` is low.
          ``TR_VIRTUAL``                    0x100000 :class:`HyperTreeList` will have virtual behaviour.
          ============================== =========== ==================================================
 
@@ -2598,7 +2598,7 @@ class TreeListMainWindow(CustomTreeCtrl):
     def SetMainColumn(self, column):
         """
         Sets the :class:`HyperTreeList` main column (i.e. the position of the underlying
-        :class:`CustomTreeCtrl`.
+        :class:`~lib.agw.customtreectrl.CustomTreeCtrl`.
 
         :param `column`: if not ``None``, an integer specifying the column index.
          If it is ``None``, the main column index is used.
@@ -2611,7 +2611,7 @@ class TreeListMainWindow(CustomTreeCtrl):
     def GetMainColumn(self):
         """
         Returns the :class:`HyperTreeList` main column (i.e. the position of the underlying
-        :class:`CustomTreeCtrl`.
+        :class:`~lib.agw.customtreectrl.CustomTreeCtrl`.
         """
         
         return self._main_column
@@ -4119,7 +4119,7 @@ class HyperTreeList(wx.PyControl):
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
          ``TR_NO_HEADER``                   0x40000 Use this style to hide the columns header.
-         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for :class:`CustomTreeCtrl` is low.
+         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for :class:`~lib.agw.customtreectrl.CustomTreeCtrl` is low.
          ``TR_VIRTUAL``                    0x100000 :class:`HyperTreeList` will have virtual behaviour.
          ============================== =========== ==================================================
 
@@ -4280,7 +4280,7 @@ class HyperTreeList(wx.PyControl):
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
          ``TR_NO_HEADER``                   0x40000 Use this style to hide the columns header.
-         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for :class:`CustomTreeCtrl` is low.
+         ``TR_ELLIPSIZE_LONG_ITEMS``        0x80000 Flag used to ellipsize long items when the horizontal space for :class:`~lib.agw.customtreectrl.CustomTreeCtrl` is low.
          ``TR_VIRTUAL``                    0x100000 :class:`HyperTreeList` will have virtual behaviour.
          ============================== =========== ==================================================
          

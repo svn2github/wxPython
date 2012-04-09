@@ -58,28 +58,28 @@ class AuiCommandCapture(wx.PyEvtHandler):
          a new control) where you define new event types, as opposed to allowing the
          user to override functions.
 
-         An instance where you might actually override the :meth:`~AuiCommandCapture.ProcessEvent` function is where
+         An instance where you might actually override the :meth:`ProcessEvent` function is where
          you want to direct event processing to event handlers not normally noticed by
          wxPython. For example, in the document/view architecture, documents and views
-         are potential event handlers. When an event reaches a frame, :meth:`~AuiCommandCapture.ProcessEvent` will
+         are potential event handlers. When an event reaches a frame, :meth:`ProcessEvent` will
          need to be called on the associated document and view in case event handler
          functions are associated with these objects. 
 
          The normal order of event table searching is as follows:
 
-         1. If the object is disabled (via a call to `SetEvtHandlerEnabled`) the function
+         1. If the object is disabled (via a call to :meth:`EvtHandler.SetEvtHandlerEnabled`) the function
             skips to step (6).
-         2. If the object is a :class:`Window`, :meth:`~AuiCommandCapture.ProcessEvent` is recursively called on the window's 
+         2. If the object is a :class:`Window`, :meth:`ProcessEvent` is recursively called on the window's 
             :class:`Validator`. If this returns ``True``, the function exits.
          3. wxWidgets `SearchEventTable` is called for this event handler. If this fails, the
             base class table is tried, and so on until no more tables exist or an appropriate
             function was found, in which case the function exits.
          4. The search is applied down the entire chain of event handlers (usually the chain
             has a length of one). If this succeeds, the function exits.
-         5. If the object is a :class:`Window` and the event is a :class:`CommandEvent`, :meth:`~AuiCommandCapture.ProcessEvent` is
+         5. If the object is a :class:`Window` and the event is a :class:`CommandEvent`, :meth:`ProcessEvent` is
             recursively applied to the parent window's event handler. If this returns ``True``,
             the function exits.
-         6. Finally, :meth:`~AuiCommandCapture.ProcessEvent` is called on the :class:`App` object.
+         6. Finally, :meth:`ProcessEvent` is called on the :class:`App` object.
         """
         
         if event.GetEventType() == wx.wxEVT_COMMAND_MENU_SELECTED:
@@ -94,11 +94,11 @@ class AuiCommandCapture(wx.PyEvtHandler):
 
 class AuiDefaultTabArt(object):
     """
-    Tab art provider code - a tab provider provides all drawing functionality to
-    the :class:`~lib.agw.aui.auibook.AuiNotebook`. This allows the :class:`~lib.agw.aui.auibook.AuiNotebook` to have a plugable look-and-feel.
+    Tab art provider code - a tab provider provides all drawing functionality to the :class:`~lib.agw.aui.auibook.AuiNotebook`.
+    This allows the :class:`~lib.agw.aui.auibook.AuiNotebook` to have a plugable look-and-feel.
 
-    By default, a :class:`~lib.agw.aui.auibook.AuiNotebook` uses an instance of this class called :class:`~lib.agw.aui.tabart.AuiDefaultTabArt`
-    which provides bitmap art and a colour scheme that is adapted to the major platforms'
+    By default, a :class:`~lib.agw.aui.auibook.AuiNotebook` uses an instance of this class called
+    :class:`AuiDefaultTabArt` which provides bitmap art and a colour scheme that is adapted to the major platforms'
     look. You can either derive from that class to alter its behaviour or write a
     completely new tab art class. Call :meth:`AuiNotebook.SetArtProvider() <lib.agw.aui.auibook.AuiNotebook.SetArtProvider>` to make use this
     new tab art.
@@ -212,7 +212,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the tab art flags.
 
-        :param `agwFlags`: a combination of the following values:
+        :param integer `agwFlags`: a combination of the following values:
 
          ==================================== ==================================
          Flag name                            Description
@@ -236,7 +236,8 @@ class AuiDefaultTabArt(object):
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
          ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
-         ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
+         ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less
+                                              full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
          ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
          ``AUI_NB_ORDER_BY_ACCESS``           Tab navigation order by last access time for the tabs
          ``AUI_NB_NO_TAB_FOCUS``              Don't draw tab focus rectangle
@@ -261,9 +262,9 @@ class AuiDefaultTabArt(object):
         """
         Sets the tab sizing information.
         
-        :param `tab_ctrl_size`: the size of the tab control area;
-        :param `tab_count`: the number of tabs;
-        :param `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
+        :param Size `tab_ctrl_size`: the size of the tab control area;
+        :param integer `tab_count`: the number of tabs;
+        :param tuple `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
          to be used when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
         """
         
@@ -304,7 +305,7 @@ class AuiDefaultTabArt(object):
 
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
-        :param `rect`: the tab control rectangle.
+        :param Rect `rect`: the tab control rectangle.
         """
 
         self._buttonRect = wx.Rect()
@@ -346,9 +347,9 @@ class AuiDefaultTabArt(object):
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
         :param `page`: the tab control page associated with the tab;
-        :param `in_rect`: rectangle the tab should be confined to;
-        :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
+        :param Rect `in_rect`: rectangle the tab should be confined to;
+        :param integer `close_button_state`: the state of the close button on the tab;
+        :param bool `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
 
         # if the caption is empty, measure some temporary text
@@ -608,12 +609,11 @@ class AuiDefaultTabArt(object):
 
     def SetCustomButton(self, bitmap_id, button_state, bmp):
         """
-        Sets a custom bitmap for the close, left, right and window list
-        buttons.
+        Sets a custom bitmap for the close, left, right and window list buttons.
         
-        :param `bitmap_id`: the button identifier;
-        :param `button_state`: the button state;
-        :param `bmp`: the custom bitmap to use for the button.
+        :param integer `bitmap_id`: the button identifier;
+        :param integer `button_state`: the button state;
+        :param Bitmap `bmp`: the custom bitmap to use for the button.
         """
 
         if bitmap_id == AUI_BUTTON_CLOSE:
@@ -661,11 +661,11 @@ class AuiDefaultTabArt(object):
 
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
-        :param `caption`: the tab text caption;
-        :param `bitmap`: the bitmap displayed on the tab;
-        :param `active`: whether the tab is selected or not;
-        :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a :class:`Window` instance inside a tab (or ``None``).
+        :param string `caption`: the tab text caption;
+        :param Bitmap `bitmap`: the bitmap displayed on the tab;
+        :param bool `active`: whether the tab is selected or not;
+        :param integer `close_button_state`: the state of the close button on the tab;
+        :param Window `control`: a :class:`Window` instance inside a tab (or ``None``).
         """
 
         dc.SetFont(self._measuring_font)
@@ -707,9 +707,9 @@ class AuiDefaultTabArt(object):
 
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
-        :param `in_rect`: rectangle the tab should be confined to;
+        :param Rect `in_rect`: rectangle the tab should be confined to;
         :param `button`: an instance of the button class;
-        :param `orientation`: the tab orientation.
+        :param integer `orientation`: the tab orientation.
         """
 
         bitmap_id, button_state = button.id, button.cur_state
@@ -784,13 +784,13 @@ class AuiDefaultTabArt(object):
         :param `dc`: a :class:`DC` device context;
         :param `page`: the page associated with the tab;
         :param `wnd`: a :class:`Window` instance object;
-        :param `draw_text`: the text that has been drawn on the tab;
-        :param `text_offset`: the text offset on the tab;
-        :param `bitmap_offset`: the bitmap offset on the tab;
-        :param `drawn_tab_yoff`: the y offset of the tab text;
-        :param `drawn_tab_height`: the height of the tab;
-        :param `textx`: the x text extent;
-        :param `texty`: the y text extent.
+        :param string `draw_text`: the text that has been drawn on the tab;
+        :param integer `text_offset`: the text offset on the tab;
+        :param integer `bitmap_offset`: the bitmap offset on the tab;
+        :param integer `drawn_tab_yoff`: the y offset of the tab text;
+        :param integer `drawn_tab_height`: the height of the tab;
+        :param integer `textx`: the x text extent;
+        :param integer `texty`: the y text extent.
         """
 
         if self.GetAGWFlags() & AUI_NB_NO_TAB_FOCUS:
@@ -824,8 +824,8 @@ class AuiDefaultTabArt(object):
         Returns the best tab control size.
 
         :param `wnd`: a :class:`Window` instance object;
-        :param `pages`: the pages associated with the tabs;
-        :param `required_bmp_size`: the size of the bitmap on the tabs.
+        :param list `pages`: the pages associated with the tabs;
+        :param Size `required_bmp_size`: the size of the bitmap on the tabs.
         """
 
         dc = wx.ClientDC(wnd)
@@ -868,7 +868,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the normal font for drawing tab labels.
 
-        :param `font`: a :class:`Font` object.
+        :param Font `font`: the new font to use to draw tab labels in their normal, un-selected state.
         """
 
         self._normal_font = font
@@ -878,7 +878,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the selected tab font for drawing tab labels.
 
-        :param `font`: a :class:`Font` object.
+        :param Font `font`: the new font to use to draw tab labels in their selected state.
         """
 
         self._selected_font = font
@@ -888,7 +888,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the font for calculating text measurements.
 
-        :param `font`: a :class:`Font` object.
+        :param Font `font`: the new font to use to measure tab labels text extents.
         """
 
         self._measuring_font = font
@@ -917,8 +917,8 @@ class AuiDefaultTabArt(object):
         Shows the drop-down window menu on the tab area.
 
         :param `wnd`: a :class:`Window` derived window instance;
-        :param `pages`: the pages associated with the tabs;
-        :param `active_idx`: the active tab index.
+        :param list `pages`: the pages associated with the tabs;
+        :param integer `active_idx`: the active tab index.
         """
         
         useImages = self.GetAGWFlags() & AUI_NB_USE_IMAGES_DROPDOWN
@@ -1041,7 +1041,7 @@ class AuiSimpleTabArt(object):
         """
         Sets the tab art flags.
 
-        :param `agwFlags`: a combination of the following values:
+        :param integer `agwFlags`: a combination of the following values:
 
          ==================================== ==================================
          Flag name                            Description
@@ -1065,7 +1065,8 @@ class AuiSimpleTabArt(object):
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
          ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
-         ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
+         ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full
+                                              screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
          ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
          ``AUI_NB_ORDER_BY_ACCESS``           Tab navigation order by last access time for the tabs
          ``AUI_NB_NO_TAB_FOCUS``              Don't draw tab focus rectangle
@@ -1090,9 +1091,9 @@ class AuiSimpleTabArt(object):
         """
         Sets the tab sizing information.
         
-        :param `tab_ctrl_size`: the size of the tab control area;
-        :param `tab_count`: the number of tabs;
-        :param `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
+        :param Size `tab_ctrl_size`: the size of the tab control area;
+        :param integer `tab_count`: the number of tabs;
+        :param tuple `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
          to be used when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
         """
         
@@ -1132,7 +1133,7 @@ class AuiSimpleTabArt(object):
 
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
-        :param `rect`: the tab control rectangle.
+        :param Rect `rect`: the tab control rectangle.
         """
         
         # draw background
@@ -1152,9 +1153,9 @@ class AuiSimpleTabArt(object):
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
         :param `page`: the tab control page associated with the tab;
-        :param `in_rect`: rectangle the tab should be confined to;
-        :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
+        :param Rect `in_rect`: rectangle the tab should be confined to;
+        :param integer `close_button_state`: the state of the close button on the tab;
+        :param bool `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
         
         # if the caption is empty, measure some temporary text
@@ -1328,10 +1329,10 @@ class AuiSimpleTabArt(object):
         Convenience method to draw tab buttons.
 
         :param `dc`: a :class:`DC` device context;
-        :param `_rect`: the tab rectangle;
-        :param `bmp`: the tab bitmap;
-        :param `bkcolour`: the tab background colour;
-        :param `button_state`: the state of the tab button.
+        :param Rect `_rect`: the tab rectangle;
+        :param Bitmap `bmp`: the tab bitmap;
+        :param Colour `bkcolour`: the tab background colour;
+        :param integer `button_state`: the state of the tab button.
         """
 
         rect = wx.Rect(*_rect)
@@ -1363,11 +1364,11 @@ class AuiSimpleTabArt(object):
 
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
-        :param `caption`: the tab text caption;
-        :param `bitmap`: the bitmap displayed on the tab;
-        :param `active`: whether the tab is selected or not;
-        :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a :class:`Window` instance inside a tab (or ``None``).
+        :param string `caption`: the tab text caption;
+        :param Bitmap `bitmap`: the bitmap displayed on the tab;
+        :param bool `active`: whether the tab is selected or not;
+        :param integer `close_button_state`: the state of the close button on the tab;
+        :param Window `control`: a :class:`Window` instance inside a tab (or ``None``).
         """
         
         dc.SetFont(self._measuring_font)
@@ -1397,9 +1398,9 @@ class AuiSimpleTabArt(object):
 
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
-        :param `in_rect`: rectangle the tab should be confined to;
+        :param Rect `in_rect`: rectangle the tab should be confined to;
         :param `button`: an instance of the button class;
-        :param `orientation`: the tab orientation.
+        :param integer `orientation`: the tab orientation.
         """
 
         bitmap_id, button_state = button.id, button.cur_state
@@ -1463,8 +1464,8 @@ class AuiSimpleTabArt(object):
         Shows the drop-down window menu on the tab area.
 
         :param `wnd`: a :class:`Window` derived window instance;
-        :param `pages`: the pages associated with the tabs;
-        :param `active_idx`: the active tab index.
+        :param list `pages`: the pages associated with the tabs;
+        :param integer `active_idx`: the active tab index.
         """
         
         menuPopup = wx.Menu()
@@ -1520,8 +1521,8 @@ class AuiSimpleTabArt(object):
         Returns the best tab control size.
 
         :param `wnd`: a :class:`Window` instance object;
-        :param `pages`: the pages associated with the tabs;
-        :param `required_bmp_size`: the size of the bitmap on the tabs.
+        :param list `pages`: the pages associated with the tabs;
+        :param Size `required_bmp_size`: the size of the bitmap on the tabs.
         """
         
         dc = wx.ClientDC(wnd)
@@ -1546,7 +1547,7 @@ class AuiSimpleTabArt(object):
         """
         Sets the normal font for drawing tab labels.
 
-        :param `font`: a :class:`Font` object.
+        :param Font `font`: the new font to use to draw tab labels in their normal, un-selected state.
         """
         
         self._normal_font = font
@@ -1556,7 +1557,7 @@ class AuiSimpleTabArt(object):
         """
         Sets the selected tab font for drawing tab labels.
 
-        :param `font`: a :class:`Font` object.
+        :param Font `font`: the new font to use to draw tab labels in their selected state.
         """
         
         self._selected_font = font
@@ -1566,7 +1567,7 @@ class AuiSimpleTabArt(object):
         """
         Sets the font for calculating text measurements.
 
-        :param `font`: a :class:`Font` object.
+        :param Font `font`: the new font to use to measure tab labels text extents.
         """
         
         self._measuring_font = font
@@ -1592,12 +1593,11 @@ class AuiSimpleTabArt(object):
 
     def SetCustomButton(self, bitmap_id, button_state, bmp):
         """
-        Sets a custom bitmap for the close, left, right and window list
-        buttons.
+        Sets a custom bitmap for the close, left, right and window list buttons.
         
-        :param `bitmap_id`: the button identifier;
-        :param `button_state`: the button state;
-        :param `bmp`: the custom bitmap to use for the button.
+        :param integer `bitmap_id`: the button identifier;
+        :param integer `button_state`: the button state;
+        :param Bitmap `bmp`: the custom bitmap to use for the button.
         """
         
         if bitmap_id == AUI_BUTTON_CLOSE:
@@ -1661,9 +1661,9 @@ class VC71TabArt(AuiDefaultTabArt):
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
         :param `page`: the tab control page associated with the tab;
-        :param `in_rect`: rectangle the tab should be confined to;
-        :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
+        :param Rect `in_rect`: rectangle the tab should be confined to;
+        :param integer `close_button_state`: the state of the close button on the tab;
+        :param bool `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
         
         # Visual studio 7.1 style
@@ -1880,11 +1880,11 @@ class FF2TabArt(AuiDefaultTabArt):
 
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
-        :param `caption`: the tab text caption;
-        :param `bitmap`: the bitmap displayed on the tab;
-        :param `active`: whether the tab is selected or not;
-        :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a :class:`Window` instance inside a tab (or ``None``).
+        :param string `caption`: the tab text caption;
+        :param Bitmap `bitmap`: the bitmap displayed on the tab;
+        :param bool `active`: whether the tab is selected or not;
+        :param integer `close_button_state`: the state of the close button on the tab;
+        :param Window `control`: a :class:`Window` instance inside a tab (or ``None``).
         """
         
         tab_size, x_extent = AuiDefaultTabArt.GetTabSize(self, dc, wnd, caption, bitmap,
@@ -1905,9 +1905,9 @@ class FF2TabArt(AuiDefaultTabArt):
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
         :param `page`: the tab control page associated with the tab;
-        :param `in_rect`: rectangle the tab should be confined to;
-        :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
+        :param Rect `in_rect`: rectangle the tab should be confined to;
+        :param integer `close_button_state`: the state of the close button on the tab;
+        :param bool `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
         
         # Firefox 2 style
@@ -2095,9 +2095,9 @@ class FF2TabArt(AuiDefaultTabArt):
         This is more consistent with :class:`~lib.agw.flatnotebook.FlatNotebook` than before.
 
         :param `dc`: a :class:`DC` device context;
-        :param `rect`: rectangle the tab should be confined to;
-        :param `focus`: whether the tab has focus or not;
-        :param `upperTabs`: whether the style is ``AUI_NB_TOP`` or ``AUI_NB_BOTTOM``.
+        :param Rect `rect`: rectangle the tab should be confined to;
+        :param bool `focus`: whether the tab has focus or not;
+        :param bool `upperTabs`: whether the style is ``AUI_NB_TOP`` or ``AUI_NB_BOTTOM``.
         """
 
         # Define the rounded rectangle base on the given rect
@@ -2173,9 +2173,9 @@ class VC8TabArt(AuiDefaultTabArt):
         """
         Sets the tab sizing information.
         
-        :param `tab_ctrl_size`: the size of the tab control area;
-        :param `tab_count`: the number of tabs;
-        :param `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
+        :param Size `tab_ctrl_size`: the size of the tab control area;
+        :param integer `tab_count`: the number of tabs;
+        :param tuple `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
          to be used when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
         """
         
@@ -2196,11 +2196,11 @@ class VC8TabArt(AuiDefaultTabArt):
 
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
-        :param `caption`: the tab text caption;
-        :param `bitmap`: the bitmap displayed on the tab;
-        :param `active`: whether the tab is selected or not;
-        :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a :class:`Window` instance inside a tab (or ``None``).
+        :param string `caption`: the tab text caption;
+        :param Bitmap `bitmap`: the bitmap displayed on the tab;
+        :param bool `active`: whether the tab is selected or not;
+        :param integer `close_button_state`: the state of the close button on the tab;
+        :param Window `control`: a :class:`Window` instance inside a tab (or ``None``).
         """
         
         tab_size, x_extent = AuiDefaultTabArt.GetTabSize(self, dc, wnd, caption, bitmap,
@@ -2226,9 +2226,9 @@ class VC8TabArt(AuiDefaultTabArt):
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
         :param `page`: the tab control page associated with the tab;
-        :param `in_rect`: rectangle the tab should be confined to;
-        :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
+        :param Rect `in_rect`: rectangle the tab should be confined to;
+        :param integer `close_button_state`: the state of the close button on the tab;
+        :param bool `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
         
         # Visual Studio 8 style
@@ -2434,8 +2434,8 @@ class VC8TabArt(AuiDefaultTabArt):
         Fills the tab with the Visual Studio 2005 gradient background.
 
         :param `dc`: a :class:`DC` device context;
-        :param `tabPoints`: a list of :class:`Point` objects describing the tab shape;
-        :param `active`: whether the tab is selected or not.
+        :param list `tabPoints`: a list of :class:`Point` objects describing the tab shape;
+        :param bool `active`: whether the tab is selected or not.
         """
 
         xList = [pt.x for pt in tabPoints]
@@ -2490,7 +2490,7 @@ class ChromeTabArt(AuiDefaultTabArt):
         """
         Sets the tab art flags.
 
-        :param `agwFlags`: a combination of the following values:
+        :param integer `agwFlags`: a combination of the following values:
 
          ==================================== ==================================
          Flag name                            Description
@@ -2514,7 +2514,8 @@ class ChromeTabArt(AuiDefaultTabArt):
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
          ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
-         ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
+         ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full
+                                              screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
          ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
          ``AUI_NB_ORDER_BY_ACCESS``           Tab navigation order by last access time for the tabs
          ``AUI_NB_NO_TAB_FOCUS``              Don't draw tab focus rectangle
@@ -2535,7 +2536,7 @@ class ChromeTabArt(AuiDefaultTabArt):
         """
         Assigns the tab custom bitmaps
 
-        :param `mirror`: whether to vertically mirror the bitmap or not.
+        :param bool `mirror`: whether to vertically mirror the bitmap or not.
         """
 
         bmps = [tab_active_left.GetBitmap(), tab_active_center.GetBitmap(),
@@ -2572,9 +2573,9 @@ class ChromeTabArt(AuiDefaultTabArt):
         """
         Sets the tab sizing information.
         
-        :param `tab_ctrl_size`: the size of the tab control area;
-        :param `tab_count`: the number of tabs;
-        :param `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
+        :param Size `tab_ctrl_size`: the size of the tab control area;
+        :param integer `tab_count`: the number of tabs;
+        :param tuple `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
          to be used when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
         """
         
@@ -2595,11 +2596,11 @@ class ChromeTabArt(AuiDefaultTabArt):
 
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
-        :param `caption`: the tab text caption;
-        :param `bitmap`: the bitmap displayed on the tab;
-        :param `active`: whether the tab is selected or not;
-        :param `close_button_state`: the state of the close button on the tab;
-        :param `control`: a :class:`Window` instance inside a tab (or ``None``).
+        :param string `caption`: the tab text caption;
+        :param Bitmap `bitmap`: the bitmap displayed on the tab;
+        :param bool `active`: whether the tab is selected or not;
+        :param integer `close_button_state`: the state of the close button on the tab;
+        :param Window `control`: a :class:`Window` instance inside a tab (or ``None``).
         """
         
         tab_size, x_extent = AuiDefaultTabArt.GetTabSize(self, dc, wnd, caption, bitmap,
@@ -2623,9 +2624,9 @@ class ChromeTabArt(AuiDefaultTabArt):
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` instance object;
         :param `page`: the tab control page associated with the tab;
-        :param `in_rect`: rectangle the tab should be confined to;
-        :param `close_button_state`: the state of the close button on the tab;
-        :param `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
+        :param Rect `in_rect`: rectangle the tab should be confined to;
+        :param integer `close_button_state`: the state of the close button on the tab;
+        :param bool `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
         
         # Chrome tab style
