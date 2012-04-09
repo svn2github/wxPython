@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 01 Apr 2012, 11.00 GMT
+# Latest Revision: 09 Apr 2012, 11.00 GMT
 #
 #
 # TODO List
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 01 Apr 2012, 11.00 GMT
+Latest Revision: Andrea Gavana @ 09 Apr 2012, 11.00 GMT
 
 Version 0.8
 
@@ -5436,6 +5436,7 @@ class UltimateListHeaderWindow(wx.PyControl):
             # find the column where this event occurred
             countCol = self._owner.GetColumnCount()
             broken = False
+            tipCol = -1
 
             for col in xrange(countCol):
 
@@ -5449,24 +5450,27 @@ class UltimateListHeaderWindow(wx.PyControl):
                     # near the column border
                     hit_border = True
                     broken = True
+                    tipCol = col
                     break
 
                 if x < xpos:
                     # inside the column
                     broken = True
+                    tipCol = col
                     break
 
                 self._minX = xpos
 
             if not broken:
                 self._column = -1
-            
-            # First check to see if we have a tooltip to display    
-            colItem = self._owner.GetColumn(col)
-            if colItem.GetToolTip() != "":
-                self.SetToolTipString(colItem.GetToolTip())
-            else:
-                self.SetToolTipString("")
+
+            if tipCol >= 0:
+                # First check to see if we have a tooltip to display    
+                colItem = self._owner.GetColumn(col)
+                if colItem.GetToolTip() != "":
+                    self.SetToolTipString(colItem.GetToolTip())
+                else:
+                    self.SetToolTipString("")
                 
             if event.LeftUp():
                 self._leftDown = False
@@ -10056,10 +10060,14 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
     def DeleteEverything(self):
         """ Deletes all items in the :class:`UltimateListCtrl`, resetting column widths to zero. """
         
-        self._columns = []
-        self._aColWidths = []
-
         self.DeleteAllItems()
+
+        count = len(self._columns)
+        for n in xrange(count):
+            self.DeleteColumn(0)
+        
+        self.RecalculatePositions()
+        self.GetListCtrl().Refresh()
 
 
 # ----------------------------------------------------------------------------
