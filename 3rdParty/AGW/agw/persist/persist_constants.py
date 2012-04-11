@@ -16,7 +16,7 @@ PM_DEFAULT_STYLE                     = PM_SAVE_RESTORE_AUI_PERSPECTIVES | PM_PER
 CONFIG_PATH_SEPARATOR = "/"
 
 BAD_DEFAULT_NAMES = ["widget", "wxSpinButton", "auiFloating", "AuiTabCtrl", "maskedTextCtrl",
-                     "numctrl", "IpAddrCtrl", "masked.num", "time", "scrolledpanel"]
+                     "numctrl", "IpAddrCtrl", "masked.num", "time", "scrolledpanel", "cPanel"]
 
 for name in dir(wx):
     if "NameStr" in name:
@@ -62,6 +62,8 @@ PERSIST_TLW_ICONIZED = "Iconized"
 # To save and restore wx.aui and wx.lib.agw.aui perspectives
 PERSIST_AGW_AUI_PERSPECTIVE = "AGWAui_Perspective"
 PERSIST_AUI_PERSPECTIVE = "Aui_Perspective"
+
+PERSIST_AUIPERSPECTIVE_KIND = "AUI manager"
 
 # ----------------------------------------------------------------------------------- #
 # String constants used by CheckBoxHandler

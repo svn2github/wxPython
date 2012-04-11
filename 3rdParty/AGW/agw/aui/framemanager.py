@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 09 Apr 2012, 21.00 GMT
+# Latest Revision: 11 Apr 2012, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -5419,7 +5419,11 @@ class AuiManager(wx.EvtHandler):
 
             if isinstance(pane.window, auibar.AuiToolBar) and (pane.IsFloatable() or pane.IsDockable()):
                 pane.window.SetGripperVisible(True)
-            
+
+        for p in self._panes:
+            if p.IsMinimized():
+                self.MinimizePane(p, False)
+                
         if update:
             self.Update()
 
@@ -9831,7 +9835,7 @@ class AuiManager(wx.EvtHandler):
             self.Update()
 
 
-    def MinimizePane(self, paneInfo):
+    def MinimizePane(self, paneInfo, mgrUpdate=True):
         """
         Minimizes a pane in a newly and automatically created :class:`~lib.agw.aui.auibar.AuiToolBar`.
 
@@ -9843,12 +9847,20 @@ class AuiManager(wx.EvtHandler):
         Clicking on the restore button on the newly created toolbar will result in the
         toolbar being removed and the original pane being restored.
 
-        :param `paneInfo`: a :class:`AuiPaneInfo` instance for the pane to be minimized.
+        :param `paneInfo`: a :class:`AuiPaneInfo` instance for the pane to be minimized;
+        :param bool `mgrUpdate`: ``True`` to call :meth:`Update` to realize the new layout,
+         ``False`` otherwise.
+
+        .. note::
+
+           The `mgrUpdate` parameter is currently only used while loading perspectives using
+           :meth:`LoadPerspective`, as minimized panes were not correctly taken into account before.
+           
         """
         
         if not paneInfo.IsToolbar():
 
-            if paneInfo.IsMinimized():
+            if paneInfo.IsMinimized() and mgrUpdate:
                 # We are already minimized
                 return
             
@@ -9989,9 +10001,11 @@ class AuiManager(wx.EvtHandler):
                 paneInfo.window.Show(False)
 
             minimize_toolbar.Show()
-            self.Update()
-            if self._agwFlags & AUI_MGR_ANIMATE_FRAMES:
-                self.AnimateDocking(win_rect, minimize_toolbar.GetScreenRect())
+
+            if mgrUpdate:
+                self.Update()
+                if self._agwFlags & AUI_MGR_ANIMATE_FRAMES:
+                    self.AnimateDocking(win_rect, minimize_toolbar.GetScreenRect())
 
 
     def OnRestoreMinimizedPane(self, event):

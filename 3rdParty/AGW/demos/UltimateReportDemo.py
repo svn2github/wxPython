@@ -611,7 +611,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.renderers = renderers
 
         # show how to select an item
-        self.list.SetItemState(5, wx.LIST_STATE_SELECTED, wx.LIST_STATE_SELECTED)
+        self.list.Select(5, True)
 
         # show how to change the colour of a couple items
         item = self.list.GetItem(1)

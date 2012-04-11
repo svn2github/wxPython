@@ -2498,7 +2498,8 @@ class TextEntryHandler(TLWHandler, TextCtrlHandler):
 HANDLERS = [
     ("BookHandler", (wx.BookCtrlBase, wx.aui.AuiNotebook, AUI.AuiNotebook, FNB.FlatNotebook,
                     LBK.LabelBook, LBK.FlatImageBook)),
-    ("TLWHandler", (wx.TopLevelWindow, )), 
+    ("TLWHandler", (wx.TopLevelWindow, )),
+    ("AUIHandler", (wx.Panel, )),
     ("CheckBoxHandler", (wx.CheckBox, )), 
     ("TreeCtrlHandler", (wx.TreeCtrl, wx.GenericDirCtrl, CT.CustomTreeCtrl)), 
     ("MenuBarHandler", (wx.MenuBar, FM.FlatMenuBar)), 

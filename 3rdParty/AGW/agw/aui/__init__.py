@@ -277,7 +277,7 @@ License And Version
 
 AUI library is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 01 Apr 2012, 11.00 GMT
+Latest Revision: Andrea Gavana @ 11 Apr 2012, 21.00 GMT
 
 Version 1.3. 
 
