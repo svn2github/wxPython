@@ -2789,11 +2789,42 @@ class AuiNotebook(wx.PyPanel):
 
         :return: ``True`` if the window has either been successfully deleted, or
          it has been added to the list of windows pending real deletion.
+
+        .. note::
+
+           This method has been added to safely un-initialize the underlying
+           :class:`~lib.agw.aui.framemanager.AuiManager` which manages the :class:`AuiNotebook`
+           layout (i.e., tab split, re-ordering, tab floating etc...).
+         
         """
         
         self._mgr.UnInit()
         return wx.PyPanel.Destroy(self)
         
+
+    def __getitem__(self, index):
+        """
+        More Pythonic way to get a specific page, also useful for iterating
+        over all pages.
+
+        :param integer `index`: the page index.
+
+        .. note::
+
+           This method makes easier to iterate over all the pages in the notebook, i.e. you can
+           safely do::
+
+               for page in notebook:
+                   DoSomething(page)
+
+
+        """
+        
+        if index < self.GetPageCount():
+            return self.GetPage(index)
+        else:
+            raise IndexError("Invalid page index")
+
 
     def GetTabContainer(self):
         """ Returns the instance of :class:`AuiTabContainer`. """
