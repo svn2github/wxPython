@@ -4211,6 +4211,8 @@ class AuiNotebook(wx.PyPanel):
         if not src_tabs:
             return
 
+        selection = self.GetSelection()
+        
         # choose a split size
         if self.GetPageCount() > 2:
             split_size = self.CalculateNewSplitSize()
@@ -4272,7 +4274,15 @@ class AuiNotebook(wx.PyPanel):
         src_tabs.RemovePage(page_info.window)
 
         if src_tabs.GetPageCount() > 0:
-            src_tabs.SetActivePage(0)
+            if selection < 0 or selection == src_idx:
+                active_page = 0
+            else:
+                if selection > src_idx:
+                    selection -= 1
+
+                active_page = selection
+            
+            src_tabs.SetActivePage(active_page)
             src_tabs.DoShowHide()
             src_tabs.Refresh()
 
