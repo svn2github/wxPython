@@ -3124,14 +3124,17 @@ class AuiFloatingFrame(wx.MiniFrame):
         if self._last_rect.IsEmpty():        
             self._last_rect = wx.Rect(*win_rect)
             return
-        
-        # skip if moving too fast to avoid massive redraws and
-        # jumping hint windows
-        if abs(win_rect.x - self._last_rect.x) > 3 or abs(win_rect.y - self._last_rect.y) > 3:
-            self._last3_rect = wx.Rect(*self._last2_rect)
-            self._last2_rect = wx.Rect(*self._last_rect)
-            self._last_rect = wx.Rect(*win_rect)
-            return
+
+        # As on OSX moving windows are not getting all move events, only sporadically, this difference
+        # is almost always big on OSX, so avoid this early exit opportunity
+        if wx.Platform != '__WXMAC__':
+            # skip if moving too fast to avoid massive redraws and
+            # jumping hint windows
+            if abs(win_rect.x - self._last_rect.x) > 3 or abs(win_rect.y - self._last_rect.y) > 3:
+                self._last3_rect = wx.Rect(*self._last2_rect)
+                self._last2_rect = wx.Rect(*self._last_rect)
+                self._last_rect = wx.Rect(*win_rect)
+                return
 
         # prevent frame redocking during resize
         if self._last_rect.GetSize() != win_rect.GetSize():
@@ -3139,6 +3142,22 @@ class AuiFloatingFrame(wx.MiniFrame):
             self._last2_rect = wx.Rect(*self._last_rect)
             self._last_rect = wx.Rect(*win_rect)
             return
+
+        dir = wx.ALL
+
+        horiz_dist = abs(win_rect.x - self._last3_rect.x)
+        vert_dist = abs(win_rect.y - self._last3_rect.y)
+
+        if vert_dist >= horiz_dist:
+            if win_rect.y < self._last3_rect.y:
+                dir = wx.NORTH
+            else:
+                dir = wx.SOUTH
+        else:
+            if win_rect.x < self._last3_rect.x:
+                dir = wx.WEST
+            else:
+                dir = wx.EAST
 
         self._last3_rect = wx.Rect(*self._last2_rect)
         self._last2_rect = wx.Rect(*self._last_rect)
@@ -3159,7 +3178,10 @@ class AuiFloatingFrame(wx.MiniFrame):
         if self._last3_rect.IsEmpty():
             return
 
-        self.OnMoving(event)
+        if event.GetEventType() == wx.wxEVT_MOVING:
+            self.OnMoving(event.GetRect(), dir)
+        else:
+            self.OnMoving(wx.RectPS(event.GetPosition(), self.GetSize()), dir)
 
 
     def OnIdle(self, event):
@@ -3217,21 +3239,23 @@ class AuiFloatingFrame(wx.MiniFrame):
                 self._owner_mgr.OnMotion_DragFloatingPane(point)
 
     
-    def OnMoving(self, event):
+    def OnMoving(self, rect, direction):
         """
         The user is moving the floating pane.
 
-        :param `event`: an instance of :class:`MouseEvent`.
-        
+        :param Rect `rect`: the pane client rectangle;
+        :param integer `direction`: the direction in which the pane is moving, can be one of
+         ``wx.NORTH``, ``wx.SOUTH``, ``wx.EAST`` or ``wx.WEST``.        
+
         .. note::
 
-           This method is used only on wxMAC if :class:`AuiManager` is using the
+           This event is only processed on wxMAC if :class:`AuiManager` is using the
            ``AUI_MGR_USE_NATIVE_MINIFRAMES`` style.
-           
         """
 
         # notify the owner manager that the pane is moving
-        self.OnMoveStart(event)
+        self.OnMoveStart(None)
+        self._lastDirection = direction
         
 
     def OnMoveFinished(self):

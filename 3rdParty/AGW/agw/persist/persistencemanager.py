@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2009
-# Latest Revision: 24 Oct 2011, 21.00 GMT
+# Latest Revision: 22 Apr 2011, 11.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -360,6 +360,7 @@ class PersistenceManager(object):
         """
 
         self._configFile = fileName
+        self._persistentObjects = {}
         
 
     def GetPersistenceFile(self):
