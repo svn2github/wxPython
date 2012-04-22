@@ -2745,7 +2745,7 @@ def GetIntroText():
     "<li>Splittable notebook control</li>" \
     "</ul>" \
     "<p><b>What's new in AUI?</b></p>" \
-    "<p>Current wxAUI Version Tracked: wxWidgets 2.9.2 (SVN HEAD)" \
+    "<p>Current wxAUI Version Tracked: wxWidgets 2.9.4 (SVN HEAD)" \
     "<p>The wxPython AUI version fixes the following bugs or implement the following" \
     " missing features (the list is not exhaustive): " \
     "<p><ul>" \
@@ -2843,7 +2843,8 @@ def GetIntroText():
     "<li>A slide-in/slide-out preview of minimized panes can be seen by enabling the <i>AuiManager</i> style" \
     "<tt>AUI_MGR_PREVIEW_MINIMIZED_PANES</tt> and by hovering with the mouse on the minimized pane toolbar tool;</li>" \
     "<li>Native of custom-drawn mini frames can be used as floating panes, depending on the <tt>AUI_MGR_USE_NATIVE_MINIFRAMES</tt> style;</li>" \
-    "<li>A 'smooth docking effect' can be obtained by using the <tt>AUI_MGR_SMOOTH_DOCKING</tt> style (similar to PyQT docking style).</li>" \
+    "<li>A 'smooth docking effect' can be obtained by using the <tt>AUI_MGR_SMOOTH_DOCKING</tt> style (similar to PyQT docking style);</li>" \
+    '<li>Implementation of "Movable" panes, i.e. a pane that is set as `Movable()` but not `Floatable()` can be dragged and docked into a new location but will not form a floating window in between.</li>' \
     "</ul><p>" \
     "<li><b>AuiNotebook:</b></li>" \
     "<ul>" \
