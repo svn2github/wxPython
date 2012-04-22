@@ -4176,6 +4176,7 @@ class AuiManager(wx.EvtHandler):
         self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.OnCaptureLost)
         self.Bind(wx.EVT_TIMER, self.OnHintFadeTimer, self._hint_fadetimer)
         self.Bind(wx.EVT_TIMER, self.SlideIn, self._preview_timer)
+        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
 
         self.Bind(wx.EVT_MOVE, self.OnMove)
         self.Bind(wx.EVT_SYS_COLOUR_CHANGED, self.OnSysColourChanged)
@@ -4422,6 +4423,8 @@ class AuiManager(wx.EvtHandler):
 
         if not managed_window:
             raise Exception("Specified managed window must be non-null. ")
+
+        self.UnInit()
         
         self._frame = managed_window
         self._frame.PushEventHandler(self)
@@ -4544,14 +4547,19 @@ class AuiManager(wx.EvtHandler):
         """
 
         if not self._frame:
-            self.Destroy()
             return
 
         for klass in [self._frame] + list(self._frame.GetChildren()):
             handler = klass.GetEventHandler()
             if klass is not handler:
                 if isinstance(handler, AuiManager):
-                    klass.PopEventHandler(True)
+                    klass.RemoveEventHandler(handler)
+
+
+    def OnDestroy(self, event) :
+
+        if self._frame == event.GetEventObject():
+            self.UnInit();
 
 
     def GetArtProvider(self):
