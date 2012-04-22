@@ -3074,7 +3074,7 @@ class AuiFloatingFrame(wx.MiniFrame):
 
             self._mgr.UnInit()
             self.Destroy()
-    
+            
 
     def OnActivate(self, event):
         """
@@ -9137,8 +9137,11 @@ class AuiManager(wx.EvtHandler):
         else:
             event.Skip()        
 
-        if self._frame.HasCapture():
-            self._frame.ReleaseMouse()
+        try:
+            if self._frame.HasCapture():
+                self._frame.ReleaseMouse()
+        except wx.PyDeadObjectError:
+            pass
             
         self._action = actionNone
 
