@@ -1906,8 +1906,8 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
             # AuiNotebooks always want to receive this event
             # even if the tab is already active, because they may
             # have multiple tab controls
-            if new_selection != self.GetActivePage() or isinstance(self.GetParent(), AuiNotebook):
-
+            if (new_selection != self.GetActivePage() or isinstance(self.GetParent(), AuiNotebook)) and \
+               not self._hover_button:
                 e = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGING, self.GetId())
                 e.SetSelection(new_selection)
                 e.SetOldSelection(self.GetActivePage())
