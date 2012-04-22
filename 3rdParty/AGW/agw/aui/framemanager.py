@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 11 Apr 2012, 21.00 GMT
+# Latest Revision: 22 Apr 2012, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -3072,6 +3072,7 @@ class AuiFloatingFrame(wx.MiniFrame):
             if self._owner_mgr and self._owner_mgr._action_window == self:
                 self._owner_mgr._action_window = None
 
+            self._mgr.UnInit()
             self.Destroy()
     
 
@@ -3134,6 +3135,12 @@ class AuiFloatingFrame(wx.MiniFrame):
                 self._last3_rect = wx.Rect(*self._last2_rect)
                 self._last2_rect = wx.Rect(*self._last_rect)
                 self._last_rect = wx.Rect(*win_rect)
+
+                # However still update the internally stored position to avoid
+                # snapping back to the old one later.
+                if self._owner_mgr:
+                    self._owner_mgr.GetPane(self._pane_window).floating_pos = win_rect.GetPosition()
+
                 return
 
         # prevent frame redocking during resize
@@ -9123,7 +9130,10 @@ class AuiManager(wx.EvtHandler):
         
         elif self._action == actionDragToolbarPane:
             self.OnLeftUp_DragToolbarPane(event)
-            
+
+        elif self._action == actionDragMovablePane:
+            self.OnLeftUp_DragMovablePane(event)
+        
         else:
             event.Skip()        
 
@@ -9151,6 +9161,9 @@ class AuiManager(wx.EvtHandler):
         
         elif self._action == actionDragToolbarPane:
             self.OnMotion_DragToolbarPane(event)
+
+        elif self._action == actionDragMovablePane:
+            self.OnMotion_DragMovablePane(event)
         
         else:
             self.OnMotion_Other(event)
@@ -9343,6 +9356,10 @@ class AuiManager(wx.EvtHandler):
                 self._action_pane.Show()
                 
             self.Update()
+
+        elif self._action_pane.IsMovable():
+            self._action = actionDragMovablePane
+            self._action_window = self._action_pane.window
 
 
     def OnMotion_Resize(self, event):
@@ -9563,6 +9580,30 @@ class AuiManager(wx.EvtHandler):
         self.DrawHintRect(pane.window, clientPt, action_offset)
 
 
+    def OnMotion_DragMovablePane(self, eventOrPt):
+        """
+        Sub-handler for the :meth:`OnMotion` event.
+
+        :param `event`: a :class:`MouseEvent` to be processed.
+        """
+
+        # Try to find the pane.
+        pane = self.GetPane(self._action_window)
+        if not pane.IsOk():
+            raise Exception("Pane window not found")
+
+        # Draw a hint for where the window will be moved.
+        if isinstance(eventOrPt, wx.Point):
+            pt = wx.Point(*eventOrPt)
+        else:
+            pt = eventOrPt.GetPosition()
+            
+        self.DrawHintRect(self._action_window, pt, wx.Point(0, 0))
+
+        # Reduces flicker.
+        self._frame.Update()
+
+
     def OnLeftUp_DragFloatingPane(self, eventOrPt):
         """
         Sub-handler for the :meth:`OnLeftUp` event.
@@ -9633,6 +9674,60 @@ class AuiManager(wx.EvtHandler):
 
         self.HideHint()
         ShowDockingGuides(self._guides, False)
+
+
+    def OnLeftUp_DragMovablePane(self, event):
+        """
+        Sub-handler for the :meth:`OnLeftUp` event.
+
+        :param `event`: a :class:`MouseEvent` to be processed.
+        """
+
+        # Try to find the pane.
+        paneInfo = self.GetPane(self._action_window)
+        if not paneInfo.IsOk():
+            raise Exception("Pane window not found")
+
+        # Hide the hint as it is no longer needed.
+        self.HideHint()
+
+        # is the pane dockable?
+        if self.CanDockPanel(paneInfo):
+            # Move the pane to new position.
+            pt = event.GetPosition()
+            # do the drop calculation
+            indx = self._panes.index(paneInfo)
+            ret, paneInfo = self.DoDrop(self._docks, self._panes, paneInfo, pt, wx.Point(0,0))
+
+            if ret:
+                e = self.FireEvent(wxEVT_AUI_PANE_DOCKING, paneInfo, canVeto=True)
+                if e.GetVeto():
+                    self.HideHint()
+                    ShowDockingGuides(self._guides, False)
+                    return
+
+                e = self.FireEvent(wxEVT_AUI_PANE_DOCKED, paneInfo, canVeto=False)
+
+                if self._agwFlags & AUI_MGR_SMOOTH_DOCKING:
+                    self.SmoothDock(paneInfo)
+
+            self._panes[indx] = paneInfo
+
+            if ret:
+                # Update the layout to realize new position and e.g. form notebooks if needed.
+                self.Update()
+
+        if self.GetAGWFlags() & AUI_MGR_ALLOW_ACTIVE_PANE:
+            # Ensure active before doing actual display.
+            ret, self._panes = SetActivePane(self._panes, paneInfo.window)
+
+        # Make changes visible to user.
+        self.Repaint()
+        
+        # Cancel the action and release the mouse.
+        self._action = actionNone
+        self._frame.ReleaseMouse()
+        self._action_window = None
 
 
     def OnMotion_DragToolbarPane(self, eventOrPt):

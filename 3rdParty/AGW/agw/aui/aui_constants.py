@@ -450,6 +450,8 @@ actionDragToolbarPane = 4
 """ Drag a floating toolbar action. """
 actionDragFloatingPane = 5
 """ Drag a floating pane action. """
+actionDragMovablePane = 6
+""" Move a pane action. """
 
 # Drop/Float constants
 auiInsertRowPixels = 10
