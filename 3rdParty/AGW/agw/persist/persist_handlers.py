@@ -313,6 +313,7 @@ class AUIHandler(AbstractHandler):
 
         # Restore the AUI perspectives if PersistenceManager allows it
         eventHandler = self._window.GetEventHandler()
+        restoreCodeCaption = False
 
         isAGWAui = isinstance(eventHandler, AUI.AuiManager)
         isAui = isinstance(eventHandler, wx.aui.AuiManager)
@@ -324,12 +325,18 @@ class AUIHandler(AbstractHandler):
             # Allowed to save and restore perspectives
             if isAGWAui:
                 name = PERSIST_AGW_AUI_PERSPECTIVE
+                restoreCodeCaption = manager.GetManagerStyle()
+                restoreCodeCaption &= ~(PM_RESTORE_CAPTION_FROM_CODE)
             else:
                 name = PERSIST_AUI_PERSPECTIVE
                 
             perspective = self._pObject.RestoreValue(name)
             if perspective is not None:
-                eventHandler.LoadPerspective(perspective)
+                if restoreCodeCaption:
+                    eventHandler.LoadPerspective(perspective,
+                                                 restorecaption=True)
+                else:
+                    eventHandler.LoadPerspective(perspective)
                 return False
             
         return True
