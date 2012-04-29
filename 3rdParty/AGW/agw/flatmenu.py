@@ -2,7 +2,7 @@
 # FLATMENU wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 29 Apr 2012, 23.00 GMT
 #
 # TODO List
 #
@@ -185,7 +185,7 @@ License And Version
 
 :class:`FlatMenu` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 29 Apr 2012, 23.00 GMT
 
 Version 1.0
 
@@ -5732,7 +5732,7 @@ class FlatMenu(FlatMenuBase):
         """
 
         newItem = FlatMenuItem(self)
-        return self.Insert(pos, newItem)
+        return self.InsertItem(pos, newItem)
 
 
     def Dismiss(self, dismissParent, resetOwner):
