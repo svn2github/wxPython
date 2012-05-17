@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 20 Mar 2012, 21.00 GMT
+# Latest Revision: 17 May 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -299,7 +299,7 @@ License And Version
 
 :class:`CustomTreeCtrl` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 20 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 17 May 2012, 21.00 GMT
 
 Version 2.6
 
@@ -5617,7 +5617,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         self.TagNextChildren(first, last, select)
 
 
-    def DoSelectItem(self, item, unselect_others=True, extended_select=False):
+    def DoSelectItem(self, item, unselect_others=True, extended_select=False, from_key=False):
         """
         Actually selects/unselects an item, sending ``EVT_TREE_SEL_CHANGING`` and
         ``EVT_TREE_SEL_CHANGED`` events.
@@ -5626,7 +5626,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param bool `unselect_others`: if ``True``, all the other selected items are
          unselected.
         :param bool `extended_select`: ``True`` if the :class:`CustomTreeCtrl` is using the
-         ``TR_EXTENDED`` style.
+         ``TR_EXTENDED`` style;
+        :param bool `from_key`: ``True`` to indicate that the selection was made via a keyboard
+         key, ``False`` if it was a mouse selection.
         """
 
         self._select_me = None
@@ -5635,7 +5637,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         # to keep going anyhow !!!
         if is_single:
-            if item.IsSelected():
+            if item.IsSelected() and not from_key:
                 # Handles hypertext items
                 self.HandleHyperLink(item)
                 return # nothing else to do
@@ -5645,7 +5647,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         elif unselect_others and item.IsSelected():
         
             # selection change if there is more than one item currently selected
-            if len(self.GetSelections()) == 1:
+            if len(self.GetSelections()) == 1 and not from_key:
                 # Handles hypertext items
                 self.HandleHyperLink(item)
                 return
@@ -5701,8 +5703,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         event.SetEventType(wxEVT_TREE_SEL_CHANGED)
         self.GetEventHandler().ProcessEvent(event)
 
-        # Handles hypertext items
-        self.HandleHyperLink(item)
+        if not from_key:
+            # Handles hypertext items
+            self.HandleHyperLink(item)
         
 
     def SelectItem(self, item, select=True):
@@ -7171,7 +7174,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                     # TODO: Huh?  If we get here, we'd better be the first child of our parent.  How else could it be?
                     if current == self.GetFirstChild(prev)[0] and self.IsItemEnabled(prev):
                         # otherwise we return to where we came from
-                        self.DoSelectItem(prev, unselect_others, extended_select)
+                        self.DoSelectItem(prev, unselect_others, extended_select, from_key=True)
                         self._key_current = prev
                 
             else:
@@ -7195,7 +7198,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                         prev = self.GetItemParent(prev)
                         
                 if prev:
-                    self.DoSelectItem(prev, unselect_others, extended_select)
+                    self.DoSelectItem(prev, unselect_others, extended_select, from_key=True)
                     self._key_current = prev
 
         # left arrow goes to the parent
@@ -7210,7 +7213,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 self.Collapse(self._current)
             else:
                 if prev and self.IsItemEnabled(prev):
-                    self.DoSelectItem(prev, unselect_others, extended_select)
+                    self.DoSelectItem(prev, unselect_others, extended_select, from_key=True)
                 
         elif keyCode == wx.WXK_RIGHT:
             # this works the same as the down arrow except that we
@@ -7218,7 +7221,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             if self.IsExpanded(self._current) and self.HasChildren(self._current):
                 child, cookie = self.GetFirstChild(self._key_current)
                 if self.IsItemEnabled(child):
-                    self.DoSelectItem(child, unselect_others, extended_select)
+                    self.DoSelectItem(child, unselect_others, extended_select, from_key=True)
                     self._key_current = child
             else:
                 self.Expand(self._current)
@@ -7230,7 +7233,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 child = self.GetNextActiveItem(self._key_current)
                 
                 if child:
-                    self.DoSelectItem(child, unselect_others, extended_select)
+                    self.DoSelectItem(child, unselect_others, extended_select, from_key=True)
                     self._key_current = child   
                 
             else:
@@ -7251,7 +7254,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                         next = self.GetNext(next)
                     
                 if next:
-                    self.DoSelectItem(next, unselect_others, extended_select)
+                    self.DoSelectItem(next, unselect_others, extended_select, from_key=True)
                     self._key_current = next
                     
 
@@ -7274,7 +7277,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             
             if last and self.IsItemEnabled(last):
             
-                self.DoSelectItem(last, unselect_others, extended_select)
+                self.DoSelectItem(last, unselect_others, extended_select, from_key=True)
                 
         # <Home> selects the root item
         elif keyCode == wx.WXK_HOME:
@@ -7290,7 +7293,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                     return
 
             if self.IsItemEnabled(prev):
-                self.DoSelectItem(prev, unselect_others, extended_select)
+                self.DoSelectItem(prev, unselect_others, extended_select, from_key=True)
         
         else:
             

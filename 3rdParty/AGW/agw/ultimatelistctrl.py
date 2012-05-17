@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 25 Apr 2012, 11.00 GMT
+# Latest Revision: 17 May 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 25 Apr 2012, 11.00 GMT
+Latest Revision: Andrea Gavana @ 17 May 2012, 21.00 GMT
 
 Version 0.8
 
@@ -9813,8 +9813,6 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         self._dirty = False
         if not noRefresh:
-            # FIXME: why should we call it from here?
-            self.UpdateCurrent()
             self.RefreshAll()
 
 
@@ -10036,7 +10034,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             for i in xrange(len(self._aColWidths)):
                 self._aColWidths[i]._bNeedsUpdate = True
 
-        for item in self._itemWithWindow:
+        for item in self._itemWithWindow[:]:
             if item.GetWindow():
                 self.DeleteItemWindow(item)
 
