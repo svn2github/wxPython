@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 21 May 2012, 21.00 GMT
+# Latest Revision: 22 May 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -299,7 +299,7 @@ License And Version
 
 :class:`CustomTreeCtrl` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 21 May 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 22 May 2012, 21.00 GMT
 
 Version 2.6
 
@@ -7153,7 +7153,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                         
                     self.CheckItem(self._current, checked)
 
-                if item.IsHyperText():
+                if self.IsItemHyperText(self._current):
                     self.HandleHyperLink(self._current)
         
             # in any case, also generate the normal key event for this key,
