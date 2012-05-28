@@ -79,18 +79,18 @@ def GetRecentAdditions():
                            'FlatMenu', 'FlatNotebook', 'FloatSpin',
                            'FoldPanelBar', 'FourWaySplitter', 'GenericMessageDialog',
                            'GradientButton', 'HyperLinkCtrl', 'HyperTreeList',
-                           'InfoBar', 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
+                           'AGWInfoBar', 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
                            'PeakMeter', 'PersistentControls', 'PieCtrl', 'PyBusyInfo',
                            'PyCollapsiblePane', 'PyProgress', 'RibbonBar', 'RulerCtrl',
                            'ShapedButton', 'ShortcutEditor', 'SpeedMeter', 'SuperToolTip',
                            'ThumbnailCtrl', 'ToasterBox', 'UltimateListCtrl',
                            'XLSGrid', 'ZoomBar']
     elif wx.VERSION < (2,9,2):
-        recentAdditions = ['AUI', 'InfoBar', 'PersistentControls', 'PyBusyInfo', 'PyGauge',
+        recentAdditions = ['AUI', 'AGWInfoBar', 'PersistentControls', 'PyBusyInfo', 'PyGauge',
                            'RibbonBar', 'ShortcutEditor', 'UltimateListCtrl',
                            'XLSGrid', 'ZoomBar']
     else:
-        recentAdditions = ['InfoBar', 'PersistentControls', 'ShortcutEditor', 'XLSGrid']
+        recentAdditions = ['AGWInfoBar', 'PersistentControls', 'ShortcutEditor', 'XLSGrid']
 
     # Return the Recent Additions for AGW    
     return recentAdditions
@@ -111,7 +111,7 @@ def GetDemos():
                 'FlatMenu', 'FlatNotebook', 'FloatSpin',
                 'FoldPanelBar', 'FourWaySplitter', 'GenericMessageDialog',
                 'GradientButton', 'HyperLinkCtrl', 'HyperTreeList',
-                'InfoBar', 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
+                'AGWInfoBar', 'KnobCtrl', 'LabelBook', 'MultiDirDialog',
                 'PeakMeter', 'PersistentControls', 'PieCtrl', 'PyBusyInfo',
                 'PyCollapsiblePane', 'PyGauge', 'PyProgress', 'RibbonBar',
                 'RulerCtrl', 'ShapedButton', 'ShortcutEditor', 'SpeedMeter',
