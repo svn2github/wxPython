@@ -27,6 +27,17 @@ Window Styles                     Hex Value   Description
 ================================= =========== =================================
 
 
+Events Processing
+=================
+
+This class processes the following events:
+
+======================================= ===================================
+Event Name                              Description
+======================================= ===================================
+``EVT_RIBBONPANEL_EXTBUTTON_ACTIVATED`` Triggered when the user activate the panel extension button.
+======================================= ===================================
+
 See Also
 ========
 
@@ -37,7 +48,12 @@ See Also
 import wx
 
 from control import RibbonControl
+
 from art import *
+
+
+wxEVT_COMMAND_RIBBONPANEL_EXTBUTTON_ACTIVATED = wx.NewEventType()
+EVT_RIBBONPANEL_EXTBUTTON_ACTIVATED = wx.PyEventBinder(wxEVT_COMMAND_RIBBONPANEL_EXTBUTTON_ACTIVATED, 1)
 
     
 def IsAncestorOf(ancestor, window):
@@ -50,6 +66,39 @@ def IsAncestorOf(ancestor, window):
             window = parent
     
     return False
+
+
+class RibbonPanelEvent(wx.PyCommandEvent):
+    """ Handles events related to :class:`RibbonPanel`. """
+
+    def __init__(self, command_type=None, win_id=0, panel=None):
+        """
+        Default class constructor.
+
+        :param integer `command_type`: the event type;
+        :param integer `win_id`: the event identifier;
+        :param `panel`: an instance of :class:`RibbonPanel`;
+        """
+        
+        wx.PyCommandEvent.__init__(self, command_type, win_id)
+        
+        self._panel = panel
+
+
+    def GetPanel(self):
+        """ Returns the panel which the event relates to. """
+
+        return self._panel
+
+        
+    def SetPanel(self, panel):
+        """
+        Sets the panel relating to this event.
+
+        :param `panel`: an instance of :class:`RibbonPanel`.
+        """
+
+        self._panel = panel
 
 
 class RibbonPanel(RibbonControl):
@@ -101,6 +150,7 @@ class RibbonPanel(RibbonControl):
         self.Bind(wx.EVT_LEFT_DOWN, self.OnMouseClick)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
+        self.Bind(wx.EVT_MOTION, self.OnMotion)
 
 
     def __del__(self):
@@ -108,7 +158,12 @@ class RibbonPanel(RibbonControl):
         if self._expanded_panel:    
             self._expanded_panel._expanded_dummy = None
             self._expanded_panel.GetParent().Destroy()
-    
+
+
+    def IsExtButtonHovered(self):
+
+        return self._ext_button_hovered
+
 
     def SetArtProvider(self, art):
         """
@@ -147,7 +202,9 @@ class RibbonPanel(RibbonControl):
         self._minimised_icon = icon
         self._minimised = False
         self._hovered = False
-
+        self._ext_button_hovered = False
+        self._ext_button_rect = wx.Rect()
+        
         if self._art == None:        
             parent = self.GetParent()
             if isinstance(parent, RibbonControl):
@@ -245,17 +302,28 @@ class RibbonPanel(RibbonControl):
 
     def TestPositionForHover(self, pos):
 
-        hovered = False
+        hovered = ext_button_hovered = False
         
         if pos.x >= 0 and pos.y >= 0:        
             size = self.GetSize()
             if pos.x < size.GetWidth() and pos.y < size.GetHeight():            
                 hovered = True
-                
-        if hovered != self._hovered:        
+
+        if hovered:
+            if self.HasExtButton():
+                ext_button_hovered = self._ext_button_rect.Contains(pos)
+
+        if hovered != self._hovered or ext_button_hovered != self._ext_button_hovered:
             self._hovered = hovered
+            self._ext_button_hovered = ext_button_hovered
             self.Refresh(False)
-    
+
+
+    def HasExtButton(self):
+        
+        bar = self.GetGrandParent()
+        return (self._flags & RIBBON_PANEL_EXT_BUTTON) and (bar.GetAGWWindowStyleFlag() & RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
+
 
     def AddChild(self, child):
 
@@ -276,6 +344,16 @@ class RibbonPanel(RibbonControl):
 
         RibbonControl.RemoveChild(self, child)
 
+
+    def OnMotion(self, event):
+        """
+        Handles the ``wx.EVT_MOTION`` event for :class:`RibbonPanel`.
+
+        :param `event`: a :class:`MouseEvent` event to be processed.
+        """
+
+        self.TestPositionForHover(event.GetPosition())
+        
 
     def OnSize(self, event):
         """
@@ -751,7 +829,10 @@ class RibbonPanel(RibbonControl):
         elif len(children) == 1:        
            # Common case of no sizer and single child taking up the entire panel
              children[0].SetDimensions(position.x, position.y, size.GetWidth(), size.GetHeight())
-        
+
+        if self.HasExtButton():
+            self._ext_button_rect = self._art.GetPanelExtButtonArea(dc, self, self.GetSize())
+
         return True
 
 
@@ -767,6 +848,12 @@ class RibbonPanel(RibbonControl):
                 self.HideExpanded()            
             else:            
                 self.ShowExpanded()
+
+        elif self.IsExtButtonHovered():
+            notification = RibbonPanelEvent(wxEVT_COMMAND_RIBBONPANEL_EXTBUTTON_ACTIVATED, self.GetId())
+            notification.SetEventObject(self)
+            notification.SetPanel(self)
+            self.ProcessEvent(notification)
             
 
     def GetExpandedDummy(self):

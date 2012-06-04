@@ -49,6 +49,8 @@ gallery_down_xpm = ["5 5 2 1", "  c None", "x c #FF00FF", "     ", "xxxxx", " xx
 gallery_left_xpm = ["5 5 2 1", "  c None", "x c #FF00FF", "   x ", "  xx ", " xxx ", "  xx ", "   x "]
 gallery_right_xpm = ["5 5 2 1", "  c None", "x c #FF00FF", " x   ", " xx  ", " xxx ", " xx  ", " x   "]
 gallery_extension_xpm = ["5 5 2 1", "  c None", "x c #FF00FF", "xxxxx", "     ", "xxxxx", " xxx ", "  x  "]
+panel_extension_xpm = ["7 7 2 1", "  c None", "x c #FF00FF", "xxxxxx ", "x      ", "x      ",
+                       "x  x  x", "x   xxx", "x   xxx", "   xxxx"]
 
 
 def LikePrimary(primary_hsl, is_gray, h, s, l):
@@ -78,6 +80,7 @@ class RibbonMSWArtProvider(object):
         self._gallery_up_bitmap = [wx.NullBitmap for i in xrange(4)]
         self._gallery_down_bitmap = [wx.NullBitmap for i in xrange(4)]
         self._gallery_extension_bitmap = [wx.NullBitmap for i in xrange(4)]
+        self._panel_extension_bitmap = [wx.NullBitmap for i in xrange(2)]
 
         if set_colour_scheme:
             self.SetColourScheme(wx.Colour(194, 216, 241), wx.Colour(255, 223, 114), wx.Colour(0, 0, 0))
@@ -216,13 +219,18 @@ class RibbonMSWArtProvider(object):
         self._panel_hover_label_colour = self._panel_label_colour
         self._panel_minimised_label_colour = self._tab_label_colour
 
+        self._panel_hover_button_background_brush = wx.Brush(LikeSecondary(secondary_hsl, secondary_is_gray, -0.9, 0.16, -0.07))
+        self._panel_hover_button_border_pen = wx.Pen(LikeSecondary(secondary_hsl, secondary_is_gray, -3.9, -0.16, -0.14))
+        self.SetColour(RIBBON_ART_PANEL_BUTTON_FACE_COLOUR, LikePrimary(primary_hsl, primary_is_gray, 1.4, -0.21, -0.23))
+        self.SetColour(RIBBON_ART_PANEL_BUTTON_HOVER_FACE_COLOUR, LikePrimary(primary_hsl, primary_is_gray, 1.5, -0.24, -0.29))
+    
         self._gallery_button_disabled_background_colour = LikePrimary(primary_hsl, primary_is_gray, -2.8, -0.46, 0.09)
         self._gallery_button_disabled_background_top_brush = wx.Brush(LikePrimary(primary_hsl, primary_is_gray, -2.8, -0.36, 0.15))
         self._gallery_hover_background_brush = wx.Brush(LikePrimary(primary_hsl, primary_is_gray, -0.8, 0.05, 0.15))
         self._gallery_border_pen = wx.Pen(LikePrimary(primary_hsl, primary_is_gray, 0.7, -0.02, 0.03))
         self._gallery_button_background_top_brush = wx.Brush(LikePrimary(primary_hsl, primary_is_gray, 0.8, 0.34, 0.13))
         self._gallery_button_background_colour = LikePrimary(primary_hsl, primary_is_gray, 1.3, 0.10, 0.08)
-        
+
         # SetColour used so that the relevant bitmaps are generated
         self.SetColour(RIBBON_ART_GALLERY_BUTTON_FACE_COLOUR, LikePrimary(primary_hsl, primary_is_gray, 1.4, -0.21, -0.23))
         self.SetColour(RIBBON_ART_GALLERY_BUTTON_HOVER_FACE_COLOUR, LikePrimary(primary_hsl, primary_is_gray, 1.5, -0.24, -0.29))
@@ -286,6 +294,9 @@ class RibbonMSWArtProvider(object):
             copy._gallery_up_bitmap[i] = self._gallery_up_bitmap[i]
             copy._gallery_down_bitmap[i] = self._gallery_down_bitmap[i]
             copy._gallery_extension_bitmap[i] = self._gallery_extension_bitmap[i]
+
+        for i in xrange(2):
+            copy._panel_extension_bitmap[i] = self._panel_extension_bitmap[i]
     
         copy._toolbar_drop_bitmap = self._toolbar_drop_bitmap
 
@@ -306,6 +317,8 @@ class RibbonMSWArtProvider(object):
         copy._panel_label_colour = self._panel_label_colour
         copy._panel_hover_label_colour = self._panel_hover_label_colour
         copy._panel_minimised_label_colour = self._panel_minimised_label_colour
+        copy._panel_button_face_colour = self._panel_button_face_colour
+        copy._panel_button_hover_face_colour = self._panel_button_hover_face_colour
         copy._panel_active_background_colour = self._panel_active_background_colour
         copy._panel_active_background_gradient_colour = self._panel_active_background_gradient_colour
         copy._panel_active_background_top_colour = self._panel_active_background_top_colour
@@ -342,6 +355,7 @@ class RibbonMSWArtProvider(object):
         copy._tab_ctrl_background_brush = self._tab_ctrl_background_brush
         copy._panel_label_background_brush = self._panel_label_background_brush
         copy._panel_hover_label_background_brush = self._panel_hover_label_background_brush
+        copy._panel_hover_button_background_brush = self._panel_hover_button_background_brush
         copy._gallery_hover_background_brush = self._gallery_hover_background_brush
         copy._gallery_button_background_top_brush = self._gallery_button_background_top_brush
         copy._gallery_button_hover_background_top_brush = self._gallery_button_hover_background_top_brush
@@ -355,6 +369,7 @@ class RibbonMSWArtProvider(object):
         copy._page_border_pen = self._page_border_pen
         copy._panel_border_pen = self._panel_border_pen
         copy._panel_border_gradient_pen = self._panel_border_gradient_pen
+        copy._panel_hover_button_border_pen = self._panel_hover_button_border_pen
         copy._panel_minimised_border_pen = self._panel_minimised_border_pen
         copy._panel_minimised_border_gradient_pen = self._panel_minimised_border_gradient_pen
         copy._tab_border_pen = self._tab_border_pen
@@ -417,7 +432,9 @@ class RibbonMSWArtProvider(object):
         self.Reload(RIBBON_ART_GALLERY_BUTTON_HOVER_FACE_COLOUR)
         self.Reload(RIBBON_ART_GALLERY_BUTTON_ACTIVE_FACE_COLOUR)
         self.Reload(RIBBON_ART_GALLERY_BUTTON_DISABLED_FACE_COLOUR)
-
+        self.Reload(RIBBON_ART_PANEL_BUTTON_FACE_COLOUR)
+        self.Reload(RIBBON_ART_PANEL_BUTTON_HOVER_FACE_COLOUR)
+        
 
     def Reload(self, setting):
 
@@ -662,6 +679,10 @@ class RibbonMSWArtProvider(object):
             return self._panel_active_background_colour
         elif id == RIBBON_ART_PANEL_ACTIVE_BACKGROUND_GRADIENT_COLOUR:
             return self._panel_active_background_gradient_colour
+        elif id == RIBBON_ART_PANEL_BUTTON_FACE_COLOUR:
+            return self._panel_button_face_colour
+        elif id == RIBBON_ART_PANEL_BUTTON_HOVER_FACE_COLOUR:
+            return self._panel_button_hover_face_colour
         elif id == RIBBON_ART_PAGE_BORDER_COLOUR:
             return self._page_border_pen.GetColour()
         elif id == RIBBON_ART_PAGE_BACKGROUND_TOP_COLOUR:
@@ -772,9 +793,9 @@ class RibbonMSWArtProvider(object):
         elif id == RIBBON_ART_GALLERY_BUTTON_ACTIVE_FACE_COLOUR:
             self._gallery_button_active_face_colour = colour
 
-            if self._flags & RIBBON_BAR_FLOW_VERTICAL:            
+            if self._flags & RIBBON_BAR_FLOW_VERTICAL:
                 self._gallery_up_bitmap[2] = RibbonLoadPixmap(gallery_left_xpm, colour)
-                self._gallery_down_bitmap[2] = RibbonLoadPixmap(gallery_right_xpm, colour)            
+                self._gallery_down_bitmap[2] = RibbonLoadPixmap(gallery_right_xpm, colour)
             else:            
                 self._gallery_up_bitmap[2] = RibbonLoadPixmap(gallery_up_xpm, colour)
                 self._gallery_down_bitmap[2] = RibbonLoadPixmap(gallery_down_xpm, colour)
@@ -855,6 +876,12 @@ class RibbonMSWArtProvider(object):
             self._panel_active_background_colour = colour
         elif id == RIBBON_ART_PANEL_ACTIVE_BACKGROUND_GRADIENT_COLOUR:
             self._panel_active_background_gradient_colour = colour
+        elif id == RIBBON_ART_PANEL_BUTTON_FACE_COLOUR:
+            self._panel_button_face_colour = colour
+            self._panel_extension_bitmap[0] = RibbonLoadPixmap(panel_extension_xpm, colour)
+        elif id == RIBBON_ART_PANEL_BUTTON_HOVER_FACE_COLOUR:
+            self._panel_button_hover_face_colour = colour
+            self._panel_extension_bitmap[1] = RibbonLoadPixmap(panel_extension_xpm, colour)
         elif id == RIBBON_ART_PAGE_BORDER_COLOUR:
             self._page_border_pen.SetColour(colour)
         elif id == RIBBON_ART_PAGE_BACKGROUND_TOP_COLOUR:
@@ -1406,6 +1433,8 @@ class RibbonMSWArtProvider(object):
         dc.SetFont(self._panel_label_font)
         dc.SetPen(wx.TRANSPARENT_PEN)
 
+        has_ext_button = wnd.HasExtButton()
+        
         if wnd.IsHovered():
             dc.SetBrush(self._panel_hover_label_background_brush)
             dc.SetTextForeground(self._panel_hover_label_colour)        
@@ -1424,6 +1453,11 @@ class RibbonMSWArtProvider(object):
         label_rect.SetY(true_rect.GetBottom() - label_rect.GetHeight())
         label_height = label_rect.GetHeight()
 
+        label_bg_rect = wx.Rect(*label_rect)
+
+        if has_ext_button:
+            label_rect.SetWidth(label_rect.GetWidth() - 13)
+            
         if label_size.GetWidth() > label_rect.GetWidth():        
             # Test if there is enough length for 3 letters and ...
             new_label = label[0:3] + "..."
@@ -1451,6 +1485,15 @@ class RibbonMSWArtProvider(object):
         else:        
             dc.DrawText(label, label_rect.x + (label_rect.GetWidth() - label_size.GetWidth()) / 2,
                         label_rect.y + (label_rect.GetHeight() - label_size.GetHeight()) / 2)
+
+        if has_ext_button:
+            if wnd.IsExtButtonHovered():
+                dc.SetPen(self._panel_hover_button_border_pen)
+                dc.SetBrush(self._panel_hover_button_background_brush)
+                dc.DrawRoundedRectangle(label_rect.GetRight(), label_rect.GetBottom() - 13, 13, 13, 1)
+                dc.DrawBitmap(self._panel_extension_bitmap[1], label_rect.GetRight() + 3, label_rect.GetBottom() - 10, True)
+            else:
+                dc.DrawBitmap(self._panel_extension_bitmap[0], label_rect.GetRight() + 3, label_rect.GetBottom() - 10, True)
         
         if wnd.IsHovered():        
             client_rect = wx.Rect(*true_rect)
@@ -1461,6 +1504,20 @@ class RibbonMSWArtProvider(object):
             self.DrawPartialPageBackground(dc, wnd, client_rect, True)
         
         self.DrawPanelBorder(dc, true_rect, self._panel_border_pen, self._panel_border_gradient_pen)
+
+
+    def GetPanelExtButtonArea(self, dc, wnd, rect):
+        """
+        Retrieve the extension button area rectangle.
+
+        :param `dc`: The device context used to measure text extents;
+        :param `wnd`: The panel where the extension button resides;
+        :param `rect`: The panel client rectangle.
+        """
+
+        true_rect = wx.Rect(*self.RemovePanelPadding(rect))
+        true_rect = wx.Rect(true_rect.GetRight()-13, true_rect.GetBottom()-13, 13, 13)
+        return true_rect
 
 
     def DrawGalleryBackground(self, dc, wnd, rect):

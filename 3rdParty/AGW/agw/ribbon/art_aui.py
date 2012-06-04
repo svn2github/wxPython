@@ -701,6 +701,32 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         return size, client_offset
 
 
+    def GetPanelExtButtonArea(self, dc, wnd, rect):
+        """
+        Retrieve the extension button area rectangle.
+
+        :param `dc`: The device context used to measure text extents;
+        :param `wnd`: The panel where the extension button resides;
+        :param `rect`: The panel client rectangle.
+        """
+
+        true_rect = wx.Rect(*rect)
+        true_rect = self.RemovePanelPadding(true_rect)
+
+        true_rect.x += 1
+        true_rect.width -= 2
+        true_rect.y += 1
+
+        dc.SetFont(self._panel_label_font)
+        label_size = dc.GetTextExtent(wnd.GetLabel())
+        label_height = label_size[1] + 5
+        label_rect = wx.Rect(*true_rect)
+        label_rect.height = label_height - 1
+
+        rect = wx.Rect(label_rect.GetRight()-13, label_rect.GetBottom()-13, 13, 13)
+        return rect
+
+
     def DrawPanelBackground(self, dc, wnd, rect):
         """
         Draw the background and chrome for a ribbon panel.
@@ -772,7 +798,17 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
                 gradient = self._page_hover_background_gradient_colour
 
             dc.GradientFillLinear(gradient_rect, colour, gradient, wx.SOUTH)
-        
+
+        if wnd.HasExtButton():
+            if wnd.IsExtButtonHovered():
+                dc.SetPen(self._panel_hover_button_border_pen)
+                dc.SetBrush(self._panel_hover_button_background_brush)
+                dc.DrawRoundedRectangle(label_rect.GetRight() - 13, label_rect.GetBottom() - 13, 13, 13, 1)
+                dc.DrawBitmap(self._panel_extension_bitmap[1], label_rect.GetRight() - 10, label_rect.GetBottom() - 10, True)
+
+            else:
+                dc.DrawBitmap(self._panel_extension_bitmap[0], label_rect.GetRight() - 10, label_rect.GetBottom() - 10, True)
+                
 
     def DrawMinimisedPanel(self, dc, wnd, rect, bitmap):
         """
