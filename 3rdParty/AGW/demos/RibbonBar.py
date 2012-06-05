@@ -12,10 +12,10 @@ except:
 
 sys.path.append(os.path.split(dirName)[0])
 
-try:
-    from agw import ribbon as RB
-except ImportError: # if it's not there locally, try the wxPython lib.
-    import wx.lib.agw.ribbon as RB
+##try:
+from agw import ribbon as RB
+##except ImportError: # if it's not there locally, try the wxPython lib.
+##    import wx.lib.agw.ribbon as RB
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 
@@ -265,14 +265,14 @@ class RibbonFrame(wx.Frame):
 
         panel = wx.Panel(self)
         
-        self._ribbon = RB.RibbonBar(panel, wx.ID_ANY)
+        self._ribbon = RB.RibbonBar(panel, wx.ID_ANY, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
 
         self._bitmap_creation_dc = wx.MemoryDC()
         self._colour_data = wx.ColourData()
         
         home = RB.RibbonPage(self._ribbon, wx.ID_ANY, "Examples", CreateBitmap("ribbon"))
         toolbar_panel = RB.RibbonPanel(home, wx.ID_ANY, "Toolbar", wx.NullBitmap, wx.DefaultPosition,
-                                       wx.DefaultSize, agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE)
+                                       wx.DefaultSize, agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE|RB.RIBBON_PANEL_EXT_BUTTON)
         
         toolbar = RB.RibbonToolBar(toolbar_panel, ID_MAIN_TOOLBAR)
         toolbar.AddTool(wx.ID_ANY, CreateBitmap("align_left"))
@@ -379,7 +379,7 @@ class RibbonFrame(wx.Frame):
         panel.SetSizer(s)
         self.panel = panel
 
-        self.BindEvents([selection, shapes, provider_bar])
+        self.BindEvents([selection, shapes, provider_bar, toolbar_panel])
 
         self.SetIcon(images.Mondrian.Icon)
         self.CenterOnScreen()
@@ -388,7 +388,7 @@ class RibbonFrame(wx.Frame):
 
     def BindEvents(self, bars):
 
-        selection, shapes, provider_bar = bars
+        selection, shapes, provider_bar, toolbar_panel = bars
         
         provider_bar.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.OnDefaultProvider, id=ID_DEFAULT_PROVIDER)
         provider_bar.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.OnAUIProvider, id=ID_AUI_PROVIDER)
@@ -402,6 +402,8 @@ class RibbonFrame(wx.Frame):
         shapes.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.OnSquareButton, id=ID_SQUARE)
         shapes.Bind(RB.EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED, self.OnTriangleDropdown, id=ID_TRIANGLE)
         shapes.Bind(RB.EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED, self.OnPolygonDropdown, id=ID_POLYGON)
+        toolbar_panel.Bind(RB.EVT_RIBBONPANEL_EXTBUTTON_ACTIVATED, self.OnExtButton)
+
         self.Bind(RB.EVT_RIBBONGALLERY_HOVER_CHANGED, self.OnHoveredColourChange, id=ID_PRIMARY_COLOUR)
         self.Bind(RB.EVT_RIBBONGALLERY_HOVER_CHANGED, self.OnHoveredColourChange, id=ID_SECONDARY_COLOUR)
         self.Bind(RB.EVT_RIBBONGALLERY_SELECTED, self.OnPrimaryColourSelect, id=ID_PRIMARY_COLOUR)
@@ -424,8 +426,9 @@ class RibbonFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnPositionTopLabels, id=ID_POSITION_TOP)
         self.Bind(wx.EVT_MENU, self.OnPositionTopIcons, id=ID_POSITION_TOP_ICONS)
         self.Bind(wx.EVT_MENU, self.OnPositionTopBoth, id=ID_POSITION_TOP_BOTH)
-        self._togglePanels.Bind(wx.EVT_TOGGLEBUTTON, self.OnTogglePanels, id=ID_TOGGLE_PANELS)
 
+        self._togglePanels.Bind(wx.EVT_TOGGLEBUTTON, self.OnTogglePanels, id=ID_TOGGLE_PANELS)
+        
 
     def SetBarStyle(self, agwStyle):
 
@@ -743,6 +746,11 @@ class RibbonFrame(wx.Frame):
     def OnTogglePanels(self, event):
 
         self._ribbon.ShowPanels(self._togglePanels.GetValue())
+
+
+    def OnExtButton(self, event):
+
+        wx.MessageBox("Extended button activated")
         
     
     def AddText(self, msg):
