@@ -623,6 +623,11 @@ class _Presenter:
             return
         # Close old window, remember where it was
         comp = Manager.getNodeComp(node)
+        # Use parent object if the current one does not support test view
+        while not comp.hasName:
+            item = view.tree.GetItemParent(item)
+            node = view.tree.GetPyData(item)
+            comp = Manager.getNodeComp(node)
         # Create memory XML file
         elem = node.cloneNode(True)
         if not node.hasAttribute('name'):
@@ -645,7 +650,6 @@ class _Presenter:
         Manager.preload(res)
         # Same module list
         res.Load('memory:test.xrc')
-        object = None
         testWin = view.testWin
         try:
             try:
@@ -658,14 +662,15 @@ class _Presenter:
                 testWin.SetView(frame, object, item)
                 testWin.Show()
                 view.tree.SetItemBold(item, True)
+                self.highlight(self.item)
             except EOFError:
                 pass
-            except NotImplementedError:
-                wx.LogError('Test window not implemented for %s' % node.getAttribute('class'))
+            except TestWinError:
+                wx.LogError('Test window could not be created for %s' % node.getAttribute('class'))
                 logger.exception('error creating test view')
             except:
-                logger.exception('error creating test view')
                 wx.LogError('Error creating test view')
+                logger.exception('error creating test view')
                 if get_debug(): raise
         finally:
             # Cleanup

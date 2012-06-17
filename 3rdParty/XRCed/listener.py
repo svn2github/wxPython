@@ -466,9 +466,6 @@ class _Listener:
         if not Presenter.applied: Presenter.update()
         Presenter.setData(self.tree.root)
 
-    def ItemsAreCompatible(self, parent, child):
-        raise NotImplementedError
-
     def OnMoveUp(self, evt):
         self.inIdle = True
         g.undoMan.RegisterUndo(undo.UndoGlobal())

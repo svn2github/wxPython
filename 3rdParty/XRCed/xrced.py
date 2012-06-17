@@ -123,8 +123,8 @@ Please upgrade wxWidgets to %d.%d.%d or higher.''' % MinWxVersion)
             else:
                 # Future name
                 Presenter.path = path
-                # Force update title
-                Presenter.setModified(False)
+        # Reset modified flag
+        Presenter.setModified(False)
         view.frame.Show()
         if not g.useAUI:
             if not g.conf.embedPanel:

@@ -137,3 +137,6 @@ def is_element(node):
 
 def is_object(node):
     return is_element(node) or node.nodeType == node.COMMENT_NODE
+
+# Exception class
+class TestWinError(Exception): pass

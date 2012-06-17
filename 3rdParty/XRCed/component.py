@@ -270,8 +270,6 @@ class Component(object):
         @param res: C{wx.xrc.XmlResource} object with current test resource.
         @param name: XRC ID of tested object.
         '''
-        if not self.hasName: raise NotImplementedError
-
         testWin = view.testWin
         if self.isTopLevel:
             # Top-level window creates frame itself
@@ -287,8 +285,8 @@ class Component(object):
                                      style=wx.CAPTION|wx.CLOSE_BOX|wx.RESIZE_BORDER)
                 frame.panel = wx.Panel(frame)
             object = res.LoadObject(frame.panel, STD_NAME, self.klass)
-            if not object: raise NotImplementedError
-            if not isinstance(object, wx.Window): raise NotImplementedError
+            if not object or not isinstance(object, wx.Window): 
+                raise TestWinError
             object.SetPosition((10,10))
             if g.conf.fitTestWin: 
                 object.Fit()
