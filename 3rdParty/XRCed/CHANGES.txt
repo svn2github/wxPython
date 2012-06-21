@@ -2,6 +2,7 @@
 -------
 * ticket #13573 (test view for items without a name selects parent view)
 * do not set modified flag if starting without a file argument
+* ticket #14282
 
 0.2.1-0
 -------

@@ -1067,6 +1067,10 @@ class CheckListBoxComboPopup(wx.CheckListBox, wx.combo.ComboPopup):
     def Create(self, parent):
         wx.CheckListBox.Create(self, parent)
         self.InsertItems(self.values, 0)
+        # Workaround for mac/windows - see ticket #14282
+        if wx.Platform in ['__WXMAC__', '__WXMSW__']:
+            self.Bind(wx.EVT_MOTION, self.OnMotion)
+            self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
         return True
 
     def GetControl(self):
@@ -1104,3 +1108,14 @@ class CheckListBoxComboPopup(wx.CheckListBox, wx.combo.ComboPopup):
             Presenter.setApplied(False)
 
         wx.combo.ComboPopup.OnDismiss(self)
+
+    if wx.Platform in ['__WXMAC__', '__WXMSW__']:
+        def OnMotion(self, evt):
+            item  = self.HitTest(evt.GetPosition())
+            if item >= 0:
+                self.Select(item)
+                self.curitem = item
+    
+        def OnLeftDown(self, evt):
+            self.value = self.curitem
+            self.Check(self.value, not self.IsChecked(self.value))
