@@ -3,7 +3,7 @@
 # Inspired By the GIMP Shortcut Editor.
 #
 # Andrea Gavana, @ 05 March 2012
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 21 Jun 2012, 20.00 GMT
 #
 #
 # TODO List
@@ -220,7 +220,7 @@ Usage example::
 
         def __init__(self, parent):
 
-            wx.Frame.__init(self, parent, -1, "ShortcutEditor Demo") 
+            wx.Frame.__init__(self, parent, -1, "ShortcutEditor Demo") 
 
             bar = wx.MenuBar()
             menu = wx.Menu()
@@ -287,7 +287,7 @@ License And Version
 
 :class:`ShortcutEditor` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 21 Jun 2012, 20.00 GMT
 
 Version 0.1
 
