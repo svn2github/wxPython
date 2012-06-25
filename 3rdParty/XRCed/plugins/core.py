@@ -462,6 +462,7 @@ component.Manager.setMenu(c, 'container', 'collapsible pane', 'wxCollapsiblePane
 ### wxMenuBar
 
 class MenuBar(component.SimpleContainer):
+    isTestable = True
     # Menubar should be shown in a normal frame
     def makeTestWin(self, res, name):
         frame = wx.Frame(None, -1, '%s: %s' % (self.klass, name), name=STD_NAME)
@@ -507,6 +508,7 @@ component.Manager.setTool(c, 'Menus', pos=(1,2))
 ### wxToolBar
 
 class ToolBar(component.SimpleContainer):
+    isTestable = True
     # Toolbar should be shown in a normal frame
     def makeTestWin(self, res, name):
         frame = wx.Frame(None, -1, '%s: %s' % (self.klass, name), name=STD_NAME)

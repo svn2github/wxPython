@@ -116,6 +116,8 @@ class Component(object):
     in the Attribute Panel.'''
     hasCode = True
     '''True if component can generate code.'''
+    isTestable = False
+    '''True if component can be inserted directly in the test view.'''
     
     def __init__(self, klass, groups, attributes, **kargs):
         '''
@@ -265,7 +267,7 @@ class Component(object):
         attrClass.add(node, attribute, value)
 
     def makeTestWin(self, res, name):
-        '''Method can be overrided by derived classes to create custom test view.
+        '''Method can be overridden by derived classes to create custom test view.
 
         @param res: C{wx.xrc.XmlResource} object with current test resource.
         @param name: XRC ID of tested object.
@@ -354,6 +356,7 @@ class SimpleComponent(Component):
 
 
 class Container(Component):
+    isTestable = True
     '''Base class for containers.'''
     def canHaveChild(self, component):
         # Test exclusion first
@@ -434,6 +437,7 @@ class SimpleContainer(Container):
     '''Container without window attributes and styles.'''
     windowAttributes = []
     genericStyles = genericExStyles = []
+    isTestable = False
 
 
 class RootComponent(Container):
@@ -540,6 +544,7 @@ class Sizer(SmartContainer):
     '''Sizers are not windows and have common implicit node.'''
     windowAttributes = []
     hasName = False
+    isTestable = False
     genericStyles = []
     genericExStyles = []    
     renameDict = {'orient':'orientation'}

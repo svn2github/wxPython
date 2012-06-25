@@ -624,9 +624,10 @@ class _Presenter:
         # Close old window, remember where it was
         comp = Manager.getNodeComp(node)
         # Use parent object if the current one does not support test view
-        while not comp.hasName:
-            item = view.tree.GetItemParent(item)
-            node = view.tree.GetPyData(item)
+        testWinItem = item
+        while not comp.isTestable:
+            testWinItem = view.tree.GetItemParent(testWinItem)
+            node = view.tree.GetPyData(testWinItem)
             comp = Manager.getNodeComp(node)
         # Create memory XML file
         elem = node.cloneNode(True)
@@ -659,10 +660,11 @@ class _Presenter:
                 # Reset previous tree item and locate tool
                 if testWin.item:
                     view.tree.SetItemBold(testWin.item, False)
-                testWin.SetView(frame, object, item)
+                testWin.SetView(frame, object, testWinItem)
                 testWin.Show()
-                view.tree.SetItemBold(item, True)
-                self.highlight(self.item)
+                view.tree.SetItemBold(testWinItem, True)
+                # For reused frame, object is not positioned immediately 
+                wx.CallAfter(self.highlight, item)
             except EOFError:
                 pass
             except TestWinError:
@@ -682,6 +684,7 @@ class _Presenter:
         TRACE('closeTestWin')
         if not view.testWin.object: return
         view.tree.SetItemBold(view.testWin.item, False)
+        view.tree.Refresh()
         view.frame.tb.ToggleTool(view.frame.ID_TOOL_LOCATE, False)
         if view.frame.miniFrame:
             view.frame.miniFrame.tb.ToggleTool(view.frame.ID_TOOL_LOCATE, False)
