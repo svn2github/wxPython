@@ -119,7 +119,8 @@ Please upgrade wxWidgets to %d.%d.%d or higher.''' % MinWxVersion)
                 os.chdir(dir)
                 path = os.path.basename(path)
             if os.path.isfile(path):
-                Presenter.open(path)
+                # Populate after final creation
+                wx.CallAfter(Presenter.open, path)
             else:
                 # Future name
                 Presenter.path = path
