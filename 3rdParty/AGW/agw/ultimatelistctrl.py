@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 17 May 2012, 21.00 GMT
+# Latest Revision: 04 Jul 2012, 18.00 GMT
 #
 #
 # TODO List
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 May 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 04 Jul 2012, 18.00 GMT
 
 Version 0.8
 
@@ -10266,6 +10266,8 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         :param `col`: the column index at which we wish to insert a new column;
         :param `item`: an instance of :class:`UltimateListItem`.
 
+        :return: the index at which the column has been inserted.
+        
         :note: This method is meaningful only if :class:`UltimateListCtrl` has the ``ULC_REPORT``
          or the ``ULC_TILE`` styles set.
         """
@@ -10285,11 +10287,13 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             if insert:
                 self._columns.insert(col, column)
                 self._aColWidths.insert(col, colWidthInfo)
+                idx = col
 
             else:
 
                 self._columns.append(column)
                 self._aColWidths.append(colWidthInfo)
+                idx = len(self._columns)-1
 
             if not self.IsVirtual():
 
@@ -10304,6 +10308,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
             # invalidate it as it has to be recalculated
             self._headerWidth = 0
+            return idx
 
 
     def GetItemWidthWithImage(self, item):
@@ -12107,17 +12112,19 @@ class UltimateListCtrl(wx.PyControl):
 
         :param `col`: the column index at which we wish to insert a column;
         :param `item`: an instance of :class:`UltimateListItem`.
+
+        :return: the index at which the column has been inserted.
         """
 
         if not self._mainWin.InReportView() and not self.HasAGWFlag(ULC_HEADER_IN_ALL_VIEWS) and \
            not self._mainWin.InTileView():
             raise Exception("Can't add column in non report/tile modes or without the ULC_HEADER_IN_ALL_VIEWS style set")
 
-        self._mainWin.InsertColumn(col, item)
+        idx = self._mainWin.InsertColumn(col, item)
         if self._headerWin:
             self._headerWin.Refresh()
 
-        return 0
+        return idx
 
 
     def InsertColumn(self, col, heading, format=ULC_FORMAT_LEFT, width=-1):
@@ -12146,6 +12153,7 @@ class UltimateListCtrl(wx.PyControl):
          ``LIST_AUTOSIZE_FILL`` will resize the column fill the remaining width
          of the window.
 
+        :return: the index at which the column has been inserted.
         """
         
         item = UltimateListItem()
