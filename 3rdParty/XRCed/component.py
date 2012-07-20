@@ -730,7 +730,7 @@ class _ComponentManager:
             if os.path.exists(bmpPath):
                 bitmap = wx.Bitmap(bmpPath)
             else:
-                bitmap = images.ToolDefault.GetBitmap()
+                bitmap = images.ToolPanel_Default.GetBitmap()
         if g.conf.toolIconScale != 100:
             im = bitmap.ConvertToImage().Scale(
                 bitmap.GetWidth() * g.conf.toolIconScale / 100,
