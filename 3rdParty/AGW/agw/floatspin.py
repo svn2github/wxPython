@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2005
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 06 Aug 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -135,7 +135,7 @@ License And Version
 
 :class:`FloatSpin` control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 06 Aug 2012, 21.00 GMT
 
 Version 0.9
 
@@ -403,15 +403,6 @@ class FloatSpin(wx.PyControl):
         # end Philip Semanchuk addition
 
         self.SetLabel(name)
-        # start Philip Semanchuk change
-        # Set the background color to match that of the parent. wxMac supports
-        # transparency, and that gives the best results on that platform.
-        # Other platforms ignore wx.ALPHA_TRANSPARENT.
-        colour = parent.GetBackgroundColour()
-        colour.Set(colour.Red(), colour.Green(), colour.Blue(), 
-                   wx.ALPHA_TRANSPARENT)
-        self.SetBackgroundColour(colour)
-        # end Philip Semanchuk change
         self.SetForegroundColour(parent.GetForegroundColour())
 
         width = size[0]
