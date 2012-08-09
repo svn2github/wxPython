@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 04 Jul 2012, 18.00 GMT
+# Latest Revision: 09 Aug 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 04 Jul 2012, 18.00 GMT
+Latest Revision: Andrea Gavana @ 09 Aug 2012, 21.00 GMT
 
 Version 0.8
 
@@ -11622,6 +11622,7 @@ class UltimateListCtrl(wx.PyControl):
         
         info = UltimateListItem()
         info._itemId = item
+        info = self._mainWin.GetItem(info)
         info.SetTextColour(col)
         self._mainWin.SetItem(info)
 
@@ -11650,6 +11651,7 @@ class UltimateListCtrl(wx.PyControl):
 
         info = UltimateListItem()
         info._itemId = item
+        info = self._mainWin.GetItem(info)
         info.SetBackgroundColour(col)
         self._mainWin.SetItem(info)
 
@@ -11677,6 +11679,7 @@ class UltimateListCtrl(wx.PyControl):
 
         info = UltimateListItem()
         info._itemId = item
+        info = self._mainWin.GetItem(info)
         info.SetFont(f)
         info.SetBackgroundColour(self.GetItemBackgroundColour(item))
         self._mainWin.SetItem(info)
