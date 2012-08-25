@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 25 Aug 2012, 10.00 GMT
 #
 #
 # TODO List
@@ -261,7 +261,7 @@ License And Version
 
 :class:`HyperTreeList` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 25 Aug 2012, 10.00 GMT
 
 Version 1.3
 
@@ -2770,7 +2770,12 @@ class TreeListMainWindow(CustomTreeCtrl):
             colBg = self._backgroundColour
         
         dc.SetBrush(wx.Brush(colBg, wx.SOLID))
-        dc.SetPen(wx.TRANSPARENT_PEN)
+
+        if attr and attr.HasBorderColour():
+            colBorder = attr.GetBorderColour()
+            dc.SetPen(wx.Pen(colBorder, 1, wx.SOLID))
+        else:
+            dc.SetPen(wx.TRANSPARENT_PEN)
 
         if self.HasAGWFlag(wx.TR_FULL_ROW_HIGHLIGHT):
 

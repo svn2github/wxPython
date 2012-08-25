@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 22 May 2012, 21.00 GMT
+# Latest Revision: 25 Aug 2012, 10.00 GMT
 #
 #
 # TODO List
@@ -299,7 +299,7 @@ License And Version
 
 :class:`CustomTreeCtrl` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 22 May 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 25 Aug 2012, 10.00 GMT
 
 Version 2.6
 
@@ -830,18 +830,20 @@ class TreeItemAttr(object):
     :note: This class is inspired by the wxWidgets generic implementation of :class:`TreeItemAttr`.
     """
     
-    def __init__(self, colText=wx.NullColour, colBack=wx.NullColour, font=wx.NullFont):
+    def __init__(self, colText=wx.NullColour, colBack=wx.NullColour, colBorder=wx.NullColour,font=wx.NullFont):
         """
         Default class constructor.
         For internal use: do not call it in your code!
 
         :param `colText`: the text colour, an instance of :class:`Colour`;
         :param `colBack`: the tree item background colour, an instance of :class:`Colour`;
+        :param `colBorder`: the tree item border colour, an instance of :class:`Colour`;
         :param `font`: the tree item font, an instance of :class:`Font`.
         """
         
         self._colText = colText
         self._colBack = colBack
+        self._colBorder = colBorder
         self._font = font
 
     # setters
@@ -864,7 +866,19 @@ class TreeItemAttr(object):
         
         self._colBack = colBack
 
-        
+
+    def SetBorderColour(self,colBorder):
+        """
+        Sets the item border colour attribute.
+
+        :param `colBack`: an instance of :class:`Colour`.
+
+        .. versionadded:: 0.9.6
+        """
+
+        self._colBorder = colBorder
+
+
     def SetFont(self, font):
         """
         Sets the item font attribute.
@@ -894,6 +908,18 @@ class TreeItemAttr(object):
         """
         
         return self._colBack != wx.NullColour
+
+
+    def HasBorderColour(self):
+        """
+        Returns whether the attribute has border colour.
+
+        :return: ``True`` if the border colour attribute has been set, ``False`` otherwise.
+
+        .. versionadded:: 0.9.6
+        """
+
+        return self._colBorder != wx.NullColour
 
 
     def HasFont(self):
@@ -926,6 +952,18 @@ class TreeItemAttr(object):
 
         return self._colBack
 
+
+    def GetBorderColour(self):
+        """
+        Returns the attribute border colour.
+
+        :return: An instance of :class:`Colour`.
+
+        .. versionadded:: 0.9.6
+        """
+        
+        return self._colBorder
+    
     
     def GetFont(self):
         """
@@ -6515,7 +6553,11 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 colBg = self._backgroundColour
             
             dc.SetBrush(wx.Brush(colBg, wx.SOLID))
-            dc.SetPen(wx.TRANSPARENT_PEN)
+            if attr and attr.HasBorderColour():
+                colBorder = attr.GetBorderColour()
+                dc.SetPen(wx.Pen(colBorder, 1, wx.SOLID))
+            else:
+                dc.SetPen(wx.TRANSPARENT_PEN)
         
         offset = (self.HasAGWFlag(TR_ROW_LINES) and [1] or [0])[0]
         
@@ -6596,7 +6638,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 if separator:
                     item_width = w
                 else:
-                    item_width = item.GetWidth()-minusicon,
+                    item_width = item.GetWidth()-minusicon
                 
                 itemrect = wx.Rect(item.GetX()+minusicon,
                                    item.GetY()+offset,
