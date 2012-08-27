@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 25 Aug 2012, 10.00 GMT
+# Latest Revision: 27 Aug 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -299,7 +299,7 @@ License And Version
 
 :class:`CustomTreeCtrl` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 25 Aug 2012, 10.00 GMT
+Latest Revision: Andrea Gavana @ 27 Aug 2012, 21.00 GMT
 
 Version 2.6
 
@@ -7905,7 +7905,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                     # don't select the item if the button was clicked
                     return
 
-                if item.GetType() > 0 and (flags & TREE_HITTEST_ONITEMCHECKICON):
+                if item.GetType() > 0 and (flags & TREE_HITTEST_ONITEMCHECKICON) and (flags & TREE_HITTEST_ONITEMLABEL == 0):
 
                     if event.LeftDown():
                         if flags & TREE_HITTEST_ONITEM and self.HasAGWFlag(TR_FULL_ROW_HIGHLIGHT):
