@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 09 Aug 2012, 21.00 GMT
+# Latest Revision: 06 Sep 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 09 Aug 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 06 Sep 2012, 21.00 GMT
 
 Version 0.8
 
@@ -13528,15 +13528,18 @@ class UltimateListCtrl(wx.PyControl):
         return self._mainWin.IsVirtual()
 
 
-    def GetScrollPos(self):
+    def GetScrollPos(self, orientation):
         """
         Returns the scrollbar position.
 
+        :param int `orientation`: defines for which scrollbar we ask the position.
+         May be ``wx.HORIZONTAL`` or ``wx.VERTICAL``.
+        
         :note: This method is forwarded to :class:`UltimateListMainWindow`.
         """
 
         if self._mainWin:
-            return self._mainWin.GetScrollPos()
+            return self._mainWin.GetScrollPos(orientation)
 
         return 0
     
@@ -13557,28 +13560,34 @@ class UltimateListCtrl(wx.PyControl):
             self._mainWin.SetScrollPos(orientation, pos, refresh)
         
 
-    def GetScrollThumb(self):
+    def GetScrollThumb(self, orientation):
         """
         Returns the scrollbar size in pixels.
+
+        :param `orientation`: determines the scroll thumb whose position is to be retrieved.
+         May be ``wx.HORIZONTAL`` or ``wx.VERTICAL``.
 
         :note: This method is forwarded to :class:`UltimateListMainWindow`.
         """
 
         if self._mainWin:
-            return self._mainWin.GetScrollThumb()
+            return self._mainWin.GetScrollThumb(orientation)
 
         return 0
 
 
-    def GetScrollRange(self):
+    def GetScrollRange(self, orientation):
         """
         Returns the scrollbar range in pixels.
+
+        :param `orientation`: determines the scroll range whose position is to be retrieved.
+         May be ``wx.HORIZONTAL`` or ``wx.VERTICAL``.
 
         :note: This method is forwarded to :class:`UltimateListMainWindow`.
         """
 
         if self._mainWin:
-            return self._mainWin.GetScrollRange()
+            return self._mainWin.GetScrollRange(orientation)
 
         return 0
 
