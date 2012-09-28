@@ -2,7 +2,7 @@
 # MULTIDIRDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 28 Sep 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -108,7 +108,7 @@ License And Version
 
 :class:`MultiDirDialog` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 28 Sep 2012, 21.00 GMT
 
 Version 0.3
 
@@ -298,7 +298,7 @@ class MultiDirDialog(wx.Dialog):
     """
 
     def __init__(self, parent, message=_("Choose one or more folders:"), title=_("Browse For Folders"),
-                 defaultPath="", style=wx.DD_DEFAULT_STYLE, agwStyle=DD_MULTIPLE, pos=wx.DefaultPosition,
+                 defaultPath="", style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER, agwStyle=DD_MULTIPLE, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, name="multidirdialog"):
         """
         Default class constructor.
@@ -324,7 +324,7 @@ class MultiDirDialog(wx.Dialog):
         :param `name`: the dialog name.
         """
 
-        wx.Dialog.__init__(self, parent, pos=pos, size=size, style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER, name=name)
+        wx.Dialog.__init__(self, parent, pos=pos, size=size, style=style, name=name)
 
         self.agwStyle = agwStyle
         

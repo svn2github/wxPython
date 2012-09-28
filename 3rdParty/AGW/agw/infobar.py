@@ -5,7 +5,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 12 March 2012
-# Latest Revision: 22 Mar 2012, 21.00 GMT
+# Latest Revision: 28 Sep 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -149,7 +149,7 @@ License And Version
 
 :class:`InfoBar` control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 22 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 28 Sep 2012, 21.00 GMT
 
 Version 0.2
 
@@ -388,7 +388,7 @@ class InfoBar(wx.PyControl):
         #     and being preceded by a spacer
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         sizer.AddF(self._icon, wx.SizerFlags().Centre().Border())
-        sizer.Add(self._text, 2000000, wx.ALIGN_CENTER_VERTICAL)
+        sizer.Add(self._text, 2000, wx.ALIGN_CENTER_VERTICAL)
         sizer.AddStretchSpacer()
         sizer.AddF(self._button, wx.SizerFlags().Centre().Border())
         self.SetSizer(sizer)
