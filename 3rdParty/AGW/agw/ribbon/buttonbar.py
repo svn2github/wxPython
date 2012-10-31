@@ -418,7 +418,7 @@ class RibbonButtonBar(RibbonControl):
         :see: :meth:`~RibbonButtonBar.AddButton`, :meth:`~RibbonButtonBar.InsertDropdownButton`, :meth:`~RibbonButtonBar.InsertButton`
         """
 
-        return self.AddSimpleButton(button_id, label, bitmap, help_string, RIBBON_BUTTON_DROPDOWN)
+        return self.AddSimpleButton(button_id, label, bitmap, kind=RIBBON_BUTTON_DROPDOWN, help_string=help_string)
 
 
     def InsertDropdownButton(self, pos, button_id, label, bitmap, help_string=""):
@@ -457,7 +457,7 @@ class RibbonButtonBar(RibbonControl):
         :see: :meth:`~RibbonButtonBar.AddButton`, :meth:`~RibbonButtonBar.InsertButton`, :meth:`~RibbonButtonBar.InsertToggleButton`
         """
 
-        return self.AddButton(button_id, label, bitmap, help_string, RIBBON_BUTTON_TOGGLE)
+        return self.AddButton(button_id, label, bitmap, kind=RIBBON_BUTTON_TOGGLE, help_string=help_string)
 
 
     def InsertToggleButton(self, pos, button_id, label, bitmap, help_string=""):
@@ -496,7 +496,7 @@ class RibbonButtonBar(RibbonControl):
         :see: :meth:`~RibbonButtonBar.AddButton`, :meth:`~RibbonButtonBar.InsertButton`, :meth:`~RibbonButtonBar.InsertHybridButton`
         """
 
-        return self.AddSimpleButton(button_id, label, bitmap, help_string, RIBBON_BUTTON_HYBRID)
+        return self.AddSimpleButton(button_id, label, bitmap, kind=RIBBON_BUTTON_HYBRID, help_string=help_string)
 
 
     def InsertHybridButton(self, pos, button_id, label, bitmap, help_string=""):
