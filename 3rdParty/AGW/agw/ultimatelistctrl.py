@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 06 Sep 2012, 21.00 GMT
+# Latest Revision: 06 Nov 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 06 Sep 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 06 Nov 2012, 21.00 GMT
 
 Version 0.8
 
@@ -5188,7 +5188,7 @@ class UltimateListHeaderWindow(wx.PyControl):
            
             # the width of the rect to draw: make it smaller to fit entirely
             # inside the column rect
-            header_rect = wx.Rect(x-1, HEADER_OFFSET_Y-1, cw-1, ch)
+            header_rect = wx.Rect(x, HEADER_OFFSET_Y-1, cw, ch)
 
             if self._headerCustomRenderer != None:
                self._headerCustomRenderer.DrawHeaderButton(dc, header_rect, flags)
