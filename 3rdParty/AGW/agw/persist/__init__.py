@@ -171,7 +171,7 @@ License And Version
 
 `PersistentObjects` library is distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 25 Apr 2012, 11.00 GMT
+Latest revision: Andrea Gavana @ 03 Dec 2012, 21.00 GMT
 Version 0.4. 
 
 """
