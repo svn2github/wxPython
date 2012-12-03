@@ -2,7 +2,7 @@
 # AQUABUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 24 Nov 2011, 22.00 GMT
+# Latest Revision: 03 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -100,7 +100,7 @@ License And Version
 
 :class:`AquaButton` control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 22 Nov 2011, 22.00 GMT
+Latest Revision: Andrea Gavana @ 03 Dec 2012, 21.00 GMT
 
 Version 0.4
 
@@ -744,6 +744,8 @@ class AquaButton(wx.PyControl):
         Sets the button shadow colour.
 
         :param `colour`: a valid :class:`Colour` object.
+
+        .. versionadded:: 0.9.7
         """
 
         self._shadowColour = colour
@@ -755,15 +757,20 @@ class AquaButton(wx.PyControl):
         Returns the button shadow colour.
 
         :return: An instance of :class:`Colour`.
+
+        .. versionadded:: 0.9.7
         """
 
         return self._shadowColour
+
 
     def SetRectColour(self, colour):
         """
         Sets the button rectangular background colour.
 
         :param `colour`: a valid :class:`Colour` object.
+
+        .. versionadded:: 0.9.7
         """
 
         self._rectColour = colour
@@ -775,6 +782,8 @@ class AquaButton(wx.PyControl):
         Returns the button rectangular background colour.
 
         :return: An instance of :class:`Colour`.
+
+        .. versionadded:: 0.9.7
         """
 
         return self._rectColour
