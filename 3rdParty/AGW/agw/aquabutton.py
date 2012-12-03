@@ -216,11 +216,15 @@ class AquaButton(wx.PyControl):
             self._hoverColour = self.LightColour(self._backColour, 30)
             self._disableColour = self.LightColour(self._backColour, 70)
             self._textColour = wx.BLACK
+            self._shadowColour = wx.NamedColour("grey")
+            self._rectColour = self.GetParent().GetBackgroundColour()
         else:
             self._backColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
             self._hoverColour = self.LightColour(self._backColour, 30)
             self._disableColour = self.LightColour(self._backColour, 70)
             self._textColour = wx.WHITE
+            self._shadowColour = wx.NamedColour("grey")
+            self._rectColour = self.GetParent().GetBackgroundColour()
 
 
     def SetBitmapLabel(self, bitmap):
@@ -273,7 +277,7 @@ class AquaButton(wx.PyControl):
 
         xpos, ypos, width, height = self.GetClientRect()
 
-        dc.SetBackground(wx.Brush(self.GetParent().GetBackgroundColour()))
+        dc.SetBackground(wx.Brush(self._rectColour))
         dc.Clear()
         gc.SetBrush(wx.WHITE_BRUSH)
 
@@ -302,7 +306,7 @@ class AquaButton(wx.PyControl):
         path2 = self.GetPath(gc, rc2, 10)
         br2 = gc.CreateRadialGradientBrush(rc2.x, rc2.y,
                                            rc2.x+rc2.width, rc2.y+rc2.height,
-                                           rc2.width, wx.NamedColour("grey"), wx.WHITE)
+                                           rc2.width, self._shadowColour, wx.WHITE)
 
         # Create top water colour to give "aqua" effect
         rc3 = wx.Rect(*rc1)
@@ -734,11 +738,56 @@ class AquaButton(wx.PyControl):
 
         return self._disableColour
 
+
+    def SetShadowColour(self, colour):
+        """
+        Sets the button shadow colour.
+
+        :param `colour`: a valid :class:`Colour` object.
+        """
+
+        self._shadowColour = colour
+        self.Invalidate()
+
+
+    def GetShadowColour(self):
+        """
+        Returns the button shadow colour.
+
+        :return: An instance of :class:`Colour`.
+        """
+
+        return self._shadowColour
+
+    def SetRectColour(self, colour):
+        """
+        Sets the button rectangular background colour.
+
+        :param `colour`: a valid :class:`Colour` object.
+        """
+
+        self._rectColour = colour
+        self.Invalidate()
+
+
+    def GetRectColour(self):
+        """
+        Returns the button rectangular background colour.
+
+        :return: An instance of :class:`Colour`.
+        """
+
+        return self._rectColour
+
     SetBackgroundColor = SetBackgroundColour
     SetHoverColor = SetHoverColour
     GetHoverColor = GetHoverColour
     SetDisabledColor = SetDisabledColour
     GetDisabledColor = GetDisabledColour
+    SetShadowColor = SetShadowColour
+    GetShadowColor = SetShadowColour
+    SetRectColor = SetRectColour
+    GetRectColor = SetRectColour
 
 
     def SetForegroundColour(self, colour):
