@@ -128,11 +128,15 @@ class Panel(wx.Panel):
         self.undo = None        # pending undo object
 
     def SetData(self, container, comp, node):
-        self.Freeze()
 
         oldLabel = self.nb.GetPageText(self.nb.GetSelection())
         self.nb.SetSelection(0)
         map(self.nb.RemovePage, range(self.nb.GetPageCount()-1, 0, -1))
+
+        # Don't freeze while removing the pages, but do it
+        # after the removes instead.  See
+        # https://groups.google.com/d/topic/wxpython-users/I8AJgkUCPj8/discussion
+        self.Freeze()
         
         self.container = container
         self.comp = comp
