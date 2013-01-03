@@ -480,8 +480,6 @@ class PyCollapsiblePane(wx.PyPanel):
         :param `sz`: an instance of :class:`Size`.
         """
 
-        # minimal size has priority over the best size so set here our min size
-        self.SetMinSize(sz)
         self.SetSize(sz)
 
         if self.HasAGWFlag(wx.CP_NO_TLW_RESIZE):
@@ -533,7 +531,7 @@ class PyCollapsiblePane(wx.PyPanel):
                     # collapsed . expanded transition
 
                     # force our parent to "fit", i.e. expand so that it can honour
-                    # our minimal size
+                    # our best size
                     top.Fit()
                 
 
@@ -553,6 +551,8 @@ class PyCollapsiblePane(wx.PyPanel):
         # update our state
         self._pPane.Show(not collapse)
         self._bCollapsed = collapse
+        self.InvalidateBestSize()
+
         self.Thaw()
 
         # update button label
@@ -602,7 +602,8 @@ class PyCollapsiblePane(wx.PyPanel):
         self._pButton.SetLabel(self.GetBtnLabel())
         self._pButton.SetInitialSize()
         self._pButton.Refresh()
-
+        self.InvalidateBestSize()
+        
         self.Layout()
 
 
@@ -624,6 +625,7 @@ class PyCollapsiblePane(wx.PyPanel):
         """
         
         self._pButton.SetFont(font)
+        self.InvalidateBestSize()
         self.Layout()    
 
 
@@ -655,6 +657,7 @@ class PyCollapsiblePane(wx.PyPanel):
         """
         
         self._expanderDimensions = width, height
+        self.InvalidateBestSize()
         if self._sz:
             self._sz.Layout()
         if self._pButton:
@@ -777,6 +780,7 @@ class PyCollapsiblePane(wx.PyPanel):
 
         if self._pPane:
             self._pButton.MoveBeforeInTabOrder(self._pPane)
+        self.InvalidateBestSize()
         self.Layout()
         
             
