@@ -2195,6 +2195,9 @@ class AuiFrame(wx.Frame):
         auibook = self._mgr.GetPane("notebook_content").window
         auibook.LoadPerspective(self._nb_perspectives[event.GetId() - ID_FirstNBPerspective])
 
+        self.gauge = ProgressGauge(auibook, size=(55, 15))
+        auibook.AddControlToPage(4, self.gauge)
+
 
     def OnGuides(self, event):
 

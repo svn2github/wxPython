@@ -550,20 +550,24 @@ class AuiDefaultTabArt(object):
         ypos = drawn_tab_yoff + (drawn_tab_height)/2 - (texty/2) - 1
 
         offset_focus = text_offset     
+
         if control is not None:
-            if control.GetPosition() != wx.Point(text_offset+1, ypos):
-                control.SetPosition(wx.Point(text_offset+1, ypos))
+            try:
+                if control.GetPosition() != wx.Point(text_offset+1, ypos):
+                    control.SetPosition(wx.Point(text_offset+1, ypos))
 
-            if not control.IsShown():
-                control.Show()
+                if not control.IsShown():
+                    control.Show()
 
-            if paint_control:
-                bmp = TakeScreenShot(control.GetScreenRect())
-                dc.DrawBitmap(bmp, text_offset+1, ypos, True)
-                
-            controlW, controlH = control.GetSize()
-            text_offset += controlW + 4
-            textx += controlW + 4
+                if paint_control:
+                    bmp = TakeScreenShot(control.GetScreenRect())
+                    dc.DrawBitmap(bmp, text_offset+1, ypos, True)
+                    
+                controlW, controlH = control.GetSize()
+                text_offset += controlW + 4
+                textx += controlW + 4
+            except wx.PyDeadObjectError:
+                pass
             
         # draw tab text
         rectx, recty, dummy = dc.GetMultiLineTextExtent(draw_text)
@@ -694,7 +698,10 @@ class AuiDefaultTabArt(object):
             tab_width = self._fixed_tab_width
 
         if control is not None:
-            tab_width += control.GetSize().GetWidth() + 4
+            try:
+                tab_width += control.GetSize().GetWidth() + 4
+            except wx.PyDeadObjectError:
+                pass
             
         x_extent = tab_width
 
@@ -1268,18 +1275,21 @@ class AuiSimpleTabArt(object):
         ypos = (tab_y + tab_height)/2 - (texty/2) + 1
 
         if control is not None:
-            if control.GetPosition() != wx.Point(text_offset+1, ypos):
-                control.SetPosition(wx.Point(text_offset+1, ypos))
+            try:
+                if control.GetPosition() != wx.Point(text_offset+1, ypos):
+                    control.SetPosition(wx.Point(text_offset+1, ypos))
 
-            if not control.IsShown():
-                control.Show()
+                if not control.IsShown():
+                    control.Show()
 
-            if paint_control:
-                bmp = TakeScreenShot(control.GetScreenRect())
-                dc.DrawBitmap(bmp, text_offset+1, ypos, True)
-                
-            controlW, controlH = control.GetSize()
-            text_offset += controlW + 4
+                if paint_control:
+                    bmp = TakeScreenShot(control.GetScreenRect())
+                    dc.DrawBitmap(bmp, text_offset+1, ypos, True)
+                    
+                controlW, controlH = control.GetSize()
+                text_offset += controlW + 4
+            except wx.PyDeadObjectError:
+                pass
 
         # draw tab text
         rectx, recty, dummy = dc.GetMultiLineTextExtent(draw_text)
@@ -1384,8 +1394,11 @@ class AuiSimpleTabArt(object):
             tab_width = self._fixed_tab_width
 
         if control is not None:
-            controlW, controlH = control.GetSize()
-            tab_width += controlW + 4
+            try:
+                controlW, controlH = control.GetSize()
+                tab_width += controlW + 4
+            except wx.PyDeadObjectError:
+                pass
 
         x_extent = tab_width - (tab_height/2) - 1
 
@@ -1796,19 +1809,22 @@ class VC71TabArt(AuiDefaultTabArt):
         offset_focus = text_offset
         
         if control is not None:
-            if control.GetPosition() != wx.Point(text_offset+1, ypos):
-                control.SetPosition(wx.Point(text_offset+1, ypos))
+            try:
+                if control.GetPosition() != wx.Point(text_offset+1, ypos):
+                    control.SetPosition(wx.Point(text_offset+1, ypos))
 
-            if not control.IsShown():
-                control.Show()
+                if not control.IsShown():
+                    control.Show()
 
-            if paint_control:
-                bmp = TakeScreenShot(control.GetScreenRect())
-                dc.DrawBitmap(bmp, text_offset+1, ypos, True)
-                
-            controlW, controlH = control.GetSize()
-            text_offset += controlW + 4
-            textx += controlW + 4
+                if paint_control:
+                    bmp = TakeScreenShot(control.GetScreenRect())
+                    dc.DrawBitmap(bmp, text_offset+1, ypos, True)
+                    
+                controlW, controlH = control.GetSize()
+                text_offset += controlW + 4
+                textx += controlW + 4
+            except wx.PyDeadObjectError:
+                pass
 
         # draw tab text
         rectx, recty, dummy = dc.GetMultiLineTextExtent(draw_text)
@@ -1874,7 +1890,7 @@ class FF2TabArt(AuiDefaultTabArt):
         return art
 
 
-    def GetTabSize(self, dc, wnd, caption, bitmap, active, close_button_state, control):
+    def GetTabSize(self, dc, wnd, caption, bitmap, active, close_button_state, control=None):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
@@ -2034,19 +2050,22 @@ class FF2TabArt(AuiDefaultTabArt):
         offset_focus = text_offset
         
         if control is not None:
-            if control.GetPosition() != wx.Point(text_offset+1, ypos):
-                control.SetPosition(wx.Point(text_offset+1, ypos))
+            try:
+                if control.GetPosition() != wx.Point(text_offset+1, ypos):
+                    control.SetPosition(wx.Point(text_offset+1, ypos))
 
-            if not control.IsShown():
-                control.Show()
+                if not control.IsShown():
+                    control.Show()
 
-            if paint_control:
-                bmp = TakeScreenShot(control.GetScreenRect())
-                dc.DrawBitmap(bmp, text_offset+1, ypos, True)
-                
-            controlW, controlH = control.GetSize()
-            text_offset += controlW + 4
-            textx += controlW + 4
+                if paint_control:
+                    bmp = TakeScreenShot(control.GetScreenRect())
+                    dc.DrawBitmap(bmp, text_offset+1, ypos, True)
+                    
+                controlW, controlH = control.GetSize()
+                text_offset += controlW + 4
+                textx += controlW + 4
+            except wx.PyDeadObjectError:
+                pass
         
         # draw tab text
         rectx, recty, dummy = dc.GetMultiLineTextExtent(draw_text)
@@ -2369,19 +2388,22 @@ class VC8TabArt(AuiDefaultTabArt):
         offset_focus = text_offset
         
         if control is not None:
-            if control.GetPosition() != wx.Point(text_offset+1, ypos):
-                control.SetPosition(wx.Point(text_offset+1, ypos))
+            try:
+                if control.GetPosition() != wx.Point(text_offset+1, ypos):
+                    control.SetPosition(wx.Point(text_offset+1, ypos))
 
-            if not control.IsShown():
-                control.Show()
+                if not control.IsShown():
+                    control.Show()
 
-            if paint_control:
-                bmp = TakeScreenShot(control.GetScreenRect())
-                dc.DrawBitmap(bmp, text_offset+1, ypos, True)
-                
-            controlW, controlH = control.GetSize()
-            text_offset += controlW + 4
-            textx += controlW + 4
+                if paint_control:
+                    bmp = TakeScreenShot(control.GetScreenRect())
+                    dc.DrawBitmap(bmp, text_offset+1, ypos, True)
+                    
+                controlW, controlH = control.GetSize()
+                text_offset += controlW + 4
+                textx += controlW + 4
+            except wx.PyDeadObjectError:
+                pass
 
         # draw tab text
         rectx, recty, dummy = dc.GetMultiLineTextExtent(draw_text)
@@ -2730,18 +2752,21 @@ class ChromeTabArt(AuiDefaultTabArt):
         ypos = drawn_tab_yoff + drawn_tab_height/2 - texty/2 - 1
 
         if control is not None:
-            if control.GetPosition() != wx.Point(text_offset+1, ypos):
-                control.SetPosition(wx.Point(text_offset+1, ypos))
+            try:
+                if control.GetPosition() != wx.Point(text_offset+1, ypos):
+                    control.SetPosition(wx.Point(text_offset+1, ypos))
 
-            if not control.IsShown():
-                control.Show()
+                if not control.IsShown():
+                    control.Show()
 
-            if paint_control:
-                bmp = TakeScreenShot(control.GetScreenRect())
-                dc.DrawBitmap(bmp, text_offset+1, ypos, True)
-                
-            controlW, controlH = control.GetSize()
-            text_offset += controlW + 4
+                if paint_control:
+                    bmp = TakeScreenShot(control.GetScreenRect())
+                    dc.DrawBitmap(bmp, text_offset+1, ypos, True)
+                    
+                controlW, controlH = control.GetSize()
+                text_offset += controlW + 4
+            except wx.PyDeadObjectError:
+                pass
 
         # draw tab text
         rectx, recty, dummy = dc.GetMultiLineTextExtent(draw_text)
