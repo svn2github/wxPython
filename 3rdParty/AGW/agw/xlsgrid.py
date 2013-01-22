@@ -2,7 +2,7 @@
 # XLSGRID wxPython IMPLEMENTATION
 #
 # Andrea Gavana @ 08 Aug 2011
-# Latest Revision: 20 MAr 2012, 21.00 GMT
+# Latest Revision: 20 Mar 2012, 21.00 GMT
 #
 #
 # TODO List
