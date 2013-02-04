@@ -13,7 +13,7 @@ this module returns the following information:
                        
 These meta data are merged into the wxPython demo tree at startup.
 
-Last updated: Andrea Gavana @ 27 Aug 2012, 21.00 GMT.
+Last updated: Andrea Gavana @ 04 Feb 2013, 21.00 GMT.
 Version 0.9.7.
 
 """

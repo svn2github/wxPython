@@ -55,7 +55,7 @@ class SuperToolTipDemo(wx.Frame):
                                           wx.Bitmap(os.path.normpath(os.path.join(bitmapDir, "sttfont.png")),
                                                     wx.BITMAP_TYPE_PNG))
         msg = "</b>A Bold Title\n\nJoins the selected cells into one larger cell\nand centers the contents in the new cell.\n" \
-              "This is often used to create labels that span\nmultiple columns.\n\n</l>I am a link{http://xoomer.alice.it/infinity77}"
+              "This is often used to create labels that span\nmultiple columns.\n\n<hr>draw a horizontal line - text on same line will be ignored\n\n</l>I am a link{http://xoomer.alice.it/infinity77}"
         self.bodyText = wx.TextCtrl(self.mainPanel, -1, msg, style=wx.TE_MULTILINE)
         self.includeCheck = wx.CheckBox(self.mainPanel, -1, "Include Body Image")
         self.footerCheck = wx.CheckBox(self.mainPanel, -1, "Show Footer")

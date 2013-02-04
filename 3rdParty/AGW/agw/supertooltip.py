@@ -2,7 +2,7 @@
 # SUPERTOOLTIP wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 30 Jan 2013, 21.00 GMT
+# Latest Revision: 04 Feb 2013, 21.00 GMT
 #
 #
 # TODO List
@@ -120,7 +120,7 @@ License And Version
 
 :class:`SuperToolTip` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 30 Jan 2013, 21.00 GMT
+Latest Revision: Andrea Gavana @ 04 Feb 2013, 21.00 GMT
 
 Version 0.5
 
@@ -349,31 +349,35 @@ class ToolTipWindowBase(object):
         messagePos = self._getTextExtent(dc, lines[0] if lines else "")[1] / 2 + self._spacing
         for line in lines:
             # Loop over all the lines in the message
-            isLink = False
-            dc.SetTextForeground(normalText)
-            if line.startswith("</b>"):      # is a bold line
-                line = line[4:]
-                font = MakeBold(messageFont)
-                dc.SetFont(font)
-            elif line.startswith("</l>"):    # is a link
-                dc.SetFont(hyperlinkFont)
-                isLink = True
-                line, hl = ExtractLink(line)
-                dc.SetTextForeground(hyperLinkText)
+            if line.startswith("<hr>"):     # draw a line
+                yText += self._spacing * 2
+                dc.DrawLine(self._spacing, yText+self._spacing, width-self._spacing, yText+self._spacing)
             else:
-                # Is a normal line
-                dc.SetFont(messageFont)
-
-            textWidth, textHeight = self._getTextExtent(dc, line)
-
-            messageHeight += textHeight
-            
-            xText = (bmpWidth + 2 * self._spacing) if bmpWidth > 0 else self._spacing
-            yText += textHeight / 2 + self._spacing
-            maxWidth = max(xText + textWidth + self._spacing, maxWidth)
-            dc.DrawText(line, xText, yText)
-            if isLink:
-                self._storeHyperLinkInfo(xText, yText, textWidth, textHeight, hl)
+                isLink = False
+                dc.SetTextForeground(normalText)
+                if line.startswith("</b>"):      # is a bold line
+                    line = line[4:]
+                    font = MakeBold(messageFont)
+                    dc.SetFont(font)
+                elif line.startswith("</l>"):    # is a link
+                    dc.SetFont(hyperlinkFont)
+                    isLink = True
+                    line, hl = ExtractLink(line)
+                    dc.SetTextForeground(hyperLinkText)
+                else:
+                    # Is a normal line
+                    dc.SetFont(messageFont)
+    
+                textWidth, textHeight = self._getTextExtent(dc, line)
+    
+                messageHeight += textHeight
+                
+                xText = (bmpWidth + 2 * self._spacing) if bmpWidth > 0 else self._spacing
+                yText += textHeight / 2 + self._spacing
+                maxWidth = max(xText + textWidth + self._spacing, maxWidth)
+                dc.DrawText(line, xText, yText)
+                if isLink:
+                    self._storeHyperLinkInfo(xText, yText, textWidth, textHeight, hl)
 
         toAdd = 0
         if bmpHeight > textHeight:
