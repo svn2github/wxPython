@@ -435,8 +435,10 @@ class PersistenceManager(object):
         :param `window`: an instance of :class:`Window`.
         """
     
-        if window.GetName() in self._persistentObjects:
-            return window
+        if window:
+            # protect for PyDeadObjectError
+            if window.GetName() in self._persistentObjects:
+                return window
     
 
     def Register(self, window, persistenceHandler=None):
