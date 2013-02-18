@@ -196,6 +196,9 @@ def MakeDisabledBitmap(bitmap):
     :param Bitmap `bitmap`: the bitmap to gray-out.
     """
 
+    if wx.VERSION_STRING >= '2.9.0':
+        return bitmap.ConvertToDisabled()
+    
     anImage = bitmap.ConvertToImage()    
     factor = 0.7        # 0 < f < 1.  Higher Is Grayer
     
