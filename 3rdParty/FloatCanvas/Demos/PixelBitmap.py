@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 
 """
 A simple demo to show how to drw a bitmap on top of the Canvas at given pixel coords.

@@ -1,4 +1,4 @@
-#!/usr/bin/env pythonw2.4
+#!/usr/bin/env python
 
 """
 DrawBot.py

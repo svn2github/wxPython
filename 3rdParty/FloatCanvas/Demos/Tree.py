@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.5
+#!/usr/bin/env python
 """
 
 This is a demo, showing how to work with a "tree" structure
