@@ -97,6 +97,7 @@ class _MouseEvent(wx.PyCommandEvent):
 ## fixme: This should probably be re-factored into a class
 _testBitmap = None
 _testDC = None
+
 def _cycleidxs(indexcount, maxvalue, step):
 
     """
@@ -148,14 +149,14 @@ def _colorGenerator():
     """
     return _cycleidxs(indexcount=3, maxvalue=256, step=1)
 
-class DrawObject:
+class DrawObject(object):
     """
     This is the base class for all the objects that can be drawn.
 
-    One must subclass from this (and an assortment of Mixins) to create
+    One must subclass from this (and an assortment of mixins) to create
     a new DrawObject.
 
-      \note This class contain a series of static dictionaries:
+      note: This class contain a series of static dictionaries:
 
       * BrushList
       * PenList
@@ -167,12 +168,14 @@ class DrawObject:
     """
 
     def __init__(self, InForeground  = False, IsVisible = True):
-        """! \param InForeground (bool)
-             \param IsVisible (Bool)
+        """
+        :param InForeground=False: whether you want the object in the foreground
+        :param param IsVisible = True: whther the object is visible
         """
         self.InForeground = InForeground
 
         self._Canvas = None
+        #self._Actual_Canvas = None
 
         self.HitColor = None
         self.CallBackFuncs = {}
@@ -239,6 +242,20 @@ class DrawObject:
             "ShortDash"  : wx.SHORT_DASH,
             "DotDash"    : wx.DOT_DASH,
             }
+
+    # # made a property so sub-classes c
+    # @property
+    # def _Canvas(self):
+    #     """
+    #     getter for the _Canvas property
+    #     """
+    #     return self._Actual_Canvas
+    # @_Canvas.setter
+    # def _Canvas(self, canvas):
+    #     """
+    #     setter for Canvas property
+    #     """
+    #     self._Actual_Canvas = canvas
 
     def Bind(self, Event, CallBackFun):
         ##fixme: Way too much Canvas Manipulation here!
@@ -350,13 +367,38 @@ class Group(DrawObject):
     """
 
     def __init__(self, ObjectList=[], InForeground  = False, IsVisible = True):
-        self.ObjectList = list(ObjectList)
+        self.ObjectList = []
+
         DrawObject.__init__(self, InForeground, IsVisible)
+
+        # this one uses a proprty for _Canvas...
+        self._Actual_Canvas = None
+
+        for obj in ObjectList:
+            self.AddObject(obj, calcBB = False)
         self.CalcBoundingBox()
 
-    def AddObject(self, obj):
+    ## re-define _Canvas property so that the sub-objects get set up right
+    @property
+    def _Canvas(self):
+        """
+        getter for the _Canvas property
+        """
+        return self._Actual_Canvas
+    @_Canvas.setter
+    def _Canvas(self, canvas):
+        """
+        setter for Canvas property
+        """
+        self._Actual_Canvas = canvas
+        for obj in self.ObjectList:
+            obj._Canvas = canvas
+
+    def AddObject(self, obj, calcBB=True):
         self.ObjectList.append(obj)
-        self.BoundingBox.Merge(obj.BoundingBox)
+        obj._Canvas = self._Canvas
+        if calcBB:
+            self.BoundingBox.Merge(obj.BoundingBox)
 
     def AddObjects(self, Objects):
         for o in Objects:
@@ -2057,7 +2099,6 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         Hs = int(scale * Hb + 0.5)
         if (self.ScaledBitmap is None) or (self.ScaledBitmap[0] != (Xb, Yb, Wb, Hb, Ws, Ws) ):
             Img = self.Image.GetSubImage(wx.Rect(Xb, Yb, Wb, Hb))
-            print "rescaling with High quality"
             Img.Rescale(Ws, Hs, quality=wx.IMAGE_QUALITY_HIGH)
             bmp = wx.BitmapFromImage(Img)
             self.ScaledBitmap = ((Xb, Yb, Wb, Hb, Ws, Ws), bmp)# this defines the cached bitmap
