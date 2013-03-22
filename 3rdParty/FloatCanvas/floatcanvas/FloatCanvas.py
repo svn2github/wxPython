@@ -298,6 +298,7 @@ class DrawObject(object):
         else:
             self.Brush = self.BrushList.setdefault( (FillColor,FillStyle),  wx.Brush(FillColor,self.FillStyleList[FillStyle] ) )
             #print "Setting Brush, BrushList length:", len(self.BrushList)
+
     def SetPen(self,LineColor,LineStyle,LineWidth):
         if (LineColor is None) or (LineStyle is None):
             self.Pen = wx.TRANSPARENT_PEN
@@ -493,11 +494,13 @@ class LineOnlyMixin:
     def SetLineColor(self, LineColor):
         self.LineColor = LineColor
         self.SetPen(LineColor,self.LineStyle,self.LineWidth)
+        print "In SetLineColor setting the pen:", self.LineColor,self.LineStyle,self.LineWidth
     SetColor = SetLineColor# so that it will do something reasonable
     
     def SetLineStyle(self, LineStyle):
         self.LineStyle = LineStyle
         self.SetPen(self.LineColor,LineStyle,self.LineWidth)
+        print "In SetLineStyle setting the pen:", self.LineColor,LineStyle,self.LineWidth
 
     def SetLineWidth(self, LineWidth):
         self.LineWidth = LineWidth
@@ -2913,11 +2916,12 @@ class FloatCanvas(wx.Panel):
 
         """
         shift = N.asarray(shift,N.float)
-        if CoordType == 'Panel':# convert from panel coordinates
+        CoordType = CoordType.lower()
+        if CoordType == 'panel':# convert from panel coordinates
             shift = shift * N.array((-1,1),N.float) *self.PanelSize/self.TransformVector
-        elif CoordType == 'Pixel': # convert from pixel coordinates
+        elif CoordType == 'pixel': # convert from pixel coordinates
             shift = shift/self.TransformVector
-        elif CoordType == 'World': # No conversion
+        elif CoordType == 'world': # No conversion
             pass
         else:
             raise FloatCanvasError('CoordType must be either "Panel", "Pixel", or "World"')
@@ -2929,28 +2933,43 @@ class FloatCanvas(wx.Panel):
         if ReDraw:
             self.Draw()
 
-    def Zoom(self, factor, center = None, centerCoords="world"):
+    def Zoom(self, factor, center = None, centerCoords="world", keepPointInPlace=False):
 
         """
         Zoom(factor, center) changes the amount of zoom of the image by factor.
         If factor is greater than one, the image gets larger.
         If factor is less than one, the image gets smaller.
+        :param factor: amount to zoom in or out If factor is greater than one,
+                       the image gets larger. If factor is less than one, the
+                       image gets smaller.
+        :param center: a tuple of (x,y) coordinates of the center of the viewport,
+                       after zooming. If center is not given, the center will stay the same.
 
-        center is a tuple of (x,y) coordinates of the center of the viewport, after zooming.
-        If center is not given, the center will stay the same.
-
-        centerCoords is a flag indicating whether the center given is in pixel or world 
-        coords. Options are: "world" or "pixel"
-        
+        :param centerCoords: flag indicating whether the center given is in pixel or world 
+                             coords. Options are: "world" or "pixel"
+        :param keepPointInPlace: boolean flag. If False, the center point is what's given.
+                                 If True, the image is shifted so that the given center point
+                                 is kept in the same pixel space. This facilitates keeping the 
+                                 same point under the mouse when zooming with the scroll wheel.
         """
-        self.Scale = self.Scale*factor
-        if not center is None:
-            if centerCoords == "pixel":
-                center = self.PixelToWorld( center )
-            else:
-                center = N.array(center,N.float)
-            self.ViewPortCenter = center
-        self.SetToNewScale()
+        if center is None:
+            center = self.ViewPortCenter
+            centerCoords = 'world' #override input if they don't give a center point.
+
+        if centerCoords == "pixel":
+            oldpoint = self.PixelToWorld( center )
+        else:
+            oldpoint = N.array(center, N.float)
+
+        self.Scale = self.Scale*factor        
+        self.SetToNewScale(False)
+
+        if centerCoords == "pixel":
+            newpoint = self.PixelToWorld( center )
+        else:
+            newpoint = N.array(center, N.float)
+        delta = (newpoint - oldpoint)
+        self.MoveImage(-delta, 'world')        
 
     def ZoomToBB(self, NewBB=None, DrawFlag=True):
 
