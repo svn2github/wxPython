@@ -2961,15 +2961,19 @@ class FloatCanvas(wx.Panel):
         else:
             oldpoint = N.array(center, N.float)
 
-        self.Scale = self.Scale*factor        
-        self.SetToNewScale(False)
-
-        if centerCoords == "pixel":
-            newpoint = self.PixelToWorld( center )
+        self.Scale = self.Scale*factor
+        if keepPointInPlace:
+            self.SetToNewScale(False)
+    
+            if centerCoords == "pixel":
+                newpoint = self.PixelToWorld( center )
+            else:
+                newpoint = N.array(center, N.float)
+            delta = (newpoint - oldpoint)
+            self.MoveImage(-delta, 'world')       
         else:
-            newpoint = N.array(center, N.float)
-        delta = (newpoint - oldpoint)
-        self.MoveImage(-delta, 'world')        
+            self.ViewPortCenter = oldpoint
+            self.SetToNewScale()         
 
     def ZoomToBB(self, NewBB=None, DrawFlag=True):
 
