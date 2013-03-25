@@ -24,13 +24,33 @@ FONTSCALE = 1.0
 CACHE_LATE_PAGES = True
 LATE_THRESHOLD = 200        # Time to render (ttr), milliseconds
 
-SHOW_LOAD_PROGRESS = True
-USE_PRINTDIRECT = True
 VERBOSE = False
 
-from pyPdf import PdfFileReader
-from pyPdf.pdf import ContentStream, PageObject
-from pyPdf.filters import ASCII85Decode, FlateDecode
+fpypdf = 0
+try:
+    import pyPdf
+    fpypdf = 1
+except:
+    pass
+
+try:
+    import PyPDF2
+    fpypdf = 2
+except:
+    pass
+
+if not fpypdf:
+    msg = "You either need pyPdf or pyPDF2 to use this."
+    raise ImportError(msg)
+elif fpypdf == 2:
+    from PyPDF2 import PdfFileReader
+    from PyPDF2.pdf import ContentStream, PageObject
+    from PyPDF2.filters import ASCII85Decode, FlateDecode
+elif fpypdf == 1:
+    from pyPdf import PdfFileReader
+    from pyPdf.pdf import ContentStream, PageObject
+    from pyPdf.filters import ASCII85Decode, FlateDecode
+
 from dcgraphics import dcGraphicsContext
 
 import wx
@@ -95,6 +115,9 @@ class pdfViewer(wx.ScrolledWindow):
                                 style | wx.NO_FULL_REPAINT_ON_RESIZE)
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)     # recommended in wxWidgets docs
         self.buttonpanel = None     # reference to panel is set by their common parent
+        self._showLoadProgress = True
+        self._usePrintDirect = True
+        
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_SIZE, self.OnResize)
@@ -104,7 +127,7 @@ class pdfViewer(wx.ScrolledWindow):
         self.resizing = False
         self.numpages = None
         self.zoomscale = -1     # fit page to screen width
-        self.page_gap = 20      # nominal inter-page gap (points)
+        self.nom_page_gap = 20  # nominal inter-page gap (points) 
         self.scrollrate = 20    # pixels per scrollbar increment
         self.ClearBackground()
 
@@ -180,8 +203,8 @@ class pdfViewer(wx.ScrolledWindow):
     def Save(self):
         "A pdf-only Save."
         wild = "Portable document format (*.pdf)|*.pdf"
-        dlg = wx.FileDialog(self, message="Save file as ...", defaultDir=getpath('report'), 
-                            defaultFile="", wildcard=wild, style=wx.SAVE|wx.OVERWRITE_PROMPT)
+        dlg = wx.FileDialog(self, message="Save file as ...",
+                                  wildcard=wild, style=wx.SAVE|wx.OVERWRITE_PROMPT)
         if dlg.ShowModal() == wx.ID_OK:
             pathname = dlg.GetPath()
             shutil.copy(self.pdfpathname, pathname)
@@ -248,7 +271,7 @@ class pdfViewer(wx.ScrolledWindow):
         self.clientdc = dc = wx.ClientDC(self)      # dc for device scaling 
         self.device_scale = dc.GetPPI()[0]/72.0     # pixels per inch / points per inch 
         self.winwidth, self.winheight = self.GetClientSizeTuple()
-        self.Ypage = self.pageheight + self.page_gap
+        self.Ypage = self.pageheight + self.nom_page_gap 
         if self.zoomscale > 0.0:
             self.scale = self.zoomscale * self.device_scale
         else:
@@ -341,8 +364,7 @@ class pdfViewer(wx.ScrolledWindow):
                     # Show inter-page gap
                     gc.SetBrush(wx.Brush(wx.Colour(180, 180, 180)))        #mid grey
                     gc.SetPen(wx.TRANSPARENT_PEN)
-                    gc.DrawRectangle(0, 0, self.pagewidth*self.device_scale,
-                                                  self.page_gap*self.device_scale)
+                    gc.DrawRectangle(0, 0, self.pagewidth, self.page_gap)
                     gc.PopState()
                     ttr = time.time()-t1 
                     if CACHE_LATE_PAGES and ttr * 1000 > LATE_THRESHOLD:
@@ -358,9 +380,11 @@ class pdfViewer(wx.ScrolledWindow):
 
     def RenderPage(self, gc, pagedrawings):
         """ Render the set of pagedrawings
-            In pdf file, bitmaps are treated as being of unit width and height and
-            are scaled appropriately in X and Y. Cairo can handle this but not
-            wx.GraphicsContext (although it should in theory) or wx.DC, 
+            In a pdf file, bitmaps are treated as being of unit width and height and
+            are scaled via a previous ConcatTransform containing the corresponding width 
+            and height as scale factors. wx.GraphicsContext/Cairo appear not to respond to  
+            this so scaling is removed from transform and width & height are added
+            to the Drawbitmap call.
         """    
         drawdict = {'ConcatTransform': gc.ConcatTransform,
                     'PushState': gc.PushState,
@@ -439,7 +463,7 @@ class pdfViewer(wx.ScrolledWindow):
         """  
         t0 = time.time()
         numpages_generated = 0
-        rp = (SHOW_LOAD_PROGRESS and frompage == 0 and topage == self.numpages-1)
+        rp = (self.ShowLoadProgress and frompage == 0 and topage == self.numpages-1)
         if rp: self.Progress('start', self.numpages)
         for self.pageno in range(frompage, topage+1):
             self.gstate = pdfState()    # state is reset with every new page
@@ -549,6 +573,15 @@ class pdfViewer(wx.ScrolledWindow):
                 if operator not in self.unimplemented:
                     if VERBOSE: print 'PDF operator %s is not implemented' % operator
                     self.unimplemented[operator] = 1
+
+        # Fix bitmap transform. Remove the scaling from any transform matrix that precedes
+        # a DrawBitmap operation as the scaling is now done in that operation.
+        for k in range(len(drawlist)-1):
+            if drawlist[k][0] == 'ConcatTransform' and drawlist[k+1][0] == 'DrawBitmap':
+                args = list(drawlist[k][1])
+                args[0] = 1.0
+                args[3] = 1.0
+                drawlist[k][1] = tuple(args)
         return drawlist            
 
     def SetFont(self, pdfont, size):
@@ -733,7 +766,7 @@ class pdfViewer(wx.ScrolledWindow):
             bitmap = wx.BitmapFromImage(image)
         else:    
             bitmap = wx.BitmapFromBuffer(width, height, data)
-        return ['DrawBitmap', (bitmap, 0, 0-height, 1.0, 1.0), {}]
+        return ['DrawBitmap', (bitmap, 0, 0-height, width, height), {}]
 
     def ConvertCMYK(self, operand):
         "Convert CMYK values (0 to 1.0) in operand to nearest RGB"
@@ -742,7 +775,30 @@ class pdfViewer(wx.ScrolledWindow):
         b = round((1-y)*(1-k)*255)
         g = round((1-m)*(1-k)*255)
         return (r, g, b)
+    
+    @property
+    def ShowLoadProgress(self):
+        """Property to control if loading progress be shown."""
+        return self._showLoadProgress
+    
+    @ShowLoadProgress.setter
+    def ShowLoadProgress(self, flag):
+        """Setter for showLoadProgress."""
+        self._showLoadProgress = flag
        
+    @property
+    def UsePrintDirect(self):
+        """
+        Property to control to use either Cairo (via a page buffer) or
+        dcGraphicsContext depending.
+        """
+        return self._usePrintDirect
+    
+    @UsePrintDirect.setter
+    def UsePrintDirect(self, flag):
+        """Setter for usePrintDirect."""
+        self._usePrintDirect = flag
+ 
 #----------------------------------------------------------------------------
 
 class pdfState:
@@ -803,9 +859,9 @@ class pdfPrintout(wx.Printout):
     def OnPrintPage(self, page):
         """ Provide the data for page by rendering the drawing commands
             to the printer DC using either Cairo (via a page buffer) or
-            dcGraphicsContext depending on USE_PRINTDIRECT
+            dcGraphicsContext depending on self.view.usePrintDirect
         """
-        if USE_PRINTDIRECT:
+        if self.view.UsePrintDirect:
             self.PrintDirect(page)
         else:
             self.PrintViaBuffer(page)
