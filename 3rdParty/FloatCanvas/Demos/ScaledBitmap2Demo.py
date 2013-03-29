@@ -2,10 +2,7 @@
 
 """
 This demo shows how to use a ScaledBitmap2 (which is like a scaled bitmap,
-but uses memory more efficiently for large images and high zoom levels.
-
-It also draws random points on top of the image, because someone on the 
-wxPython mailing list asked for that...
+but uses memory more efficiently for large images and high zoom levels.)
 
 
 """
@@ -40,7 +37,7 @@ class DrawFrame(wx.Frame):
                                      ProjectionFun = None,
                                      BackgroundColor = "DARK SLATE BLUE",
                                      ).Canvas
-        Canvas.MaxScale=4 # sets the maximum zoom level
+        Canvas.MaxScale=20 # sets the maximum zoom level
         self.Canvas = Canvas
 
         FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
@@ -49,30 +46,15 @@ class DrawFrame(wx.Frame):
         # create the image:
         image = wx.Image(ImageFile)
         self.width, self.height = image.GetSize()
-        img = Canvas.AddScaledBitmap( image,
-                                      (0,0),
-                                      Height=image.GetHeight(),
-                                      Position = 'tl',
-                                      )
-
-        #Box.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Binding)
-        
-        ## now set up a timer
-        self.timer = wx.Timer(self)
-        self.Bind(wx.EVT_TIMER, self.AddPoint, self.timer)
-
-
+        img = FloatCanvas.ScaledBitmap2( image,
+                                        (0,0),
+                                        Height=image.GetHeight(),
+                                        Position = 'tl',
+                                        )
+        Canvas.AddObject(img)
         
         self.Show()
         Canvas.ZoomToBB()
-        self.timer.Start(20)
-
-    def AddPoint(self, evt=None):
-        x = random.randint(0, self.width)
-        y = random.randint(0, self.height)
-        self.Canvas.AddPoint((x,-y), Diameter=8) # minus y, because floatcanvas uses y-up
-        self.Canvas.Draw()
-        wx.GetApp().Yield(onlyIfNeeded=True)
         
     def OnMove(self, event):
         """
@@ -80,12 +62,6 @@ class DrawFrame(wx.Frame):
 
         """
         self.SetStatusText("%i, %i"%tuple(event.Coords))
-
-    def Binding(self, event):
-        print "Writing a png file:"
-        self.Canvas.SaveAsImage("junk.png")
-        print "Writing a jpeg file:"
-        self.Canvas.SaveAsImage("junk.jpg",wx.BITMAP_TYPE_JPEG)
 
 
 app = wx.App(False)
