@@ -225,7 +225,11 @@ class DrawFrame(wx.Frame):
             Canvas.AddObject(bmp)
             bmp.Bind(FC.EVT_FC_LEFT_DOWN, self.ObjectHit)
 
-        A = MovingArc((-5, 0),(-2, 2),(-5, 2), LineColor="Red", LineWidth=2)
+        A = MovingArc((-5, 0),(-2, 2),(-5, 2),
+                      LineColor="Red",
+                      LineWidth=2,
+                      FillColor="green",
+                      FillStyle="CrossDiagHatch")
         self.Canvas.AddObject(A)    
         A.Bind(FC.EVT_FC_LEFT_DOWN, self.ObjectHit)
 

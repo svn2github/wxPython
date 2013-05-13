@@ -2017,7 +2017,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         """
         delta = Pw - self.XY
         Pb = delta * self.BmpScale
-        Pb *= (1, -1) ##fixme: this may only works for Yup projection!
+        Pb *= (1, -1) ##fixme: this may only works for Y-up projection!
                       ##       and may only work for top left position
 
         return Pb.astype(N.int_)
@@ -2276,7 +2276,7 @@ class Arc(XYObjectMixin, LineAndFillMixin, DrawObject):
         self.HitLineWidth = max(LineWidth,self.MinHitLineWidth)
 
         self.SetPen(LineColor, LineStyle, LineWidth)
-        self.SetBrush(FillColor, FillStyle)                  #Why isn't this working ???
+        self.SetBrush(FillColor, FillStyle)
 
     def Move(self, Delta ):
         """
@@ -2501,7 +2501,7 @@ class FloatCanvas(wx.Panel):
         else:
             raise FloatCanvasError('Projectionfun must be either:'
                                    ' "FlatEarth", None, or a callable object '
-                                   '(function, for instance) that takes the '
+                                   '(function or callable object) that takes the '
                                    'ViewPortCenter and returns a MapProjectionVector')
 
     def FlatEarthProjection(self, CenterPoint):
