@@ -49,11 +49,12 @@ class DrawFrame(wx.Frame):
         T = FloatCanvas.Text("Group A", (5.5, 5.5), Position="cc", Size = 16, Weight=wx.BOLD, Family=wx.SWISS)
 
         self.GroupA = FloatCanvas.Group((R,C,E))
+        self.GroupA.Name = "Group A"
         self.GroupA.AddObjects((C2,T))
         Canvas.AddObject(self.GroupA)
 
         
-        ## create another Groups of objects
+        ## create another Group of objects
 
         R = FloatCanvas.Rectangle((15, 15),(10, 18), FillColor="orange")
         E = FloatCanvas.Ellipse((22, 28), (12, 8), FillColor="yellow")
@@ -62,6 +63,7 @@ class DrawFrame(wx.Frame):
         T = FloatCanvas.Text("Group B", (19, 24), Position="cc", Size = 16, Weight=wx.BOLD, Family=wx.SWISS)
 
         self.GroupB = FloatCanvas.Group((R,E,C,C2,T))
+        self.GroupB.Name = "Group B"
         Canvas.AddObject(self.GroupB)
        
         self.Groups = {"A":self.GroupA, "B":self.GroupB}
@@ -69,7 +71,12 @@ class DrawFrame(wx.Frame):
         # Add a couple of tools to the Canvas Toolbar
 
         tb = NC.ToolBar
-#        tb.AddSeparator()
+    
+        # bind some events:
+        self.GroupA.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.OnLeftClick)
+        self.GroupA.Bind(FloatCanvas.EVT_FC_RIGHT_DOWN, self.OnRightClick)
+        self.GroupB.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.OnLeftClick)
+        self.GroupB.Bind(FloatCanvas.EVT_FC_RIGHT_DOWN, self.OnRightClick)
 
         for Group in self.Groups.keys():
             Button = wx.Button(tb, wx.ID_ANY, "Hide/Show%s"%Group)
@@ -80,6 +87,13 @@ class DrawFrame(wx.Frame):
 
         self.Show()
         Canvas.ZoomToBB()
+
+    def OnLeftClick(self, obj):
+        print "Group:", obj.Name, "left clicked"
+
+    def OnRightClick(self, obj):
+        print "Group:", obj.Name, "right clicked"
+
 
     def OnMove(self, event):
         """

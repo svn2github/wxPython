@@ -454,15 +454,24 @@ class Group(DrawObject):
                 self._Canvas.HitColorGenerator.next() # first call to prevent the background color from being used.
             # Set all contained objects to the same Hit color:
             self.HitColor = self._Canvas.HitColorGenerator.next()
-        for obj in self.ObjectList:
-            obj.SetHitPen(self.HitColor, self.HitLineWidth)
-            obj.SetHitBrush(self.HitColor)
-            obj.HitAble = True
+        # for obj in self.ObjectList:
+        #     obj.SetHitPen(self.HitColor, self.HitLineWidth)
+        #     obj.SetHitBrush(self.HitColor)
+        #     obj.HitAble = True
         # put the object in the hit dict, indexed by it's color
+        self._ChangeChildrenHitColor(self.ObjectList)
         if not self._Canvas.HitDict:
             self._Canvas.MakeHitDict()
         self._Canvas.HitDict[Event][self.HitColor] = (self)
 
+    def _ChangeChildrenHitColor(self, objlist):
+        for obj in objlist:
+            obj.SetHitPen(self.HitColor, self.HitLineWidth)
+            obj.SetHitBrush(self.HitColor)
+            obj.HitAble = True
+            
+            if isinstance(obj, Group):
+                self._ChangeChildrenHitColor(obj.ObjectList)
 
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel = None, HTdc=None):
         for obj in self.ObjectList:
