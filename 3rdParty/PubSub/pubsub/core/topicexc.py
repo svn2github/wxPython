@@ -1,6 +1,6 @@
 '''
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE.txt for details.
 
 '''
@@ -40,7 +40,7 @@ class UndefinedSubtopic(UndefinedTopic):
         UndefinedTopic.__init__(self, subName, msgFormat)
 
 
-class ListenerSpecIncomplete(RuntimeError):
+class TopicNotDefined(RuntimeError):
     '''
     Raised when an attempt is made to create a topic for which
     a specification is not available, but pub.setTopicUnspecifiedFatal()

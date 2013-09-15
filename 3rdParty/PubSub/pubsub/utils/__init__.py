@@ -2,7 +2,7 @@
 Provides utility functions and classes that are not required for using 
 pubsub but are likely to be very useful. 
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE.txt for details.
 
 '''

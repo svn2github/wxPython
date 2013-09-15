@@ -1,6 +1,6 @@
 '''
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE.txt for details.
 
 '''
@@ -9,7 +9,7 @@ from pubsub import pub
 
 
 def init():
-    '''Do something that changes topic tree so exportTopicTree interesting'''
+    '''Do something that changes topic tree so exportTopicTreeSpec interesting'''
     
     def proto(msg, arg1=None): pass
     topic = pub.getOrCreateTopic('topic_2.subtopic_21', proto)

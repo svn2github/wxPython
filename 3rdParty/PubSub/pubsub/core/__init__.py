@@ -23,19 +23,19 @@ Only one protocol can be used in an application. The default protocol,
 if none is chosen by user, is kwargs, as selected by the call to
 _prependModulePath() at end of this file. 
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE.txt for details.
 
 '''
 
 
-def setMsgProtocol(protocol):
+def setMsgProtocol(protocolName):
     import policies
 
-    policies.msgDataProtocol = protocol
+    policies.msgDataProtocol = protocolName
 
     # add appropriate subdir for protocol-specific implementation
-    if protocol == 'kwargs':
+    if protocolName == 'kwargs':
         _replaceModulePath0('kwargs')
     else:
         _replaceModulePath0('arg1')

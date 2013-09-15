@@ -1,22 +1,31 @@
 '''
-Higher-level classes and functions related to listening of pubsub messages.
+Base classes and functions related to listening of pubsub messages.
 Listeners are callable objects that get subscribed to a pubsub
-topic. Listeners are deemed "invalid" or "inadequate" (used interchangeably)
-by pubsub if they wouldn't be able to receive all message data of a topic
-message. This module includes this validation functionality, which varies
-based on the pubsub messaging protocol used. 
+topic. 
 
-Note that a Listener instance holds its callable listener only by weak
+Each instance of Listener holds its callable listener only by weak
 reference so it doesn't prevent the callable from being garbage collected
-when callable is no longer in use by the application.
+when callable is no longer in use by the application. A Listener instance 
+has the same hash value as the callable that it wraps. 
 
-In order for a listener to subscribe to a topic, it must adhere to that
-topic's "listener protocol specification" (LPS). A subscription will
-fail (via a ListenerInadequate exception) if this is not the case. For
+A callable will be given data when a message is sent to it. The way this 
+data is packaged is the "message protocol". For example in the kwargs 
+protocol the data is sent via keyword arguments, whereas in the arg1 
+protocol it is sent as fields of a Message object. 
+
+In order for a listener to subscribe to a topic, it must be capable of 
+receiving this data. If pubsub determines that this is not the case, it
+will raise a ListenerInadequate exception. This check uses the topic's 
+"message protocol specification" (MPS). For
 instance, if topic A has an LPS "arg1, arg2=None"", then only listeners
 of the form callable([self,] arg1, arg2=something) will be accepted.
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
+Since MPS verification depends on the messaging protocol, only the 
+base capability is defined in this module; actual validators are 
+defined in the protocol folders (kwargs and arg1) by deriving from 
+the base class. 
+
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE.txt for details.
 
 '''
@@ -99,7 +108,12 @@ class ListenerBase:
         return self._callable() is None
 
     def wantsTopicObjOnCall(self):
+        '''True if this listener wants topic object: it has a arg=pub.AUTO_TOPIC'''
         return self._autoTopicArgName is not None
+
+    def wantsAllMessageData(self):
+        '''True if this listener wants all message data: it has a **kwargs argument'''
+        return self.acceptsAllKwargs
     
     def _unlinkFromTopic_(self):
         '''Tell self that it is no longer used by a Topic. This allows 

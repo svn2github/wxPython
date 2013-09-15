@@ -15,7 +15,7 @@ unsubscribes, or dies, a notification handler, if you
 specified one via pub.addNotificationHandler(), is given the 
 relevant information. 
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE.txt for details.
 '''
 
@@ -288,7 +288,7 @@ def useNotifyByPubsubMessage(publisher=None, all=True, **kwargs):
     
     The publisher is rarely needed:
 
-    * The publisher only needs to be specfied if pubsub is not installed
+    * The publisher must be specfied if pubsub is not installed
       on the system search path (ie from pubsub import ... would fail or
       import wrong pubsub -- such as if pubsub is within wxPython's
       wx.lib package). Then pbuModule is the pub module to use::

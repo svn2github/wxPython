@@ -8,7 +8,7 @@ to type, etc).
 Experiment by changing arg1_topics.py and looking at the output tree 
 in arg1_topics_out.py.
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE.txt for details.
 '''
 
@@ -27,7 +27,7 @@ print 'Using "arg1" messaging protocol of pubsub v3'
 try:
     print '------- init ----------'
 
-    pub.importTopicTree( arg1_topics )
+    pub.addTopicDefnProvider( arg1_topics, pub.TOPIC_TREE_FROM_CLASS )
     pub.setTopicUnspecifiedFatal()
 
     import arg1_listeners
@@ -41,11 +41,11 @@ try:
     print '------- done ----------'
 
     print 'Exporting topic tree to', arg1_topics.__name__
-    pub.exportTopicTree('arg1_topics_out')
+    pub.exportTopicTreeSpec('arg1_topics_out')
 
 except Exception, exc:
     import traceback
     traceback.print_exc()
-    print pub.exportTopicTree()
+    print pub.exportTopicTreeSpec()
 
 print '------ exiting --------'
