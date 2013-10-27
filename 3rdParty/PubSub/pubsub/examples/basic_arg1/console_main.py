@@ -6,13 +6,14 @@
 '''
 
 from pubsub import setuparg1
+from pubsub.py2and3 import print_
 
 import console_senders as senders
 import console_listeners
 
 
 def run():
-    print 'Using "arg1" messaging protocol of pubsub v3'
+    print_('Using "arg1" messaging protocol of pubsub v3')
 
     senders.doSomething1()
     senders.doSomething2()

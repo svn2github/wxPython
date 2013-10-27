@@ -1,34 +1,70 @@
 '''
-This module contains several concrete classes that implement the 
-ITopicDefnDeserializer interface. They all assume a Python class 
-syntax format, but stored as a string, module file, or class object. 
-
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 '''
 
 
 import os, re, inspect
 from textwrap import TextWrapper, dedent
 
-import policies
-from topicargspec import topicArgsFromCallable
-from topictreetraverser import TopicTreeTraverser
-from itopicdefnprovider import ITopicDefnProvider
+from .. import (
+    policies, 
+    py2and3
+)
+from .topicargspec import (
+    topicArgsFromCallable, 
+    ArgSpecGiven
+)
+from .topictreetraverser import TopicTreeTraverser
+from .topicexc import UnrecognizedSourceFormatError
 
-# method name assumed to represent Topic Message Data Specification
+
+class ITopicDefnProvider:
+    '''
+    All topic definition providers added via pub.addTopicDefnProvider()
+    must have this interface. Derived classes must override the getDefn(), 
+    getTreeDoc() and topicNames() methods. 
+    '''
+    
+    def getDefn(self, topicNameTuple):
+        '''Must return a pair (string, ArgSpecGiven) for given topic. 
+        The first item is a description for topic, the second item 
+        contains the message data specification (MDS). Note topic name
+        is in tuple format ('a', 'b', 'c') rather than 'a.b.c'. '''
+        msg = 'Must return (string, ArgSpecGiven), or (None, None)'
+        raise NotImplementedError(msg)
+
+    def topicNames(self):
+        '''Return an iterator over topic names available from this provider.
+        Note that the topic names should be in tuple rather than dotted-string
+        format so as to be compatible with getDefn().'''
+        msg = 'Must return a list of topic names available from this provider'
+        raise NotImplementedError(msg)
+
+    def getTreeDoc(self):
+        '''Get the docstring for the topic tree.'''
+        msg = 'Must return documentation string for root topic (tree)'
+        raise NotImplementedError(msg)
+
+    def __iter__(self):
+        '''Same as self.topicNames(), do NOT override.'''
+        return self.topicNames()
+
+
+# name of method in class name assumed to represent topic's listener signature
+# which will get checked against topic's Message Data Specification (MDS)
 SPEC_METHOD_NAME = 'msgDataSpec'
 
 
 class ITopicDefnDeserializer:
     '''
-    All functionality to convert a topic tree representation into a
-    set of topic definitions that can be used by a topic definition
-    provider.
+    Interface class for all topic definition de-serializers that can be 
+    accepted by TopicDefnProvider. A deserializer 
+    creates a topic tree from something such as file, module, or string. 
     '''
 
     class TopicDefn:
-        '''Encapsulate date for a topic definition. Returned by
+        '''Encapsulate date for a topic definition. Used by
         getNextTopic().'''
 
         def __init__(self, nameTuple, description, argsDocs, required):
@@ -41,44 +77,41 @@ class ITopicDefnDeserializer:
             return (self.description is not None) and (self.argsDocs is not None)
 
     def getTreeDoc(self):
-        '''Get the documentation for the topic tree. This will be
-        interpreted differently based on the type of definition provider. '''
+        '''Get the docstring for the topic tree.'''
         raise NotImplementedError
 
     def getNextTopic(self):
-        '''Override this to provide the next topic definition available
-        from the data. The return must be an instance of TopicDefn.'''
+        '''Get the next topic definition available from the data. The return 
+        must be an instance of TopicDefn. Must return None when no topics 
+        are left.'''
         raise NotImplementedError
 
     def doneIter(self):
-        '''This will be called automatically by the definition provider once
-        it considers the iteration completed. Override this only if your
-        deserializer needs to do something, such as close a file.
-        '''
+        '''Called automatically by TopicDefnProvider once
+        it considers the iteration completed. Override this only if 
+        deserializer needs to take action, such as closing a file.'''
         pass
 
     def resetIter(self):
-        '''May be called by the definition provider if needs to
-        restart the iteration. Override this only if something
-        special must be done such as resetting a file point to
-        beginning etc. '''
+        '''Called by the TopicDefnProvider if it needs to
+        restart the topic iteration. Override this only if special action needed,
+        such as resetting a file pointer to beginning of file.'''
         pass
 
 
 class TopicDefnDeserialClass(ITopicDefnDeserializer):
     '''
-    Interpret a class tree as a topic definition tree. The class name is the
-    topic name, its doc string is its description. A method called the same 
-    as SPEC_METHOD_NAME is inpsected to infer the optional and required
-    message arguments that all listeners must accept. The doc string of that
-    method is parsed to extract the description for each argument.
-    '''
+    Convert a nested class tree as a topic definition tree. Format: the class 
+    name is the topic name, its doc string is its description. The topic's 
+    message data specification is determined by inspecting a class method called 
+    the same as SPEC_METHOD_NAME. The doc string of that method is parsed to 
+    extract the description for each message data.
+     '''
 
     def __init__(self, pyClassObj=None):
-        '''If pyClassObj is given, it is a class that contains nested
+        '''If pyClassObj is given, it is an object that contains nested
         classes defining root topics; the root topics contain nested
-        classes defining subtopics; etc. Hence the init calls
-        addDefnFromClassObj() on each nested class found in pyClassObj. '''
+        classes defining subtopics; etc.'''
         self.__rootTopics = []
         self.__iterStarted = False
         self.__nextTopic = iter(self.__rootTopics)
@@ -88,36 +121,15 @@ class TopicDefnDeserialClass(ITopicDefnDeserializer):
             self.__rootDoc = pyClassObj.__doc__
             topicClasses = self.__getTopicClasses(pyClassObj)
             for topicName, pyClassObj in topicClasses:
-                self.addDefnFromClassObj(pyClassObj)
+                self.__addDefnFromClassObj(pyClassObj)
 
     def getTreeDoc(self):
-        '''Returns the first doc string that was found in the pyClassObj
-        given to self. '''
         return self.__rootDoc
 
-    def addDefnFromClassObj(self, pyClassObj):
-        '''Use pyClassObj as a topic definition written using "Python classes".
-        The class name is the topic name, assumed to be a root topic, and
-        descends recursively down into nested classes. '''
-        if self.__iterStarted:
-            raise RuntimeError('addClassObj must be called before iteration started!')
-
-        parentNameTuple = (pyClassObj.__name__, )
-        if pyClassObj.__doc__ is not None:
-            self.__rootTopics.append( (parentNameTuple, pyClassObj) )
-            if self.__rootDoc is None:
-                self.__rootDoc = pyClassObj.__doc__
-        self.__findTopics(pyClassObj, parentNameTuple)
-        # iterator is now out of sync, so reset it; obviously this would
-        # screw up getNextTopic which is why we had to test for self.__iterStarted
-        self.__nextTopic = iter(self.__rootTopics)
-
     def getNextTopic(self):
-        '''Get next topic defined by this provider. Returns None when
-        no topics are left. May call resetIter() to restart the iteration.'''
         self.__iterStarted = True
         try:
-            topicNameTuple, topicClassObj = self.__nextTopic.next()
+            topicNameTuple, topicClassObj = py2and3.nextiter(self.__nextTopic)
         except StopIteration:
             return None
 
@@ -143,6 +155,24 @@ class TopicDefnDeserialClass(ITopicDefnDeserializer):
     def getDefinedTopics(self):
         return [nt for (nt, defn) in self.__rootTopics]
 
+    def __addDefnFromClassObj(self, pyClassObj):
+        '''Extract a topic definition from a Python class: topic name, 
+        docstring, and MDS, and docstring for each message data. 
+        The class name is the topic name, assumed to be a root topic, and
+        descends recursively into nested classes to define subtopic etc. '''
+        if self.__iterStarted:
+            raise RuntimeError('addDefnFromClassObj must be called before iteration started!')
+
+        parentNameTuple = (pyClassObj.__name__, )
+        if pyClassObj.__doc__ is not None:
+            self.__rootTopics.append( (parentNameTuple, pyClassObj) )
+            if self.__rootDoc is None:
+                self.__rootDoc = pyClassObj.__doc__
+        self.__findTopics(pyClassObj, parentNameTuple)
+        # iterator is now out of sync, so reset it; obviously this would
+        # screw up getNextTopic which is why we had to test for self.__iterStarted
+        self.__nextTopic = iter(self.__rootTopics)
+
     def __findTopics(self, pyClassObj, parentNameTuple):
         assert not self.__iterStarted
         assert parentNameTuple
@@ -167,6 +197,8 @@ class TopicDefnDeserialClass(ITopicDefnDeserializer):
         memberNames = dir(pyClassObj)
         topicClasses = []
         for memberName in memberNames:
+            if memberName.startswith('_'): 
+                continue # ignore special and non-public methods
             member = getattr(pyClassObj, memberName)
             if inspect.isclass( member ):
                 topicNameTuple = parentNameTuple + (memberName,)
@@ -201,25 +233,20 @@ class TopicDefnDeserialClass(ITopicDefnDeserializer):
 
 class TopicDefnDeserialModule(ITopicDefnDeserializer):
     '''
-    Deserialize a module containing source code defining a topic tree.
-    This loads the module and finds all class definitions in it (at
-    module level that is) and uses a TopicDefnDeserialClass to
-    deserialize each one into a topic definition.
+    Deserialize a module containing Python source code defining a topic tree.
+    This loads the module and gives it to an instance of TopicDefnDeserialClass.
     '''
 
     def __init__(self, moduleName, searchPath=None):
         '''Load the given named module, searched for in searchPath or, if not
-        specified, in sys.path. The top-level classes will be assumed to be
-        topic definitions with a doc string and a message data specification
-        method as described in TopicDefnDeserialClass'.
+        specified, in sys.path. Give it to a TopicDefnDeserialClass.
         '''
-        import imp2
+        from . import imp2
         module = imp2.load_module(moduleName, searchPath)
         self.__classDeserial = TopicDefnDeserialClass(module)
 
     def getTreeDoc(self):
         return self.__classDeserial.getTreeDoc()
-        #return self.__moduleDoc
     
     def getNextTopic(self):
         return self.__classDeserial.getNextTopic()
@@ -236,14 +263,16 @@ class TopicDefnDeserialModule(ITopicDefnDeserializer):
 
 class TopicDefnDeserialString(ITopicDefnDeserializer):
     '''
-    Deserialize a string containing source code defining a topic tree.
-    This just saves the string into a temporary file created in os.getcwd(), 
-    and the rest is delegated to TopicDefnDeserialModule. The temporary
-    file (module) is deleted (as well as its byte-compiled version)
-    when the doneIter() method is called.
+    Deserialize a string containing Python source code defining a topic tree.
+    The string has the same format as expected by TopicDefnDeserialModule.
     '''
 
     def __init__(self, source):
+        '''This just saves the string into a temporary file created in 
+        os.getcwd(), and the rest is delegated to TopicDefnDeserialModule. 
+        The temporary file (module -- as well as its byte-compiled 
+        version) will be deleted when the doneIter() method is called.'''
+
         def createTmpModule():
             moduleNamePre = 'tmp_export_topics_'
             import os, tempfile
@@ -268,7 +297,11 @@ class TopicDefnDeserialString(ITopicDefnDeserializer):
         self.__modDeserial.doneIter()
         # remove the temporary module and its compiled version (*.pyc)
         os.remove(self.__filename)
-        os.remove(self.__filename + 'c')
+        try: # py3.2+ uses special folder/filename for .pyc files
+            from imp import cache_from_source
+            os.remove(cache_from_source(self.__filename))
+        except ImportError:
+            os.remove(self.__filename + 'c')
 
     def resetIter(self):
         self.__modDeserial.resetIter()
@@ -285,23 +318,26 @@ TOPIC_TREE_FROM_CLASS  = 'class'
 class TopicDefnProvider(ITopicDefnProvider):
     '''
     Default implementation of the ITopicDefnProvider API. This
-    implementation accepts several formats for the source data
-    and delegates to suitable parser that knows how to convert
-    source data into a topic definition.
-
-    You can create your own topic definition provider classes,
-    for formats (say, XML) not supported by TopicDefnProvider.
-    See also pub.addTopicDefnProvider().
+    implementation accepts several formats for the topic tree 
+    source data and delegates to a registered ITopicDefnDeserializer
+    that converts source data into topic definitions. 
+    
+    This provider is instantiated automatically by 
+    ``pub.addTopicDefnProvider(source, format)``
+    when source is *not* an ITopicDefnProvider.
+    
+    Additional de-serializers can be registered via registerTypeForImport().
     '''
 
-    typeRegistry = {}
+    _typeRegistry = {}
 
-    class UnrecognizedImportFormat(ValueError): pass
-    
     def __init__(self, source, format, **providerKwargs):
-        if format not in self.typeRegistry:
-            raise self.UnrecognizedImportFormat()
-        providerClassObj = self.typeRegistry[format]
+        '''Find the correct de-serializer class from registry for the given 
+        format; instantiate it with given source and providerKwargs; get 
+        all available topic definitions.'''
+        if format not in self._typeRegistry:
+            raise UnrecognizedSourceFormatError()
+        providerClassObj = self._typeRegistry[format]
         provider = providerClassObj(source, **providerKwargs)
         self.__topicDefns = {}
         self.__treeDocs = provider.getTreeDoc()
@@ -319,22 +355,40 @@ class TopicDefnProvider(ITopicDefnProvider):
         if defn is not None:
             assert defn.isComplete()
             desc = defn.description
-            spec = self.ArgSpecGiven(defn.argsDocs, defn.required)
+            spec = ArgSpecGiven(defn.argsDocs, defn.required)
         return desc, spec
 
     def topicNames(self):
-        return self.__topicDefns.iterkeys()
+        return py2and3.iterkeys(self.__topicDefns)
 
     def getTreeDoc(self):
         return self.__treeDocs
 
+    @classmethod
+    def registerTypeForImport(cls, typeName, providerClassObj):
+        '''If a new type of importer is defined for topic definitions, it 
+        can be registered with pubsub by providing a name for the new 
+        importer (typeName), and the class to instantiate when 
+        pub.addTopicDefnProvider(obj, typeName) is called. For instance, ::  
+        
+            from pubsub.core.topicdefnprovider import ITopicDefnDeserializer
+            class SomeNewImporter(ITopicDefnDeserializer): 
+                ...
+            TopicDefnProvider.registerTypeForImport('some name', SomeNewImporter)
+            # will instantiate SomeNewImporter(source)
+            pub.addTopicDefnProvider(source, 'some name') 
+        '''
+        assert issubclass(providerClassObj, ITopicDefnDeserializer)
+        cls._typeRegistry[typeName] = providerClassObj
 
-def registerTypeForImport(typeName, providerClassObj):
-    TopicDefnProvider.typeRegistry[typeName] = providerClassObj
+    @classmethod
+    def initTypeRegistry(cls):
+        cls.registerTypeForImport(TOPIC_TREE_FROM_MODULE, TopicDefnDeserialModule)
+        cls.registerTypeForImport(TOPIC_TREE_FROM_STRING, TopicDefnDeserialString)
+        cls.registerTypeForImport(TOPIC_TREE_FROM_CLASS,  TopicDefnDeserialClass)
 
-registerTypeForImport(TOPIC_TREE_FROM_MODULE, TopicDefnDeserialModule)
-registerTypeForImport(TOPIC_TREE_FROM_STRING, TopicDefnDeserialString)
-registerTypeForImport(TOPIC_TREE_FROM_CLASS,  TopicDefnDeserialClass)
+
+TopicDefnProvider.initTypeRegistry()
 
 
 def _backupIfExists(filename, bak):
@@ -358,13 +412,15 @@ defaultTopicTreeSpecFooter = \
 
 
 def exportTopicTreeSpec(moduleName = None, rootTopic=None, bak='bak', moduleDoc=None):
-    '''Export the topic tree rooted at rootTopic to module (.py) file. This file 
-    will contain a nested class hierarchy representing the topic tree. Returns a
-    string representing the contents of the file. Parameters:
+    '''Using TopicTreeSpecPrinter, exports the topic tree rooted at rootTopic to a
+    Python module (.py) file. This module will define module-level classes 
+    representing root topics, nested classes for subtopics etc. Returns a string 
+    representing the contents of the file. Parameters:
 
         - If moduleName is given, the topic tree is written to moduleName.py in
-          os.getcwd() (the file is overwritten). If bak is None, the module file
-          is not backed up.
+          os.getcwd(). By default, it is first backed up, it it already exists, 
+          using bak as the filename extension. If bak is None, existing module file 
+          gets overwritten. 
         - If rootTopic is specified, the export only traverses tree from 
           corresponding topic. Otherwise, complete tree, using 
           pub.getDefaultTopicTreeRoot() as starting  point.
@@ -372,16 +428,15 @@ def exportTopicTreeSpec(moduleName = None, rootTopic=None, bak='bak', moduleDoc=
     '''
 
     if rootTopic is None:
-        from pubsub import pub
-        rootTopic = pub.getDefaultTopicTreeRoot()
-    elif isinstance(rootTopic, (str, unicode)):
-        from pubsub import pub
-        rootTopic = pub.getTopic(rootTopic)
+        from .. import pub
+        rootTopic = pub.getDefaultTopicMgr().getRootAllTopics()
+    elif py2and3.isstring(rootTopic):
+        from .. import pub
+        rootTopic = pub.getDefaultTopicMgr().getTopic(rootTopic)
 
     # create exporter
     if moduleName is None:
-        from StringIO import StringIO
-        capture = StringIO()
+        capture = py2and3.StringIO()
         TopicTreeSpecPrinter(rootTopic, fileObj=capture, treeDoc=moduleDoc)
         return capture.getvalue()
 
@@ -389,7 +444,7 @@ def exportTopicTreeSpec(moduleName = None, rootTopic=None, bak='bak', moduleDoc=
         filename = '%s.py' % moduleName
         if bak:
             _backupIfExists(filename, bak)
-        moduleFile = file(filename, 'w')
+        moduleFile = open(filename, 'w')
         try:
             TopicTreeSpecPrinter(rootTopic, fileObj=moduleFile, treeDoc=moduleDoc)
         finally:
@@ -397,21 +452,14 @@ def exportTopicTreeSpec(moduleName = None, rootTopic=None, bak='bak', moduleDoc=
 
 ##############################################################
 
-def _toDocString(msg):
-    if not msg:
-        return msg
-    if msg.startswith("'''") or msg.startswith('"""'):
-        return msg
-    return "'''\n%s\n'''" % msg.strip()
-
-
 class TopicTreeSpecPrinter:
     '''
-    Function class to print the topic tree using the Python class
-    syntax. If printed to a module, it can then be imported, 
-    given to pub.addTopicDefnProvider(), etc. 
-    The printout can be sent to any file object (object that has a
-    write() method).
+    Helper class to print the topic tree using the Python class
+    syntax. The "printout" can be sent to any file object (object that has a
+    write() method). If printed to a module, the module can be imported and
+    given to pub.addTopicDefnProvider(module, 'module'). Importing the module 
+    also provides code completion of topic names (rootTopic.subTopic can be 
+    given to any pubsub function requiring a topic name).
     '''
 
     INDENT_CH = ' '
@@ -421,7 +469,7 @@ class TopicTreeSpecPrinter:
         treeDoc = defaultTopicTreeSpecHeader, footer = defaultTopicTreeSpecFooter):
         '''For formatting, can specify the width of output, the indent step, the 
         header and footer to print to override defaults. The destination is fileObj;
-        if none is given, then sys.stdout is used. If rootTopic is given(), calls
+        if none is given, then sys.stdout is used. If rootTopic is given, calls
         writeAll(rootTopic) at end of __init__.'''
         self.__traverser = TopicTreeTraverser(self)
 
@@ -430,7 +478,7 @@ class TopicTreeSpecPrinter:
 
         self.__destination = fileObj
         self.__output = []
-        self.__header = _toDocString(treeDoc)
+        self.__header = self.__toDocString(treeDoc)
         self.__footer = footer
         self.__lastWasAll = False # True when last topic done was the ALL_TOPICS
 
@@ -442,15 +490,15 @@ class TopicTreeSpecPrinter:
         args = dict(width=width, indentStep=indentStep, treeDoc=treeDoc,
                     footer=footer, fileObj=fileObj)
         def fmItem(argName, argVal):
-            if isinstance(argVal, (str, unicode)):
+            if py2and3.isstring(argVal):
                 MIN_OFFSET = 5
                 lenAV = width - MIN_OFFSET - len(argName)
                 if lenAV > 0:
-                    argVal = `argVal[:lenAV] + '...'`
+                    argVal = repr(argVal[:lenAV] + '...')
             elif argName == 'fileObj':
                 argVal = fileObj.__class__.__name__
             return '# - %s: %s' % (argName, argVal)
-        fmtArgs = [fmItem(argName, argVal) for (argName, argVal) in args.iteritems()]
+        fmtArgs = [fmItem(key, args[key]) for key in sorted(py2and3.iterkeys(args))]
         self.__comment = [
             '# Automatically generated by %s(**kwargs).' % self.__class__.__name__,
             '# The kwargs were:',
@@ -463,7 +511,7 @@ class TopicTreeSpecPrinter:
 
     def getOutput(self):
         '''Each line that was sent to fileObj was saved in a list; returns a 
-        string which is '\n'.join(list).'''
+        string which is ``'\\n'.join(list)``.'''
         return '\n'.join( self.__output )
 
     def writeAll(self, topicObj):
@@ -525,6 +573,13 @@ class TopicTreeSpecPrinter:
         if not self.__lastWasAll:
            self.__indent -= self.__indentStep
 
+    def __toDocString(self, msg):
+        if not msg:
+            return msg
+        if msg.startswith("'''") or msg.startswith('"""'):
+            return msg
+        return "'''\n%s\n'''" % msg.strip()
+
     def __printTopicDescription(self, topicObj):
         if topicObj.getDescription():
             extraIndent = self.__indentStep
@@ -535,7 +590,7 @@ class TopicTreeSpecPrinter:
     def __printTopicArgSpec(self, topicObj):
         extraIndent = self.__indentStep
 
-        # generate the listener protocol
+        # generate the message data specification
         reqdArgs, optArgs = topicObj.getArgs()
         argsStr = []
         if reqdArgs:
@@ -558,10 +613,11 @@ class TopicTreeSpecPrinter:
             # but ignore the arg keys that are in parent args docs:
             parentMsgKeys = ()
             if topicObj.getParent() is not None:
-                parentMsgKeys = topicObj.getParent().getArgDescriptions().keys()
+                parentMsgKeys = topicObj.getParent().getArgDescriptions().keys() # keys iter ok
             argsDocs = topicObj.getArgDescriptions()
-            for key, argDesc in argsDocs.iteritems():
+            for key in sorted(py2and3.iterkeys(argsDocs)):
                 if key not in parentMsgKeys:
+                    argDesc = argsDocs[key]
                     msg = "- %s: %s" % (key, argDesc)
                     self.__formatItem(msg, extraIndent)
             self.__formatItem("'''", extraIndent)

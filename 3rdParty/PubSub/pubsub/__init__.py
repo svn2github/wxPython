@@ -1,54 +1,25 @@
 '''
-Pubsub provides components required to support publish-subscribe
-messaging within an application. The publish-subscribe package provides the
-following modules:
+Pubsub package initialization. 
 
-- ``pub``: first and foremost, provides functions for sending messages
-  and subscribing listeners. It also provides functions and base classes for
-  improving robustness of pubsub-based applications: tracking pubsub usage,
-  handling exceptions in listeners, and specificying message topic
-  hierarchy, to name a few.
-- ``utils``: subpackage of utility functions and classes, some based on
-  base classe defined in pub core. They provide
-  basic pubsub usage tracker, exception handler, topic tree printer,
-  and more. These can also serve as examples of how to create your
-  own trackers/handlers/etc.
-
-Two modules allow to choose the messaging protocol
-and must be used only ONCE in an application:
-
-- ``setupkwargs``: setup pubsub to use "kwargs" messaging protocol
-  This is the default so it is not usually necessary to use setupkwargs.
-- ``setuparg1``: setup pubsub to use "arg1" messaging protocol.
-
-Typical usage would be
-
-> from pubsub import pub
-> def myListener(greeting, name):
->   print greeting.capitalize(), name.capitalize()
-> pub.subscribe(myListener, 'your.topic')
-> pub.sendMessage('your.topic', greeting='hello', name='you')
-> Hello You
-
-The source distribution has many more examples.
-'''
-
-'''
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 
 Last change info:
-- $Date: 2013-09-15 08:35:55 -0400 (Sun, 15 Sep 2013) $
-- $Revision: 309 $
+- $Date: 2013-10-10 01:15:37 -0400 (Thu, 10 Oct 2013) $
+- $Revision: 329 $
 
 '''
 
+LAST_RELEASE_DATE = "2013-09-15"
+LAST_RELEASE_VER = "3.2.1b"
+
+__version__ = "3.3.0dev1"
 
 __all__ = [
     'pub',
     'utils',
     'setupkwargs',
     'setuparg1',
+    '__version__'
     ]
-
 

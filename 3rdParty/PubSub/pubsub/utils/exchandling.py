@@ -2,9 +2,6 @@
 Some utility classes for exception handling of exceptions raised
 within listeners:
 
-- IListenerExcHandler: base class for any handler that would be given to
-  pub.setListenerExcHandler(). The derived class will probably
-  want to make use of TracebackInfo.
 - TracebackInfo: convenient way of getting stack trace of latest
   exception raised. The handler can create the instance to retrieve
   the stack trace and then log it, present it to user, etc.
@@ -12,12 +9,14 @@ within listeners:
   traceback info
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 
 '''
 
 
 import sys, traceback
+
+from ..core.listener import IListenerExcHandler
 
 
 class TracebackInfo:
@@ -64,22 +63,6 @@ class TracebackInfo:
 
     def __str__(self):
         return self.getFormattedString()
-
-
-class IListenerExcHandler:
-    '''
-    Interface class for the exception handler. Such handler is called
-    whenever a listener raises an exception during a pub.sendMessage().
-    You may give an instance of a class derived from IListenerExcHandler to
-    pub.setListenerExcHandler(). Example::
-
-        from pubsub.utils.exchandling import IListenerExcHandler
-        class MyHandler(IListenerExcHandler):
-            def __call__(self, listenerID, topicObj):
-                ... do something with listenerID ...
-    '''
-    def __call__(self, listenerID, topicObj):
-        raise NotImplementedError('%s must override __call__()' % self.__class__)
 
 
 class ExcPublisher(IListenerExcHandler):

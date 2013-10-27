@@ -2,12 +2,12 @@
 Output various aspects of topic tree to string or file.
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 '''
 
 from textwrap import TextWrapper
 
-from core.topictreetraverser import ITopicTreeVisitor
+from ..core.topictreetraverser import (ITopicTreeVisitor, TopicTreeTraverser)
 
 
 class TopicTreePrinter(ITopicTreeVisitor):
@@ -139,7 +139,7 @@ class TopicTreePrinter(ITopicTreeVisitor):
             self.__output.append( self.__formatDefn(indent, head) )
             tmpIndent = indent + self.__indentStep
             required = topicObj.getArgs()[0]
-            for key, arg in args.iteritems():
+            for key, arg in args.items(): # iter in 3, list in 2 ok
                 if not desc:
                     arg = ''
                 elif key in required:
@@ -185,13 +185,11 @@ def printTreeDocs(rootTopic=None, topicMgr=None, **kwargs):
     bulletTopicArg, fileObj(stdout). If fileObj not given, stdout is used.'''
     if rootTopic is None:
         if topicMgr is None:
-            from intraimport import parentImport
-            pub = parentImport('pub')
+            from .. import pub
             topicMgr = pub.getDefaultTopicMgr()
-        rootTopic = topicMgr.getRootTopic()
+        rootTopic = topicMgr.getRootAllTopics()
 
     printer = TopicTreePrinter(**kwargs)
-    from core.topictreetraverser import TopicTreeTraverser
     traverser = TopicTreeTraverser(printer)
     traverser.traverse(rootTopic)
 

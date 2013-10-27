@@ -1,3 +1,14 @@
+For PyPubSub v3.3.0
+^^^^^^^^^^^^^^^^^^^^^
+
+* cleanup low-level API: exception classes, moved some out of pub module that did not 
+  belong there (clutter), move couple modules, 
+* completed the ref docs
+* support installation via pip
+* adopt version metadata adheres to PIP 396
+* support Python 3
+* (P) new wxPubsubMonitor utility class
+
 For PyPubSub v3.2.0
 ^^^^^^^^^^^^^^^^^^^
 

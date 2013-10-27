@@ -31,6 +31,7 @@ import time
 import threading
 
 from pubsub import pub
+from pubsub.py2and3 import print_
 
 
 resultStep = 1000000 # how many counts for thread "result" to be available
@@ -42,7 +43,7 @@ def threadObserver(transfers, threadObj, count):
     generated... but threadObj is the thread in which this
     threadObserver is called and should indicate Main thread).'''
 
-    print transfers, threadObj, count / resultStep
+    print_(transfers, threadObj, count / resultStep)
 
 pub.subscribe(threadObserver, 'testTopic')
 
@@ -71,14 +72,14 @@ class ParaFunction(threading.Thread):
         self.transfer = 0    # count how many transfers occurred
 
     def run(self):
-        print 'aux thread started'
+        print_('aux thread started')
         self.running = True
         while self.running:
             self.count += 1
             if self.count % resultStep == 0:
                 self.queue.put(self.count)
 
-        print 'aux thread done'
+        print_('aux thread done')
 
     def stop(self):
         self.running = False
@@ -106,7 +107,7 @@ def main():
     try:
         thread.start()
 
-        print 'starting event loop'
+        print_('starting event loop')
         eventLoop = True
         while eventLoop:
             time.sleep(1) # pretend that main thread does other stuff
@@ -114,12 +115,14 @@ def main():
                 idleFn()
 
     except KeyboardInterrupt:
-        print 'Main interrupted, stopping aux thread'
+        print_('Main interrupted, stopping aux thread')
         thread.stop()
 
     except Exception, exc:
-        print exc
-        print 'Exception, stopping aux thread'
+        from pubsub import py2and3
+        exc = py2and3.getexcobj()
+        print_(exc)
+        print_('Exception, stopping aux thread')
         thread.stop()
 
 

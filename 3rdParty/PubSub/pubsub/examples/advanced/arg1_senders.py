@@ -8,13 +8,6 @@
 from pubsub import pub
 
 
-def init():
-    '''Do something that changes topic tree so exportTopicTreeSpec interesting'''
-    
-    topic = pub.getOrCreateTopic('topic_2.subtopic_21')
-    topic.setDescription( 'description for subtopic 21')
-
-
 def doSomething1():
     pub.sendMessage('topic_1.subtopic_11', ('message for subtopic 11', 'other message', 123))
 

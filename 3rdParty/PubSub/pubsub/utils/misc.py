@@ -3,20 +3,20 @@ Provides useful functions and classes. Most useful are probably
 printTreeDocs and printTreeSpec.
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
 
-
+import sys
+from .. import py2and3
 
 __all__ = ('printImported', 'StructMsg', 'Callback', 'Enum' )
 
 
 def printImported():
     '''Output a list of pubsub modules imported so far'''
-    import sys
-    ll = [mod for mod in sys.modules.keys() if mod.find('pubsub') >= 0]
+    ll = [mod for mod in sys.modules.keys() if mod.find('pubsub') >= 0] # iter keys ok
     ll.sort()
-    print '\n'.join(ll)
+    py2and3.print_('\n'.join(ll))
 
 
 class StructMsg:

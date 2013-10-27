@@ -4,12 +4,11 @@ mixed into topicobj.Topic so that a user can use a Topic object to
 send a message to the topic's listeners via a publish() method.
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
-
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 '''
 
 
-from publisherbase import PublisherBase
+from .publisherbase import PublisherBase
 
 
 class Publisher(PublisherBase):

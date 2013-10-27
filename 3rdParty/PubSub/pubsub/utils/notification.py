@@ -16,11 +16,11 @@ specified one via pub.addNotificationHandler(), is given the
 relevant information. 
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 '''
 
-from core import callables
-from core.notificationmgr import INotificationHandler
+from ..core import callables
+from ..core.notificationmgr import INotificationHandler
 
 
 class IgnoreNotificationsMixin(INotificationHandler):
@@ -148,7 +148,7 @@ class NotifyByPubsubMessage(INotificationHandler):
         try:
             topicMgr.getTopic(self.topicRoot)
             
-        except RuntimeError:
+        except ValueError:
             # no, so create them
             self._pubTopic = topicMgr.getOrCreateTopic(self.topicRoot)
             self._pubTopic.setDescription('root of all pubsub-specific topics')
@@ -299,8 +299,7 @@ def useNotifyByPubsubMessage(publisher=None, all=True, **kwargs):
 
     '''
     if publisher is None:
-        from intraimport import parentImport
-        pub = parentImport('pub')
+        from .. import pub
         publisher = pub.getDefaultPublisher()
     topicMgr = publisher.getTopicMgr()
     notifHandler = NotifyByPubsubMessage( topicMgr )
@@ -324,8 +323,7 @@ def useNotifyByWriteFile(fileObj=None, prefix=None,
     notifHandler = NotifyByWriteFile(fileObj, prefix)
 
     if publisher is None:
-        from intraimport import parentImport
-        pub = parentImport('pub')
+        from .. import pub
         publisher = pub.getDefaultPublisher()
     publisher.addNotificationHandler(notifHandler)
     publisher.setNotificationFlags(all=all, **kwargs)

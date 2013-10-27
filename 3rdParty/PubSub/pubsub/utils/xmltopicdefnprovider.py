@@ -42,7 +42,7 @@ This will create a text file for the XML and return the string representation
 of the XML tree.
 
 :copyright: Copyright since 2013 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 '''
 
 __author__ = 'Joshua R English'
@@ -50,12 +50,13 @@ __revision__ = 6
 __date__ = '2013-07-27'
 
 
-from pubsub.core.topictreetraverser import ITopicTreeVisitor
-from pubsub.core.itopicdefnprovider import ITopicDefnProvider
-from pubsub.core.topicdefnprovider import (
+from ..core.topictreetraverser import ITopicTreeVisitor
+from ..core.topicdefnprovider import (
+    ITopicDefnProvider,
+    ArgSpecGiven,
     TOPIC_TREE_FROM_STRING,
     )
-
+from .. import py2and3
 
 try:
     from elementtree import ElementTree as ET
@@ -79,7 +80,7 @@ def _get_elem(elem):
         try:
             elem = ET.fromstring(elem)
         except:
-            print "Value Error", elem
+            py2and3.print_("Value Error", elem)
             raise ValueError("Cannot convert to element")
     return elem
 
@@ -91,7 +92,7 @@ class XmlTopicDefnProvider(ITopicDefnProvider):
 
     class XmlParserError(RuntimeError): pass
 
-    class UnrecognizedImportFormat(ValueError): pass
+    class UnrecognizedSourceFormatError(ValueError): pass
     
     def __init__(self, xml, format=TOPIC_TREE_FROM_STRING):
         self._topics = {}
@@ -101,7 +102,7 @@ class XmlTopicDefnProvider(ITopicDefnProvider):
         elif format == TOPIC_TREE_FROM_STRING:
             self._parse_tree(_get_elem(xml))
         else:
-            raise UnrecognizedImportFormat()
+            raise UnrecognizedSourceFormatError()
 
     def _parse_tree(self, tree):
         doc_node = tree.find('description')
@@ -144,7 +145,7 @@ class XmlTopicDefnProvider(ITopicDefnProvider):
             if this.get('optional', '').lower() not in ['true', 't','yes','y']:
                 reqlist.append(this_id)
 
-        defn = self.ArgSpecGiven(specs, tuple(reqlist))
+        defn = ArgSpecGiven(specs, tuple(reqlist))
 
         parents.append(node.get('id'))
 
@@ -158,7 +159,7 @@ class XmlTopicDefnProvider(ITopicDefnProvider):
         return self._topics.get(topicNameTuple, (None, None))
 
     def topicNames(self):
-        return self._topics.iterkeys()
+        return py2and3.iterkeys(self._topics) # dict_keys iter in 3, list in 2
 
     def getTreeDoc(self):
         return self._treeDoc
@@ -253,10 +254,10 @@ def exportTopicTreeSpecXml(moduleName=None, rootTopic=None, bak='bak', moduleDoc
     '''
 
     if rootTopic is None:
-        from pubsub import pub
+        from .. import pub
         rootTopic = pub.getDefaultTopicTreeRoot()
-    elif isinstance(rootTopic, (str, unicode)):
-        from pubsub import pub
+    elif py2and3.isstring(rootTopic):
+        from .. import pub
         rootTopic = pub.getTopic(rootTopic)
 
     tree = ET.Element('topicdefntree')

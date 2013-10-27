@@ -9,7 +9,7 @@ is up=1. The parentImport() function mostly used from within modules
 of a package so up defaults to 2.
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 '''
 
 # allow utils modules to find sibblings in core

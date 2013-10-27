@@ -1,11 +1,10 @@
 '''
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
-
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 '''
 
-from notificationmgr import NotificationMgr
+from .notificationmgr import NotificationMgr
 
 
 class TreeConfig:

@@ -12,8 +12,8 @@ in kwargs_topics_out.py.
 :license: BSD, see LICENSE.txt for details.
 '''
 
-from pubsub import setupkwargs
 from pubsub import pub
+from pubsub.py2and3 import print_
 
 import notifhandle
 import exchandle
@@ -22,10 +22,10 @@ import kwargs_topics
 
 #***** actual application **********
 
-print 'Using "kwargs" messaging protocol of pubsub v3'
+print_('Using "kwargs" messaging protocol of pubsub v3')
 
 try:
-    print '------- init ----------'
+    print_('------- init ----------')
 
     pub.addTopicDefnProvider( kwargs_topics, pub.TOPIC_TREE_FROM_CLASS )
     pub.setTopicUnspecifiedFatal()
@@ -33,19 +33,18 @@ try:
     import kwargs_listeners
     import kwargs_senders as senders
 
-    senders.init()
-    print '-----------------------'
+    print_('-----------------------')
     senders.doSomething1()
     senders.doSomething2()
 
-    print '------- done ----------'
+    print_('------- done ----------')
 
-    print 'Exporting topic tree to', kwargs_topics.__name__
+    print_('Exporting topic tree to', kwargs_topics.__name__)
     pub.exportTopicTreeSpec('kwargs_topics_out')
 
 except Exception, exc:
     import traceback
     traceback.print_exc()
-    print pub.exportTopicTreeSpec()
+    print_(pub.exportTopicTreeSpec())
 
-print '------ exiting --------'
+print_('------ exiting --------')
