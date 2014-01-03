@@ -330,7 +330,7 @@ TR_EDIT_LABELS = wx.TR_EDIT_LABELS                             # can edit item l
 """ Use this style if you wish the user to be able to edit labels in the tree control. """
 TR_ROW_LINES = wx.TR_ROW_LINES                                 # put border around items
 """ Use this style to draw a contrasting border between displayed rows. """
-TR_COLUMN_LINES = 0x200000                                     # put border between columns
+TR_COLUMN_LINES = 0x1000                                       # put border between columns
 """ Use this style to draw a contrasting border between displayed columns. """
 TR_HIDE_ROOT = wx.TR_HIDE_ROOT                                 # don't display root node
 """ Use this style to suppress the display of the root node, effectively causing the first-level nodes to appear as a series of root nodes. """
