@@ -261,7 +261,7 @@ License And Version
 
 :class:`HyperTreeList` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 25 Aug 2012, 10.00 GMT
+Latest Revision: Andrea Gavana @ 03 Jan 2014, 23.00 GMT
 
 Version 1.3
 
