@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 25 Aug 2012, 10.00 GMT
+# Latest Revision: 03 Jan 2014, 23.00 GMT
 #
 #
 # TODO List
@@ -330,6 +330,8 @@ TR_EDIT_LABELS = wx.TR_EDIT_LABELS                             # can edit item l
 """ Use this style if you wish the user to be able to edit labels in the tree control. """
 TR_ROW_LINES = wx.TR_ROW_LINES                                 # put border around items
 """ Use this style to draw a contrasting border between displayed rows. """
+TR_COLUMN_LINES = 0x200000                                     # put border between columns
+""" Use this style to draw a contrasting border between displayed columns. """
 TR_HIDE_ROOT = wx.TR_HIDE_ROOT                                 # don't display root node
 """ Use this style to suppress the display of the root node, effectively causing the first-level nodes to appear as a series of root nodes. """
 TR_FULL_ROW_HIGHLIGHT = wx.TR_FULL_ROW_HIGHLIGHT               # highlight full horz space
