@@ -53,9 +53,19 @@ class DrawFrame(wx.Frame):
                                         )
         Canvas.AddObject(img)
         
+        self.Canvas.Bind(wx.EVT_SIZE, self.OnSize)
+
         self.Show()
         Canvas.ZoomToBB()
-        
+    
+    def OnSize(self, event):
+        """
+        re-zooms the canvas to fit the window
+
+        """
+        self.Canvas.ZoomToBB()
+        event.Skip()
+
     def OnMove(self, event):
         """
         Updates the status bar with the world coordinates
