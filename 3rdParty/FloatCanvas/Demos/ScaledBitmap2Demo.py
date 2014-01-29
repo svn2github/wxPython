@@ -4,6 +4,7 @@
 This demo shows how to use a ScaledBitmap2 (which is like a scaled bitmap,
 but uses memory more efficiently for large images and high zoom levels.)
 
+This also demonstrates how to auto-rescale the image when the Window is re-sized
 
 """
 
@@ -14,12 +15,12 @@ ImageFile = "white_tank.jpg"
 import wx
 import random
 ## import the installed version
-from wx.lib.floatcanvas import NavCanvas, FloatCanvas
+#from wx.lib.floatcanvas import NavCanvas, FloatCanvas
 
 ## import a local version
-#import sys
-#sys.path.append("../")
-#from floatcanvas import NavCanvas, FloatCanvas
+import sys
+sys.path.append("../")
+from floatcanvas import NavCanvas, FloatCanvas
 
 class DrawFrame(wx.Frame):
 
@@ -56,14 +57,14 @@ class DrawFrame(wx.Frame):
         self.Canvas.Bind(wx.EVT_SIZE, self.OnSize)
 
         self.Show()
-        Canvas.ZoomToBB()
+        Canvas.ZoomToBB(margin_adjust=1.0)
     
     def OnSize(self, event):
         """
         re-zooms the canvas to fit the window
 
         """
-        self.Canvas.ZoomToBB()
+        self.Canvas.ZoomToBB(margin_adjust=1.0)
         event.Skip()
 
     def OnMove(self, event):

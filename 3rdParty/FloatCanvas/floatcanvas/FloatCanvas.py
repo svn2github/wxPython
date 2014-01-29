@@ -2765,7 +2765,8 @@ class FloatCanvas(wx.Panel):
 
     def OnSize(self, event=None):
         self.InitializePanel()
-        self.SizeTimer.Start(50, oneShot=True)
+        #self.SizeTimer.Start(50, oneShot=True)
+        self.OnSizeTimer()
 
     def OnSizeTimer(self, event=None):
         self.MakeNewBuffers()
@@ -2980,12 +2981,25 @@ class FloatCanvas(wx.Panel):
             self.ViewPortCenter = oldpoint
             self.SetToNewScale()         
 
-    def ZoomToBB(self, NewBB=None, DrawFlag=True):
+    def ZoomToBB(self, NewBB=None, DrawFlag=True, margin_adjust=0.95):
 
         """
 
         Zooms the image to the bounding box given, or to the bounding
         box of all the objects on the canvas, if none is given.
+
+        :param NewBB=None: the bounding box you want to zoom in to.
+                           If None, it will be calcuated from all the
+                           objects on the Canvas.
+        :type NewBB: floatcanvas.utilities.BBox.BBox object (or something compatible).
+
+        :param DrawFlag=True: If True, will force a re-draw, regardless of whether
+                              anythign has changed on the Canvas
+
+        :param margin_adjust=0.95: amount to adjsut the scale so teh BB will have a
+                                   bit of margin in the Canvas. 1.0 shoud be a tight fit.
+
+        :type margin_adjust: float
 
         """
         if NewBB is not None:
@@ -3002,13 +3016,13 @@ class FloatCanvas(wx.Panel):
             BoundingBox = BoundingBox*self.MapProjectionVector # this does need to make a copy!
             try:
                 self.Scale = min(abs(self.PanelSize[0] / (BoundingBox[1,0]-BoundingBox[0,0])),
-                                 abs(self.PanelSize[1] / (BoundingBox[1,1]-BoundingBox[0,1])) )*0.95
+                                 abs(self.PanelSize[1] / (BoundingBox[1,1]-BoundingBox[0,1])) )*margin_adjust
             except ZeroDivisionError: # this will happen if the BB has zero width or height
                 try: #width == 0
-                    self.Scale = (self.PanelSize[0]  / (BoundingBox[1,0]-BoundingBox[0,0]))*0.95
+                    self.Scale = (self.PanelSize[0]  / (BoundingBox[1,0]-BoundingBox[0,0]))*margin_adjust
                 except ZeroDivisionError:
                     try: # height == 0
-                        self.Scale = (self.PanelSize[1]  / (BoundingBox[1,1]-BoundingBox[0,1]))*0.95
+                        self.Scale = (self.PanelSize[1]  / (BoundingBox[1,1]-BoundingBox[0,1]))*margin_adjust
                     except ZeroDivisionError: #zero size! (must be a single point)
                         self.Scale = 1
 
