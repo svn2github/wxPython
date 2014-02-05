@@ -30,9 +30,12 @@ class MyPanel(wx.Panel):
 
         bmp1 = wx.BitmapFromImage(wx.Image('bmp1.png', wx.BITMAP_TYPE_PNG))
         bmp2 = wx.BitmapFromImage(wx.Image('bmp2.png', wx.BITMAP_TYPE_PNG))            
-        img1 = self.Canvas.AddScaledBitmap2(bmp1, (0, 0), Height = bmp1.GetHeight(), Position = 'tl')
-        img2 = self.Canvas.AddScaledBitmap2(bmp2, (100, -100), Height = bmp2.GetHeight(), Position = 'tl')
+        img1 = self.Canvas.AddScaledBitmap(bmp1, (0, 0), Height = bmp1.GetHeight(), Position = 'tl', Quality='normal')
+        img2 = self.Canvas.AddScaledBitmap2(bmp2, (100, -100), Height = bmp2.GetHeight(), Position = 'tl', Quality='high')
         
+        print img1.Quality
+        print img2.Quality
+
         self.Canvas.ZoomToBB()
         #wx.CallLater(1, self.Canvas.ZoomToBB)
 

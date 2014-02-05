@@ -51,6 +51,7 @@ class DrawFrame(wx.Frame):
                                         (0,0),
                                         Height=image.GetHeight(),
                                         Position = 'tl',
+                                        Quality='high'
                                         )
         Canvas.AddObject(img)
         
