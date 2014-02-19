@@ -15,18 +15,18 @@ I'm sure it can be fixed, but I don't have a need for it, so I haven't taken the
 import wx
 
 ## import the installed version
-#from wx.lib.floatcanvas import NavCanvas, FloatCanvas
+# from wx.lib.floatcanvas import NavCanvas, FloatCanvas
 
-## import a local version
+# import a local version
 import sys
 sys.path.append("..")
 from floatcanvas import NavCanvas, FloatCanvas
 
 
-import numpy as N
+import numpy as np
 
 def YDownProjection(CenterPoint):
-    return N.array((1,-1))
+    return np.array((1,-1))
 
 class DrawFrame(wx.Frame):
 
