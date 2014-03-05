@@ -374,6 +374,8 @@ class DrawFrame(wx.Frame):
                 self.MovingObject.Move(dxy) 
             self.Canvas.Draw(True)
 
-app = wx.PySimpleApp(0)
-DrawFrame(None, -1, "FloatCanvas Tree Demo App", wx.DefaultPosition, (700,700) )
+app = wx.App(0)
+DrawFrame(None,
+          title="FloatCanvas Tree Demo App",
+          size = (700,700) )
 app.MainLoop()

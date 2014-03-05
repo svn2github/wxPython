@@ -51,8 +51,8 @@ ID_TEST = 500
 
 
 class DrawFrame(wx.Frame):
-    def __init__(self,parent, id,title,position,size):
-        wx.Frame.__init__(self,parent, id,title,position, size)
+    def __init__(self, parent, *args, **kwargs):
+        wx.Frame.__init__(self, parent, *args, **kwargs)
         
         ## Set up the MenuBar
         
@@ -243,51 +243,14 @@ class DemoApp(wx.App):
     """
     
     def OnInit(self):
-        wx.InitAllImageHandlers()
-        frame = DrawFrame(None, -1, "Simple Drawing Window",wx.DefaultPosition, (700,700) )
-
+        frame = DrawFrame(None,
+                          title="Simple Drawing Window",
+                          size=(700,700),
+                        )
         self.SetTopWindow(frame)
 
         return True
-            
-def Read_MapGen(filename,stats = False):
-    """
-    This function reads a MapGen Format file, and
-    returns a list of NumPy arrays with the line segments in them.
-    
-    Each NumPy array in the list is an NX2 array of Python Floats.
-    
-    The demo should have come with a file, "world.dat" that is the
-    shorelines of the whole worls, in MapGen format.
-    
-    """
-    import string
-    from numpy import array
-    file = open(filename,'rt')
-    data = file.readlines()
-    data = map(string.strip,data)
-    
-    Shorelines = []
-    segment = []
-    for line in data:
-        if line == "# -b": #New segment begining
-            if segment: Shorelines.append(array(segment))
-            segment = []
-        else:
-            segment.append(map(float,string.split(line)))
-    if segment: Shorelines.append(array(segment))
-    
-    if stats:
-        NumSegments = len(Shorelines)
-        NumPoints = False
-        for segment in Shorelines:
-            NumPoints = NumPoints + len(segment)
-        AvgPoints = NumPoints / NumSegments
-        print "Number of Segments: ", NumSegments
-        print "Average Number of Points per segment: ",AvgPoints
-        
-    return Shorelines
-    
+                
 if __name__ == "__main__":
 
     app = DemoApp(0)
