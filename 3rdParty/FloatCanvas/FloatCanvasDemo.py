@@ -19,7 +19,10 @@ except ImportError:
 
 def BuildDrawFrame(): # this gets called when needed, rather than on import
     try:
+        import sys
+        sys.path.append('./')
         from floatcanvas import NavCanvas, FloatCanvas, Resources
+        print "using local copy of FloatCanvas"
     except ImportError: # if it's not there locally, try the wxPython lib.
         from wx.lib.floatcanvas import NavCanvas, FloatCanvas, Resources
     import wx.lib.colourdb

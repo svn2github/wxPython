@@ -2580,6 +2580,7 @@ class FloatCanvas(wx.Panel):
                         EVT_FC_RIGHT_DCLICK: {},
                         EVT_FC_ENTER_OBJECT: {},
                         EVT_FC_LEAVE_OBJECT: {},
+                        EVT_FC_MOTION: {},
                         }
 
     def _RaiseMouseEvent(self, Event, EventType):
@@ -2588,6 +2589,7 @@ class FloatCanvas(wx.Panel):
         """
         pt = self.PixelToWorld( Event.GetPosition() )
         evt = _MouseEvent(EventType, Event, self.GetId(), pt)
+        # called the Windows usual event handler
         self.GetEventHandler().ProcessEvent(evt)
 
     if wx.__version__ >= "2.8":
@@ -2628,15 +2630,28 @@ class FloatCanvas(wx.Panel):
         Object.CallBackFuncs[HitEvent](Object)
 
     def HitTest(self, event, HitEvent):
+        """
+        Does a hit test on objects that are "hit-able"
+
+        If an object is hit, its event handler is called,
+        and this method returns True
+
+        If no object is hit, this method returns False.
+
+        If the event is outside the Window, no object will be considered hit
+        """
         if self.HitDict:
             # check if there are any objects in the dict for this event
             if self.HitDict[ HitEvent ]:
                 xy = event.GetPosition()
-                color = self.GetHitTestColor( xy )
-                if color in self.HitDict[ HitEvent ]:
-                    Object = self.HitDict[ HitEvent ][color]
-                    self._CallHitCallback(Object, xy, HitEvent)
-                    return True
+                winsize = self.Size
+                if not (xy[0] < 0 or xy[1] < 0 or xy[0] > winsize[0] or xy[1] > winsize[1]):
+                    # The mouse event is in the Window
+                    color = self.GetHitTestColor( xy )
+                    if color in self.HitDict[ HitEvent ]:
+                        Object = self.HitDict[ HitEvent ][color]
+                        self._CallHitCallback(Object, xy, HitEvent)
+                        return True
             return False
 
 
