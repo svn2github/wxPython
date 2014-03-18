@@ -1895,6 +1895,10 @@ class Bitmap(TextObjectMixin, DrawObject, ):
         (self.Width, self.Height) = self.Bitmap.GetWidth(), self.Bitmap.GetHeight()
         self.ShiftFun = self.ShiftFunDict[Position]
 
+        # no need for a line width with bitmaps
+        self.MinHitLineWidth = 0
+        self.HitLineWidth = 0
+
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         XY = WorldToPixel(self.XY)
         XY = self.ShiftFun(XY[0], XY[1], self.Width, self.Height)
@@ -1947,6 +1951,11 @@ class ScaledBitmap(TextObjectMixin, DrawObject, ):
         self.ScaledBitmap = None
         self.ScaledHeight = None
         self.Quality = Quality
+
+        # no need for a line width with bitmaps
+        self.MinHitLineWidth = 0
+        self.HitLineWidth = 0
+
 
     @property 
     def Quality(self):
@@ -2033,6 +2042,10 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         self.CalcBoundingBox()
         self.ScaledBitmap = None # cache of the last existing scaled bitmap
         self.Quality = Quality
+
+        # no need for aline width with images.
+        self.MinHitLineWidth = 0
+        self.HitLineWidth = 0
 
     @property 
     def Quality(self):

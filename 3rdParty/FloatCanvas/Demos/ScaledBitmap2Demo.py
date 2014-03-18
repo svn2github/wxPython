@@ -54,12 +54,14 @@ class DrawFrame(wx.Frame):
                                         Quality='high'
                                         )
         Canvas.AddObject(img)
+
+        img.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.OnLeftDown)
         
         self.Canvas.Bind(wx.EVT_SIZE, self.OnSize)
 
         self.Show()
         Canvas.ZoomToBB(margin_adjust=1.0)
-    
+
     def OnSize(self, event):
         """
         re-zooms the canvas to fit the window
@@ -67,6 +69,9 @@ class DrawFrame(wx.Frame):
         """
         self.Canvas.ZoomToBB(margin_adjust=1.0)
         event.Skip()
+
+    def OnLeftDown(self, obj):
+        print "coords:", obj.HitCoords
 
     def OnMove(self, event):
         """
